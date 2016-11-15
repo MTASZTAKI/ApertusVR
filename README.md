@@ -12,7 +12,7 @@ ApertusVR creates multiuser scenes which means that all of the particpant shares
 the same things at the same time.
 
 ApertusVR has set-in-stone interfaces, language bindings and disjunct libraries therefore
-it is easily embeddable to an existing development on any platform.
+it is easily embeddable to an existing development.
 
 ## How to use
 ### From Source
