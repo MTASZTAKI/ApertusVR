@@ -1,5 +1,6 @@
 # ApertusVR
-Platfrom-free, embeddable, distributed and shared virtual reality
+Distributed scene sharing engine for virtual and/or augmented reality on any platform
+
 
 
 ## About
