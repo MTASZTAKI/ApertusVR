@@ -4,7 +4,8 @@ Platfrom-free, embeddable, distributed and shared virtual reality
 
 ## About
 ApertusVR has a loosly coupled structure in order to easily configure the
-engine capabilities and run these configuration instances on different machines. 
+engine capabilities and run these configuration instances on different machines
+and connect them together via internet. 
 
 ApertusVR creates multiuser scenes which means that all of the particpant shares
 the same things at the same time.
@@ -14,6 +15,8 @@ it is easily embeddable to an existing development on any platform.
 
 ## How to use
 ### From Source
+Currently, tested only on Windows Visual Studio Community 2015
+
 1. Clone the [repository](https://github.com/MTASZTAKI/ApertusVR)
 2. Build with [cmake](https://cmake.org/)
 
