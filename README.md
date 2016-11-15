@@ -1,5 +1,5 @@
 # ApertusVR
-Distributed scene sharing engine for virtual and/or augmented reality on any platform
+Distributed scene sharing engine for virtual and augmented reality on any platform
 
 
 
