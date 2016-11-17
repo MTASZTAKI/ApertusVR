@@ -1,0 +1,21 @@
+compositor DOF
+{
+    technique
+    {
+        texture scene target_width target_height PF_FLOAT16_RGBA	
+        
+		target scene
+        {
+            input previous
+        }          
+       target_output
+       {
+         input none          
+         pass render_quad
+         {
+               material PostProc/DoF
+               input 0 scene               
+         }
+       }
+    }
+}

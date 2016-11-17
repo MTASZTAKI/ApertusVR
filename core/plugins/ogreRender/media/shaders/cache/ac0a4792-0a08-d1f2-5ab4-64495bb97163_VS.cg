@@ -1,0 +1,45 @@
+//-----------------------------------------------------------------------------
+// Program Type: Vertex shader
+// Language: cg
+// Created by Ogre RT Shader Generator. All rights reserved.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+//                         PROGRAM DEPENDENCIES
+//-----------------------------------------------------------------------------
+#include "FFPLib_Transform.cg"
+#include "FFPLib_Common.cg"
+#include "SGXLib_PerPixelLighting.cg"
+#include "FFPLib_Texturing.cg"
+
+//-----------------------------------------------------------------------------
+//                         GLOBAL PARAMETERS
+//-----------------------------------------------------------------------------
+
+float4x4	worldviewproj_matrix;
+float4x4	inverse_transpose_worldview_matrix;
+
+//-----------------------------------------------------------------------------
+// Function Name: main
+// Function Desc: Vertex Program Entry point
+//-----------------------------------------------------------------------------
+void main
+	(
+	 in float4	iPos_0 : POSITION, 
+	 in float3	iNormal_0 : NORMAL, 
+	 out float4	oPos_0 : POSITION, 
+	 out float3	oTexcoord3_0 : TEXCOORD0
+	)
+{
+	float4	lLocalParam_0;
+	float4	lLocalParam_1;
+
+	FFP_Transform(worldviewproj_matrix, iPos_0, oPos_0);
+
+	FFP_Construct(1.0, 1.0, 1.0, 1.0, lLocalParam_0);
+
+	FFP_Construct(0.0, 0.0, 0.0, 0.0, lLocalParam_1);
+
+	SGX_TransformNormal(inverse_transpose_worldview_matrix, iNormal_0, oTexcoord3_0);
+}
+

@@ -1,0 +1,23 @@
+material SketchupDefault
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1.0 1.0 1.0
+         ambient 1.0 1.0 1.0
+      }
+   }
+}
+
+material SketchupDefault_Back
+{
+   technique
+   {
+      pass
+      {
+         diffuse 0.6941176470588235 0.7176470588235294 0.7450980392156863
+         ambient 0.6941176470588235 0.7176470588235294 0.7450980392156863
+      }
+   }
+}

@@ -1,0 +1,58 @@
+# Build directories
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+build/
+
+# Generated Files
+*.exe
+*.obj
+*.lib
+*.exp
+*.stamp
+*.stamp.depend
+*.log
+*.lastbuildstate
+*.sln
+*.VC.db
+*.VC.opendb
+*.vcxproj
+*.vcxproj.filters
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# CMake files
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
+# Ogre
+!3rdParty/ogre/Dependencies/src/Cg/lib/*
+!3rdParty/ogre/Dependencies/src/Cg/lib64/*
+!3rdParty/ogre/Dependencies/src/NVAPI-R313-developer/lib/*
+!3rdParty/ogre/Dependencies/src/NVAPI-R313-developer/lib64/*
+3rdParty/ogre/Dependencies/ogredeps
+3rdParty/ogre/include/OgreBuildSettings.h
+3rdParty/ogre/SDK/
+
+# RakNet
+3rdParty/raknet/include
+
+# Curl
+3rdParty/curl/DartConfiguration.tcl
+
+# Exclude thirdparties
+!3rdParty/node-v0.10.46/

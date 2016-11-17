@@ -1,0 +1,65 @@
+//-----------------------------------------------------------------------------
+// Program Type: Fragment shader
+// Language: cg
+// Created by Ogre RT Shader Generator. All rights reserved.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+//                         PROGRAM DEPENDENCIES
+//-----------------------------------------------------------------------------
+#include "FFPLib_Common.cg"
+#include "SGXLib_PerPixelLighting.cg"
+#include "FFPLib_Texturing.cg"
+
+//-----------------------------------------------------------------------------
+//                         GLOBAL PARAMETERS
+//-----------------------------------------------------------------------------
+
+float4	derived_ambient_light_colour;
+float4	surface_diffuse_colour;
+float4	surface_specular_colour;
+float4	surface_emissive_colour;
+float4	derived_scene_colour;
+float	surface_shininess;
+float4	light_position_view_space0;
+float4	light_attenuation1;
+float4	derived_light_diffuse2;
+float4	derived_light_specular3;
+
+//-----------------------------------------------------------------------------
+// Function Name: main
+// Function Desc: Pixel Program Entry point
+//-----------------------------------------------------------------------------
+void main
+	(
+	 in float3	iTexcoord3_0 : TEXCOORD0, 
+	 in float3	iTexcoord3_1 : TEXCOORD1, 
+	 out float4	oColor_0 : COLOR
+	)
+{
+	float4	lLocalParam_0;
+	float4	lLocalParam_1;
+	float4	lPerPixelDiffuse;
+	float4	lPerPixelSpecular;
+
+	FFP_Construct(1.0, 1.0, 1.0, 1.0, lLocalParam_0);
+
+	FFP_Construct(0.0, 0.0, 0.0, 0.0, lLocalParam_1);
+
+	FFP_Assign(lLocalParam_0, oColor_0);
+
+	FFP_Assign(derived_scene_colour, lPerPixelDiffuse);
+
+	FFP_Assign(lLocalParam_1, lPerPixelSpecular);
+
+	SGX_Light_Point_DiffuseSpecular(iTexcoord3_0, iTexcoord3_1, light_position_view_space0.xyz, light_attenuation1, derived_light_diffuse2.xyz, derived_light_specular3.xyz, surface_shininess, lPerPixelDiffuse.xyz, lPerPixelSpecular.xyz, lPerPixelDiffuse.xyz, lPerPixelSpecular.xyz);
+
+	FFP_Assign(lPerPixelDiffuse, lLocalParam_0);
+
+	FFP_Assign(lLocalParam_0, oColor_0);
+
+	FFP_Assign(lPerPixelSpecular, lLocalParam_1);
+
+	FFP_Add(oColor_0.xyz, lLocalParam_1.xyz, oColor_0.xyz);
+}
+

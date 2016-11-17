@@ -1,0 +1,77 @@
+//-----------------------------------------------------------------------------
+// Program Type: Fragment shader
+// Language: cg
+// Created by Ogre RT Shader Generator. All rights reserved.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+//                         PROGRAM DEPENDENCIES
+//-----------------------------------------------------------------------------
+#include "FFPLib_Common.cg"
+#include "SGXLib_PerPixelLighting.cg"
+#include "FFPLib_Texturing.cg"
+#include "SGXLib_TriplanarTexturing.cg"
+
+//-----------------------------------------------------------------------------
+//                         GLOBAL PARAMETERS
+//-----------------------------------------------------------------------------
+
+float4	derived_ambient_light_colour;
+float4	surface_diffuse_colour;
+float4	surface_specular_colour;
+float4	surface_emissive_colour;
+float4	derived_scene_colour;
+float	surface_shininess;
+float4	light_position_view_space0;
+float4	light_direction_view_space1;
+float4	light_attenuation2;
+float3	spotlight_params0;
+float4	derived_light_diffuse3;
+float4	light_position_view_space4;
+float4	light_direction_view_space5;
+float4	light_attenuation6;
+float3	spotlight_params1;
+float4	derived_light_diffuse7;
+sampler2D	tp_sampler_from_x0 : register(s0);
+sampler2D	tp_sampler_from_y1 : register(s1);
+sampler2D	tp_sampler_from_z2 : register(s2);
+float3	gTPParams2;
+
+//-----------------------------------------------------------------------------
+// Function Name: main
+// Function Desc: Pixel Program Entry point
+//-----------------------------------------------------------------------------
+void main
+	(
+	 in float3	iTexcoord3_0 : TEXCOORD0, 
+	 in float3	iTexcoord3_1 : TEXCOORD1, 
+	 in float4	iColor_0 : COLOR, 
+	 in float4	iTexcoord4_2 : TEXCOORD2, 
+	 out float4	oColor_0 : COLOR
+	)
+{
+	float4	lLocalParam_0;
+	float4	lLocalParam_1;
+	float4	lPerPixelDiffuse;
+
+	FFP_Construct(1.0, 1.0, 1.0, 1.0, lLocalParam_0);
+
+	FFP_Construct(0.0, 0.0, 0.0, 0.0, lLocalParam_1);
+
+	FFP_Assign(lLocalParam_0, oColor_0);
+
+	FFP_Assign(derived_scene_colour, lPerPixelDiffuse);
+
+	SGX_Light_Spot_Diffuse(iTexcoord3_0, iTexcoord3_1, light_position_view_space0.xyz, light_direction_view_space1.xyz, light_attenuation2, spotlight_params0, derived_light_diffuse3.xyz, lPerPixelDiffuse.xyz, lPerPixelDiffuse.xyz);
+
+	SGX_Light_Spot_Diffuse(iTexcoord3_0, iTexcoord3_1, light_position_view_space4.xyz, light_direction_view_space5.xyz, light_attenuation6, spotlight_params1, derived_light_diffuse7.xyz, lPerPixelDiffuse.xyz, lPerPixelDiffuse.xyz);
+
+	FFP_Assign(lPerPixelDiffuse, lLocalParam_0);
+
+	FFP_Assign(lLocalParam_0, oColor_0);
+
+	SGX_TriplanarTexturing(iColor_0, iTexcoord3_0, iTexcoord4_2, tp_sampler_from_x0, tp_sampler_from_y1, tp_sampler_from_z2, gTPParams2, oColor_0);
+
+	FFP_Add(oColor_0.xyz, lLocalParam_1.xyz, oColor_0.xyz);
+}
+

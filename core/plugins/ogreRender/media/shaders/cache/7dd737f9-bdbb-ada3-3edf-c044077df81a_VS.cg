@@ -1,0 +1,73 @@
+//-----------------------------------------------------------------------------
+// Program Type: Vertex shader
+// Language: cg
+// Created by Ogre RT Shader Generator. All rights reserved.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+//                         PROGRAM DEPENDENCIES
+//-----------------------------------------------------------------------------
+#include "FFPLib_Transform.cg"
+#include "FFPLib_Common.cg"
+#include "FFPLib_Texturing.cg"
+#include "SGXLib_NormalMapLighting.cg"
+
+//-----------------------------------------------------------------------------
+//                         GLOBAL PARAMETERS
+//-----------------------------------------------------------------------------
+
+float4x4	worldviewproj_matrix;
+float3	camera_position;
+float4x4	world_matrix;
+float4x4	inv_world_rotation_matrix0;
+float4	light_position_world_space0;
+
+//-----------------------------------------------------------------------------
+// Function Name: main
+// Function Desc: Vertex Program Entry point
+//-----------------------------------------------------------------------------
+void main
+	(
+	 in float4	iPos_0 : POSITION, 
+	 in float3	iNormal_0 : NORMAL, 
+	 in float3	iTangent_0 : TANGENT, 
+	 in float2	iTexcoord2_0 : TEXCOORD0, 
+	 out float4	oPos_0 : POSITION, 
+	 out float2	oTexcoord2_0 : TEXCOORD0, 
+	 out float3	oTexcoord3_1 : TEXCOORD1, 
+	 out float3	oTexcoord3_2 : TEXCOORD2
+	)
+{
+	float4	lLocalParam_0;
+	float4	lLocalParam_1;
+	float3x3	lMatTBN;
+	float3	lNormalMapTempDir;
+	float3	lLocalParam_4;
+
+	FFP_Transform(worldviewproj_matrix, iPos_0, oPos_0);
+
+	FFP_Construct(1.0, 1.0, 1.0, 1.0, lLocalParam_0);
+
+	FFP_Construct(0.0, 0.0, 0.0, 0.0, lLocalParam_1);
+
+	SGX_ConstructTBNMatrix(iNormal_0, iTangent_0, lMatTBN);
+
+	FFP_Assign(iTexcoord2_0, oTexcoord2_0);
+
+	SGX_TransformPosition(world_matrix, iPos_0, lLocalParam_4);
+
+	FFP_Subtract(camera_position.xyz, lLocalParam_4.xyz, lNormalMapTempDir);
+
+	SGX_TransformNormal(inv_world_rotation_matrix0, lNormalMapTempDir, lNormalMapTempDir);
+
+	SGX_TransformNormal(lMatTBN, lNormalMapTempDir, oTexcoord3_1);
+
+	FFP_Subtract(light_position_world_space0.xyz, lLocalParam_4, lNormalMapTempDir);
+
+	SGX_TransformNormal(inv_world_rotation_matrix0, lNormalMapTempDir, lNormalMapTempDir);
+
+	SGX_TransformNormal(lMatTBN, lNormalMapTempDir, oTexcoord3_2);
+
+	FFP_Assign(iTexcoord2_0, oTexcoord2_0);
+}
+
