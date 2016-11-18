@@ -53,6 +53,8 @@ if (NOT PYTHONINTERP_FOUND)
 			message("Python: Installation failed, exit code (${PYTHON_SETUP_RESULT})")
 		endif ()
 
+		find_package(PythonInterp)
+		message("Pthon: version: ${PYTHON_VERSION_STRING}")
 		if (NOT PYTHONINTERP_FOUND)
 			message(FATAL_ERROR "Python: Could not find python")
 		endif ()
