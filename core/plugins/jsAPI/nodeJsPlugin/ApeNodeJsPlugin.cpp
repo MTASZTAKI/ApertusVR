@@ -52,7 +52,7 @@ ApeNodeJsPlugin::~ApeNodeJsPlugin()
 
 void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: " << event.subjectName << std::endl;
+	//std::cout << "ApeNodeJsPlugin::nodeEventCallBack: " << event.subjectName << std::endl;
 	IJsEventManager::getSingleton().onEvent(event);
 }
 

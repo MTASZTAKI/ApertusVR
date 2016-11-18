@@ -39,5 +39,5 @@ add_library (ApeSystemConfig SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeSystemConfig)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeSystemConfig PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEMCONFIG_DLL)
+set_property (TARGET ApeSystemConfig PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEMCONFIG_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeSystemConfig PROPERTY FOLDER "Core")

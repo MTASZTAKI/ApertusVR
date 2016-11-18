@@ -107,6 +107,12 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					mSceneSessionConfig.uniqueUserNamePrefix = jsonDocument["sceneSession"]["uniqueUserNamePrefix"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionGUID")
 					mSceneSessionConfig.sessionGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
+				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
+				{
+					std::stringstream sessionResourceLocation;
+					sessionResourceLocation << APE_SOURCE_DIR << jsonDocument["sceneSession"]["sessionResourceLocation"].GetString();
+					mSceneSessionConfig.sessionResourceLocation = sessionResourceLocation.str();
+				}
 			}
 			rapidjson::Value& pluginManager = jsonDocument["pluginManager"];
 			for (rapidjson::Value::MemberIterator pluginManagerMemberIterator =

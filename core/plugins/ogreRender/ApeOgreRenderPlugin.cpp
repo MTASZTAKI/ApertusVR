@@ -87,12 +87,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (!Ogre::ResourceGroupManager::getSingleton().resourceLocationExists(resourceFolder))
 							{
 								std::string resourceGroupName = "OTF";
-								Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceFolder, "FileSystem", resourceGroupName);
+								/*Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceFolder, "FileSystem", resourceGroupName);
 								Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(resourceGroupName);
 								std::cout << "Parsing resource location " << resourceFolder << " please wait......" << std::endl;
 								while (!Ogre::ResourceGroupManager::getSingleton().isResourceGroupInitialised(resourceGroupName))
 									std::this_thread::sleep_for(std::chrono::milliseconds(100));
-								std::cout << "Resource location " << resourceFolder << " parsed successfully" << std::endl;
+								std::cout << "Resource location " << resourceFolder << " parsed successfully" << std::endl;*/
 							}
 						}
 					}
@@ -105,7 +105,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 					break;
 				case Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR:
-					mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
+						mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
 					break;
 				}
 			}
@@ -531,6 +531,7 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/GLSLES", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/HLSL", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/materials", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
 	
 
 	mpRoot->initialise(false, "Ape");
