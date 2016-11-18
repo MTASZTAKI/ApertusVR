@@ -37,13 +37,13 @@ Ape::JsEventManagerImpl::~JsEventManagerImpl()
 
 void Ape::JsEventManagerImpl::connectEvent(Ape::Event::Group group, v8::Persistent<v8::Function> cb)
 {
-	std::cout << "Ape::JsEventManagerImpl::connectEvent" << std::endl;
+	//std::cout << "Ape::JsEventManagerImpl::connectEvent" << std::endl;
 	mEventMap[group].push_back(cb);
 }
 
 void Ape::JsEventManagerImpl::onEvent(const Ape::Event& e)
 {
-	std::cout << "Ape::JsEventManagerImpl::onEvent()" << std::endl;
+	//std::cout << "Ape::JsEventManagerImpl::onEvent()" << std::endl;
 
 	/* TODO
 	v8::Local<v8::Object> obj = v8::Object::New();

@@ -105,7 +105,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 					break;
 				case Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR:
-					mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
+						mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
 					break;
 				}
 			}
