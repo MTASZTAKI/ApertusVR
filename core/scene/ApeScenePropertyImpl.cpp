@@ -80,8 +80,8 @@ RakNet::RM3SerializationResult Ape::ScenePropertyImpl::Serialize(RakNet::Seriali
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAmbientColor);
-	for (auto resourceFolder : mResourceFolders)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(resourceFolder.c_str()));
+	/*for (auto resourceFolder : mResourceFolders)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(resourceFolder.c_str()));*/
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSkyBoxMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -95,11 +95,11 @@ void Ape::ScenePropertyImpl::Deserialize(RakNet::DeserializeParameters *deserial
 	RakNet::RakString resourceFolder;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, resourceFolder))
+	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, resourceFolder))
 	{
 		mResourceFolders.push_back(resourceFolder.C_String());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SCENEPROPERTY_ADDRESOURCEFOLDER));
-	}
+	}*/
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, skyBoxMaterialName))
 	{
 		mSkyBoxMaterialName = skyBoxMaterialName;
