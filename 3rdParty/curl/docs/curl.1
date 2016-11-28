@@ -176,9 +176,9 @@ HTTP 2 to negotiate HTTP 2 support with the server during https sessions.
 .IP "-1, --tlsv1"
 (SSL)
 Forces curl to use TLS version 1.x when negotiating with a remote TLS server.
-You can use options \fI--tlsv1.0\fP, \fI--tlsv1.1\fP, and \fI--tlsv1.2\fP to
-control the TLS version more precisely (if the SSL backend in use supports such
-a level of control).
+You can use options \fI--tlsv1.0\fP, \fI--tlsv1.1\fP, \fI--tlsv1.2\fP, and
+\fI--tlsv1.3\fP to control the TLS version more precisely (if the SSL backend
+in use supports such a level of control).
 .IP "-2, --sslv2"
 (SSL) Forces curl to use SSL version 2 when negotiating with a remote SSL
 server. Sometimes curl is built without SSLv2 support. SSLv2 is widely
@@ -356,7 +356,7 @@ told to read from a file like that, carriage returns and newlines will be
 stripped out. If you don't want the @ character to have a special
 interpretation use \fI--data-raw\fP instead.
 .IP "-D, --dump-header <file>"
-Write the protocol headers to the specified file.
+Write the received protocol headers to the specified file.
 
 This option is handy to use when you want to store the headers that an HTTP
 site sends to you. Cookies from the headers could then be read in a second
@@ -620,6 +620,23 @@ or no response at all is received, the verification fails.
 
 This is currently only implemented in the OpenSSL, GnuTLS and NSS backends.
 (Added in 7.41.0)
+.IP "--fail-early"
+Fail and exit on first detected error.
+
+When curl is used to do multiple transfers on the command line, it will
+attempt to operate on each given URL, one by one. By default, it will ignore
+errors if there are more URLs given and the last URL's success will determine
+the error code curl returns. So early failures will be "hidden" by subsequent
+successful transfers.
+
+Using this option, curl will instead return an error on the first transfers
+that fails, independent on the amount of more URLs that are given on the
+command line. This way, no transfer failures go undetected by scripts and
+similar.
+
+This option will apply for all given URLs even if you use \fI--next\fP.
+
+(Added in 7.52.0)
 .IP "--false-start"
 
 (SSL) Tells curl to use false start during the TLS handshake. False start is a
@@ -1451,6 +1468,33 @@ the default authentication method curl uses with proxies.
 .IP "--proxy-digest"
 Tells curl to use HTTP Digest authentication when communicating with the given
 proxy. Use \fI--digest\fP for enabling HTTP Digest with a remote host.
+.IP "--proxy-cacert <CA certificate>"
+(SSL) Same as --cacert but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-capath <CA certificate directory>"
+(SSL) Same as --capath but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-cert <certificate[:password]>"
+(SSL) Same as \fI--cert\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-cert-type <type>"
+(SSL) Same as \fI--cert-type\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-ciphers <list of ciphers>"
+(SSL) Same as \fI--ciphers\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-crlfile <file>"
+(HTTPS) Same as \fI--crlfile\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-insecure"
+(SSL) Same as \fI--insecure\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-key <key>"
+(SSL) Same as \fI--key\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-key-type <type>"
+(SSL) Same as \fI--key-type\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
 .IP "--proxy-negotiate"
 Tells curl to use HTTP Negotiate (SPNEGO) authentication when communicating
 with the given proxy. Use \fI--negotiate\fP for enabling HTTP Negotiate (SPNEGO)
@@ -1458,11 +1502,29 @@ with a remote host. (Added in 7.17.1)
 .IP "--proxy-ntlm"
 Tells curl to use HTTP NTLM authentication when communicating with the given
 proxy. Use \fI--ntlm\fP for enabling NTLM with a remote host.
+.IP "--proxy-pass <phrase>"
+(SSL) Same as \fI--pass\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
 .IP "--proxy-service-name <servicename>"
 This option allows you to change the service name for proxy negotiation.
 
 Examples: --proxy-negotiate proxy-name \fI--proxy-service-name\fP sockd would use
 sockd/proxy-name.  (Added in 7.43.0).
+.IP "--proxy-ssl-allow-beast"
+(SSL) Same as \fI--ssl-allow-beast\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-tlsauthtype <authtype>"
+Same as \fI--tlsauthtype\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-tlspassword <password>"
+Same as \fI--tlspassword\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-tlsuser <user>"
+Same as \fI--tlsuser\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
+.IP "--proxy-tlsv1"
+(SSL) Same as \fI--tlsv1\fP but used in HTTPS proxy context.
+(Added in 7.52.0)
 .IP "--proxy1.0 <proxyhost[:port]>"
 Use the specified HTTP 1.0 proxy. If the port number is not specified, it is
 assumed at port 1080.
@@ -1620,6 +1682,10 @@ also \fI--retry-max-time\fP to limit the total time allowed for
 retries. (Added in 7.12.3)
 
 If this option is used several times, the last one will be used.
+.IP "--retry-connrefused"
+In addition to the other conditions, consider ECONNREFUSED as a transient
+error too for \fI--retry\fP. This option is used together with
+\fI--retry\fP. (Added in 7.52.0)
 .IP "--retry-delay <seconds>"
 Make curl sleep this amount of time before each retry when a transfer has
 failed with a transient error (it changes the default backoff time algorithm
@@ -1774,6 +1840,11 @@ curl -T "{file1,file2}" http://www.example.com
 or even
 
 curl -T "img[1-1000].png" ftp://ftp.example.com/upload/
+
+When uploading to an SMTP server: the uploaded data is assumed to be RFC 5322
+formatted. It has to feature the necessary set of headers and mail body
+formatted correctly by the user as curl will not transcode nor encode it
+further in any way.
 .IP "--tcp-nodelay"
 Turn on the TCP_NODELAY option. See the \fIcurl_easy_setopt(3)\fP man page for
 details about this option. (Added in 7.11.2)
@@ -1820,6 +1891,10 @@ Forces curl to use TLS version 1.1 when negotiating with a remote TLS server.
 (SSL)
 Forces curl to use TLS version 1.2 when negotiating with a remote TLS server.
 (Added in 7.34.0)
+.IP "--tlsv1.3"
+(SSL)
+Forces curl to use TLS version 1.3 when negotiating with a remote TLS server.
+(Added in 7.52.0)
 .IP "--tr-encoding"
 (HTTP) Request a compressed Transfer-Encoding response using one of the
 algorithms curl supports, and uncompress the data while receiving it.
@@ -1986,6 +2061,9 @@ IPv4 or IPv6 (Added in 7.29.0)
 .TP
 .B remote_port
 The remote port number of the most recently done connection (Added in 7.29.0)
+.TP
+.B scheme
+The URL scheme (sometimes called protocol) that was effectively used (Added in 7.52.0)
 .TP
 .B size_download
 The total amount of bytes that were downloaded.

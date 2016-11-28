@@ -15,7 +15,7 @@
  */
 
 /*
- * Copyright (c) 1983 Regents of the University of California.
+ * Copyright (c) 1983, 2016 Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1040,10 +1040,10 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
 #ifdef USE_WINSOCK
   recvtimeout = sizeof(recvtimeoutbak);
   getsockopt(peer, SOL_SOCKET, SO_RCVTIMEO,
-             (char*)&recvtimeoutbak, (int*)&recvtimeout);
+             (char *)&recvtimeoutbak, (int *)&recvtimeout);
   recvtimeout = TIMEOUT*1000;
   setsockopt(peer, SOL_SOCKET, SO_RCVTIMEO,
-             (const char*)&recvtimeout, sizeof(recvtimeout));
+             (const char *)&recvtimeout, sizeof(recvtimeout));
 #endif
 
   if(tp->th_opcode == opcode_WRQ)
@@ -1054,7 +1054,7 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
 #ifdef USE_WINSOCK
   recvtimeout = recvtimeoutbak;
   setsockopt(peer, SOL_SOCKET, SO_RCVTIMEO,
-             (const char*)&recvtimeout, sizeof(recvtimeout));
+             (const char *)&recvtimeout, sizeof(recvtimeout));
 #endif
 
   return 0;
@@ -1232,19 +1232,17 @@ static void sendtftp(struct testcase *test, struct formats *pf)
 {
   int size;
   ssize_t n;
-  /* This is volatile to live through a siglongjmp */
+  /* These are volatile to live through a siglongjmp */
   volatile unsigned short sendblock; /* block count */
-  struct tftphdr *sdp;      /* data buffer */
-  struct tftphdr *sap;      /* ack buffer */
+  struct tftphdr * volatile sdp = r_init(); /* data buffer */
+  struct tftphdr * const sap = &ackbuf.hdr; /* ack buffer */
 
   sendblock = 1;
 #if defined(HAVE_ALARM) && defined(SIGALRM)
   mysignal(SIGALRM, timer);
 #endif
-  sdp = r_init();
-  sap = &ackbuf.hdr;
   do {
-    size = readit(test, &sdp, pf->f_convert);
+    size = readit(test, (struct tftphdr **)&sdp, pf->f_convert);
     if(size < 0) {
       nak(errno + 100);
       return;

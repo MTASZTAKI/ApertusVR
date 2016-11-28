@@ -140,7 +140,7 @@ static void storerequest(char *reqbuf, size_t totalsize);
 
 const char *serverlogfile = DEFAULT_LOGFILE;
 
-#define SWSVERSION "cURL test suite HTTP server/0.1"
+#define SWSVERSION "curl test suite HTTP server/0.1"
 
 #define REQUEST_DUMP  "log/server.input"
 #define RESPONSE_DUMP "log/server.response"
@@ -2231,9 +2231,9 @@ int main(int argc, char *argv[])
     /* Clear out closed sockets */
     for(socket_idx = num_sockets - 1; socket_idx >= 1; --socket_idx) {
       if(CURL_SOCKET_BAD == all_sockets[socket_idx]) {
-        char* dst = (char *) (all_sockets + socket_idx);
-        char* src = (char *) (all_sockets + socket_idx + 1);
-        char* end = (char *) (all_sockets + num_sockets);
+        char *dst = (char *) (all_sockets + socket_idx);
+        char *src = (char *) (all_sockets + socket_idx + 1);
+        char *end = (char *) (all_sockets + num_sockets);
         memmove(dst, src, end - src);
         num_sockets -= 1;
       }

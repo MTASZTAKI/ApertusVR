@@ -55,7 +55,9 @@ my %warnings = (
     'COPYRIGHT'        => 'file missing a copyright statement',
     'BADCOMMAND'       => 'bad !checksrc! instruction',
     'UNUSEDIGNORE'     => 'a warning ignore was not used',
-    'OPENCOMMENT'      => 'file ended with a /* comment still "open"'
+    'OPENCOMMENT'      => 'file ended with a /* comment still "open"',
+    'ASTERISKSPACE'    => 'pointer declared with space after asterisk',
+    'ASTERISKNOSPACE'  => 'pointer declared without space before asterisk'
     );
 
 sub readwhitelist {
@@ -471,6 +473,31 @@ sub scanfile {
             }
         }
 
+        # check for 'char * name'
+        if(($l =~ /(^.*(char|int|long|void|curl_slist|CURL|CURLM|CURLMsg|curl_httppost) *(\*+)) (\w+)/) && ($4 ne "const")) {
+            checkwarn("ASTERISKNOSPACE",
+                      $line, length($1), $file, $ol,
+                      "no space after declarative asterisk");
+        }
+        # check for 'char*'
+        if(($l =~ /(^.*(char|int|long|void|curl_slist|CURL|CURLM|CURLMsg|curl_httppost|sockaddr_in|FILE)\*)/)) {
+            checkwarn("ASTERISKNOSPACE",
+                      $line, length($1)-1, $file, $ol,
+                      "no space before asterisk");
+        }
+
+        # check for 'void func() {', but avoid false positives by requiring
+        # both an open and closed parentheses before the open brace
+        if($l =~ /^((\w).*){\z/) {
+            my $k = $1;
+            $k =~ s/const *//;
+            $k =~ s/static *//;
+            if($k =~ /\(.*\)/) {
+                checkwarn("BRACEPOS",
+                          $line, length($l)-1, $file, $ol,
+                          "wrongly placed open brace");
+            }
+        }
         $line++;
         $prevl = $ol;
     }
