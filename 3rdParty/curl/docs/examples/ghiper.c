@@ -94,7 +94,8 @@ typedef struct _SockInfo {
 } SockInfo;
 
 /* Die if we get a bad CURLMcode somewhere */
-static void mcode_or_die(const char *where, CURLMcode code) {
+static void mcode_or_die(const char *where, CURLMcode code)
+{
   if(CURLM_OK != code) {
     const char *s;
     switch (code) {
@@ -206,7 +207,8 @@ static void remsock(SockInfo *f)
 }
 
 /* Assign information to a SockInfo structure */
-static void setsock(SockInfo*f, curl_socket_t s, CURL*e, int act, GlobalInfo*g)
+static void setsock(SockInfo *f, curl_socket_t s, CURL *e, int act,
+                    GlobalInfo *g)
 {
   GIOCondition kind =
     (act&CURL_POLL_IN?G_IO_IN:0)|(act&CURL_POLL_OUT?G_IO_OUT:0);

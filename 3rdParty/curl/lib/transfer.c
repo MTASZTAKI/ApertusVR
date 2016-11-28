@@ -1137,7 +1137,7 @@ CURLcode Curl_readwrite(struct connectdata *conn,
 
       */
 
-      long ms = Curl_tvdiff(k->now, k->start100);
+      time_t ms = Curl_tvdiff(k->now, k->start100);
       if(ms >= data->set.expect_100_timeout) {
         /* we've waited long enough, continue anyway */
         k->exp100 = EXP100_SEND_DATA;
@@ -1296,7 +1296,7 @@ CURLcode Curl_pretransfer(struct Curl_easy *data)
   /* Init the SSL session ID cache here. We do it here since we want to do it
      after the *_setopt() calls (that could specify the size of the cache) but
      before any transfer takes place. */
-  result = Curl_ssl_initsessions(data, data->set.ssl.max_ssl_sessions);
+  result = Curl_ssl_initsessions(data, data->set.general_ssl.max_ssl_sessions);
   if(result)
     return result;
 

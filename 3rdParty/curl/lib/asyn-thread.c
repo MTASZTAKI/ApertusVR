@@ -155,8 +155,8 @@ struct thread_sync_data {
   curl_mutex_t * mtx;
   int done;
 
-  char * hostname;        /* hostname to resolve, Curl_async.hostname
-                             duplicate */
+  char *hostname;        /* hostname to resolve, Curl_async.hostname
+                            duplicate */
   int port;
   int sock_error;
   Curl_addrinfo *res;
@@ -169,7 +169,7 @@ struct thread_sync_data {
 struct thread_data {
   curl_thread_t thread_hnd;
   unsigned int poll_interval;
-  long interval_end;
+  time_t interval_end;
   struct thread_sync_data tsd;
 };
 
@@ -200,7 +200,7 @@ void destroy_thread_sync_data(struct thread_sync_data * tsd)
 /* Initialize resolver thread synchronization data */
 static
 int init_thread_sync_data(struct thread_data * td,
-                           const char * hostname,
+                           const char *hostname,
                            int port,
                            const struct addrinfo *hints)
 {
@@ -382,7 +382,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   struct thread_data *td = calloc(1, sizeof(struct thread_data));
   int err = RESOLVER_ENOMEM;
 
-  conn->async.os_specific = (void*) td;
+  conn->async.os_specific = (void *)td;
   if(!td)
     goto err_exit;
 
@@ -525,7 +525,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
   }
   else {
     /* poll for name lookup done with exponential backoff up to 250ms */
-    long elapsed = Curl_tvdiff(Curl_tvnow(), data->progress.t_startsingle);
+    time_t elapsed = Curl_tvdiff(Curl_tvnow(), data->progress.t_startsingle);
     if(elapsed < 0)
       elapsed = 0;
 

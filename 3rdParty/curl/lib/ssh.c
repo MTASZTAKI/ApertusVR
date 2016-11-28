@@ -71,7 +71,7 @@
 #include "url.h"
 #include "speedcheck.h"
 #include "getinfo.h"
-
+#include "strdup.h"
 #include "strcase.h"
 #include "vtls/vtls.h"
 #include "connect.h"
@@ -676,7 +676,7 @@ static CURLcode ssh_check_fingerprint(struct connectdata *conn)
    * against a known fingerprint, if available.
    */
   if(pubkey_md5 && strlen(pubkey_md5) == 32) {
-    if(!fingerprint || strcmp(md5buffer, pubkey_md5)) {
+    if(!fingerprint || !strcasecompare(md5buffer, pubkey_md5)) {
       if(fingerprint)
         failf(data,
             "Denied establishing ssh session: mismatch md5 fingerprint. "
@@ -874,7 +874,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
           break;
         }
 
-        sshc->passphrase = data->set.str[STRING_KEY_PASSWD];
+        sshc->passphrase = data->set.ssl.key_passwd;
         if(!sshc->passphrase)
           sshc->passphrase = "";
 
@@ -2112,9 +2112,10 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
 
       /* get room for the filename and extra output */
       sshc->readdir_totalLen += 4 + sshc->readdir_len;
-      new_readdir_line = realloc(sshc->readdir_line, sshc->readdir_totalLen);
+      new_readdir_line = Curl_saferealloc(sshc->readdir_line,
+                                          sshc->readdir_totalLen);
       if(!new_readdir_line) {
-        Curl_safefree(sshc->readdir_line);
+        sshc->readdir_line = NULL;
         Curl_safefree(sshc->readdir_filename);
         Curl_safefree(sshc->readdir_longentry);
         state(conn, SSH_SFTP_CLOSE);
