@@ -20,18 +20,26 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (common)
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeSampleScenePlugin.h
+	)
 
-option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
-option(APE_SAMPLES_MultiDisplay "Use APE_SAMPLES_MultiDisplay?" OFF )
-option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" OFF )
+set (SOURCES 
+	ApeSampleScenePlugin.cpp
+	)
 
-if (${APE_SAMPLES_MultiPlayer})
-	add_subdirectory (multiPlayer)
-endif ()	
-if (${APE_SAMPLES_MultiDisplay})
-	add_subdirectory (multiDisplay)
-endif ()
-if (${APE_SAMPLES_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeSampleScenePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeSampleScenePlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeSampleScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeSampleScenePlugin PROPERTY FOLDER "Samples/Common/Plugins")
+
+

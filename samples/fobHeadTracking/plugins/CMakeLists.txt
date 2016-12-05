@@ -20,15 +20,26 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeSystem.json
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeFobHeadTrackingPlugin.h
 	)
 
-add_custom_target(
-    Configs_helloWorldHost ALL
-    SOURCES ${CONFIGS}
-)
+set (SOURCES 
+	ApeFobHeadTrackingPlugin.cpp
+	)
 
-set_property (TARGET Configs_helloWorldHost PROPERTY FOLDER "Samples/HelloWorld/Configs")
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Samples/FobHeadTracking/Plugins")
+
+

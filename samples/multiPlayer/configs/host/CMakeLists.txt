@@ -20,30 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (plugin)
-add_subdirectory (configs)
-
-set (SOURCES_LAUNCHER 
-	ApeHelloWorldLauncher.cpp
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	ApeSystem.json
 	)
 
-set (SOURCES
-	ApeHelloWorldMain.cpp
-	)
+add_custom_target(
+    Configs_multiPlayerHost ALL
+    SOURCES ${CONFIGS}
+)
 
-include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${RAPIDJSON_INCLUDE_DIR} 
-	)
-
-add_executable (ApeHelloWorldLauncher ${SOURCES_LAUNCHER})
-target_link_libraries (ApeHelloWorldLauncher)
-set_property (TARGET ApeHelloWorldLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHelloWorldLauncher PROPERTY FOLDER "Samples/HelloWorld")
-
-add_executable (ApeHelloWorld ${SOURCES})
-target_link_libraries (ApeHelloWorld ApeSystem ApePluginManager)
-set_property (TARGET ApeHelloWorld PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHelloWorld PROPERTY FOLDER "Samples/HelloWorld")
-
-
+set_property (TARGET Configs_multiPlayerHost PROPERTY FOLDER "Samples/MultiPlayer/Configs")

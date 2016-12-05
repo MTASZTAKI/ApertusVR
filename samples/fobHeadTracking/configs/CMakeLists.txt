@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_helloWorldGuest ALL
+    Configs_multiDisplay ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_helloWorldGuest PROPERTY FOLDER "Samples/HelloWorld/Configs")
+set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs)

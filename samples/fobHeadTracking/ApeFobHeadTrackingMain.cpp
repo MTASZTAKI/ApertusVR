@@ -29,18 +29,7 @@ SOFTWARE.*/
 int main (int argc, char** argv)
 {
 	std::stringstream configDir;
-	if (argc > 1)
-	{
-		std::string participantType = argv[1];
-		if (participantType == "host")
-			configDir << APE_SOURCE_DIR << "\\samples\\helloWorld\\configs\\helloWorldHost";
-		else if (participantType == "guest")
-			configDir << APE_SOURCE_DIR << "\\samples\\helloWorld\\configs\\helloWorldGuest";
-		else if (participantType == "local")
-			configDir << APE_SOURCE_DIR << "\\common\\configs\\defaults";
-	}
-	else
-		configDir << APE_SOURCE_DIR << "\\common\\configs\\defaults";
+	configDir << APE_SOURCE_DIR << "\\samples\\multiDisplay\\configs";
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;

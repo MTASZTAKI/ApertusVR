@@ -20,18 +20,29 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (common)
+add_subdirectory (configs)
 
-option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
-option(APE_SAMPLES_MultiDisplay "Use APE_SAMPLES_MultiDisplay?" OFF )
-option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" OFF )
+set (SOURCES_LAUNCHER 
+	ApeMultiPlayerLauncher.cpp
+	)
 
-if (${APE_SAMPLES_MultiPlayer})
-	add_subdirectory (multiPlayer)
-endif ()	
-if (${APE_SAMPLES_MultiDisplay})
-	add_subdirectory (multiDisplay)
-endif ()
-if (${APE_SAMPLES_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
+set (SOURCES
+	ApeMultiPlayerMain.cpp
+	)
+
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
+	${RAPIDJSON_INCLUDE_DIR} 
+	)
+
+add_executable (ApeMultiPlayerLauncher ${SOURCES_LAUNCHER})
+target_link_libraries (ApeMultiPlayerLauncher)
+set_property (TARGET ApeMultiPlayerLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeMultiPlayerLauncher PROPERTY FOLDER "Samples/MultiPlayer")
+
+add_executable (ApeMultiPlayer ${SOURCES})
+target_link_libraries (ApeMultiPlayer ApeSystem ApePluginManager)
+set_property (TARGET ApeMultiPlayer PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeMultiPlayer PROPERTY FOLDER "Samples/MultiPlayer)
+
+

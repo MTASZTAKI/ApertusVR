@@ -20,26 +20,20 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Add all header and cpp files in the directory to the project
-set (HEADERS
-	ApeHelloWorldPlugin.h
-	)
+add_subdirectory (configs)
 
-set (SOURCES 
-	ApeHelloWorldPlugin.cpp
+set (SOURCES
+	ApeMultiDisplayMain.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
+	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_library (ApeHelloWorldPlugin SHARED ${SOURCES} ${HEADERS})
-
-# Link with dependency libraries
-target_link_libraries (ApeHelloWorldPlugin ApePluginManager ApeScene ApeEventManager)
-
-set_property (TARGET ApeHelloWorldPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-
-set_property (TARGET ApeHelloWorldPlugin PROPERTY FOLDER "Samples/HelloWorld")
+add_executable (ApeMultiDisplay ${SOURCES})
+target_link_libraries (ApeMultiDisplay ApeSystem ApePluginManager)
+set_property (TARGET ApeMultiDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay)
 
 
