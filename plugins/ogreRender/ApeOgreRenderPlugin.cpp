@@ -513,7 +513,7 @@ void Ape::OgreRenderPlugin::Init()
     
 #endif
 	std::stringstream mediaFolder;
-	mediaFolder << APE_SOURCE_DIR << "/core/plugins/ogreRender/media";
+	mediaFolder << APE_SOURCE_DIR << "/plugins/ogreRender/media";
 
 	mpRoot->setRenderSystem(renderSystem);
 

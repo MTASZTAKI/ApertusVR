@@ -73,7 +73,7 @@ target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeSce
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS )
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Core/Plugins/JsAPI" )
+set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
 
 
 if (NOT EXISTS ${BUILD_PATH_DEBUG}/package.json)

@@ -135,7 +135,7 @@ add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
 ${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES})
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Core/Plugins")
+set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
 	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ogre bins to the desired place

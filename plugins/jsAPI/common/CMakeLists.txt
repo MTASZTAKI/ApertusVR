@@ -63,5 +63,5 @@ target_link_libraries( ${MY_TARGET_NAME} MY_NODEJS_LIB )
 set_property (TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS BUILDING_APE_JSEVENTMANAGER_DLL)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Core/Plugins/JsAPI")
+set_property (TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI")
 

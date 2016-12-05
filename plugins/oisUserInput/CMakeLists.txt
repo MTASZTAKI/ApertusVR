@@ -97,7 +97,7 @@ if (WIN32)
 endif ()	
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeOisUserInputPlugin PROPERTY FOLDER "Core/Plugins")
+set_property (TARGET ApeOisUserInputPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
 	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
