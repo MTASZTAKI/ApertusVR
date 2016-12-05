@@ -36,11 +36,7 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\host";
 		else if (participantType == "guest")
 			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\guest";
-		else if (participantType == "local")
-			configDir << APE_SOURCE_DIR << "\\common\\configs\\defaults";
 	}
-	else
-		configDir << APE_SOURCE_DIR << "\\common\\configs\\defaults";
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;

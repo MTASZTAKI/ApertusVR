@@ -35,6 +35,6 @@ include_directories(
 add_executable (ApeFobHeadTracking ${SOURCES})
 target_link_libraries (ApeFobHeadTracking ApeSystem ApePluginManager)
 set_property (TARGET ApeFobHeadTracking PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeFobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking)
+set_property (TARGET ApeFobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking")
 
 

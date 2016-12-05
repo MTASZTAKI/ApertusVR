@@ -31,4 +31,4 @@ add_custom_target(
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs)
+set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs")

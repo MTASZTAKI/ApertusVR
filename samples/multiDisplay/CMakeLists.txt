@@ -34,6 +34,6 @@ include_directories(
 add_executable (ApeMultiDisplay ${SOURCES})
 target_link_libraries (ApeMultiDisplay ApeSystem ApePluginManager)
 set_property (TARGET ApeMultiDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay)
+set_property (TARGET ApeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay")
 
 

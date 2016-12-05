@@ -43,6 +43,6 @@ set_property (TARGET ApeMultiPlayerLauncher PROPERTY FOLDER "Samples/MultiPlayer
 add_executable (ApeMultiPlayer ${SOURCES})
 target_link_libraries (ApeMultiPlayer ApeSystem ApePluginManager)
 set_property (TARGET ApeMultiPlayer PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiPlayer PROPERTY FOLDER "Samples/MultiPlayer)
+set_property (TARGET ApeMultiPlayer PROPERTY FOLDER "Samples/MultiPlayer")
 
 

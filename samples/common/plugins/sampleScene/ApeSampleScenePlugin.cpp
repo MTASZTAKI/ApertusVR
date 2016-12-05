@@ -1,26 +1,26 @@
 #include <iostream>
-#include "ApeHelloWorldPlugin.h"
+#include "ApeSampleScenePlugin.h"
 
-ApeHelloWorldPlugin::ApeHelloWorldPlugin()
+ApeSampleScenePlugin::ApeSampleScenePlugin()
 {
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSampleScenePlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 }
 
-ApeHelloWorldPlugin::~ApeHelloWorldPlugin()
+ApeSampleScenePlugin::~ApeSampleScenePlugin()
 {
-	std::cout << "ApeHelloWorldPlugin dtor" << std::endl;
+	std::cout << "ApeSampleScenePlugin dtor" << std::endl;
 }
 
-void ApeHelloWorldPlugin::nodeEventCallBack(const Ape::Event& event)
+void ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
 {
 	//std::cout  << "event called on the " << event.subjectName << " node" << std::endl;
 }
 
-void ApeHelloWorldPlugin::Init()
+void ApeSampleScenePlugin::Init()
 {
-	std::cout << "ApeHelloWorldPlugin::init" << std::endl;
+	std::cout << "ApeSampleScenePlugin::init" << std::endl;
 	mPlanetNode = mpScene->createNode("planetNode");
 	if (auto planetNode = mPlanetNode.lock())
 	{
@@ -43,7 +43,7 @@ void ApeHelloWorldPlugin::Init()
 	}
 }
 
-void ApeHelloWorldPlugin::Run()
+void ApeSampleScenePlugin::Run()
 {
 	while (true)
 	{
@@ -51,25 +51,25 @@ void ApeHelloWorldPlugin::Run()
 		if (auto planetNode = mPlanetNode.lock())
 			planetNode->rotate(0.0017f, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeSampleScenePlugin::nodeEventCallBack, this, std::placeholders::_1));
 }
 
-void ApeHelloWorldPlugin::Step()
+void ApeSampleScenePlugin::Step()
 {
 
 }
 
-void ApeHelloWorldPlugin::Stop()
+void ApeSampleScenePlugin::Stop()
 {
 
 }
 
-void ApeHelloWorldPlugin::Suspend()
+void ApeSampleScenePlugin::Suspend()
 {
 
 }
 
-void ApeHelloWorldPlugin::Restart()
+void ApeSampleScenePlugin::Restart()
 {
 
 }

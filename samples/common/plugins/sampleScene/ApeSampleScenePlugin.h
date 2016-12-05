@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_HELLOWORLDPLUGIN_H
-#define APE_HELLOWORLDPLUGIN_H
+#ifndef APE_SAMPLESCENELUGIN_H
+#define APE_SAMPLESCENELUGIN_H
 
 #include <iostream>
 #include <thread>
@@ -37,9 +37,9 @@ SOFTWARE.*/
 #include "ApeIFileMaterial.h"
 #include "ApeISceneProperty.h"
 
-#define THIS_PLUGINNAME "ApeHelloWorldPlugin"
+#define THIS_PLUGINNAME "ApeSampleScenePlugin"
 
-class ApeHelloWorldPlugin : public Ape::IPlugin
+class ApeSampleScenePlugin : public Ape::IPlugin
 {
 private:
 	Ape::IEventManager* mpEventManager;
@@ -51,9 +51,9 @@ private:
 	void nodeEventCallBack(const Ape::Event& event);
 	
 public:
-	ApeHelloWorldPlugin();
+	ApeSampleScenePlugin();
 
-	~ApeHelloWorldPlugin();
+	~ApeSampleScenePlugin();
 	
 	void Init() override;
 
@@ -68,15 +68,15 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHelloWorldPlugin()
+APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSampleScenePlugin()
 {
 
-	return new ApeHelloWorldPlugin;
+	return new ApeSampleScenePlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApeHelloWorldPlugin(Ape::IPlugin *plugin)
+APE_PLUGIN_FUNC void DestroyApeSampleScenePlugin(Ape::IPlugin *plugin)
 {
-	delete (ApeHelloWorldPlugin*)plugin;
+	delete (ApeSampleScenePlugin*)plugin;
 }
 
 APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -84,7 +84,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 APE_PLUGIN_ALLOC()
 {
 	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHelloWorldPlugin, DestroyApeHelloWorldPlugin);
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSampleScenePlugin, DestroyApeSampleScenePlugin);
 	return 0;
 }
 

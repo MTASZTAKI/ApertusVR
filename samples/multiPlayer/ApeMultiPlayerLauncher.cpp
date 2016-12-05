@@ -36,9 +36,9 @@ void runHost()
 	std::stringstream exeDir;
 	//TODO platfrom specific new window command
 #ifdef _DEBUG
-	exeDir << "start "  APE_BIN_DIR << "\\debug\\ApeHelloWorld.exe host";
+	exeDir << "start "  APE_BIN_DIR << "\\debug\\ApeMultiPlayer.exe host";
 #else
-	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeHelloWorld.exe host";
+	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeMultiPlayer.exe host";
 #endif
 	std::system(exeDir.str().c_str());
 }
@@ -48,9 +48,9 @@ void runGuest()
 	std::stringstream exeDir;
 	//TODO platfrom specific new window command
 #ifdef _DEBUG
-	exeDir << "start " << APE_BIN_DIR << "\\debug\\ApeHelloWorld.exe guest";
+	exeDir << "start " << APE_BIN_DIR << "\\debug\\ApeMultiPlayer.exe guest";
 #else
-	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeHelloWorld.exe guest";
+	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeMultiPlayer.exe guest";
 #endif
 	std::system(exeDir.str().c_str());
 }
@@ -62,7 +62,7 @@ int main (int argc, char** argv)
 
 	std::string hostGUID;
 	std::stringstream hostConfigFilePath;
-	hostConfigFilePath << APE_SOURCE_DIR << "\\samples\\helloWorld\\configs\\helloWorldHost\\ApeSystem.json";
+	hostConfigFilePath << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\host\\ApeSystem.json";
 	FILE* apeHostSystemConfigFile = std::fopen(hostConfigFilePath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeHostSystemConfigFile)
@@ -84,7 +84,7 @@ int main (int argc, char** argv)
 		fclose(apeHostSystemConfigFile);
 	}
 	std::stringstream guestConfigFilePath;
-	guestConfigFilePath << APE_SOURCE_DIR << "\\samples\\helloWorld\\configs\\helloWorldGuest\\ApeSystem.json";
+	guestConfigFilePath << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\guest\\ApeSystem.json";
 	FILE* apeSystemConfigFile = std::fopen(guestConfigFilePath.str().c_str(), "r");
 	char readBufferGuest[65536];
 	rapidjson::Document jsonDocument;
