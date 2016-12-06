@@ -16,21 +16,32 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": 0,
+                            "y": 0,
+                            "z": -150
+                        },
+                        "orientationOffset": {
+                            "angle": 0,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
             "monitorIndex": 1,
             "resolution": {
                 "width": 1280,
@@ -46,21 +57,32 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": 0,
+                            "y": 0,
+                            "z": -150
+                        },
+                        "orientationOffset": {
+                            "angle": 0,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
             "monitorIndex": 2,
             "resolution": {
                 "width": 1280,
@@ -76,21 +98,32 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": 150,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "orientationOffset": {
+                            "angle": -90,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
             "monitorIndex": 3,
             "resolution": {
                 "width": 1280,
@@ -106,21 +139,32 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": 150,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "orientationOffset": {
+                            "angle": -90,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
             "monitorIndex": 4,
             "resolution": {
                 "width": 1280,
@@ -136,21 +180,32 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": -150,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "orientationOffset": {
+                            "angle": 90,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
             "monitorIndex": 5,
             "resolution": {
                 "width": 1280,
@@ -166,20 +221,30 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
                     "width": 1280,
                     "height": 720,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+                        "positionOffset": {
+                            "x": -150,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "orientationOffset": {
+                            "angle": 90,
+                            "x": 0,
+                            "y": 1,
+                            "z": 0
+                        },
+                        "disparity": 8,
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
-        },
+        }
     ]
 }
-

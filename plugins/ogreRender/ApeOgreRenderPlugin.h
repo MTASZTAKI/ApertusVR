@@ -128,7 +128,7 @@ namespace Ape
 
 		Ape::OgreMovableTextFactory* mpOgreMovableTextFactory;
 
-		Ogre::RenderWindow* mpRenderWindow;
+		std::map<int, Ogre::RenderWindow*> mRenderWindows;
 
 		Ogre::RTShader::ShaderGenerator* mpShaderGenerator;
 
