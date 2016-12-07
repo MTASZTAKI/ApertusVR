@@ -20,24 +20,24 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-message("CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
-message("CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+message(STATUS "CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 # TODO: put APE_OUTPUT_DIR_DEBUG variable to CMakeLists.txt located in project root folder
 set(APE_OUTPUT_DIR_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/)
-message("APE_OUTPUT_DIR_DEBUG: ${APE_OUTPUT_DIR_DEBUG}")
+message(STATUS "APE_OUTPUT_DIR_DEBUG: ${APE_OUTPUT_DIR_DEBUG}")
 
 set(APE_OUTPUT_DIR_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/)
-message("APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
+message(STATUS "APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
 
 set(JS_API_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-message("JS_API_DIR: ${JS_API_DIR}")
+message(STATUS "JS_API_DIR: ${JS_API_DIR}")
 
 set(JS_API_COMMON_DIR ${JS_API_DIR}/common)
-message("JS_API_COMMON_DIR: ${JS_API_COMMON_DIR}")
+message(STATUS "JS_API_COMMON_DIR: ${JS_API_COMMON_DIR}")
 
 set(NODE_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46)
-message("NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
+message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
 
 set(NODE_LIBRARY Release node Debug node)
 
@@ -73,19 +73,21 @@ if (WIN32)
 		elseif (MSVC80) # Visual Studio 2005
 		    GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\8.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		endif ()
-		message("Visual Studio path: ${VS_DIR}")
+		message(STATUS "Visual Studio path: ${VS_DIR}")
 
 		# Check if devenv is installed
 		set(DEVENV_PATH_X86 "${VS_DIR}/Common7/IDE/devenv.exe")
 		set(DEVENV_PATH_X64 "${VS_DIR}/Common7/IDE/devenv.exe")
 		set(DEVENV_PATH "")
 		if (EXISTS ${DEVENV_PATH_X86})
+			set(HOST_ARCH_X86 1)
 			set(DEVENV_PATH ${DEVENV_PATH_X86})
 		endif ()
 		if (EXISTS ${DEVENV_PATH_X64})
+			set(HOST_ARCH_X64 1)
 			set(DEVENV_PATH ${DEVENV_PATH_X64})
 		endif ()
-		message("Devenv path: ${DEVENV_PATH}")
+		message(STATUS "Devenv path: ${DEVENV_PATH}")
 
 		if (NOT ${DEVENV_PATH} STREQUAL "")
 			set(VCBUILD true)
@@ -106,12 +108,12 @@ if (WIN32)
 			if (EXISTS ${MSBUILD_SETUP_PATH_X64})
 				set(MSBUILD_SETUP_PATH ${MSBUILD_SETUP_PATH_X64})
 			endif ()
-			message("MS Build Tools Path: ${MSBUILD_SETUP_PATH}")
+			message(STATUS "MS Build Tools Path: ${MSBUILD_SETUP_PATH}")
 
 			if (NOT EXISTS ${MSBUILD_SETUP_PATH})
 
 				# Install MSBuildTools
-				message("MSBuildTools: Starting installer...")
+				message(STATUS "MSBuildTools: Starting installer...")
 
 				set(MS_BUILD_TOOLS_PATH "${CMAKE_SOURCE_DIR}/3rdParty/msbuildtool/BuildTools_Full.exe")
 
@@ -120,7 +122,7 @@ if (WIN32)
 					RESULT_VARIABLE MS_BUILD_TOOLS_RESULT
 				)
 				if (${MS_BUILD_TOOLS_RESULT} EQUAL 0)
-					message("MSBuildTools: Installation succeeded, exit code (${MS_BUILD_TOOLS_RESULT})")
+					message(STATUS "MSBuildTools: Installation succeeded, exit code (${MS_BUILD_TOOLS_RESULT})")
 				else ()
 					message("MSBuildTools: Installation failed, exit code (${MS_BUILD_TOOLS_RESULT})")
 				endif ()
@@ -138,7 +140,7 @@ if (WIN32)
 
 
 		# Build Node js
-		message("ApePlugins: Prebuilding Node js...")
+		message(STATUS "ApePlugins: Prebuilding Node js...")
 
 		set(NODE_VCBUILD_PATH "${NODE_SOURCE_DIR}/vcbuild.bat")
 		set(NODE_SOLUTION_PATH "${NODE_SOURCE_DIR}/node.sln")
@@ -173,7 +175,7 @@ if (WIN32)
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
-				message("ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
+				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
 			else ()
 				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
 			endif ()
@@ -186,7 +188,7 @@ if (WIN32)
 			#--------------------------------------------------------------------------------------------------------
 
 			# Build Node js
-			message("ApePlugins: Node: Setting up environment variables and building...")
+			message(STATUS "ApePlugins: Node: Setting up environment variables and building...")
 			if (${VCBUILD})
 				execute_process(
 					COMMAND cmd /c ${DEVENV_PATH} ${NODE_SOLUTION_PATH} /Build "Release"
@@ -202,7 +204,7 @@ if (WIN32)
 			endif ()
 
 			if (${BUILD_RESULT} EQUAL 0)
-				message("ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
+				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
 			else ()
 				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
 			endif ()
@@ -229,6 +231,8 @@ if (WIN32)
 				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_RELEASE}")
 			endif ()
 
+		else ()
+			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in release folder...")
 		endif ()
 
 		#--------------------------------------------------------------------------------------------------------
@@ -246,7 +250,7 @@ if (WIN32)
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
-				message("ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
+				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
 			else ()
 				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
 			endif ()
@@ -275,7 +279,7 @@ if (WIN32)
 			endif ()
 
 			if (${BUILD_RESULT} EQUAL 0)
-				message("ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
+				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
 			else ()
 				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
 			endif ()
@@ -300,6 +304,59 @@ if (WIN32)
 			# Check generated lib
 			if (NOT EXISTS ${NODE_LIB_PATH_DEBUG})
 				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_DEBUG}")
+			endif ()
+
+		else ()
+			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in debug folder...")
+		endif ()
+
+		#--------------------------------------------------------------------------------------------------------
+
+		###
+		### NPM
+		###
+
+		message(STATUS "ApePlugins: npm version: ${RESULT_VARIABLE}")
+		execute_process(
+			COMMAND cmd /c "npm --version"
+			RESULT_VARIABLE BUILD_RESULT
+		)
+
+		if (${BUILD_RESULT} EQUAL 0)
+			message(STATUS "ApePlugins: npm is installed.")
+		else ()
+			message("ApePlugins: npm is not installed, starting installer...")
+
+			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46-installer/win32/node-v0.10.46-x86.msi)
+			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46-installer/win64/node-v0.10.46-x64.msi)
+
+			if (HOST_ARCH_X86)
+				execute_process(
+					COMMAND cmd /c ${NODE_INSTALLER_X86_PATH}
+					RESULT_VARIABLE BUILD_RESULT
+				)
+			elseif (HOST_ARCH_X64)
+				execute_process(
+					COMMAND cmd /c ${NODE_INSTALLER_X64_PATH}
+					RESULT_VARIABLE BUILD_RESULT
+				)
+			endif ()
+
+			if (${BUILD_RESULT} EQUAL 0)
+				message(STATUS "ApePlugins: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
+
+				# check again npm version
+				message("ApePlugins: Node-installer: after installation, npm version: ${RESULT_VARIABLE}")
+				execute_process(
+					COMMAND cmd /c "npm --version"
+					RESULT_VARIABLE BUILD_RESULT
+				)
+				if (${BUILD_RESULT} NOT EQUAL 0)
+					message(FATAL_ERROR "ApePlugins: Node-installer: npm is still not installed...")
+				endif ()
+
+			else ()
+				message(FATAL_ERROR "ApePlugins: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
 			endif ()
 
 		endif ()
