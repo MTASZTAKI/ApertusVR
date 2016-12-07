@@ -32,28 +32,30 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeISceneProperty.h"
+#include "ApeISystemConfig.h"
+#include "ApeFobHeadTracking.h"
 
-#define THIS_PLUGINNAME "ApeHelloWorldPlugin"
+#define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
-class ApeHelloWorldPlugin : public Ape::IPlugin
+class ApeFobHeadTrackingPlugin : public Ape::IPlugin
 {
 private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mPlanetNode;
+	Ape::NodeWeakPtr mCameraNode;
+
+	Ape::ISystemConfig* mpSystemConfig;
+
+	void* mpFobTracker;
 	
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 	
 public:
-	ApeHelloWorldPlugin();
+	ApeFobHeadTrackingPlugin();
 
-	~ApeHelloWorldPlugin();
+	~ApeFobHeadTrackingPlugin();
 	
 	void Init() override;
 
@@ -68,15 +70,14 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHelloWorldPlugin()
+APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
 {
-
-	return new ApeHelloWorldPlugin;
+	return new ApeFobHeadTrackingPlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApeHelloWorldPlugin(Ape::IPlugin *plugin)
+APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
 {
-	delete (ApeHelloWorldPlugin*)plugin;
+	delete (ApeFobHeadTrackingPlugin*)plugin;
 }
 
 APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -84,7 +85,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 APE_PLUGIN_ALLOC()
 {
 	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHelloWorldPlugin, DestroyApeHelloWorldPlugin);
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
 	return 0;
 }
 

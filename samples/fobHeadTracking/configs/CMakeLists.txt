@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_multiDisplay ALL
+    Configs_fobHeadTracking ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs")
+set_property (TARGET Configs_fobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking/Configs")

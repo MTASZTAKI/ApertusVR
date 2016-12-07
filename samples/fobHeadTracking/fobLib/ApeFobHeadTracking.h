@@ -20,17 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#ifndef APE_FOBHEADTRACKING_H
+#define APE_FOBHEADTRACKING_H
 
-#include <string>
-#include <sstream>
-#include <map>
-#include "ApeSystem.h"
+#ifndef WIN32
+#include <sys/shm.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#endif 
 
-int main (int argc, char** argv)
-{
-	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\fobHeadTracking\\configs";
-	Ape::System::Start(configDir.str(), true);
-	Ape::System::Stop();
-	return 0;
+
+#if  (WIN32 && BUILDING_APE_FOBHEADTRACKING_DLL)
+#define TRACKD_EXPORT_API __declspec(dllexport)
+#else
+#define TRACKD_EXPORT_API
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
+TRACKD_EXPORT_API void* trackdInitTrackerReader(int);
+
+
+TRACKD_EXPORT_API int trackdGetPosition(void* tracker, int id, float* pos);
+
+
+TRACKD_EXPORT_API int trackdGetEulerAngles(void* tracker, int id, float* orn);
+
+
+TRACKD_EXPORT_API int trackdGetMatrix(void* tracker, int id, float mat[4][4]);
+
+
+#ifdef __cplusplus
 }
+#endif 
+
+#endif 

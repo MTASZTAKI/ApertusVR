@@ -22,26 +22,21 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeFobHeadTrackingPlugin.h
+	ApeFobHeadTracking.h
 	)
 
 set (SOURCES 
-	ApeFobHeadTrackingPlugin.cpp
+	ApeFobHeadTracking.cpp
 	)
 
-include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	../fobLib
-	)
-
-add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (ApeFobHeadTrackingLib SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeFobHeadTrackingLib)
+target_link_libraries (ApeFobHeadTrackingLib)
 
-set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeFobHeadTrackingLib PROPERTY COMPILE_DEFINITIONS BUILDING_APE_FOBHEADTRACKING_DLL)
 
-set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Samples/FobHeadTracking/Plugins")
+set_property (TARGET ApeFobHeadTrackingLib PROPERTY FOLDER "Samples/FobHeadTracking/FobLib")
 
 
 

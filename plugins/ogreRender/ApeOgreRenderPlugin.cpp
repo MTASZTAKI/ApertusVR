@@ -125,7 +125,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::NODE_POSITION:
 					{
-						auto anyad = mpSceneMgr->getSceneNode(nodeName);
 						if (mpSceneMgr->hasSceneNode(nodeName))
 							mpSceneMgr->getSceneNode(nodeName)->setPosition(ConversionToOgre(node->getPosition()));
 					}

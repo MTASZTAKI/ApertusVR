@@ -222,6 +222,7 @@ void Ape::OISUserInputPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::OISUserInputPlugin::Step()
