@@ -118,13 +118,14 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				switch (event.type)
 				{
 				case Ape::Event::Type::NODE_CREATE:
-					mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+						mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 					break;
 				case Ape::Event::Type::NODE_DELETE:
 					; 
 					break;
 				case Ape::Event::Type::NODE_POSITION:
 					{
+						auto anyad = mpSceneMgr->getSceneNode(nodeName);
 						if (mpSceneMgr->hasSceneNode(nodeName))
 							mpSceneMgr->getSceneNode(nodeName)->setPosition(ConversionToOgre(node->getPosition()));
 					}
@@ -293,6 +294,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (mpSceneMgr->hasCamera(event.subjectName))
 							mpSceneMgr->getCamera(event.subjectName)->setNearClipDistance(camera->getNearClipDistance());
+					}
+					break;
+				case Ape::Event::Type::CAMERA_POSITIONOFFSET:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getPositionOffset()));
+					}
+					break;
+				case Ape::Event::Type::CAMERA_ORIENTATIONOFFSET:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientationOffset()));
 					}
 					break;
 				}
@@ -496,8 +509,6 @@ void Ape::OgreRenderPlugin::Init()
 											orientationOffset.FromAngleAxis(angle, axis);
 											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
 										}
-										else if (cameraMemberIterator->name == "disparity")
-											ogreViewPortConfig.camera.disparity = cameraMemberIterator->value.GetFloat();
 
 									}
 								}
@@ -618,6 +629,8 @@ void Ape::OgreRenderPlugin::Init()
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
+				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 
 			//TODO somhow no backfaces for that and create a manual instead and animating when zoomin and etc.

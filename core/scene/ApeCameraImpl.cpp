@@ -31,6 +31,8 @@ Ape::CameraImpl::CameraImpl(std::string name, std::string parentNodeName) : Ape:
 	mNearClipDistance = 0.0f;
 	mFarClipDistance = 0.0f;
 	mAspectRatio = 0.0f;
+	mPositionOffset = Ape::Vector3();
+	mOrientationOffset = Ape::Quaternion();
 }
 
 Ape::CameraImpl::~CameraImpl()
@@ -102,5 +104,27 @@ void Ape::CameraImpl::setAspectRatio(float aspectRatio)
 {
 	mAspectRatio = aspectRatio;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ASPECTRATIO));
+}
+
+Ape::Vector3 Ape::CameraImpl::getPositionOffset()
+{
+	return mPositionOffset;
+}
+
+void Ape::CameraImpl::setPositionOffset(Ape::Vector3 positionOffset)
+{
+	mPositionOffset = positionOffset;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_POSITIONOFFSET));
+}
+
+Ape::Quaternion Ape::CameraImpl::getOrientationOffset()
+{
+	return mOrientationOffset;
+}
+
+void Ape::CameraImpl::setOrientationOffset(Ape::Quaternion orientationOffset)
+{
+	mOrientationOffset = orientationOffset;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORIENTATIONOFFSET));
 }
 

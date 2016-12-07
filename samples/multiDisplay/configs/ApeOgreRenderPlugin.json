@@ -23,7 +23,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": 0,
+                            "x": -4,
                             "y": 0,
                             "z": -150
                         },
@@ -33,7 +33,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -64,7 +63,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": 0,
+                            "x": 4,
                             "y": 0,
                             "z": -150
                         },
@@ -74,7 +73,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -105,7 +103,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": 150,
+                            "x": 146,
                             "y": 0,
                             "z": 0
                         },
@@ -115,7 +113,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -146,7 +143,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": 150,
+                            "x": 154,
                             "y": 0,
                             "z": 0
                         },
@@ -156,7 +153,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -187,7 +183,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": -150,
+                            "x": -146,
                             "y": 0,
                             "z": 0
                         },
@@ -197,7 +193,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -228,7 +223,7 @@
                     "height": 720,
                     "camera": {
                         "positionOffset": {
-                            "x": -150,
+                            "x": -154,
                             "y": 0,
                             "z": 0
                         },
@@ -238,7 +233,6 @@
                             "y": 1,
                             "z": 0
                         },
-                        "disparity": 8,
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45

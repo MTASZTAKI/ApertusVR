@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include <string>
 #include "ApeEntity.h"
 #include "ApeVector3.h"
+#include "ApeQuaternion.h"
 #include "ApeRadian.h"
 
 namespace Ape
@@ -61,11 +62,20 @@ namespace Ape
 		virtual float getAspectRatio() = 0;
 
 		virtual void setAspectRatio(float aspectRatio) = 0;
+
+		virtual Ape::Vector3 getPositionOffset() = 0;
+
+		virtual void setPositionOffset(Ape::Vector3 positionOffset) = 0;
+
+		virtual Ape::Quaternion getOrientationOffset() = 0;
+
+		virtual void setOrientationOffset(Ape::Quaternion orientationOffset) = 0;
+
 	};
 
-	typedef std::shared_ptr<ICamera> CameraSharedPtr;
+	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;
 
-	typedef std::weak_ptr<ICamera> CameraWeakPtr;
+	typedef std::weak_ptr<Ape::ICamera> CameraWeakPtr;
 }
 
 #endif

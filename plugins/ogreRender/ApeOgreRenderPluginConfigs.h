@@ -44,8 +44,6 @@ namespace Ape
 
 		Degree fovY;
 
-		float disparity;
-
 		OgreCameraConfig()
 		{
 			this->positionOffset = Ape::Vector3();
@@ -53,7 +51,6 @@ namespace Ape
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
-			this->disparity = 0.0f;
 		}
 
 		OgreCameraConfig(
@@ -61,15 +58,13 @@ namespace Ape
 			Ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
-			Degree fovY,
-			float disparity)
+			Degree fovY)
 		{
 			this->positionOffset = positionOffset;
 			this->orientationOffset = orientationOffset;
 			this->nearClip = nearClip;
 			this->farClip = farClip;
 			this->fovY = fovY;
-			this->disparity = disparity;
 		}
 	};
 

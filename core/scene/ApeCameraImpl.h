@@ -59,6 +59,14 @@ namespace Ape
 
 		void setAspectRatio(float aspectRatio) override;
 
+		Ape::Vector3 getPositionOffset() override;
+
+		void setPositionOffset(Ape::Vector3 positionOffset) override;
+
+		Ape::Quaternion getOrientationOffset() override;
+
+		void setOrientationOffset(Ape::Quaternion orientationOffset) override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -73,6 +81,10 @@ namespace Ape
 		float mFarClipDistance;
 
 		float mAspectRatio;
+
+		Ape::Quaternion mOrientationOffset;
+
+		Ape::Vector3 mPositionOffset;
 	};
 }
 
