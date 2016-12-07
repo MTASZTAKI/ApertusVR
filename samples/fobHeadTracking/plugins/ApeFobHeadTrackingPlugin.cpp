@@ -9,6 +9,7 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mCameraNode = Ape::NodeWeakPtr();
 	mpFobTracker = nullptr;
+	mCameras = std::vector<Ape::CameraWeakPtr>();
 }
 
 ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
@@ -35,13 +36,19 @@ void ApeFobHeadTrackingPlugin::Run()
 {
 	while (mpFobTracker)
 	{
-		if (trackdGetPosition(mpFobTracker, 0, pos))
+		float positionFromTracker[3];
+		if (trackdGetPosition(mpFobTracker, 0, positionFromTracker))
 		{
-
-		}
-		if (auto cameraNode = mCameraNode.lock())
-		{
-			
+			for (auto weakCameraPtr : mCameras)
+			{
+				if (auto camera = weakCameraPtr.lock())
+				{
+					;
+					//camera->setFocalLength();
+					//camera->setFrustumOffset();
+					//camera->setFOVy();
+				}
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}

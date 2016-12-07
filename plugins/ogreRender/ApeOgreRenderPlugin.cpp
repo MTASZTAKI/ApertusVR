@@ -250,6 +250,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							{
 								if (mpSceneMgr->hasSceneNode(camera->getParentNodeName()))
 									mpSceneMgr->getSceneNode(camera->getParentNodeName())->attachObject(ogreCamera);
+								//TODO whyí it is only working here
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
 							}
@@ -625,6 +626,9 @@ void Ape::OgreRenderPlugin::Init()
 			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::Type::CAMERA).lock());
 			if (camera)
 			{
+				//TODO why it is not ok
+				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+				camera->setFocalLength(1.0f);
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());

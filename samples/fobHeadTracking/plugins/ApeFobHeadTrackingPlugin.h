@@ -28,10 +28,12 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <vector>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
+#include "ApeICamera.h"
 #include "ApeISystemConfig.h"
 #include "ApeFobHeadTracking.h"
 
@@ -45,6 +47,8 @@ private:
 	Ape::IScene* mpScene;
 
 	Ape::NodeWeakPtr mCameraNode;
+
+	std::vector<Ape::CameraWeakPtr> mCameras;
 
 	Ape::ISystemConfig* mpSystemConfig;
 
