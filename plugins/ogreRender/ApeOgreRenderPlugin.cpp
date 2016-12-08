@@ -32,7 +32,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mEventDoubleQueue = Ape::DoubleQueue<Event>(true);
+	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::SCENEPROPERTY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -250,7 +250,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							{
 								if (mpSceneMgr->hasSceneNode(camera->getParentNodeName()))
 									mpSceneMgr->getSceneNode(camera->getParentNodeName())->attachObject(ogreCamera);
-								//TODO whyí it is only working here
+								//TODO why it is only working?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
 							}
@@ -281,7 +281,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::CAMERA_FRUSTUMOFFSET:
 					{
 						if (mpSceneMgr->hasCamera(event.subjectName))
-							mpSceneMgr->getCamera(event.subjectName)->setFrustumOffset(camera->getFrustumOffset());
+							mpSceneMgr->getCamera(event.subjectName)->setFrustumOffset(Ape::ConversionToOgre(camera->getFrustumOffset()));
 					}
 					break;
 				case Ape::Event::Type::CAMERA_FARCLIP:
@@ -307,6 +307,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (mpSceneMgr->hasCamera(event.subjectName))
 							mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientationOffset()));
 					}
+					break;
+				case Ape::Event::Type::CAMERA_INITPOSITIONOFFSET:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getInitPositionOffset()));
+				}
+					break;
+				case Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getInitOrientationOffset()));
+				}
 					break;
 				}
 			}
@@ -632,8 +644,8 @@ void Ape::OgreRenderPlugin::Init()
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
-				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
-				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
+				camera->setInitPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
+				camera->setInitOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 
 			//TODO somhow no backfaces for that and create a manual instead and animating when zoomin and etc.

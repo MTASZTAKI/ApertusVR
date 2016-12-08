@@ -39,9 +39,9 @@ namespace Ape
 
 		void setFocalLength(float focalLength)  override;
 
-		float getFrustumOffset()  override;
+		Ape::Vector2 getFrustumOffset()  override;
 
-		void setFrustumOffset(float frustumOffset)  override;
+		void setFrustumOffset(Ape::Vector2 frustumOffset)  override;
 
 		Ape::Radian getFOVy()  override;
 
@@ -67,12 +67,20 @@ namespace Ape
 
 		void setOrientationOffset(Ape::Quaternion orientationOffset) override;
 
+		Ape::Vector3 getInitPositionOffset() override;
+
+		void setInitPositionOffset(Ape::Vector3 initPositionOffset) override;
+
+		Ape::Quaternion getInitOrientationOffset() override;
+
+		void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		float mFocalLength;
 
-		float mFrustumOffset;
+		Ape::Vector2 mFrustumOffset;
 
 		Ape::Radian mFOVy;
 
@@ -85,6 +93,11 @@ namespace Ape
 		Ape::Quaternion mOrientationOffset;
 
 		Ape::Vector3 mPositionOffset;
+
+		Ape::Quaternion mInitOrientationOffset;
+
+		Ape::Vector3 mInitPositionOffset;
+
 	};
 }
 

@@ -37,7 +37,7 @@ include_directories(
 add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeFobHeadTrackingLib)
+target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow ApeFobHeadTrackingLib)
 
 set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

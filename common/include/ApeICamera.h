@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include <string>
 #include "ApeEntity.h"
+#include "ApeVector2.h"
 #include "ApeVector3.h"
 #include "ApeQuaternion.h"
 #include "ApeRadian.h"
@@ -43,9 +44,9 @@ namespace Ape
 
 		virtual void setFocalLength(float focalLength) = 0;
 
-		virtual float getFrustumOffset() = 0;
+		virtual Ape::Vector2 getFrustumOffset() = 0;
 
-		virtual void setFrustumOffset(float frustumOffset) = 0;
+		virtual void setFrustumOffset(Ape::Vector2 frustumOffset) = 0;
 
 		virtual Ape::Radian getFOVy() = 0;
 
@@ -69,7 +70,15 @@ namespace Ape
 
 		virtual Ape::Quaternion getOrientationOffset() = 0;
 
-		virtual void setOrientationOffset(Ape::Quaternion orientationOffset) = 0;
+		virtual void setOrientationOffset(Ape::Quaternion orientation) = 0;
+
+		virtual Ape::Vector3 getInitPositionOffset() = 0;
+
+		virtual void setInitPositionOffset(Ape::Vector3 initPositionOffset) = 0;
+
+		virtual Ape::Quaternion getInitOrientationOffset() = 0;
+
+		virtual void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) = 0;
 
 	};
 

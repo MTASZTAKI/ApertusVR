@@ -32,7 +32,7 @@ int trackdGetEulerAngles(void* tracker, int id, float* orn)
 	orn[0] = 0;
 	orn[1] = 0;
 	orn[2] = 0;
-	return 0;
+	return 1;
 }
 
 int trackdGetPosition(void* tracker, int id, float* pos)
@@ -40,7 +40,7 @@ int trackdGetPosition(void* tracker, int id, float* pos)
 	pos[0] = 0;
 	pos[1] = 0;
 	pos[2] = 0;
-	return 0;
+	return 1;
 }
 
 int trackdGetMatrix( void* tracker, int id, float mat[4][4] )

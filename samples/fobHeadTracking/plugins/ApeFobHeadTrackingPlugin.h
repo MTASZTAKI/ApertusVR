@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <vector>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
@@ -35,7 +36,10 @@ SOFTWARE.*/
 #include "ApeINode.h"
 #include "ApeICamera.h"
 #include "ApeISystemConfig.h"
+#include "ApeIMainWindow.h"
 #include "ApeFobHeadTracking.h"
+#include "ApeEuler.h"
+#include "ApeDoubleQueue.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
@@ -48,9 +52,19 @@ private:
 
 	Ape::NodeWeakPtr mCameraNode;
 
+	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
+
 	std::vector<Ape::CameraWeakPtr> mCameras;
 
 	Ape::ISystemConfig* mpSystemConfig;
+
+	Ape::IMainWindow* mpMainWindow;
+
+	Ape::Quaternion mFobTrackerRotation;
+
+	Ape::Vector3 mFobTrackerOffset;
+
+	float mFobTrackerScale = 30.48f;
 
 	void* mpFobTracker;
 	

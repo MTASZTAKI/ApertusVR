@@ -67,6 +67,7 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
 #include "ApeICamera.h"
+#define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
 #include "ApeOgreMovableText.h"
