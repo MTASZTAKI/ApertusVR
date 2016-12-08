@@ -29,7 +29,7 @@ SOFTWARE.*/
 int main (int argc, char** argv)
 {
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\multiDisplay\\configs";
+	configDir << APE_SOURCE_DIR << "\\samples\\caveDisplay\\configs";
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;
