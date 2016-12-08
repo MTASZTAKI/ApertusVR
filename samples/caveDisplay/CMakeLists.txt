@@ -20,15 +20,20 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeSystem.json
+add_subdirectory (configs)
+
+set (SOURCES
+	ApeCaveDisplayMain.cpp
 	)
 
-add_custom_target(
-    Configs_multiDisplay ALL
-    SOURCES ${CONFIGS}
-)
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
+	${RAPIDJSON_INCLUDE_DIR} 
+	)
 
-set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs")
+add_executable (ApeCaveDisplay ${SOURCES})
+target_link_libraries (ApeCaveDisplay ApeSystem ApePluginManager)
+set_property (TARGET ApeCaveDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeCaveDisplay PROPERTY FOLDER "Samples/CaveDisplay")
+
+

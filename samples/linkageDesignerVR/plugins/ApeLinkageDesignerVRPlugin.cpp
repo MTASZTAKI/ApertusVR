@@ -6,6 +6,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 }
 
@@ -16,13 +17,12 @@ ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 
 void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 {
-	
+
 }
 
 void ApeLinkageDesignerVRPlugin::Init()
 {
 	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
-
 }
 
 void ApeLinkageDesignerVRPlugin::Run()

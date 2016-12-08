@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_FOBHEADTRACKINGPLUGIN_H
-#define APE_FOBHEADTRACKINGPLUGIN_H
+#ifndef APE_LINKAGEDESIGNERVRPLUGIN_H
+#define APE_LINKAGEDESIGNERVRPLUGIN_H
 
 #include <iostream>
 #include <thread>
@@ -36,44 +36,25 @@ SOFTWARE.*/
 #include "ApeINode.h"
 #include "ApeICamera.h"
 #include "ApeISystemConfig.h"
-#include "ApeIMainWindow.h"
-#include "ApeFobHeadTracking.h"
-#include "ApeEuler.h"
-#include "ApeDoubleQueue.h"
 
-#define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
-class ApeFobHeadTrackingPlugin : public Ape::IPlugin
+#define THIS_PLUGINNAME "ApeLinkageDesignerVRPlugin"
+
+class ApeLinkageDesignerVRPlugin : public Ape::IPlugin
 {
 private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mCameraNode;
-
-	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
-
-	std::vector<Ape::CameraWeakPtr> mCameras;
-
 	Ape::ISystemConfig* mpSystemConfig;
-
-	Ape::IMainWindow* mpMainWindow;
-
-	Ape::Quaternion mFobTrackerRotation;
-
-	Ape::Vector3 mFobTrackerOffset;
-
-	float mFobTrackerScale = 30.48f;
-
-	void* mpFobTracker;
 	
 	void eventCallBack(const Ape::Event& event);
 	
 public:
-	ApeFobHeadTrackingPlugin();
+	ApeLinkageDesignerVRPlugin();
 
-	~ApeFobHeadTrackingPlugin();
+	~ApeLinkageDesignerVRPlugin();
 	
 	void Init() override;
 
@@ -88,14 +69,14 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
+APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLinkageDesignerVRPlugin()
 {
-	return new ApeFobHeadTrackingPlugin;
+	return new ApeLinkageDesignerVRPlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
+APE_PLUGIN_FUNC void DestroyApeLinkageDesignerVRPlugin(Ape::IPlugin *plugin)
 {
-	delete (ApeFobHeadTrackingPlugin*)plugin;
+	delete (ApeLinkageDesignerVRPlugin*)plugin;
 }
 
 APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -103,7 +84,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 APE_PLUGIN_ALLOC()
 {
 	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeLinkageDesignerVRPlugin, DestroyApeLinkageDesignerVRPlugin);
 	return 0;
 }
 

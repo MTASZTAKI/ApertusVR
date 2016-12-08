@@ -21,9 +21,10 @@
 #SOFTWARE.
 
 add_subdirectory (configs)
+add_subdirectory (plugins)
 
 set (SOURCES
-	ApeMultiDisplayMain.cpp
+	ApeLinkageDesignerVRMain.cpp
 	)
 
 include_directories(
@@ -31,9 +32,9 @@ include_directories(
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeMultiDisplay ${SOURCES})
-target_link_libraries (ApeMultiDisplay ApeSystem ApePluginManager)
-set_property (TARGET ApeMultiDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay")
+add_executable (ApeLinkageDesignerVR ${SOURCES})
+target_link_libraries (ApeLinkageDesignerVR ApeSystem ApePluginManager)
+set_property (TARGET ApeLinkageDesignerVR PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeLinkageDesignerVR PROPERTY FOLDER "Samples/LinkageDesignerVR")
 
 

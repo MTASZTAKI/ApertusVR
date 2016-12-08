@@ -20,24 +20,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (common)
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeLinkageDesignerVRPlugin.h
+	)
 
-option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
-option(APE_SAMPLES_CaveDisplay "Use APE_SAMPLES_CaveDisplay?" ON )
-option(APE_SAMPLES_LinkageDesignerVR "Use APE_SAMPLES_LinkageDesignerVR?" ON )
-if (WIN32)
-	option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" OFF )
-endif ()
+set (SOURCES 
+	ApeLinkageDesignerVRPlugin.cpp
+	)
 
-if (${APE_SAMPLES_MultiPlayer})
-	add_subdirectory (multiPlayer)
-endif ()	
-if (${APE_SAMPLES_CaveDisplay})
-	add_subdirectory (caveDisplay)
-endif ()
-if (${APE_SAMPLES_LinkageDesignerVR})
-	add_subdirectory (linkageDesignerVR)
-endif ()
-if (${APE_SAMPLES_FobHeadTracking} AND WIN32)
-	add_subdirectory (fobHeadTracking)
-endif ()
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeLinkageDesignerVRPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeLinkageDesignerVRPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeLinkageDesignerVRPlugin PROPERTY FOLDER "Samples/LinkageDesignerVR/Plugins")
+
+
+
