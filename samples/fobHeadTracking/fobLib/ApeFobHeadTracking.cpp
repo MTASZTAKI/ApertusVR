@@ -29,17 +29,17 @@ void* trackdInitTrackerReader(int)
 
 int trackdGetEulerAngles(void* tracker, int id, float* orn)
 {
-	orn[0] = 0;
-	orn[1] = 0;
-	orn[2] = 0;
+	orn[0] = 45.0f;
+	orn[1] = 0.0f;
+	orn[2] = 0.0f;
 	return 1;
 }
 
 int trackdGetPosition(void* tracker, int id, float* pos)
 {
-	pos[0] = 0;
-	pos[1] = 0;
-	pos[2] = 0;
+	pos[0] = 0.1f;
+	pos[1] = 0.1f;
+	pos[2] = 0.1f;
 	return 1;
 }
 
