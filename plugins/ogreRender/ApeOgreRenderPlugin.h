@@ -59,6 +59,7 @@ SOFTWARE.*/
 #include "OgreTechnique.h"
 #include "OgrePanelOverlayElement.h"
 #include "OgreWindowEventUtilities.h"
+#include "Procedural.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"

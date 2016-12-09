@@ -35,8 +35,11 @@ set(PATH_OGREDEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies)
 set(PATH_OGREDEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
 set(PATH_OGRE ${CMAKE_SOURCE_DIR}/3rdParty/ogre)
 set(OGRE_READY FALSE)
+set(PATH_OGRE_PROCEDURAL ${CMAKE_SOURCE_DIR}/3rdParty/ogre_procedural)
+set(OGRE_PROCEDURAL_READY FALSE)
 
 #find ogre
+message (STATUS "try to find Ogre" )
 set (OGRE_STATIC OFF)
 set (ENV{OGREDEPS_BUILD_SDL2} FALSE)
 set (ENV{OGRE_BUILD_RENDERSYSTEM_D3D9} FALSE)
@@ -57,7 +60,7 @@ set (CMAKE_INSTALL_PREFIX ${PATH_OGRE})
 add_subdirectory(${PATH_OGRE} ${PATH_OGRE} EXCLUDE_FROM_ALL)
 set (CMAKE_SOURCE_DIR ${STORED_CMSD})
 set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${PATH_OGRE};${PATH_OGRE}/CMake/;${PATH_OGRE}/lib/OGRE/cmake;${PATH_OGRE}/CMake/Packages; ${PATH_OGRE}/CMake/Utils)
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${PATH_OGRE};${PATH_OGRE}/CMake/;${PATH_OGRE}/lib/OGRE/cmake;${PATH_OGRE}/CMake/Packages;${PATH_OGRE}/CMake/Utils)
 find_package (OGRE 1.10 QUIET)
 if (${OGRE_FOUND})
 	set(OGRE_READY TRUE)
@@ -108,6 +111,46 @@ if (NOT OGRE_READY)
 		reportError (output if error)
 	endforeach ()
 endif ()
+#find ogre_procedural
+message (STATUS "try to find Ogre_procedural" )
+set (ENV{OgreProcedural_HOME} ${PATH_OGRE_PROCEDURAL})
+set (STORED_CMSD ${CMAKE_SOURCE_DIR})
+set (STORED_CIP ${CMAKE_INSTALL_PREFIX})
+set (CMAKE_SOURCE_DIR ${PATH_OGRE_PROCEDURAL})
+set (CMAKE_INSTALL_PREFIX ${PATH_OGRE_PROCEDURAL})
+add_subdirectory(${PATH_OGRE_PROCEDURAL} ${PATH_OGRE_PROCEDURAL} EXCLUDE_FROM_ALL)
+set (CMAKE_SOURCE_DIR ${STORED_CMSD})
+set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
+set (CMAKE_MODULE_PATH ${PATH_OGRE_PROCEDURAL}/CMake/Utils;${PATH_OGRE_PROCEDURAL}/CMake;${PATH_OGRE_PROCEDURAL}/CMake/Packages)
+find_package (OgreProcedural QUIET)
+if (${OgreProcedural_FOUND})
+	set(OGRE_PROCEDURAL_READY TRUE)
+	message (STATUS "ogre_procedural is installed" )
+else ()
+	set(OGRE_PROCEDURAL_READY FALSE)
+	message (STATUS "ogre_procedural is not installed")
+endif ()
+#try ogre_procedural
+if (NOT OGRE_PROCEDURAL_READY)
+#build ogre_procedural
+	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+		message (STATUS "Configuring ogre_procedural for ${CONF}, please wait.....")
+		execute_process ( 
+				COMMAND ${CMAKE_COMMAND} 
+				-G ${CMAKE_GENERATOR} 
+				.
+				WORKING_DIRECTORY ${PATH_OGRE_PROCEDURAL}
+				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+				)		
+		reportError (output if error)
+		message (STATUS "Building ogre_procedural for ${CONF}, please wait.....")
+		execute_process ( 
+			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
+			WORKING_DIRECTORY ${PATH_OGRE_PROCEDURAL}
+			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+		reportError (output if error)
+	endforeach ()
+endif ()
 # ApeOgreRenderPlugin
 set (HEADERS
 	ApeOgreRenderPlugin.h
@@ -129,11 +172,12 @@ include_directories(
 	${OGRE_RenderSystem_Direct3D11_INCLUDE_DIRS}
 	${OGRE_RenderSystem_GL_INCLUDE_DIRS}
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
+	${OgreProcedural_INCLUDE_DIRS}
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES})
+${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
@@ -158,6 +202,9 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D11_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreProcedural_d.dll)
+		file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
 	# release dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreMain.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
@@ -176,6 +223,9 @@ if (WIN32)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D11.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreProcedural.dll)
+		file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 endif ()
 
