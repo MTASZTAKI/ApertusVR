@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):process()
+Procedural.Lookup(buffer):setParameterImage(bufferCellNormal):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_20", "Lookup_Demo")
+dotfile:set("Gradient", "texture_gradient", "Cell", "texture_cell_smooth", "Lookup", "texture_lookup")

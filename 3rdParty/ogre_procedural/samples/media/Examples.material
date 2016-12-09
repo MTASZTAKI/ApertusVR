@@ -1,0 +1,97 @@
+material Examples/Rockwall
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.4 0.4 0.4
+			diffuse 1.0 1.0 1.0
+			texture_unit
+			{
+				texture old_fence.jpg
+			}
+		}
+	}
+}
+
+material Examples/BeachStones
+{
+	technique
+	{
+		pass
+		{
+			ambient  0.5 0.5 0.5
+			diffuse  1.0 1.0 1.0		
+			specular 0.2 0.2 0.2 1.0 30.0
+
+			texture_unit
+			{
+				texture red_brick.jpg
+			}
+		}
+	}
+}
+
+material Examples/Road
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture road.png
+			}
+		}
+	}
+}
+
+material Examples/Marble
+{
+	technique
+	{
+		pass
+		{
+			diffuse 1.0 1.0 1.0
+			
+			texture_unit
+			{
+				texture marble.jpg			
+			}
+		}
+	}
+}
+
+material HiddenLine
+{
+	technique
+	{
+		pass
+		{
+			ambient  1.0 1.0 1.0
+			diffuse  1.0 1.0 1.0
+			shading  flat
+		}
+		
+		pass
+		{			
+			ambient 0.0 0.0 0.0
+			diffuse 0.0 0.0 0.0
+			polygon_mode wireframe
+			depth_bias 10
+		}
+	}
+}
+
+material RedLine
+{
+	technique
+	{
+		pass
+		{
+			emissive 1.0 0.0 0.0
+			ambient  1.0 0.0 0.0
+			diffuse  1.0 0.0 0.0
+		}
+	}
+}

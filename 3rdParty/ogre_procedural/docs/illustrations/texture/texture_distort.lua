@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):setColours(Procedural.ColourValue_Black, Procedural.ColourValue_Red, Procedural.ColourValue_Green, Procedural.ColourValue_Blue):process()
+Procedural.Distort(buffer):setParameterImage(bufferCellNormal):setPower(255):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_12", "Distort_Demo")
+dotfile:set("Gradient", "texture_gradient", "Cell", "texture_cell_smooth", "Distort", "texture_distort")

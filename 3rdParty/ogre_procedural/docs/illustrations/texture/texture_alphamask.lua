@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):setColours(Procedural.ColourValue_Black, Procedural.ColourValue_Red, Procedural.ColourValue_Green, Procedural.ColourValue_Blue):process()
+Procedural.AlphaMask(buffer):setParameterImage(bufferCellNormal):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_04", "AlphaMask_Demo")
+dotfile:set("Cell", "texture_cell_smooth", "Gradient", "texture_gradient", "AlphaMask", "texture_alphamask")

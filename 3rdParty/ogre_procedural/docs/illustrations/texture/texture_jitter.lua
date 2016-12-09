@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Image(buffer):setFile("red_brick.jpg"):process()
+Procedural.Jitter(buffer):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_17", "Jitter_Demo")
+dotfile:set("Image", "texture_image", "Jitter", "texture_jitter")

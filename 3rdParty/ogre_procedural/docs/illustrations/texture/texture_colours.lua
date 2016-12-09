@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):setColours(Procedural.ColourValue_Black, Procedural.ColourValue_Red, Procedural.ColourValue_Green, Procedural.ColourValue_Blue):process()
+Procedural.Colours(buffer):setColourBase(Procedural.ColourValue_Red):setColourPercent(Procedural.ColourValue_Blue):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_07", "Colours_Demo")
+dotfile:set("Gradient", "texture_gradient", "Colours", "texture_colours")

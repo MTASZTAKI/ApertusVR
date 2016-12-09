@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):setColours(Procedural.ColourValue_Black, Procedural.ColourValue_Red, Procedural.ColourValue_Green, Procedural.ColourValue_Blue):process()
+Procedural.RotationZoom(buffer):setRotation(0.125):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_25", "RotationZoom_Demo")
+dotfile:set("Gradient", "texture_gradient", "RotationZoom", "texture_rotationzoom")

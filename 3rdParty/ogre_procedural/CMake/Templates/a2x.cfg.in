@@ -1,0 +1,1 @@
+XSLTPROC = '${ASCIIDOC_DIR}/xsltproc'
