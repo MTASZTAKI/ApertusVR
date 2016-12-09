@@ -47,6 +47,13 @@ CTestTestfile.cmake
 3rdParty/ogre/Dependencies/ogredeps
 3rdParty/ogre/include/OgreBuildSettings.h
 3rdParty/ogre/SDK/
+3rdParty/ogre/CPackConfig.cmake
+3rdParty/ogre/CPackSourceConfig.cmake
+3rdParty/ogre_procedural/SDK/
+3rdParty/ogre_procedural/include/ProceduralPlatform.h
+3rdParty/ogre_procedural/version.txt
+3rdParty/ogre_procedural/CPackConfig.cmake
+3rdParty/ogre_procedural/CPackSourceConfig.cmake
 
 # RakNet
 3rdParty/raknet/include
