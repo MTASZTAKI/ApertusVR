@@ -34,7 +34,7 @@ add_library (ApeFobHeadTrackingLib SHARED ${SOURCES} ${HEADERS})
 # Link with dependency libraries
 target_link_libraries (ApeFobHeadTrackingLib)
 
-set_property (TARGET ApeFobHeadTrackingLib PROPERTY COMPILE_DEFINITIONS BUILDING_APE_FOBHEADTRACKING_DLL)
+set_property (TARGET ApeFobHeadTrackingLib PROPERTY COMPILE_DEFINITIONS TRACKD_DLL_EXPORTS)
 
 set_property (TARGET ApeFobHeadTrackingLib PROPERTY FOLDER "Samples/FobHeadTracking/FobLib")
 

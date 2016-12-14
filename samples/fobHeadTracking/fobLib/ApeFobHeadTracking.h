@@ -30,7 +30,7 @@ SOFTWARE.*/
 #endif 
 
 
-#if  (WIN32 && BUILDING_APE_FOBHEADTRACKING_DLL)
+#if  (WIN32 && TRACKD_DLL_EXPORTS)
 #define TRACKD_EXPORT_API __declspec(dllexport)
 #else
 #define TRACKD_EXPORT_API
