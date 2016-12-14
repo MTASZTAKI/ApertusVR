@@ -115,7 +115,7 @@ if (WIN32)
 				# Install MSBuildTools
 				message(STATUS "MSBuildTools: Starting installer...")
 
-				set(MS_BUILD_TOOLS_PATH "${CMAKE_SOURCE_DIR}/3rdParty/msbuildtool/BuildTools_Full.exe")
+				set(MS_BUILD_TOOLS_PATH "${CMAKE_SOURCE_DIR}/3rdParty/msbuildtools/BuildTools_Full.exe")
 
 				execute_process(
 					COMMAND cmd /c ${MS_BUILD_TOOLS_PATH}
