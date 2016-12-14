@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Solid(buffer):setColour(Procedural.ColourValue(0.0, 0.5, 1.0, 1.0)):process()
+Procedural.CircleTexture(buffer):setColour(Procedural.ColourValue_Red):setRadius(0.3):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_32", "Circle_Demo")
+dotfile:set("Solid", "texture_solid", "Circle", "texture_circle")

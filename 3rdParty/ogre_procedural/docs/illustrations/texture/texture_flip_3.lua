@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Image(buffer):setFile("red_brick.jpg"):process()
+Procedural.Flip(buffer):setAxis(Procedural.Flip_FLIP_HORIZONTAL):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_14c", "Flip_horizontal_Demo")
+dotfile:set("Image", "texture_image", "Flip", "texture_flip_3")

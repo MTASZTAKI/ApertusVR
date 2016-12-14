@@ -32,7 +32,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mEventDoubleQueue = Ape::DoubleQueue<Event>(true);
+	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::SCENEPROPERTY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -42,7 +42,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
-	mpRenderWindow = NULL;
+	mRenderWindows = std::map<int, Ogre::RenderWindow*>();
 	mpOverlaySys = NULL;
 	mpOgreMovableTextFactory = NULL;
 	mpOverlayMgr = NULL;
@@ -118,7 +118,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				switch (event.type)
 				{
 				case Ape::Event::Type::NODE_CREATE:
-					mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+						mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 					break;
 				case Ape::Event::Type::NODE_DELETE:
 					; 
@@ -246,10 +246,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreCamera = mpSceneMgr->createCamera(event.subjectName))
 						{
-							if (auto viewPort = mpRenderWindow->addViewport(ogreCamera))
+							if (auto viewPort = mRenderWindows[atoi(event.subjectName.c_str())]->addViewport(ogreCamera))
 							{
 								if (mpSceneMgr->hasSceneNode(camera->getParentNodeName()))
 									mpSceneMgr->getSceneNode(camera->getParentNodeName())->attachObject(ogreCamera);
+								//TODO why it is only working?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
 							}
@@ -280,7 +281,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::CAMERA_FRUSTUMOFFSET:
 					{
 						if (mpSceneMgr->hasCamera(event.subjectName))
-							mpSceneMgr->getCamera(event.subjectName)->setFrustumOffset(camera->getFrustumOffset());
+							mpSceneMgr->getCamera(event.subjectName)->setFrustumOffset(Ape::ConversionToOgre(camera->getFrustumOffset()));
 					}
 					break;
 				case Ape::Event::Type::CAMERA_FARCLIP:
@@ -294,6 +295,30 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (mpSceneMgr->hasCamera(event.subjectName))
 							mpSceneMgr->getCamera(event.subjectName)->setNearClipDistance(camera->getNearClipDistance());
 					}
+					break;
+				case Ape::Event::Type::CAMERA_POSITIONOFFSET:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getPositionOffset()));
+					}
+					break;
+				case Ape::Event::Type::CAMERA_ORIENTATIONOFFSET:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientationOffset()));
+					}
+					break;
+				case Ape::Event::Type::CAMERA_INITPOSITIONOFFSET:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getInitPositionOffset()));
+				}
+					break;
+				case Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getInitOrientationOffset()));
+				}
 					break;
 				}
 			}
@@ -310,7 +335,7 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
 	std::stringstream ss;
-	ss << mpRenderWindow->getLastFPS();
+	ss << mRenderWindows[0]->getLastFPS();
 	//TODO overlay
 	//mpOverlayTextArea->setCaption(ss.str());
 
@@ -439,9 +464,7 @@ void Ape::OgreRenderPlugin::Init()
 								viewport.MemberBegin();
 								viewportMemberIterator != viewport.MemberEnd(); ++viewportMemberIterator)
 							{
-								if (viewportMemberIterator->name == "name")
-									ogreViewPortConfig.name = viewportMemberIterator->value.GetString();
-								else if (viewportMemberIterator->name == "zOrder")
+								if (viewportMemberIterator->name == "zOrder")
 									ogreViewPortConfig.zOrder = viewportMemberIterator->value.GetInt();
 								else if (viewportMemberIterator->name == "left")
 									ogreViewPortConfig.left = viewportMemberIterator->value.GetInt();
@@ -463,6 +486,41 @@ void Ape::OgreRenderPlugin::Init()
 											ogreViewPortConfig.camera.farClip = cameraMemberIterator->value.GetFloat();
 										else if (cameraMemberIterator->name == "fovY")
 											ogreViewPortConfig.camera.fovY = cameraMemberIterator->value.GetFloat();
+										else if (cameraMemberIterator->name == "positionOffset")
+										{
+											for (rapidjson::Value::MemberIterator elementMemberIterator =
+												viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
+												elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+											{
+												if (elementMemberIterator->name == "x")
+													ogreViewPortConfig.camera.positionOffset.x = elementMemberIterator->value.GetFloat();
+												else if (elementMemberIterator->name == "y")
+													ogreViewPortConfig.camera.positionOffset.y = elementMemberIterator->value.GetFloat();
+												else if (elementMemberIterator->name == "z")
+													ogreViewPortConfig.camera.positionOffset.z = elementMemberIterator->value.GetFloat();
+											}
+										}
+										else if (cameraMemberIterator->name == "orientationOffset")
+										{
+											Ogre::Quaternion orientationOffset;
+											Ogre::Degree angle;
+											Ogre::Vector3 axis;
+											for (rapidjson::Value::MemberIterator elementMemberIterator =
+												viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
+												elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+											{
+												if (elementMemberIterator->name == "angle")
+													angle = elementMemberIterator->value.GetFloat();
+												else if (elementMemberIterator->name == "x")
+													axis.x = elementMemberIterator->value.GetFloat();
+												else if (elementMemberIterator->name == "y")
+													axis.y = elementMemberIterator->value.GetFloat();
+												else if (elementMemberIterator->name == "z")
+													axis.z = elementMemberIterator->value.GetFloat();
+											}
+											orientationOffset.FromAngleAxis(angle, axis);
+											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
+										}
 
 									}
 								}
@@ -544,14 +602,9 @@ void Ape::OgreRenderPlugin::Init()
 	for (int i = 0; i < mOgreRenderWindowConfigList.size(); i++)
 	{
 		Ogre::RenderWindowDescription winDesc;
-		if (i == 0)
-			winDesc.name = mpSystemConfig->getMainWindowConfig().name;
-		else
-		{
-			std::stringstream ss;
-			ss << mpSystemConfig->getMainWindowConfig().name << i;
-			winDesc.name = ss.str();
-		}
+		std::stringstream ss;
+		ss << mOgreRenderWindowConfigList[i].monitorIndex;
+		winDesc.name = ss.str();
 		winDesc.height = mOgreRenderWindowConfigList[i].height;
 		winDesc.width = mOgreRenderWindowConfigList[i].width;
 		winDesc.useFullScreen = mOgreRenderWindowConfigList[i].fullScreen;
@@ -580,29 +633,37 @@ void Ape::OgreRenderPlugin::Init()
 
 		if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
 		{
-			mpRenderWindow = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
-			mpRenderWindow->setDeactivateOnFocusChange(false);
-			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderWindowConfigList[i].viewportList[0].name, mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::Type::CAMERA).lock());
+			mRenderWindows[i] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
+			mRenderWindows[i]->setDeactivateOnFocusChange(false);
+			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::Type::CAMERA).lock());
 			if (camera)
 			{
+				//TODO why it is not ok
+				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+				camera->setFocalLength(1.0f);
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+				camera->setInitPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
+				camera->setInitOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 
 			//TODO somhow no backfaces for that and create a manual instead and animating when zoomin and etc.
 			//if (auto frustumMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("frustum.mesh", mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::GEOMETRY_FILE).lock()))
 				//frustumMeshFile->setFileName("frustum.mesh");
 
-			void* windowHnd = 0;
-			mpRenderWindow->getCustomAttribute("WINDOW", &windowHnd);
-			std::ostringstream windowHndStr;
-			windowHndStr << windowHnd;
-			mOgreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
+			if (i == 0)
+			{
+				void* windowHnd = 0;
+				mRenderWindows[i]->getCustomAttribute("WINDOW", &windowHnd);
+				std::ostringstream windowHndStr;
+				windowHndStr << windowHnd;
+				mOgreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
 
-			mpMainWindow->setHandle(windowHnd);
-			mpMainWindow->setWidth(mOgreRenderWindowConfigList[0].width);
-			mpMainWindow->setHeight(mOgreRenderWindowConfigList[0].height);
+				mpMainWindow->setHandle(windowHnd);
+				mpMainWindow->setWidth(mOgreRenderWindowConfigList[0].width);
+				mpMainWindow->setHeight(mOgreRenderWindowConfigList[0].height);
+			}
 		}
 	}
 	

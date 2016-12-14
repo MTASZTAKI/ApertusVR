@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Cloud(buffer):process()
+Procedural.Dilate(buffer):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_11", "Dilate_Demo")
+dotfile:set("Cloud", "texture_cloud", "Dilate", "texture_dilate")

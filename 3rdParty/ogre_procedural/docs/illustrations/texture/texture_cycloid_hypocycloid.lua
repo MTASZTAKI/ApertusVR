@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Solid(buffer):setColour(Procedural.ColourValue(0.0, 0.5, 1.0, 1.0)):process()
+Procedural.Cycloid(buffer):setColour(Procedural.ColourValue_Red):setPenSize(2):setType(Procedural.Cycloid_HYPOCYCLOID):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_30", "Cycloid_Demo")
+dotfile:set("Solid", "texture_solid", "Hypocycloid", "texture_cycloid_hypocycloid")

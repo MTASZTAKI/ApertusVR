@@ -35,7 +35,7 @@ set (APE_OUTPUT_DIR_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
 # python
 find_package(PythonInterp)
-message("Pthon: version: ${PYTHON_VERSION_STRING}")
+message("Python: version: ${PYTHON_VERSION_STRING}")
 if (NOT PYTHONINTERP_FOUND)
 	if (WIN32)
 
@@ -54,7 +54,7 @@ if (NOT PYTHONINTERP_FOUND)
 		endif ()
 
 		find_package(PythonInterp)
-		message("Pthon: version: ${PYTHON_VERSION_STRING}")
+		message("Python: version: ${PYTHON_VERSION_STRING}")
 		if (NOT PYTHONINTERP_FOUND)
 			message(FATAL_ERROR "Python: Could not find python")
 		endif ()

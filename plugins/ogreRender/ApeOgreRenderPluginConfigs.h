@@ -34,9 +34,9 @@ namespace Ape
 {
 	struct OgreCameraConfig
 	{
-		Ape::Vector3 position;
+		Ape::Vector3 positionOffset;
 		
-		Ape::Quaternion orientation;
+		Ape::Quaternion orientationOffset;
 
 		float nearClip;
 
@@ -46,22 +46,22 @@ namespace Ape
 
 		OgreCameraConfig()
 		{
-			this->position = Ape::Vector3();
-			this->orientation = Ape::Quaternion();
+			this->positionOffset = Ape::Vector3();
+			this->orientationOffset = Ape::Quaternion();
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
 		}
 
 		OgreCameraConfig(
-			Ape::Vector3 position,
-			Ape::Quaternion orientation,
+			Ape::Vector3 positionOffset,
+			Ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
 			Degree fovY)
 		{
-			this->position = position;
-			this->orientation = orientation;
+			this->positionOffset = positionOffset;
+			this->orientationOffset = orientationOffset;
 			this->nearClip = nearClip;
 			this->farClip = farClip;
 			this->fovY = fovY;
@@ -70,8 +70,6 @@ namespace Ape
 
 	struct OgreViewPortConfig
 	{
-		std::string name;
-
 		OgreCameraConfig camera;
 
 		int zOrder;
@@ -86,7 +84,6 @@ namespace Ape
 
 		OgreViewPortConfig()
 		{
-			this->name = std::string();
 			this->camera = OgreCameraConfig();
 			this->zOrder = 0;
 			this->left = 0;
@@ -96,7 +93,6 @@ namespace Ape
 		}
 
 		OgreViewPortConfig(
-		std::string name,
 		OgreCameraConfig camera,
 		int zOrder,
 		int left,
@@ -104,7 +100,6 @@ namespace Ape
 		int width,
 		int height)
 		{
-			this->name = name;
 			this->camera = camera;
 			this->zOrder = zOrder;
 			this->left = left;

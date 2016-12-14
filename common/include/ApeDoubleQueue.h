@@ -40,14 +40,10 @@ namespace Ape
 		
 		std::mutex mPushMutex;
 		
-		bool mIsUnique;
-		
     public:
-		DoubleQueue() : mIsUnique(false), mPush(std::vector<T>()), mPop(std::vector<T>())
-		{}
-
-		DoubleQueue(bool unique) : mIsUnique(unique), mPush(std::vector<T>()), mPop(std::vector<T>())
-		{}
+		DoubleQueue() :mPush(std::vector<T>()), mPop(std::vector<T>())
+		{
+		}
 		
 		~DoubleQueue()
 		{
@@ -84,10 +80,12 @@ namespace Ape
         void push(T elem)
 		{
 			std::lock_guard<std::mutex> lock(mPushMutex);
-			if (mIsUnique && (std::find(mPush.begin(), mPush.end(), elem) == mPush.end()))
+			#ifdef APE_DOUBLEQUEUE_UNIQUE
+				if (std::find(mPush.begin(), mPush.end(), elem) == mPush.end())
+					mPush.push_back(elem);
+			#else
 				mPush.push_back(elem);
-			else
-				mPush.push_back(elem);
+			#endif
 		}
 
         void pop()
@@ -112,7 +110,6 @@ namespace Ape
 
 		DoubleQueue& operator =(const DoubleQueue& other)
 		{
-			mIsUnique = other.mIsUnique;
 			mPush = other.mPush;
 			mPop = other.mPop;
 			return *this;

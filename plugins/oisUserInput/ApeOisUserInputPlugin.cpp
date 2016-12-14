@@ -50,7 +50,7 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.group == Ape::Event::Group::NODE && event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
 	{
 		if (auto node = (mpScene->getNode(event.subjectName).lock()))
 			mCameraNode = node;
@@ -59,7 +59,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::OISUserInputPlugin::Init()
 {
-
+	std::cout << "OISUserInputPlugin::Init" << std::endl;
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOisUserInputPlugin.json";
@@ -82,9 +82,10 @@ void Ape::OISUserInputPlugin::Init()
 	}
 
 
-	
+	std::cout << "OISUserInputPlugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	std::cout << "OisUserInputPlugin main window was found" << std::endl;
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -222,6 +223,7 @@ void Ape::OISUserInputPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::OISUserInputPlugin::Step()

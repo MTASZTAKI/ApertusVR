@@ -25,7 +25,9 @@ SOFTWARE.*/
 
 #include <string>
 #include "ApeEntity.h"
+#include "ApeVector2.h"
 #include "ApeVector3.h"
+#include "ApeQuaternion.h"
 #include "ApeRadian.h"
 
 namespace Ape
@@ -42,9 +44,9 @@ namespace Ape
 
 		virtual void setFocalLength(float focalLength) = 0;
 
-		virtual float getFrustumOffset() = 0;
+		virtual Ape::Vector2 getFrustumOffset() = 0;
 
-		virtual void setFrustumOffset(float frustumOffset) = 0;
+		virtual void setFrustumOffset(Ape::Vector2 frustumOffset) = 0;
 
 		virtual Ape::Radian getFOVy() = 0;
 
@@ -61,11 +63,28 @@ namespace Ape
 		virtual float getAspectRatio() = 0;
 
 		virtual void setAspectRatio(float aspectRatio) = 0;
+
+		virtual Ape::Vector3 getPositionOffset() = 0;
+
+		virtual void setPositionOffset(Ape::Vector3 positionOffset) = 0;
+
+		virtual Ape::Quaternion getOrientationOffset() = 0;
+
+		virtual void setOrientationOffset(Ape::Quaternion orientation) = 0;
+
+		virtual Ape::Vector3 getInitPositionOffset() = 0;
+
+		virtual void setInitPositionOffset(Ape::Vector3 initPositionOffset) = 0;
+
+		virtual Ape::Quaternion getInitOrientationOffset() = 0;
+
+		virtual void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) = 0;
+
 	};
 
-	typedef std::shared_ptr<ICamera> CameraSharedPtr;
+	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;
 
-	typedef std::weak_ptr<ICamera> CameraWeakPtr;
+	typedef std::weak_ptr<Ape::ICamera> CameraWeakPtr;
 }
 
 #endif

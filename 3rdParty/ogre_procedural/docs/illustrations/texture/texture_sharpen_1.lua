@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Image(buffer):setFile("red_brick.jpg"):process()
+Procedural.Sharpen(buffer):setType(Procedural.Sharpen_SHARP_BASIC):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_27a", "Sharpen_basic_Demo")
+dotfile:set("Image", "texture_image", "Sharpen", "texture_sharpen_1")

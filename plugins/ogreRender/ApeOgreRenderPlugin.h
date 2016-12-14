@@ -59,6 +59,7 @@ SOFTWARE.*/
 #include "OgreTechnique.h"
 #include "OgrePanelOverlayElement.h"
 #include "OgreWindowEventUtilities.h"
+#include "Procedural.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
@@ -67,6 +68,7 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
 #include "ApeICamera.h"
+#define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
 #include "ApeOgreMovableText.h"
@@ -128,7 +130,7 @@ namespace Ape
 
 		Ape::OgreMovableTextFactory* mpOgreMovableTextFactory;
 
-		Ogre::RenderWindow* mpRenderWindow;
+		std::map<int, Ogre::RenderWindow*> mRenderWindows;
 
 		Ogre::RTShader::ShaderGenerator* mpShaderGenerator;
 

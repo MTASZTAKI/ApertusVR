@@ -95,10 +95,10 @@ namespace Ape
 				double s3 = std::sin(m_roll.radian / 2.0f);
 				double c1c2 = c1 * c2;
 				double s1s2 = s1 * s2;
-				double w =c1c2 * c3 - s1s2 * s3;
-				double x =c1c2 * s3 + s1s2 * c3;
-				double y =s1*c2*c3 + c1 * s2 * s3;
-				double z =c1*s2*c3 - s1*c2*s3;
+				double w = c1c2 * c3 - s1s2 * s3;
+				double x = c1c2 * s3 + s1s2 * c3;
+				double y = s1 * c2 * c3 + c1 * s2 * s3;
+				double z = c1 * s2 * c3 - s1 * c2 * s3;
 				m_cachedQuaternion = Ape::Quaternion((float) w, (float) x, (float) y, (float) z); 
 				m_changed = false;
 			}

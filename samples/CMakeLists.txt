@@ -20,4 +20,22 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (helloWorld)
+add_subdirectory (common)
+
+option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
+option(APE_SAMPLES_CaveDisplay "Use APE_SAMPLES_CaveDisplay?" ON )
+option(APE_SAMPLES_LinkageDesignerVR "Use APE_SAMPLES_LinkageDesignerVR?" ON )
+option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" ON )
+
+if (${APE_SAMPLES_MultiPlayer})
+	add_subdirectory (multiPlayer)
+endif ()	
+if (${APE_SAMPLES_CaveDisplay})
+	add_subdirectory (caveDisplay)
+endif ()
+if (${APE_SAMPLES_LinkageDesignerVR})
+	add_subdirectory (linkageDesignerVR)
+endif ()
+if (${APE_SAMPLES_FobHeadTracking})
+	add_subdirectory (fobHeadTracking)
+endif ()
