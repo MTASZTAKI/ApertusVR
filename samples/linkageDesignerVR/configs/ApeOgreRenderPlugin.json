@@ -1,4 +1,5 @@
 {
+    "renderSystem" : "DX11",
     "renderWindows": [
         {
             "monitorIndex": 0,

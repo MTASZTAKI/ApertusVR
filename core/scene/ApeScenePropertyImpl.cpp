@@ -29,6 +29,7 @@ Ape::ScenePropertyImpl::ScenePropertyImpl(std::string name, bool isHostCreated) 
 	mAmbientColor = Ape::Color();
 	mResourceFolders = Ape::ResourceFolders();
 	mSkyBoxMaterialName = std::string();
+	mBackgroundColor = Ape::Color();
 }
 
 Ape::ScenePropertyImpl::~ScenePropertyImpl()
@@ -69,6 +70,17 @@ std::string Ape::ScenePropertyImpl::getSkyBoxMaterialName()
 	return mSkyBoxMaterialName;
 }
 
+void Ape::ScenePropertyImpl::setBackgroundColor(Ape::Color background)
+{
+	mBackgroundColor = background;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SCENEPROPERTY_BACKGROUNDCOLOR));
+}
+
+Ape::Color Ape::ScenePropertyImpl::getBackgroundColor()
+{
+	return mBackgroundColor;
+}
+
 void Ape::ScenePropertyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -80,6 +92,7 @@ RakNet::RM3SerializationResult Ape::ScenePropertyImpl::Serialize(RakNet::Seriali
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAmbientColor);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBackgroundColor);
 	/*for (auto resourceFolder : mResourceFolders)
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(resourceFolder.c_str()));*/
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSkyBoxMaterialName.c_str()));
@@ -95,6 +108,8 @@ void Ape::ScenePropertyImpl::Deserialize(RakNet::DeserializeParameters *deserial
 	RakNet::RakString resourceFolder;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBackgroundColor))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SCENEPROPERTY_BACKGROUNDCOLOR));
 	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, resourceFolder))
 	{
 		mResourceFolders.push_back(resourceFolder.C_String());

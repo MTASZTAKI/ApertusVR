@@ -53,16 +53,19 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	std::stringstream generatedUniqueUserName;
 	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
 	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
-	std::string userNodeName = gpSystemConfigImpl->getSceneSessionConfig().generatedUniqueUserName;
-	if (auto userNode = gpSceneImpl->createNode(userNodeName).lock())
+	if (gpSystemConfigImpl->getSceneSessionConfig().participantType == SceneSession::ParticipantType::HOST || gpSystemConfigImpl->getSceneSessionConfig().participantType == SceneSession::ParticipantType::GUEST)
 	{
-		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNodeName, userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
+		std::string userNodeName = gpSystemConfigImpl->getSceneSessionConfig().generatedUniqueUserName;
+		if (auto userNode = gpSceneImpl->createNode(userNodeName).lock())
 		{
-			userNameText->setCaption(userNodeName);
-			userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNodeName, userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
+			{
+				userNameText->setCaption(userNodeName);
+				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			}
 		}
+		gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	}
-	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

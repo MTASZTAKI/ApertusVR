@@ -42,13 +42,17 @@ namespace Ape
 	public:
 		virtual void addResourceLocation(std::string resourceFolder, std::string resourceGroupName) = 0;
 
-		virtual void setAmbientColor(Color ambient) = 0;
-		
-		virtual void setSkyBoxMaterialName(std::string materialName) = 0;
-
 		virtual ResourceFolders getResourceFolders() = 0;
 
+		virtual void setAmbientColor(Color ambient) = 0;
+
 		virtual Color getAmbientColor() = 0;
+
+		virtual void setBackgroundColor(Color background) = 0;
+
+		virtual Color getBackgroundColor() = 0;
+		
+		virtual void setSkyBoxMaterialName(std::string materialName) = 0;
 
 		virtual std::string getSkyBoxMaterialName() = 0;
 	};

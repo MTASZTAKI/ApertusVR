@@ -6,7 +6,6 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 }
 
@@ -23,6 +22,11 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 void ApeLinkageDesignerVRPlugin::Init()
 {
 	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
+	if (auto sceneProperty = mpScene->getProperty().lock())
+	{
+		sceneProperty->setAmbientColor(Ape::Color(0.1f, 0.1f, 0.1f, 1.0f));
+		sceneProperty->setBackgroundColor(Ape::Color(1.0f, 1.0f, 1.0f, 1.0f));
+	}
 }
 
 void ApeLinkageDesignerVRPlugin::Run()

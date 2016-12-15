@@ -107,6 +107,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR:
 						mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
 					break;
+				case Ape::Event::Type::SCENEPROPERTY_BACKGROUNDCOLOR:
+					{
+						for (Ogre::SceneManager::CameraIterator it = mpSceneMgr->getCameraIterator(); it.hasMoreElements(); it.moveNext())
+							it.current()->second->getViewport()->setBackgroundColour(ConversionToOgre(sceneProperty->getBackgroundColor()));
+					}
+					break;
 				}
 			}
 		}
@@ -402,6 +408,7 @@ void Ape::OgreRenderPlugin::Step()
 
 void Ape::OgreRenderPlugin::Init()
 {
+	std::string renderSystemName;
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -413,6 +420,8 @@ void Ape::OgreRenderPlugin::Init()
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
+			rapidjson::Value& renderSystem = jsonDocument["renderSystem"];
+			renderSystemName = renderSystem.GetString();
 			rapidjson::Value& renderWindows = jsonDocument["renderWindows"];
 			for (auto& renderWindow : renderWindows.GetArray())
 			{
@@ -536,62 +545,39 @@ void Ape::OgreRenderPlugin::Init()
 	}	
 	
 	mpRoot = new Ogre::Root("", "", "ApeOgreRenderPlugin.log");
+    
+	Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
 
-#if defined (__APPLE__)
-    Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
-    Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
-    mpRoot->loadPlugin( "RenderSystem_GL" );
-    mpRoot->loadPlugin( "Plugin_ParticleFX");
-#endif
+	#if defined (_DEBUG)
+		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
+		if (renderSystemName == "DX11")
+			mpRoot->loadPlugin( "RenderSystem_Direct3D11_d" );
+		else 
+			mpRoot->loadPlugin( "RenderSystem_GL_d" );
+	#else
+		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
+		if (renderSystemName == "DX11")
+			mpRoot->loadPlugin("RenderSystem_Direct3D11");
+		else
+			mpRoot->loadPlugin("RenderSystem_GL");
+	#endif
     
-#if defined (_WIN32)
+	Ogre::RenderSystem* renderSystem = nullptr;
+	if (renderSystemName == "DX11")
+		renderSystem = mpRoot->getRenderSystemByName("Direct3D11 Rendering Subsystem");
+	else
+		renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
+	
     
-    #if defined (_DEBUG)
-        Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
-        Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
-//		mpRoot->loadPlugin( "RenderSystem_Direct3D11_d" );
-        mpRoot->loadPlugin( "RenderSystem_GL_d" );
-       // mpRoot->loadPlugin( "Plugin_ParticleFX_d");
-		// mpRoot->loadPlugin( "Plugin_CgProgramManager_d");
-		
-    #else
-        Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
-        Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
-//      mpRoot->loadPlugin( "RenderSystem_Direct3D11" );
-		mpRoot->loadPlugin( "RenderSystem_GL" );
-        mpRoot->loadPlugin( "Plugin_ParticleFX" );
-		mpRoot->loadPlugin( "Plugin_CgProgramManager" );
-    #endif
-#endif
 
-#if defined (WIN32)
-	Ogre::RenderSystem *renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
-#else
-	Ogre::RenderSystem *renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
-    
-#endif
 	std::stringstream mediaFolder;
 	mediaFolder << APE_SOURCE_DIR << "/plugins/ogreRender/media";
 
 	mpRoot->setRenderSystem(renderSystem);
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts",				 "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials/scripts", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials/textures", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials/programs", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/models", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/compositors", "FileSystem");
-	//Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/oculus", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/Cg", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/GLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/GLSL150", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/GLSLES", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/HLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/shaders/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
 	
-
 	mpRoot->initialise(false, "Ape");
 	mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC);
 
@@ -615,10 +601,6 @@ void Ape::OgreRenderPlugin::Init()
 		winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
 		winDesc.miscParams["FSAA"] = mOgreRenderWindowConfigList[i].fsaa;
 		winDesc.miscParams["FSAAHint"] = mOgreRenderWindowConfigList[i].fsaaHint;
-        #if defined (__APPLE__)
-            winDesc.miscParams["macAPI"] = "cocoa";
-            winDesc.miscParams["macAPICocoaUseNSView"] = "true";
-        #endif
 		std::stringstream monitorIndexSS;
 		monitorIndexSS << mOgreRenderWindowConfigList[i].monitorIndex;
 		winDesc.miscParams["monitorIndex"] = monitorIndexSS.str().c_str();
@@ -647,11 +629,6 @@ void Ape::OgreRenderPlugin::Init()
 				camera->setInitPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
 				camera->setInitOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
-
-			//TODO somhow no backfaces for that and create a manual instead and animating when zoomin and etc.
-			//if (auto frustumMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("frustum.mesh", mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::GEOMETRY_FILE).lock()))
-				//frustumMeshFile->setFileName("frustum.mesh");
-
 			if (i == 0)
 			{
 				void* windowHnd = 0;

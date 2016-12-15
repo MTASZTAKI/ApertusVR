@@ -34,9 +34,11 @@ namespace Ape
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
-		ResourceFolders mResourceFolders;
+		Ape::ResourceFolders mResourceFolders;
 
-		Color mAmbientColor;
+		Ape::Color mAmbientColor;
+
+		Ape::Color mBackgroundColor;
 
 		std::string mName;
 
@@ -58,6 +60,10 @@ namespace Ape
 		Color getAmbientColor() override;
 
 		std::string getSkyBoxMaterialName() override;
+
+		void setBackgroundColor(Color background) override;
+
+		Color getBackgroundColor() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
