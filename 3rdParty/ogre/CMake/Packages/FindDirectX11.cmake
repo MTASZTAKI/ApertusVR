@@ -18,16 +18,25 @@ if(WIN32) # The only platform it makes sense to check for DirectX11 SDK
 	include(FindPkgMacros)
 	findpkg_begin(DirectX11)
 
-	# Windows 10 Universal SDK
+	# Visual Studio v14 (2015)
 	if(MSVC14)
 		if(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION)
 			set(W10SDK_VER ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION})
 		else()
 			set(W10SDK_VER 10.0.10240.0)
 		endif()
-		find_path(DirectX11_INCLUDE_DIR NAMES d3d11.h HINTS "C:/Program Files (x86)/Windows Kits/10/include/${W10SDK_VER}/um" "C:/Program Files/Windows Kits/10/include/${W10SDK_VER}/um")
-		set(DirectX11_LIBRARY d3d11.lib dxgi.lib dxguid.lib) # in "C:/Program Files (x86)/Windows Kits/10/lib/${W10SDK_VER}/um/${MSVC_CXX_ARCHITECTURE_ID}/"
-		
+
+		# Windows 10 Universal SDK
+		if(EXISTS "C:/Program Files (x86)/Windows Kits/10/include/${W10SDK_VER}/um" OR EXISTS "C:/Program Files/Windows Kits/10/include/${W10SDK_VER}/um")
+			find_path(DirectX11_INCLUDE_DIR NAMES d3d11.h HINTS "C:/Program Files (x86)/Windows Kits/10/include/${W10SDK_VER}/um" "C:/Program Files/Windows Kits/10/include/${W10SDK_VER}/um")
+			set(DirectX11_LIBRARY d3d11.lib dxgi.lib dxguid.lib) # in "C:/Program Files (x86)/Windows Kits/10/lib/${W10SDK_VER}/um/${MSVC_CXX_ARCHITECTURE_ID}/"
+
+		# Windows Phone 8.1 SDK
+		elseif(EXISTS "C:/Program Files (x86)/Windows Kits/8.1/include/um" OR EXISTS "C:/Program Files/Windows Kits/8.1/include/um")
+			find_path(DirectX11_INCLUDE_DIR NAMES d3d11.h HINTS "C:/Program Files (x86)/Windows Kits/8.1/include/um" "C:/Program Files/Windows Kits/8.1/include/um")
+			set(DirectX11_LIBRARY d3d11.lib dxgi.lib dxguid.lib) # in "C:/Program Files (x86)/Windows Kits/8.1/lib/winv6.3/um/${MSVC_CXX_ARCHITECTURE_ID}/"
+		endif()
+
 	# Windows Phone 8.1 SDK
 	elseif(WINDOWS_PHONE AND MSVC12)
 		find_path(DirectX11_INCLUDE_DIR NAMES d3d11.h HINTS "C:/Program Files (x86)/Windows Phone Kits/8.1/include" "C:/Program Files/Windows Phone Kits/8.1/include")
