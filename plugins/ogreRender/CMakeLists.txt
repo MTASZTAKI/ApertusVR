@@ -22,6 +22,7 @@
 
 # ogre patch log begin
 # Dependencies folder was copied to the ogre root folder
+# FindDirectX11.cmake (3rdParty/ogre/CMake/Packages/FindDirectX11.cmake) was patched to find DirectX11 on Windows 8.1
 # ogre patch log begin
 
 #error function
