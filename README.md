@@ -8,7 +8,7 @@ ApertusVR has a loosely coupled structure in order to easily configure the
 engine capabilities and run these configuration instances on different machines
 and connect them together via internet. 
 
-ApertusVR creates multiuser scenes which means that all of the particpant shares
+ApertusVR creates multiuser scenes which means that all of the participant shares
 the same things at the same time.
 
 ApertusVR has set-in-stone interfaces, language bindings and disjunct libraries therefore
