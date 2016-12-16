@@ -25,6 +25,7 @@ SOFTWARE.*/
 #include "ApeLightImpl.h"
 #include "ApeTextGeometryImpl.h"
 #include "ApeFileGeometryImpl.h"
+#include "ApePrimitiveGeometryImpl.h"
 #include "ApeFileMaterialImpl.h"
 #include "ApeCameraImpl.h"
 #include "ApeScenePropertyImpl.h"
@@ -129,6 +130,15 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 				replicaManager->Reference(geometryFile.get());
 			return geometryFile;
 		}
+		case Ape::Entity::GEOMETRY_PRIMITVE:
+		{
+			auto geometryPrimitive = std::make_shared<Ape::PrimitiveGeometryImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, geometryPrimitive));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(geometryPrimitive.get());
+			return geometryPrimitive;
+		}
 		case Ape::Entity::MATERIAL_FILE:
 		{
 			auto materialFile = std::make_shared<Ape::FileMaterialImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
@@ -166,6 +176,9 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::GEOMETRY_FILE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_FILE_DELETE));
+			break;
+		case Ape::Entity::GEOMETRY_PRIMITVE:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PRIMITVE_DELETE));
 			break;
 		case Ape::Entity::MATERIAL_FILE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_FILE_DELETE));

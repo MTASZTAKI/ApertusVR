@@ -20,64 +20,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_IPrimitiveGeometry_H
+#define APE_IPrimitiveGeometry_H
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
+#include "ApeGeometry.h"
+#include "ApePrimitiveGeometryParameterTypes.h"
+#include "ApeVector3.h"
 
 namespace Ape
-{
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			GEOMETRY_FILE,
-			GEOMETRY_MANUAL,
-			GEOMETRY_TEXT,
-			GEOMETRY_PRIMITVE,
-			MATERIAL_FILE,
-			MATERIAL_MANUAL,
-			TEXTURE,
-			CAMERA,
-			COLLISION,
-			INVALID
-		};
-		
+{	
+	class IPrimitiveGeometry : public Ape::Geometry
+	{
 	protected:
-		Entity(std::string name, std::string parentNodeName, Type type) : mName(name), mParentNodeName(parentNodeName), mType(type) {};
+		IPrimitiveGeometry(std::string name, std::string parentNodeName) : Ape::Geometry(name, parentNodeName, Ape::Entity::GEOMETRY_PRIMITVE) {}
 		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		std::string mParentNodeName;
-		
-		Type mType;
+		virtual ~IPrimitiveGeometry() {};
 		
 	public:
-		std::string getName() { return mName; };
+		virtual void setParameters(Ape::PrimitiveGeometryParameterBase parameters) = 0;
+		
+		virtual Ape::PrimitiveGeometryParameterBase getParameters() = 0;
 
-		Type getType() { return mType; };
-
-		std::string getParentNodeName() { return mParentNodeName; };
+		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 	};
-
-	typedef std::shared_ptr<Entity> EntitySharedPtr;
-
-	typedef std::weak_ptr<Entity> EntityWeakPtr;
-
-	typedef std::vector<EntitySharedPtr> EntitySharedPtrVector;
-	
-	typedef std::vector<EntityWeakPtr> EntityWeakPtrVector;
-	
-	typedef std::map<std::string, EntityWeakPtr> EntityWeakPtrNameMap;
-	
-	typedef std::map<std::string, EntitySharedPtr> EntitySharedPtrNameMap;
 }
 
 #endif

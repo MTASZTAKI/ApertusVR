@@ -51,7 +51,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpOverlayTextArea = NULL;
 	mpOverlayFontManager = NULL;
 	mpOverlayFont = NULL;
-	mpShaderGenerator = NULL;
+	mpHlmsPbsManager = NULL;
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 }
@@ -167,6 +167,73 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							{
 								if (mpSceneMgr->hasSceneNode(parentNodeName))
 									mpSceneMgr->getSceneNode(parentNodeName)->attachObject(ogreEntity);
+							}
+						}
+					}
+					break;
+				case Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_PRIMITVE_DELETE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS:
+					{
+						if (auto primitiveGeometry = std::static_pointer_cast<Ape::IPrimitiveGeometry>(mpScene->getEntity(geometryName).lock()))
+						{
+							Ape::PrimitiveGeometryParameterBase* primitiveParameters = &primitiveGeometry->getParameters();
+							if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::BOX)
+							{
+								Ape::PrimitiveGeometryParameterBox* boxParameters = static_cast<Ape::PrimitiveGeometryParameterBox*>(primitiveParameters);
+								Procedural::BoxGenerator().setSizeX(boxParameters->dimensions.x).setSizeY(boxParameters->dimensions.x).setSizeZ(boxParameters->dimensions.x)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::PLANE)
+							{
+								Ape::PrimitiveGeometryParameterPlane* planeParameters = static_cast<Ape::PrimitiveGeometryParameterPlane*>(primitiveParameters);
+								Procedural::PlaneGenerator().setNumSegX(planeParameters->numSeg.x).setNumSegY(planeParameters->numSeg.y)
+									.setSizeX(planeParameters->size.x).setSizeY(planeParameters->size.y)
+									.setUTile(planeParameters->tile.x).setVTile(planeParameters->tile.y)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::SPHERE)
+							{
+								Ape::PrimitiveGeometryParameterSphere* sphereParameters = static_cast<Ape::PrimitiveGeometryParameterSphere*>(primitiveParameters);
+								Procedural::SphereGenerator().setRadius(sphereParameters->radius)
+									.setUTile(sphereParameters->tile.x).setVTile(sphereParameters->tile.y)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::CYLINDER)
+							{
+								Ape::PrimitiveGeometryParameterCylinder* cylinderParameters = static_cast<Ape::PrimitiveGeometryParameterCylinder*>(primitiveParameters);
+								Procedural::CylinderGenerator().setHeight(cylinderParameters->height)
+									.setRadius(cylinderParameters->radius)
+									.setUTile(cylinderParameters->tile)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::TORUS)
+							{
+								Ape::PrimitiveGeometryParameterTorus* torusParameters = static_cast<Ape::PrimitiveGeometryParameterTorus*>(primitiveParameters);
+								Procedural::TorusGenerator().setRadius(torusParameters->radius)
+									.setSectionRadius(torusParameters->sectionRadius)
+									.setUTile(torusParameters->tile.x).setVTile(torusParameters->tile.y)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::CONE)
+							{
+								Ape::PrimitiveGeometryParameterCone* coneParameters = static_cast<Ape::PrimitiveGeometryParameterCone*>(primitiveParameters);
+								Procedural::ConeGenerator().setRadius(coneParameters->radius)
+									.setHeight(coneParameters->height)
+									.setNumSegBase(coneParameters->numSeg.x).setNumSegHeight(coneParameters->numSeg.y)
+									.setUTile(coneParameters->tile)
+									.realizeMesh(geometryName);
+							}
+							else if (primitiveParameters->type == Ape::PrimitiveGeometryParameter::Type::TUBE)
+							{
+								Ape::PrimitiveGeometryParameterTube* tubeParameters = static_cast<Ape::PrimitiveGeometryParameterTube*>(primitiveParameters);
+								Procedural::TubeGenerator().setHeight(tubeParameters->height)
+									.setUTile(tubeParameters->tile)
+									.realizeMesh(geometryName);
 							}
 						}
 					}
@@ -576,6 +643,7 @@ void Ape::OgreRenderPlugin::Init()
 	mpRoot->setRenderSystem(renderSystem);
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts",				 "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
@@ -644,10 +712,12 @@ void Ape::OgreRenderPlugin::Init()
 		}
 	}
 	
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
 	mpOverlaySys = new Ogre::OverlaySystem();
 	mpSceneMgr->addRenderQueueListener(mpOverlaySys);
 
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	mpHlmsPbsManager = new Ogre::HlmsManager(mpSceneMgr);
 
 	mpOgreMovableTextFactory = new Ape::OgreMovableTextFactory();
 	mpRoot->addMovableObjectFactory(mpOgreMovableTextFactory);

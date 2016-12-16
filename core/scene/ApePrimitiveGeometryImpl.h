@@ -20,27 +20,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IPRIMITVEBOXGEOMETRY_H
-#define APE_IPRIMITVEBOXGEOMETRY_H
+#ifndef APE_PrimitiveGeometryImpl_H
+#define APE_PrimitiveGeometryImpl_H
 
-#include <string>
-#include <vector>
-#include "ApeGeometry.h"
-#include "ApeVector3.h"
+#include "ApeIPrimitiveGeometry.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeReplica.h"
 
 namespace Ape
-{	
-	class IPrimitveBoxGeometry : public Geometry
+{
+	class PrimitiveGeometryImpl : public Ape::IPrimitiveGeometry, public Ape::Replica
 	{
-	protected:
-		IPrimitveBoxGeometry(std::string name, std::string parentNodeName) : Geometry(name, parentNodeName, Entity::GEOMETRY_PRIMITVE_BOX) {}
-		
-		virtual ~IPrimitveBoxGeometry() {};
-		
 	public:
-		virtual void setDimensions (Vector3 dimensions) = 0;
-		
-		virtual Vector3 getDimensions () = 0;
+		PrimitiveGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+
+		~PrimitiveGeometryImpl();
+
+		void setParameters(Ape::PrimitiveGeometryParameterBase parameters);
+
+		Ape::PrimitiveGeometryParameterBase getParameters();
+
+		void setMaterial(Ape::MaterialWeakPtr material);
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::PrimitiveGeometryParameterBase mParameters;
 	};
 }
 

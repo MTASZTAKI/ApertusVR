@@ -45,7 +45,8 @@ set (HEADERS
 	ApeGeometry.h
 	ApeIManualGeometry.h
 	ApeIFileGeometry.h
-	ApeIPrimitveBoxGeometry.h
+	ApeIPrimitiveGeometry.h
+	ApePrimitiveGeometryParameterTypes.h
 	ApeSingleton.h
 	ApeIEventManager.h
 	ApeISceneSession.h

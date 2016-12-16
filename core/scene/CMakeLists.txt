@@ -28,6 +28,7 @@ set (HEADERS
 	ApeCameraImpl.h
 	ApeSceneImpl.h
 	ApeFileGeometryImpl.h
+	ApePrimitiveGeometryImpl.h
 	ApeFileMaterialImpl.h
 	ApeScenePropertyImpl.h
 	session/ApeReplica.h
@@ -45,6 +46,7 @@ set (SOURCES
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp
 	ApeFileGeometryImpl.cpp
+	ApePrimitiveGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
 	ApeScenePropertyImpl.cpp
 	session/ApeReplica.cpp

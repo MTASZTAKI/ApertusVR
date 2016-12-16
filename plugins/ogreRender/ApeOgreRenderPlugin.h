@@ -59,11 +59,15 @@ SOFTWARE.*/
 #include "OgreTechnique.h"
 #include "OgrePanelOverlayElement.h"
 #include "OgreWindowEventUtilities.h"
+#include "OgreHlmsManager.h"
+#include "OgreHlmsPbsMaterial.h"
+#include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIPrimitiveGeometry.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
@@ -132,7 +136,7 @@ namespace Ape
 
 		std::map<int, Ogre::RenderWindow*> mRenderWindows;
 
-		Ogre::RTShader::ShaderGenerator* mpShaderGenerator;
+		Ogre::HlmsManager* mpHlmsPbsManager;
 
 		Ape::IScene* mpScene;
 
