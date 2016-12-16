@@ -91,10 +91,10 @@ if (NOT EXISTS ${BUILD_PATH_RELEASE}/apeServer.js)
 endif ()
 
 if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/apeHttpApi.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}}/js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js)
 endif ()
 if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/apeHttpApi.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}}/js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js)
 endif ()
 
 # Run npm install command in output folder. This will install node module dependencies according to package.json
