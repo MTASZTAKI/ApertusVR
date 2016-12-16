@@ -4,7 +4,7 @@ Distributed scene sharing engine for virtual and augmented reality on any platfo
 
 
 ## About
-ApertusVR has a loosly coupled structure in order to easily configure the
+ApertusVR has a loosely coupled structure in order to easily configure the
 engine capabilities and run these configuration instances on different machines
 and connect them together via internet. 
 
