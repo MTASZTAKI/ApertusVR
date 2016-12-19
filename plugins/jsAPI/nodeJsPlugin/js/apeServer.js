@@ -27,6 +27,7 @@ var logger = require('morgan');
 var assert = require('assert');
 var util = require('util');
 var expressValidator = require('express-validator');
+var apePluginLoader = require('apertusvr/js/apePluginLoader');
 var apeHTTPApi = require('apertusvr/js/apeHttpApi');
 
 const moduleTag = 'NodeJsExt';
