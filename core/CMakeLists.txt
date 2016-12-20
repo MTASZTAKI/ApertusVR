@@ -22,9 +22,9 @@
 
 
 add_subdirectory (eventManager)
+add_subdirectory (jsAPI)
 add_subdirectory (mainWindow)
 add_subdirectory (pluginManager)
 add_subdirectory (scene)
 add_subdirectory (system)
 add_subdirectory (systemConfig)
-

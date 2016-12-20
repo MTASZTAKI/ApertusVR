@@ -83,4 +83,4 @@ set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS _CRT_NONSTDC
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS BUILDING_NODE_EXTENSION )
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
+set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Core/JsAPI" )
