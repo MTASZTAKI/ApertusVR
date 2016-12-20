@@ -96,4 +96,5 @@ app.post(rootPath + '/nodes/:name/position', function(req, res, next) {
 app.log('app', 'ApertusVR NodeJS Server');
 app.listen(port, host,  function() {
   app.log('app', 'Listening on ' + host + ':' + port);
+  apePluginLoader.loadPlugins();
 });
