@@ -37,7 +37,7 @@ namespace Ape
 	class Material : public Entity
 	{
 	protected:
-	    Material(std::string name, std::string parentNodeName, Entity::Type entityType) : Entity(name, parentNodeName, entityType) {}
+	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
 		
 		virtual ~Material() {};
 		

@@ -27,7 +27,8 @@ SOFTWARE.*/
 #include <string>
 #include <memory>
 #include <map>
-#include "Ape.h"
+#include "ApeILight.h"
+#include "ApeGeometry.h"
 #include "ApeVector3.h"
 #include "ApeQuaternion.h"
 
@@ -88,6 +89,18 @@ namespace Ape
 
 		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
 	};
+
+	typedef std::shared_ptr<INode> NodeSharedPtr;
+
+	typedef std::weak_ptr<INode> NodeWeakPtr;
+	
+	typedef std::vector<NodeSharedPtr> NodeSharedPtrVector;
+	
+	typedef std::vector<NodeWeakPtr> NodeWeakPtrVector;
+
+	typedef std::map<std::string, NodeWeakPtr> NodeWeakPtrNameMap;
+	
+	typedef std::map<std::string, NodeSharedPtr> NodeSharedPtrNameMap;
 }
 
 #endif

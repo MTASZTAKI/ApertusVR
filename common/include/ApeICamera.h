@@ -35,7 +35,7 @@ namespace Ape
 	class ICamera : public Entity
 	{
 	protected:
-		ICamera(std::string name, std::string parentNodeName) : Entity(name, parentNodeName, Entity::CAMERA) {}
+		ICamera(std::string name) : Entity(name, Entity::CAMERA) {}
 		virtual ~ICamera() {};
 
 	public:

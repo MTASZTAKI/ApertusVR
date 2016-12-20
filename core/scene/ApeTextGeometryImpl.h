@@ -32,7 +32,7 @@ namespace Ape
 	class TextGeometryImpl : public Ape::ITextGeometry, public Ape::Replica
 	{
 	public:
-		TextGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		TextGeometryImpl(std::string name, bool isHostCreated);
 
 		~TextGeometryImpl();
 		

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApePrimitiveGeometryImpl.h"
 
-Ape::PrimitiveGeometryImpl::PrimitiveGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::IPrimitiveGeometry(name, parentNodeName), Ape::Replica("PrimitiveGeometry", isHostCreated)
+Ape::PrimitiveGeometryImpl::PrimitiveGeometryImpl(std::string name, bool isHostCreated) : Ape::IPrimitiveGeometry(name), Ape::Replica("PrimitiveGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mParameters = Ape::PrimitiveGeometryParameterBase();

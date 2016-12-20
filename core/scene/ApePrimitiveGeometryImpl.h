@@ -32,7 +32,7 @@ namespace Ape
 	class PrimitiveGeometryImpl : public Ape::IPrimitiveGeometry, public Ape::Replica
 	{
 	public:
-		PrimitiveGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		PrimitiveGeometryImpl(std::string name, bool isHostCreated);
 
 		~PrimitiveGeometryImpl();
 

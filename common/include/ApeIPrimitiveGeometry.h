@@ -34,7 +34,7 @@ namespace Ape
 	class IPrimitiveGeometry : public Ape::Geometry
 	{
 	protected:
-		IPrimitiveGeometry(std::string name, std::string parentNodeName) : Ape::Geometry(name, parentNodeName, Ape::Entity::GEOMETRY_PRIMITVE) {}
+		IPrimitiveGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_PRIMITVE) {}
 		
 		virtual ~IPrimitiveGeometry() {};
 		
@@ -44,6 +44,8 @@ namespace Ape
 		virtual Ape::PrimitiveGeometryParameterBase getParameters() = 0;
 
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

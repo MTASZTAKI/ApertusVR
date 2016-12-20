@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include <memory>
 #include <string>
 #include <vector>
+#include "Ape.h"
 #include "ApeEntity.h"
 #include "ApeMaterial.h"
 
@@ -48,8 +49,8 @@ namespace Ape
 		};
 		
 	protected:
-	    Geometry(std::string name, std::string parentNodeName, Entity::Type entityType) : Entity(name, parentNodeName, entityType) 
-			, mGeometries(GeometryLodLevelVectorMap()), mMaterial(MaterialWeakPtr()), mOperationType(OperationType::INVALID) {};
+	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
+			, mGeometries(GeometryLodLevelVectorMap()), mMaterial(MaterialWeakPtr()), mOperationType(OperationType::INVALID), mParentNode(Ape::NodeWeakPtr()){};
 		
 		virtual ~Geometry() {};
 		
@@ -58,6 +59,8 @@ namespace Ape
 		MaterialWeakPtr mMaterial;
 		
 		OperationType mOperationType;
+
+		Ape::NodeWeakPtr mParentNode;
 		
 	public:
 		
@@ -65,10 +68,10 @@ namespace Ape
 		
 		MaterialWeakPtr getMaterial() { return mMaterial; };
 		
-		OperationType getOperationType() { return mOperationType; };	
-	};
+		OperationType getOperationType() { return mOperationType; };
 
-	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
+		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
+	};
 }
 
 #endif

@@ -34,7 +34,7 @@ namespace Ape
 	class ITextGeometry : public Geometry
 	{
 	protected:
-		ITextGeometry(std::string name, std::string parentNodeName) : Geometry(name, parentNodeName, Entity::GEOMETRY_TEXT) {}
+		ITextGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_TEXT) {}
 		
 		virtual ~ITextGeometry() {};
 		

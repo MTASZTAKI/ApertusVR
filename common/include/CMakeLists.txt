@@ -22,6 +22,7 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
+    Ape.h
 	ApeColor.h
 	ApeEntity.h
 	ApeEvent.h

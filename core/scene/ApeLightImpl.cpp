@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApeLightImpl.h"
 
-Ape::LightImpl::LightImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::ILight(name, parentNodeName), Ape::Replica("Light", isHostCreated)
+Ape::LightImpl::LightImpl(std::string name, bool isHostCreated) : Ape::ILight(name), Ape::Replica("Light", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mLightType = Ape::Light::Type::INVALID;
@@ -108,7 +108,6 @@ void Ape::LightImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnec
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-	allocationIdBitstream->Write(RakNet::RakString(mParentNodeName.c_str()));
 }
 
 RakNet::RM3SerializationResult Ape::LightImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

@@ -26,6 +26,7 @@
 
 # ogre_procedural patch log begin
 # CMakeLists.txt was modified in the ogre_procedural root folder
+# FindOGRE.cmake was modified in the ogre_procedural root folder/Cmake/Packages folder
 # ogre_procedural patch log begin
 
 #error function

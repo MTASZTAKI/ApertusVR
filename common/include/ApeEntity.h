@@ -49,13 +49,11 @@ namespace Ape
 		};
 		
 	protected:
-		Entity(std::string name, std::string parentNodeName, Type type) : mName(name), mParentNodeName(parentNodeName), mType(type) {};
+		Entity(std::string name, Type type) : mName(name), mType(type) {};
 		
 		virtual ~Entity() {};
 		
 		std::string mName;
-		
-		std::string mParentNodeName;
 		
 		Type mType;
 		
@@ -63,21 +61,7 @@ namespace Ape
 		std::string getName() { return mName; };
 
 		Type getType() { return mType; };
-
-		std::string getParentNodeName() { return mParentNodeName; };
 	};
-
-	typedef std::shared_ptr<Entity> EntitySharedPtr;
-
-	typedef std::weak_ptr<Entity> EntityWeakPtr;
-
-	typedef std::vector<EntitySharedPtr> EntitySharedPtrVector;
-	
-	typedef std::vector<EntityWeakPtr> EntityWeakPtrVector;
-	
-	typedef std::map<std::string, EntityWeakPtr> EntityWeakPtrNameMap;
-	
-	typedef std::map<std::string, EntitySharedPtr> EntitySharedPtrNameMap;
 }
 
 #endif

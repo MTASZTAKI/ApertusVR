@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApeFileGeometryImpl.h"
 
-Ape::FileGeometryImpl::FileGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::IFileGeometry(name, parentNodeName), Ape::Replica("FileGeometry", isHostCreated)
+Ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : Ape::IFileGeometry(name), Ape::Replica("FileGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();
@@ -48,7 +48,6 @@ void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinatio
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-	allocationIdBitstream->Write(RakNet::RakString(mParentNodeName.c_str()));
 }
 
 RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApeTextGeometryImpl.h"
 
-Ape::TextGeometryImpl::TextGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::ITextGeometry(name, parentNodeName), Ape::Replica("TextGeometry", isHostCreated)
+Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : Ape::ITextGeometry(name), Ape::Replica("TextGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mCaption = "";
@@ -72,7 +72,6 @@ void Ape::TextGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinatio
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-	allocationIdBitstream->Write(RakNet::RakString(mParentNodeName.c_str()));
 }
 
 RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

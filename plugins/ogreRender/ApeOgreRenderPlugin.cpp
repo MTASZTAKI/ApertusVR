@@ -146,10 +146,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == Ape::Event::Group::GEOMETRY)
 		{			
-			if (auto geometry = mpScene->getEntity(event.subjectName).lock())
+			if (auto geometry = std::static_pointer_cast<Ape::Geometry>(mpScene->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometry->getName();
-				std::string parentNodeName = geometry->getParentNodeName();
+				std::string parentNodeName = "";
+				if (auto parentNode = geometry->getParentNode().lock())
+					parentNodeName = parentNode->getName();
 				switch (event.type)
 				{
 				case Ape::Event::Type::GEOMETRY_FILE_CREATE:
@@ -321,8 +323,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							if (auto viewPort = mRenderWindows[atoi(event.subjectName.c_str())]->addViewport(ogreCamera))
 							{
-								if (mpSceneMgr->hasSceneNode(camera->getParentNodeName()))
-									mpSceneMgr->getSceneNode(camera->getParentNodeName())->attachObject(ogreCamera);
+								if (auto parentNode = std::static_pointer_cast<Ape::IPrimitiveGeometry>(mpScene->getEntity(event.subjectName).lock()))
+								{
+									if (mpSceneMgr->hasSceneNode(parentNode->getName()))
+										mpSceneMgr->getSceneNode(parentNode->getName())->attachObject(ogreCamera);
+								}
 								//TODO why it is only working?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);

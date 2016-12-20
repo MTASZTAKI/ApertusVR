@@ -82,7 +82,7 @@ void Ape::NodeImpl::setParent(std::string parentNodeName)
 	if (auto parentNode = mpScene->getNode(mParentName).lock())
 	{
 		mParentName = parentNodeName;
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENT));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	else
 		mParentName = "";	
@@ -185,7 +185,7 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentName = parentName.C_String();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENT));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));

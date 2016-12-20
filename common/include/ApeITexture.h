@@ -44,7 +44,7 @@ namespace Ape
 	class ITexture : public Entity
 	{
 	protected:
-	    ITexture(std::string name, std::string parentNodeName) : Entity(name, parentNodeName, Entity::TEXTURE) {}
+	    ITexture(std::string name) : Entity(name, Entity::TEXTURE) {}
 		
 		virtual ~ITexture() {};
 		

@@ -33,7 +33,7 @@ namespace Ape
 	{
 	public:
 
-		LightImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		LightImpl(std::string name, bool isHostCreated);
 
 		~LightImpl();
 		

@@ -78,7 +78,7 @@ namespace Ape
 	class ILight : public Entity
 	{
 	protected:
-	    ILight(std::string name, std::string parentNodeName) : Entity(name, parentNodeName, Entity::LIGHT) {}
+	    ILight(std::string name) : Entity(name, Entity::LIGHT) {}
 		
 		virtual ~ILight() {};
 		

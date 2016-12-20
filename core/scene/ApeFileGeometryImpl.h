@@ -32,7 +32,7 @@ namespace Ape
 	class FileGeometryImpl : public Ape::IFileGeometry, public Ape::Replica
 	{
 	public:
-		FileGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		FileGeometryImpl(std::string name, bool isHostCreated);
 
 		~FileGeometryImpl();
 		
