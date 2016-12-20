@@ -34,17 +34,16 @@ const moduleTag = 'NodeJsExt';
 const apiVersion = 'v1';
 const rootPath = '/api/' + apiVersion;
 
-// encapsulate console.log()
-function log(tag, str) {
-  console.log(moduleTag + ': ' + tag + ': ' + str);
-}
-
 // set server host and port
 var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
 var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
 
 // create Express server
 var app = express();
+
+app['log'] = function(tag, str) {
+  console.log(moduleTag + ': ' + tag + ': ' + str);
+}
 
 // use logger
 app.use(logger('dev'));
@@ -94,7 +93,7 @@ app.post(rootPath + '/nodes/:name/position', function(req, res, next) {
   apeHTTPApi.setPosition(req, res, next);
 });
 
-log('app', 'ApertusVR NodeJS Server');
+app.log('app', 'ApertusVR NodeJS Server');
 app.listen(port, host,  function() {
-  log('app', 'Listening on ' + host + ':' + port);
+  app.log('app', 'Listening on ' + host + ':' + port);
 });
