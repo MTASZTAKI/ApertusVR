@@ -51,7 +51,9 @@ void Ape::PluginManagerImpl::CreatePlugins()
 {
 	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
 	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
-	for (std::vector<std::string>::iterator it = pluginManagerConfig.pluginnames.begin(); it != pluginManagerConfig.pluginnames.end(); ++it)
+	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
+	pluginNames.push_back("ApeNodeJsPlugin");
+	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
 			mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::CreatePlugin, this, (*it)));
