@@ -24,21 +24,21 @@ void ApeSampleScenePlugin::Init()
 	mPlanetNode = mpScene->createNode("planetNode");
 	if (auto planetNode = mPlanetNode.lock())
 	{
-		if (auto sceneProperty = mpScene->getProperty().lock())
+		if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 		{
-			sceneProperty->setAmbientColor(Ape::Color(0.3f, 0.3f, 0.3f, 1.0f));
-			if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", "", Ape::Entity::MATERIAL_FILE).lock()))
-			{
-				universeSkyBoxMaterial->setFileName("universe.material");
-				sceneProperty->setSkyBoxMaterialName(universeSkyBoxMaterial->getName());
-			}
+			universeSkyBoxMaterial->setFileName("universe.material");
+			universeSkyBoxMaterial->setAsSkyBox();
 		}
-		if (auto planetMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("planet.mesh", planetNode->getName(), Ape::Entity::GEOMETRY_FILE).lock()))
+		if (auto planetMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("planet.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
 			planetMeshFile->setFileName("planet.mesh");
-		if (auto helloWorldText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("helloWorldText", planetNode->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
+			planetMeshFile->setParentNode(planetNode);
+		}
+		if (auto helloWorldText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("helloWorldText", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
 			helloWorldText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
 			helloWorldText->setCaption("helloWorld");
+			helloWorldText->setParentNode(planetNode);
 		}
 	}
 }

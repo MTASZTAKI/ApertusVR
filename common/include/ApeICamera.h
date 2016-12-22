@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 #include "ApeQuaternion.h"
 #include "ApeRadian.h"
+#include "ApeINode.h"
 
 namespace Ape
 {	
@@ -36,6 +37,7 @@ namespace Ape
 	{
 	protected:
 		ICamera(std::string name) : Entity(name, Entity::CAMERA) {}
+
 		virtual ~ICamera() {};
 
 	public:
@@ -80,6 +82,9 @@ namespace Ape
 
 		virtual void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) = 0;
 
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual Ape::NodeWeakPtr getParentNode() = 0;
 	};
 
 	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;

@@ -28,7 +28,6 @@ SOFTWARE.*/
 #include "ApePrimitiveGeometryImpl.h"
 #include "ApeFileMaterialImpl.h"
 #include "ApeCameraImpl.h"
-#include "ApeScenePropertyImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -40,8 +39,6 @@ Ape::SceneImpl::SceneImpl()
 	mNodes = Ape::NodeSharedPtrNameMap();
 	mEntities = Ape::EntitySharedPtrNameMap();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	if (mpSceneSessionImpl->isHost())
-		createProperty();
 	msSingleton = this;
 }
 
@@ -99,13 +96,13 @@ Ape::EntityWeakPtr Ape::SceneImpl::getEntity(std::string name)
 		return Ape::EntityWeakPtr();
 }
 
-Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string parentNodeName, Ape::Entity::Type type)
+Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::Type type)
 {
 	switch (type) 
 	{
 		case Ape::Entity::LIGHT:
 		{
-			auto light = std::make_shared<Ape::LightImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			auto light = std::make_shared<Ape::LightImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, light));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::LIGHT_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -114,7 +111,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 		}
 		case Ape::Entity::GEOMETRY_TEXT:
 		{
-			auto geometryText = std::make_shared<Ape::TextGeometryImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			auto geometryText = std::make_shared<Ape::TextGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, geometryText));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_TEXT_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -123,7 +120,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 		}
 		case Ape::Entity::GEOMETRY_FILE:
 		{
-			auto geometryFile = std::make_shared<Ape::FileGeometryImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			auto geometryFile = std::make_shared<Ape::FileGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, geometryFile));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_FILE_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -132,7 +129,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 		}
 		case Ape::Entity::GEOMETRY_PRIMITVE:
 		{
-			auto geometryPrimitive = std::make_shared<Ape::PrimitiveGeometryImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			auto geometryPrimitive = std::make_shared<Ape::PrimitiveGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, geometryPrimitive));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -141,7 +138,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 		}
 		case Ape::Entity::MATERIAL_FILE:
 		{
-			auto materialFile = std::make_shared<Ape::FileMaterialImpl>(name, parentNodeName, mpSceneSessionImpl->isHost());
+			auto materialFile = std::make_shared<Ape::FileMaterialImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, materialFile));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_FILE_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -150,7 +147,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, std::string pa
 		}
 		case Ape::Entity::CAMERA:
 		{
-			auto camera = std::make_shared<Ape::CameraImpl>(name, parentNodeName);
+			auto camera = std::make_shared<Ape::CameraImpl>(name);
 			mEntities.insert(std::make_pair(name, camera));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_CREATE));
 			return camera;
@@ -191,18 +188,5 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 		default:
 			break;
 	}
-}
-
-Ape::ScenePropertyWeakPtr Ape::SceneImpl::getProperty()
-{
-	return mProperty;
-}
-
-Ape::ScenePropertyWeakPtr Ape::SceneImpl::createProperty()
-{
-	mProperty = std::make_shared<Ape::ScenePropertyImpl>("SceneProperty", mpSceneSessionImpl->isHost());
-	if (auto replicaManager = mReplicaManager.lock())
-		replicaManager->Reference((Ape::ScenePropertyImpl*)mProperty.get());
-	return mProperty;
 }
 

@@ -32,8 +32,6 @@ SOFTWARE.*/
 
 namespace Ape
 {		
-	typedef std::map<int, EntityWeakPtrVector> GeometryLodLevelVectorMap;	
-	
 	class Geometry : public Entity
 	{
 	public:
@@ -50,23 +48,17 @@ namespace Ape
 		
 	protected:
 	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
-			, mGeometries(GeometryLodLevelVectorMap()), mMaterial(MaterialWeakPtr()), mOperationType(OperationType::INVALID), mParentNode(Ape::NodeWeakPtr()){};
+			,mOperationType(OperationType::INVALID), mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
 		
 		virtual ~Geometry() {};
-		
-		GeometryLodLevelVectorMap mGeometries;
-		
-		MaterialWeakPtr mMaterial;
 		
 		OperationType mOperationType;
 
 		Ape::NodeWeakPtr mParentNode;
+
+		std::string mParentNodeName;
 		
 	public:
-		
-		GeometryLodLevelVectorMap getGeometries() { return mGeometries; };
-		
-		MaterialWeakPtr getMaterial() { return mMaterial; };
 		
 		OperationType getOperationType() { return mOperationType; };
 

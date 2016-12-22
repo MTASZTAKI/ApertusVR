@@ -26,6 +26,7 @@ Ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : 
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();
+	mpScene = Ape::IScene::getSingletonPtr();
 }
 
 Ape::FileGeometryImpl::~FileGeometryImpl()
@@ -44,6 +45,18 @@ void Ape::FileGeometryImpl::setFileName(std::string fileName)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_FILENAME));
 }
 
+void Ape::FileGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+{
+	if (auto parentNodeSP = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mParentNodeName = parentNodeSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+	}
+	else
+		mParentNode = Ape::NodeWeakPtr();
+}
+
 void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -56,6 +69,7 @@ RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -69,6 +83,13 @@ void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	{
 		mFileName = fileName.C_String();
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_FILENAME));
+	}
+	RakNet::RakString parentName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
+	{
+		mParentNodeName = parentName.C_String();
+		mParentNode = mpScene->getNode(mParentNodeName);
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

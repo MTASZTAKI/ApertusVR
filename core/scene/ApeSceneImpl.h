@@ -58,15 +58,11 @@ namespace Ape
 
 		Ape::EntityWeakPtr getEntity(std::string name) override;
 
-		Ape::EntityWeakPtr createEntity(std::string name, std::string parentNodeName, Ape::Entity::Type type) override;
-
-		Ape::ScenePropertyWeakPtr getProperty() override;
+		Ape::EntityWeakPtr createEntity(std::string name, Ape::Entity::Type type) override;
 
 		void deleteNode(std::string name) override;
 
 		void deleteEntity(std::string name) override;
-
-		Ape::ScenePropertyWeakPtr createProperty();
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
@@ -74,8 +70,6 @@ namespace Ape
 		Ape::NodeSharedPtrNameMap mNodes;
 		
 		Ape::EntitySharedPtrNameMap mEntities;
-		
-		Ape::ScenePropertySharedPtr mProperty;
 		
 		Ape::ISystemConfig* mpSystemConfig;
 

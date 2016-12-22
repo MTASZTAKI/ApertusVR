@@ -40,8 +40,6 @@ namespace Ape
 		
 		std::string getName() const override;
 		
-		std::string getParentName() const override;
-		
 		Vector3 getPosition() const override;
 		
 		Vector3 getDerivedPosition() const override;
@@ -54,7 +52,9 @@ namespace Ape
 		
 		Vector3 getDerivedScale() const override;
 		
-		void setParent(std::string parentNodeName) override;
+		void setParentNode(Ape::NodeWeakPtr parentNode);
+
+		Ape::NodeWeakPtr getParentNode();
 		
 		void setPosition(Vector3 position) override;
 		
@@ -79,13 +79,15 @@ namespace Ape
 
 		std::string mName;
 
-		std::string mParentName;
+		Ape::NodeWeakPtr mParentNode;
 
-		Vector3 mPosition;
+		std::string mParentNodeName;
 
-		Quaternion mOrientation;
+		Ape::Vector3 mPosition;
 
-		Vector3 mScale;
+		Ape::Quaternion mOrientation;
+
+		Ape::Vector3 mScale;
 	};
 }
 

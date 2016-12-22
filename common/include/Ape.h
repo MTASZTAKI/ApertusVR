@@ -20,64 +20,65 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_INODE_H
-#define APE_INODE_H
+#ifndef APE_H
+#define APE_H
 
 #include <vector>
 #include <string>
-#include <memory>
 #include <map>
-#include "Ape.h"
-#include "ApeVector3.h"
-#include "ApeQuaternion.h"
+#include <memory>
 
 namespace Ape
 {	
-	namespace Node
-	{
-		enum TransformationSpace
-		{
-			LOCAL,
-			PARENT,
-			WORLD,
-			INVALID
-		};
-	}
+	class INode;
 
-	class INode
-	{
-	protected:
-		virtual ~INode() {};
-		
-	public:
-		virtual std::string getName() const = 0;
+	typedef std::shared_ptr<INode> NodeSharedPtr;
 
-		virtual Vector3 getPosition() const = 0;
+	typedef std::weak_ptr<INode> NodeWeakPtr;
 
-		virtual Vector3 getDerivedPosition() const = 0;
+	typedef std::vector<NodeSharedPtr> NodeSharedPtrVector;
 
-		virtual Quaternion getOrientation() const = 0;
+	typedef std::vector<NodeWeakPtr> NodeWeakPtrVector;
 
-		virtual Quaternion getDerivedOrientation() const = 0;
+	typedef std::map<std::string, NodeWeakPtr> NodeWeakPtrNameMap;
 
-		virtual Vector3 getScale() const = 0;
+	typedef std::map<std::string, NodeSharedPtr> NodeSharedPtrNameMap;
 
-		virtual Vector3 getDerivedScale() const = 0;
+	class Geometry;
+	
+	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+	class ILight;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+	typedef std::weak_ptr<ILight> LightWeakPtr;
 
-		virtual void setPosition(Vector3 position) = 0;
+	class Entity;
 
-		virtual void setOrientation(Quaternion orientation) = 0;
+	typedef std::shared_ptr<Entity> EntitySharedPtr;
 
-		virtual void setScale(Vector3 scale) = 0;
+	typedef std::weak_ptr<Entity> EntityWeakPtr;
 
-		virtual void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
+	typedef std::vector<EntitySharedPtr> EntitySharedPtrVector;
 
-		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
-	};
+	typedef std::vector<EntityWeakPtr> EntityWeakPtrVector;
+
+	typedef std::map<std::string, EntityWeakPtr> EntityWeakPtrNameMap;
+
+	typedef std::map<std::string, EntitySharedPtr> EntitySharedPtrNameMap;
+
+	class Geometry;
+
+	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
+
+	class SubGeometry;
+
+	class Pass;
+
+	typedef std::weak_ptr<Pass> PassWeakPtr;
+
+	class Material;
+
+	typedef std::weak_ptr<Material> MaterialWeakPtr;
 }
 
 #endif

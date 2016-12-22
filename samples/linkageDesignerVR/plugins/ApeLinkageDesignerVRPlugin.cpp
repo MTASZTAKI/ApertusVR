@@ -22,11 +22,6 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 void ApeLinkageDesignerVRPlugin::Init()
 {
 	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
-	if (auto sceneProperty = mpScene->getProperty().lock())
-	{
-		sceneProperty->setAmbientColor(Ape::Color(0.1f, 0.1f, 0.1f, 1.0f));
-		sceneProperty->setBackgroundColor(Ape::Color(1.0f, 1.0f, 1.0f, 1.0f));
-	}
 }
 
 void ApeLinkageDesignerVRPlugin::Run()

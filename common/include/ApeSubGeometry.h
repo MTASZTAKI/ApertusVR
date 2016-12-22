@@ -20,46 +20,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#ifndef APE_SUBGEOMETRY_H
+#define APE_SUBGEOMETRY_H
 
-#ifndef APE_ISCENEPROPERTY_H
-#define APE_ISCENEPROPERTY_H
-
-#include <map>
-#include <vector>
-#include <string>
 #include <memory>
-#include "ApeColor.h"
+#include <string>
+#include <vector>
+#include "Ape.h"
+#include "ApeEntity.h"
+#include "ApeMaterial.h"
 
 namespace Ape
-{
-	typedef std::vector<std::string> ResourceFolders;
-
-	class ISceneProperty
-	{ 
+{		
+	class SubGeometry : public Entity
+	{
 	protected:
-		virtual ~ISceneProperty() {};
+		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType)
+			, mParentGeometry(Ape::GeometryWeakPtr()){};
+		
+		virtual ~SubGeometry() {};
+
+		Ape::GeometryWeakPtr mParentGeometry;
 		
 	public:
-		virtual void addResourceLocation(std::string resourceFolder, std::string resourceGroupName) = 0;
+		Ape::GeometryWeakPtr getParentGeometry() { return mParentGeometry; };
 
-		virtual ResourceFolders getResourceFolders() = 0;
-
-		virtual void setAmbientColor(Color ambient) = 0;
-
-		virtual Color getAmbientColor() = 0;
-
-		virtual void setBackgroundColor(Color background) = 0;
-
-		virtual Color getBackgroundColor() = 0;
-		
-		virtual void setSkyBoxMaterialName(std::string materialName) = 0;
-
-		virtual std::string getSkyBoxMaterialName() = 0;
 	};
-
-	typedef std::shared_ptr<ISceneProperty> ScenePropertySharedPtr;
-
-	typedef std::weak_ptr<ISceneProperty> ScenePropertyWeakPtr;
 }
 
 #endif

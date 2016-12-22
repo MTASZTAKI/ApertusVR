@@ -30,6 +30,7 @@ set (HEADERS
 	ApeICamera.h
 	ApeILight.h
 	ApeMaterial.h
+	ApePass.h
 	ApeIManualMaterial.h
 	ApeIFileMaterial.h
 	ApeINode.h
@@ -44,6 +45,7 @@ set (HEADERS
 	ApeVector3.h
 	ApeVector4.h
 	ApeGeometry.h
+	ApeSubGeometry.h
 	ApeIManualGeometry.h
 	ApeIFileGeometry.h
 	ApeIPrimitiveGeometry.h
@@ -58,7 +60,6 @@ set (HEADERS
 	ApeISystemConfig.h
 	ApeDoubleQueue.h
 	ApeIMainWindow.h
-	ApeISceneProperty.h
 	)
 
 add_custom_target(

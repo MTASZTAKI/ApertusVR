@@ -30,9 +30,9 @@ namespace Ape
 	class IManualMaterial : public Material
 	{
 	protected:
-	    IManualMaterial(std::string name, std::string parentNodeName) : Material(name, parentNodeName, Entity::MATERIAL_MANUAL) {}
+	    IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
 		
-		virtual ~IFileMaterial() {};
+		virtual ~IManualMaterial() {};
 		
 	public:
 		virtual void setDiffuseColor(Color diffuse) = 0;
@@ -45,9 +45,7 @@ namespace Ape
 
 		virtual void setShininess(float shininess) = 0;
 		
-		virtual void setSceneBlend(bool enable) = 0;
-		
-		virtual void setTextures(Textures textures) = 0;
+		virtual void setPass(Ape::PassWeakPtr pass) = 0;
 	};
 }
 

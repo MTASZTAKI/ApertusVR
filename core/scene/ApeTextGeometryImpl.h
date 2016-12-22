@@ -25,7 +25,9 @@ SOFTWARE.*/
 
 #include "ApeITextGeometry.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
 #include "ApeReplica.h"
+#include "ApeINode.h"
 
 namespace Ape
 {
@@ -48,6 +50,8 @@ namespace Ape
 		
 		void setOffset(Vector3 position) override;
 
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -56,6 +60,8 @@ namespace Ape
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 
 		std::string mCaption;
 

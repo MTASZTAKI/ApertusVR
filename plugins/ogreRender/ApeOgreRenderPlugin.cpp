@@ -34,7 +34,6 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::SCENEPROPERTY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::LIGHT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -73,50 +72,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 	while (!mEventDoubleQueue.emptyPop())
 	{
 		Ape::Event event = mEventDoubleQueue.front();
-		if (event.group == Ape::Event::Group::SCENEPROPERTY)
-		{
-			if (auto sceneProperty = mpScene->getProperty().lock())
-			{
-				switch (event.type)
-				{
-				case Ape::Event::Type::SCENEPROPERTY_ADDRESOURCEFOLDER:
-					{
-						auto resourceFolders = sceneProperty->getResourceFolders();
-						for (auto resourceFolder : resourceFolders)
-						{
-							if (!Ogre::ResourceGroupManager::getSingleton().resourceLocationExists(resourceFolder))
-							{
-								std::string resourceGroupName = "OTF";
-								/*Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceFolder, "FileSystem", resourceGroupName);
-								Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(resourceGroupName);
-								std::cout << "Parsing resource location " << resourceFolder << " please wait......" << std::endl;
-								while (!Ogre::ResourceGroupManager::getSingleton().isResourceGroupInitialised(resourceGroupName))
-									std::this_thread::sleep_for(std::chrono::milliseconds(100));
-								std::cout << "Resource location " << resourceFolder << " parsed successfully" << std::endl;*/
-							}
-						}
-					}
-					break;
-				case Ape::Event::Type::SCENEPROPERTY_SKYBOXMATERIAL:
-					{
-						std::string skyBoxMaterialName = sceneProperty->getSkyBoxMaterialName();
-						if (Ogre::MaterialManager::getSingleton().resourceExists(skyBoxMaterialName))
-							mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
-					}
-					break;
-				case Ape::Event::Type::SCENEPROPERTY_AMBIENTCOLOR:
-						mpSceneMgr->setAmbientLight(ConversionToOgre(sceneProperty->getAmbientColor()));
-					break;
-				case Ape::Event::Type::SCENEPROPERTY_BACKGROUNDCOLOR:
-					{
-						for (Ogre::SceneManager::CameraIterator it = mpSceneMgr->getCameraIterator(); it.hasMoreElements(); it.moveNext())
-							it.current()->second->getViewport()->setBackgroundColour(ConversionToOgre(sceneProperty->getBackgroundColor()));
-					}
-					break;
-				}
-			}
-		}
-		else if (event.group == Ape::Event::Group::NODE)
+		if (event.group == Ape::Event::Group::NODE)
 		{
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
@@ -289,6 +245,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::MATERIAL_FILE_FILENAME:
 					;
+					break;
+				case Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX:
+					{
+						std::string skyBoxMaterialName = material->getName();
+						if (Ogre::MaterialManager::getSingleton().resourceExists(skyBoxMaterialName))
+							mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
+					}
 					break;
 				}
 			}
@@ -690,11 +653,12 @@ void Ape::OgreRenderPlugin::Init()
 		{
 			mRenderWindows[i] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 			mRenderWindows[i]->setDeactivateOnFocusChange(false);
-			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName, Ape::Entity::Type::CAMERA).lock());
+			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
 			if (camera)
 			{
 				//TODO why it is not ok
 				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+				camera->setParentNode(mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName));
 				camera->setFocalLength(1.0f);
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);

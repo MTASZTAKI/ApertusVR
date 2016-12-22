@@ -22,9 +22,10 @@ SOFTWARE.*/
 
 #include "ApeCameraImpl.h"
 
-Ape::CameraImpl::CameraImpl(std::string name, std::string parentNodeName) : Ape::ICamera(name, parentNodeName)
+Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpScene = Ape::IScene::getSingletonPtr();
 	mFocalLength = 0.0f;
 	mFrustumOffset = Ape::Vector2();
 	mFOVy = 0.0f;
@@ -35,6 +36,7 @@ Ape::CameraImpl::CameraImpl(std::string name, std::string parentNodeName) : Ape:
 	mOrientationOffset = Ape::Quaternion();
 	mInitPositionOffset = Ape::Vector3();
 	mInitOrientationOffset = Ape::Quaternion();
+	mParentNode = Ape::NodeWeakPtr();
 }
 
 Ape::CameraImpl::~CameraImpl()
@@ -150,5 +152,21 @@ void Ape::CameraImpl::setInitOrientationOffset(Ape::Quaternion initOrientationOf
 {
 	mInitOrientationOffset = initOrientationOffset;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET));
+}
+
+void Ape::CameraImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+{
+	if (auto parentNodeSP = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PARENTNODE));
+	}
+	else
+		mParentNode = Ape::NodeWeakPtr();
+}
+
+Ape::NodeWeakPtr Ape::CameraImpl::getParentNode()
+{
+	return mParentNode;
 }
 

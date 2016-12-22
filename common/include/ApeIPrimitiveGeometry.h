@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 #include "ApePrimitiveGeometryParameterTypes.h"
 #include "ApeVector3.h"
+#include "ApeINode.h"
 
 namespace Ape
 {	
@@ -43,9 +44,11 @@ namespace Ape
 		
 		virtual Ape::PrimitiveGeometryParameterBase getParameters() = 0;
 
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

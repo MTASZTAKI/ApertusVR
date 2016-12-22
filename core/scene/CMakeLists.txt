@@ -30,7 +30,6 @@ set (HEADERS
 	ApeFileGeometryImpl.h
 	ApePrimitiveGeometryImpl.h
 	ApeFileMaterialImpl.h
-	ApeScenePropertyImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -48,7 +47,6 @@ set (SOURCES
 	ApeFileGeometryImpl.cpp
 	ApePrimitiveGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
-	ApeScenePropertyImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp

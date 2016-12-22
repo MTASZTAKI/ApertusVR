@@ -25,13 +25,14 @@ SOFTWARE.*/
 
 #include "ApeICamera.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
 	class CameraImpl : public Ape::ICamera
 	{
 	public:
-		CameraImpl(std::string name, std::string parentNodeName);
+		CameraImpl(std::string name);
 
 		~CameraImpl();
 		
@@ -75,8 +76,14 @@ namespace Ape
 
 		void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) override;
 
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		Ape::NodeWeakPtr getParentNode() override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 
 		float mFocalLength;
 
@@ -97,6 +104,8 @@ namespace Ape
 		Ape::Quaternion mInitOrientationOffset;
 
 		Ape::Vector3 mInitPositionOffset;
+
+		NodeWeakPtr mParentNode;
 
 	};
 }

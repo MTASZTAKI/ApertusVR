@@ -39,6 +39,8 @@ namespace Ape
 		virtual void setFileName (std::string fileName) = 0;
 		
 		virtual std::string getfFileName () = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

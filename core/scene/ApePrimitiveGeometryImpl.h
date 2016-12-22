@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "ApeIPrimitiveGeometry.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
 #include "ApeReplica.h"
 
 namespace Ape
@@ -40,7 +41,11 @@ namespace Ape
 
 		Ape::PrimitiveGeometryParameterBase getParameters();
 
+		void setParentNode(Ape::NodeWeakPtr parentNode);
+
 		void setMaterial(Ape::MaterialWeakPtr material);
+
+		Ape::MaterialWeakPtr getMaterial();
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -51,7 +56,11 @@ namespace Ape
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
+		Ape::IScene* mpScene;
+
 		Ape::PrimitiveGeometryParameterBase mParameters;
+
+		Ape::MaterialWeakPtr mMaterial;
 	};
 }
 

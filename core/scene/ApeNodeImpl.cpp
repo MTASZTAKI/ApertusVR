@@ -27,65 +27,77 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mName = name;
-	mParentName = "";
+	mParentNode = Ape::NodeWeakPtr();
+	mParentNodeName = std::string();
 	mPosition = Ape::Vector3();
 	mScale = Ape::Vector3();
 	mOrientation = Ape::Quaternion();
 }
+
 Ape::NodeImpl::~NodeImpl()
 {
 	
 }
+
 std::string Ape::NodeImpl::getName() const
 {
 	return mName;
 }
+
 Ape::Vector3 Ape::NodeImpl::getPosition() const
 {
 	return mPosition;
 }
+
 Ape::Quaternion Ape::NodeImpl::getOrientation() const
 {
 	return mOrientation;
 }
+
 Ape::Vector3 Ape::NodeImpl::getScale() const
 {
 	return mScale;
 }
-std::string Ape::NodeImpl::getParentName() const
-{
-	return mParentName;
-}
+
 Ape::Vector3 Ape::NodeImpl::getDerivedPosition() const
 {
-	if (auto parentNode = mpScene->getNode(mParentName).lock())
+	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedPosition() + (parentNode->getDerivedOrientation() * (parentNode->getDerivedScale() * mPosition));
 	else 
 		return mPosition;
 }
+
 Ape::Quaternion Ape::NodeImpl::getDerivedOrientation() const
 {
-	if (auto parentNode = mpScene->getNode(mParentName).lock())
+	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedOrientation() * mOrientation;
 	else
 		return mOrientation;
 }
+
 Ape::Vector3 Ape::NodeImpl::getDerivedScale() const
 {
-	if (auto parentNode = mpScene->getNode(mParentName).lock())
+	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedScale() * mScale;
 	else
 		return mScale;
 }
-void Ape::NodeImpl::setParent(std::string parentNodeName)
+
+void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
-	if (auto parentNode = mpScene->getNode(mParentName).lock())
+	if (auto parentNodeSP = parentNode.lock())
 	{
-		mParentName = parentNodeName;
+		mParentNode = parentNode;
+		mParentNodeName = parentNodeSP->getName();
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	else
-		mParentName = "";	
+		mParentNode = Ape::NodeWeakPtr();
+}
+
+Ape::NodeWeakPtr Ape::NodeImpl::getParentNode()
+{
+	return mParentNode;
 }
 
 void Ape::NodeImpl::setPosition( Vector3 position )
@@ -115,7 +127,7 @@ void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::Transformation
 		break;
 	case Ape::Node::TransformationSpace::WORLD:
 	{
-		if (auto parentNode = mpScene->getNode(mParentName).lock())
+		if (auto parentNode = mParentNode.lock())
 			setPosition(mPosition + ((parentNode->getDerivedOrientation().Inverse() * transformVector) / parentNode->getDerivedScale()));
 		else 
 			setPosition(mPosition + transformVector);
@@ -167,7 +179,7 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOrientation);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -184,7 +196,8 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_ORIENTATION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
-		mParentName = parentName.C_String();
+		mParentNodeName = parentName.C_String();
+		mParentNode = mpScene->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))

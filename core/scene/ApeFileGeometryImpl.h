@@ -25,6 +25,8 @@ SOFTWARE.*/
 
 #include "ApeIFileGeometry.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
 #include "ApeReplica.h"
 
 namespace Ape
@@ -40,6 +42,8 @@ namespace Ape
 
 		std::string getfFileName();
 
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -48,6 +52,8 @@ namespace Ape
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 
 		std::string mFileName;
 	};

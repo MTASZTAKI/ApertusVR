@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_MATERIAL_H
-#define APE_MATERIAL_H
+#ifndef APE_PASS_H
+#define APE_PASS_H
 
 #include <string>
 #include <vector>
@@ -30,41 +30,24 @@ SOFTWARE.*/
 #include "ApeEntity.h"
 #include "ApeITexture.h"
 #include "ApeColor.h"
-#include "ApePass.h"
 
 namespace Ape
 {	
-	class Material : public Entity
+	class Pass : public Entity
 	{
 	protected:
-	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
+		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 		
-		virtual ~Material() {};
-
-		Color mDiffuseColor;
-
-		Color mSpecularColor;
-
-		Color mAmbientColor;
-
-		Color mEmissiveColor;
-
-		float mShininess;
-
-		PassWeakPtr mPass;
+		virtual ~Pass() {};
 
 	public:
-		Color getDiffuseColor() { return mDiffuseColor; };
+		virtual void setAlbedo(Ape::Color albedo) = 0;
 
-		Color getSpecularColor() { return mSpecularColor; };
+		virtual void setRoughness(float roughness) = 0;
 
-		Color getAmbientColor() { return mAmbientColor; };
+		virtual void setLightRoughnessOffset(float lightRoughnessOffset) = 0;
 
-		Color getEmissiveColor() { return mEmissiveColor; };
-
-		float getShininess() { return mShininess; };
-
-		PassWeakPtr getPass() { return mPass; };
+		virtual void setF0(Ape::Color f0) = 0;
 	};
 }
 

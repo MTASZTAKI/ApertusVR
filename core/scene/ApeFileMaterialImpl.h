@@ -41,6 +41,8 @@ namespace Ape
 
 		std::string getfFileName();
 
+		void setAsSkyBox() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -51,6 +53,8 @@ namespace Ape
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		std::string mFileName;
+
+		bool mIsSkyBox;
 	};
 }
 

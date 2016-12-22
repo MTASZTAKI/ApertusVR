@@ -35,7 +35,6 @@ SOFTWARE.*/
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
-#include "ApeISceneProperty.h"
 
 #define THIS_PLUGINNAME "ApeSampleScenePlugin"
 

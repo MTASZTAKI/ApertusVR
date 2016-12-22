@@ -36,7 +36,6 @@ SOFTWARE.*/
 #include "ApeSingleton.h"
 #include "ApeINode.h"
 #include "ApeEntity.h"
-#include "ApeISceneProperty.h"
  
 namespace Ape
 {
@@ -56,9 +55,7 @@ namespace Ape
 
 		virtual Ape::EntityWeakPtr getEntity(std::string name) = 0;
 
-		virtual Ape::EntityWeakPtr createEntity(std::string name, std::string parentNodeName, Ape::Entity::Type type) = 0;
-
-		virtual Ape::ScenePropertyWeakPtr getProperty() = 0;
+		virtual Ape::EntityWeakPtr createEntity(std::string name, Ape::Entity::Type type) = 0;
 
 		virtual void deleteNode(std::string name) = 0;
 
