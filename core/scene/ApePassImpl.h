@@ -20,51 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_LIGHTIMPL_H
-#define APE_LIGHTIMPL_H
+#ifndef APE_PASSIMPL_H
+#define APE_PASSIMPL_H
 
-#include "ApeILight.h"
+#include "ApeIPass.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
 #include "ApeIScene.h"
+#include "ApeINode.h"
+#include "ApeReplica.h"
 
 namespace Ape
 {
-	class LightImpl : public ILight, public Ape::Replica
+	class PassImpl : public Ape::IPass, public Ape::Replica
 	{
 	public:
+		PassImpl(std::string name, bool isHostCreated);
 
-		LightImpl(std::string name, bool isHostCreated);
+		~PassImpl();
+		
+		void setAlbedo(Ape::Color albedo) override;
 
-		~LightImpl();
-		
-		Light::Type getLightType() override;
-		
-		Color getDiffuseColor() override;
-		
-		Color getSpecularColor()override;
-		
-		LightSpotRange getLightSpotRange()override;
-		
-		LightAttenuation getLightAttenuation() override;
-		
-		Vector3 getLightDirection() override;
-		
-		void setLightType(Light::Type lightType) override;
-		
-		void setDiffuseColor(Color diffuseColor) override;
-		
-		void setSpecularColor(Color specularColor) override;
-		
-		void setLightSpotRange(LightSpotRange lightSpotRange) override;
-		
-		void setLightAttenuation(LightAttenuation lightAttenuation) override; 
-		
-		void setLightDirection(Vector3 lightDirection) override;
+		void setRoughness(float roughness) override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setLightRoughnessOffset(float lightRoughnessOffset) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		void setF0(Ape::Color f0) override;
+
+		Ape::Color getAlbedo() override;
+
+		float getRoughness() override;
+
+		float getLightRoughnessOffset() override;
+
+		Ape::Color getF0() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -77,21 +65,13 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		Light::Type mLightType;
+		Ape::Color mAlbedo;
 
-		Color mDiffuseColor;
+		float mRoughness;
 
-		Color mSpecularColor;
+		float mLightRoughnessOffset;
 
-		LightSpotRange mLightSpotRange;
-
-		LightAttenuation mLightAttenuation;
-
-		Vector3 mLightDirection;
-
-		NodeWeakPtr mParentNode;
-
-		std::string mParentNodeName;
+		Ape::Color mF0;
 	};
 }
 

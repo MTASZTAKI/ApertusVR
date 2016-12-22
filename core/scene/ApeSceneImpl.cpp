@@ -28,6 +28,8 @@ SOFTWARE.*/
 #include "ApePrimitiveGeometryImpl.h"
 #include "ApeFileMaterialImpl.h"
 #include "ApeCameraImpl.h"
+#include "ApeManualMaterialImpl.h"
+#include "ApePassImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -145,6 +147,24 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(materialFile.get());
 			return materialFile;
 		}
+		case Ape::Entity::MATERIAL_MANUAL:
+		{
+			auto materialManual = std::make_shared<Ape::ManualMaterialImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, materialManual));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_MANUAL_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(materialManual.get());
+			return materialManual;
+		}
+		case Ape::Entity::PASS:
+		{
+			auto pass = std::make_shared<Ape::PassImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, pass));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(pass.get());
+			return pass;
+		}
 		case Ape::Entity::CAMERA:
 		{
 			auto camera = std::make_shared<Ape::CameraImpl>(name);
@@ -179,6 +199,12 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::MATERIAL_FILE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_FILE_DELETE));
+			break;
+		case Ape::Entity::MATERIAL_MANUAL:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_MANUAL_DELETE));
+			break;
+		case Ape::Entity::PASS:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

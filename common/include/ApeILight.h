@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include "ApeColor.h"
 #include "ApeDegree.h"
 #include "ApeRadian.h"
+#include "ApeINode.h"
 
 namespace Ape
 {
@@ -106,6 +107,11 @@ namespace Ape
 		virtual void setLightAttenuation(LightAttenuation lightAttenuation) = 0;
 
 		virtual void setLightDirection(Vector3 lightDirection) = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual Ape::NodeWeakPtr getParentNode() = 0;
+
 	};
 }
 

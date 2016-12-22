@@ -20,49 +20,44 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+
+#ifndef APE_IPASS_H
+#define APE_IPASS_H
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
+#include "Ape.h"
+#include "ApeEntity.h"
+#include "ApeITexture.h"
+#include "ApeColor.h"
 
 namespace Ape
-{
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			GEOMETRY_FILE,
-			GEOMETRY_MANUAL,
-			GEOMETRY_TEXT,
-			GEOMETRY_PRIMITVE,
-			MATERIAL_FILE,
-			MATERIAL_MANUAL,
-			TEXTURE,
-			CAMERA,
-			COLLISION,
-			PASS,
-			INVALID
-		};
-		
+{	
+	class IPass : public Entity
+	{
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+		IPass(std::string name) : Entity(name, Entity::PASS) {}
 		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
+		virtual ~IPass() {};
 
-		Type getType() { return mType; };
+	public:
+		virtual void setAlbedo(Ape::Color albedo) = 0;
+
+		virtual void setRoughness(float roughness) = 0;
+
+		virtual void setLightRoughnessOffset(float lightRoughnessOffset) = 0;
+
+		virtual void setF0(Ape::Color f0) = 0;
+
+		virtual Ape::Color getAlbedo() = 0;
+
+		virtual float getRoughness() = 0;
+
+		virtual float getLightRoughnessOffset() = 0;
+
+		virtual Ape::Color getF0() = 0;
 	};
 }
 
 #endif
+

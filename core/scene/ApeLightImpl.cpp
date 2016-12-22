@@ -25,12 +25,15 @@ SOFTWARE.*/
 Ape::LightImpl::LightImpl(std::string name, bool isHostCreated) : Ape::ILight(name), Ape::Replica("Light", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpScene = Ape::IScene::getSingletonPtr();
 	mLightType = Ape::Light::Type::INVALID;
 	mDiffuseColor = Ape::Color();
 	mSpecularColor = Ape::Color();
 	mLightSpotRange = Ape::LightSpotRange();
 	mLightAttenuation = Ape::LightAttenuation();
 	mLightDirection = Ape::Vector3();
+	mParentNode = Ape::NodeWeakPtr();
+	mParentNodeName = std::string();
 }
 
 Ape::LightImpl::~LightImpl()
@@ -66,6 +69,23 @@ Ape::LightAttenuation Ape::LightImpl::getLightAttenuation()
 Ape::Vector3 Ape::LightImpl::getLightDirection()
 {
 	return mLightDirection;
+}
+
+Ape::NodeWeakPtr Ape::LightImpl::getParentNode()
+{
+	return mParentNode;
+}
+
+void Ape::LightImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+{
+	if (auto parentNodeSP = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mParentNodeName = parentNodeSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_PARENTNODE));
+	}
+	else
+		mParentNode = Ape::NodeWeakPtr();
 }
 
 void Ape::LightImpl::setDiffuseColor( Color diffuseColor )
@@ -121,6 +141,7 @@ RakNet::RM3SerializationResult Ape::LightImpl::Serialize(RakNet::SerializeParame
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightSpotRange);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightAttenuation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightDirection);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -131,15 +152,22 @@ void Ape::LightImpl::Deserialize(RakNet::DeserializeParameters *deserializeParam
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightType))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_TYPE));
-	else if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_DIFFUSE));
-	else if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_SPECULAR));
-	else if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightSpotRange))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightSpotRange))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_SPOTRANGE));
-	else if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightAttenuation))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightAttenuation))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_ATTENUATION));
-	else if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightDirection))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightDirection))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_DIRECTION));
+	RakNet::RakString parentName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
+	{
+		mParentNodeName = parentName.C_String();
+		mParentNode = mpScene->getNode(mParentNodeName);
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::LIGHT_PARENTNODE));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

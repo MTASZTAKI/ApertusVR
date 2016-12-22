@@ -20,36 +20,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#ifndef APE_MANUALMATERIALIMPL_H
+#define APE_MANUALMATERIALIMPL_H
 
-#ifndef APE_PASS_H
-#define APE_PASS_H
-
-#include <string>
-#include <vector>
-#include "Ape.h"
-#include "ApeEntity.h"
-#include "ApeITexture.h"
-#include "ApeColor.h"
+#include "ApeIManualMaterial.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
+#include "ApeReplica.h"
 
 namespace Ape
-{	
-	class Pass : public Entity
+{
+	class ManualMaterialImpl : public Ape::IManualMaterial, public Ape::Replica
 	{
-	protected:
-		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
-		
-		virtual ~Pass() {};
-
 	public:
-		virtual void setAlbedo(Ape::Color albedo) = 0;
+		ManualMaterialImpl(std::string name, bool isHostCreated);
 
-		virtual void setRoughness(float roughness) = 0;
+		~ManualMaterialImpl();
 
-		virtual void setLightRoughnessOffset(float lightRoughnessOffset) = 0;
+		void setDiffuseColor(Ape::Color diffuse) override;
 
-		virtual void setF0(Ape::Color f0) = 0;
+		void setSpecularColor(Ape::Color specular) override;
+
+		void setAmbientColor(Ape::Color ambient) override;
+
+		void setEmissiveColor(Ape::Color emissive) override;
+
+		void setShininess(float shininess) override;
+
+		void setPass(Ape::PassWeakPtr pass) override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 	};
 }
 
 #endif
-

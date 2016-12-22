@@ -72,9 +72,9 @@ namespace Ape
 
 	class SubGeometry;
 
-	class Pass;
+	class IPass;
 
-	typedef std::weak_ptr<Pass> PassWeakPtr;
+	typedef std::weak_ptr<IPass> PassWeakPtr;
 
 	class Material;
 

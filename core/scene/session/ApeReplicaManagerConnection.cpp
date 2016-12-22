@@ -28,6 +28,8 @@ SOFTWARE.*/
 #include "ApeTextGeometryImpl.h" 
 #include "ApeLightImpl.h" 
 #include "ApeFileMaterialImpl.h"
+#include "ApeManualMaterialImpl.h"
+#include "ApePassImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -85,6 +87,20 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		allocationIdBitstream->Read(lightName);
 		if (auto light = mpSceneImpl->createEntity(lightName.C_String(), Ape::Entity::LIGHT).lock())
 			return ((Ape::LightImpl*)light.get());
+	}
+	else if (objectType == "ManualMaterial")
+	{
+		RakNet::RakString manualMaterialName;
+		allocationIdBitstream->Read(manualMaterialName);
+		if (auto manualMaterial = mpSceneImpl->createEntity(manualMaterialName.C_String(), Ape::Entity::MATERIAL_MANUAL).lock())
+			return ((Ape::ManualMaterialImpl*)manualMaterial.get());
+	}
+	else if (objectType == "Pass")
+	{
+		RakNet::RakString passName;
+		allocationIdBitstream->Read(passName);
+		if (auto pass = mpSceneImpl->createEntity(passName.C_String(), Ape::Entity::PASS).lock())
+			return ((Ape::PassImpl*)pass.get());
 	}
 	return NULL;
 }

@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "ApeEntity.h"
 #include "ApeITexture.h"
 #include "ApeColor.h"
-#include "ApePass.h"
+#include "ApeIPass.h"
 
 namespace Ape
 {	
@@ -41,30 +41,32 @@ namespace Ape
 		
 		virtual ~Material() {};
 
-		Color mDiffuseColor;
+		Ape::Color mDiffuseColor;
 
-		Color mSpecularColor;
+		Ape::Color mSpecularColor;
 
-		Color mAmbientColor;
+		Ape::Color mAmbientColor;
 
-		Color mEmissiveColor;
+		Ape::Color mEmissiveColor;
 
 		float mShininess;
 
-		PassWeakPtr mPass;
+		Ape::PassWeakPtr mPass;
+
+		std::string mPassName;
 
 	public:
-		Color getDiffuseColor() { return mDiffuseColor; };
+		Ape::Color getDiffuseColor() { return mDiffuseColor; };
 
-		Color getSpecularColor() { return mSpecularColor; };
+		Ape::Color getSpecularColor() { return mSpecularColor; };
 
-		Color getAmbientColor() { return mAmbientColor; };
+		Ape::Color getAmbientColor() { return mAmbientColor; };
 
-		Color getEmissiveColor() { return mEmissiveColor; };
+		Ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
 
-		PassWeakPtr getPass() { return mPass; };
+		Ape::PassWeakPtr getPass() { return mPass; };
 	};
 }
 
