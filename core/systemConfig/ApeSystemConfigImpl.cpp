@@ -124,6 +124,11 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					for (auto& plugin : pluginManager["plugins"].GetArray())
 						mPluginManagerConfig.pluginnames.push_back(plugin.GetString());
 				}
+				else if (pluginManagerMemberIterator->name == "jsplugins")
+				{
+					for (auto& jsplugin : pluginManager["jsplugins"].GetArray())
+						mPluginManagerConfig.jsPluginNames.push_back(jsplugin.GetString());
+				}
 			}
 		}
 		fclose(apeSystemConfigFile);

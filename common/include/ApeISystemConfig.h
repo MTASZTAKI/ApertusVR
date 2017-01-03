@@ -44,17 +44,21 @@ namespace Ape
 	struct PluginManagerConfig
 	{
 		std::vector<std::string> pluginnames;
+		std::vector<std::string> jsPluginNames;
 
 		PluginManagerConfig()
 		{
 			this->pluginnames = std::vector<std::string>();
+			this->jsPluginNames = std::vector<std::string>();
 		}
 
 		PluginManagerConfig(
-			std::vector<std::string> pluginnames
+			std::vector<std::string> pluginnames,
+			std::vector<std::string> jsPluginNames
 			)
 		{
 			this->pluginnames = pluginnames;
+			this->jsPluginNames = jsPluginNames;
 		}
 	};
 
