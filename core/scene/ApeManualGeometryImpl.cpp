@@ -27,6 +27,8 @@ Ape::ManualGeomteryImpl::ManualGeomteryImpl(std::string name, bool isHostCreated
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mParameter = Ape::ManualGeometryParameter();
+	mMaterial = Ape::MaterialWeakPtr();
+	mMaterialName = std::string();
 }
 
 Ape::ManualGeomteryImpl::~ManualGeomteryImpl()
@@ -57,6 +59,23 @@ void Ape::ManualGeomteryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 		mParentNode = Ape::NodeWeakPtr();
 }
 
+void Ape::ManualGeomteryImpl::setMaterial(Ape::MaterialWeakPtr material)
+{
+	if (auto materialSP = material.lock())
+	{
+		mMaterial = material;
+		mMaterialName = materialSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL));
+	}
+	else
+		mMaterial = Ape::MaterialWeakPtr();
+}
+
+Ape::MaterialWeakPtr Ape::ManualGeomteryImpl::getMaterial()
+{
+	return mMaterial;
+}
+
 void Ape::ManualGeomteryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -70,6 +89,7 @@ RakNet::RM3SerializationResult Ape::ManualGeomteryImpl::Serialize(RakNet::Serial
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameter);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -86,6 +106,16 @@ void Ape::ManualGeomteryImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE));
+	}
+	RakNet::RakString materialName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
+	{
+		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
+		{
+			mMaterial = material;
+			mMaterialName = material->getName();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

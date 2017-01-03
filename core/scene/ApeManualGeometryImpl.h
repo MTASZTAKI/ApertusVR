@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
+#include "ApeMaterial.h"
 #include "ApeReplica.h"
 
 namespace Ape
@@ -44,6 +45,10 @@ namespace Ape
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
+		void setMaterial(Ape::MaterialWeakPtr material);
+
+		Ape::MaterialWeakPtr getMaterial();
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -56,6 +61,10 @@ namespace Ape
 		Ape::IScene* mpScene;
 
 		Ape::ManualGeometryParameter mParameter;
+
+		Ape::MaterialWeakPtr mMaterial;
+
+		std::string mMaterialName;
 	};
 }
 

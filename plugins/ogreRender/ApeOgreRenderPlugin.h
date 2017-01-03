@@ -68,6 +68,7 @@ SOFTWARE.*/
 #include "ApeILight.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIPrimitiveGeometry.h"
+#include "ApeIManualGeometry.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"

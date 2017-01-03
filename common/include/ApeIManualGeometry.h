@@ -81,6 +81,10 @@ namespace Ape
 		virtual void setParameter(ManualGeometryParameter parameter) = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+
+		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

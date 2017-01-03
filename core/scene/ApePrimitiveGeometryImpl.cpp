@@ -28,6 +28,7 @@ Ape::PrimitiveGeometryImpl::PrimitiveGeometryImpl(std::string name, bool isHostC
 	mpScene = Ape::IScene::getSingletonPtr();
 	mParameters = Ape::PrimitiveGeometryParameterBase();
 	mMaterial = Ape::MaterialWeakPtr();
+	mMaterialName = std::string();
 }
 
 Ape::PrimitiveGeometryImpl::~PrimitiveGeometryImpl()
@@ -60,7 +61,14 @@ void Ape::PrimitiveGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 
 void Ape::PrimitiveGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
 {
-	mMaterial = material;
+	if (auto materialSP = material.lock())
+	{
+		mMaterial = material;
+		mMaterialName = materialSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL));
+	}
+	else
+		mMaterial = Ape::MaterialWeakPtr();
 }
 
 Ape::MaterialWeakPtr Ape::PrimitiveGeometryImpl::getMaterial()
@@ -81,6 +89,7 @@ RakNet::RM3SerializationResult Ape::PrimitiveGeometryImpl::Serialize(RakNet::Ser
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -97,6 +106,16 @@ void Ape::PrimitiveGeometryImpl::Deserialize(RakNet::DeserializeParameters *dese
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+	}
+	RakNet::RakString materialName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
+	{
+		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
+		{
+			mMaterial = material;
+			mMaterialName = material->getName();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

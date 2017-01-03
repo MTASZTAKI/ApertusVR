@@ -61,6 +61,8 @@ namespace Ape
 		Ape::PrimitiveGeometryParameterBase mParameters;
 
 		Ape::MaterialWeakPtr mMaterial;
+
+		std::string mMaterialName;
 	};
 }
 

@@ -135,6 +135,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_DELETE:
 					;
 					break;
+				case Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL:
+					;
+					break;
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS:
 					{
 						if (auto primitiveGeometry = std::static_pointer_cast<Ape::IPrimitiveGeometry>(mpScene->getEntity(geometryName).lock()))
@@ -225,6 +228,50 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
 								ogreText->setCaption(textGeometry->getCaption());
+						}
+					}
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_CREATE:
+					{
+						mpSceneMgr->createManualObject(geometryName);
+					}
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_DELETE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER:
+					{
+						if (auto geometryManual = std::static_pointer_cast<Ape::IManualGeometry>(mpScene->getEntity(geometryName).lock()))
+						{
+							if (auto ogreManual = mpSceneMgr->getManualObject(geometry->getName()))
+							{
+								if (geometry->getOperationType() == Ape::Geometry::OperationType::TRIANGLELIST)
+								{
+									if (auto material = geometryManual->getMaterial().lock())
+									{
+										Ape::ManualGeometryParameter parameter = geometryManual->getParameter();
+										ogreManual->begin(material->getName(), ConversionToOgre(Ape::Geometry::OperationType::TRIANGLELIST));
+										for (int i = 0; i < parameter.vertexList.size(); i++)
+										{
+											ogreManual->position(parameter.vertexList[i].x, parameter.vertexList[i].y, parameter.vertexList[i].z);
+											if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
+												ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);
+											if (parameter.colorList.size() != 0 && i < parameter.colorList.size())
+												ogreManual->colour(parameter.colorList[i].x, parameter.colorList[i].y, parameter.colorList[i].z);
+											if (parameter.textureCoordList.size() != 0 && i < parameter.textureCoordList.size())
+												ogreManual->textureCoord(parameter.textureCoordList[i].x, 1.0f - parameter.textureCoordList[i].y);
+										}
+										for (int i = 0; i < parameter.indexList.size(); i++)
+											ogreManual->index(parameter.indexList[i]);
+										for (int i = 0; i < parameter.triangleList.size(); i++)
+											ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);
+										ogreManual->end();
+									}
+								}
+							}
 						}
 					}
 					break;
