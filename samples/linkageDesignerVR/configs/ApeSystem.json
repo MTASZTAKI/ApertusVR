@@ -23,6 +23,9 @@
             "ApeOisUserInputPlugin",
             "ApeLinkageDesignerVRPlugin",
             "ApeFobHeadTrackingPlugin"
+        ],
+        "jsplugins": [
+            "/samples/linkageDesignerVR/plugins/x3dLoader/x3dLoader.js"
         ]
     }
 }
