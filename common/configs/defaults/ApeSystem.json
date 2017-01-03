@@ -4,10 +4,10 @@
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
-        "participantType": "Host",
-        "uniqueUserNamePrefix": "HelloWorldHost",
-        "sessionGUID": "981785050430568311",
-        "sessionResourceLocation": "/plugins/sampleScene/resources",
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "Local",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": "/samples/helloWorld/resources",
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -21,7 +21,8 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
-            "ApeSampleScenePlugin"
+            "ApeHelloWorldPlugin",
+            "ApeNodeJsPlugin"
         ],
         "jsplugins": [
         ]
