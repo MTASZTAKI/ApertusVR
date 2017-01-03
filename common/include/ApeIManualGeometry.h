@@ -31,39 +31,56 @@ SOFTWARE.*/
 namespace Ape
 {	
 	typedef std::vector < int > IntVector;
+
+	struct ManualGeometryParameter
+	{
+		Ape::Vector3Vector vertexList;
+		Ape::Vector3Vector normalList;
+		Ape::Vector3Vector colorList;
+		Ape::IntVector indexList;
+		Ape::Vector3Vector triangleList;
+		Ape::Vector3Vector textureCoordList;
+
+		ManualGeometryParameter()
+		{
+			vertexList = Ape::Vector3Vector();
+			normalList = Ape::Vector3Vector();
+			colorList = Ape::Vector3Vector();
+			indexList = Ape::IntVector();
+			triangleList = Ape::Vector3Vector();
+			textureCoordList = Ape::Vector3Vector();
+		}
+
+		ManualGeometryParameter(
+			Ape::Vector3Vector vertexList,
+			Ape::Vector3Vector normalList,
+			Ape::Vector3Vector colorList,
+			Ape::IntVector indexList,
+			Ape::Vector3Vector triangleList,
+			Ape::Vector3Vector textureCoordList)
+		{
+			vertexList = vertexList;
+			normalList = normalList;
+			colorList = colorList;
+			indexList = indexList;
+			triangleList = triangleList;
+			textureCoordList = textureCoordList;
+		}
+	};
 	
 	class IManualGeometry : public Geometry
 	{
 	protected:
-		IManualGeometry(std::string name, std::string parentNodeName) : Geometry(name, parentNodeName, Entity::GEOMETRY_MANUAL) {}
+		IManualGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_MANUAL) {}
+
 		virtual ~IManualGeometry() {};
 		
 	public:
-		virtual int getIndex() = 0;
+		virtual ManualGeometryParameter getParameter() = 0;
 		
-		virtual Vector3Vector getVertexList() = 0;
-		
-		virtual Vector3Vector getNormalList() = 0;
-		
-		virtual Vector3Vector getColorList() = 0;
-		
-		virtual IntVector getIndexList() = 0;
-	
-		virtual Vector3Vector getTriangleList() = 0;
-		
-		virtual Vector3Vector getTextureCoordList() = 0;
-		
-		virtual void getVertexList(Vector3Vector vertices) = 0;
-		
-		virtual void getNormalList(Vector3Vector normals) = 0;
-		
-		virtual void getColorList(Vector3Vector colors) = 0;
-		
-		virtual void getIndexList(IntVector indices) = 0;
-	
-		virtual void getTriangleList(Vector3Vector triangles) = 0;
-		
-		virtual void getTextureCoordList(Vector3Vector textureCoords) = 0;
+		virtual void setParameter(ManualGeometryParameter parameter) = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

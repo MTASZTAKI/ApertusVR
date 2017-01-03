@@ -20,83 +20,72 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePrimitiveGeometryImpl.h"
+#include "ApeManualGeometryImpl.h"
 
-Ape::PrimitiveGeometryImpl::PrimitiveGeometryImpl(std::string name, bool isHostCreated) : Ape::IPrimitiveGeometry(name), Ape::Replica("PrimitiveGeometry", isHostCreated)
+Ape::ManualGeomteryImpl::ManualGeomteryImpl(std::string name, bool isHostCreated) : Ape::IManualGeometry(name), Ape::Replica("ManualGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
-	mParameters = Ape::PrimitiveGeometryParameterBase();
-	mMaterial = Ape::MaterialWeakPtr();
+	mParameter = Ape::ManualGeometryParameter();
 }
 
-Ape::PrimitiveGeometryImpl::~PrimitiveGeometryImpl()
+Ape::ManualGeomteryImpl::~ManualGeomteryImpl()
 {
 	
 }
 
-void Ape::PrimitiveGeometryImpl::setParameters(Ape::PrimitiveGeometryParameterBase parameters)
+void Ape::ManualGeomteryImpl::setParameter(Ape::ManualGeometryParameter parameter)
 {
-	mParameters = parameters;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS));
+	mParameter = parameter;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER));
 }
 
-Ape::PrimitiveGeometryParameterBase Ape::PrimitiveGeometryImpl::getParameters()
+Ape::ManualGeometryParameter Ape::ManualGeomteryImpl::getParameter()
 {
-	return mParameters;
+	return mParameter;
 }
 
-void Ape::PrimitiveGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void Ape::ManualGeomteryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE));
 	}
 	else
 		mParentNode = Ape::NodeWeakPtr();
 }
 
-void Ape::PrimitiveGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
-{
-	mMaterial = material;
-}
-
-Ape::MaterialWeakPtr Ape::PrimitiveGeometryImpl::getMaterial()
-{
-	return mMaterial;
-}
-
-void Ape::PrimitiveGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void Ape::ManualGeomteryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::PrimitiveGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult Ape::ManualGeomteryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameter);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
 
-void Ape::PrimitiveGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void Ape::ManualGeomteryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameter))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
