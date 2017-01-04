@@ -53,6 +53,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpHlmsPbsManager = NULL;
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
+	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -77,27 +78,33 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
 				std::string nodeName = node->getName();
-				switch (event.type)
+				if (auto ogreNode = mpSceneMgr->getSceneNode(nodeName))
 				{
-				case Ape::Event::Type::NODE_CREATE:
+					switch (event.type)
+					{
+					case Ape::Event::Type::NODE_CREATE:
 						mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-					break;
-				case Ape::Event::Type::NODE_DELETE:
-					; 
-					break;
-				case Ape::Event::Type::NODE_POSITION:
-					{
-						if (mpSceneMgr->hasSceneNode(nodeName))
-							mpSceneMgr->getSceneNode(nodeName)->setPosition(ConversionToOgre(node->getPosition()));
+						break;
+					case Ape::Event::Type::NODE_PARENTNODE:
+						{
+							if (auto parentNode = node->getParentNode().lock())
+							{
+								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
+									ogreParentNode->addChild(ogreNode);
+							}
+						}
+						break;
+					case Ape::Event::Type::NODE_DELETE:
+						;
+						break;
+					case Ape::Event::Type::NODE_POSITION:
+						ogreNode->setPosition(ConversionToOgre(node->getPosition()));
+						break;
+					case Ape::Event::Type::NODE_ORIENTATION:
+						ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
+						break;
 					}
-					break;
-				case Ape::Event::Type::NODE_ORIENTATION:
-					{
-						if (mpSceneMgr->hasSceneNode(nodeName))
-							mpSceneMgr->getSceneNode(nodeName)->setOrientation(ConversionToOgre(node->getOrientation()));
-					}
-					break;
-				}		
+				}
 			}
 		}
 		else if (event.group == Ape::Event::Group::GEOMETRY)
@@ -112,6 +119,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::GEOMETRY_FILE_CREATE:
 					;
+					break;
+				case Ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
+					{
+						if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+						{
+							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								ogreParentNode->attachObject(ogreGeometry);
+						}
+					}
 					break;
 				case Ape::Event::Type::GEOMETRY_FILE_DELETE:
 					; 
@@ -132,11 +148,42 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE:
 					;
 					break;
+				case Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE:
+					{
+						if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+						{
+							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								ogreParentNode->attachObject(ogreGeometry);
+						}
+					}
+					break;
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_DELETE:
 					;
 					break;
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL:
-					;
+					{
+						if (auto ogrePrimitveGeometry = mpSceneMgr->getEntity(geometryName))
+						{
+							auto primitveGeometry = std::static_pointer_cast<Ape::IPrimitiveGeometry>(geometry);
+							if (auto material = primitveGeometry->getMaterial().lock())
+							{
+								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+								ogrePrimitveGeometry->setMaterial(ogreMaterial);
+								if (auto pass = material->getPass().lock())
+								{
+									if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+									{
+										size_t ogreSubEntitxCount = ogrePrimitveGeometry->getNumSubEntities();
+										for (size_t i = 0; i < ogreSubEntitxCount; i++)
+										{
+											Ogre::SubEntity* ogreSubEntity = ogrePrimitveGeometry->getSubEntity(i);
+											mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+										}
+									}
+								}
+							}
+						}
+					}
 					break;
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS:
 					{
@@ -210,6 +257,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						}
 					}
 					break;
+				case Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE:
+					{
+						if (auto ogreTextGeometry = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
+						{
+							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								ogreParentNode->attachObject(ogreTextGeometry);
+						}
+					}
+					break;
 				case Ape::Event::Type::GEOMETRY_TEXT_DELETE:
 					;
 					break;
@@ -236,11 +292,42 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->createManualObject(geometryName);
 					}
 					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE:
+					{
+						if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+						{
+							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								ogreParentNode->attachObject(ogreGeometry);
+						}
+					}
+					break;
 				case Ape::Event::Type::GEOMETRY_MANUAL_DELETE:
 					;
 					break;
 				case Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL:
-					;
+					{
+						if (auto ogreManualGeometry = mpSceneMgr->getEntity(geometryName))
+						{
+							auto manualGeometry = std::static_pointer_cast<Ape::IManualGeometry>(geometry);
+							if (auto material = manualGeometry->getMaterial().lock())
+							{
+								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+								ogreManualGeometry->setMaterial(ogreMaterial);
+								if (auto pass = material->getPass().lock())
+								{
+									if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+									{
+										size_t ogreSubEntitxCount = ogreManualGeometry->getNumSubEntities();
+										for (size_t i = 0; i < ogreSubEntitxCount; i++)
+										{
+											Ogre::SubEntity* ogreSubEntity = ogreManualGeometry->getSubEntity(i);
+											mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+										}
+									}
+								}
+							}
+						}
+					}
 					break;
 				case Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER:
 					{
@@ -301,12 +388,54 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_CREATE:
-						Ogre::MaterialManager::getSingleton().createOrRetrieve(material->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					;// Ogre::MaterialManager::getSingleton().createOrRetrieve(material->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_DELETE:
 					;
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_PASS:
+					{
+						if (auto pass = material->getPass().lock())
+						{
+							auto ogrePassMaterial = Ogre::MaterialManager::getSingleton().getByName(pass->getName());
+							if (!ogrePassMaterial.isNull())
+								ogrePassMaterial->clone(material->getName());
+						}
+						
+					}
+					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::PASS)
+		{
+			if (auto pass = std::static_pointer_cast<Ape::Pass>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				switch (event.type)
+				{
+				case Ape::Event::Type::PASS_PBS_CREATE:
+					{
+						auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(pass->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+						Ogre::MaterialPtr ogrePbsPassMaterial = result.first.staticCast<Ogre::Material>();
+						if (!ogrePbsPassMaterial.isNull())
+							ogrePbsPassMaterial->createTechnique()->createPass();
+						Ogre::PbsMaterial* ogrePbsMaterial = new Ogre::PbsMaterial();
+						mPbsMaterials[pass->getName()] = ogrePbsMaterial;
+					}
+					break;
+				case Ape::Event::Type::PASS_PBS_ALBEDO:
+						mPbsMaterials[pass->getName()]->setAlbedo(ConversionToOgre(std::static_pointer_cast<Ape::IPbsPass>(pass)->getAlbedo()));
+					break;
+				case Ape::Event::Type::PASS_PBS_F0:
+						mPbsMaterials[pass->getName()]->setF0(ConversionToOgre(std::static_pointer_cast<Ape::IPbsPass>(pass)->getF0()));
+					break;
+				case Ape::Event::Type::PASS_PBS_ROUGHNESS:
+						mPbsMaterials[pass->getName()]->setRoughness(std::static_pointer_cast<Ape::IPbsPass>(pass)->getRoughness());
+					break;
+				case Ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET:
+						mPbsMaterials[pass->getName()]->setLightRoughnessOffset(std::static_pointer_cast<Ape::IPbsPass>(pass)->getLightRoughnessOffset());
+					break;
+				case Ape::Event::Type::PASS_PBS_DELETE:
 					;
 					break;
 				}
@@ -314,19 +443,46 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == Ape::Event::Group::LIGHT)
 		{
-			if (auto light = mpScene->getEntity(event.subjectName).lock())
+			if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->getEntity(event.subjectName).lock()))
 			{
-				switch (event.type)
+				if (auto ogreLight = mpSceneMgr->getLight(light->getName()))
 				{
-				case Ape::Event::Type::LIGHT_CREATE:
-					; 
-					break;
-				case Ape::Event::Type::LIGHT_DELETE:
-					; 
-					break;
-				default:
-					; 
-					break;
+					switch (event.type)
+					{
+					case Ape::Event::Type::LIGHT_CREATE:
+						mpSceneMgr->createLight(light->getName());
+						break;
+					case Ape::Event::Type::LIGHT_ATTENUATION:
+						ogreLight->setAttenuation(light->getLightAttenuation().range, light->getLightAttenuation().constant, light->getLightAttenuation().linear, light->getLightAttenuation().quadratic);
+						break;
+					case Ape::Event::Type::LIGHT_DIFFUSE:
+						ogreLight->setDiffuseColour(Ape::ConversionToOgre(light->getDiffuseColor()));
+						break;
+					case Ape::Event::Type::LIGHT_DIRECTION:
+						ogreLight->setDirection(Ape::ConversionToOgre(light->getLightDirection()));
+						break;
+					case Ape::Event::Type::LIGHT_SPECULAR:
+						ogreLight->setSpecularColour(Ape::ConversionToOgre(light->getSpecularColor()));
+						break;
+					case Ape::Event::Type::LIGHT_SPOTRANGE:
+						ogreLight->setSpotlightRange(Ogre::Radian(light->getLightSpotRange().innerAngle.toRadian()), Ogre::Radian(light->getLightSpotRange().outerAngle.toRadian()), light->getLightSpotRange().falloff);
+						break;
+					case Ape::Event::Type::LIGHT_TYPE:
+						ogreLight->setType(Ape::ConversionToOgre(light->getLightType()));
+						break;
+					case Ape::Event::Type::LIGHT_PARENTNODE:
+						{
+							if (auto parentNode = light->getParentNode().lock())
+							{
+								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
+									ogreParentNode->attachObject(ogreLight);
+							}
+						}
+						break;
+					case Ape::Event::Type::LIGHT_DELETE:
+						;
+						break;
+					}
 				}
 			}
 		}
@@ -350,6 +506,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
+							}
+						}
+					}
+					break;
+				case Ape::Event::Type::CAMERA_PARENTNODE:
+					{
+						if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+						{
+							if (auto parentNode = camera->getParentNode().lock())
+							{
+								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
+									ogreParentNode->attachObject(ogreCamera);
 							}
 						}
 					}
@@ -406,16 +574,16 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 					break;
 				case Ape::Event::Type::CAMERA_INITPOSITIONOFFSET:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getInitPositionOffset()));
-				}
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getInitPositionOffset()));
+					}
 					break;
 				case Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getInitOrientationOffset()));
-				}
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getInitOrientationOffset()));
+					}
 					break;
 				}
 			}

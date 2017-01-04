@@ -83,6 +83,8 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIPbsPass.h"
+
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
 
@@ -139,6 +141,8 @@ namespace Ape
 		std::map<int, Ogre::RenderWindow*> mRenderWindows;
 
 		Ogre::HlmsManager* mpHlmsPbsManager;
+
+		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
 		Ape::IScene* mpScene;
 

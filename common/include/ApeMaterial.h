@@ -46,7 +46,6 @@ namespace Ape
 		std::string mPassName;
 
 	public:
-
 		Ape::PassWeakPtr getPass() { return mPass; };
 	};
 }
