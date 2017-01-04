@@ -78,32 +78,38 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
 				std::string nodeName = node->getName();
-				if (auto ogreNode = mpSceneMgr->getSceneNode(nodeName))
+				Ogre::SceneNode* ogreNode = nullptr;
+				if (mpSceneMgr->hasSceneNode(nodeName))
+					ogreNode = mpSceneMgr->getSceneNode(nodeName);
+				switch (event.type)
 				{
-					switch (event.type)
+				case Ape::Event::Type::NODE_CREATE:
+					mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+					break;
+				case Ape::Event::Type::NODE_PARENTNODE:
 					{
-					case Ape::Event::Type::NODE_CREATE:
-						mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-						break;
-					case Ape::Event::Type::NODE_PARENTNODE:
+						if (auto parentNode = node->getParentNode().lock())
 						{
-							if (auto parentNode = node->getParentNode().lock())
+							Ogre::SceneNode* ogreParentNode = ogreNode->getParentSceneNode();
+							if (ogreParentNode)
+								ogreParentNode->removeChild(ogreNode);
+							if (mpSceneMgr->hasSceneNode(parentNode->getName()))
 							{
-								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
-									ogreParentNode->addChild(ogreNode);
+								ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName());
+								ogreParentNode->addChild(ogreNode);
 							}
 						}
-						break;
-					case Ape::Event::Type::NODE_DELETE:
-						;
-						break;
-					case Ape::Event::Type::NODE_POSITION:
-						ogreNode->setPosition(ConversionToOgre(node->getPosition()));
-						break;
-					case Ape::Event::Type::NODE_ORIENTATION:
-						ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
-						break;
 					}
+					break;
+				case Ape::Event::Type::NODE_DELETE:
+					;
+					break;
+				case Ape::Event::Type::NODE_POSITION:
+					ogreNode->setPosition(ConversionToOgre(node->getPosition()));
+					break;
+				case Ape::Event::Type::NODE_ORIENTATION:
+					ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
+					break;
 				}
 			}
 		}
@@ -136,13 +142,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						std::string fileExtension = geometryName.substr(geometryName.find_first_of("."));
 						if (fileExtension == ".mesh")
-						{
-							if (auto ogreEntity = mpSceneMgr->createEntity(geometryName, geometryName))
-							{
-								if (mpSceneMgr->hasSceneNode(parentNodeName))
-									mpSceneMgr->getSceneNode(parentNodeName)->attachObject(ogreEntity);
-							}
-						}
+							mpSceneMgr->createEntity(geometryName, geometryName);
 					}
 					break;
 				case Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE:
@@ -252,8 +252,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							ogreText->setTextAlignment(Ape::OgreMovableText::H_CENTER, Ape::OgreMovableText::V_ABOVE);
 							ogreText->showOnTop(true);
-							if (mpSceneMgr->hasSceneNode(parentNodeName))
-								mpSceneMgr->getSceneNode(parentNodeName)->attachObject(ogreText);
 						}
 					}
 					break;
@@ -271,7 +269,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::GEOMETRY_TEXT_OFFSET:
 					{
-						if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometry->getName(), "MovableText"))
+						if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
 						{
 							if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
 								ogreText->setLocalTranslation(Ape::ConversionToOgre(textGeometry->getOffset()));
@@ -280,7 +278,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::GEOMETRY_TEXT_CAPTION:
 					{
-						if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometry->getName(), "MovableText"))
+						if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
 						{
 							if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
 								ogreText->setCaption(textGeometry->getCaption());
@@ -445,44 +443,44 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		{
 			if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->getEntity(event.subjectName).lock()))
 			{
-				if (auto ogreLight = mpSceneMgr->getLight(light->getName()))
+				Ogre::Light* ogreLight = nullptr;
+				if (mpSceneMgr->hasLight(light->getName()))
+					ogreLight = mpSceneMgr->getLight(light->getName());
+				switch (event.type)
 				{
-					switch (event.type)
+				case Ape::Event::Type::LIGHT_CREATE:
+					mpSceneMgr->createLight(light->getName());
+					break;
+				case Ape::Event::Type::LIGHT_ATTENUATION:
+					ogreLight->setAttenuation(light->getLightAttenuation().range, light->getLightAttenuation().constant, light->getLightAttenuation().linear, light->getLightAttenuation().quadratic);
+					break;
+				case Ape::Event::Type::LIGHT_DIFFUSE:
+					ogreLight->setDiffuseColour(Ape::ConversionToOgre(light->getDiffuseColor()));
+					break;
+				case Ape::Event::Type::LIGHT_DIRECTION:
+					ogreLight->setDirection(Ape::ConversionToOgre(light->getLightDirection()));
+					break;
+				case Ape::Event::Type::LIGHT_SPECULAR:
+					ogreLight->setSpecularColour(Ape::ConversionToOgre(light->getSpecularColor()));
+					break;
+				case Ape::Event::Type::LIGHT_SPOTRANGE:
+					ogreLight->setSpotlightRange(Ogre::Radian(light->getLightSpotRange().innerAngle.toRadian()), Ogre::Radian(light->getLightSpotRange().outerAngle.toRadian()), light->getLightSpotRange().falloff);
+					break;
+				case Ape::Event::Type::LIGHT_TYPE:
+					ogreLight->setType(Ape::ConversionToOgre(light->getLightType()));
+					break;
+				case Ape::Event::Type::LIGHT_PARENTNODE:
 					{
-					case Ape::Event::Type::LIGHT_CREATE:
-						mpSceneMgr->createLight(light->getName());
-						break;
-					case Ape::Event::Type::LIGHT_ATTENUATION:
-						ogreLight->setAttenuation(light->getLightAttenuation().range, light->getLightAttenuation().constant, light->getLightAttenuation().linear, light->getLightAttenuation().quadratic);
-						break;
-					case Ape::Event::Type::LIGHT_DIFFUSE:
-						ogreLight->setDiffuseColour(Ape::ConversionToOgre(light->getDiffuseColor()));
-						break;
-					case Ape::Event::Type::LIGHT_DIRECTION:
-						ogreLight->setDirection(Ape::ConversionToOgre(light->getLightDirection()));
-						break;
-					case Ape::Event::Type::LIGHT_SPECULAR:
-						ogreLight->setSpecularColour(Ape::ConversionToOgre(light->getSpecularColor()));
-						break;
-					case Ape::Event::Type::LIGHT_SPOTRANGE:
-						ogreLight->setSpotlightRange(Ogre::Radian(light->getLightSpotRange().innerAngle.toRadian()), Ogre::Radian(light->getLightSpotRange().outerAngle.toRadian()), light->getLightSpotRange().falloff);
-						break;
-					case Ape::Event::Type::LIGHT_TYPE:
-						ogreLight->setType(Ape::ConversionToOgre(light->getLightType()));
-						break;
-					case Ape::Event::Type::LIGHT_PARENTNODE:
+						if (auto parentNode = light->getParentNode().lock())
 						{
-							if (auto parentNode = light->getParentNode().lock())
-							{
-								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
-									ogreParentNode->attachObject(ogreLight);
-							}
+							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
+								ogreParentNode->attachObject(ogreLight);
 						}
-						break;
-					case Ape::Event::Type::LIGHT_DELETE:
-						;
-						break;
 					}
+					break;
+				case Ape::Event::Type::LIGHT_DELETE:
+					;
+					break;
 				}
 			}
 		}
@@ -498,11 +496,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							if (auto viewPort = mRenderWindows[atoi(event.subjectName.c_str())]->addViewport(ogreCamera))
 							{
-								if (auto parentNode = std::static_pointer_cast<Ape::IPrimitiveGeometry>(mpScene->getEntity(event.subjectName).lock()))
-								{
-									if (mpSceneMgr->hasSceneNode(parentNode->getName()))
-										mpSceneMgr->getSceneNode(parentNode->getName())->attachObject(ogreCamera);
-								}
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);

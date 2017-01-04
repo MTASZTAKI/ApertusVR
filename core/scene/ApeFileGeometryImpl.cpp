@@ -51,7 +51,7 @@ void Ape::FileGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
 	}
 	else
 		mParentNode = Ape::NodeWeakPtr();
