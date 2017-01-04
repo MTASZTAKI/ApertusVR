@@ -30,7 +30,8 @@ set (HEADERS
 	ApeICamera.h
 	ApeILight.h
 	ApeMaterial.h
-	ApeIPass.h
+	ApePass.h
+	ApeIPbsPass.h
 	ApeIManualMaterial.h
 	ApeIFileMaterial.h
 	ApeINode.h

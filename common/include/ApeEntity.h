@@ -45,7 +45,7 @@ namespace Ape
 			TEXTURE,
 			CAMERA,
 			COLLISION,
-			PASS,
+			PASS_PBS,
 			INVALID
 		};
 		

@@ -280,7 +280,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == Ape::Event::Group::MATERIAL)
 		{
-			if (auto material = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(event.subjectName).lock()))
 			{
 				switch (event.type)
 				{
@@ -299,6 +299,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (Ogre::MaterialManager::getSingleton().resourceExists(skyBoxMaterialName))
 							mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
 					}
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_CREATE:
+						Ogre::MaterialManager::getSingleton().createOrRetrieve(material->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_DELETE:
+					;
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_PASS:
+					;
 					break;
 				}
 			}
@@ -338,7 +347,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									if (mpSceneMgr->hasSceneNode(parentNode->getName()))
 										mpSceneMgr->getSceneNode(parentNode->getName())->attachObject(ogreCamera);
 								}
-								//TODO why it is only working?
+								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
 							}

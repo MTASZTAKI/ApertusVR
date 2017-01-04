@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "ApeLightImpl.h" 
 #include "ApeFileMaterialImpl.h"
 #include "ApeManualMaterialImpl.h"
-#include "ApePassImpl.h"
+#include "ApePbsPassImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -103,12 +103,12 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		if (auto manualMaterial = mpSceneImpl->createEntity(manualMaterialName.C_String(), Ape::Entity::MATERIAL_MANUAL).lock())
 			return ((Ape::ManualMaterialImpl*)manualMaterial.get());
 	}
-	else if (objectType == "Pass")
+	else if (objectType == "PbsPass")
 	{
-		RakNet::RakString passName;
-		allocationIdBitstream->Read(passName);
-		if (auto pass = mpSceneImpl->createEntity(passName.C_String(), Ape::Entity::PASS).lock())
-			return ((Ape::PassImpl*)pass.get());
+		RakNet::RakString pbsPassName;
+		allocationIdBitstream->Read(pbsPassName);
+		if (auto pbsPass = mpSceneImpl->createEntity(pbsPassName.C_String(), Ape::Entity::PASS_PBS).lock())
+			return ((Ape::PbsPassImpl*)pbsPass.get());
 	}
 	return NULL;
 }

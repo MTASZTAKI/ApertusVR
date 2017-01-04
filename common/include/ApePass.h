@@ -20,22 +20,46 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IMANUALMATERIAL_H
-#define APE_IMANUALMATERIAL_H
 
-#include "ApeMaterial.h"
+#ifndef APE_PASS_H
+#define APE_PASS_H
+
+#include <string>
+#include <vector>
+#include "Ape.h"
+#include "ApeEntity.h"
+#include "ApeITexture.h"
+#include "ApeColor.h"
 
 namespace Ape
 {	
-	class IManualMaterial : public Material
+	class Pass : public Entity
 	{
 	protected:
-	    IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
+		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 		
-		virtual ~IManualMaterial() {};
-		
+		virtual ~Pass() {};
+
+		Ape::Color mDiffuseColor;
+
+		Ape::Color mSpecularColor;
+
+		Ape::Color mAmbientColor;
+
+		Ape::Color mEmissiveColor;
+
+		float mShininess;
+
 	public:
-		virtual void setPass(Ape::PassWeakPtr pass) = 0;
+		Ape::Color getDiffuseColor() { return mDiffuseColor; };
+
+		Ape::Color getSpecularColor() { return mSpecularColor; };
+
+		Ape::Color getAmbientColor() { return mAmbientColor; };
+
+		Ape::Color getEmissiveColor() { return mEmissiveColor; };
+
+		float getShininess() { return mShininess; };
 	};
 }
 

@@ -20,10 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_PASSIMPL_H
-#define APE_PASSIMPL_H
+#ifndef APE_PBSPASSIMPL_H
+#define APE_PBSPASSIMPL_H
 
-#include "ApeIPass.h"
+#include "ApeIPbsPass.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
@@ -31,12 +31,12 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class PassImpl : public Ape::IPass, public Ape::Replica
+	class PbsPassImpl : public Ape::IPbsPass, public Ape::Replica
 	{
 	public:
-		PassImpl(std::string name, bool isHostCreated);
+		PbsPassImpl(std::string name, bool isHostCreated);
 
-		~PassImpl();
+		~PbsPassImpl();
 		
 		void setAlbedo(Ape::Color albedo) override;
 
@@ -53,6 +53,16 @@ namespace Ape
 		float getLightRoughnessOffset() override;
 
 		Ape::Color getF0() override;
+
+		void setDiffuseColor(Ape::Color diffuse) override;
+
+		void setSpecularColor(Ape::Color specular) override;
+
+		void setAmbientColor(Ape::Color ambient) override;
+
+		void setEmissiveColor(Ape::Color emissive) override;
+
+		void setShininess(float shininess) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

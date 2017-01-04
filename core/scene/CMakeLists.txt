@@ -30,7 +30,7 @@ set (HEADERS
 	ApeFileGeometryImpl.h
 	ApePrimitiveGeometryImpl.h
 	ApeFileMaterialImpl.h
-	ApePassImpl.h
+	ApePbsPassImpl.h
 	ApeManualMaterialImpl.h
 	ApeManualGeometryImpl.h
 	session/ApeReplica.h
@@ -50,7 +50,7 @@ set (SOURCES
 	ApeFileGeometryImpl.cpp
 	ApePrimitiveGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
-	ApePassImpl.cpp
+	ApePbsPassImpl.cpp
 	ApeManualMaterialImpl.cpp
 	ApeManualGeometryImpl.cpp
 	session/ApeReplica.cpp

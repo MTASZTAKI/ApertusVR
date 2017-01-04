@@ -21,24 +21,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_IPASS_H
-#define APE_IPASS_H
+#ifndef APE_IPBSPASS_H
+#define APE_IPBSPASS_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
+#include "ApePass.h"
 #include "ApeEntity.h"
 #include "ApeITexture.h"
 #include "ApeColor.h"
 
 namespace Ape
 {	
-	class IPass : public Entity
+	class IPbsPass : public Pass
 	{
 	protected:
-		IPass(std::string name) : Entity(name, Entity::PASS) {}
+		IPbsPass(std::string name) : Pass(name, Entity::PASS_PBS) {}
 		
-		virtual ~IPass() {};
+		virtual ~IPbsPass() {};
 
 	public:
 		virtual void setAlbedo(Ape::Color albedo) = 0;
@@ -56,6 +57,16 @@ namespace Ape
 		virtual float getLightRoughnessOffset() = 0;
 
 		virtual Ape::Color getF0() = 0;
+
+		virtual void setDiffuseColor(Color diffuse) = 0;
+
+		virtual void setSpecularColor(Color specular) = 0;
+
+		virtual void setAmbientColor(Color ambient) = 0;
+
+		virtual void setEmissiveColor(Color emissive) = 0;
+
+		virtual void setShininess(float shininess) = 0;
 	};
 }
 
