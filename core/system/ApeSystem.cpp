@@ -53,10 +53,11 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	std::stringstream generatedUniqueUserName;
 	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
 	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
+	std::string userNodeName = gpSystemConfigImpl->getSceneSessionConfig().generatedUniqueUserName;
+	auto userNode = gpSceneImpl->createNode(userNodeName);
 	if (gpSystemConfigImpl->getSceneSessionConfig().participantType == SceneSession::ParticipantType::HOST || gpSystemConfigImpl->getSceneSessionConfig().participantType == SceneSession::ParticipantType::GUEST)
 	{
-		std::string userNodeName = gpSystemConfigImpl->getSceneSessionConfig().generatedUniqueUserName;
-		if (auto userNode = gpSceneImpl->createNode(userNodeName).lock())
+		if (userNode.lock())
 		{
 			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
 			{

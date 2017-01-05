@@ -501,21 +501,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
-								if (Ogre::RTShader::ShaderGenerator::initialize())
+								if (mOgreCameras.size() == 1)
 								{
-									mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
-									mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-									mpShaderGenerator->addSceneManager(mpSceneMgr);
-									mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
-									Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
-									Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-									pMainRenderState->reset();
-									pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-									mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									if (Ogre::RTShader::ShaderGenerator::initialize())
+									{
+										mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+										mpShaderGenerator->addSceneManager(mpSceneMgr);
+										mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+										Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+										viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+										Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+										pMainRenderState->reset();
+										pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+										mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									}
+									else
+										std::cout << "Problem in the RTSS init" << std::endl;
 								}
-								else
-									std::cout << "Problem in the RTSS init" << std::endl;
 							}
 						}
 					}
