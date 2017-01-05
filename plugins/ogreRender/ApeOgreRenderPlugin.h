@@ -84,7 +84,7 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIPbsPass.h"
-
+#include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
 
@@ -139,6 +139,10 @@ namespace Ape
 		Ape::OgreMovableTextFactory* mpOgreMovableTextFactory;
 
 		std::map<int, Ogre::RenderWindow*> mRenderWindows;
+
+		Ogre::RTShader::ShaderGenerator* mpShaderGenerator;
+
+		Ape::ShaderGeneratorResolver* mpShaderGeneratorResolver;
 
 		Ogre::HlmsManager* mpHlmsPbsManager;
 

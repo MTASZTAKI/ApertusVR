@@ -11,6 +11,10 @@ material universe
 				cubic_texture purple-nebula-complex.png combinedUVW
 				tex_address_mode clamp
 			}
+ 			rtshader_system
+ 			{	 				
+ 				lighting_stage per_pixel				
+ 			}
 		}
 	}
 }

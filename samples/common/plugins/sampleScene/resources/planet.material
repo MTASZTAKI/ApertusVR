@@ -12,6 +12,10 @@ material _1_-_Default2
          {
             texture earth.jpg
          }
+		 rtshader_system
+ 		 {	 				
+ 			lighting_stage per_pixel				
+ 		 }
       }
    }
 }

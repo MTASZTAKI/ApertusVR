@@ -51,6 +51,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpOverlayFontManager = NULL;
 	mpOverlayFont = NULL;
 	mpHlmsPbsManager = NULL;
+	mpShaderGenerator = NULL;
+	mpShaderGeneratorResolver = NULL;
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
@@ -499,6 +501,21 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
+								if (Ogre::RTShader::ShaderGenerator::initialize())
+								{
+									mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+									mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+									mpShaderGenerator->addSceneManager(mpSceneMgr);
+									mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+									Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+									pMainRenderState->reset();
+									pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+									mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+								}
+								else
+									std::cout << "Problem in the RTSS init" << std::endl;
 							}
 						}
 					}
@@ -829,6 +846,13 @@ void Ape::OgreRenderPlugin::Init()
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts",				 "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/Cg", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL150", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
