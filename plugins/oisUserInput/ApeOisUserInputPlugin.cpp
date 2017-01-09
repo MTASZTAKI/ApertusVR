@@ -202,9 +202,9 @@ void Ape::OISUserInputPlugin::moveUserNode()
 		else if (mKeyCode == OIS::KeyCode::KC_S)
 			cameraNode->translate(Ape::Vector3(0, 0, 1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_LEFT)
-			cameraNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+			cameraNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		else if (mKeyCode == OIS::KeyCode::KC_RIGHT)
-			cameraNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+			cameraNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		else if (mKeyCode == OIS::KeyCode::KC_UP)
 			cameraNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_DOWN)

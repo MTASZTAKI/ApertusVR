@@ -1270,12 +1270,16 @@ void Ape::OgreRenderPlugin::Init()
 		winDesc.height = mOgreRenderWindowConfigList[i].height;
 		winDesc.width = mOgreRenderWindowConfigList[i].width;
 		winDesc.useFullScreen = mOgreRenderWindowConfigList[i].fullScreen;
-		winDesc.miscParams["colourDepth"] = mOgreRenderWindowConfigList[i].colorDepth;
+		std::stringstream colourDepthSS;
+		colourDepthSS << mOgreRenderWindowConfigList[i].colorDepth;
+		winDesc.miscParams["colourDepth"] = colourDepthSS.str().c_str();
 		winDesc.miscParams["vsync"] = mOgreRenderWindowConfigList[i].vSync ? "Yes" : "No";
 		std::stringstream vsyncIntervalSS;
 		vsyncIntervalSS << mOgreRenderWindowConfigList[i].vSyncInterval;
 		winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
-		winDesc.miscParams["FSAA"] = mOgreRenderWindowConfigList[i].fsaa;
+		std::stringstream fsaaSS;
+		fsaaSS << mOgreRenderWindowConfigList[i].fsaa;
+		winDesc.miscParams["FSAA"] = fsaaSS.str().c_str();
 		winDesc.miscParams["FSAAHint"] = mOgreRenderWindowConfigList[i].fsaaHint;
 		std::stringstream monitorIndexSS;
 		monitorIndexSS << mOgreRenderWindowConfigList[i].monitorIndex;
