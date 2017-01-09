@@ -761,10 +761,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		{
 			if (auto materialManual = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(event.subjectName).lock()))
 			{
+				std::string materialName = materialManual->getName();
+				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				Ogre::MaterialPtr ogreMaterial = result.first.staticCast<Ogre::Material>();
 				switch (event.type)
 				{
 				case Ape::Event::Type::MATERIAL_MANUAL_CREATE:
-					Ogre::MaterialManager::getSingleton().createOrRetrieve(materialManual->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					;
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_DELETE:
 					;
@@ -773,9 +776,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 					if (auto pass = materialManual->getPass().lock())
 					{
+						Ogre::MaterialManager::getSingleton().remove(materialName);
 						auto ogrePassMaterial = Ogre::MaterialManager::getSingleton().getByName(pass->getName());
 						if (!ogrePassMaterial.isNull())
-							ogrePassMaterial->clone(materialManual->getName());
+							ogrePassMaterial->clone(materialName);
 					}
 				}
 					break;
