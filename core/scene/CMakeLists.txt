@@ -28,7 +28,7 @@ set (HEADERS
 	ApeCameraImpl.h
 	ApeSceneImpl.h
 	ApeFileGeometryImpl.h
-	ApePrimitiveGeometryImpl.h
+	ApePlaneGeometryImpl.h
 	ApeFileMaterialImpl.h
 	ApePbsPassImpl.h
 	ApeManualMaterialImpl.h
@@ -48,7 +48,7 @@ set (SOURCES
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp
 	ApeFileGeometryImpl.cpp
-	ApePrimitiveGeometryImpl.cpp
+	ApePlaneGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
 	ApePbsPassImpl.cpp
 	ApeManualMaterialImpl.cpp

@@ -23,23 +23,23 @@ SOFTWARE.*/
 #ifndef APE_PrimitiveGeometryImpl_H
 #define APE_PrimitiveGeometryImpl_H
 
-#include "ApeIPrimitiveGeometry.h"
+#include "ApeIPlaneGeometry.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
 #include "ApeReplica.h"
 
 namespace Ape
 {
-	class PrimitiveGeometryImpl : public Ape::IPrimitiveGeometry, public Ape::Replica
+	class PlaneGeometryImpl : public Ape::IPlaneGeometry, public Ape::Replica
 	{
 	public:
-		PrimitiveGeometryImpl(std::string name, bool isHostCreated);
+		PlaneGeometryImpl(std::string name, bool isHostCreated);
 
-		~PrimitiveGeometryImpl();
+		~PlaneGeometryImpl();
 
-		void setParameters(Ape::PrimitiveGeometryParameterBase parameters);
+		void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile);
 
-		Ape::PrimitiveGeometryParameterBase getParameters();
+		Ape::GeometryPlaneParameters getParameters();
 
 		void setParentNode(Ape::NodeWeakPtr parentNode);
 
@@ -58,7 +58,7 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		Ape::PrimitiveGeometryParameterBase mParameters;
+		Ape::GeometryPlaneParameters mParameters;
 
 		Ape::MaterialWeakPtr mMaterial;
 

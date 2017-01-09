@@ -25,8 +25,9 @@ SOFTWARE.*/
 #include "ApeLightImpl.h"
 #include "ApeTextGeometryImpl.h"
 #include "ApeFileGeometryImpl.h"
-#include "ApePrimitiveGeometryImpl.h"
+#include "ApePlaneGeometryImpl.h"
 #include "ApeTextGeometryImpl.h" 
+#include "ApeManualGeometryImpl.h" 
 #include "ApeFileMaterialImpl.h"
 #include "ApeCameraImpl.h"
 #include "ApeManualMaterialImpl.h"
@@ -130,18 +131,18 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(geometryFile.get());
 			return geometryFile;
 		}
-		case Ape::Entity::GEOMETRY_PRIMITVE:
+		case Ape::Entity::GEOMETRY_PLANE:
 		{
-			auto geometryPrimitive = std::make_shared<Ape::PrimitiveGeometryImpl>(name, mpSceneSessionImpl->isHost());
-			mEntities.insert(std::make_pair(name, geometryPrimitive));
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PRIMITVE_CREATE));
+			auto geometryPlane = std::make_shared<Ape::PlaneGeometryImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, geometryPlane));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PLANE_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
-				replicaManager->Reference(geometryPrimitive.get());
-			return geometryPrimitive;
+				replicaManager->Reference(geometryPlane.get());
+			return geometryPlane;
 		}
 		case Ape::Entity::GEOMETRY_MANUAL:
 		{
-			auto geometryManual = std::make_shared<Ape::PrimitiveGeometryImpl>(name, mpSceneSessionImpl->isHost());
+			auto geometryManual = std::make_shared<Ape::ManualGeomteryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, geometryManual));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_MANUAL_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
@@ -204,8 +205,8 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 		case Ape::Entity::GEOMETRY_FILE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_FILE_DELETE));
 			break;
-		case Ape::Entity::GEOMETRY_PRIMITVE:
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PRIMITVE_DELETE));
+		case Ape::Entity::GEOMETRY_PLANE:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PLANE_DELETE));
 			break;
 		case Ape::Entity::GEOMETRY_MANUAL:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_MANUAL_DELETE));

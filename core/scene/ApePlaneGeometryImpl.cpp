@@ -20,69 +20,71 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePrimitiveGeometryImpl.h"
+#include "ApePlaneGeometryImpl.h"
 
-Ape::PrimitiveGeometryImpl::PrimitiveGeometryImpl(std::string name, bool isHostCreated) : Ape::IPrimitiveGeometry(name), Ape::Replica("PrimitiveGeometry", isHostCreated)
+Ape::PlaneGeometryImpl::PlaneGeometryImpl(std::string name, bool isHostCreated) : Ape::IPlaneGeometry(name), Ape::Replica("PlaneGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
-	mParameters = Ape::PrimitiveGeometryParameterBase();
+	mParameters = Ape::GeometryPlaneParameters();
 	mMaterial = Ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::PrimitiveGeometryImpl::~PrimitiveGeometryImpl()
+Ape::PlaneGeometryImpl::~PlaneGeometryImpl()
 {
 	
 }
 
-void Ape::PrimitiveGeometryImpl::setParameters(Ape::PrimitiveGeometryParameterBase parameters)
+void Ape::PlaneGeometryImpl::setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile)
 {
-	mParameters = parameters;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS));
+	mParameters.numSeg = numSeg;
+	mParameters.size = size;
+	mParameters.tile = tile;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_PARAMETERS));
 }
 
-Ape::PrimitiveGeometryParameterBase Ape::PrimitiveGeometryImpl::getParameters()
+Ape::GeometryPlaneParameters Ape::PlaneGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::PrimitiveGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void Ape::PlaneGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_PARENTNODE));
 	}
 	else
 		mParentNode = Ape::NodeWeakPtr();
 }
 
-void Ape::PrimitiveGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void Ape::PlaneGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_MATERIAL));
 	}
 	else
 		mMaterial = Ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::PrimitiveGeometryImpl::getMaterial()
+Ape::MaterialWeakPtr Ape::PlaneGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::PrimitiveGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void Ape::PlaneGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::PrimitiveGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult Ape::PlaneGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -94,18 +96,18 @@ RakNet::RM3SerializationResult Ape::PrimitiveGeometryImpl::Serialize(RakNet::Ser
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
 
-void Ape::PrimitiveGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void Ape::PlaneGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARAMETERS));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
@@ -114,7 +116,7 @@ void Ape::PrimitiveGeometryImpl::Deserialize(RakNet::DeserializeParameters *dese
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PRIMITVE_MATERIAL));
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

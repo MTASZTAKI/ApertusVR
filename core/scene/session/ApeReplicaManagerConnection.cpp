@@ -24,7 +24,7 @@ SOFTWARE.*/
 #include "ApeReplicaManagerConnection.h"
 #include "ApeNodeImpl.h" 
 #include "ApeFileGeometryImpl.h"
-#include "ApePrimitiveGeometryImpl.h" 
+#include "ApePlaneGeometryImpl.h" 
 #include "ApeTextGeometryImpl.h"
 #include "ApeManualGeometryImpl.h" 
 #include "ApeLightImpl.h" 
@@ -61,12 +61,12 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		if (auto fileGeometry = mpSceneImpl->createEntity(fileGeometryName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())
 			return ((Ape::FileGeometryImpl*)fileGeometry.get());
 	}
-	else if (objectType == "PrimitiveGeometry")
+	else if (objectType == "PlaneGeometry")
 	{
-		RakNet::RakString primitiveGeomteryName;
-		allocationIdBitstream->Read(primitiveGeomteryName);
-		if (auto PrimitiveGeometry = mpSceneImpl->createEntity(primitiveGeomteryName.C_String(), Ape::Entity::GEOMETRY_PRIMITVE).lock())
-			return ((Ape::PrimitiveGeometryImpl*)PrimitiveGeometry.get());
+		RakNet::RakString planeGeometryName;
+		allocationIdBitstream->Read(planeGeometryName);
+		if (auto planeGeometry = mpSceneImpl->createEntity(planeGeometryName.C_String(), Ape::Entity::GEOMETRY_PLANE).lock())
+			return ((Ape::PlaneGeometryImpl*)planeGeometry.get());
 	}
 	else if (objectType == "TextGeometry")
 	{

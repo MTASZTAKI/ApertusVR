@@ -20,29 +20,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IPrimitiveGeometry_H
-#define APE_IPrimitiveGeometry_H
+#ifndef APE_IPLANEGEOMETRY_H
+#define APE_IPLANEGEOMETRY_H
 
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
-#include "ApePrimitiveGeometryParameterTypes.h"
+#include "ApeVector2.h"
 #include "ApeVector3.h"
 #include "ApeINode.h"
 
 namespace Ape
 {	
-	class IPrimitiveGeometry : public Ape::Geometry
+	struct GeometryPlaneParameters
+	{
+		Ape::Vector2 numSeg;
+		Ape::Vector2 size;
+		Ape::Vector2 tile;
+
+		GeometryPlaneParameters()
+		{
+			this->numSeg = Ape::Vector2();
+			this->size = Ape::Vector2();
+			this->tile = Ape::Vector2();
+		}
+
+		GeometryPlaneParameters(
+			Ape::Vector2 numSeg,
+			Ape::Vector2 size,
+			Ape::Vector2 tile)
+		{
+			this->numSeg = numSeg;
+			this->size = size;
+			this->tile = tile;
+		}
+	};
+
+	class IPlaneGeometry : public Ape::Geometry
 	{
 	protected:
-		IPrimitiveGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_PRIMITVE) {}
+		IPlaneGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_PLANE) {}
 		
-		virtual ~IPrimitiveGeometry() {};
+		virtual ~IPlaneGeometry() {};
 		
 	public:
-		virtual void setParameters(Ape::PrimitiveGeometryParameterBase parameters) = 0;
+		virtual void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile) = 0;
 		
-		virtual Ape::PrimitiveGeometryParameterBase getParameters() = 0;
+		virtual Ape::GeometryPlaneParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 

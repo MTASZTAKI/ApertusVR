@@ -27,6 +27,14 @@ void ApeLinkageDesignerVRPlugin::Init()
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
+	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	{
+		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
+			plane->setParentNode(planeNode);
+		}
+	}
 }
 
 void ApeLinkageDesignerVRPlugin::Run()

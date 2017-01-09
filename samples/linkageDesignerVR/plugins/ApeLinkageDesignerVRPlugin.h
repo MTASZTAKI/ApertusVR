@@ -37,6 +37,7 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeISystemConfig.h"
 #include "ApeIFileMaterial.h"
+#include "ApeIPlaneGeometry.h"
 
 
 #define THIS_PLUGINNAME "ApeLinkageDesignerVRPlugin"
