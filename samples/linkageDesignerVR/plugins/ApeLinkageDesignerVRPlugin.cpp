@@ -22,6 +22,11 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 void ApeLinkageDesignerVRPlugin::Init()
 {
 	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
+	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	{
+		skyBoxMaterial->setFileName("skyBox.material");
+		skyBoxMaterial->setAsSkyBox();
+	}
 }
 
 void ApeLinkageDesignerVRPlugin::Run()

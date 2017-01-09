@@ -20,26 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (common)
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	ApeSystem.json
+	)
 
-option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
-option(APE_SAMPLES_SinglePlayer "Use APE_SAMPLES_SinglePlayer?" ON )
-option(APE_SAMPLES_CaveDisplay "Use APE_SAMPLES_CaveDisplay?" ON )
-option(APE_SAMPLES_LinkageDesignerVR "Use APE_SAMPLES_LinkageDesignerVR?" ON )
-option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" ON )
+add_custom_target(
+    Configs_singlePlayer ALL
+    SOURCES ${CONFIGS}
+)
 
-if (${APE_SAMPLES_MultiPlayer})
-	add_subdirectory (multiPlayer)
-endif ()	
-if (${APE_SAMPLES_SinglePlayer})
-	add_subdirectory (singlePlayer)
-endif ()
-if (${APE_SAMPLES_CaveDisplay})
-	add_subdirectory (caveDisplay)
-endif ()
-if (${APE_SAMPLES_LinkageDesignerVR})
-	add_subdirectory (linkageDesignerVR)
-endif ()
-if (${APE_SAMPLES_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
+set_property (TARGET Configs_singlePlayer PROPERTY FOLDER "Samples/SinglePlayer/Configs")

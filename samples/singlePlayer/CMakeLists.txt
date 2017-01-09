@@ -20,26 +20,19 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (common)
+add_subdirectory (configs)
 
-option(APE_SAMPLES_MultiPlayer "Use APE_SAMPLES_MultiPlayer?" ON )
-option(APE_SAMPLES_SinglePlayer "Use APE_SAMPLES_SinglePlayer?" ON )
-option(APE_SAMPLES_CaveDisplay "Use APE_SAMPLES_CaveDisplay?" ON )
-option(APE_SAMPLES_LinkageDesignerVR "Use APE_SAMPLES_LinkageDesignerVR?" ON )
-option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" ON )
+set (SOURCES
+	ApeSinglePlayerMain.cpp
+	)
 
-if (${APE_SAMPLES_MultiPlayer})
-	add_subdirectory (multiPlayer)
-endif ()	
-if (${APE_SAMPLES_SinglePlayer})
-	add_subdirectory (singlePlayer)
-endif ()
-if (${APE_SAMPLES_CaveDisplay})
-	add_subdirectory (caveDisplay)
-endif ()
-if (${APE_SAMPLES_LinkageDesignerVR})
-	add_subdirectory (linkageDesignerVR)
-endif ()
-if (${APE_SAMPLES_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
+	)
+
+add_executable (ApeSinglePlayer ${SOURCES})
+target_link_libraries (ApeSinglePlayer ApeSystem ApePluginManager)
+set_property (TARGET ApeSinglePlayer PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeSinglePlayer PROPERTY FOLDER "Samples/SinglePlayer")
+
+
