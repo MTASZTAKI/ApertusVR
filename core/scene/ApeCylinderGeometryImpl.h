@@ -20,26 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_PLANEGEOMETRYIMPL_H
-#define APE_PLANEGEOMETRYIMPL_H
+#ifndef APE_CYLINDERGEOMETRYIMPL_H
+#define APE_CYLINDERGEOMETRYIMPL_H
 
-#include "ApeIPlaneGeometry.h"
+#include "ApeICylinderGeometry.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
 #include "ApeReplica.h"
 
 namespace Ape
 {
-	class PlaneGeometryImpl : public Ape::IPlaneGeometry, public Ape::Replica
+	class CylinderGeometryImpl : public Ape::ICylinderGeometry, public Ape::Replica
 	{
 	public:
-		PlaneGeometryImpl(std::string name, bool isHostCreated);
+		CylinderGeometryImpl(std::string name, bool isHostCreated);
 
-		~PlaneGeometryImpl();
+		~CylinderGeometryImpl();
 
-		void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile);
+		void setParameters(float radius, float height, float tile);
 
-		Ape::GeometryPlaneParameters getParameters();
+		Ape::GeometryCylinderParameters getParameters();
 
 		void setParentNode(Ape::NodeWeakPtr parentNode);
 
@@ -58,7 +58,7 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		Ape::GeometryPlaneParameters mParameters;
+		Ape::GeometryCylinderParameters mParameters;
 
 		Ape::MaterialWeakPtr mMaterial;
 

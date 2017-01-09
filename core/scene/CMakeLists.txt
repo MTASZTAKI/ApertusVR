@@ -29,6 +29,12 @@ set (HEADERS
 	ApeSceneImpl.h
 	ApeFileGeometryImpl.h
 	ApePlaneGeometryImpl.h
+	ApeBoxGeometryImpl.h
+	ApeCylinderGeometryImpl.h
+	ApeConeGeometryImpl.h
+	ApeTorusGeometryImpl.h
+	ApeTubeGeometryImpl.h
+	ApeSphereGeometryImpl.h
 	ApeFileMaterialImpl.h
 	ApePbsPassImpl.h
 	ApeManualMaterialImpl.h
@@ -49,6 +55,12 @@ set (SOURCES
 	ApeSceneImpl.cpp
 	ApeFileGeometryImpl.cpp
 	ApePlaneGeometryImpl.cpp
+	ApeBoxGeometryImpl.cpp
+	ApeCylinderGeometryImpl.cpp
+	ApeConeGeometryImpl.cpp
+	ApeTorusGeometryImpl.cpp
+	ApeTubeGeometryImpl.cpp
+	ApeSphereGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
 	ApePbsPassImpl.cpp
 	ApeManualMaterialImpl.cpp

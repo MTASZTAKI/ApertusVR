@@ -20,56 +20,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ITORUSGEOMETRY_H
-#define APE_ITORUSGEOMETRY_H
+#ifndef APE_TORUSGEOMETRYIMPL_H
+#define APE_TORUSGEOMETRYIMPL_H
 
-#include <string>
-#include <vector>
-#include "ApeGeometry.h"
-#include "ApeVector2.h"
-#include "ApeVector3.h"
-#include "ApeINode.h"
+#include "ApeITorusGeometry.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeReplica.h"
 
 namespace Ape
-{	
-	struct GeometryTorusParameters
+{
+	class TorusGeometryImpl : public Ape::ITorusGeometry, public Ape::Replica
 	{
-		float radius;
-		float sectionRadius;
-		Ape::Vector2 tile;
-
-		GeometryTorusParameters()
-		{
-			this->radius = 0.0f;
-			this->sectionRadius = 0.0f;
-			this->tile = Ape::Vector2();
-		}
-
-		GeometryTorusParameters(float radius, float sectionRadius, Ape::Vector2 tile)
-		{
-			this->radius = radius;
-			this->sectionRadius = sectionRadius;
-			this->tile = tile;
-		}
-	};
-
-	class ITorusGeometry : public Ape::Geometry
-	{
-	protected:
-		ITorusGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_TORUS) {}
-		
-		virtual ~ITorusGeometry() {};
-		
 	public:
-		virtual void setParameters(float radius, float sectionRadius, Ape::Vector2 tile) = 0;
-		
-		virtual Ape::GeometryTorusParameters getParameters() = 0;
+		TorusGeometryImpl(std::string name, bool isHostCreated);
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		~TorusGeometryImpl();
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		void setParameters(float radius, float sectionRadius, Ape::Vector2 tile);
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		Ape::GeometryTorusParameters getParameters();
+
+		void setParentNode(Ape::NodeWeakPtr parentNode);
+
+		void setMaterial(Ape::MaterialWeakPtr material);
+
+		Ape::MaterialWeakPtr getMaterial();
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
+
+		Ape::GeometryTorusParameters mParameters;
+
+		Ape::MaterialWeakPtr mMaterial;
+
+		std::string mMaterialName;
 	};
 }
 
