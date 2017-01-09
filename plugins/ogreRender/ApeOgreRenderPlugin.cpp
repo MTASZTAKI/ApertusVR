@@ -36,6 +36,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::LIGHT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TEXT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_PLANE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -47,7 +48,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TORUS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
 	mRenderWindows = std::map<int, Ogre::RenderWindow*>();
@@ -753,21 +754,29 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
 				}
 					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::MATERIAL_MANUAL)
+		{
+			if (auto materialManual = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				switch (event.type)
+				{
 				case Ape::Event::Type::MATERIAL_MANUAL_CREATE:
-					;// Ogre::MaterialManager::getSingleton().createOrRetrieve(material->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					Ogre::MaterialManager::getSingleton().createOrRetrieve(materialManual->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_DELETE:
 					;
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_PASS:
 				{
-					if (auto pass = materialFile->getPass().lock())
+					if (auto pass = materialManual->getPass().lock())
 					{
 						auto ogrePassMaterial = Ogre::MaterialManager::getSingleton().getByName(pass->getName());
 						if (!ogrePassMaterial.isNull())
-							ogrePassMaterial->clone(materialFile->getName());
+							ogrePassMaterial->clone(materialManual->getName());
 					}
-
 				}
 					break;
 				}
@@ -778,33 +787,50 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 			if (auto passPbs = std::static_pointer_cast<Ape::IPbsPass>(mpScene->getEntity(event.subjectName).lock()))
 			{
 				std::string passPbsName = passPbs->getName();
-				switch (event.type)
+				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passPbsName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				Ogre::MaterialPtr ogrePbsPassMaterial = result.first.staticCast<Ogre::Material>();
+				if (!ogrePbsPassMaterial.isNull())
 				{
-				case Ape::Event::Type::PASS_PBS_CREATE:
-				{
-					auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passPbsName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-					Ogre::MaterialPtr ogrePbsPassMaterial = result.first.staticCast<Ogre::Material>();
-					if (!ogrePbsPassMaterial.isNull())
+					switch (event.type)
+					{
+					case Ape::Event::Type::PASS_PBS_CREATE:
+					{
 						ogrePbsPassMaterial->createTechnique()->createPass();
-					Ogre::PbsMaterial* ogrePbsMaterial = new Ogre::PbsMaterial();
-					mPbsMaterials[passPbsName] = ogrePbsMaterial;
-				}
-					break;
-				case Ape::Event::Type::PASS_PBS_ALBEDO:
-					mPbsMaterials[passPbsName]->setAlbedo(ConversionToOgre(passPbs->getAlbedo()));
-					break;
-				case Ape::Event::Type::PASS_PBS_F0:
-					mPbsMaterials[passPbsName]->setF0(ConversionToOgre(passPbs->getF0()));
-					break;
-				case Ape::Event::Type::PASS_PBS_ROUGHNESS:
-					mPbsMaterials[passPbsName]->setRoughness(passPbs->getRoughness());
-					break;
-				case Ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET:
-					mPbsMaterials[passPbsName]->setLightRoughnessOffset(passPbs->getLightRoughnessOffset());
-					break;
-				case Ape::Event::Type::PASS_PBS_DELETE:
-					;
-					break;
+						Ogre::PbsMaterial* ogrePbsMaterial = new Ogre::PbsMaterial();
+						mPbsMaterials[passPbsName] = ogrePbsMaterial;
+					}
+						break;
+					case Ape::Event::Type::PASS_PBS_AMBIENT:
+						ogrePbsPassMaterial->setAmbient(ConversionToOgre(passPbs->getAmbientColor()));
+						break;
+					case Ape::Event::Type::PASS_PBS_DIFFUSE:
+						ogrePbsPassMaterial->setDiffuse(ConversionToOgre(passPbs->getDiffuseColor()));
+						break;
+					case Ape::Event::Type::PASS_PBS_EMISSIVE:
+						ogrePbsPassMaterial->setSelfIllumination(ConversionToOgre(passPbs->getEmissiveColor()));
+						break;
+					case Ape::Event::Type::PASS_PBS_SPECULAR:
+						ogrePbsPassMaterial->setSpecular(ConversionToOgre(passPbs->getSpecularColor()));
+						break;
+					case Ape::Event::Type::PASS_PBS_SHININESS:
+						ogrePbsPassMaterial->setShininess(passPbs->getShininess());
+						break;
+					case Ape::Event::Type::PASS_PBS_ALBEDO:
+						mPbsMaterials[passPbsName]->setAlbedo(ConversionToOgre(passPbs->getAlbedo()));
+						break;
+					case Ape::Event::Type::PASS_PBS_F0:
+						mPbsMaterials[passPbsName]->setF0(ConversionToOgre(passPbs->getF0()));
+						break;
+					case Ape::Event::Type::PASS_PBS_ROUGHNESS:
+						mPbsMaterials[passPbsName]->setRoughness(passPbs->getRoughness());
+						break;
+					case Ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET:
+						mPbsMaterials[passPbsName]->setLightRoughnessOffset(passPbs->getLightRoughnessOffset());
+						break;
+					case Ape::Event::Type::PASS_PBS_DELETE:
+						;
+						break;
+					}
 				}
 			}
 		}

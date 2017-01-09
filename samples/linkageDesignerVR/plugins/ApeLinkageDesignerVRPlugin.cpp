@@ -33,6 +33,15 @@ void ApeLinkageDesignerVRPlugin::Init()
 		{
 			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
 			plane->setParentNode(planeNode);
+			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+			{
+				if (auto planeMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("planeMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+				{
+					planeMaterialPbsPass->setEmissiveColor(Ape::Color(0.7f, 0.5f, 0.7f));
+					planeMaterial->setPass(planeMaterialPbsPass);
+					plane->setMaterial(planeMaterial);
+				}
+			}
 		}
 	}
 }

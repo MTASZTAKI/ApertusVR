@@ -67,7 +67,7 @@ void Ape::CylinderGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_PLANE_MATERIAL));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_MATERIAL));
 	}
 	else
 		mMaterial = Ape::MaterialWeakPtr();

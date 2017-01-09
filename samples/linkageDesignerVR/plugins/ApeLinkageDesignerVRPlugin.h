@@ -38,6 +38,8 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeIFileMaterial.h"
 #include "ApeIPlaneGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIPbsPass.h"
 
 
 #define THIS_PLUGINNAME "ApeLinkageDesignerVRPlugin"

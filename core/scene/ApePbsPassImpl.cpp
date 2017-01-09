@@ -46,25 +46,25 @@ void Ape::PbsPassImpl::setDiffuseColor(Ape::Color diffuse)
 void Ape::PbsPassImpl::setSpecularColor(Ape::Color specular)
 {
 	mSpecularColor = specular;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SPECULAR));
 }
 
 void Ape::PbsPassImpl::setAmbientColor(Ape::Color ambient)
 {
 	mAmbientColor = ambient;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_AMBIENT));
 }
 
 void Ape::PbsPassImpl::setEmissiveColor(Ape::Color emissive)
 {
 	mEmissiveColor = emissive;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_EMISSIVE));
 }
 
 void Ape::PbsPassImpl::setShininess(float shininess)
 {
 	mShininess = shininess;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SHININESS));
 }
 
 void Ape::PbsPassImpl::setAlbedo(Ape::Color albedo)
