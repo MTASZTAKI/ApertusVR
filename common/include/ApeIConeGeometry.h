@@ -20,53 +20,63 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_ICONEGEOMETRY_H
+#define APE_ICONEGEOMETRY_H
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
+#include "ApeGeometry.h"
+#include "ApeVector2.h"
+#include "ApeVector3.h"
+#include "ApeINode.h"
 
 namespace Ape
-{
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_MANUAL,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			TEXTURE,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
+{	
+	struct GeometryConeParameters
+	{
+		float radius;
+		float height;
+		float tile;
+		Ape::Vector2 numSeg;
 
-		Type getType() { return mType; };
+		GeometryConeParameters()
+		{
+			this->radius = 0.0f;
+			this->height = 0.0f;
+			this->tile = 0.0f;
+			this->numSeg = Ape::Vector2();
+		}
+
+		GeometryConeParameters(
+			float radius,
+			float height,
+			float tile,
+			Ape::Vector2 numSeg)
+		{
+			this->radius = radius;
+			this->height = height;
+			this->tile = tile;
+			this->numSeg = numSeg;
+		}
+	};
+
+	class IConeGeometry : public Ape::Geometry
+	{
+	protected:
+		IConeGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CONE) {}
+		
+		virtual ~IConeGeometry() {};
+		
+	public:
+		virtual void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg) = 0;
+		
+		virtual Ape::GeometryConeParameters getParameters() = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+
+		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

@@ -20,53 +20,59 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_ICYLINDERGEOMETRY_H
+#define APE_ICYLINDERGEOMETRY_H
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
+#include "ApeGeometry.h"
+#include "ApeVector2.h"
+#include "ApeVector3.h"
+#include "ApeINode.h"
 
 namespace Ape
-{
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_MANUAL,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			TEXTURE,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
+{	
+	struct GeometryCylinderParameters
+	{
+		float radius;
+		float height;
+		float tile;
 
-		Type getType() { return mType; };
+		GeometryCylinderParameters()
+		{
+			this->radius = 0.0f;
+			this->height = 0.0f;
+			this->tile = 0.0f;
+		}
+
+		GeometryCylinderParameters(
+			float radius,
+			float height,
+			float tile)
+		{
+			this->radius = radius;
+			this->height = height;
+			this->tile = tile;
+		}
+	};
+
+	class ICylinderGeometry : public Ape::Geometry
+	{
+	protected:
+		ICylinderGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CYLINDER) {}
+		
+		virtual ~ICylinderGeometry() {};
+		
+	public:
+		virtual void setParameters(float radius, float height, float tile) = 0;
+		
+		virtual Ape::GeometryCylinderParameters getParameters() = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+
+		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

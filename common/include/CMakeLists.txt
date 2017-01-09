@@ -50,6 +50,12 @@ set (HEADERS
 	ApeIManualGeometry.h
 	ApeIFileGeometry.h
 	ApeIPlaneGeometry.h
+	ApeITorusGeometry.h
+	ApeIConeGeometry.h
+	ApeITubeGeometry.h
+	ApeIBoxGeometry.h
+	ApeISphereGeometry.h
+	ApeICylinderGeometry.h
 	ApeSingleton.h
 	ApeIEventManager.h
 	ApeISceneSession.h
