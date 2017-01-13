@@ -226,10 +226,8 @@ void ApeFobHeadTrackingPlugin::Run()
 				{
 					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						cameraLeft->setPosition(userNode->getOrientation() * (mTrackedViewerPosition + 
-							mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
-						cameraRight->setPosition(userNode->getOrientation() * (mTrackedViewerPosition +
-							mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
+						cameraLeft->setPosition(userNode->getOrientation() * (mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
+						cameraRight->setPosition(userNode->getOrientation() * (mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
 						cameraLeft->setOrientation(userNode->getOrientation() * displayConfig.orientation);
 						cameraRight->setOrientation(userNode->getOrientation() * displayConfig.orientation);
 
