@@ -105,7 +105,7 @@ void ApeFobHeadTrackingPlugin::Init()
 					mTrackerConfig.scale = trackerMemberIterator->value.GetFloat();
 				}
 			}
-			rapidjson::Value& displays = jsonDocument["renderWindows"];
+			rapidjson::Value& displays = jsonDocument["displays"];
 			for (auto& display : displays.GetArray())
 			{
 				Ape::FobHeadTrackingDisplayConfig fobHeadTrackingDisplayConfig;
