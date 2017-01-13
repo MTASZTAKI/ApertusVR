@@ -72,12 +72,12 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				if (auto camera = cameraWeakPtr.lock())
 				{
-					Ape::Vector3 viewerToDisplay = camera->getInitOrientationOffset().Inverse() * (viewerPosition + viewerOrientation * camera->getInitPositionOffset());
-					//TODO camera mode maybe move the camera parent node?
-					//camera->setPositionOffset(viewerPosition);
-					//camera->setOrientationOffset(viewerOrientation);
+					/*Ape::Vector3 viewerToDisplay = camera->getInitOrientationOffset().Inverse() * (viewerPosition + viewerOrientation * camera->getInitPositionOffset());
 					camera->setFocalLength(viewerToDisplay.z);
 					camera->setFrustumOffset(Ape::Vector2(-viewerToDisplay.x, -viewerToDisplay.y));
+					camera->setFOVy(2 * atan((mpMainWindow->getHeight() / 2) / camera->getFocalLength()));*/
+					camera->setFocalLength(viewerPosition.z);
+					camera->setFrustumOffset(Ape::Vector2(-viewerPosition.x, -viewerPosition.y));
 					camera->setFOVy(2 * atan((mpMainWindow->getHeight() / 2) / camera->getFocalLength()));
 				}
 			}

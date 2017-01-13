@@ -30,7 +30,7 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mParentNode = Ape::NodeWeakPtr();
 	mParentNodeName = std::string();
 	mPosition = Ape::Vector3();
-	mScale = Ape::Vector3();
+	mScale = Ape::Vector3(1.0f, 1.0f, 1.0f);
 	mOrientation = Ape::Quaternion();
 }
 

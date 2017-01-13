@@ -34,8 +34,6 @@ Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 	mAspectRatio = 0.0f;
 	mPositionOffset = Ape::Vector3();
 	mOrientationOffset = Ape::Quaternion();
-	mInitPositionOffset = Ape::Vector3();
-	mInitOrientationOffset = Ape::Quaternion();
 	mParentNode = Ape::NodeWeakPtr();
 }
 
@@ -130,28 +128,6 @@ void Ape::CameraImpl::setOrientationOffset(Ape::Quaternion orientationOffset)
 {
 	mOrientationOffset = orientationOffset;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORIENTATIONOFFSET));
-}
-
-Ape::Vector3 Ape::CameraImpl::getInitPositionOffset()
-{
-	return mInitPositionOffset;
-}
-
-void Ape::CameraImpl::setInitPositionOffset(Ape::Vector3 initPositionOffset)
-{
-	mInitPositionOffset = initPositionOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_INITPOSITIONOFFSET));
-}
-
-Ape::Quaternion Ape::CameraImpl::getInitOrientationOffset()
-{
-	return mInitOrientationOffset;
-}
-
-void Ape::CameraImpl::setInitOrientationOffset(Ape::Quaternion initOrientationOffset)
-{
-	mInitOrientationOffset = initOrientationOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET));
 }
 
 void Ape::CameraImpl::setParentNode(Ape::NodeWeakPtr parentNode)

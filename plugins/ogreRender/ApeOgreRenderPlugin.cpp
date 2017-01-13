@@ -982,18 +982,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientationOffset()));
 				}
 					break;
-				case Ape::Event::Type::CAMERA_INITPOSITIONOFFSET:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getInitPositionOffset()));
-				}
-					break;
-				case Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getInitOrientationOffset()));
-				}
-					break;
 				}
 			}
 		}
@@ -1307,8 +1295,8 @@ void Ape::OgreRenderPlugin::Init()
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
-				camera->setInitPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
-				camera->setInitOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
+				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
+				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 			if (i == 0)
 			{

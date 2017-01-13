@@ -68,14 +68,6 @@ namespace Ape
 
 		void setOrientationOffset(Ape::Quaternion orientationOffset) override;
 
-		Ape::Vector3 getInitPositionOffset() override;
-
-		void setInitPositionOffset(Ape::Vector3 initPositionOffset) override;
-
-		Ape::Quaternion getInitOrientationOffset() override;
-
-		void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) override;
-
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
 		Ape::NodeWeakPtr getParentNode() override;
@@ -100,10 +92,6 @@ namespace Ape
 		Ape::Quaternion mOrientationOffset;
 
 		Ape::Vector3 mPositionOffset;
-
-		Ape::Quaternion mInitOrientationOffset;
-
-		Ape::Vector3 mInitPositionOffset;
 
 		NodeWeakPtr mParentNode;
 

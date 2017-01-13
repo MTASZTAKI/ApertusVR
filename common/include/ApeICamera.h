@@ -74,14 +74,6 @@ namespace Ape
 
 		virtual void setOrientationOffset(Ape::Quaternion orientation) = 0;
 
-		virtual Ape::Vector3 getInitPositionOffset() = 0;
-
-		virtual void setInitPositionOffset(Ape::Vector3 initPositionOffset) = 0;
-
-		virtual Ape::Quaternion getInitOrientationOffset() = 0;
-
-		virtual void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) = 0;
-
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
