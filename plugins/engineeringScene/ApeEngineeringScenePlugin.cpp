@@ -67,7 +67,7 @@ void ApeEngineeringScenePlugin::Init()
 	if (auto demoObjectNode = mpScene->createNode("demoObjectNode").lock())
 	{
 		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
-		if (auto demoObject = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoObject", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+		if (auto demoBox = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoBox", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 		{
 			Ape::GeometryCoordinates coordinates = {
 				 10,  10, -10,
@@ -86,9 +86,27 @@ void ApeEngineeringScenePlugin::Init()
 				1, 5, 6, 2, -1,
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
-			demoObject->setParameters(coordinates, indices);
-			demoObject->setParentNode(demoObjectNode);
-			demoObject->setMaterial(demoObjectMaterial);
+			demoBox->setParameters(coordinates, indices);
+			demoBox->setParentNode(demoObjectNode);
+			demoBox->setMaterial(demoObjectMaterial);
+		}
+		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+		{
+			Ape::GeometryCoordinates coordinates = {
+				0, 10, 0,
+				10, 10, 0,
+				5, 10, 8.3f,
+				5, 18.3f, 2.8f
+			};
+			Ape::GeometryIndices indices = {
+				0, 1, 2, -1,
+				1, 3, 2, -1,
+				2, 3, 0, -1,
+				3, 1, 0, -1
+			};
+			demoPyramid->setParameters(coordinates, indices);
+			demoPyramid->setParentNode(demoObjectNode);
+			demoPyramid->setMaterial(demoObjectMaterial);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
