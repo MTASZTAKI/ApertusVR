@@ -60,13 +60,13 @@ namespace Ape
 
 		void setAspectRatio(float aspectRatio) override;
 
-		Ape::Vector3 getPositionOffset() override;
+		Ape::Vector3 getPosition() override;
 
-		void setPositionOffset(Ape::Vector3 positionOffset) override;
+		void setPosition(Ape::Vector3 positionOffset) override;
 
-		Ape::Quaternion getOrientationOffset() override;
+		Ape::Quaternion getOrientation() override;
 
-		void setOrientationOffset(Ape::Quaternion orientationOffset) override;
+		void setOrientation(Ape::Quaternion orientationOffset) override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 

@@ -1116,16 +1116,16 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setNearClipDistance(camera->getNearClipDistance());
 				}
 					break;
-				case Ape::Event::Type::CAMERA_POSITIONOFFSET:
+				case Ape::Event::Type::CAMERA_POSITION:
 				{
 					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getPositionOffset()));
+						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getPosition()));
 				}
 					break;
-				case Ape::Event::Type::CAMERA_ORIENTATIONOFFSET:
+				case Ape::Event::Type::CAMERA_ORIENTATION:
 				{
 					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientationOffset()));
+						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientation()));
 				}
 					break;
 				}

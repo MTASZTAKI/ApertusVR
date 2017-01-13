@@ -66,13 +66,13 @@ namespace Ape
 
 		virtual void setAspectRatio(float aspectRatio) = 0;
 
-		virtual Ape::Vector3 getPositionOffset() = 0;
+		virtual Ape::Vector3 getPosition() = 0;
 
-		virtual void setPositionOffset(Ape::Vector3 positionOffset) = 0;
+		virtual void setPosition(Ape::Vector3 positionOffset) = 0;
 
-		virtual Ape::Quaternion getOrientationOffset() = 0;
+		virtual Ape::Quaternion getOrientation() = 0;
 
-		virtual void setOrientationOffset(Ape::Quaternion orientation) = 0;
+		virtual void setOrientation(Ape::Quaternion orientation) = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
