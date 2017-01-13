@@ -203,8 +203,8 @@ void ApeFobHeadTrackingPlugin::Run()
 						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
 						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
 						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
-						//cameraLeft->setFrustumOffset(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y);
-						//cameraRight->setFrustumOffset(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y);
+						cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
+						cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
 						cameraLeft->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraLeft->getFocalLength()));
 						cameraRight->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraRight->getFocalLength()));
 					}
