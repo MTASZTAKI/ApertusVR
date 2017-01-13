@@ -1259,7 +1259,9 @@ void Ape::OgreRenderPlugin::Init()
 
 	mpRoot->addFrameListener(this);
 
-	mCameraNode = mpScene->createNode("CameraNode");
+	std::stringstream cameraNodeName;
+	cameraNodeName << mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName << "_CameraNode";
+	mCameraNode = mpScene->createNode(cameraNodeName.str());
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;

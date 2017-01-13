@@ -56,7 +56,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 		{
 			if (auto cameraNode = camera->getParentNode().lock())
 			{
-				if (mUserNode.lock())
+				if (mUserNode.lock() && !cameraNode->getParentNode().lock())
 					cameraNode->setParentNode(mUserNode);
 			}
 		}
