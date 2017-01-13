@@ -1208,12 +1208,16 @@ void Ape::OgreRenderPlugin::Init()
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
 		if (renderSystemName == "DX11")
 			mpRoot->loadPlugin( "RenderSystem_Direct3D11_d" );
+		else if (renderSystemName == "DX9")
+			mpRoot->loadPlugin("RenderSystem_Direct3D9_d");
 		else 
 			mpRoot->loadPlugin( "RenderSystem_GL_d" );
 	#else
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
 		if (renderSystemName == "DX11")
 			mpRoot->loadPlugin("RenderSystem_Direct3D11");
+		else if (renderSystemName == "DX9")
+			mpRoot->loadPlugin("RenderSystem_Direct3D9");
 		else
 			mpRoot->loadPlugin("RenderSystem_GL");
 	#endif
@@ -1221,6 +1225,8 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::RenderSystem* renderSystem = nullptr;
 	if (renderSystemName == "DX11")
 		renderSystem = mpRoot->getRenderSystemByName("Direct3D11 Rendering Subsystem");
+	else if (renderSystemName == "DX9")
+		renderSystem = mpRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 	else
 		renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 	

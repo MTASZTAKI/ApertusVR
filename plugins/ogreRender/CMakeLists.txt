@@ -176,6 +176,7 @@ include_directories(
 	${OGRE_HLMS_INCLUDE_DIRS}
 	${OGRE_MeshLodGenerator_INCLUDE_DIRS}
 	${OGRE_Plugin_ParticleFX_INCLUDE_DIRS}
+	${OGRE_RenderSystem_Direct3D9_INCLUDE_DIRS}
 	${OGRE_RenderSystem_Direct3D11_INCLUDE_DIRS}
 	${OGRE_RenderSystem_GL_INCLUDE_DIRS}
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
@@ -184,7 +185,7 @@ include_directories(
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
+${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
@@ -206,8 +207,15 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_GL_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_GL_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D11_d.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	if (DirectX9_FOUND)
+		if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D9_d.dll)
+			file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		endif()
+	endif()
+	if (DirectX11_FOUND)
+		if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D11_d.dll)
+			file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		endif()
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreRTShaderSystem_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
@@ -231,8 +239,15 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_GL.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_GL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D11.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	if (DirectX9_FOUND)
+		if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D9.dll)
+			file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D9.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		endif()
+	endif()
+	if (DirectX11_FOUND)
+		if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D11.dll)
+			file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		endif()
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreRTShaderSystem.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
