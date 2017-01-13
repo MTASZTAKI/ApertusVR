@@ -184,6 +184,20 @@ void ApeFobHeadTrackingPlugin::Run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
+	for (int i = 0; i < mDisplayConfigList.size(); i++)
+	{
+		auto displayConfig = mDisplayConfigList[i];
+		if (auto cameraLeft = mCameras[i * 2].lock())
+		{
+			if (auto cameraRight = mCameras[i * 2 + 1].lock())
+			{
+				cameraLeft->setPositionOffset(Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
+				cameraRight->setPositionOffset(Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
+				cameraLeft->setOrientationOffset(displayConfig.orientation);
+				cameraRight->setOrientationOffset(displayConfig.orientation);
+			}
+		}
+	}
 	while (mpFobTracker)
 	{
 		float positionDataFromTracker[3];
@@ -211,7 +225,7 @@ void ApeFobHeadTrackingPlugin::Run()
 				}
 			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
