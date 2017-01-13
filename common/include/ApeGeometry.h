@@ -32,21 +32,8 @@ SOFTWARE.*/
 #include "ApeMaterial.h"
 
 namespace Ape
-{		
-    struct GeometryCoordinate
-	{
-		float x, y, z;
-
-		GeometryCoordinate() : 
-			x(0.0f), y(0.0f), z(0.0f)
-		{}
-
-		GeometryCoordinate(float _x, float _y, float _z) :
-			x(_x), y(_y), z(_z)
-		{}
-	};
-	
-    typedef std::vector<GeometryCoordinate> GeometryCoordinates;
+{			
+    typedef std::vector<float> GeometryCoordinates;
 	
 	typedef std::vector<int> GeometryIndices;	//-1 code for stop
 	

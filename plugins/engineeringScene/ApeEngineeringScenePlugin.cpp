@@ -53,31 +53,42 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
+	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
+	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	{
+		if (auto demoObjectMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("demoObjectMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		{
+			demoObjectMaterialPbsPass->setShininess(15.0f);
+			demoObjectMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
+		}
+	}
 	if (auto demoObjectNode = mpScene->createNode("demoObjectNode").lock())
 	{
+		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
 		if (auto demoObject = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoObject", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 		{
-			Ape::GeometryCoordinates coordinates;
-			coordinates.push_back(Ape::GeometryCoordinate(-100, -100, 0));
-			coordinates.push_back(Ape::GeometryCoordinate(100, -100, 0));
-			coordinates.push_back(Ape::GeometryCoordinate(100, 100, 0));
-			coordinates.push_back(Ape::GeometryCoordinate(-100, 100, 0));
-			//std::vector<int> indices(0, 1, 2, 3, -1);
-
-			
-			//demoObject->setParameters(coordinates, indices);
+			Ape::GeometryCoordinates coordinates = {
+				 10,  10, -10,
+				 10, -10, -10,
+				-10, -10, -10,
+				-10,  10, -10,
+				 10,  10,  10,
+				 10, -10,  10,
+				-10, -10,  10,
+				-10,  10,  10
+			};
+			Ape::GeometryIndices indices = { 
+				0, 1, 2, 3, -1,
+				4, 7, 6, 5, -1,
+				0, 4, 5, 1, -1,
+				1, 5, 6, 2, -1,
+				2, 6, 7, 3, -1,
+				4, 0, 3, 7, -1 };
+			demoObject->setParameters(coordinates, indices);
 			demoObject->setParentNode(demoObjectNode);
-			if (auto demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-			{
-				if (auto demoObjectMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("demoObjectMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
-				{
-					demoObjectMaterialPbsPass->setShininess(15.0f);
-					demoObjectMaterialPbsPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 0.0f));
-					demoObjectMaterialPbsPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 0.0f));
-					demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
-					demoObject->setMaterial(demoObjectMaterial);
-				}
-			}
+			demoObject->setMaterial(demoObjectMaterial);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
@@ -142,12 +153,10 @@ void ApeEngineeringScenePlugin::Init()
 					}
 					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
-						Ape::GeometryCoordinates coordinates;
-						coordinates.push_back(Ape::GeometryCoordinate(0, 0, 0));
-						coordinates.push_back(Ape::GeometryCoordinate(400, 0, 0));
-						Ape::GeometryIndices indices;
-						indices.push_back(0);
-						indices.push_back(1);
+						Ape::GeometryCoordinates coordinates = {
+							0, 0, 0,
+							400, 0, 0 };
+						Ape::GeometryIndices indices = { 0, 1, -1 };
 						coordinateSystemArrowXExtension->setParameters(coordinates, indices);
 						coordinateSystemArrowXExtension->setParentNode(coordinateSystemArrowXConeNode);
 					}
@@ -181,12 +190,10 @@ void ApeEngineeringScenePlugin::Init()
 					}
 					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
-						Ape::GeometryCoordinates coordinates;
-						coordinates.push_back(Ape::GeometryCoordinate(0, 0, 0));
-						coordinates.push_back(Ape::GeometryCoordinate(0, 400, 0));
-						Ape::GeometryIndices indices;
-						indices.push_back(0);
-						indices.push_back(1);
+						Ape::GeometryCoordinates coordinates = {
+							0, 0, 0,
+							0, 400, 0 };
+						Ape::GeometryIndices indices = { 0, 1, -1 };
 						coordinateSystemArrowYExtension->setParameters(coordinates, indices);
 						coordinateSystemArrowYExtension->setParentNode(coordinateSystemArrowYConeNode);
 					}
@@ -220,12 +227,10 @@ void ApeEngineeringScenePlugin::Init()
 					}
 					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
-						Ape::GeometryCoordinates coordinates;
-						coordinates.push_back(Ape::GeometryCoordinate(0, 0, 0));
-						coordinates.push_back(Ape::GeometryCoordinate(0, 0, 400));
-						Ape::GeometryIndices indices;
-						indices.push_back(0);
-						indices.push_back(1);
+						Ape::GeometryCoordinates coordinates = {
+							0, 0, 0,
+							0, 0, 400 };
+						Ape::GeometryIndices indices = { 0, 1, -1 };
 						coordinateSystemArrowZExtension->setParameters(coordinates, indices);
 						coordinateSystemArrowZExtension->setParentNode(coordinateSystemArrowZConeNode);
 					}

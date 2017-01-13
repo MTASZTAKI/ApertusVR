@@ -657,22 +657,62 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					Ape::GeometryIndexedFaceSetParameters parameters = manual->getParameters();
 					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-						for (int i = 0; i < parameters.coordinates.size(); i++)
+						std::vector<Ogre::Vector3> normals;
+						normals.resize(parameters.coordinates.size() / 3);
+						for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
+							normals[normalIndex] = Ogre::Vector3::ZERO;
+						int indexIndex = 0;
+						while (indexIndex < parameters.indices.size())
 						{
-							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
-							int indexCount = 0;
-							while (parameters.indices[indexCount] != -1)
-								indexCount++;
-							if (indexCount == 3)
-								ogreManual->triangle(parameters.indices[indexCount - 2], parameters.indices[indexCount - 1], parameters.indices[indexCount]);
-							else if (indexCount == 3)
-								ogreManual->quad(parameters.indices[indexCount - 3], parameters.indices[indexCount - 2], parameters.indices[indexCount - 1], parameters.indices[indexCount]);
+							int coordinate0Index = parameters.indices[indexIndex] * 3;
+							Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
+							
+							int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
+							Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
+							
+							int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
+							Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
+							
+							int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
+							Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
+							
+							Ogre::Vector3 coordinate0Normal((coordinate3 - coordinate0).crossProduct(coordinate1 - coordinate0));
+							coordinate0Normal.normalise();
+
+							Ogre::Vector3 coordinate1Normal((coordinate0 - coordinate1).crossProduct(coordinate2 - coordinate1));
+							coordinate1Normal.normalise();
+
+							Ogre::Vector3 coordinate2Normal((coordinate1 - coordinate2).crossProduct(coordinate3 - coordinate2));
+							coordinate2Normal.normalise();
+
+							Ogre::Vector3 coordinate3Normal((coordinate2 - coordinate3).crossProduct(coordinate0 - coordinate3));
+							coordinate3Normal.normalise();
+							
+							normals[parameters.indices[indexIndex]] += coordinate0Normal;
+							normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
+							normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
+							normals[parameters.indices[indexIndex + 3]] += coordinate3Normal;
+							
+							indexIndex = indexIndex + 5;
+						}
+						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
+						{
+							ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
+							normals[coordinateIndex / 3].normalise();
+							ogreManual->normal(normals[coordinateIndex / 3]);
+						}
+						indexIndex = 0;
+						while (indexIndex < parameters.indices.size())
+						{
+							ogreManual->quad(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2], parameters.indices[indexIndex + 3]);
+							indexIndex = indexIndex + 5;
 						}
 						ogreManual->end();
 						ogreManual->convertToMesh(geometryName);
 						mpSceneMgr->createEntity(geometryName, geometryName);
 						mpSceneMgr->destroyManualObject(geometryName);
+						
 					}
 				}
 					break;
@@ -709,11 +749,19 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					Ape::GeometryIndexedLineSetParameters parameters = manual->getParameters();
 					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_LINE_STRIP);
-						for (int i = 0; i < parameters.coordinates.size(); i++)
-							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
-						for (int i = 0; i < parameters.indices.size(); i++)
-							ogreManual->index(parameters.indices[i]);
+						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_LINE_LIST);
+						for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
+							ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
+						/*int indexIndex = 0;
+						while (indexIndex < parameters.indices.size())
+						{
+							while (parameters.indices[indexIndex] != -1)
+							{
+								ogreManual->index(parameters.indices[indexIndex]);
+								indexIndex++;
+							}
+							indexIndex++;
+						}*/
 						ogreManual->end();
 						ogreManual->convertToMesh(geometryName);
 						mpSceneMgr->createEntity(geometryName, geometryName);
