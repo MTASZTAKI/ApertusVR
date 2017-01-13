@@ -34,10 +34,11 @@ Ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
 	
 }
 
-void Ape::IndexedLineSetGeometryImpl::setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices)
+void Ape::IndexedLineSetGeometryImpl::setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color)
 {
 	mParameters.coordinates = coordinates;
 	mParameters.indices = indices;
+	mParameters.color = color;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
 }
 

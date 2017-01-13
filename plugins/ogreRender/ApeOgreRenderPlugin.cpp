@@ -792,10 +792,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					Ape::GeometryIndexedLineSetParameters parameters = manual->getParameters();
 					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_LINE_LIST);
+						ogreManual->begin("FlatVertexColorNoLighting", Ogre::RenderOperation::OperationType::OT_LINE_LIST);
 						for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
+						{
 							ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
-						/*int indexIndex = 0;
+							ogreManual->colour(Ape::ConversionToOgre(parameters.color));
+						}
+						int indexIndex = 0;
 						while (indexIndex < parameters.indices.size())
 						{
 							while (parameters.indices[indexIndex] != -1)
@@ -804,7 +807,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								indexIndex++;
 							}
 							indexIndex++;
-						}*/
+						}
 						ogreManual->end();
 						ogreManual->convertToMesh(geometryName);
 						mpSceneMgr->createEntity(geometryName, geometryName);
@@ -1381,6 +1384,7 @@ void Ape::OgreRenderPlugin::Init()
 	mpRoot->setRenderSystem(renderSystem);
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts",				 "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/Cg", "FileSystem");

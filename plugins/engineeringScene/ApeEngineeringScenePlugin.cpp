@@ -178,7 +178,8 @@ void ApeEngineeringScenePlugin::Init()
 							0, 0, 0,
 							0, 400, 0 };
 						Ape::GeometryIndices indices = { 0, 1, -1 };
-						coordinateSystemArrowXExtension->setParameters(coordinates, indices);
+						Ape::Color color(1, 0, 0);
+						coordinateSystemArrowXExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowXExtension->setParentNode(coordinateSystemArrowXConeNode);
 					}
 				}
@@ -215,7 +216,8 @@ void ApeEngineeringScenePlugin::Init()
 							0, 0, 0,
 							0, 400, 0 };
 						Ape::GeometryIndices indices = { 0, 1, -1 };
-						coordinateSystemArrowYExtension->setParameters(coordinates, indices);
+						Ape::Color color(0, 1, 0);
+						coordinateSystemArrowYExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowYExtension->setParentNode(coordinateSystemArrowYConeNode);
 					}
 				}
@@ -253,7 +255,8 @@ void ApeEngineeringScenePlugin::Init()
 							0, 0, 0,
 							0, 400, 0 };
 						Ape::GeometryIndices indices = { 0, 1, -1 };
-						coordinateSystemArrowZExtension->setParameters(coordinates, indices);
+						Ape::Color color(0, 0, 1);
+						coordinateSystemArrowZExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowZExtension->setParentNode(coordinateSystemArrowZConeNode);
 					}
 				}

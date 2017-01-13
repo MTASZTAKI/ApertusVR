@@ -34,19 +34,23 @@ namespace Ape
 	{
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
+		Ape::Color color;
 		
 		GeometryIndexedLineSetParameters()
 		{
 			this->coordinates = Ape::GeometryCoordinates();
 			this->indices = Ape::GeometryIndices();
+			this->color = Ape::Color();
 		}
 
 		GeometryIndexedLineSetParameters(
 			Ape::GeometryCoordinates coordinates,
-			Ape::GeometryIndices indices)
+			Ape::GeometryIndices indices,
+			Ape::Color color)
 		{
 			this->coordinates = coordinates;
 			this->indices = indices;
+			this->color = color;
 		}
 	};
 	
@@ -58,7 +62,7 @@ namespace Ape
 		virtual ~IIndexedLineSetGeometry() {};
 		
 	public:
-		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices) = 0;
+		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) = 0;
 		
 		virtual Ape::GeometryIndexedLineSetParameters getParameters() = 0;
 

@@ -37,7 +37,7 @@ namespace Ape
 
 		~IndexedLineSetGeometryImpl();
 
-		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices);
+		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color);
 
 		Ape::GeometryIndexedLineSetParameters getParameters();
 
