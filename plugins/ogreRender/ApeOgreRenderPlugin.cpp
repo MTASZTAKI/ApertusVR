@@ -51,7 +51,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
-	mRenderWindows = std::map<int, Ogre::RenderWindow*>();
+	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
 	mpOverlaySys = NULL;
 	mpOgreMovableTextFactory = NULL;
 	mpOverlayMgr = NULL;
@@ -893,7 +893,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 					if (auto ogreCamera = mpSceneMgr->createCamera(event.subjectName))
 					{
-						if (auto viewPort = mRenderWindows[atoi(event.subjectName.c_str())]->addViewport(ogreCamera))
+						if (auto viewPort = mRenderWindows[event.subjectName.c_str()]->addViewport(ogreCamera))
 						{
 							//TODO why it is working instead of in the init phase?
 							ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
@@ -996,8 +996,8 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	std::stringstream ss;
-	ss << mRenderWindows[0]->getLastFPS();
+	//std::stringstream ss;
+	//ss << mRenderWindows[0]->getLastFPS();
 	//TODO overlay
 	//mpOverlayTextArea->setCaption(ss.str());
 
@@ -1283,8 +1283,8 @@ void Ape::OgreRenderPlugin::Init()
 
 		if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
 		{
-			mRenderWindows[i] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
-			mRenderWindows[i]->setDeactivateOnFocusChange(false);
+			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
+			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
 			if (camera)
 			{
@@ -1301,7 +1301,7 @@ void Ape::OgreRenderPlugin::Init()
 			if (i == 0)
 			{
 				void* windowHnd = 0;
-				mRenderWindows[i]->getCustomAttribute("WINDOW", &windowHnd);
+				mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
 				std::ostringstream windowHndStr;
 				windowHndStr << windowHnd;
 				mOgreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
