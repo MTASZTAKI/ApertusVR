@@ -100,7 +100,17 @@ void ApeFobHeadTrackingPlugin::Init()
 				}
 				else if (trackerMemberIterator->name == "scale")
 				{
-					mTrackerConfig.scale = trackerMemberIterator->value.GetFloat();
+					for (rapidjson::Value::MemberIterator scaleMemberIterator =
+						tracker[scaleMemberIterator->name].MemberBegin();
+						scaleMemberIterator != tracker[scaleMemberIterator->name].MemberEnd(); ++scaleMemberIterator)
+					{
+						if (scaleMemberIterator->name == "x")
+							mTrackerConfig.scale.x = scaleMemberIterator->value.GetFloat();
+						else if (scaleMemberIterator->name == "y")
+							mTrackerConfig.scale.y = scaleMemberIterator->value.GetFloat();
+						else if (scaleMemberIterator->name == "z")
+							mTrackerConfig.scale.z = scaleMemberIterator->value.GetFloat();
+					}
 				}
 				else if (trackerMemberIterator->name == "eyeSeparation")
 				{

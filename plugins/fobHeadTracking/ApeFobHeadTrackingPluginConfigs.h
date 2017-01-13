@@ -38,7 +38,7 @@ namespace Ape
 		
 		Ape::Quaternion rotation;
 		
-		float scale;
+		Ape::Vector3 scale;
 
 		float eyeSeparationPerEye;
 
@@ -46,14 +46,14 @@ namespace Ape
 		{
 			this->translate = Ape::Vector3();
 			this->rotation = Ape::Quaternion();
-			this->scale = 0.0f;
+			this->scale = Ape::Vector3();
 			this->eyeSeparationPerEye = 0.0f;
 		}
 
 		FobHeadTrackingTrackerConfig(
 			Ape::Vector3 translate,
 			Ape::Quaternion rotation,
-			float scale,
+			Ape::Vector3 scale,
 			float eyeSeparationPerEye)
 		{
 			this->translate = translate;

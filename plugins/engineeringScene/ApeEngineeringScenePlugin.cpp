@@ -45,8 +45,8 @@ void ApeEngineeringScenePlugin::Init()
 				if (auto planeMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("planeMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
 				{
 					planeMaterialPbsPass->setShininess(15.0f);
-					planeMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.9f, 0.8f));
-					planeMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.9f, 0.8f));
+					planeMaterialPbsPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
+					planeMaterialPbsPass->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
 					planeMaterial->setPass(planeMaterialPbsPass);
 					plane->setMaterial(planeMaterial);
 				}
@@ -115,11 +115,26 @@ void ApeEngineeringScenePlugin::Init()
 			Ape::GeometryCoordinates coordinates = {
 				10, 20, 10,
 				10, 10, 10,
-				10, 10, 0
+				10, 10, -10,
+				10, 20, -10,
+				-10, 20, 10,
+				-10, 10, 10,
+				-10, 10, -10,
+				-10, 20, -10
 			};
 			Ape::GeometryIndices indices = {
 				0, 1, -1,
-				1, 2, -1
+				1, 2, -1,
+				2, 3, -1,
+				3, 0, -1,
+				0, 4, -1,
+				4, 5, -1,
+				5, 1, -1,
+				5, 6, -1,
+				6, 7, -1,
+				7, 4, -1,
+				3, 7, -1,
+				2, 6, -1
 			};
 			Ape::Color color(1, 0, 0);
 			demoLine->setParameters(coordinates, indices, color);
