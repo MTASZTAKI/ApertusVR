@@ -676,16 +676,16 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
 							Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
 							
-							Ogre::Vector3 coordinate0Normal((coordinate3 - coordinate0).crossProduct(coordinate1 - coordinate0));
+							Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate3 - coordinate0));
 							coordinate0Normal.normalise();
 
-							Ogre::Vector3 coordinate1Normal((coordinate0 - coordinate1).crossProduct(coordinate2 - coordinate1));
+							Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
 							coordinate1Normal.normalise();
 
-							Ogre::Vector3 coordinate2Normal((coordinate1 - coordinate2).crossProduct(coordinate3 - coordinate2));
+							Ogre::Vector3 coordinate2Normal((coordinate3 - coordinate2).crossProduct(coordinate1 - coordinate2));
 							coordinate2Normal.normalise();
 
-							Ogre::Vector3 coordinate3Normal((coordinate2 - coordinate3).crossProduct(coordinate0 - coordinate3));
+							Ogre::Vector3 coordinate3Normal((coordinate0 - coordinate3).crossProduct(coordinate2 - coordinate3));
 							coordinate3Normal.normalise();
 							
 							normals[parameters.indices[indexIndex]] += coordinate0Normal;
