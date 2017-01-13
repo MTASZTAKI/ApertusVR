@@ -531,8 +531,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					Ape::GeometryConeParameters parameters = primitive->getParameters();
 					Procedural::ConeGenerator().setRadius(parameters.radius)
 						.setHeight(parameters.height)
-						.setNumSegBase(parameters.numSeg.x).setNumSegHeight(parameters.numSeg.y)
-						.setUTile(parameters.tile)
+						//.setNumSegBase(parameters.numSeg.x).setNumSegHeight(parameters.numSeg.y)
+						//.setUTile(parameters.tile)
 						.realizeMesh(geometryName);
 					mpSceneMgr->createEntity(geometryName, geometryName);
 

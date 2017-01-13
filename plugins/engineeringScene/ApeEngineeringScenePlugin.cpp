@@ -160,9 +160,10 @@ void ApeEngineeringScenePlugin::Init()
 			{
 				coordinateSystemArrowXConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowXConeNode->setPosition(Ape::Vector3(100.0f, 0.0f, 0.0f));
-				if (auto coordinateSystemArrowXCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowXCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
+				coordinateSystemArrowXConeNode->rotate(Ape::Degree(-90.0f).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+				if (auto coordinateSystemArrowXCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity("coordinateSystemArrowXCone", Ape::Entity::GEOMETRY_CONE).lock()))
 				{
-					coordinateSystemArrowXCone->setParameters(2.5f, Ape::Vector2(1, 1));
+					coordinateSystemArrowXCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowXCone->setParentNode(coordinateSystemArrowXConeNode);
 					coordinateSystemArrowXCone->setMaterial(coordinateSystemArrowXMaterial);
 					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
@@ -175,7 +176,7 @@ void ApeEngineeringScenePlugin::Init()
 					{
 						Ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
-							400, 0, 0 };
+							0, 400, 0 };
 						Ape::GeometryIndices indices = { 0, 1, -1 };
 						coordinateSystemArrowXExtension->setParameters(coordinates, indices);
 						coordinateSystemArrowXExtension->setParentNode(coordinateSystemArrowXConeNode);
@@ -197,9 +198,9 @@ void ApeEngineeringScenePlugin::Init()
 			{
 				coordinateSystemArrowYConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowYConeNode->setPosition(Ape::Vector3(0.0f, 100.0f, 0.0f));
-				if (auto coordinateSystemArrowYCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowYCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
+				if (auto coordinateSystemArrowYCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity("coordinateSystemArrowYCone", Ape::Entity::GEOMETRY_CONE).lock()))
 				{
-					coordinateSystemArrowYCone->setParameters(2.5f, Ape::Vector2(1, 1));
+					coordinateSystemArrowYCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowYCone->setParentNode(coordinateSystemArrowYConeNode);
 					coordinateSystemArrowYCone->setMaterial(coordinateSystemArrowYMaterial);
 					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
@@ -234,9 +235,10 @@ void ApeEngineeringScenePlugin::Init()
 			{
 				coordinateSystemArrowZConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowZConeNode->setPosition(Ape::Vector3(0.0f, 0.0f, 100.0f));
-				if (auto coordinateSystemArrowZCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowZCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
+				coordinateSystemArrowZConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+				if (auto coordinateSystemArrowZCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity("coordinateSystemArrowZCone", Ape::Entity::GEOMETRY_CONE).lock()))
 				{
-					coordinateSystemArrowZCone->setParameters(2.5f, Ape::Vector2(1, 1));
+					coordinateSystemArrowZCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowZCone->setParentNode(coordinateSystemArrowZConeNode);
 					coordinateSystemArrowZCone->setMaterial(coordinateSystemArrowZMaterial);
 					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
@@ -249,7 +251,7 @@ void ApeEngineeringScenePlugin::Init()
 					{
 						Ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
-							0, 0, 400 };
+							0, 400, 0 };
 						Ape::GeometryIndices indices = { 0, 1, -1 };
 						coordinateSystemArrowZExtension->setParameters(coordinates, indices);
 						coordinateSystemArrowZExtension->setParentNode(coordinateSystemArrowZConeNode);
