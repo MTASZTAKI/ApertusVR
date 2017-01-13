@@ -662,7 +662,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
 							normals[normalIndex] = Ogre::Vector3::ZERO;
 						int indexIndex = 0;
-						bool isQuad = false;
 						while (indexIndex < parameters.indices.size())
 						{
 							int indexCount = 0;
@@ -670,7 +669,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								indexCount++;
 							if (indexCount == 4)
 							{
-								isQuad = true;
 								int coordinate0Index = parameters.indices[indexIndex] * 3;
 								Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
 
@@ -739,12 +737,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						indexIndex = 0;
 						while (indexIndex < parameters.indices.size())
 						{
-							if (isQuad)
+							int indexCount = 0;
+							while (parameters.indices[indexIndex + indexCount] != -1)
+								indexCount++;
+							if (indexCount == 4)
 							{
 								ogreManual->quad(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2], parameters.indices[indexIndex + 3]);
 								indexIndex = indexIndex + 5;
 							}
-							else
+							else if (indexCount == 3)
 							{
 								ogreManual->triangle(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2]);
 								indexIndex = indexIndex + 4;
