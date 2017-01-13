@@ -19,6 +19,7 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
+	mCameraNode = Ape::NodeWeakPtr();
 }
 
 ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
@@ -91,19 +92,20 @@ void ApeFobHeadTrackingPlugin::Init()
 						tracker[trackerMemberIterator->name].MemberBegin();
 						translateMemberIterator != tracker[trackerMemberIterator->name].MemberEnd(); ++translateMemberIterator)
 					{
-						if (rotationMemberIterator->name == "x")
-							mTrackerConfig.translate.x = rotationMemberIterator->value.GetFloat();
-						else if (rotationMemberIterator->name == "y")
-							mTrackerConfig.translate.y = rotationMemberIterator->value.GetFloat();
-						else if (rotationMemberIterator->name == "z")
-							mTrackerConfig.translate.z = rotationMemberIterator->value.GetFloat();
+						if (translateMemberIterator->name == "x")
+							mTrackerConfig.translate.x = translateMemberIterator->value.GetFloat();
+						else if (translateMemberIterator->name == "y")
+							mTrackerConfig.translate.y = translateMemberIterator->value.GetFloat();
+						else if (translateMemberIterator->name == "z")
+							mTrackerConfig.translate.z = translateMemberIterator->value.GetFloat();
 					}
 				}
 				else if (trackerMemberIterator->name == "scale")
 				{
-				    mTrackerConfig.scale = tracker[trackerMemberIterator->name]->value.getFloat();
+					mTrackerConfig.scale = trackerMemberIterator->value.GetFloat();
 				}
 			}
+			rapidjson::Value& displays = jsonDocument["renderWindows"];
 			for (auto& display : displays.GetArray())
 			{
 				Ape::FobHeadTrackingDisplayConfig fobHeadTrackingDisplayConfig;
@@ -117,9 +119,9 @@ void ApeFobHeadTrackingPlugin::Init()
 							sizeMemberIterator != display[displayMemberIterator->name].MemberEnd(); ++sizeMemberIterator)
 						{
 							if (sizeMemberIterator->name == "width")
-								fobHeadTrackingDisplayConfig.size.width = resolutionMemberIterator->value.GetFloat();
-							else if (resolutionMemberIterator->name == "height")
-								fobHeadTrackingDisplayConfig.size.height = resolutionMemberIterator->value.GetFloat();
+								fobHeadTrackingDisplayConfig.size.x = sizeMemberIterator->value.GetFloat();
+							else if (sizeMemberIterator->name == "height")
+								fobHeadTrackingDisplayConfig.size.y = sizeMemberIterator->value.GetFloat();
 						}
 					}
 					else if (displayMemberIterator->name == "position")
@@ -157,7 +159,7 @@ void ApeFobHeadTrackingPlugin::Init()
 					}
 					else if (displayMemberIterator->name == "disparity")
 					{
-						fobHeadTrackingDisplayConfig.disparity = display[displayMemberIterator->name]->value.getFloat();
+						fobHeadTrackingDisplayConfig.disparity = displayMemberIterator->value.GetFloat();
 					}
 				}
 				mDisplayConfigList.push_back(fobHeadTrackingDisplayConfig);
@@ -190,23 +192,29 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			Ape::Vector3 viewerPosition = Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2]) * mTrackerConfig.scale + mTrackerConfig.translate;
 			Ape::Quaternion viewerOrientation = Ape::Euler(orientationDataFromTracker[0], orientationDataFromTracker[1], orientationDataFromTracker[2]).toQuaternion() * mTrackerConfig.rotation;
-			for(auto const& displayConfig : mDisplayConfigCamerasMap)
+			for(auto const& display : mDisplayConfigCamerasMap)
 			{
-				auto cameraLeft = displayConfig.second[0];
-				auto cameraRight = displayConfig.second[1];
-				Ape::Vector3 viewerLeftEyeRelativeToDisplay =  displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
-				Ape::Vector3 viewerRightEyeRelativeToDisplay =  displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
-				cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
-				cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
-				cameraLeft->setFrustumOffset(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y);
-				cameraRight->setFrustumOffset(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y);
-				cameraLeft->setFOVy(2 * atan((displayConfig.size.height / 2) / cameraLeft->getFocalLength()));
-				cameraRight->setFOVy(2 * atan((displayConfig.size.height / 2) / cameraRight->getFocalLength()));
+				if (auto cameraLeft = display.second[0].lock())
+				{
+					if (auto cameraRight = display.second[1].lock())
+					{
+						Ape::FobHeadTrackingDisplayConfig displayConfig = display.first;
+						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
+						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
+						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
+						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
+						//cameraLeft->setFrustumOffset(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y);
+						//cameraRight->setFrustumOffset(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y);
+						cameraLeft->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraLeft->getFocalLength()));
+						cameraRight->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraRight->getFocalLength()));
+					}
+				}
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void ApeFobHeadTrackingPlugin::Step()

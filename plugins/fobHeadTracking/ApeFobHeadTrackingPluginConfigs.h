@@ -77,7 +77,7 @@ namespace Ape
 		}
 
 		FobHeadTrackingDisplayConfig(
-			Ape::Vector2 size;
+			Ape::Vector2 size,
 			Ape::Vector3 position,
 			Ape::Quaternion orientation,
 			float disparity)
@@ -86,6 +86,14 @@ namespace Ape
 			this->position = position;
 			this->orientation = orientation;
 			this->disparity = disparity;
+		}
+
+		bool operator<(const FobHeadTrackingDisplayConfig& other) const
+		{
+			if (disparity < other.disparity)
+				return true;
+			else
+				return false;
 		}
 	};
 

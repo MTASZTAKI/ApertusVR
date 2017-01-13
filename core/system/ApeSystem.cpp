@@ -49,7 +49,8 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 		; //TODO open a paltform specific window
 
 	gpPluginManagerImpl = new PluginManagerImpl();
-	gpPluginManagerImpl->LoadPlugins();
+	gpPluginManagerImpl->CreatePlugins();
+
 	std::stringstream generatedUniqueUserName;
 	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
 	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
@@ -68,6 +69,7 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 		}
 		gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	}
+
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

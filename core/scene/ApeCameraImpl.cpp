@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include "ApeCameraImpl.h"
+#include <iostream>
 
 Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 {

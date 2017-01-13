@@ -66,6 +66,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
+	mCameraNode = Ape::NodeWeakPtr();
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -76,6 +77,11 @@ Ape::OgreRenderPlugin::~OgreRenderPlugin()
 
 void Ape::OgreRenderPlugin::eventCallBack(const Ape::Event& event)
 {
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
+	{
+		if (auto node = (mpScene->getNode(event.subjectName).lock()))
+			mCameraNode = node;
+	}
 	mEventDoubleQueue.push(event);
 }
 
@@ -90,38 +96,43 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
 				std::string nodeName = node->getName();
-				Ogre::SceneNode* ogreNode = nullptr;
-				if (mpSceneMgr->hasSceneNode(nodeName))
-					ogreNode = mpSceneMgr->getSceneNode(nodeName);
-				switch (event.type)
-				{
-				case Ape::Event::Type::NODE_CREATE:
+				if (event.type == Ape::Event::Type::NODE_CREATE)
 					mpSceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-					break;
-				case Ape::Event::Type::NODE_PARENTNODE:
+				else 
 				{
-					if (auto parentNode = node->getParentNode().lock())
+					Ogre::SceneNode* ogreNode = nullptr;
+					if (mpSceneMgr->hasSceneNode(nodeName))
+						ogreNode = mpSceneMgr->getSceneNode(nodeName);
+					if (ogreNode)
 					{
-						Ogre::SceneNode* ogreParentNode = ogreNode->getParentSceneNode();
-						if (ogreParentNode)
-							ogreParentNode->removeChild(ogreNode);
-						if (mpSceneMgr->hasSceneNode(parentNode->getName()))
+						switch (event.type)
 						{
-							ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName());
-							ogreParentNode->addChild(ogreNode);
+						case Ape::Event::Type::NODE_PARENTNODE:
+						{
+							if (auto parentNode = node->getParentNode().lock())
+							{
+								Ogre::SceneNode* ogreParentNode = ogreNode->getParentSceneNode();
+								if (ogreParentNode)
+									ogreParentNode->removeChild(ogreNode);
+								if (mpSceneMgr->hasSceneNode(parentNode->getName()))
+								{
+									ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName());
+									ogreParentNode->addChild(ogreNode);
+								}
+							}
+						}
+							break;
+						case Ape::Event::Type::NODE_DELETE:
+							;
+							break;
+						case Ape::Event::Type::NODE_POSITION:
+							ogreNode->setPosition(ConversionToOgre(node->getPosition()));
+							break;
+						case Ape::Event::Type::NODE_ORIENTATION:
+							ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
+							break;
 						}
 					}
-				}
-					break;
-				case Ape::Event::Type::NODE_DELETE:
-					;
-					break;
-				case Ape::Event::Type::NODE_POSITION:
-					ogreNode->setPosition(ConversionToOgre(node->getPosition()));
-					break;
-				case Ape::Event::Type::NODE_ORIENTATION:
-					ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
-					break;
 				}
 			}
 		}
@@ -647,88 +658,88 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				}
 			}
-			else if (event.group == Ape::Event::Group::GEOMETRY_MANUAL)
+		}
+		else if (event.group == Ape::Event::Group::GEOMETRY_MANUAL)
+		{
+			if (auto geometryManual = std::static_pointer_cast<Ape::IManualGeometry>(mpScene->getEntity(event.subjectName).lock()))
 			{
-				if (auto geometryManual = std::static_pointer_cast<Ape::IManualGeometry>(mpScene->getEntity(event.subjectName).lock()))
+				std::string geometryName = geometryManual->getName();
+				std::string parentNodeName = "";
+				if (auto parentNode = geometryManual->getParentNode().lock())
+					parentNodeName = parentNode->getName();
+				switch (event.type)
 				{
-					std::string geometryName = geometryManual->getName();
-					std::string parentNodeName = "";
-					if (auto parentNode = geometryText->getParentNode().lock())
-						parentNodeName = parentNode->getName();
-					switch (event.type)
+				case Ape::Event::Type::GEOMETRY_MANUAL_CREATE:
+				{
+					mpSceneMgr->createManualObject(geometryName);
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE:
+				{
+					if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
 					{
-					case Ape::Event::Type::GEOMETRY_MANUAL_CREATE:
-					{
-						mpSceneMgr->createManualObject(geometryName);
+						if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+							ogreParentNode->attachObject(ogreGeometry);
 					}
-						break;
-					case Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE:
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_DELETE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL:
+				{
+					if (auto ogreManualGeometry = mpSceneMgr->getEntity(geometryName))
 					{
-						if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+						if (auto material = geometryManual->getMaterial().lock())
 						{
-							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
-								ogreParentNode->attachObject(ogreGeometry);
+							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+							ogreManualGeometry->setMaterial(ogreMaterial);
+							if (auto pass = material->getPass().lock())
+							{
+								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+								{
+									size_t ogreSubEntitxCount = ogreManualGeometry->getNumSubEntities();
+									for (size_t i = 0; i < ogreSubEntitxCount; i++)
+									{
+										Ogre::SubEntity* ogreSubEntity = ogreManualGeometry->getSubEntity(i);
+										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+									}
+								}
+							}
 						}
 					}
-						break;
-					case Ape::Event::Type::GEOMETRY_MANUAL_DELETE:
-						;
-						break;
-					case Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL:
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER:
+				{
+					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						if (auto ogreManualGeometry = mpSceneMgr->getEntity(geometryName))
+						if (geometryManual->getOperationType() == Ape::Geometry::OperationType::TRIANGLELIST)
 						{
 							if (auto material = geometryManual->getMaterial().lock())
 							{
-								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-								ogreManualGeometry->setMaterial(ogreMaterial);
-								if (auto pass = material->getPass().lock())
+								Ape::ManualGeometryParameter parameter = geometryManual->getParameter();
+								ogreManual->begin(material->getName(), ConversionToOgre(Ape::Geometry::OperationType::TRIANGLELIST));
+								for (int i = 0; i < parameter.vertexList.size(); i++)
 								{
-									if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
-									{
-										size_t ogreSubEntitxCount = ogreManualGeometry->getNumSubEntities();
-										for (size_t i = 0; i < ogreSubEntitxCount; i++)
-										{
-											Ogre::SubEntity* ogreSubEntity = ogreManualGeometry->getSubEntity(i);
-											mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
-										}
-									}
+									ogreManual->position(parameter.vertexList[i].x, parameter.vertexList[i].y, parameter.vertexList[i].z);
+									if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
+										ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);
+									if (parameter.colorList.size() != 0 && i < parameter.colorList.size())
+										ogreManual->colour(parameter.colorList[i].x, parameter.colorList[i].y, parameter.colorList[i].z);
+									if (parameter.textureCoordList.size() != 0 && i < parameter.textureCoordList.size())
+										ogreManual->textureCoord(parameter.textureCoordList[i].x, 1.0f - parameter.textureCoordList[i].y);
 								}
+								for (int i = 0; i < parameter.indexList.size(); i++)
+									ogreManual->index(parameter.indexList[i]);
+								for (int i = 0; i < parameter.triangleList.size(); i++)
+									ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);
+								ogreManual->end();
 							}
 						}
 					}
-						break;
-					case Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER:
-					{
-						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
-						{
-							if (geometryManual->getOperationType() == Ape::Geometry::OperationType::TRIANGLELIST)
-							{
-								if (auto material = geometryManual->getMaterial().lock())
-								{
-									Ape::ManualGeometryParameter parameter = geometryManual->getParameter();
-									ogreManual->begin(material->getName(), ConversionToOgre(Ape::Geometry::OperationType::TRIANGLELIST));
-									for (int i = 0; i < parameter.vertexList.size(); i++)
-									{
-										ogreManual->position(parameter.vertexList[i].x, parameter.vertexList[i].y, parameter.vertexList[i].z);
-										if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
-											ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);
-										if (parameter.colorList.size() != 0 && i < parameter.colorList.size())
-											ogreManual->colour(parameter.colorList[i].x, parameter.colorList[i].y, parameter.colorList[i].z);
-										if (parameter.textureCoordList.size() != 0 && i < parameter.textureCoordList.size())
-											ogreManual->textureCoord(parameter.textureCoordList[i].x, 1.0f - parameter.textureCoordList[i].y);
-									}
-									for (int i = 0; i < parameter.indexList.size(); i++)
-										ogreManual->index(parameter.indexList[i]);
-									for (int i = 0; i < parameter.triangleList.size(); i++)
-										ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);
-									ogreManual->end();
-								}
-							}
-						}
-					}
-						break;
-					}
+				}
+					break;
 				}
 			}
 		}
@@ -1291,19 +1302,6 @@ void Ape::OgreRenderPlugin::Init()
 		{
 			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
-			if (camera)
-			{
-				//TODO why it is not ok
-				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-				camera->setParentNode(mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName));
-				camera->setFocalLength(1.0f);
-				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
-				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
-				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
-				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
-				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
-			}
 			if (i == 0)
 			{
 				void* windowHnd = 0;
@@ -1315,6 +1313,19 @@ void Ape::OgreRenderPlugin::Init()
 				mpMainWindow->setHandle(windowHnd);
 				mpMainWindow->setWidth(mOgreRenderWindowConfigList[0].width);
 				mpMainWindow->setHeight(mOgreRenderWindowConfigList[0].height);
+			}
+			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
+			if (camera)
+			{
+				//TODO why it is not ok
+				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+				camera->setParentNode(mCameraNode);
+				camera->setFocalLength(1.0f);
+				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
+				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
+				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
+				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 		}
 	}

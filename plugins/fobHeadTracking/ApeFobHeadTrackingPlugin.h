@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <map>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -40,7 +41,7 @@ SOFTWARE.*/
 #include "ApeFobHeadTracking.h"
 #include "ApeEuler.h"
 #include "ApeDoubleQueue.h"
-#include "ApeFobHeadTrackingPluginConfig.h"
+#include "ApeFobHeadTrackingPluginConfigs.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
@@ -50,6 +51,8 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
+
+	Ape::NodeWeakPtr mCameraNode;
 
 	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 

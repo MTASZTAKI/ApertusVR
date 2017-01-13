@@ -30,6 +30,8 @@ Ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mPluginThreadVector = std::vector<std::thread>();
+	mPluginVector = std::vector<Ape::IPlugin*>();
 }
 
 Ape::PluginManagerImpl::~PluginManagerImpl()
@@ -45,7 +47,7 @@ void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 	Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
 }
 
-void Ape::PluginManagerImpl::LoadPlugins()
+void Ape::PluginManagerImpl::CreatePlugins()
 {
 	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
 	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
