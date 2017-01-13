@@ -29,16 +29,13 @@ ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
 
 void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
-	{
-		if (auto node = (mpScene->getNode(event.subjectName).lock()))
-			mCameraNode = node;
-	}
-	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+    if (event.type == Ape::Event::Type::CAMERA_PARENTNODE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
 			mCameraDoubleQueue.push(camera);
+			if (!mCameraNode.lock())
+				mCameraNode = camera->getParentNode();
 		}
 	}
 }

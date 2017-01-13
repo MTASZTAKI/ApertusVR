@@ -77,11 +77,6 @@ Ape::OgreRenderPlugin::~OgreRenderPlugin()
 
 void Ape::OgreRenderPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
-	{
-		if (auto node = (mpScene->getNode(event.subjectName).lock()))
-			mCameraNode = node;
-	}
 	mEventDoubleQueue.push(event);
 }
 
@@ -1263,6 +1258,8 @@ void Ape::OgreRenderPlugin::Init()
 	mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC);
 
 	mpRoot->addFrameListener(this);
+
+	mCameraNode = mpScene->createNode("CameraNode");
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;

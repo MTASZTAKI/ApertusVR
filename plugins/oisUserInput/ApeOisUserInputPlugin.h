@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
+#include "ApeITextGeometry.h"
 
 namespace Ape
 {
@@ -81,7 +82,7 @@ namespace Ape
 
 		Ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mCameraNode;
+		Ape::NodeWeakPtr mUserNode;
 
 		bool mIsPressed;
 

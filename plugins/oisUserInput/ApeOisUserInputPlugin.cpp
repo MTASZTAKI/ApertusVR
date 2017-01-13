@@ -36,8 +36,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mKeyCode = OIS::KeyCode::KC_UNASSIGNED;
 	mIsPressed = false;
 	mSpeedFactor = 2;
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	mCameraNode = Ape::NodeWeakPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mUserNode = Ape::NodeWeakPtr();
 }
 
 Ape::OISUserInputPlugin::~OISUserInputPlugin()
@@ -50,16 +50,38 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
+	if (event.type == Ape::Event::Type::CAMERA_PARENTNODE)
 	{
-		if (auto node = (mpScene->getNode(event.subjectName).lock()))
-			mCameraNode = node;
+		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (auto cameraNode = camera->getParentNode().lock())
+			{
+				if (mUserNode.lock())
+					cameraNode->setParentNode(mUserNode);
+			}
+		}
 	}
 }
 
 void Ape::OISUserInputPlugin::Init()
 {
 	std::cout << "OISUserInputPlugin::Init" << std::endl;
+
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->createNode(userNodeName);
+	if (mpSystemConfig->getSceneSessionConfig().participantType == SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == SceneSession::ParticipantType::GUEST)
+	{
+		if (mUserNode.lock())
+		{
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
+			{
+				userNameText->setCaption(userNodeName);
+				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+				userNameText->setParentNode(mUserNode);
+			}
+		}
+	}
+
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOisUserInputPlugin.json";
@@ -186,7 +208,7 @@ bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 
 void Ape::OISUserInputPlugin::moveUserNode()
 {
-	auto cameraNode = mCameraNode.lock();
+	auto cameraNode = mUserNode.lock();
 	if (cameraNode && mIsPressed)
 	{
 		if (mKeyCode == OIS::KeyCode::KC_PGUP)
@@ -223,7 +245,7 @@ void Ape::OISUserInputPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::OISUserInputPlugin::Step()
