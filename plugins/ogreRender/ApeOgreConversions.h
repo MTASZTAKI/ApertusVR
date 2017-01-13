@@ -89,46 +89,6 @@ namespace Ape
 		return Ape::Color(p_colv.r, p_colv.g, p_colv.b, p_colv.a);
 	}
 
-	inline std::vector<Ogre::Vector3> ConversionToOgre(const Ape::Vector3Vector &vList)
-	{
-		std::vector<Ogre::Vector3> vec;
-		vec.reserve(vList.size());
-		for (auto it : vList) {
-			vec.push_back(ConversionToOgre(it));
-		}
-		return vec;
-	}
-
-	inline Ape::Vector3Vector ConversionFromOgre(std::vector < Ogre::Vector3 > p_v3v)
-	{
-		Ape::Vector3Vector v3l;
-		v3l.reserve(p_v3v.size());
-		for (auto it : p_v3v) {
-			v3l.push_back(ConversionFromOgre(it));
-		}
-		return v3l;
-	}
-
-	inline std::vector<Ogre::Vector4> ConversionToOgre(const Ape::Vector4Vector &vList)
-	{
-		std::vector<Ogre::Vector4> vec;
-		vec.reserve(vList.size());
-		for (auto it : vList) {
-			vec.push_back(ConversionToOgre(it));
-		}
-		return vec;
-	}
-
-	inline Ape::Vector4Vector ConversionFromOgre(std::vector < Ogre::Vector4 > p_v4v)
-	{
-		Ape::Vector4Vector v4l;
-		v4l.reserve(p_v4v.size());
-		for (auto it : p_v4v) {
-			v4l.push_back(ConversionFromOgre(it));
-		}
-		return v4l;
-	}
-
 	inline std::vector<Ogre::ColourValue> ConversionToOgre(const Ape::ColorVector &cList)
 	{
 		std::vector<Ogre::ColourValue> vec;
@@ -198,49 +158,6 @@ namespace Ape
 		default:
 			return Ogre::Light::LightTypes(-1);
 		}
-	}
-
-	inline Ape::Geometry::OperationType ConversionFromOgre(Ogre::RenderOperation::OperationType type)
-	{
-		switch (type)
-		{
-		case Ogre::RenderOperation::OT_POINT_LIST:
-			return Ape::Geometry::OperationType::POINTLIST;
-		case Ogre::RenderOperation::OT_LINE_LIST:
-			return Ape::Geometry::OperationType::LINELIST;
-		case Ogre::RenderOperation::OT_LINE_STRIP:
-			return Ape::Geometry::OperationType::LINESTRIP;
-		case Ogre::RenderOperation::OT_TRIANGLE_LIST:
-			return Ape::Geometry::OperationType::TRIANGLELIST;
-		case Ogre::RenderOperation::OT_TRIANGLE_STRIP:
-			return Ape::Geometry::OperationType::TRIANGLESTRIP;
-		case Ogre::RenderOperation::OT_TRIANGLE_FAN:
-			return Ape::Geometry::OperationType::TRIANGLEFAN;
-		default:
-			return Ape::Geometry::OperationType::INVALID;
-		}			
-	}
-
-	inline Ogre::RenderOperation::OperationType ConversionToOgre(Ape::Geometry::OperationType type)
-	{
-		switch (type)
-		{
-		case Ape::Geometry::OperationType::POINTLIST:
-			return Ogre::RenderOperation::OT_POINT_LIST;
-		case Ape::Geometry::OperationType::LINELIST:
-			return Ogre::RenderOperation::OT_LINE_LIST;
-		case Ape::Geometry::OperationType::LINESTRIP:
-			return Ogre::RenderOperation::OT_LINE_STRIP;
-		case Ape::Geometry::OperationType::TRIANGLELIST:
-			return Ogre::RenderOperation::OT_TRIANGLE_LIST;
-		case Ape::Geometry::OperationType::TRIANGLESTRIP:
-			return Ogre::RenderOperation::OT_TRIANGLE_STRIP;
-		case Ape::Geometry::OperationType::TRIANGLEFAN:
-			return Ogre::RenderOperation::OT_TRIANGLE_FAN;
-		case Ape::Geometry::OperationType::INVALID:
-		default:
-			return Ogre::RenderOperation::OperationType(-1);
-		}			
 	}
 }
 

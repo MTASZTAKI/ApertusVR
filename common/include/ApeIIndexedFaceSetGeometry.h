@@ -20,54 +20,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_IINDEXEDFACESETGEOMETRY_H
+#define APE_IINDEXEDFACESETGEOMETRY_H
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
+#include "ApeGeometry.h"
 
 namespace Ape
-{
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			TEXTURE,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
+{	
 
-		Type getType() { return mType; };
+	struct GeometryIndexedFaceSetParameters
+	{
+		Ape::GeometryCoordinates coordinates;
+		Ape::GeometryIndices indices;
+		
+		GeometryIndexedFaceSetParameters()
+		{
+			this->coordinates = Ape::GeometryCoordinates();
+			this->indices = Ape::GeometryIndices();
+		}
+
+		GeometryIndexedFaceSetParameters(
+			Ape::GeometryCoordinates coordinates,
+			Ape::GeometryIndices indices)
+		{
+			this->coordinates = coordinates;
+			this->indices = indices;
+		}
+	};
+	
+	class IIndexedFaceSetGeometry : public Geometry
+	{
+	protected:
+		IIndexedFaceSetGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_INDEXEDFACESET) {}
+
+		virtual ~IIndexedFaceSetGeometry() {};
+		
+	public:
+		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices) = 0;
+		
+		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+
+		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

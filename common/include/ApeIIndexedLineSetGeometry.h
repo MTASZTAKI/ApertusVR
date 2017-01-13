@@ -20,65 +20,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IMANUALGEOMETRY_H
-#define APE_IMANUALGEOMETRY_H
+#ifndef APE_IINDEXEDLINESETGEOMETRY_H
+#define APE_IINDEXEDLINESETGEOMETRY_H
 
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
-#include "ApeVector3.h"
 
 namespace Ape
 {	
-	typedef std::vector < int > IntVector;
 
-	struct ManualGeometryParameter
+	struct GeometryIndexedLineSetParameters
 	{
-		Ape::Vector3Vector vertexList;
-		Ape::Vector3Vector normalList;
-		Ape::Vector3Vector colorList;
-		Ape::IntVector indexList;
-		Ape::Vector3Vector triangleList;
-		Ape::Vector3Vector textureCoordList;
-
-		ManualGeometryParameter()
+		Ape::GeometryCoordinates coordinates;
+		Ape::GeometryIndices indices;
+		
+		GeometryIndexedLineSetParameters()
 		{
-			vertexList = Ape::Vector3Vector();
-			normalList = Ape::Vector3Vector();
-			colorList = Ape::Vector3Vector();
-			indexList = Ape::IntVector();
-			triangleList = Ape::Vector3Vector();
-			textureCoordList = Ape::Vector3Vector();
+			this->coordinates = Ape::GeometryCoordinates();
+			this->indices = Ape::GeometryIndices();
 		}
 
-		ManualGeometryParameter(
-			Ape::Vector3Vector vertexList,
-			Ape::Vector3Vector normalList,
-			Ape::Vector3Vector colorList,
-			Ape::IntVector indexList,
-			Ape::Vector3Vector triangleList,
-			Ape::Vector3Vector textureCoordList)
+		GeometryIndexedLineSetParameters(
+			Ape::GeometryCoordinates coordinates,
+			Ape::GeometryIndices indices)
 		{
-			vertexList = vertexList;
-			normalList = normalList;
-			colorList = colorList;
-			indexList = indexList;
-			triangleList = triangleList;
-			textureCoordList = textureCoordList;
+			this->coordinates = coordinates;
+			this->indices = indices;
 		}
 	};
 	
-	class IManualGeometry : public Geometry
+	class IIndexedLineSetGeometry : public Geometry
 	{
 	protected:
-		IManualGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_MANUAL) {}
+		IIndexedLineSetGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_INDEXEDLINESET) {}
 
-		virtual ~IManualGeometry() {};
+		virtual ~IIndexedLineSetGeometry() {};
 		
 	public:
-		virtual ManualGeometryParameter getParameter() = 0;
+		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices) = 0;
 		
-		virtual void setParameter(ManualGeometryParameter parameter) = 0;
+		virtual Ape::GeometryIndexedLineSetParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 

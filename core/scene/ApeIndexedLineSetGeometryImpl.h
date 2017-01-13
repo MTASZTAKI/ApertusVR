@@ -20,30 +20,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_MANUALGEOMTERYIMPL_H
-#define APE_MANUALGEOMTERYIMPL_H
+#ifndef APE_INDEXEDLINESETGEOMETRYIMPL_H
+#define APE_INDEXEDLINESETGEOMETRYIMPL_H
 
-#include "ApeIManualGeometry.h"
+#include "ApeIIndexedLineSetGeometry.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeMaterial.h"
 #include "ApeReplica.h"
 
 namespace Ape
 {
-	class ManualGeomteryImpl : public Ape::IManualGeometry, public Ape::Replica
+	class IndexedLineSetGeometryImpl : public Ape::IIndexedLineSetGeometry, public Ape::Replica
 	{
 	public:
-		ManualGeomteryImpl(std::string name, bool isHostCreated);
+		IndexedLineSetGeometryImpl(std::string name, bool isHostCreated);
 
-		~ManualGeomteryImpl();
+		~IndexedLineSetGeometryImpl();
 
-		ManualGeometryParameter getParameter() override;
+		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices);
 
-		void setParameter(ManualGeometryParameter parameter) override;
+		Ape::GeometryIndexedLineSetParameters getParameters();
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(Ape::NodeWeakPtr parentNode);
 
 		void setMaterial(Ape::MaterialWeakPtr material);
 
@@ -60,7 +58,7 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		Ape::ManualGeometryParameter mParameter;
+		Ape::GeometryIndexedLineSetParameters mParameters;
 
 		Ape::MaterialWeakPtr mMaterial;
 

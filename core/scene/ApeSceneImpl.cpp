@@ -33,7 +33,8 @@ SOFTWARE.*/
 #include "ApeSphereGeometryImpl.h"
 #include "ApeConeGeometryImpl.h"
 #include "ApeTextGeometryImpl.h" 
-#include "ApeManualGeometryImpl.h" 
+#include "ApeIndexedFaceSetGeometryImpl.h" 
+#include "ApeIndexedLineSetGeometryImpl.h" 
 #include "ApeFileMaterialImpl.h"
 #include "ApeCameraImpl.h"
 #include "ApeManualMaterialImpl.h"
@@ -200,11 +201,20 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
-		case Ape::Entity::GEOMETRY_MANUAL:
+		case Ape::Entity::GEOMETRY_INDEXEDFACESET:
 		{
-			auto entity = std::make_shared<Ape::ManualGeomteryImpl>(name, mpSceneSessionImpl->isHost());
+			auto entity = std::make_shared<Ape::IndexedFaceSetGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_MANUAL_CREATE));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
+		case Ape::Entity::GEOMETRY_INDEXEDLINESET:
+		{
+			auto entity = std::make_shared<Ape::IndexedLineSetGeometryImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
 				replicaManager->Reference(entity.get());
 			return entity;
@@ -286,8 +296,11 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 		case Ape::Entity::GEOMETRY_TUBE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_TUBE_DELETE));
 			break;
-		case Ape::Entity::GEOMETRY_MANUAL:
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_MANUAL_DELETE));
+		case Ape::Entity::GEOMETRY_INDEXEDFACESET:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE));
+			break;
+		case Ape::Entity::GEOMETRY_INDEXEDLINESET:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE));
 			break;
 		case Ape::Entity::MATERIAL_FILE:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_FILE_DELETE));

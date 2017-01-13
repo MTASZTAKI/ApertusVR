@@ -160,8 +160,6 @@ namespace Ape
 			return fLength;
 		}
 	};
-
-	typedef std::vector<Ape::Vector3> Vector3Vector;
 }
 
 #endif

@@ -32,7 +32,8 @@ SOFTWARE.*/
 #include "ApeSphereGeometryImpl.h"
 #include "ApeConeGeometryImpl.h"
 #include "ApeTextGeometryImpl.h"
-#include "ApeManualGeometryImpl.h" 
+#include "ApeIndexedFaceSetGeometryImpl.h" 
+#include "ApeIndexedLineSetGeometryImpl.h" 
 #include "ApeLightImpl.h" 
 #include "ApeFileMaterialImpl.h"
 #include "ApeManualMaterialImpl.h"
@@ -109,10 +110,15 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TEXT).lock())
 				return ((Ape::TextGeometryImpl*)entity.get());
 		}
-		else if (objectType == "ManualGeometry")
+		else if (objectType == "IndexedFaceSetGeometry")
 		{
-			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_MANUAL).lock())
-				return ((Ape::ManualGeomteryImpl*)entity.get());
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDFACESET).lock())
+				return ((Ape::IndexedFaceSetGeometryImpl*)entity.get());
+		}
+		else if (objectType == "IndexedLineSetGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDLINESET).lock())
+				return ((Ape::IndexedLineSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "FileMaterial")
 		{

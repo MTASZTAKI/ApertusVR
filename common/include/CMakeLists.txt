@@ -47,7 +47,8 @@ set (HEADERS
 	ApeVector4.h
 	ApeGeometry.h
 	ApeSubGeometry.h
-	ApeIManualGeometry.h
+	ApeIIndexedFaceSetGeometry.h
+	ApeIIndexedLineSetGeometry.h
 	ApeIFileGeometry.h
 	ApeIPlaneGeometry.h
 	ApeITorusGeometry.h

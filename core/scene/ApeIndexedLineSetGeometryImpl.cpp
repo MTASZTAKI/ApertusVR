@@ -20,92 +20,93 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeManualGeometryImpl.h"
+#include "ApeIndexedLineSetGeometryImpl.h"
 
-Ape::ManualGeomteryImpl::ManualGeomteryImpl(std::string name, bool isHostCreated) : Ape::IManualGeometry(name), Ape::Replica("ManualGeometry", isHostCreated)
+Ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bool isHostCreated) : Ape::IIndexedLineSetGeometry(name), Ape::Replica("IndexedLineSetGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
-	mParameter = Ape::ManualGeometryParameter();
+	mParameters = Ape::GeometryIndexedLineSetParameters();
 	mMaterial = Ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::ManualGeomteryImpl::~ManualGeomteryImpl()
+Ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
 {
 	
 }
 
-void Ape::ManualGeomteryImpl::setParameter(Ape::ManualGeometryParameter parameter)
+void Ape::IndexedLineSetGeometryImpl::setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices)
 {
-	mParameter = parameter;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER));
+	mParameters.coordinates = coordinates;
+	mParameters.indices = indices;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
 }
 
-Ape::ManualGeometryParameter Ape::ManualGeomteryImpl::getParameter()
+Ape::GeometryIndexedLineSetParameters Ape::IndexedLineSetGeometryImpl::getParameters()
 {
-	return mParameter;
+	return mParameters;
 }
 
-void Ape::ManualGeomteryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void Ape::IndexedLineSetGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
 	}
 	else
 		mParentNode = Ape::NodeWeakPtr();
 }
 
-void Ape::ManualGeomteryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void Ape::IndexedLineSetGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_MATERIAL));
 	}
 	else
 		mMaterial = Ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::ManualGeomteryImpl::getMaterial()
+Ape::MaterialWeakPtr Ape::IndexedLineSetGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::ManualGeomteryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void Ape::IndexedLineSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::ManualGeomteryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult Ape::IndexedLineSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameter);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
 
-void Ape::ManualGeomteryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void Ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameter))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
@@ -114,7 +115,7 @@ void Ape::ManualGeomteryImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL));
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

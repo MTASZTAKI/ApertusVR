@@ -46,6 +46,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TUBE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_SPHERE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TORUS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -120,10 +122,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							;
 							break;
 						case Ape::Event::Type::NODE_POSITION:
-							ogreNode->setPosition(ConversionToOgre(node->getPosition()));
+							ogreNode->setPosition(Ape::ConversionToOgre(node->getPosition()));
 							break;
 						case Ape::Event::Type::NODE_ORIENTATION:
-							ogreNode->setOrientation(ConversionToOgre(node->getOrientation()));
+							ogreNode->setOrientation(Ape::ConversionToOgre(node->getOrientation()));
 							break;
 						}
 					}
@@ -601,6 +603,162 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 			}
 		}
+		else if (event.group == Ape::Event::Group::GEOMETRY_INDEXEDFACESET)
+		{
+			if (auto manual = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string geometryName = manual->getName();
+				std::string parentNodeName = "";
+				if (auto parentNode = manual->getParentNode().lock())
+					parentNodeName = parentNode->getName();
+				switch (event.type)
+				{
+				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE:
+					mpSceneMgr->createManualObject(geometryName);
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE:
+				{
+					if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+					{
+						if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+							ogreParentNode->attachObject(ogreGeometry);
+					}
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL:
+				{
+					if (auto ogrePrimitveGeometry = mpSceneMgr->getEntity(geometryName))
+					{
+						if (auto material = manual->getMaterial().lock())
+						{
+							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+							ogrePrimitveGeometry->setMaterial(ogreMaterial);
+							if (auto pass = material->getPass().lock())
+							{
+								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+								{
+									size_t ogreSubEntitxCount = ogrePrimitveGeometry->getNumSubEntities();
+									for (size_t i = 0; i < ogreSubEntitxCount; i++)
+									{
+										Ogre::SubEntity* ogreSubEntity = ogrePrimitveGeometry->getSubEntity(i);
+										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+									}
+								}
+							}
+						}
+					}
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS:
+				{
+					Ape::GeometryIndexedFaceSetParameters parameters = manual->getParameters();
+					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
+					{
+						if (auto material = manual->getMaterial().lock())
+							ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						else
+							ogreManual->begin("", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						for (int i = 0; i < parameters.coordinates.size(); i++)
+						{
+							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
+							/*if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
+								ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);*/
+						}
+						/*for (int i = 0; i < parameters.faceIndices; i++)
+							ogreManual->qu(parameter.indexList[i]);
+						for (int i = 0; i < parameters.triangleList.size(); i++)
+							ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);*/
+						ogreManual->end();
+						ogreManual->convertToMesh(geometryName);
+					}
+					mpSceneMgr->createEntity(geometryName, geometryName);
+
+				}
+					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::GEOMETRY_INDEXEDLINESET)
+		{
+			if (auto manual = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string geometryName = manual->getName();
+				std::string parentNodeName = "";
+				if (auto parentNode = manual->getParentNode().lock())
+					parentNodeName = parentNode->getName();
+				switch (event.type)
+				{
+				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_CREATE:
+					mpSceneMgr->createManualObject(geometryName);
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE:
+				{
+					if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
+					{
+						if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+							ogreParentNode->attachObject(ogreGeometry);
+					}
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE:
+					;
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_MATERIAL:
+				{
+					if (auto ogrePrimitveGeometry = mpSceneMgr->getEntity(geometryName))
+					{
+						if (auto material = manual->getMaterial().lock())
+						{
+							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+							ogrePrimitveGeometry->setMaterial(ogreMaterial);
+							if (auto pass = material->getPass().lock())
+							{
+								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+								{
+									size_t ogreSubEntitxCount = ogrePrimitveGeometry->getNumSubEntities();
+									for (size_t i = 0; i < ogreSubEntitxCount; i++)
+									{
+										Ogre::SubEntity* ogreSubEntity = ogrePrimitveGeometry->getSubEntity(i);
+										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+									}
+								}
+							}
+						}
+					}
+				}
+					break;
+				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS:
+				{
+					Ape::GeometryIndexedLineSetParameters parameters = manual->getParameters();
+					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
+					{
+						if (auto material = manual->getMaterial().lock())
+							ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_LINE_STRIP);
+						else
+							ogreManual->begin("", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						for (int i = 0; i < parameters.coordinates.size(); i++)
+						{
+							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
+							/*if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
+							ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);*/
+						}
+						/*for (int i = 0; i < parameters.faceIndices; i++)
+						ogreManual->qu(parameter.indexList[i]);
+						for (int i = 0; i < parameters.triangleList.size(); i++)
+						ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);*/
+						ogreManual->end();
+						ogreManual->convertToMesh(geometryName);
+					}
+					mpSceneMgr->createEntity(geometryName, geometryName);
+
+				}
+					break;
+				}
+			}
+		}
 		else if (event.group == Ape::Event::Group::GEOMETRY_TEXT)
 		{
 			if (auto geometryText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(event.subjectName).lock()))
@@ -647,90 +805,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
 							ogreText->setCaption(textGeometry->getCaption());
-					}
-				}
-					break;
-				}
-			}
-		}
-		else if (event.group == Ape::Event::Group::GEOMETRY_MANUAL)
-		{
-			if (auto geometryManual = std::static_pointer_cast<Ape::IManualGeometry>(mpScene->getEntity(event.subjectName).lock()))
-			{
-				std::string geometryName = geometryManual->getName();
-				std::string parentNodeName = "";
-				if (auto parentNode = geometryManual->getParentNode().lock())
-					parentNodeName = parentNode->getName();
-				switch (event.type)
-				{
-				case Ape::Event::Type::GEOMETRY_MANUAL_CREATE:
-				{
-					mpSceneMgr->createManualObject(geometryName);
-				}
-					break;
-				case Ape::Event::Type::GEOMETRY_MANUAL_PARENTNODE:
-				{
-					if (auto ogreGeometry = mpSceneMgr->getEntity(geometryName))
-					{
-						if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
-							ogreParentNode->attachObject(ogreGeometry);
-					}
-				}
-					break;
-				case Ape::Event::Type::GEOMETRY_MANUAL_DELETE:
-					;
-					break;
-				case Ape::Event::Type::GEOMETRY_MANUAL_MATERIAL:
-				{
-					if (auto ogreManualGeometry = mpSceneMgr->getEntity(geometryName))
-					{
-						if (auto material = geometryManual->getMaterial().lock())
-						{
-							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-							ogreManualGeometry->setMaterial(ogreMaterial);
-							if (auto pass = material->getPass().lock())
-							{
-								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
-								{
-									size_t ogreSubEntitxCount = ogreManualGeometry->getNumSubEntities();
-									for (size_t i = 0; i < ogreSubEntitxCount; i++)
-									{
-										Ogre::SubEntity* ogreSubEntity = ogreManualGeometry->getSubEntity(i);
-										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
-									}
-								}
-							}
-						}
-					}
-				}
-					break;
-				case Ape::Event::Type::GEOMETRY_MANUAL_PARAMETER:
-				{
-					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
-					{
-						if (geometryManual->getOperationType() == Ape::Geometry::OperationType::TRIANGLELIST)
-						{
-							if (auto material = geometryManual->getMaterial().lock())
-							{
-								Ape::ManualGeometryParameter parameter = geometryManual->getParameter();
-								ogreManual->begin(material->getName(), ConversionToOgre(Ape::Geometry::OperationType::TRIANGLELIST));
-								for (int i = 0; i < parameter.vertexList.size(); i++)
-								{
-									ogreManual->position(parameter.vertexList[i].x, parameter.vertexList[i].y, parameter.vertexList[i].z);
-									if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
-										ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);
-									if (parameter.colorList.size() != 0 && i < parameter.colorList.size())
-										ogreManual->colour(parameter.colorList[i].x, parameter.colorList[i].y, parameter.colorList[i].z);
-									if (parameter.textureCoordList.size() != 0 && i < parameter.textureCoordList.size())
-										ogreManual->textureCoord(parameter.textureCoordList[i].x, 1.0f - parameter.textureCoordList[i].y);
-								}
-								for (int i = 0; i < parameter.indexList.size(); i++)
-									ogreManual->index(parameter.indexList[i]);
-								for (int i = 0; i < parameter.triangleList.size(); i++)
-									ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);
-								ogreManual->end();
-							}
-						}
 					}
 				}
 					break;

@@ -39,8 +39,6 @@ namespace Ape
 			x(_x), y(_y)
 		{}
 	};
-
-	typedef std::vector<Ape::Vector2> Vector2Vector;
 }
 
 #endif

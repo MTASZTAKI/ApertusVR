@@ -26,42 +26,43 @@ SOFTWARE.*/
 #include <memory>
 #include <string>
 #include <vector>
+#include <array>
 #include "Ape.h"
 #include "ApeEntity.h"
 #include "ApeMaterial.h"
 
 namespace Ape
 {		
+    struct GeometryCoordinate
+	{
+		float x, y, z;
+
+		GeometryCoordinate() : 
+			x(0.0f), y(0.0f), z(0.0f)
+		{}
+
+		GeometryCoordinate(float _x, float _y, float _z) :
+			x(_x), y(_y), z(_z)
+		{}
+	};
+	
+    typedef std::vector<GeometryCoordinate> GeometryCoordinates;
+	
+	typedef std::vector<int> GeometryIndices;	//-1 code for stop
+	
 	class Geometry : public Entity
 	{
-	public:
-		enum OperationType
-		{
-			POINTLIST,
-			LINELIST,
-			LINESTRIP,
-			TRIANGLELIST,
-			TRIANGLESTRIP,
-			TRIANGLEFAN,
-			INVALID
-		};
-		
 	protected:
 	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
-			,mOperationType(OperationType::INVALID), mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
+			,mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
 		
 		virtual ~Geometry() {};
-		
-		OperationType mOperationType;
 
 		Ape::NodeWeakPtr mParentNode;
 
 		std::string mParentNodeName;
 		
 	public:
-		
-		OperationType getOperationType() { return mOperationType; };
-
 		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
 	};
 }
