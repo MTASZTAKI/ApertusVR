@@ -110,6 +110,21 @@ void ApeEngineeringScenePlugin::Init()
 			demoPyramid->setParentNode(demoObjectNode);
 			demoPyramid->setMaterial(demoObjectMaterial);
 		}
+		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+		{
+			Ape::GeometryCoordinates coordinates = {
+				10, 20, 10,
+				10, 10, 10,
+				10, 10, 0
+			};
+			Ape::GeometryIndices indices = {
+				0, 1, -1,
+				1, 2, -1
+			};
+			Ape::Color color(1, 0, 0);
+			demoLine->setParameters(coordinates, indices, color);
+			demoLine->setParentNode(demoObjectNode);
+		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
