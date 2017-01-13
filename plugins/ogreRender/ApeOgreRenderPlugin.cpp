@@ -657,25 +657,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					Ape::GeometryIndexedFaceSetParameters parameters = manual->getParameters();
 					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						if (auto material = manual->getMaterial().lock())
-							ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-						else
-							ogreManual->begin("", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
 						for (int i = 0; i < parameters.coordinates.size(); i++)
 						{
 							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
-							/*if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
-								ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);*/
+							int indexCount = 0;
+							while (parameters.indices[indexCount] != -1)
+								indexCount++;
+							if (indexCount == 3)
+								ogreManual->triangle(parameters.indices[indexCount - 2], parameters.indices[indexCount - 1], parameters.indices[indexCount]);
+							else if (indexCount == 3)
+								ogreManual->quad(parameters.indices[indexCount - 3], parameters.indices[indexCount - 2], parameters.indices[indexCount - 1], parameters.indices[indexCount]);
 						}
-						/*for (int i = 0; i < parameters.faceIndices; i++)
-							ogreManual->qu(parameter.indexList[i]);
-						for (int i = 0; i < parameters.triangleList.size(); i++)
-							ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);*/
 						ogreManual->end();
 						ogreManual->convertToMesh(geometryName);
+						mpSceneMgr->createEntity(geometryName, geometryName);
+						mpSceneMgr->destroyManualObject(geometryName);
 					}
-					mpSceneMgr->createEntity(geometryName, geometryName);
-
 				}
 					break;
 				}
@@ -706,53 +704,21 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE:
 					;
 					break;
-				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_MATERIAL:
-				{
-					if (auto ogrePrimitveGeometry = mpSceneMgr->getEntity(geometryName))
-					{
-						if (auto material = manual->getMaterial().lock())
-						{
-							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-							ogrePrimitveGeometry->setMaterial(ogreMaterial);
-							if (auto pass = material->getPass().lock())
-							{
-								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
-								{
-									size_t ogreSubEntitxCount = ogrePrimitveGeometry->getNumSubEntities();
-									for (size_t i = 0; i < ogreSubEntitxCount; i++)
-									{
-										Ogre::SubEntity* ogreSubEntity = ogrePrimitveGeometry->getSubEntity(i);
-										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
-									}
-								}
-							}
-						}
-					}
-				}
-					break;
 				case Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS:
 				{
 					Ape::GeometryIndexedLineSetParameters parameters = manual->getParameters();
 					if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 					{
-						if (auto material = manual->getMaterial().lock())
-							ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_LINE_STRIP);
-						else
-							ogreManual->begin("", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+						ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_LINE_STRIP);
 						for (int i = 0; i < parameters.coordinates.size(); i++)
-						{
 							ogreManual->position(parameters.coordinates[i].x, parameters.coordinates[i].y, parameters.coordinates[i].z);
-							/*if (parameter.normalList.size() != 0 && i < parameter.normalList.size())
-							ogreManual->normal(parameter.normalList[i].x, parameter.normalList[i].y, parameter.normalList[i].z);*/
-						}
-						/*for (int i = 0; i < parameters.faceIndices; i++)
-						ogreManual->qu(parameter.indexList[i]);
-						for (int i = 0; i < parameters.triangleList.size(); i++)
-						ogreManual->triangle(parameter.triangleList[i].x, parameter.triangleList[i].y, parameter.triangleList[i].z);*/
+						for (int i = 0; i < parameters.indices.size(); i++)
+							ogreManual->index(parameters.indices[i]);
 						ogreManual->end();
 						ogreManual->convertToMesh(geometryName);
+						mpSceneMgr->createEntity(geometryName, geometryName);
+						mpSceneMgr->destroyManualObject(geometryName);
 					}
-					mpSceneMgr->createEntity(geometryName, geometryName);
 
 				}
 					break;

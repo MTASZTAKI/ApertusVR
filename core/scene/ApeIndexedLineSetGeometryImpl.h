@@ -43,10 +43,6 @@ namespace Ape
 
 		void setParentNode(Ape::NodeWeakPtr parentNode);
 
-		void setMaterial(Ape::MaterialWeakPtr material);
-
-		Ape::MaterialWeakPtr getMaterial();
-
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -59,10 +55,6 @@ namespace Ape
 		Ape::IScene* mpScene;
 
 		Ape::GeometryIndexedLineSetParameters mParameters;
-
-		Ape::MaterialWeakPtr mMaterial;
-
-		std::string mMaterialName;
 	};
 }
 

@@ -42,6 +42,9 @@ SOFTWARE.*/
 #include "ApeITubeGeometry.h"
 #include "ApeIConeGeometry.h"
 #include "ApeISphereGeometry.h"
+#include "ApeITextGeometry.h"
+#include "ApeIIndexedFaceSetGeometry.h"
+#include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
 
