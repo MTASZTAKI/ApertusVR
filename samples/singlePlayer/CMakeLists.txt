@@ -23,7 +23,7 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeSinglePlayerMain.cpp
+	ApeSinglePlayer.cpp
 	)
 
 include_directories(

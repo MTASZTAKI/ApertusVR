@@ -27,7 +27,7 @@ set (SOURCES_LAUNCHER
 	)
 
 set (SOURCES
-	ApeMultiPlayerMain.cpp
+	ApeMultiPlayer.cpp
 	)
 
 include_directories(

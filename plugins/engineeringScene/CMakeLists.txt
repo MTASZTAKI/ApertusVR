@@ -20,8 +20,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local)
-add_subdirectory (guest)
-add_subdirectory (host)
-add_subdirectory (host_cave)
-add_subdirectory (local_cave)
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeEngineeringScenePlugin.h
+	)
+
+set (SOURCES 
+	ApeEngineeringScenePlugin.cpp
+	)
+
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeEngineeringScenePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeEngineeringScenePlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeEngineeringScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeEngineeringScenePlugin PROPERTY FOLDER "Plugins")
+
+
+

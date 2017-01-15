@@ -22,6 +22,7 @@
 
 set (CONFIGS
 	ApeOgreRenderPlugin.json
+	ApeFobHeadTrackingPlugin.json
 	ApeOisUserInputPlugin.json
 	ApeSystem.json
 	)

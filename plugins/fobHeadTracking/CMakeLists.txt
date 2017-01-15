@@ -20,8 +20,32 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local)
-add_subdirectory (guest)
-add_subdirectory (host)
-add_subdirectory (host_cave)
-add_subdirectory (local_cave)
+
+add_subdirectory (fobLib)
+
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeFobHeadTrackingPlugin.h
+	)
+
+set (SOURCES 
+	ApeFobHeadTrackingPlugin.cpp
+	)
+
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	fobLib
+	${RAPIDJSON_INCLUDE_DIR}
+	)
+
+add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow ApeFobHeadTrackingLib)
+
+set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Plugins")
+
+
+

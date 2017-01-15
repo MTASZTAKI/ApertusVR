@@ -20,8 +20,20 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local)
-add_subdirectory (guest)
-add_subdirectory (host)
-add_subdirectory (host_cave)
-add_subdirectory (local_cave)
+add_subdirectory (configs)
+
+set (SOURCES
+	ApeCaveSystem.cpp
+	)
+
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
+	${RAPIDJSON_INCLUDE_DIR} 
+	)
+
+add_executable (ApeCaveSystem ${SOURCES})
+target_link_libraries (ApeCaveSystem ApeSystem ApePluginManager)
+set_property (TARGET ApeCaveSystem PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ApeCaveSystem PROPERTY FOLDER "Samples/CaveSystem")
+
+

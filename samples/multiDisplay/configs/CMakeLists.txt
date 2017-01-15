@@ -20,8 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local)
-add_subdirectory (guest)
-add_subdirectory (host)
-add_subdirectory (host_cave)
-add_subdirectory (local_cave)
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	ApeSystem.json
+	)
+
+add_custom_target(
+    Configs_multiDisplay ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_multiDisplay PROPERTY FOLDER "Samples/MultiDisplay/Configs")
