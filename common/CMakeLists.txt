@@ -21,4 +21,3 @@
 #SOFTWARE.
 
 add_subdirectory (include)
-add_subdirectory (configs)
