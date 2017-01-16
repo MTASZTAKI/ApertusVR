@@ -21,6 +21,7 @@
 #SOFTWARE.
 
 set (CONFIGS
+    ApeFobHeadTrackingPlugin.json
 	ApeOgreRenderPlugin.json
 	ApeOisUserInputPlugin.json
 	ApeSystem.json
