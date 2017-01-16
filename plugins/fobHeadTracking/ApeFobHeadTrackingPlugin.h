@@ -63,8 +63,8 @@ private:
 	Ape::FobHeadTrackingTrackerConfig mTrackerConfig;
 
 	Ape::FobHeadTrackingDisplayConfigList mDisplayConfigList;
-	
-	std::map<Ape::FobHeadTrackingDisplayConfig, std::vector<Ape::CameraWeakPtr>> mDisplayConfigCamerasMap;
+
+	std::vector<Ape::CameraWeakPtr> mCameras;
 
 	void* mpFobTracker;
 	

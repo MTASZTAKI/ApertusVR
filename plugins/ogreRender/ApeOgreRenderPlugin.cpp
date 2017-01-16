@@ -1324,8 +1324,6 @@ void Ape::OgreRenderPlugin::Init()
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 				camera->setFOVy(mOgreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
-				camera->setPositionOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.positionOffset);
-				camera->setOrientationOffset(mOgreRenderWindowConfigList[i].viewportList[0].camera.orientationOffset);
 			}
 		}
 	}

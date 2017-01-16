@@ -15,7 +15,7 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpFobTracker = nullptr;
 	mCameraDoubleQueue = Ape::DoubleQueue<Ape::CameraWeakPtr>();
-	mDisplayConfigCamerasMap = std::map<Ape::FobHeadTrackingDisplayConfig, std::vector<Ape::CameraWeakPtr>>();
+	mCameras = std::vector<Ape::CameraWeakPtr>();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
@@ -178,11 +178,11 @@ void ApeFobHeadTrackingPlugin::Run()
 		mCameraDoubleQueue.swap();
 		while (!mCameraDoubleQueue.emptyPop())
 		{
-			mDisplayConfigCamerasMap[mDisplayConfigList[cameraCount % 2]].push_back(mCameraDoubleQueue.front());
+			mCameras.push_back(mCameraDoubleQueue.front());
 			cameraCount++;
 			mCameraDoubleQueue.pop();
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	while (mpFobTracker)
 	{
@@ -192,13 +192,13 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			Ape::Vector3 viewerPosition = Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2]) * mTrackerConfig.scale + mTrackerConfig.translate;
 			Ape::Quaternion viewerOrientation = Ape::Euler(orientationDataFromTracker[0], orientationDataFromTracker[1], orientationDataFromTracker[2]).toQuaternion() * mTrackerConfig.rotation;
-			for(auto const& display : mDisplayConfigCamerasMap)
+			for(int i = 0; i < mDisplayConfigList.size(); i++)
 			{
-				if (auto cameraLeft = display.second[0].lock())
+				auto displayConfig = mDisplayConfigList[i];
+				if (auto cameraLeft = mCameras[i * 2].lock())
 				{
-					if (auto cameraRight = display.second[1].lock())
+					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						Ape::FobHeadTrackingDisplayConfig displayConfig = display.first;
 						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
 						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
 						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
