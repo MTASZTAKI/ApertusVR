@@ -4,9 +4,9 @@
         {
             "monitorIndex": 0,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -20,8 +20,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,
@@ -33,9 +33,9 @@
         {
             "monitorIndex": 1,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -49,8 +49,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,
@@ -62,9 +62,9 @@
         {
             "monitorIndex": 2,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -78,8 +78,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,
@@ -91,9 +91,9 @@
         {
             "monitorIndex": 3,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -107,8 +107,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,
@@ -120,9 +120,9 @@
         {
             "monitorIndex": 4,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -136,8 +136,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,
@@ -149,9 +149,9 @@
         {
             "monitorIndex": 5,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -165,8 +165,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
                         "nearClip": 1,
                         "farClip": 10000,

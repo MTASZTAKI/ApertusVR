@@ -1,73 +1,72 @@
 {
     "tracker": {
-		"rotation": {
-					"angle": 90,
-					"x": 0.0,
-					"y": 0.0,
-					"z": -1.0
-				},
-		"translate": {
-					"x": 0.0,
-					"y": -136.5,
-					"z": 0.0
-				},
-		"scale": 30.48
-	},
-	"displays": [
+        "rotation": {
+            "angle": 90,
+            "x": 0,
+            "y": 0,
+            "z": -1
+        },
+        "translate": {
+            "x": 0,
+            "y": -136.5,
+            "z": 0
+        },
+        "scale": 30.48
+    },
+    "displays": [
         {
-			"size":{
-				"width": 300,
-				"height": 225
-			},
-			"position":{
-				"x": 0,
-				"y": 0,
-				"z": -150
-			}
-			"orientation":{
-			    "angle": 0,
-				"x": 0,
-				"y": 1,
-				"z": 0
-			}
-			"disparity": 8.0
-		},
-		{
-			"size":{
-				"width": 300,
-				"height": 225
-			},
-			"position":{
-				"x": 150,
-				"y": 0,
-				"z": 0
-			}
-			"orientation":{
-			    "angle": -90,
-				"x": 0,
-				"y": 1,
-				"z": 0
-			}
-			"disparity": 8.0
-		},
-		{
-			"size":{
-				"width": 300,
-				"height": 225
-			},
-			"position":{
-				"x": -150,
-				"y": 0,
-				"z": 0
-			}
-			"orientation":{
-			    "angle": 90,
-				"x": 0,
-				"y": 1,
-				"z": 0
-			}
-			"disparity": 8.0
-		}
-	]
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": -150
+            },
+            "orientation": {
+                "angle": 0,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "disparity": 8
+        },
+        {
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": 150,
+                "y": 0,
+                "z": 0
+            },
+            "orientation": {
+                "angle": -90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "disparity": 8
+        },
+        {
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": -150,
+                "y": 0,
+                "z": 0
+            },
+            "orientation": {
+                "angle": 90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "disparity": 8
+        }
+    ]
 }
-
