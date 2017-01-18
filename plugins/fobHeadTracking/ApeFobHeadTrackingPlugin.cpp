@@ -35,7 +35,15 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 		{
 			mCameraDoubleQueue.push(camera);
 			if (!mCameraNode.lock())
+			{
 				mCameraNode = camera->getParentNode();
+				if (auto cameraNode = mCameraNode.lock())
+				{
+					/*cameraNode->setPosition(mTrackerConfig.translate);
+					cameraNode->setOrientation(mTrackerConfig.rotation);
+					cameraNode->setScale(mTrackerConfig.scale);*/
+				}
+			}
 		}
 	}
 }
@@ -184,25 +192,42 @@ void ApeFobHeadTrackingPlugin::Run()
 	for (int i = 0; i < mDisplayConfigList.size(); i++)
 	{
 		auto displayConfig = mDisplayConfigList[i];
+		Ape::Vector3 viewerPosition = Ape::Vector3(0, 50, 0);
+		Ape::Degree angle = 45.0f;
+		Ape::Vector3 axis = Ape::Vector3(0, 1, 0);
+		Ape::Quaternion viewerOrientation;
+		viewerOrientation.FromAngleAxis(angle, axis);
 		if (auto cameraLeft = mCameras[i * 2].lock())
 		{
 			if (auto cameraRight = mCameras[i * 2 + 1].lock())
 			{
-				cameraLeft->setPositionOffset(Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
-				cameraRight->setPositionOffset(Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
 				cameraLeft->setOrientationOffset(displayConfig.orientation);
 				cameraRight->setOrientationOffset(displayConfig.orientation);
+
+				Ape::Vector3 viewerLeftEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + viewerPosition;
+				Ape::Vector3 viewerRightEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + viewerPosition;
+				cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
+				cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
+				cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
+				cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
+				float fovY = 2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength());
+				cameraLeft->setFOVy(fovY);
+				cameraRight->setFOVy(fovY);
 			}
 		}
+		if (auto cameraNode = mCameraNode.lock())
+		{
+			cameraNode->setPosition(viewerPosition);
+			cameraNode->setOrientation(viewerOrientation);
+		}
 	}
+
 	while (mpFobTracker)
 	{
 		float positionDataFromTracker[3];
 		float orientationDataFromTracker[3];
 		if (trackdGetPosition(mpFobTracker, 0, positionDataFromTracker) && trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
 		{
-			Ape::Vector3 viewerPosition = Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2]) * mTrackerConfig.scale + mTrackerConfig.translate;
-			Ape::Quaternion viewerOrientation = Ape::Euler(orientationDataFromTracker[0], orientationDataFromTracker[1], orientationDataFromTracker[2]).toQuaternion() * mTrackerConfig.rotation;
 			for(int i = 0; i < mDisplayConfigList.size(); i++)
 			{
 				auto displayConfig = mDisplayConfigList[i];
@@ -210,14 +235,7 @@ void ApeFobHeadTrackingPlugin::Run()
 				{
 					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(-displayConfig.disparity / 2, 0, 0) - displayConfig.position);
-						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition + viewerOrientation * Ape::Vector3(displayConfig.disparity / 2, 0, 0) - displayConfig.position);
-						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
-						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
-						cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
-						cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
-						cameraLeft->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraLeft->getFocalLength()));
-						cameraRight->setFOVy(2 * atan((displayConfig.size.x / 2) / cameraRight->getFocalLength()));
+						;
 					}
 				}
 			}
