@@ -930,8 +930,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto parentNode = camera->getParentNode().lock())
 						{
-							if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
-								ogreParentNode->attachObject(ogreCamera);
+							if (mpSceneMgr->hasSceneNode(parentNode->getName()))
+							{
+								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName()))
+								{
+									if (ogreCamera->getParentNode())
+										ogreCamera->detachFromParent();
+									ogreParentNode->attachObject(ogreCamera);
+								}
+							}
 						}
 					}
 				}

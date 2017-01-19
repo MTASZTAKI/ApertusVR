@@ -54,6 +54,8 @@ private:
 
 	Ape::NodeWeakPtr mUserNode;
 
+	Ape::NodeWeakPtr mCamerasNode;
+
 	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
 	Ape::ISystemConfig* mpSystemConfig;
