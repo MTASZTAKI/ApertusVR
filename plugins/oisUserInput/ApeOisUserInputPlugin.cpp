@@ -50,16 +50,10 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_PARENTNODE)
+	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-		{
-			if (auto cameraNode = camera->getParentNode().lock())
-			{
-				if (mUserNode.lock() && !cameraNode->getParentNode().lock())
-					cameraNode->setParentNode(mUserNode);
-			}
-		}
+			camera->setParentNode(mUserNode);
 	}
 }
 

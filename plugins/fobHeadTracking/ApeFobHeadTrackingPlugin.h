@@ -52,7 +52,7 @@ private:
 
 	Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mCameraNode;
+	Ape::NodeWeakPtr mUserNode;
 
 	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 

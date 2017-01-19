@@ -126,8 +126,6 @@ namespace Ape
 
 		Ogre::SceneManager* mpSceneMgr;
 
-		Ape::NodeWeakPtr mCameraNode;
-
 		std::vector<Ogre::Camera*> mOgreCameras;
 
 		Ogre::OverlaySystem* mpOverlaySys;

@@ -19,7 +19,7 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
-	mCameraNode = Ape::NodeWeakPtr();
+	mUserNode = Ape::NodeWeakPtr();
 }
 
 ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
@@ -34,16 +34,8 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
 			mCameraDoubleQueue.push(camera);
-			if (!mCameraNode.lock())
-			{
-				mCameraNode = camera->getParentNode();
-				if (auto cameraNode = mCameraNode.lock())
-				{
-					/*cameraNode->setPosition(mTrackerConfig.translate);
-					cameraNode->setOrientation(mTrackerConfig.rotation);
-					cameraNode->setScale(mTrackerConfig.scale);*/
-				}
-			}
+			if (!mUserNode.lock())
+				mUserNode = camera->getParentNode();
 		}
 	}
 }
@@ -215,10 +207,10 @@ void ApeFobHeadTrackingPlugin::Run()
 				cameraRight->setFOVy(fovY);
 			}
 		}
-		if (auto cameraNode = mCameraNode.lock())
+		if (auto userNode = mUserNode.lock())
 		{
-			cameraNode->setPosition(viewerPosition);
-			cameraNode->setOrientation(viewerOrientation);
+			userNode->setPosition(viewerPosition);
+			userNode->setOrientation(viewerOrientation);
 		}
 	}
 

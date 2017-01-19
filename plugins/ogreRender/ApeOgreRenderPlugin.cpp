@@ -66,7 +66,6 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
-	mCameraNode = Ape::NodeWeakPtr();
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1259,10 +1258,6 @@ void Ape::OgreRenderPlugin::Init()
 
 	mpRoot->addFrameListener(this);
 
-	std::stringstream cameraNodeName;
-	cameraNodeName << mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName << "_CameraNode";
-	mCameraNode = mpScene->createNode(cameraNodeName.str());
-
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
 	for (int i = 0; i < mOgreRenderWindowConfigList.size(); i++)
@@ -1318,7 +1313,6 @@ void Ape::OgreRenderPlugin::Init()
 			{
 				//TODO why it is not ok
 				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-				camera->setParentNode(mCameraNode);
 				camera->setFocalLength(1.0f);
 				camera->setNearClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 				camera->setFarClipDistance(mOgreRenderWindowConfigList[i].viewportList[0].camera.farClip);
