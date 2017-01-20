@@ -99,6 +99,10 @@ void ApeFobHeadTrackingPlugin::Init()
 				{
 					mTrackerConfig.scale = trackerMemberIterator->value.GetFloat();
 				}
+				else if (trackerMemberIterator->name == "eyeSeparation")
+				{
+					mTrackerConfig.eyeSeparationPerEye = trackerMemberIterator->value.GetFloat() / 2;
+				}
 			}
 			rapidjson::Value& displays = jsonDocument["displays"];
 			for (auto& display : displays.GetArray())
@@ -152,10 +156,6 @@ void ApeFobHeadTrackingPlugin::Init()
 						}
 						fobHeadTrackingDisplayConfig.orientation.FromAngleAxis(angle, axis);
 					}
-					else if (displayMemberIterator->name == "disparity")
-					{
-						fobHeadTrackingDisplayConfig.disparity = displayMemberIterator->value.GetFloat();
-					}
 				}
 				mDisplayConfigList.push_back(fobHeadTrackingDisplayConfig);
 			}
@@ -194,6 +194,8 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				cameraLeft->setOrientationOffset(displayConfig.orientation);
 				cameraRight->setOrientationOffset(displayConfig.orientation);
+				cameraLeft->setPositionOffset(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
+				cameraRight->setPositionOffset(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
 			}
 		}
 	}
@@ -203,8 +205,8 @@ void ApeFobHeadTrackingPlugin::Run()
 		float orientationDataFromTracker[3];
 		if (trackdGetPosition(mpFobTracker, 0, positionDataFromTracker) && trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
 		{*/
-			Ape::Vector3 viewerPosition = Ape::Vector3(0, 50, 0);
-			Ape::Degree angle = 45.0f;
+			Ape::Vector3 viewerPosition = Ape::Vector3(0, 0, 0);
+			Ape::Degree angle = 0.0f;
 			Ape::Vector3 axis = Ape::Vector3(0, 1, 0);
 			Ape::Quaternion viewerOrientation;
 			viewerOrientation.FromAngleAxis(angle, axis);
@@ -223,15 +225,14 @@ void ApeFobHeadTrackingPlugin::Run()
 				{
 					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						Ape::Vector3 viewerLeftEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + viewerPosition;
-						Ape::Vector3 viewerRightEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + viewerPosition;
+						Ape::Vector3 viewerLeftEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + (viewerPosition + (viewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)));
+						Ape::Vector3 viewerRightEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + (viewerPosition + (viewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)));
 						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
 						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
 						cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
 						cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
-						float fovY = 2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength());
-						cameraLeft->setFOVy(fovY);
-						cameraRight->setFOVy(fovY);
+						cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
+						cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
 					}
 				}
 			}

@@ -40,21 +40,26 @@ namespace Ape
 		
 		float scale;
 
+		float eyeSeparationPerEye;
+
 		FobHeadTrackingTrackerConfig()
 		{
 			this->translate = Ape::Vector3();
 			this->rotation = Ape::Quaternion();
 			this->scale = 0.0f;
+			this->eyeSeparationPerEye = 0.0f;
 		}
 
 		FobHeadTrackingTrackerConfig(
 			Ape::Vector3 translate,
 			Ape::Quaternion rotation,
-			float scale)
+			float scale,
+			float eyeSeparationPerEye)
 		{
 			this->translate = translate;
 			this->rotation = rotation;
 			this->scale = scale;
+			this->eyeSeparationPerEye = eyeSeparationPerEye;
 		}
 	};
 
@@ -65,35 +70,22 @@ namespace Ape
 		Ape::Vector3 position;
 		
 		Ape::Quaternion orientation;
-		
-		float disparity;
 
 		FobHeadTrackingDisplayConfig()
 		{
 			this->size = Ape::Vector2();
 			this->position = Ape::Vector3();
 			this->orientation = Ape::Quaternion();
-			this->disparity = 0.0f;
 		}
 
 		FobHeadTrackingDisplayConfig(
 			Ape::Vector2 size,
 			Ape::Vector3 position,
-			Ape::Quaternion orientation,
-			float disparity)
+			Ape::Quaternion orientation)
 		{
 			this->size = size;
 			this->position = position;
 			this->orientation = orientation;
-			this->disparity = disparity;
-		}
-
-		bool operator<(const FobHeadTrackingDisplayConfig& other) const
-		{
-			if (disparity < other.disparity)
-				return true;
-			else
-				return false;
 		}
 	};
 

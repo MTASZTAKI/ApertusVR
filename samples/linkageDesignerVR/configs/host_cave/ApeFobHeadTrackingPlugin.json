@@ -11,7 +11,8 @@
             "y": -136.5,
             "z": 0
         },
-        "scale": 30.48
+        "scale": 30.48,
+		"eyeSeparation": 8
     },
     "displays": [
         {
@@ -22,15 +23,14 @@
             "position": {
                 "x": 0,
                 "y": 0,
-                "z": -150
+                "z": 150
             },
             "orientation": {
                 "angle": 0,
                 "x": 0,
                 "y": 1,
                 "z": 0
-            },
-            "disparity": 8
+            }
         },
         {
             "size": {
@@ -47,8 +47,7 @@
                 "x": 0,
                 "y": 1,
                 "z": 0
-            },
-            "disparity": 8
+            }
         },
         {
             "size": {
@@ -65,8 +64,7 @@
                 "x": 0,
                 "y": 1,
                 "z": 0
-            },
-            "disparity": 8
+            }
         }
     ]
 }
