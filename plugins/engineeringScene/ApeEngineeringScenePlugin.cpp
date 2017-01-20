@@ -91,7 +91,7 @@ void ApeEngineeringScenePlugin::Init()
 		if (auto coordinateSystemArrowXTubeNode = mpScene->createNode("coordinateSystemArrowXTubeNode").lock())
 		{
 			coordinateSystemArrowXTubeNode->setParentNode(coordinateSystemNode);
-			coordinateSystemArrowXTubeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+			coordinateSystemArrowXTubeNode->rotate(Ape::Degree(-90.0f).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
 			if (auto coordinateSystemArrowXTube = std::static_pointer_cast<Ape::ITubeGeometry>(mpScene->createEntity("coordinateSystemArrowXTube", Ape::Entity::GEOMETRY_TUBE).lock()))
 			{
 				coordinateSystemArrowXTube->setParameters(100.0f, 1.0f);
@@ -101,7 +101,7 @@ void ApeEngineeringScenePlugin::Init()
 			if (auto coordinateSystemArrowXConeNode = mpScene->createNode("coordinateSystemArrowXConeNode").lock())
 			{
 				coordinateSystemArrowXConeNode->setParentNode(coordinateSystemNode);
-				coordinateSystemArrowXConeNode->setPosition(Ape::Vector3(0.0f, 100.0f, 0.0f));
+				coordinateSystemArrowXConeNode->setPosition(Ape::Vector3(100.0f, 0.0f, 0.0f));
 				if (auto coordinateSystemArrowXCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowXCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
 				{
 					coordinateSystemArrowXCone->setParameters(2.5f, Ape::Vector2(1, 1));
@@ -113,7 +113,7 @@ void ApeEngineeringScenePlugin::Init()
 		if (auto coordinateSystemArrowYTubeNode = mpScene->createNode("coordinateSystemArrowYTubeNode").lock())
 		{
 			coordinateSystemArrowYTubeNode->setParentNode(coordinateSystemNode);
-			coordinateSystemArrowYTubeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			coordinateSystemArrowYTubeNode->rotate(Ape::Degree(0.0f).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 			if (auto coordinateSystemArrowYTube = std::static_pointer_cast<Ape::ITubeGeometry>(mpScene->createEntity("coordinateSystemArrowYTube", Ape::Entity::GEOMETRY_TUBE).lock()))
 			{
 				coordinateSystemArrowYTube->setParameters(100.0f, 1.0f);
@@ -123,7 +123,7 @@ void ApeEngineeringScenePlugin::Init()
 			if (auto coordinateSystemArrowYConeNode = mpScene->createNode("coordinateSystemArrowYConeNode").lock())
 			{
 				coordinateSystemArrowYConeNode->setParentNode(coordinateSystemNode);
-				coordinateSystemArrowYConeNode->setPosition(Ape::Vector3(0.0f, 0.0f, 100.0f));
+				coordinateSystemArrowYConeNode->setPosition(Ape::Vector3(0.0f, 100.0f, 0.0f));
 				if (auto coordinateSystemArrowYCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowYCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
 				{
 					coordinateSystemArrowYCone->setParameters(2.5f, Ape::Vector2(1, 1));
@@ -135,7 +135,7 @@ void ApeEngineeringScenePlugin::Init()
 		if (auto coordinateSystemArrowZTubeNode = mpScene->createNode("coordinateSystemArrowZTubeNode").lock())
 		{
 			coordinateSystemArrowZTubeNode->setParentNode(coordinateSystemNode);
-			coordinateSystemArrowZTubeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			coordinateSystemArrowZTubeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
 			if (auto coordinateSystemArrowZTube = std::static_pointer_cast<Ape::ITubeGeometry>(mpScene->createEntity("coordinateSystemArrowZTube", Ape::Entity::GEOMETRY_TUBE).lock()))
 			{
 				coordinateSystemArrowZTube->setParameters(100.0f, 1.0f);
@@ -145,7 +145,7 @@ void ApeEngineeringScenePlugin::Init()
 			if (auto coordinateSystemArrowZConeNode = mpScene->createNode("coordinateSystemArrowZConeNode").lock())
 			{
 				coordinateSystemArrowZConeNode->setParentNode(coordinateSystemNode);
-				coordinateSystemArrowZConeNode->setPosition(Ape::Vector3(-100.0f, 0.0f, 0.0f));
+				coordinateSystemArrowZConeNode->setPosition(Ape::Vector3(0.0f, 0.0f, 100.0f));
 				if (auto coordinateSystemArrowZCone = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("coordinateSystemArrowZCone", Ape::Entity::GEOMETRY_SPHERE).lock()))
 				{
 					coordinateSystemArrowZCone->setParameters(2.5f, Ape::Vector2(1, 1));

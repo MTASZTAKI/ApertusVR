@@ -194,8 +194,6 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				cameraLeft->setOrientationOffset(displayConfig.orientation);
 				cameraRight->setOrientationOffset(displayConfig.orientation);
-				cameraLeft->setPositionOffset(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-				cameraRight->setPositionOffset(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
 			}
 		}
 	}
@@ -205,8 +203,8 @@ void ApeFobHeadTrackingPlugin::Run()
 		float orientationDataFromTracker[3];
 		if (trackdGetPosition(mpFobTracker, 0, positionDataFromTracker) && trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
 		{*/
-			Ape::Vector3 viewerPosition = Ape::Vector3(0, 0, 0);
-			Ape::Degree angle = 0.0f;
+			Ape::Vector3 viewerPosition = Ape::Vector3(50, 50, 100);
+			Ape::Degree angle = 45.0f;
 			Ape::Vector3 axis = Ape::Vector3(0, 1, 0);
 			Ape::Quaternion viewerOrientation;
 			viewerOrientation.FromAngleAxis(angle, axis);
@@ -225,8 +223,8 @@ void ApeFobHeadTrackingPlugin::Run()
 				{
 					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						Ape::Vector3 viewerLeftEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + (viewerPosition + (viewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)));
-						Ape::Vector3 viewerRightEyeRelativeToDisplay = (displayConfig.orientation * displayConfig.position) + (viewerPosition + (viewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)));
+						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition - displayConfig.position);// +(viewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)));
+						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (viewerPosition - displayConfig.position);// +(viewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)));
 						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
 						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
 						cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
