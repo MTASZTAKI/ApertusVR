@@ -68,6 +68,12 @@ private:
 
 	std::vector<Ape::CameraWeakPtr> mCameras;
 
+	Ape::Vector3 mTrackedViewerPosition;
+
+	Ape::Quaternion mTrackedViewerOrientation;
+
+	Ape::Euler mTrackedViewerOrientationYPR;
+
 	void* mpFobTracker;
 	
 	void eventCallBack(const Ape::Event& event);

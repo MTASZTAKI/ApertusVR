@@ -1,14 +1,14 @@
 {
     "tracker": {
         "rotation": {
-            "angle": 90,
+            "angle": 0,
             "x": 0,
-            "y": 0,
-            "z": -1
+            "y": 1,
+            "z": 0
         },
         "translate": {
             "x": 0,
-            "y": -136.5,
+            "y": -20,
             "z": 0
         },
         "scale": 30.48,
@@ -23,7 +23,7 @@
             "position": {
                 "x": 0,
                 "y": 0,
-                "z": 150
+                "z": -150
             },
             "orientation": {
                 "angle": 0,

@@ -4,7 +4,7 @@
         {
             "monitorIndex": 0,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -20,7 +20,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
@@ -33,7 +33,7 @@
         {
             "monitorIndex": 1,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -49,7 +49,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
@@ -62,7 +62,7 @@
         {
             "monitorIndex": 2,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -78,7 +78,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
@@ -91,7 +91,7 @@
         {
             "monitorIndex": 3,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -107,7 +107,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
@@ -120,7 +120,7 @@
         {
             "monitorIndex": 4,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -136,7 +136,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
@@ -149,7 +149,7 @@
         {
             "monitorIndex": 5,
             "resolution": {
-                "width": 1440,
+                "width": 1400,
                 "height": 1050,
                 "fullScreen": true
             },
@@ -165,7 +165,7 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1440,
+                    "width": 1400,
                     "height": 1050,
                     "camera": {
                         "nearClip": 1,
