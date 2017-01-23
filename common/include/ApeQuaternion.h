@@ -187,8 +187,6 @@ namespace Ape
 		}
 
 	};
-
-	typedef std::vector<Ape::Quaternion> QuaternionVector;
 }
 
 #endif
