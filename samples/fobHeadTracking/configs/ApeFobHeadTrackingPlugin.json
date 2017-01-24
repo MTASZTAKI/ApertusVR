@@ -1,10 +1,10 @@
 {
     "tracker": {
         "rotation": {
-            "angle": 90,
+            "angle": 0,
             "x": 0,
-            "y": 0,
-            "z": -1
+            "y": 1,
+            "z": 0
         },
         "translate": {
             "x": 0,
@@ -27,40 +27,6 @@
             },
             "orientation": {
                 "angle": 0,
-                "x": 0,
-                "y": 1,
-                "z": 0
-            }
-        },
-        {
-            "size": {
-                "width": 300,
-                "height": 225
-            },
-            "position": {
-                "x": 150,
-                "y": 0,
-                "z": 0
-            },
-            "orientation": {
-                "angle": -90,
-                "x": 0,
-                "y": 1,
-                "z": 0
-            }
-        },
-        {
-            "size": {
-                "width": 300,
-                "height": 225
-            },
-            "position": {
-                "x": -150,
-                "y": 0,
-                "z": 0
-            },
-            "orientation": {
-                "angle": 90,
                 "x": 0,
                 "y": 1,
                 "z": 0

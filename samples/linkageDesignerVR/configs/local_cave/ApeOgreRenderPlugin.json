@@ -60,7 +60,7 @@
             ]
         },
         {
-            "monitorIndex": 2,
+            "monitorIndex": 3,
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -89,7 +89,7 @@
             ]
         },
         {
-            "monitorIndex": 3,
+            "monitorIndex": 2,
             "resolution": {
                 "width": 1400,
                 "height": 1050,
