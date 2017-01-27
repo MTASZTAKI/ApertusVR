@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"declaration": false,
+		"experimentalDecorators": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitUseStrict": true,
+		"outDir": "../../dist/bundle",
+		"strictNullChecks": true,
+		"target": "es5"
+	},
+	"files": [
+		"emscripten.d.ts",
+		"em-api.ts"
+	]
+}
