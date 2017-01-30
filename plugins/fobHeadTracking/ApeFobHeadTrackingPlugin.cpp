@@ -191,7 +191,7 @@ void ApeFobHeadTrackingPlugin::Run()
 				mCameras.push_back(camera);
 				if (!mUserNode.lock())
 					mUserNode = camera->getParentNode();
-				camera->setParentNode(mCamerasNode);
+				/*camera->setParentNode(mCamerasNode);*/
 				cameraCount++;
 			}
 			mCameraDoubleQueue.pop();
@@ -212,10 +212,8 @@ void ApeFobHeadTrackingPlugin::Run()
 		}
 		if (auto userNode = mUserNode.lock())
 		{
-			userNode->setPosition(mTrackedViewerPosition);
-			userNode->setOrientation(Ape::Quaternion());
-			userNode->rotate(Ape::Degree(orientationDataFromTracker[1]).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-			userNode->rotate(Ape::Degree(orientationDataFromTracker[0]).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->setPosition(Ape::Vector3(positionDataFromTracker[0] * 3.0f, positionDataFromTracker[1], positionDataFromTracker[2] * 3.0f) * mTrackerConfig.scale);
+			userNode->setOrientation(mTrackedViewerOrientation);
 		}
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
@@ -226,10 +224,10 @@ void ApeFobHeadTrackingPlugin::Run()
 				{
 					if (auto cameraRight = mCameras[i * 2 + 1].lock())
 					{
-						cameraLeft->setPosition(userNode->getOrientation() * (mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
-						cameraRight->setPosition(userNode->getOrientation() * (mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0) + userNode->getPosition()));
-						cameraLeft->setOrientation(userNode->getOrientation() * displayConfig.orientation);
-						cameraRight->setOrientation(userNode->getOrientation() * displayConfig.orientation);
+						cameraLeft->setPosition((mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)));
+						cameraRight->setPosition((mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)));
+						cameraLeft->setOrientation(displayConfig.orientation);
+						cameraRight->setOrientation(displayConfig.orientation);
 
 						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
 							(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
