@@ -202,29 +202,29 @@ bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 
 void Ape::OISUserInputPlugin::moveUserNode()
 {
-	auto cameraNode = mUserNode.lock();
-	if (cameraNode && mIsPressed)
+	auto userNode = mUserNode.lock();
+	if (userNode && mIsPressed)
 	{
 		if (mKeyCode == OIS::KeyCode::KC_PGUP)
-			cameraNode->translate(Ape::Vector3(0, 1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_PGDOWN)
-			cameraNode->translate(Ape::Vector3(0, -1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, -1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_D)
-			cameraNode->translate(Ape::Vector3(1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_A)
-			cameraNode->translate(Ape::Vector3(-1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(-1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_W)
-			cameraNode->translate(Ape::Vector3(0, 0, -1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 0, -1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_S)
-			cameraNode->translate(Ape::Vector3(0, 0, 1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 0, 1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_LEFT)
-			cameraNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		else if (mKeyCode == OIS::KeyCode::KC_RIGHT)
-			cameraNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		else if (mKeyCode == OIS::KeyCode::KC_UP)
-			cameraNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		else if (mKeyCode == OIS::KeyCode::KC_DOWN)
-			cameraNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 	}
 }
 
