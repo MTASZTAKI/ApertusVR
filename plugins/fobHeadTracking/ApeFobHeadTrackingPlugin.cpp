@@ -212,8 +212,7 @@ void ApeFobHeadTrackingPlugin::Run()
 		}
 		if (auto userNode = mUserNode.lock())
 		{
-			userNode->setPosition(Ape::Vector3(positionDataFromTracker[0] * 3.0f, positionDataFromTracker[1], positionDataFromTracker[2] * 3.0f) * mTrackerConfig.scale);
-			userNode->setOrientation(mTrackedViewerOrientation);
+			userNode->setPosition(userNode->getOrientation() * (Ape::Vector3(positionDataFromTracker[0] * 3.0f, positionDataFromTracker[1], positionDataFromTracker[2] * 3.0f) * mTrackerConfig.scale));
 		}
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
