@@ -1,0 +1,200 @@
+material "_04_-_Default"
+{
+	technique _04_-_Default_technique
+	{
+		pass _04_-_Default_standard
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "ID10_monitor"
+{
+	technique ID10_monitor_technique
+	{
+		pass ID10_monitor_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit ID10_monitor_Diffuse#0
+			{
+				texture ID10_mt_monitor.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit ID10_monitor_Normal#1
+			{
+				texture ID10_monitorLightingMap.png
+				tex_coord_set 2
+				colour_op modulate
+			}
+		}
+	}
+}
+material "metalroom"
+{
+	technique metalroom_technique
+	{
+		pass metalroom_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit metalroom_Diffuse#0
+			{
+				texture metalroom.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit metalroom_Normal#1
+			{
+				texture metalroomLightingMap.png
+				tex_coord_set 2
+				colour_op modulate
+			}
+		}
+	}
+}
+material "ID9_monitortalp"
+{
+	technique ID9_monitortalp_technique
+	{
+		pass ID9_monitortalp_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit ID9_monitortalp_Diffuse#0
+			{
+				texture ID9_mt_monitortalp.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit ID9_monitortalp_Normal#1
+			{
+				texture ID9_monitortalpLightingMap.png
+				tex_coord_set 2
+				colour_op modulate
+			}
+		}
+	}
+}
+material "images01.jpg"
+{
+	technique images01.jpg_technique
+	{
+		pass images01.jpg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			texture_unit images01.jpg_Diffuse#0
+			{
+				texture images01.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "images02.jpg"
+{
+	technique images02.jpg_technique
+	{
+		pass images02.jpg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			texture_unit images02.jpg_Diffuse#0
+			{
+				texture images02.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "images03.jpg"
+{
+	technique images03.jpg_technique
+	{
+		pass images03.jpg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			texture_unit images03.jpg_Diffuse#0
+			{
+				texture images03.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "images04.jpg"
+{
+	technique images04.jpg_technique
+	{
+		pass images04.jpg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			texture_unit images04.jpg_Diffuse#0
+			{
+				texture images04.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "images05.jpg"
+{
+	technique images05.jpg_technique
+	{
+		pass images05.jpg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			texture_unit images05.jpg_Diffuse#0
+			{
+				texture images05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
