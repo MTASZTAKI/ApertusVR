@@ -190,13 +190,30 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				mCameras.push_back(camera);
 				if (!mUserNode.lock())
+				{
 					mUserNode = camera->getParentNode();
-				/*camera->setParentNode(mCamerasNode);*/
+					mCamerasNode.lock()->setParentNode(mUserNode);
+				}
+				camera->setParentNode(mCamerasNode);
 				cameraCount++;
 			}
 			mCameraDoubleQueue.pop();
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+	for (int i = 0; i < mDisplayConfigList.size(); i++)
+	{
+		auto displayConfig = mDisplayConfigList[i];
+		if (auto cameraLeft = mCameras[i * 2].lock())
+		{
+			if (auto cameraRight = mCameras[i * 2 + 1].lock())
+			{
+				cameraLeft->setPosition(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
+				cameraRight->setPosition(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
+				cameraLeft->setOrientation(displayConfig.orientation);
+				cameraRight->setOrientation(displayConfig.orientation);
+			}
+		}
 	}
 	while (mpFobTracker)
 	{
@@ -210,40 +227,32 @@ void ApeFobHeadTrackingPlugin::Run()
 				Ape::Degree(orientationDataFromTracker[0]).toRadian());
 			mTrackedViewerOrientation = mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation;
 		}
-		if (auto userNode = mUserNode.lock())
+		if (auto camerasNode = mCamerasNode.lock())
 		{
-			userNode->setPosition(mTrackedViewerPosition);
-			userNode->setOrientation(mTrackedViewerOrientation);
+			camerasNode->setPosition(mTrackedViewerPosition);
+			camerasNode->setOrientation(mTrackedViewerOrientation);
 		}
 		//system("cls");
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];
-			if (auto userNode = mUserNode.lock())
+			if (auto cameraLeft = mCameras[i * 2].lock())
 			{
-				if (auto cameraLeft = mCameras[i * 2].lock())
+				if (auto cameraRight = mCameras[i * 2 + 1].lock())
 				{
-					if (auto cameraRight = mCameras[i * 2 + 1].lock())
-					{
-						cameraLeft->setPosition(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-						cameraRight->setPosition(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
-						cameraLeft->setOrientation(displayConfig.orientation);
-						cameraRight->setOrientation(displayConfig.orientation);
+					Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
+						(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
+					Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
+						(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
+					cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
+					cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
+					cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
+					cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
+					cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
+					cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
 
-						Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
-							(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
-						Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
-							(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
-						cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
-						cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
-						cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
-						cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
-						cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
-						cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
-
-						//std::cout << i << "left" << viewerLeftEyeRelativeToDisplay.x << "," << viewerLeftEyeRelativeToDisplay.y << ", " << viewerLeftEyeRelativeToDisplay.z << std::endl;
-						//std::cout << i << "right" << viewerRightEyeRelativeToDisplay.x << "," << viewerRightEyeRelativeToDisplay.y << ", " << viewerRightEyeRelativeToDisplay.z << std::endl;
-					}
+					//std::cout << i << "left" << viewerLeftEyeRelativeToDisplay.x << "," << viewerLeftEyeRelativeToDisplay.y << ", " << viewerLeftEyeRelativeToDisplay.z << std::endl;
+					//std::cout << i << "right" << viewerRightEyeRelativeToDisplay.x << "," << viewerRightEyeRelativeToDisplay.y << ", " << viewerRightEyeRelativeToDisplay.z << std::endl;
 				}
 			}
 		}
