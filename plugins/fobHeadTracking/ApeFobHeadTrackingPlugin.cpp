@@ -229,11 +229,11 @@ void ApeFobHeadTrackingPlugin::Run()
 		}
 		if (auto camerasNode = mCamerasNode.lock())
 		{
-			Ape::Quaternion trackedViewerOrientation = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
+			/*Ape::Quaternion trackedViewerOrientation = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
 				Ape::Degree(0).toRadian(),
-				Ape::Degree(orientationDataFromTracker[0]).toRadian());
+				Ape::Degree(orientationDataFromTracker[0]).toRadian());*/
 			camerasNode->setPosition(mTrackedViewerPosition);
-			camerasNode->setOrientation(trackedViewerOrientation);
+			camerasNode->setOrientation(mTrackedViewerOrientation);
 		}
 		//system("cls");
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
@@ -244,9 +244,9 @@ void ApeFobHeadTrackingPlugin::Run()
 				if (auto cameraRight = mCameras[i * 2 + 1].lock())
 				{
 					Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
-						(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
+						(displayConfig.orientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
 					Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
-						(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
+						(displayConfig.orientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
 					cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
 					cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
 					cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
