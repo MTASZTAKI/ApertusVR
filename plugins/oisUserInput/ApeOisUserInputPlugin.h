@@ -84,9 +84,7 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
-		bool mIsPressed;
-
-		OIS::KeyCode mKeyCode;
+		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		int mSpeedFactor;
 
