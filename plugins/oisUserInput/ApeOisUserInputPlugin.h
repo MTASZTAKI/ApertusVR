@@ -86,7 +86,9 @@ namespace Ape
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
-		int mSpeedFactor;
+		int mTranslateSpeedFactor;
+
+		int mRotateSpeedFactor;
 
 		void moveUserNode();
 

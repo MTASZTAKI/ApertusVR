@@ -34,7 +34,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mSpeedFactor = 2;
+	mTranslateSpeedFactor = 5;
+	mRotateSpeedFactor = 1;
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNode = Ape::NodeWeakPtr();
 }
@@ -175,29 +176,29 @@ void Ape::OISUserInputPlugin::moveUserNode()
 	if (userNode)
 	{
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 1 * mRotateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, -1 * mRotateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			userNode->translate(Ape::Vector3(1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			userNode->translate(Ape::Vector3(-1 * mSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			userNode->translate(Ape::Vector3(0, 0, -1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			userNode->translate(Ape::Vector3(0, 0, 1 * mSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			userNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			userNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			userNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			userNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			userNode->rotate(0.017f * mSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
 		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			userNode->rotate(-0.017f * mSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
 	}
 }
 
