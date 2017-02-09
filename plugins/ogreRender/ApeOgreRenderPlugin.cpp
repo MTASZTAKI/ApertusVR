@@ -1116,6 +1116,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setNearClipDistance(camera->getNearClipDistance());
 				}
 					break;
+				case Ape::Event::Type::CAMERA_PROJECTION:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setCustomProjectionMatrix(true, Ape::ConversionToOgre(camera->getProjection()));
+				}
+					break;
 				case Ape::Event::Type::CAMERA_POSITION:
 				{
 					if (mpSceneMgr->hasCamera(event.subjectName))

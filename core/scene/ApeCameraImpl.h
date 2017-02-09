@@ -59,6 +59,10 @@ namespace Ape
 		float getAspectRatio() override;
 
 		void setAspectRatio(float aspectRatio) override;
+		
+		Ape::Matrix4 getProjection() override;
+
+		void setProjection(Ape::Matrix4 projection) override;
 
 		Ape::Vector3 getPosition() override;
 
@@ -88,6 +92,8 @@ namespace Ape
 		float mFarClipDistance;
 
 		float mAspectRatio;
+		
+		Ape::Matrix4 mProjection;
 
 		Ape::Quaternion mOrientationOffset;
 

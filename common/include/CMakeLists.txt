@@ -63,6 +63,7 @@ set (HEADERS
 	ApeDegree.h
 	ApeRadian.h
 	ApeEuler.h
+	ApeMatrix4.h
 	ApeSystem.h
 	ApeISystemConfig.h
 	ApeDoubleQueue.h

@@ -255,6 +255,8 @@ void ApeFobHeadTrackingPlugin::Run()
 					cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
 					cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
 
+					//cameraLeft->setProjection(Ape::Matrix4());
+					//cameraRight->setProjection(Ape::Matrix4());
 					//std::cout << i << "left" << viewerLeftEyeRelativeToDisplay.x << "," << viewerLeftEyeRelativeToDisplay.y << ", " << viewerLeftEyeRelativeToDisplay.z << std::endl;
 					//std::cout << i << "right" << viewerRightEyeRelativeToDisplay.x << "," << viewerRightEyeRelativeToDisplay.y << ", " << viewerRightEyeRelativeToDisplay.z << std::endl;
 				}

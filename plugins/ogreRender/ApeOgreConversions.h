@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 #include "ApeVector2.h"
 #include "ApeVector4.h"
+#include "ApeMatrix4.h"
 #include "ApeQuaternion.h"
 #include "ApeColor.h"
 #include "ApeILight.h"
@@ -36,6 +37,7 @@ SOFTWARE.*/
 #include "OgreQuaternion.h"
 #include "OgreColourValue.h"
 #include "OgreLight.h"
+#include "OgreMatrix4.h"
 
 namespace Ape
 {
@@ -47,6 +49,26 @@ namespace Ape
 	inline Ape::Vector3 ConversionFromOgre(const Ogre::Vector3& p_vec)
 	{
 		return Ape::Vector3(p_vec.x, p_vec.y, p_vec.z);
+	}
+
+	inline Ogre::Matrix4 ConversionToOgre(const Ape::Matrix4& p_mat4)
+	{
+		return Ogre::Matrix4(
+			p_mat4.m[0][0], p_mat4.m[0][1], p_mat4.m[0][2], p_mat4.m[0][3],
+			p_mat4.m[1][0], p_mat4.m[1][1], p_mat4.m[1][2], p_mat4.m[1][3],
+			p_mat4.m[2][0], p_mat4.m[2][1], p_mat4.m[2][2], p_mat4.m[2][3],
+			p_mat4.m[3][0], p_mat4.m[3][1], p_mat4.m[3][2], p_mat4.m[3][3]
+			);
+	}
+
+	inline Ape::Matrix4 ConversionFromOgre(const Ogre::Matrix4& p_mat4)
+	{
+		return Ape::Matrix4(
+			p_mat4[0][0], p_mat4[0][1], p_mat4[0][2], p_mat4[0][3],
+			p_mat4[1][0], p_mat4[1][1], p_mat4[1][2], p_mat4[1][3],
+			p_mat4[2][0], p_mat4[2][1], p_mat4[2][2], p_mat4[2][3],
+			p_mat4[3][0], p_mat4[3][1], p_mat4[3][2], p_mat4[3][3]
+			);
 	}
 
 	inline Ogre::Vector2 ConversionToOgre(const Ape::Vector2& p_vec)

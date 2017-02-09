@@ -33,6 +33,7 @@ Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 	mNearClipDistance = 0.0f;
 	mFarClipDistance = 0.0f;
 	mAspectRatio = 0.0f;
+	mProjection = Ape::Matrix4();
 	mPositionOffset = Ape::Vector3();
 	mOrientationOffset = Ape::Quaternion();
 	mParentNode = Ape::NodeWeakPtr();
@@ -107,6 +108,17 @@ void Ape::CameraImpl::setAspectRatio(float aspectRatio)
 {
 	mAspectRatio = aspectRatio;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ASPECTRATIO));
+}
+
+Ape::Matrix4 Ape::CameraImpl::getProjection()
+{
+	return mProjection;
+}
+
+void Ape::CameraImpl::setProjection(Ape::Matrix4 projection)
+{
+	mProjection = projection;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PROJECTION));
 }
 
 Ape::Vector3 Ape::CameraImpl::getPosition()
