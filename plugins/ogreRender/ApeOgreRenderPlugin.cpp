@@ -65,6 +65,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpHlmsPbsManager = NULL;
 	mpShaderGenerator = NULL;
 	mpShaderGeneratorResolver = NULL;
+	mpMeshLodGenerator = NULL;
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
@@ -1144,6 +1145,43 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 	}
 }
 
+void Ape::OgreRenderPlugin::recreateEntity(Ogre::Entity* meshEntity)
+{
+	Ogre::SceneNode* parentNode = meshEntity->getParentSceneNode();
+	if (meshEntity)
+	{
+		if (parentNode)
+			meshEntity->detachFromParent();
+		mpSceneMgr->destroyEntity(meshEntity);
+	}
+	//meshEntity = mpSceneMgr->createEntity(mLodConfig.mesh->getName(), mLodConfig.mesh);
+	if (parentNode)
+		parentNode->attachObject(meshEntity);
+}
+
+void Ape::OgreRenderPlugin::forceLodLevel(Ogre::Entity* meshEntity, int lodLevelID, bool forceDelayed)
+{
+	/*mForcedLodLevel = lodLevelID;
+	if (!forceDelayed)
+	{
+		if (lodLevelID == -1 || mLodConfig.mesh->getNumLodLevels() <= 1) 
+			meshEntity->setMeshLodBias(1.0, 0, std::numeric_limits<unsigned short>::max());
+		else 
+			meshEntity->setMeshLodBias(1.0, lodLevelID, lodLevelID);
+	}*/
+}
+
+bool Ape::OgreRenderPlugin::shouldInject(Ogre::LodWorkQueueRequest* request)
+{
+	return true;
+}
+
+void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* request)
+{
+	//recreateEntity();
+	//forceLodLevel(mForcedLodLevel, false);
+}
+
 bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 {
 	return Ogre::FrameListener::frameStarted( evt );
@@ -1151,10 +1189,11 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	//std::stringstream ss;
-	//ss << mRenderWindows[0]->getLastFPS();
-	//TODO overlay
-	//mpOverlayTextArea->setCaption(ss.str());
+	#if defined (_DEBUG)
+		if (mRenderWindows.size() > 0)
+			std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;
+	#else
+	#endif
 
 	processEventDoubleQueue();
 	
@@ -1481,4 +1520,8 @@ void Ape::OgreRenderPlugin::Init()
 
 	mpOgreMovableTextFactory = new Ape::OgreMovableTextFactory();
 	mpRoot->addMovableObjectFactory(mpOgreMovableTextFactory);
+
+	mpMeshLodGenerator = new  Ogre::MeshLodGenerator();
+	mpMeshLodGenerator->_initWorkQueue();
+	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(this);
 }

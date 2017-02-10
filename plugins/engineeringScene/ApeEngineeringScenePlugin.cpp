@@ -54,6 +54,14 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
+	if (auto node = mpScene->createNode("sphereNode").lock())
+	{
+		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			meshFile->setFileName("sphere.mesh");
+			meshFile->setParentNode(node);
+		}
+	}
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{

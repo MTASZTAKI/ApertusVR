@@ -61,6 +61,10 @@ SOFTWARE.*/
 #include "OgreWindowEventUtilities.h"
 #include "OgreHlmsManager.h"
 #include "OgreHlmsPbsMaterial.h"
+#include "OgreLodConfig.h"
+#include "OgreMeshLodGenerator.h"
+#include "OgreLodWorkQueueInjectorListener.h"
+#include "OgreLodWorkQueueInjector.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "ApeIFileMaterial.h"
@@ -97,7 +101,7 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class OgreRenderPlugin : public IPlugin, public Ogre::FrameListener
+	class OgreRenderPlugin : public IPlugin, public Ogre::FrameListener, public Ogre::LodWorkQueueInjectorListener
 	{
 	public:
 		OgreRenderPlugin();
@@ -116,11 +120,15 @@ namespace Ape
 
 		void Restart() override;
 
-		bool frameStarted(const Ogre::FrameEvent& evt);
+		bool frameStarted(const Ogre::FrameEvent& evt) override;
 
-		bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+		bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
 
-		bool frameEnded(const Ogre::FrameEvent& evt);
+		bool frameEnded(const Ogre::FrameEvent& evt) override;
+
+		bool shouldInject(Ogre::LodWorkQueueRequest* request) override;
+
+		void injectionCompleted(Ogre::LodWorkQueueRequest* request) override;
 
 	private:
 		Ogre::Root* mpRoot;
@@ -153,6 +161,8 @@ namespace Ape
 
 		Ogre::HlmsManager* mpHlmsPbsManager;
 
+		Ogre::MeshLodGenerator* mpMeshLodGenerator;
+
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
 		Ape::IScene* mpScene;
@@ -170,6 +180,10 @@ namespace Ape
 		void processEventDoubleQueue();
 
 		void eventCallBack(const Ape::Event& event);
+
+		void recreateEntity(Ogre::Entity* meshEntity);
+
+		void forceLodLevel(Ogre::Entity* meshEntity, int lodLevelID, bool forceDelayed = true);
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOgreRenderPlugin()

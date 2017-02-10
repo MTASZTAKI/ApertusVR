@@ -49,6 +49,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
 #include "ApeInterpolator.h"
+#include "ApeIFileGeometry.h"
 
 
 #define THIS_PLUGINNAME "ApeEngineeringScenePlugin"
