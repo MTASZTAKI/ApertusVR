@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <fstream>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "ApeOisUserInputPlugin.h"
@@ -38,6 +39,12 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mRotateSpeedFactor = 1;
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNode = Ape::NodeWeakPtr();
+	mUserNodePoses = std::vector<UserNodePose>();
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(0, -159, -159), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(67.7422, -159, -159), Ape::Quaternion(0.917916, 0, -0.396774, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(213.27, -159, -159), Ape::Quaternion(0.917916, 0, -0.396774, 0)));
+	mUserNodePosesToggleIndex = 0;
+	mIsKeyPressed = false;
 }
 
 Ape::OISUserInputPlugin::~OISUserInputPlugin()
@@ -145,6 +152,14 @@ void Ape::OISUserInputPlugin::Init()
 bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
+	auto userNode = mUserNode.lock();
+	if (userNode)
+	{
+		if (mKeyCodeMap[OIS::KeyCode::KC_C])
+			saveUserNodePose(userNode);
+		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
+			toggleUserNodePoses(userNode);
+	}
 	return true;
 }
 
@@ -167,6 +182,24 @@ bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseB
 bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
+}
+
+void Ape::OISUserInputPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+{
+	std::ofstream userNodePoseFile;
+	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().y << " : " <<
+		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+	userNodePoseFile.close();
+}
+
+void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
+{
+	userNode->setPosition(mUserNodePoses[mUserNodePosesToggleIndex].position);
+	userNode->setOrientation(mUserNodePoses[mUserNodePosesToggleIndex].orientation);
+	mUserNodePosesToggleIndex++;
+	if (mUserNodePoses.size() == mUserNodePosesToggleIndex)
+		mUserNodePosesToggleIndex = 0;
 }
 
 

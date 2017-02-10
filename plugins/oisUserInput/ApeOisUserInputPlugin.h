@@ -70,6 +70,19 @@ namespace Ape
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
 	private:
+		struct UserNodePose
+		{
+			Ape::Vector3 position;
+			Ape::Quaternion orientation;
+
+			UserNodePose(
+				Ape::Vector3 position,
+				Ape::Quaternion orientation)
+			{
+				this->position = position;
+				this->orientation = orientation;
+			}
+		};
 		OIS::Keyboard* mpKeyboard; 
 
 		OIS::Mouse* mpMouse;
@@ -86,11 +99,21 @@ namespace Ape
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
+		std::vector<UserNodePose> mUserNodePoses;
+
+		int mUserNodePosesToggleIndex;
+
 		int mTranslateSpeedFactor;
 
 		int mRotateSpeedFactor;
 
+		bool mIsKeyPressed;
+
 		void moveUserNode();
+
+		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+
+		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 
 		void eventCallBack(const Ape::Event& event);
 	};
