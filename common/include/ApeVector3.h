@@ -60,6 +60,11 @@ namespace Ape
 			x * rkVector.y - y * rkVector.x);
 		}
 
+		float dotProduct(const Vector3& vec) const
+		{
+			return x * vec.x + y * vec.y + z * vec.z;
+		}
+
 		Vector3& operator = ( const Vector3& rkVector )
 		{
 		     x = rkVector.x;

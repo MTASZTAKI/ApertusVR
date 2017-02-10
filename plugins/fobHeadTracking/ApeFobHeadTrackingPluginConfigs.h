@@ -71,21 +71,36 @@ namespace Ape
 		
 		Ape::Quaternion orientation;
 
+		Ape::Vector3 bottomLeftCorner;
+
+		Ape::Vector3 bottomRightCorner;
+
+		Ape::Vector3 topLeftCorner;
+
 		FobHeadTrackingDisplayConfig()
 		{
 			this->size = Ape::Vector2();
 			this->position = Ape::Vector3();
 			this->orientation = Ape::Quaternion();
+			this->bottomLeftCorner = Ape::Vector3();
+			this->bottomRightCorner = Ape::Vector3();
+			this->topLeftCorner = Ape::Vector3();
 		}
 
 		FobHeadTrackingDisplayConfig(
 			Ape::Vector2 size,
 			Ape::Vector3 position,
-			Ape::Quaternion orientation)
+			Ape::Quaternion orientation,
+			Ape::Vector3 bottomLeftCorner,
+			Ape::Vector3 bottomRightCorner,
+			Ape::Vector3 topLeftCorner)
 		{
 			this->size = size;
 			this->position = position;
 			this->orientation = orientation;
+			this->bottomLeftCorner = bottomLeftCorner;
+			this->bottomRightCorner = bottomRightCorner;
+			this->topLeftCorner = topLeftCorner;
 		}
 	};
 

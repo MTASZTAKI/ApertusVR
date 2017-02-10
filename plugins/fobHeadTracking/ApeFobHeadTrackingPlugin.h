@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include "ApeEuler.h"
 #include "ApeDoubleQueue.h"
 #include "ApeFobHeadTrackingPluginConfigs.h"
+#include "ApeMatrix4.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
@@ -77,6 +78,11 @@ private:
 	void* mpFobTracker;
 	
 	void eventCallBack(const Ape::Event& event);
+
+	Ape::Matrix4 calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
+		Ape::Vector3 trackedViewerPosition, Ape::Vector2 cameraClippingValues);
+
+	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, Ape::Vector2 cameraClippingValues);
 	
 public:
 	ApeFobHeadTrackingPlugin();

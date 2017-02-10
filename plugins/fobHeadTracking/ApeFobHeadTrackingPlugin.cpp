@@ -177,6 +177,67 @@ void ApeFobHeadTrackingPlugin::Init()
 	}	
 }
 
+Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, Ape::Vector2 cameraClippingValues)
+{
+	float x = 2.0f * cameraClippingValues.x / (displayDistanceRight - displayDistanceLeft);
+	float y = 2.0f * cameraClippingValues.x / (displayDistanceTop - displayDistanceBottom);
+	float a = (displayDistanceRight + displayDistanceLeft) / (displayDistanceRight - displayDistanceLeft);
+	float b = (displayDistanceTop + displayDistanceBottom) / (displayDistanceTop - displayDistanceBottom);
+	float c = -(cameraClippingValues.y + cameraClippingValues.x) / (cameraClippingValues.y - cameraClippingValues.x);
+	float d = -(2.0f * cameraClippingValues.y * cameraClippingValues.x) / (cameraClippingValues.y - cameraClippingValues.x);
+	Ape::Matrix4 m(
+		x, 0, a, 0,
+		0, y, b, 0,
+		0, 0, c, d,
+		0, 0, -1, 0);
+	return m;
+}
+
+Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
+	Ape::Vector3 trackedViewerPosition, Ape::Vector2 cameraClippingValues)
+{
+	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
+	Ape::Vector3 displayWidth, displayDiagonal, displayNormal;
+
+	float displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop, trackedViewerDistanceToDisplay;
+
+	displayWidth = displayBottomRightCorner - displayBottomLeftCorner;
+	displayWidth.normalise();
+	displayDiagonal = displayTopLeftCorner - displayBottomLeftCorner;
+	displayDiagonal.normalise();
+	displayNormal = displayWidth.crossProduct(displayDiagonal);
+	displayNormal.normalise();
+
+	trackedViewerDistanceToDisplayBottomLeftCorner = displayBottomLeftCorner - trackedViewerPosition;
+	trackedViewerDistanceToDisplayBottomRightCorner = displayBottomRightCorner - trackedViewerPosition;
+	trackedViewerDistanceToDisplayTopLeftCorner = displayTopLeftCorner - trackedViewerPosition;
+
+	trackedViewerDistanceToDisplay = -(trackedViewerDistanceToDisplayBottomLeftCorner.dotProduct(displayNormal));
+
+	displayDistanceLeft = (displayWidth.dotProduct(trackedViewerDistanceToDisplayBottomLeftCorner) * cameraClippingValues.x) / trackedViewerDistanceToDisplay;
+	displayDistanceRight = (displayWidth.dotProduct(trackedViewerDistanceToDisplayBottomRightCorner) * cameraClippingValues.x) / trackedViewerDistanceToDisplay;
+	displayDistanceBottom = (displayDiagonal.dotProduct(trackedViewerDistanceToDisplayBottomLeftCorner) * cameraClippingValues.x) / trackedViewerDistanceToDisplay;
+	displayDistanceTop = (displayDiagonal.dotProduct(trackedViewerDistanceToDisplayTopLeftCorner) * cameraClippingValues.x) / trackedViewerDistanceToDisplay;
+
+	Ape::Matrix4 perspectiveOffCenterProjection = perspectiveOffCenter(displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop, cameraClippingValues);
+
+	Ape::Matrix4 transform(
+		displayWidth.x, displayWidth.y, displayWidth.z, 0,
+		displayDiagonal.x, displayDiagonal.y, displayDiagonal.z, 0,
+		displayNormal.x, displayNormal.y, displayNormal.z, 0,
+		0, 0, 0, 1);
+
+	Ape::Matrix4 trackedViewerTranslate(
+		1, 0, 0, -trackedViewerPosition.x,
+		0, 1, 0, -trackedViewerPosition.y,
+		0, 0, 1, -trackedViewerPosition.z,
+		0, 0, 0, 1);
+
+	Ape::Matrix4 cameraProjection = Ape::MATRIX4IDENTITY * perspectiveOffCenterProjection * transform * trackedViewerTranslate;
+
+	return cameraProjection;
+}
+
 void ApeFobHeadTrackingPlugin::Run()
 {
     int excpectedCameraCount = mDisplayConfigList.size() * 2;
@@ -255,8 +316,10 @@ void ApeFobHeadTrackingPlugin::Run()
 					cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
 					cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
 
-					//cameraLeft->setProjection(Ape::Matrix4());
-					//cameraRight->setProjection(Ape::Matrix4());
+					cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+						viewerLeftEyeRelativeToDisplay, Ape::Vector2(cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance())));
+					cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+						viewerRightEyeRelativeToDisplay, Ape::Vector2(cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance())));
 					//std::cout << i << "left" << viewerLeftEyeRelativeToDisplay.x << "," << viewerLeftEyeRelativeToDisplay.y << ", " << viewerLeftEyeRelativeToDisplay.z << std::endl;
 					//std::cout << i << "right" << viewerRightEyeRelativeToDisplay.x << "," << viewerRightEyeRelativeToDisplay.y << ", " << viewerRightEyeRelativeToDisplay.z << std::endl;
 				}

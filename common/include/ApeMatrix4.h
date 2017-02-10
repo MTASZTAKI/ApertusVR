@@ -82,7 +82,7 @@ namespace Ape
 			m[3][3] = m33;
 		}
 
-		void swap(Ape::Matrix4& other)
+		void swap(Matrix4& other)
 		{
 			std::swap(m[0][0], other.m[0][0]);
 			std::swap(m[0][1], other.m[0][1]);
@@ -114,9 +114,9 @@ namespace Ape
 			return m[iRow];
 		}
 
-		Ape::Matrix4 concatenate(const Ape::Matrix4 &m2) const
+		Matrix4 concatenate(const Matrix4 &m2) const
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 			r.m[0][0] = m[0][0] * m2.m[0][0] + m[0][1] * m2.m[1][0] + m[0][2] * m2.m[2][0] + m[0][3] * m2.m[3][0];
 			r.m[0][1] = m[0][0] * m2.m[0][1] + m[0][1] * m2.m[1][1] + m[0][2] * m2.m[2][1] + m[0][3] * m2.m[3][1];
 			r.m[0][2] = m[0][0] * m2.m[0][2] + m[0][1] * m2.m[1][2] + m[0][2] * m2.m[2][2] + m[0][3] * m2.m[3][2];
@@ -140,7 +140,7 @@ namespace Ape
 			return r;
 		}
 
-		Ape::Matrix4 operator * ( const Ape::Matrix4 &m2 ) const
+		Matrix4 operator * ( const Matrix4 &m2 ) const
 		{
 			return concatenate( m2 );
 		}
@@ -168,9 +168,9 @@ namespace Ape
 				);
 		}
 
-		Ape::Matrix4 operator + ( const Ape::Matrix4 &m2 ) const
+		Matrix4 operator + ( const Matrix4 &m2 ) const
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 
 			r.m[0][0] = m[0][0] + m2.m[0][0];
 			r.m[0][1] = m[0][1] + m2.m[0][1];
@@ -195,9 +195,9 @@ namespace Ape
 			return r;
 		}
 
-		Ape::Matrix4 operator - ( const Ape::Matrix4 &m2 ) const
+		Matrix4 operator - ( const Matrix4 &m2 ) const
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 			r.m[0][0] = m[0][0] - m2.m[0][0];
 			r.m[0][1] = m[0][1] - m2.m[0][1];
 			r.m[0][2] = m[0][2] - m2.m[0][2];
@@ -221,7 +221,7 @@ namespace Ape
 			return r;
 		}
 
-		bool operator == ( const Ape::Matrix4& m2 ) const
+		bool operator == ( const Matrix4& m2 ) const
 		{
 			if( 
 				m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
@@ -232,7 +232,7 @@ namespace Ape
 			return true;
 		}
 
-		bool operator != ( const Ape::Matrix4& m2 ) const
+		bool operator != ( const Matrix4& m2 ) const
 		{
 			if( 
 				m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
@@ -243,9 +243,9 @@ namespace Ape
 			return false;
 		}
 
-		Ape::Matrix4 transpose(void) const
+		Matrix4 transpose(void) const
 		{
-			return Ape::Matrix4(m[0][0], m[1][0], m[2][0], m[3][0],
+			return Matrix4(m[0][0], m[1][0], m[2][0], m[3][0],
 						   m[0][1], m[1][1], m[2][1], m[3][1],
 						   m[0][2], m[1][2], m[2][2], m[3][2],
 						   m[0][3], m[1][3], m[2][3], m[3][3]);
@@ -279,9 +279,9 @@ namespace Ape
 			m[3][0] = 0.0; m[3][1] = 0.0; m[3][2] = 0.0; m[3][3] = 1.0;
 		}
 
-		static Ape::Matrix4 getTranslate( const Ape::Vector3& v )
+		static Matrix4 getTranslate( const Ape::Vector3& v )
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 
 			r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = v.x;
 			r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0; r.m[1][3] = v.y;
@@ -291,9 +291,9 @@ namespace Ape
 			return r;
 		}
 
-		static Ape::Matrix4 getTrans( float t_x, float t_y, float t_z )
+		static Matrix4 getTrans( float t_x, float t_y, float t_z )
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 
 			r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = t_x;
 			r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0; r.m[1][3] = t_y;
@@ -310,9 +310,9 @@ namespace Ape
 			m[2][2] = v.z;
 		}
 
-		static Ape::Matrix4 getScale( const Ape::Vector3& v )
+		static Matrix4 getScale( const Ape::Vector3& v )
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 			r.m[0][0] = v.x; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = 0.0;
 			r.m[1][0] = 0.0; r.m[1][1] = v.y; r.m[1][2] = 0.0; r.m[1][3] = 0.0;
 			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = v.z; r.m[2][3] = 0.0;
@@ -321,9 +321,9 @@ namespace Ape
 			return r;
 		}
 
-		static Ape::Matrix4 getScale( float s_x, float s_y, float s_z )
+		static Matrix4 getScale( float s_x, float s_y, float s_z )
 		{
-			Ape::Matrix4 r;
+			Matrix4 r;
 			r.m[0][0] = s_x; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = 0.0;
 			r.m[1][0] = 0.0; r.m[1][1] = s_y; r.m[1][2] = 0.0; r.m[1][3] = 0.0;
 			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = s_z; r.m[2][3] = 0.0;
@@ -332,6 +332,12 @@ namespace Ape
 			return r;
         }
     };
+	static const Matrix4 MATRIX4IDENTITY
+		(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 #endif
