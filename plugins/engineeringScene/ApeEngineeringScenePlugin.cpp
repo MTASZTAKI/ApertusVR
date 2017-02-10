@@ -7,6 +7,7 @@ ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	mInterpolators = std::vector<Ape::Interpolator*>();
 }
 
 ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
@@ -64,7 +65,8 @@ void ApeEngineeringScenePlugin::Init()
 			demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
 		}
 	}
-	if (auto demoObjectNode = mpScene->createNode("demoObjectNode").lock())
+	auto demoObjectNode = mpScene->createNode("demoObjectNode").lock();
+	if (demoObjectNode)
 	{
 		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
 		if (auto demoBox = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoBox", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
@@ -293,12 +295,37 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
+	Ape::Interpolator* moveInterpolator = new Ape::Interpolator(true);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 0),
+		Ape::Vector3(10, 10, 100),
+		10.0,
+		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
+	);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 100),
+		Ape::Vector3(10, 10, 0),
+		10.0,
+		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
+	);
+	mInterpolators.push_back(moveInterpolator);
 }
 
 void ApeEngineeringScenePlugin::Run()
 {
 	while (true)
 	{
+		if (!mInterpolators.empty())
+		{
+			for (std::vector<Ape::Interpolator*>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
+			{
+				(*it)->iterateTopSection();
+				if ((*it)->isQueueEmpty()) 
+					it = mInterpolators.erase(it);
+				else 
+					it++;
+			}
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));

@@ -47,6 +47,7 @@ SOFTWARE.*/
 #include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
+#include "ApeInterpolator.h"
 
 
 #define THIS_PLUGINNAME "ApeEngineeringScenePlugin"
@@ -59,6 +60,8 @@ private:
 	Ape::IScene* mpScene;
 
 	Ape::ISystemConfig* mpSystemConfig;
+
+	std::vector<Ape::Interpolator*> mInterpolators;
 	
 	void eventCallBack(const Ape::Event& event);
 	
