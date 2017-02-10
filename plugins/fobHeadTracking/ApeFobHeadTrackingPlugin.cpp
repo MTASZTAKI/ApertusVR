@@ -169,6 +169,59 @@ void ApeFobHeadTrackingPlugin::Init()
 						}
 						fobHeadTrackingDisplayConfig.orientation.FromAngleAxis(angle, axis);
 					}
+					else if (displayMemberIterator->name == "corners")
+					{
+						rapidjson::Value& corners = display[displayMemberIterator->name];
+						for (auto& corner : corners.GetArray())
+						{
+							for (rapidjson::Value::MemberIterator cornerMemberIterator =
+								corner.MemberBegin(); cornerMemberIterator != corner.MemberEnd(); ++cornerMemberIterator)
+							{
+								if (cornerMemberIterator->name == "bottomLeftCorner")
+								{
+									for (rapidjson::Value::MemberIterator memberIterator =
+										corner[cornerMemberIterator->name].MemberBegin();
+										memberIterator != corner[cornerMemberIterator->name].MemberEnd(); ++memberIterator)
+									{
+										if (memberIterator->name == "x")
+											fobHeadTrackingDisplayConfig.bottomLeftCorner.x = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "y")
+											fobHeadTrackingDisplayConfig.bottomLeftCorner.y = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "z")
+											fobHeadTrackingDisplayConfig.bottomLeftCorner.z = memberIterator->value.GetFloat();
+									}
+								}
+								else if (cornerMemberIterator->name == "bottomRightCorner")
+								{
+									for (rapidjson::Value::MemberIterator memberIterator =
+										corner[cornerMemberIterator->name].MemberBegin();
+										memberIterator != corner[cornerMemberIterator->name].MemberEnd(); ++memberIterator)
+									{
+										if (memberIterator->name == "x")
+											fobHeadTrackingDisplayConfig.bottomRightCorner.x = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "y")
+											fobHeadTrackingDisplayConfig.bottomRightCorner.y = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "z")
+											fobHeadTrackingDisplayConfig.bottomRightCorner.z = memberIterator->value.GetFloat();
+									}
+								}
+								else if (cornerMemberIterator->name == "topLeftCorner")
+								{
+									for (rapidjson::Value::MemberIterator memberIterator =
+										corner[cornerMemberIterator->name].MemberBegin();
+										memberIterator != corner[cornerMemberIterator->name].MemberEnd(); ++memberIterator)
+									{
+										if (memberIterator->name == "x")
+											fobHeadTrackingDisplayConfig.topLeftCorner.x = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "y")
+											fobHeadTrackingDisplayConfig.topLeftCorner.y = memberIterator->value.GetFloat();
+										else if (memberIterator->name == "z")
+											fobHeadTrackingDisplayConfig.topLeftCorner.z = memberIterator->value.GetFloat();
+									}
+								}
+							}
+						}
+					}
 				}
 				mDisplayConfigList.push_back(fobHeadTrackingDisplayConfig);
 			}
