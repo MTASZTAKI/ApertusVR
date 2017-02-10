@@ -309,6 +309,21 @@ void ApeEngineeringScenePlugin::Init()
 		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
 	);
 	mInterpolators.push_back(moveInterpolator);
+
+	Ape::Interpolator* rotateInterpolator = new Ape::Interpolator(true);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(1, 0, 0, 0),
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		10.0,
+		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
+	);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		Ape::Quaternion(1, 0, 0, 0),
+		10.0,
+		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
+	);
+	mInterpolators.push_back(rotateInterpolator);
 }
 
 void ApeEngineeringScenePlugin::Run()
