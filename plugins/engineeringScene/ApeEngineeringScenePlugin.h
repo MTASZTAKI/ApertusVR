@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <list>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -61,7 +62,7 @@ private:
 
 	Ape::ISystemConfig* mpSystemConfig;
 
-	std::vector<Ape::Interpolator*> mInterpolators;
+	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 	
 	void eventCallBack(const Ape::Event& event);
 	

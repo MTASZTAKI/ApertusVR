@@ -7,7 +7,7 @@ ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
-	mInterpolators = std::vector<Ape::Interpolator*>();
+	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 }
 
 ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
@@ -295,7 +295,7 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
-	Ape::Interpolator* moveInterpolator = new Ape::Interpolator(true);
+	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
 	moveInterpolator->addSection(
 		Ape::Vector3(10, 10, 0),
 		Ape::Vector3(10, 10, 100),
@@ -308,9 +308,9 @@ void ApeEngineeringScenePlugin::Init()
 		10.0,
 		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
 	);
-	mInterpolators.push_back(moveInterpolator);
+	mInterpolators.push_back(std::move(moveInterpolator));
 
-	Ape::Interpolator* rotateInterpolator = new Ape::Interpolator(true);
+	auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
 	rotateInterpolator->addSection(
 		Ape::Quaternion(1, 0, 0, 0),
 		Ape::Quaternion(0.7071, 0, 0.7071, 0),
@@ -323,7 +323,7 @@ void ApeEngineeringScenePlugin::Init()
 		10.0,
 		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
 	);
-	mInterpolators.push_back(rotateInterpolator);
+	mInterpolators.push_back(std::move(rotateInterpolator));
 }
 
 void ApeEngineeringScenePlugin::Run()
@@ -332,7 +332,7 @@ void ApeEngineeringScenePlugin::Run()
 	{
 		if (!mInterpolators.empty())
 		{
-			for (std::vector<Ape::Interpolator*>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
+			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
 			{
 				(*it)->iterateTopSection();
 				if ((*it)->isQueueEmpty()) 
