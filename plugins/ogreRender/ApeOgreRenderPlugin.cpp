@@ -127,6 +127,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_ORIENTATION:
 							ogreNode->setOrientation(Ape::ConversionToOgre(node->getOrientation()));
 							break;
+						case Ape::Event::Type::NODE_SCALE:
+							ogreNode->setScale(Ape::ConversionToOgre(node->getScale()));
+							break;
 						}
 					}
 				}
