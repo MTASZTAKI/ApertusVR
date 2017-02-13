@@ -49,8 +49,80 @@
                     },
                     "topLeftCorner": {
                         "x": -150,
-                        "y": 300,
+                        "y": 225,
                         "z": -150
+                    }
+                }
+            ]
+        },
+        {
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": 150,
+                "y": 112.5,
+                "z": 0
+            },
+            "orientation": {
+                "angle": -90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "corners": [
+                {
+					"bottomLeftCorner": {
+                        "x": 150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "bottomRightCorner": {
+                        "x": 150,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "topLeftCorner": {
+                        "x": 150,
+                        "y": 225,
+                        "z": -150
+                    }
+                }
+            ]
+        },
+        {
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": -150,
+                "y": 112.5,
+                "z": 0
+            },
+            "orientation": {
+                "angle": 90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "corners": [
+                {
+                    "bottomLeftCorner": {
+                        "x": -150,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "bottomRightCorner": {
+                        "x": -150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "topLeftCorner": {
+                        "x": -150,
+                        "y": 225,
+                        "z": 150
                     }
                 }
             ]

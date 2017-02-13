@@ -34,7 +34,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mTranslateSpeedFactor = 5;
+	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNode = Ape::NodeWeakPtr();
@@ -176,9 +176,9 @@ void Ape::OISUserInputPlugin::moveUserNode()
 	if (userNode)
 	{
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mRotateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mRotateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_D])
 			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
 		if (mKeyCodeMap[OIS::KeyCode::KC_A])

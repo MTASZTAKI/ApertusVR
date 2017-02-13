@@ -287,6 +287,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 		0, 0, 0, 1);
 
 	Ape::Matrix4 cameraProjection = Ape::MATRIX4IDENTITY * perspectiveOffCenterProjection * transform * trackedViewerTranslate;
+	//Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection;
 
 	return cameraProjection;
 }
@@ -322,8 +323,8 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			if (auto cameraRight = mCameras[i * 2 + 1].lock())
 			{
-				cameraLeft->setOrientation(displayConfig.orientation);
-				cameraRight->setOrientation(displayConfig.orientation);
+				//cameraLeft->setOrientation(displayConfig.orientation);
+				//cameraRight->setOrientation(displayConfig.orientation);
 			}
 		}
 	}
@@ -355,24 +356,28 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				if (auto cameraRight = mCameras[i * 2 + 1].lock())
 				{
-					cameraLeft->setPosition(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-					cameraRight->setPosition(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
+					//cameraLeft->setPosition(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
+					//cameraRight->setPosition(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
 
-					Ape::Vector3 viewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
+					Ape::Vector3 trackedViewerLeftEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
 						(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
-					Ape::Vector3 viewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
+					Ape::Vector3 trackedViewerRightEyeRelativeToDisplay = displayConfig.orientation.Inverse() * (mTrackedViewerPosition +
 						(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0)) - displayConfig.position);
-					cameraLeft->setFocalLength(viewerLeftEyeRelativeToDisplay.z);
-					cameraRight->setFocalLength(viewerRightEyeRelativeToDisplay.z);
-					cameraLeft->setFrustumOffset(Ape::Vector2(-viewerLeftEyeRelativeToDisplay.x, -viewerLeftEyeRelativeToDisplay.y));
-					cameraRight->setFrustumOffset(Ape::Vector2(-viewerRightEyeRelativeToDisplay.x, -viewerRightEyeRelativeToDisplay.y));
+					cameraLeft->setFocalLength(trackedViewerLeftEyeRelativeToDisplay.z);
+					cameraRight->setFocalLength(trackedViewerRightEyeRelativeToDisplay.z);
+					cameraLeft->setFrustumOffset(Ape::Vector2(-trackedViewerLeftEyeRelativeToDisplay.x, -trackedViewerLeftEyeRelativeToDisplay.y));
+					cameraRight->setFrustumOffset(Ape::Vector2(-trackedViewerRightEyeRelativeToDisplay.x, -trackedViewerRightEyeRelativeToDisplay.y));
 					cameraLeft->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraLeft->getFocalLength()));
 					cameraRight->setFOVy(2 * atan((displayConfig.size.y / 2) / cameraRight->getFocalLength()));
 
+					Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition + 
+						(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
+					Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition + 
+						(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
 					cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
-						viewerLeftEyeRelativeToDisplay, Ape::Vector2(cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance())));
+						trackedViewerLeftEyePosition, Ape::Vector2(cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance())));
 					cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
-						viewerRightEyeRelativeToDisplay, Ape::Vector2(cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance())));
+						trackedViewerRightEyePosition, Ape::Vector2(cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance())));
 					//std::cout << i << "left" << viewerLeftEyeRelativeToDisplay.x << "," << viewerLeftEyeRelativeToDisplay.y << ", " << viewerLeftEyeRelativeToDisplay.z << std::endl;
 					//std::cout << i << "right" << viewerRightEyeRelativeToDisplay.x << "," << viewerRightEyeRelativeToDisplay.y << ", " << viewerRightEyeRelativeToDisplay.z << std::endl;
 				}
