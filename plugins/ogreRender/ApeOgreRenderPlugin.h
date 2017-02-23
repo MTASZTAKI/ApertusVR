@@ -65,6 +65,9 @@ SOFTWARE.*/
 #include "OgreMeshLodGenerator.h"
 #include "OgreLodWorkQueueInjectorListener.h"
 #include "OgreLodWorkQueueInjector.h"
+#include "OgrePixelCountLodStrategy.h"
+#include "OgreLodWorkQueueRequest.h"
+#include "OgreLodWorkQueueWorker.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "ApeIFileMaterial.h"
@@ -151,6 +154,10 @@ namespace Ape
 
 		Ogre::Font* mpOverlayFont;
 
+		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
+		
+		Ogre::Entity* mpCurrentlyLoadingMeshEntity;
+
 		Ape::OgreMovableTextFactory* mpOgreMovableTextFactory;
 
 		std::map<std::string, Ogre::RenderWindow*> mRenderWindows;
@@ -180,10 +187,6 @@ namespace Ape
 		void processEventDoubleQueue();
 
 		void eventCallBack(const Ape::Event& event);
-
-		void recreateEntity(Ogre::Entity* meshEntity);
-
-		void forceLodLevel(Ogre::Entity* meshEntity, int lodLevelID, bool forceDelayed = true);
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOgreRenderPlugin()

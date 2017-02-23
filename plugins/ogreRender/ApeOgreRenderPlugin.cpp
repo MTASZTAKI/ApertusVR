@@ -66,6 +66,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpShaderGenerator = NULL;
 	mpShaderGeneratorResolver = NULL;
 	mpMeshLodGenerator = NULL;
+	mCurrentlyLoadingMeshEntityLodConfig = Ogre::LodConfig();
+	mpCurrentlyLoadingMeshEntity = NULL;
 	mOgreRenderWindowConfigList = Ape::OgreRenderWindowConfigList();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
@@ -165,7 +167,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 					std::string fileExtension = geometryName.substr(geometryName.find_first_of("."));
 					if (fileExtension == ".mesh")
-						mpSceneMgr->createEntity(geometryName, geometryName);
+					{
+						mCurrentlyLoadingMeshEntityLodConfig.mesh = Ogre::MeshManager::getSingleton().load(geometryName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+						mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(geometryName, geometryName);
+						mCurrentlyLoadingMeshEntityLodConfig.advanced = Ogre::LodConfig::Advanced();
+						mCurrentlyLoadingMeshEntityLodConfig.strategy = Ogre::PixelCountLodStrategy::getSingletonPtr();
+						mCurrentlyLoadingMeshEntityLodConfig.levels.clear();
+						mCurrentlyLoadingMeshEntityLodConfig.advanced.profile.clear();
+						Ogre::LodWorkQueueWorker::getSingleton().clearPendingLodRequests();
+						Ogre::LodConfig lodConfig;
+						mpMeshLodGenerator->getAutoconfig(mCurrentlyLoadingMeshEntityLodConfig.mesh, lodConfig);
+						lodConfig.advanced.useBackgroundQueue = true;
+						lodConfig.advanced.profile = mCurrentlyLoadingMeshEntityLodConfig.advanced.profile;
+						lodConfig.advanced.useVertexNormals = mCurrentlyLoadingMeshEntityLodConfig.advanced.useVertexNormals;
+						mpMeshLodGenerator->generateLodLevels(lodConfig);
+						mpSceneMgr->destroyEntity(mpCurrentlyLoadingMeshEntity);
+						mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(mCurrentlyLoadingMeshEntityLodConfig.mesh->getName(), mCurrentlyLoadingMeshEntityLodConfig.mesh);
+					}
 				}
 					break;
 				}
@@ -1145,32 +1163,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 	}
 }
 
-void Ape::OgreRenderPlugin::recreateEntity(Ogre::Entity* meshEntity)
-{
-	Ogre::SceneNode* parentNode = meshEntity->getParentSceneNode();
-	if (meshEntity)
-	{
-		if (parentNode)
-			meshEntity->detachFromParent();
-		mpSceneMgr->destroyEntity(meshEntity);
-	}
-	//meshEntity = mpSceneMgr->createEntity(mLodConfig.mesh->getName(), mLodConfig.mesh);
-	if (parentNode)
-		parentNode->attachObject(meshEntity);
-}
-
-void Ape::OgreRenderPlugin::forceLodLevel(Ogre::Entity* meshEntity, int lodLevelID, bool forceDelayed)
-{
-	/*mForcedLodLevel = lodLevelID;
-	if (!forceDelayed)
-	{
-		if (lodLevelID == -1 || mLodConfig.mesh->getNumLodLevels() <= 1) 
-			meshEntity->setMeshLodBias(1.0, 0, std::numeric_limits<unsigned short>::max());
-		else 
-			meshEntity->setMeshLodBias(1.0, lodLevelID, lodLevelID);
-	}*/
-}
-
 bool Ape::OgreRenderPlugin::shouldInject(Ogre::LodWorkQueueRequest* request)
 {
 	return true;
@@ -1178,8 +1170,7 @@ bool Ape::OgreRenderPlugin::shouldInject(Ogre::LodWorkQueueRequest* request)
 
 void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* request)
 {
-	//recreateEntity();
-	//forceLodLevel(mForcedLodLevel, false);
+	mpCurrentlyLoadingMeshEntity->setMeshLodBias(1.0, 1, 1);
 }
 
 bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
