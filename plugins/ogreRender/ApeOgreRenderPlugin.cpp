@@ -1170,7 +1170,7 @@ bool Ape::OgreRenderPlugin::shouldInject(Ogre::LodWorkQueueRequest* request)
 
 void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* request)
 {
-	mpCurrentlyLoadingMeshEntity->setMeshLodBias(1.0, 1, 1);
+	mpCurrentlyLoadingMeshEntity->setMeshLodBias(1.0);
 }
 
 bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
