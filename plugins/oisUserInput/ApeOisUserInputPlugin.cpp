@@ -40,13 +40,22 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNode = Ape::NodeWeakPtr();
 	mUserNodePoses = std::vector<UserNodePose>();
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(102.032, -582, -582), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(103.374, -252, -252), Ape::Quaternion(0.993901, 0, 0.110273, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(5.87041, -252, -252), Ape::Quaternion(-0.0187007, 0, 0.999825, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(427.51, -582, -582), Ape::Quaternion(0.250598, 0, 0.968091, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(151.171, -582, -582), Ape::Quaternion(0.984112, 0, 0.177551, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-32.9196, -582, -582), Ape::Quaternion(-0.0187003, 1.45519e-11, 0.999825, -9.31323e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(121.314, -582, -582), Ape::Quaternion(-0.286629, -2.97443e-10, -0.958042, 8.82668e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-50.2942, -267, -39.543), Ape::Quaternion(0.108578, 0.000922807, -0.994053, 0.00844969)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(109.65, -254.404, 683.883), Ape::Quaternion(-0.994235, -0.00845123, -0.106884, 0.000908416)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(182.939, -582, 322.612), Ape::Quaternion(0.299624, 3.09414e-10, 0.954057, -8.78543e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-33.8135, -582, 524.087), Ape::Quaternion(-0.0356937, -1.2817e-12, 0.999363, -9.31436e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(136.762, -582, 607.147), Ape::Quaternion(-0.938136, -8.84368e-10, -0.346269, 2.9235e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-636.561, -267, 251.884), Ape::Quaternion(0.809606, 7.34888e-10, -0.586974, 5.72286e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(47.2687, -579, -656.354), Ape::Quaternion(-0.152424, -1.73481e-10, -0.988316, 9.15137e-10)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(95.8991, -579, -640.988), Ape::Quaternion(-0.152424, -1.73481e-10, -0.988316, 9.15137e-10)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(332.168, -562, -343.67), Ape::Quaternion(-0.919263, 0, 0.393645, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(419.488, -510.18, -28.347), Ape::Quaternion(-0.728918, 0.0309977, 0.683282, 0.029057)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-269.323, -469.674, 275.482), Ape::Quaternion(0.506584, -0.0475041, 0.857121, 0.0803752)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));
+
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
 }
