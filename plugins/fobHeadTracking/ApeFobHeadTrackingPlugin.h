@@ -31,6 +31,8 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <map>
+#include <algorithm>
+#include <iterator>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
