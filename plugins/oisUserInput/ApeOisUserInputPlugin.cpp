@@ -192,7 +192,7 @@ void Ape::OISUserInputPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().y << " : " <<
+	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
 		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
 	userNodePoseFile.close();
 }
