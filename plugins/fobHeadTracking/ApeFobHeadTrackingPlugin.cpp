@@ -287,7 +287,6 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 		0, 0, 0, 1);
 
 	Ape::Matrix4 cameraProjection = Ape::MATRIX4IDENTITY * perspectiveOffCenterProjection * transform * trackedViewerTranslate;
-	//Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection;
 
 	return cameraProjection;
 }
