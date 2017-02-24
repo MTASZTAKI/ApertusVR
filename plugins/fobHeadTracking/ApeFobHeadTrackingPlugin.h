@@ -82,9 +82,9 @@ private:
 	void eventCallBack(const Ape::Event& event);
 
 	Ape::Matrix4 calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
-		Ape::Vector3 trackedViewerPosition, Ape::Vector2 cameraClippingValues);
+		Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip);
 
-	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, Ape::Vector2 cameraClippingValues);
+	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, float cameraNearClip, float cameraFarClip);
 	
 public:
 	ApeFobHeadTrackingPlugin();
