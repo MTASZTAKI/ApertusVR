@@ -86,6 +86,16 @@ namespace Ape
 		{
 		     return ( x == rkVector.x && y == rkVector.y && z == rkVector.z );
 		}
+
+		bool operator < (const Vector3& rkVector) const
+		{
+			return (x < rkVector.x && y < rkVector.y && z < rkVector.z);
+		}
+
+		bool operator > (const Vector3& rkVector) const
+		{
+			return (x > rkVector.x && y > rkVector.y && z > rkVector.z);
+		}
 		
 		bool operator != ( const Vector3& rkVector ) const
 		{

@@ -68,6 +68,15 @@ namespace Ape
 		{
 			return Quaternion(-w, -x, -y, -z);
 		}
+
+		Quaternion operator / (const float fScalar) const
+		{
+			return Quaternion(
+				w / fScalar,
+				x / fScalar,
+				y / fScalar,
+				z / fScalar);
+		}
 		
 		Ape::Vector3 operator* (const Ape::Vector3& v) const
 		{
@@ -78,6 +87,16 @@ namespace Ape
 			uv = uv * (2.0f * w);
 			uuv = uuv * 2.0f;
 			return v + uv + uuv;
+		}
+
+		bool operator < (const Quaternion& rkQ) const
+		{
+			return (w < rkQ.w && x < rkQ.x && y < rkQ.y && z < rkQ.z);
+		}
+
+		bool operator > (const Quaternion& rkQ) const
+		{
+			return (w > rkQ.w  && x > rkQ.x && y > rkQ.y && z > rkQ.z);
 		}
 		
 		Quaternion operator* (const Quaternion& rkQ) const
