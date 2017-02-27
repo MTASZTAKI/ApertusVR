@@ -181,8 +181,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						lodConfig.advanced.profile = mCurrentlyLoadingMeshEntityLodConfig.advanced.profile;
 						lodConfig.advanced.useVertexNormals = mCurrentlyLoadingMeshEntityLodConfig.advanced.useVertexNormals;
 						mpMeshLodGenerator->generateLodLevels(lodConfig);
-						mpSceneMgr->destroyEntity(mpCurrentlyLoadingMeshEntity);
-						mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(mCurrentlyLoadingMeshEntityLodConfig.mesh->getName(), mCurrentlyLoadingMeshEntityLodConfig.mesh);
 					}
 				}
 					break;
@@ -1170,7 +1168,9 @@ bool Ape::OgreRenderPlugin::shouldInject(Ogre::LodWorkQueueRequest* request)
 
 void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* request)
 {
-	mpCurrentlyLoadingMeshEntity->setMeshLodBias(1.0);
+	mpSceneMgr->destroyEntity(mpCurrentlyLoadingMeshEntity);
+	mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(mCurrentlyLoadingMeshEntityLodConfig.mesh->getName(), mCurrentlyLoadingMeshEntityLodConfig.mesh);
+	mpCurrentlyLoadingMeshEntity->setMeshLodBias(0.5);
 }
 
 bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
