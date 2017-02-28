@@ -25,7 +25,7 @@ option(APE_SAMPLES_SinglePlayer "Use APE_SAMPLES_SinglePlayer?" ON )
 option(APE_SAMPLES_CaveSystem "Use APE_SAMPLES_CaveSystem?" ON )
 option(APE_SAMPLES_LinkageDesignerVR "Use APE_SAMPLES_LinkageDesignerVR?" ON )
 option(APE_SAMPLES_FobHeadTracking "APE_SAMPLES_FobHeadTracking?" ON )
-option(APE_SAMPLES_MultiDislpay "APE_SAMPLES_MultiDisplay?" ON )
+option(APE_SAMPLES_MultiDisplay "APE_SAMPLES_MultiDisplay?" ON )
 
 if (${APE_SAMPLES_MultiPlayer})
 	add_subdirectory (multiPlayer)

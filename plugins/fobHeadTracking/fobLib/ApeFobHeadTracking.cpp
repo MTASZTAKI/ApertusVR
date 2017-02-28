@@ -24,8 +24,8 @@ SOFTWARE.*/
 
 void* trackdInitTrackerReader(int)
 {
-	return 0;
-	//return (void*)1;
+	//return 0;
+	return (void*)1;
 }
 
 int trackdGetEulerAngles(void* tracker, int id, float* orn)

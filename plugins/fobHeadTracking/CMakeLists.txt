@@ -46,7 +46,7 @@ target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEve
 
 set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Plugins/ApeFobHeadTracking")
 
 
 
