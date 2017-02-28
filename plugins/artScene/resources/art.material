@@ -1,0 +1,1575 @@
+material "tower-mid-e"
+{
+	technique tower-mid-e_technique
+	{
+		pass tower-mid-e_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-e_Diffuse#0
+			{
+				texture tower-mid-eCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "dome001"
+{
+	technique dome001_technique
+	{
+		pass dome001_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit dome001_Diffuse#0
+			{
+				texture dome001CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "dome002"
+{
+	technique dome002_technique
+	{
+		pass dome002_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit dome002_Diffuse#0
+			{
+				texture dome002CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-b"
+{
+	technique tower-mid-b_technique
+	{
+		pass tower-mid-b_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-b_Diffuse#0
+			{
+				texture tower-mid-bCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-c"
+{
+	technique tower-c_technique
+	{
+		pass tower-c_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-c_Diffuse#0
+			{
+				texture tower-cCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "big-stair-round"
+{
+	technique big-stair-round_technique
+	{
+		pass big-stair-round_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit big-stair-round_Diffuse#0
+			{
+				texture big-stair-roundCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "big-stair-arc"
+{
+	technique big-stair-arc_technique
+	{
+		pass big-stair-arc_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit big-stair-arc_Diffuse#0
+			{
+				texture big-stair-arcCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-d"
+{
+	technique tower-mid-d_technique
+	{
+		pass tower-mid-d_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-d_Diffuse#0
+			{
+				texture tower-mid-dCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-b"
+{
+	technique tower-b_technique
+	{
+		pass tower-b_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-b_Diffuse#0
+			{
+				texture tower-bCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-g"
+{
+	technique tower-mid-g_technique
+	{
+		pass tower-mid-g_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-g_Diffuse#0
+			{
+				texture tower-mid-gCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "dome003"
+{
+	technique dome003_technique
+	{
+		pass dome003_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit dome003_Diffuse#0
+			{
+				texture dome003CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "arc-slide"
+{
+	technique arc-slide_technique
+	{
+		pass arc-slide_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit arc-slide_Diffuse#0
+			{
+				texture arc-slideCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-a"
+{
+	technique tower-mid-a_technique
+	{
+		pass tower-mid-a_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-a_Diffuse#0
+			{
+				texture tower-mid-aCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-f"
+{
+	technique tower-mid-f_technique
+	{
+		pass tower-mid-f_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-f_Diffuse#0
+			{
+				texture tower-mid-fCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-corner-square_a"
+{
+	technique handrail-corner-square_a_technique
+	{
+		pass handrail-corner-square_a_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-corner-square_a_Diffuse#0
+			{
+				texture handrail-corner-square_aCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "bottom-01"
+{
+	technique bottom-01_technique
+	{
+		pass bottom-01_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit bottom-01_Diffuse#0
+			{
+				texture bottom-01CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "wall-big"
+{
+	technique wall-big_technique
+	{
+		pass wall-big_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit wall-big_Diffuse#0
+			{
+				texture wall-bigCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-h"
+{
+	technique tower-mid-h_technique
+	{
+		pass tower-mid-h_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-h_Diffuse#0
+			{
+				texture tower-mid-hCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "dome004"
+{
+	technique dome004_technique
+	{
+		pass dome004_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit dome004_Diffuse#0
+			{
+				texture dome004CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "stair-third"
+{
+	technique stair-third_technique
+	{
+		pass stair-third_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit stair-third_Diffuse#0
+			{
+				texture stair-thirdCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "column-arc"
+{
+	technique column-arc_technique
+	{
+		pass column-arc_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit column-arc_Diffuse#0
+			{
+				texture column-arcCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-stair-filled"
+{
+	technique handrail-stair-filled_technique
+	{
+		pass handrail-stair-filled_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-stair-filled_Diffuse#0
+			{
+				texture handrail-stair-filledCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "bottom-02"
+{
+	technique bottom-02_technique
+	{
+		pass bottom-02_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit bottom-02_Diffuse#0
+			{
+				texture bottom-02CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-i"
+{
+	technique tower-mid-i_technique
+	{
+		pass tower-mid-i_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-i_Diffuse#0
+			{
+				texture tower-mid-iCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "dome005"
+{
+	technique dome005_technique
+	{
+		pass dome005_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit dome005_Diffuse#0
+			{
+				texture dome005CompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-a"
+{
+	technique tower-a_technique
+	{
+		pass tower-a_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-a_Diffuse#0
+			{
+				texture tower-aCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "long-stair-arc"
+{
+	technique long-stair-arc_technique
+	{
+		pass long-stair-arc_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit long-stair-arc_Diffuse#0
+			{
+				texture long-stair-arcCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-small"
+{
+	technique handrail-small_technique
+	{
+		pass handrail-small_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-small_Diffuse#0
+			{
+				texture handrail-smallCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-bridge"
+{
+	technique handrail-bridge_technique
+	{
+		pass handrail-bridge_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-bridge_Diffuse#0
+			{
+				texture handrail-bridgeCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "stair-filled"
+{
+	technique stair-filled_technique
+	{
+		pass stair-filled_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit stair-filled_Diffuse#0
+			{
+				texture stair-filledCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "tower-mid-c"
+{
+	technique tower-mid-c_technique
+	{
+		pass tower-mid-c_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit tower-mid-c_Diffuse#0
+			{
+				texture tower-mid-cCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-stair-big"
+{
+	technique handrail-stair-big_technique
+	{
+		pass handrail-stair-big_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-stair-big_Diffuse#0
+			{
+				texture handrail-stair-bigCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-stair-third"
+{
+	technique handrail-stair-third_technique
+	{
+		pass handrail-stair-third_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-stair-third_Diffuse#0
+			{
+				texture handrail-stair-thirdCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-stair-under"
+{
+	technique handrail-stair-under_technique
+	{
+		pass handrail-stair-under_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-stair-under_Diffuse#0
+			{
+				texture handrail-stair-underCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "handrail-stair-big-round"
+{
+	technique handrail-stair-big-round_technique
+	{
+		pass handrail-stair-big-round_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit handrail-stair-big-round_Diffuse#0
+			{
+				texture handrail-stair-big-roundCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "column-line"
+{
+	technique column-line_technique
+	{
+		pass column-line_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit column-line_Diffuse#0
+			{
+				texture column-lineCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "big-stair"
+{
+	technique big-stair_technique
+	{
+		pass big-stair_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit big-stair_Diffuse#0
+			{
+				texture big-stairCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "stair-down"
+{
+	technique stair-down_technique
+	{
+		pass stair-down_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			 
+			 
+
+			texture_unit stair-down_Diffuse#0
+			{
+				texture stair-downCompleteMap.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Folder0001"
+{
+	technique Folder0001_technique
+	{
+		pass Folder0001_standard
+		{
+			cull_hardware none
+			cull_software none
+			shading phong
+			ambient 0.905882 0.843137 0.764706 1
+			diffuse 0.905882 0.843137 0.764706 1
+			specular 0 0 0 0 137.7
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Material__27"
+{
+	technique Material__27_technique
+	{
+		pass Material__27_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit Material__27_Diffuse#0
+			{
+				texture _0c1DEMO.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "wire_088144225"
+{
+	technique wire_088144225_technique
+	{
+		pass wire_088144225_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.0941177 0.278431 0.760784 1
+			specular 0.0980392 0.0980392 0.0980392 1 102
+			emissive 0 0 0 1
+		}
+	}
+}
+material "BlackMetal_1"
+{
+	technique BlackMetal_1_technique
+	{
+		pass BlackMetal_1_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 142.8
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Circle_1"
+{
+	technique Circle_1_technique
+	{
+		pass Circle_1_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.0235294 0.00784314 0 1
+			specular 0 0 0 1 130.05
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Skullcap_1"
+{
+	technique Skullcap_1_technique
+	{
+		pass Skullcap_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Skullcap_1_Diffuse#0
+			{
+				texture chc_tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Back_1"
+{
+	technique Back_1_technique
+	{
+		pass Back_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Back_1_Diffuse#0
+			{
+				texture ch_tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Middle_1"
+{
+	technique Middle_1_technique
+	{
+		pass Middle_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Middle_1_Diffuse#0
+			{
+				texture chc_tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Top_1"
+{
+	technique Top_1_technique
+	{
+		pass Top_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Top_1_Diffuse#0
+			{
+				texture chc_tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Bangs_1"
+{
+	technique Bangs_1_technique
+	{
+		pass Bangs_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Bangs_1_Diffuse#0
+			{
+				texture CH_Tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Highlight_1"
+{
+	technique Highlight_1_technique
+	{
+		pass Highlight_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Highlight_1_Diffuse#0
+			{
+				texture CH_Tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Wisps_1"
+{
+	technique Wisps_1_technique
+	{
+		pass Wisps_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 84.15
+			emissive 1 1 1 1
+
+			texture_unit Wisps_1_Diffuse#0
+			{
+				texture ch_tex05.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Outer_6"
+{
+	technique Outer_6_technique
+	{
+		pass Outer_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.0980392 0.0980392 0.0980392 1
+			specular 0 0 0 1 142.8
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Inner_6"
+{
+	technique Inner_6_technique
+	{
+		pass Inner_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.933333 0.933333 0.933333 1
+			specular 0 0 0 1 142.8
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Glass_6"
+{
+	technique Glass_6_technique
+	{
+		pass Glass_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 201.45
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Parts_6"
+{
+	technique Parts_6_technique
+	{
+		pass Parts_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 135.15
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Leather_6"
+{
+	technique Leather_6_technique
+	{
+		pass Leather_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.933333 0.960784 0.94902 1
+			specular 0 0 0 1 142.8
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Metal_6"
+{
+	technique Metal_6_technique
+	{
+		pass Metal_6_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 150.45
+			emissive 0 0 0 1
+		}
+	}
+}
+material "wire_153228153"
+{
+	technique wire_153228153_technique
+	{
+		pass wire_153228153_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.32549 0.776471 0.32549 1
+			specular 0.0980392 0.0980392 0.0980392 1 102
+			emissive 0 0 0 1
+		}
+	}
+}
+material "wire_027177027"
+{
+	technique wire_027177027_technique
+	{
+		pass wire_027177027_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.00392157 0.443137 0.00392157 1
+			specular 0.0980392 0.0980392 0.0980392 1 102
+			emissive 0 0 0 1
+		}
+	}
+}
+material "plastic_4"
+{
+	technique plastic_4_technique
+	{
+		pass plastic_4_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.0117647 0.0705882 0.32549 1
+			specular 0 0 0 1 209.1
+			emissive 0 0 0 1
+		}
+	}
+}
+material "metal_yellow_4"
+{
+	technique metal_yellow_4_technique
+	{
+		pass metal_yellow_4_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.0941177 0.0745098 0 1
+			specular 0 0 0 1 209.1
+			emissive 0 0 0 1
+		}
+	}
+}
+material "metal_white_4"
+{
+	technique metal_white_4_technique
+	{
+		pass metal_white_4_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.207843 0.207843 0.207843 1
+			specular 0 0 0 1 209.1
+			emissive 0 0 0 1
+		}
+	}
+}
+material "paper_4"
+{
+	technique paper_4_technique
+	{
+		pass paper_4_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 0.866667 0.866667 0.866667 1
+			specular 0 0 0 1 209.1
+			emissive 0 0 0 1
+		}
+	}
+}
+material "body_5"
+{
+	technique body_5_technique
+	{
+		pass body_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "inner_5"
+{
+	technique inner_5_technique
+	{
+		pass inner_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "sole_5"
+{
+	technique sole_5_technique
+	{
+		pass sole_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "heel_tip_5"
+{
+	technique heel_tip_5_technique
+	{
+		pass heel_tip_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "toe_cap_5"
+{
+	technique toe_cap_5_technique
+	{
+		pass toe_cap_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "toe_cap_edg_5"
+{
+	technique toe_cap_edg_5_technique
+	{
+		pass toe_cap_edg_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "strap_5"
+{
+	technique strap_5_technique
+	{
+		pass strap_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "strap_in_5"
+{
+	technique strap_in_5_technique
+	{
+		pass strap_in_5_standard
+		{
+			shading phong
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 1 183.6
+			emissive 0 0 0 1
+		}
+	}
+}
+material "Material__25"
+{
+	technique Material__25_technique
+	{
+		pass Material__25_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit Material__25_Diffuse#0
+			{
+				texture _01___Def.JPG
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Material__26"
+{
+	technique Material__26_technique
+	{
+		pass Material__26_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit Material__26_Diffuse#0
+			{
+				texture Materi01.JPG
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "_01___Def"
+{
+	technique _01___Def_technique
+	{
+		pass _01___Def_standard
+		{
+			cull_hardware none
+			cull_software none
+			shading phong
+			ambient 0.337255 0.105882 0.0823529 1
+			diffuse 0.337255 0.105882 0.0823529 1
+			specular 0 0 0 0 2.55
+			emissive 0 0 0 1
+		}
+	}
+}
+material "FrontCol"
+{
+	technique FrontCol_technique
+	{
+		pass FrontCol_standard
+		{
+			cull_hardware none
+			cull_software none
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 2.55
+			emissive 1 1 1 1
+
+			texture_unit FrontCol_Diffuse#0
+			{
+				texture _01___Def.JPG
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Material"
+{
+	technique Material_technique
+	{
+		pass Material_standard
+		{
+			cull_hardware none
+			cull_software none
+			shading phong
+			ambient 0.101961 0.0117647 0 1
+			diffuse 0.101961 0.0117647 0 1
+			specular 0 0 0 0 2.55
+			emissive 1 1 1 1
+		}
+	}
+}
+material "Material__27_1"
+{
+	technique Material__27_1_technique
+	{
+		pass Material__27_1_standard
+		{
+			shading phong
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit Material__27_1_Diffuse#0
+			{
+				texture Material.JPG
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+
