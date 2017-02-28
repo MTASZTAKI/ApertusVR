@@ -1,7 +1,7 @@
 {
 	"renderSystem" : "DX9",
 	"lodLevels" : {
-			"autoGenerateAndSave": false,
+			"autoGenerateAndSave": true,
 			"bias" : 0.5 
 		},
     "renderWindows": [
