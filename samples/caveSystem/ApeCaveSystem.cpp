@@ -29,7 +29,14 @@ SOFTWARE.*/
 int main (int argc, char** argv)
 {
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs";
+	if (argc > 1)
+	{
+		std::string participantType = argv[1];
+		if (participantType == "art")
+			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\art";
+		else if (participantType == "presentation")
+			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\presentation";
+	}
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;
