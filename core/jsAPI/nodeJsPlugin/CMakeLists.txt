@@ -93,18 +93,3 @@ endif ()
 if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js)
 	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js DESTINATION ${TARGET_MODULE_PATH_RELEASE})
 endif ()
-
-
-# Run npm install command in output folder. This will install node module dependencies according to package.json
-add_custom_command(
-        TARGET ${MY_TARGET_NAME}
-        POST_BUILD
-        WORKING_DIRECTORY ${BUILD_PATH_DEBUG}
-        COMMAND npm install
-        )
-add_custom_command(
-        TARGET ${MY_TARGET_NAME}
-        POST_BUILD
-        WORKING_DIRECTORY ${BUILD_PATH_RELEASE}
-        COMMAND npm install
-        )
