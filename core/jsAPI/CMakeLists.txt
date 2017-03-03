@@ -162,7 +162,19 @@ if (WIN32)
 		### RELEASE
 		###
 
-		if (NOT EXISTS ${NODE_DLL_PATH_RELEASE})
+		if (EXISTS ${NODE_DLL_PATH_RELEASE})
+			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/release folder...")
+			if (NOT EXISTS ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME})
+				# Copy node.dll to output directory
+				execute_process(
+					COMMAND ${CMAKE_COMMAND} -E copy
+					${NODE_DLL_PATH_RELEASE} ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME}
+					RESULT_VARIABLE
+					COPY_SETUP_RESULT
+				)
+				message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+			endif ()
+		else ()
 
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
@@ -227,8 +239,6 @@ if (WIN32)
 				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_RELEASE}")
 			endif ()
 
-		else ()
-			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in release folder...")
 		endif ()
 
 		#--------------------------------------------------------------------------------------------------------
@@ -237,7 +247,20 @@ if (WIN32)
 		### DEBUG
 		###
 
-#		if (NOT EXISTS ${NODE_DLL_PATH_DEBUG})
+		if (EXISTS ${NODE_DLL_PATH_DEBUG})
+			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/debug folder...")
+			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
+				# Copy node.dll to output directory
+				execute_process(
+					COMMAND ${CMAKE_COMMAND} -E copy
+					${NODE_DLL_PATH_DEBUG} ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}
+					RESULT_VARIABLE
+					COPY_SETUP_RESULT
+				)
+				message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+			endif ()
+		endif ()
+#		else ()
 #
 #			# Use vcbuild to generate solution files
 #			message("ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
@@ -302,8 +325,6 @@ if (WIN32)
 #				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_DEBUG}")
 #			endif ()
 #
-#		else ()
-#			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in debug folder...")
 #		endif ()
 
 		#--------------------------------------------------------------------------------------------------------
