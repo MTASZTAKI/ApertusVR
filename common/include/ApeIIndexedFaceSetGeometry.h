@@ -41,12 +41,35 @@ namespace Ape
 			this->indices = Ape::GeometryIndices();
 		}
 
-		GeometryIndexedFaceSetParameters(
-			Ape::GeometryCoordinates coordinates,
-			Ape::GeometryIndices indices)
+		GeometryIndexedFaceSetParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices)
 		{
 			this->coordinates = coordinates;
 			this->indices = indices;
+		}
+
+		Ape::GeometryCoordinates getCoordinates()
+		{
+			return coordinates;
+		}
+
+		Ape::GeometryIndices getIndices()
+		{
+			return indices;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+
+			buff << "Coordinates(";
+			for (auto const &item : coordinates) buff << item << ", ";
+			buff << ")" << std::endl;
+
+			buff << "Indices(";
+			for (auto const &item : indices) buff << item << ", ";
+			buff << ")" << std::endl;
+
+			return buff.str();
 		}
 	};
 	

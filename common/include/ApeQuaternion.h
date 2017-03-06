@@ -163,7 +163,7 @@ namespace Ape
 		std::string toString() const
 		{
 			std::ostringstream buff;
-			buff << "Quaternion( " << w << ", " << x << ", " << y << ", " << z << ")";
+			buff << "Quaternion(" << w << ", " << x << ", " << y << ", " << z << ")";
 			return buff.str();
 		}
 		
@@ -204,6 +204,11 @@ namespace Ape
 				return t;
 			}
 		}
+
+		float getW() { return w; }
+		float getX() { return x; }
+		float getY() { return y; }
+		float getZ() { return z; }
 
 	};
 }

@@ -44,10 +44,6 @@ namespace Ape
 
 	typedef std::map<std::string, NodeSharedPtr> NodeSharedPtrNameMap;
 
-	class Geometry;
-	
-	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
-
 	class ILight;
 
 	typedef std::weak_ptr<ILight> LightWeakPtr;
@@ -69,6 +65,20 @@ namespace Ape
 	class Geometry;
 
 	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
+
+	typedef std::shared_ptr<Geometry> GeometrySharedPtr;
+
+	class ITextGeometry;
+
+	typedef std::weak_ptr<ITextGeometry> TextGeometryWeakPtr;
+
+	typedef std::shared_ptr<ITextGeometry> TextGeometrySharedPtr;
+
+	class IIndexedFaceSetGeometry;
+
+	typedef std::weak_ptr<IIndexedFaceSetGeometry> IndexedFaceSetGeometryWeakPtr;
+
+	typedef std::shared_ptr<IIndexedFaceSetGeometry> IndexedFaceSetGeometrySharedPtr;
 
 	class SubGeometry;
 

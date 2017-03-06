@@ -42,6 +42,11 @@ namespace Ape
 		{
 			return float(degree * ape_PI / 180);
 		};
+
+		float getDegree()
+		{
+			return degree;
+		}
 	};
 }
 
