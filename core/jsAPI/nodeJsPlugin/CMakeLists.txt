@@ -67,7 +67,7 @@ endif ()
 # TODO: MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeJsAPICommon MY_NODEJS_LIB )
+target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene MY_NODEJS_LIB )
 
 # Add preprocessor definitions
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS )
@@ -90,11 +90,32 @@ if (NOT EXISTS ${BUILD_PATH_RELEASE}/apeServer.js)
 	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeServer.js DESTINATION ${BUILD_PATH_RELEASE})
 endif ()
 
+if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/ape.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/ape.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js)
+endif ()
+if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/ape.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/ape.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js)
+endif ()
+
 if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/apeHttpApi.js)
 	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js)
 endif ()
 if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/apeHttpApi.js)
 	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js)
+endif ()
+
+if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/apePluginLoader.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apePluginLoader.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js)
+endif ()
+if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/apePluginLoader.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apePluginLoader.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js)
+endif ()
+
+if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/httpApi/apeHttpApiNode.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/httpApi/apeHttpApiNode.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js/httpApi)
+endif ()
+if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/httpApi/apeHttpApiNode.js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/httpApi/apeHttpApiNode.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js/httpApi)
 endif ()
 
 # Run npm install command in output folder. This will install node module dependencies according to package.json

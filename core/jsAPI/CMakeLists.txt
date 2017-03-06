@@ -33,10 +33,7 @@ message(STATUS "APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
 set(JS_API_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "JS_API_DIR: ${JS_API_DIR}")
 
-set(JS_API_COMMON_DIR ${JS_API_DIR}/common)
-message(STATUS "JS_API_COMMON_DIR: ${JS_API_COMMON_DIR}")
-
-set(NODE_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46)
+set(NODE_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4)
 message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
 
 set(NODE_LIBRARY Release node Debug node)
@@ -241,74 +238,74 @@ if (WIN32)
 		### DEBUG
 		###
 
-		if (NOT EXISTS ${NODE_DLL_PATH_DEBUG})
-
-			# Use vcbuild to generate solution files
-			message("ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
-			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign
-				RESULT_VARIABLE NODE_VCBUILD_RESULT
-			)
-			if (${NODE_VCBUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
-			else ()
-				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
-			endif ()
-
-			# Check generated solution file
-			if (NOT EXISTS ${NODE_SOLUTION_PATH})
-				message(FATAL_ERROR "Could not find ${NODE_SOLUTION_PATH}")
-			endif ()
-
-			#--------------------------------------------------------------------------------------------------------
-
-			# Build Node js
-			message("ApePlugins: Node: Setting up environment variables and building...")
-			if (${VCBUILD})
-				execute_process(
-					COMMAND cmd /c ${DEVENV_PATH} ${NODE_SOLUTION_PATH} /Build "Debug"
-					RESULT_VARIABLE BUILD_RESULT
-				)
-			elseif (${MSBUILD})
-				execute_process(
-					COMMAND cmd /c ${MSBUILD_SETUP_PATH} & msbuild ${NODE_SOLUTION_PATH} /t:Build /p:Configuration=Debug
-					RESULT_VARIABLE BUILD_RESULT
-				)
-			else ()
-				message(FATAL_ERROR "Could not find devenv or msbuild")
-			endif ()
-
-			if (${BUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
-			else ()
-				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
-			endif ()
-
-			# Check generated dll
-			if (NOT EXISTS ${NODE_DLL_PATH_DEBUG})
-				message(FATAL_ERROR "Could not find ${NODE_DLL_PATH_DEBUG}")
-			endif ()
-
-			# Copy node.dll to output directory
-			execute_process(
-				COMMAND ${CMAKE_COMMAND} -E copy
-				${NODE_DLL_PATH_DEBUG} ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}
-				RESULT_VARIABLE
-				COPY_SETUP_RESULT
-			)
-			message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
-			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
-				message(FATAL_ERROR "Could not find ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}")
-			endif ()
-
-			# Check generated lib
-			if (NOT EXISTS ${NODE_LIB_PATH_DEBUG})
-				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_DEBUG}")
-			endif ()
-
-		else ()
-			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in debug folder...")
-		endif ()
+#		if (NOT EXISTS ${NODE_DLL_PATH_DEBUG})
+#
+#			# Use vcbuild to generate solution files
+#			message("ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
+#			execute_process(
+#				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign
+#				RESULT_VARIABLE NODE_VCBUILD_RESULT
+#			)
+#			if (${NODE_VCBUILD_RESULT} EQUAL 0)
+#				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
+#			else ()
+#				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
+#			endif ()
+#
+#			# Check generated solution file
+#			if (NOT EXISTS ${NODE_SOLUTION_PATH})
+#				message(FATAL_ERROR "Could not find ${NODE_SOLUTION_PATH}")
+#			endif ()
+#
+#			#--------------------------------------------------------------------------------------------------------
+#
+#			# Build Node js
+#			message("ApePlugins: Node: Setting up environment variables and building...")
+#			if (${VCBUILD})
+#				execute_process(
+#					COMMAND cmd /c ${DEVENV_PATH} ${NODE_SOLUTION_PATH} /Build "Debug"
+#					RESULT_VARIABLE BUILD_RESULT
+#				)
+#			elseif (${MSBUILD})
+#				execute_process(
+#					COMMAND cmd /c ${MSBUILD_SETUP_PATH} & msbuild ${NODE_SOLUTION_PATH} /t:Build /p:Configuration=Debug
+#					RESULT_VARIABLE BUILD_RESULT
+#				)
+#			else ()
+#				message(FATAL_ERROR "Could not find devenv or msbuild")
+#			endif ()
+#
+#			if (${BUILD_RESULT} EQUAL 0)
+#				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
+#			else ()
+#				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
+#			endif ()
+#
+#			# Check generated dll
+#			if (NOT EXISTS ${NODE_DLL_PATH_DEBUG})
+#				message(FATAL_ERROR "Could not find ${NODE_DLL_PATH_DEBUG}")
+#			endif ()
+#
+#			# Copy node.dll to output directory
+#			execute_process(
+#				COMMAND ${CMAKE_COMMAND} -E copy
+#				${NODE_DLL_PATH_DEBUG} ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}
+#				RESULT_VARIABLE
+#				COPY_SETUP_RESULT
+#			)
+#			message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+#			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
+#				message(FATAL_ERROR "Could not find ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}")
+#			endif ()
+#
+#			# Check generated lib
+#			if (NOT EXISTS ${NODE_LIB_PATH_DEBUG})
+#				message(FATAL_ERROR "Could not find ${NODE_LIB_PATH_DEBUG}")
+#			endif ()
+#
+#		else ()
+#			message(STATUS "ApePlugins: Skip building NodeJs, dlls found in debug folder...")
+#		endif ()
 
 		#--------------------------------------------------------------------------------------------------------
 
@@ -327,8 +324,8 @@ if (WIN32)
 		else ()
 			message("ApePlugins: npm is not installed, starting installer...")
 
-			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46-installer/win32/node-v0.10.46-x86.msi)
-			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v0.10.46-installer/win64/node-v0.10.46-x64.msi)
+			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win32/node-v0.10.46-x86.msi)
+			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win64/node-v0.10.46-x64.msi)
 
 			if (HOST_ARCH_X86)
 				execute_process(
@@ -368,6 +365,5 @@ endif ()
 
 
 
-add_subdirectory (common)
 add_subdirectory (nodeJsExtension)
 add_subdirectory (nodeJsPlugin)

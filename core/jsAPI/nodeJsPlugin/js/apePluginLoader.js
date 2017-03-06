@@ -20,14 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var ape = require('apertusvr/apertusvr.node');
+var ape = require('apertusvr/js/ape');
 
 const moduleTag = 'ApeJsPluginLoader';
 
-ape.exports.loadJsPlugins = function() {
-	// foreach(pluginName in ape.system.config.pluginNames) {
+// extend ape module
+exports.loadPlugins = function() {
+	// TODO: create system config wrapper in cbindings
+	// foreach(pluginName in ape.cbindings.system.config.pluginNames) {
 	// 	var plugin = require(pluginName);
 	// 	plugin.Init();
 	// }
-	log("tag", "test from ApeJsPluginLoader")
+	console.log(moduleTag, "test from ApeJsPluginLoader")
 }

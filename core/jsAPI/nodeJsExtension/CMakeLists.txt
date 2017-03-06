@@ -26,18 +26,41 @@ set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
+	wrappers/ApeJsBindColor.h
+	wrappers/ApeJsBindDegree.h
+	wrappers/ApeJsBindIndexedFaceSetGeometryImpl.h
+	wrappers/ApeJsBindLightImpl.h
+	wrappers/ApeJsBindManager.h
+	wrappers/ApeJsBindNodeImpl.h
+	wrappers/ApeJsBindQuaternion.h
+	wrappers/ApeJsBindRadian.h
+	wrappers/ApeJsBindTextGeometryImpl.h
+	wrappers/ApeJsBindVector3.h
 	)
 
 set (SOURCES
-	apertusvr_wrap.cxx
+    bindings.cpp
+    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Binding.cc
+    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Buffer.cc
+    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/common.cc
+    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/reflect.cc
 	)
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
-	${JS_API_COMMON_DIR}
+	${PROJECT_SOURCE_DIR}/core/scene
+	${PROJECT_SOURCE_DIR}/core/scene/session
+	${PROJECT_SOURCE_DIR}/core/system
+	${PROJECT_SOURCE_DIR}/core/systemConfig
+	${PROJECT_SOURCE_DIR}/core/eventManager
+	${PROJECT_SOURCE_DIR}/core/pluginManager
 	${NODE_SOURCE_DIR}/src
 	${NODE_SOURCE_DIR}/deps/uv/include
 	${NODE_SOURCE_DIR}/deps/v8/include
+	${PROJECT_SOURCE_DIR}/3rdParty/nbind/include
+	${PROJECT_SOURCE_DIR}/3rdParty/nan
+	${PROJECT_SOURCE_DIR}/3rdParty/raknet/Source
+	${PROJECT_SOURCE_DIR}/core/jsAPI/nodeJsExtension/wrappers
 	)
 
 # Add the dynamic library target to the project
@@ -56,11 +79,13 @@ if (WIN32)
 endif ()
 # TODO: MY_NODEJS_LIB under unix
 
-# Add Node lib dependency
-target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeJsAPICommon MY_NODEJS_LIB )
+# Link with dependency libraries
+if(WIN32)
+	target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
+endif()
 
 # Set target library's name
-set_target_properties( ${MY_TARGET_NAME} PROPERTIES OUTPUT_NAME "apertusvr" )
+set_target_properties( ${MY_TARGET_NAME} PROPERTIES OUTPUT_NAME "nbind" )
 set_target_properties( ${MY_TARGET_NAME} PROPERTIES SUFFIX ".node" )
 
 # Set library output dir in debug for our target
@@ -74,13 +99,7 @@ set_target_properties( ${MY_TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEB
 set_target_properties( ${MY_TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/${MY_TARGET_OUTPUT} )
 
 # Add preprocessor definitions
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS NODE_GYP_MODULE_NAME apertusvr )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS USING_UV_SHARED 1 )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS USING_V8_SHARED 1 )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS V8_DEPRECATION_WARNINGS 1 )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS _CRT_SECURE_NO_DEPRECATE )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS _CRT_NONSTDC_NO_DEPRECATE )
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS BUILDING_NODE_EXTENSION )
+target_compile_definitions(${MY_TARGET_NAME} PRIVATE NODE_GYP_MODULE_NAME=nbind USING_UV_SHARED=1 USING_V8_SHARED=1 V8_DEPRECATION_WARNINGS=1 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE BUILDING_NODE_EXTENSION)
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Core/JsAPI" )

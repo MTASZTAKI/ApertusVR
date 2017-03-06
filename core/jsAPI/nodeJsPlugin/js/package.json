@@ -4,17 +4,21 @@
   "description": "Javascript interpreter and HTTP API extension for ApertusVR",
   "main": "server.js",
   "dependencies": {
+    "assert": "^1.4.1",
     "body-parser": "^1.15.2",
+    "cheerio": "*",
     "express": "^4.14.0",
     "express-validator": "^2.20.10",
     "morgan": "^1.7.0",
-    "assert": "^1.4.1",
-    "util": "^0.10.3"
+    "nbind": "^0.3.9",
+    "node-gyp": "^3.5.0",
+    "util": "^0.10.3",
+    "uuid": "*"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node apeServer.js"
   },
   "repository": {
     "type": "git",

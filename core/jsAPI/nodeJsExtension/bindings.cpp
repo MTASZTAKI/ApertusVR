@@ -1,0 +1,8 @@
+#include "ApeJsBindColor.h"
+#include "ApeJsBindDegree.h"
+#include "ApeJsBindNodeImpl.h"
+#include "ApeJsBindLightImpl.h"
+#include "ApeJsBindManager.h"
+#include "ApeJsBindQuaternion.h"
+#include "ApeJsBindRadian.h"
+#include "ApeJsBindVector3.h"

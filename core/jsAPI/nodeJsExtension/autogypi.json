@@ -1,0 +1,94 @@
+{
+
+	"targets": [
+		{
+			"target_name": "apertusvr",
+			"type": "static_library",
+			"sources": [
+				"bindings.cpp"
+			],
+			"include_dirs": [
+				".",
+				"../../../../common/include",
+				"../../common",
+				"../../../scene",
+				"../../../scene/session",
+				"../../../eventManager",
+				"../../../system",
+				"../../../../3rdParty/raknet/",
+				"../../../../3rdParty/raknet/include/RakNet"
+			],
+			"dependencies": [
+				"nbind"
+			],
+			"direct_dependent_settings": {
+				"include_dirs": [
+					".",
+					"~/dev/repos/ApertusVR/common/include",
+					"../../../../common/include",
+					"../../common",
+					"../../../scene",
+					"../../../scene/session",
+					"../../../eventManager",
+					"../../../system",
+					"../../../../3rdParty/raknet/",
+					"../../../../3rdParty/raknet/include/RakNet"
+				]
+			},
+			"link_settings": {
+				"libraries": [
+					"../../../../../ApertusVR-build/core/pluginManager/Release/ApePluginManager.lib",
+					"../../../../../ApertusVR-build/core/scene/Release/ApeScene.lib",
+					"../../../../../ApertusVR-build/core/jsAPI/common/Release/ApeJsAPICommon.lib",
+					"../../../../../ApertusVR-build/core/eventManager/Release/ApeEventManager.lib",
+					"../../../../../ApertusVR-build/core/systemConfig/Release/ApeSystemConfig.lib",
+					"../../../../3rdParty/raknet/Lib/LibStatic/Release/RakNetLibStatic.lib",
+					"../../../../3rdParty/curl/lib/Release/libcurl_imp.lib",
+					"ws2_32.lib"
+				]
+			},
+			"cflags": [ "-std=c++11" ],
+			"conditions": [
+				[	"OS=='mac'", {
+						"cflags": [
+						],
+						"link_settings": {
+						},
+						"defines": [
+						],
+						"include_dirs": [
+						],
+						"libraries": [
+						]
+					}
+				],
+				[	"OS=='win'", {
+						"cflags": [
+						],
+						"link_settings": {
+						},
+						"defines": [
+						],
+						"include_dirs": [
+						],
+						"libraries": [
+						]
+					}
+				],
+				[	"OS=='linux'" {
+						"cflags": [
+						],
+						"link_settings": {
+						},
+						"defines": [
+						],
+						"include_dirs": [
+						],
+						"libraries": [
+						]
+					}
+				]
+			]
+		}
+	]
+}

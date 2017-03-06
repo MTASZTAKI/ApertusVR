@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
-#include "ApeIJsEventManager.h"
+//#include "ApeIJsEventManager.h"
 
 #include <map>
 #include <vector>
@@ -44,7 +44,7 @@ private:
 
 	Ape::IScene* mpScene;
 
-	Ape::IJsEventManager* mpJsEventManager;
+	//Ape::IJsEventManager* mpJsEventManager;
 
 	Ape::NodeWeakPtr mNodeWeakPtr;
 
