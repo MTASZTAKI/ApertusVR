@@ -324,8 +324,8 @@ if (WIN32)
 		else ()
 			message("ApePlugins: npm is not installed, starting installer...")
 
-			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win32/node-v0.10.46-x86.msi)
-			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win64/node-v0.10.46-x64.msi)
+			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win32/node-v6.9.4-x86.msi)
+			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win64/node-v6.9.4-x64.msi)
 
 			if (HOST_ARCH_X86)
 				execute_process(
