@@ -340,17 +340,7 @@ if (WIN32)
 
 			if (${BUILD_RESULT} EQUAL 0)
 				message(STATUS "ApePlugins: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
-
-				# check again npm version
-				message("ApePlugins: Node-installer: after installation, npm version: ${RESULT_VARIABLE}")
-				execute_process(
-					COMMAND cmd /c "npm --version"
-					RESULT_VARIABLE BUILD_RESULT
-				)
-				if (${BUILD_RESULT} NOT EQUAL 0)
-					message(FATAL_ERROR "ApePlugins: Node-installer: npm is still not installed...")
-				endif ()
-
+				message(FATAL_ERROR "ApePlugins: Node-installer: npm should be added to path by the installer. Please restart CMake gui and reconfigure!")
 			else ()
 				message(FATAL_ERROR "ApePlugins: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
 			endif ()
