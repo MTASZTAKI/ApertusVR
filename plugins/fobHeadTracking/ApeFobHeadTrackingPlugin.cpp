@@ -274,13 +274,19 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 
 	Ape::Matrix4 perspectiveOffCenterProjection = perspectiveOffCenter(displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop, cameraNearClip, cameraFarClip);
 
+	Ape::Matrix4 transform(
+		displayWidth.x,  displayWidth.y,  displayWidth.z, 0,
+		displayHeight.x, displayHeight.y, displayHeight.z, 0,
+		displayNormal.x, displayNormal.y, displayNormal.z, 0,
+		0, 0, 0, 1);
+
 	Ape::Matrix4 trackedViewerTranslate(
 		1, 0, 0, -trackedViewerPosition.x,
 		0, 1, 0, -trackedViewerPosition.y,
 		0, 0, 1, -trackedViewerPosition.z,
 		0, 0, 0, 1);
 
-	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * trackedViewerTranslate;
+	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * transform * trackedViewerTranslate;
 
 	return cameraProjection;
 }
@@ -308,18 +314,6 @@ void ApeFobHeadTrackingPlugin::Run()
 			mCameraDoubleQueue.pop();
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	}
-	for (int i = 0; i < mDisplayConfigList.size(); i++)
-	{
-		auto displayConfig = mDisplayConfigList[i];
-		if (auto cameraLeft = mCameras[i * 2].lock())
-		{
-			if (auto cameraRight = mCameras[i * 2 + 1].lock())
-			{
-				cameraLeft->setOrientation(displayConfig.orientation);
-				cameraRight->setOrientation(displayConfig.orientation);
-			}
-		}
 	}
 	while (mpFobTracker)
 	{
