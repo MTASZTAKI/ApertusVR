@@ -73,18 +73,18 @@
             },
             "corners": [
                 {
-					"bottomLeftCorner": {
-                        "x": 150,
+                    "bottomLeftCorner": {
+                        "x": -150,
                         "y": 0,
                         "z": -150
                     },
                     "bottomRightCorner": {
                         "x": 150,
                         "y": 0,
-                        "z": 150
+                        "z": -150
                     },
                     "topLeftCorner": {
-                        "x": 150,
+                        "x": -150,
                         "y": 225,
                         "z": -150
                     }
@@ -112,17 +112,17 @@
                     "bottomLeftCorner": {
                         "x": -150,
                         "y": 0,
-                        "z": 150
+                        "z": -150
                     },
                     "bottomRightCorner": {
-                        "x": -150,
+                        "x": 150,
                         "y": 0,
                         "z": -150
                     },
                     "topLeftCorner": {
                         "x": -150,
                         "y": 225,
-                        "z": 150
+                        "z": -150
                     }
                 }
             ]
