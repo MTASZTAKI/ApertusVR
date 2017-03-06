@@ -76,13 +76,12 @@ if (WIN32)
 		set(DEVENV_PATH_X86 "${VS_DIR}/Common7/IDE/devenv.exe")
 		set(DEVENV_PATH_X64 "${VS_DIR}/Common7/IDE/devenv.exe")
 		set(DEVENV_PATH "")
-		if (EXISTS ${DEVENV_PATH_X86})
-			set(HOST_ARCH_X86 1)
-			set(DEVENV_PATH ${DEVENV_PATH_X86})
-		endif ()
 		if (EXISTS ${DEVENV_PATH_X64})
 			set(HOST_ARCH_X64 1)
 			set(DEVENV_PATH ${DEVENV_PATH_X64})
+		elseif (EXISTS ${DEVENV_PATH_X86})
+			set(HOST_ARCH_X86 1)
+			set(DEVENV_PATH ${DEVENV_PATH_X86})
 		endif ()
 		message(STATUS "Devenv path: ${DEVENV_PATH}")
 
@@ -327,14 +326,14 @@ if (WIN32)
 			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win32/node-v6.9.4-x86.msi)
 			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win64/node-v6.9.4-x64.msi)
 
-			if (HOST_ARCH_X86)
-				execute_process(
-					COMMAND cmd /c ${NODE_INSTALLER_X86_PATH}
-					RESULT_VARIABLE BUILD_RESULT
-				)
-			elseif (HOST_ARCH_X64)
+			if (HOST_ARCH_X64)
 				execute_process(
 					COMMAND cmd /c ${NODE_INSTALLER_X64_PATH}
+					RESULT_VARIABLE BUILD_RESULT
+				)
+			elseif (HOST_ARCH_X86)
+				execute_process(
+					COMMAND cmd /c ${NODE_INSTALLER_X86_PATH}
 					RESULT_VARIABLE BUILD_RESULT
 				)
 			endif ()
