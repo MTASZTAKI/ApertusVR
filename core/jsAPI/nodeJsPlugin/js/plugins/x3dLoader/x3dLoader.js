@@ -98,7 +98,7 @@ exports.parseScaleAttr = function(currentItem)
 
 // ---
 
-exports.parseItem = function(parentItem, currentItem, lastParentNodeJsPtr)
+exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 {
   var typeName = currentItem[0].type;
   var tagName = currentItem[0].tagName || currentItem[0].name;
@@ -188,15 +188,11 @@ exports.parseItem = function(parentItem, currentItem, lastParentNodeJsPtr)
       nodeObj.setScale(scale);
       console.log(nodeObj.getScale().toString());
 
-      // if (parentItem) {
-      //   ape.nbind.JsBindManager().getNode(parentItem[0].itemName, function(error, obj) {
-      //     if (error) {
-      //       console.log('error: ' + obj);
-      //       return;
-      //     }
-      //     nodeObj.setParentNodeJsPtr(obj);
-      //   });
-      // }
+      console.log('parentNodeObj: ' + parentNodeObj);
+      if (parentNodeObj) {
+        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
+        nodeObj.setParentNodeJsPtr(parentNodeObj);
+      }
     }
   }
 }
