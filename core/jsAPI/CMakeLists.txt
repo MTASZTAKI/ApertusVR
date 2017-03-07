@@ -197,7 +197,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} release x64 nosign
+				COMMAND cmd /c ${NODE_VCBUILD_PATH} release x64 nosign dll
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
@@ -282,7 +282,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign
+				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign dll
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
