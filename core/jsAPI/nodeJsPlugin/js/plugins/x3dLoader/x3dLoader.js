@@ -146,6 +146,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       //
     }
     else if (tagName == 'indexedfaceset') {
+      var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
+      console.log('indexedFaceSet is created with name: ' + currentItem[0].itemName);
+      console.log(indexedFaceSetObj.getParameters().toString());
+
+      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+      console.log(' - coordinate.point: ' + coordinatePointsArr);
+
       var coordIndexArr = self.parseCoordIndexAttr(currentItem);
       console.log(' - coordIndex: ' + coordIndexArr);
 
@@ -154,8 +161,14 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log(' - solid: ' + solid);
       }
 
-      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-      console.log(' - coordinate.point: ' + coordinatePointsArr);
+      indexedFaceSetObj.setParameters(coordinatePointsArr, coordIndexArr);
+      console.log(indexedFaceSetObj.getParameters().toString());
+
+      console.log('parentNodeObj: ' + parentNodeObj);
+      if (parentNodeObj) {
+        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
+        indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+      }
     }
     else if (tagName == 'indexedlineset') {
       var coordIndexArr = self.parseCoordIndexAttr(currentItem);
