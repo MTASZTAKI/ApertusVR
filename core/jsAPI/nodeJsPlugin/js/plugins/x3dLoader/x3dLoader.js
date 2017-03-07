@@ -93,7 +93,7 @@ exports.parseScaleAttr = function(currentItem)
       return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
     }
   }
-  return new ape.nbind.Vector3();
+  return new ape.nbind.Vector3(1, 1, 1);
 }
 
 // ---
