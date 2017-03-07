@@ -737,7 +737,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							while (indexIndex < parameters.indices.size())
 							{
 								int indexCount = 0;
-								while (parameters.indices[indexIndex + indexCount] != -1)
+								while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
 									indexCount++;
 								if (indexCount == 4)
 								{
@@ -810,7 +810,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							while (indexIndex < parameters.indices.size())
 							{
 								int indexCount = 0;
-								while (parameters.indices[indexIndex + indexCount] != -1)
+								while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
 									indexCount++;
 								if (indexCount == 4)
 								{
@@ -874,7 +874,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						int indexIndex = 0;
 						while (indexIndex < parameters.indices.size())
 						{
-							while (parameters.indices[indexIndex] != -1)
+							while (indexIndex < parameters.indices.size() && parameters.indices[indexIndex] != -1)
 							{
 								ogreManual->index(parameters.indices[indexIndex]);
 								indexIndex++;
