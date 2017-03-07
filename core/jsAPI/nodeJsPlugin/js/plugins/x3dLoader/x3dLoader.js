@@ -188,6 +188,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     else if (tagName == 'transform') {
       var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
       console.log('node created with name: ' + nodeObj.getName());
+      nodeLevel++;
 
       var position = self.parseTranslationAttr(currentItem);
       nodeObj.setPosition(position);
@@ -206,19 +207,40 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
         nodeObj.setParentNodeJsPtr(parentNodeObj);
       }
+
+      return nodeObj;
     }
   }
 }
 
-exports.parseTree = function($, parentItem, childItem) {
+
+var nodeLevelMap = {};
+var nodeLevel = 0;
+var nodeLevelTmp = 0;
+
+exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
     return;
   }
-  self.parseItem(parentItem, childItem, null);
+  var currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
+  if (currentNode) {
+    nodeLevelMap[nodeLevel] = currentNode;
+  }
+
+  console.log('currentNode: ' + currentNode);
+  console.log('nodeLevel: ' + nodeLevel);
+
+  nodeLevelTmp = nodeLevel;
+
   $(childItem).children().each(function(i, elem) {
     var currentChild = $(this);
-    self.parseTree($, $(currentChild).parent(), $(currentChild));
+    self.parseTree($, $(currentChild).parent(), $(currentChild), nodeLevelMap[nodeLevel]);
   });
+
+  if (currentNode) {
+    nodeLevel = nodeLevel - 1;
+  }
+
   return;
 };
 
@@ -227,5 +249,5 @@ exports.parseX3D = function(x3dFilePath) {
     xmlMode: true,
     lowerCaseTags: true
   });
-  self.parseTree($, null, $('X3D'));
+  self.parseTree($, null, $('X3D'), null);
 };
