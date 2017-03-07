@@ -33,11 +33,29 @@ message(STATUS "APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
 set(JS_API_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "JS_API_DIR: ${JS_API_DIR}")
 
-set(NODE_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4)
+set(NODE_VERSION "6.10.0")
+message(STATUS "NODE_VERSION: ${NODE_VERSION}")
+
+set(NODE_ROOT_DIR ${APE_SOURCE_DIR}/3rdParty/nodejs)
+message(STATUS "NODE_ROOT_DIR: ${NODE_ROOT_DIR}")
+
+set(NODE_SOURCE_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/source)
 message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
+
+set(NODE_INSTALLER_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/installer)
+message(STATUS "NODE_INSTALLER_DIR: ${NODE_INSTALLER_DIR}")
+
+set(NODE_INSTALLER_X86_PATH ${NODE_INSTALLER_DIR}/x86/node-v${NODE_VERSION}-x86.msi)
+message(STATUS "NODE_INSTALLER_X86_PATH: ${NODE_INSTALLER_X86_PATH}")
+
+set(NODE_INSTALLER_X64_PATH ${NODE_INSTALLER_DIR}/x64/node-v${NODE_VERSION}-x64.msi)
+message(STATUS "NODE_INSTALLER_X64_PATH: ${NODE_INSTALLER_X64_PATH}")
 
 set(NODE_LIBRARY Release node Debug node)
 
+if (NOT EXISTS ${NODE_ROOT_DIR})
+	message(FATAL_ERROR "Could not find ${NODE_ROOT_DIR}")
+endif ()
 if (NOT EXISTS ${NODE_SOURCE_DIR})
 	message(FATAL_ERROR "Could not find ${NODE_SOURCE_DIR}")
 endif ()
@@ -343,9 +361,6 @@ if (WIN32)
 			message(STATUS "ApePlugins: npm is installed.")
 		else ()
 			message("ApePlugins: npm is not installed, starting installer...")
-
-			set(NODE_INSTALLER_X86_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win32/node-v6.9.4-x86.msi)
-			set(NODE_INSTALLER_X64_PATH ${APE_SOURCE_DIR}/3rdParty/node-v6.9.4-installer/win64/node-v6.9.4-x64.msi)
 
 			if (HOST_ARCH_X64)
 				execute_process(
