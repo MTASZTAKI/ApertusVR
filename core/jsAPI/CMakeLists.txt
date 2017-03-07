@@ -222,7 +222,7 @@ if (WIN32)
 				)
 			elseif (${MSBUILD})
 				execute_process(
-					# COMMAND cmd /c ${MSBUILD_SETUP_PATH} & msbuild ${NODE_SOLUTION_PATH} /t:Build /p:Configuration=Release
+					COMMAND cmd /c ${MSBUILD_SETUP_PATH} & msbuild ${NODE_SOLUTION_PATH} /t:Build /p:Configuration=Release
 					RESULT_VARIABLE BUILD_RESULT
 				)
 			else ()
