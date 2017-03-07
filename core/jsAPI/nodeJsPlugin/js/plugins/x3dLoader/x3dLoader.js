@@ -7,6 +7,8 @@ var self = this;
 
 // IndexedFaceSet, IndexedLineSet
 
+var nameCounter = 0;
+
 exports.parseCoordIndexAttr = function(currentItem)
 {
   var coordinates = new Array();
@@ -100,7 +102,8 @@ exports.parseItem = function(parentItem, currentItem, lastParentNodeJsPtr)
 {
   var typeName = currentItem[0].type;
   var tagName = currentItem[0].tagName || currentItem[0].name;
-  var itemName = (currentItem[0].itemName || currentItem.attr('DEF') || uuidV1());
+  var itemName = (currentItem[0].itemName || currentItem.attr('DEF') || 'item' + nameCounter);
+  nameCounter++;
   currentItem[0].itemName = itemName;
   console.log(itemName + ' - ' + typeName + ' - ' + tagName);
 
