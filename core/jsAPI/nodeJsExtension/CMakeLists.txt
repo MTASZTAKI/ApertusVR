@@ -36,6 +36,8 @@ set (HEADERS
 	wrappers/ApeJsBindRadian.h
 	wrappers/ApeJsBindTextGeometryImpl.h
 	wrappers/ApeJsBindVector3.h
+	wrappers/ApeManualMaterialJsBind.h
+	wrappers/ApePbsPassJsBind.h
 	)
 
 set (SOURCES

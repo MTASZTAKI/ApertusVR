@@ -80,15 +80,31 @@ namespace Ape
 
 	typedef std::shared_ptr<IIndexedFaceSetGeometry> IndexedFaceSetGeometrySharedPtr;
 
+	class IManualMaterial;
+
+	typedef std::weak_ptr<IManualMaterial> ManualMaterialWeakPtr;
+
+	typedef std::shared_ptr<IManualMaterial> ManualMaterialSharedPtr;
+
 	class SubGeometry;
 
 	class Pass;
 
 	typedef std::weak_ptr<Pass> PassWeakPtr;
 
+	typedef std::shared_ptr<Pass> PassSharedPtr;
+
+	class IPbsPass;
+
+	typedef std::weak_ptr<IPbsPass> PbsPassWeakPtr;
+
+	typedef std::shared_ptr<IPbsPass> PbsPassSharedPtr;
+
 	class Material;
 
 	typedef std::weak_ptr<Material> MaterialWeakPtr;
+
+	typedef std::shared_ptr<Material> MaterialSharedPtr;
 }
 
 #endif
