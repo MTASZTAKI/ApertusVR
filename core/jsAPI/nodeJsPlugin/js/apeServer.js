@@ -143,6 +143,6 @@ app.listen(port, host,  function() {
   var jsBindManager = ape.nbind.JsBindManager();
   utils.iterate(jsBindManager, 'jsBindManager', '');
 
-  x3dLoader.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/pyramid.x3d');
+  x3dLoader.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d');
   console.log('X3D-parse done.');
 });
