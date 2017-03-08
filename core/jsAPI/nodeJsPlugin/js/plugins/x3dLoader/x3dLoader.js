@@ -308,6 +308,22 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
       return nodeObj;
     }
+    else if (tagName == 'group') {
+      var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+      console.log('group node created with name: ' + nodeObj.getName());
+      nodeLevel++;
+
+      console.log('parentNodeObj: ' + parentNodeObj);
+      if (parentNodeObj) {
+        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
+        nodeObj.setParentNodeJsPtr(parentNodeObj);
+      }
+
+      return nodeObj;
+    }
+    else {
+
+    }
   }
 }
 
