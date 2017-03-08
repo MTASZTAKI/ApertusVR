@@ -143,6 +143,29 @@ app.listen(port, host,  function() {
   var jsBindManager = ape.nbind.JsBindManager();
   utils.iterate(jsBindManager, 'jsBindManager', '');
 
+  // if demoObjectNode found, attach a textGeometry and set caption
+  ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
+    if (error) {
+      console.log('error: ' + error);
+      return;
+    }
+    var textObj = jsBindManager.createText('textGeometry');
+    textObj.setParentNodeJsPtr(obj);
+
+    setInterval(function() {
+      var pos = obj.getPosition();
+      var ort = obj.getOrientation();
+      textObj.setCaption('x: ' + roundDecimal(pos.x) + ', y: ' + roundDecimal(pos.y) + ', z: ' + roundDecimal(pos.z) + '\n' +
+                         'w: ' + roundDecimal(ort.w) + ', x: ' + roundDecimal(ort.x) + ', y: ' + roundDecimal(ort.y) + ', z: ' + roundDecimal(ort.z)
+      );
+    }, 20);
+
+  });
+
   x3dLoader.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d');
   console.log('X3D-parse done.');
 });
+
+function roundDecimal(num) {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};
