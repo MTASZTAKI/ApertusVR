@@ -32,6 +32,8 @@ SOFTWARE.*/
 #include "ApeJsBindLightImpl.h"
 #include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindTextGeometryImpl.h"
+#include "ApeManualMaterialJsBind.h"
+#include "ApePbsPassJsBind.h"
 
 #ifdef NBIND_CLASS
 
@@ -133,9 +135,61 @@ public:
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
-			if (auto textGeometry = std::dynamic_pointer_cast<Ape::IIndexedFaceSetGeometry>(entity))
+			if (auto indexedFaceSet = std::dynamic_pointer_cast<Ape::IIndexedFaceSetGeometry>(entity))
 			{
 				done(false, IndexedFaceSetJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
+	ManualMaterialJsPtr createManualMaterial(std::string name)
+	{
+		std::cout << "createManualMaterial()" << std::endl;
+		return ManualMaterialJsPtr(mpScene->createEntity(name, Ape::Entity::MATERIAL_MANUAL));
+	}
+
+	bool getManualMaterial(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getManualMaterial()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto manualMaterial = std::dynamic_pointer_cast<Ape::IManualMaterial>(entity))
+			{
+				done(false, ManualMaterialJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
+	PbsPassJsPtr createPbsPass(std::string name)
+	{
+		std::cout << "createPbsPass()" << std::endl;
+		return PbsPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_PBS));
+	}
+
+	bool getPbsPass(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getPbsPass()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto pbsPass = std::dynamic_pointer_cast<Ape::IPbsPass>(entity))
+			{
+				done(false, PbsPassJsPtr(mpScene->getEntity(name)));
 				return true;
 			}
 
@@ -166,6 +220,12 @@ NBIND_CLASS(JsBindManager)
 
 	method(createIndexedFaceSet);
 	method(getIndexedFaceSet);
+
+	method(createManualMaterial);
+	method(getManualMaterial);
+
+	method(createPbsPass);
+	method(getPbsPass);
 }
 
 #endif

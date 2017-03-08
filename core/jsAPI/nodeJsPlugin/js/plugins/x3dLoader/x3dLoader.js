@@ -134,6 +134,41 @@ exports.parseScaleAttr = function(currentItem)
   return new ape.nbind.Vector3(1, 1, 1);
 }
 
+exports.parseDiffuseColorAttr = function (currentItem) {
+    var diffuseColor = currentItem.attr('diffuseColor');
+    if (utils.isDefined(diffuseColor)) {
+        console.log(' - diffuseColor: ' + diffuseColor);
+        var itemArr = diffuseColor.trim().split(' ');
+        if (itemArr.length == 3) {
+            return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1);
+        }
+    }
+    return new ape.nbind.Color(1, 1, 1, 1);
+}
+
+exports.parseSpecularColorAttr = function (currentItem) {
+    var specularColor = currentItem.attr('specularColor');
+    if (utils.isDefined(specularColor)) {
+        console.log(' - specularColor: ' + specularColor);
+        var itemArr = specularColor.trim().split(' ');
+        if (itemArr.length == 3) {
+            return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1);
+        }
+    }
+    return new ape.nbind.Color(1, 1, 1, 1);
+}
+
+exports.parseMaterial = function (currentItem, parentGeometry) {
+    var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(currentItem[0].itemName);
+    var pbsPass = ape.nbind.JsBindManager().createPbsPass(currentItem[0].itemName + 'PbsPass');
+    var diffuseColor = self.parseDiffuseColorAttr(currentItem);
+    var specularColor = self.parseSpecularColorAttr(currentItem);
+    pbsPass.setDiffuseColor(diffuseColor);
+    pbsPass.setSpecularColor(specularColor);
+    manualMaterial.setPbsPass(pbsPass);
+    parentGeometry.setManualMaterial(manualMaterial);
+}
+
 // ---
 
 exports.parseItem = function(parentItem, currentItem, parentNodeObj)
@@ -229,6 +264,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
         indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
       }
+
+      var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+      self.parseMaterial(matItem, indexedFaceSetObj);
     }
     else if (tagName == 'indexedlineset') {
       // var coordIndexArr = self.parseCoordIndexAttr(currentItem);

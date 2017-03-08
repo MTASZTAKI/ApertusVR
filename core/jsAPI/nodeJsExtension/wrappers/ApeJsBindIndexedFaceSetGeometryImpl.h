@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeIndexedFaceSetGeometryImpl.h"
 #include "ApeJsBindNodeImpl.h"
+#include "ApeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS
 
@@ -125,6 +126,11 @@ public:
 	{
 		mPtr.lock()->setParameters(coordinates, indices);
 	}
+
+	void setManualMaterial(ManualMaterialJsPtr manualMaterial)
+	{
+		mPtr.lock()->setMaterial(manualMaterial.getManualMaterialSharedPtr());
+	}
 };
 
 using namespace Ape;
@@ -170,6 +176,7 @@ NBIND_CLASS(IndexedFaceSetJsPtr)
 
 	method(getParameters);
 	method(setParameters);
+	method(setManualMaterial);
 }
 
 #endif

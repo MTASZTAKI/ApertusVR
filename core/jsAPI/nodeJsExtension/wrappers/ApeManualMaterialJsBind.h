@@ -105,9 +105,9 @@ public:
 
 	// IManualMaterial
 
-	void setPass(Ape::PassWeakPtr pass)
+	void setPbsPass(PbsPassJsPtr pbsPass)
 	{
-		mPtr.lock()->setPass(pass);
+		mPtr.lock()->setPass(pbsPass.getPbsPassSharedPtr());
 	}
 };
 
@@ -138,7 +138,7 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(getType);
 
 	// IManualMaterial
-	method(setPass);
+	method(setPbsPass);
 }
 
 #endif
