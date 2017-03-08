@@ -231,19 +231,19 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       }
     }
     else if (tagName == 'indexedlineset') {
-      var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-      console.log(' - coordIndex: ' + coordIndexArr);
-
-      var colorIndexArr = self.parseCoordIndexAttr(currentItem);
-      console.log(' - colorIndex: ' + colorIndexArr);
-
-      var colorPerVertex = currentItem.attr('colorPerVertex');
-      if (utils.isDefined(colorPerVertex)) {
-        console.log(' - colorPerVertex: ' + colorPerVertex);
-      }
-
-      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-      console.log(' - coordinate.point: ' + coordinatePointsArr);
+      // var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+      // console.log(' - coordIndex: ' + coordIndexArr);
+      //
+      // var colorIndexArr = self.parseCoordIndexAttr(currentItem);
+      // console.log(' - colorIndex: ' + colorIndexArr);
+      //
+      // var colorPerVertex = currentItem.attr('colorPerVertex');
+      // if (utils.isDefined(colorPerVertex)) {
+      //   console.log(' - colorPerVertex: ' + colorPerVertex);
+      // }
+      //
+      // var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+      // console.log(' - coordinate.point: ' + coordinatePointsArr);
     }
     else if (tagName == 'transform') {
       var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
