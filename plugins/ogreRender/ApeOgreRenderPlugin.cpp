@@ -798,6 +798,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 
 									indexIndex = indexIndex + 4;
 								}
+								else
+								{
+									// TODO
+									indexIndex = indexIndex + indexCount + 1;
+								}
 							}
 							ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
 							for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
@@ -812,6 +817,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								int indexCount = 0;
 								while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
 									indexCount++;
+
 								if (indexCount == 4)
 								{
 									ogreManual->quad(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2], parameters.indices[indexIndex + 3]);
@@ -821,6 +827,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									ogreManual->triangle(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2]);
 									indexIndex = indexIndex + 4;
+								}
+								else
+								{
+									for (int i = 0; i < indexCount; i++)
+										ogreManual->index(parameters.indices[indexIndex + i]);
+
+									indexIndex = indexIndex + indexCount + 1;
 								}
 							}
 							ogreManual->end();
