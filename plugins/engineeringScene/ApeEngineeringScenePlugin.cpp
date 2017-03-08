@@ -35,7 +35,7 @@ void ApeEngineeringScenePlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
 		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
 	}
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
@@ -53,7 +53,7 @@ void ApeEngineeringScenePlugin::Init()
 				}
 			}
 		}
-	}
+	}*/
 	if (auto node = mpScene->createNode("sphereNode").lock())
 	{
 		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
