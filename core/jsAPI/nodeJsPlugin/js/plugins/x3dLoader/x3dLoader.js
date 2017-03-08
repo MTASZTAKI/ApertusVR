@@ -25,14 +25,14 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
     return false;
   }
 
-  var indexArr = coordIndex.trim().split(' ');
-  if (indexArr.length < 3) {
+  var itemsArr = coordIndex.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+  if (itemsArr.length < 3) {
     callback('Array length is less than 3!', null);
     return false;
   }
 
-  for (var i = 0; i < indexArr.length; i++) {
-    coordMap[Number(indexArr[i])] = Number(indexArr[i]);
+  for (var i = 0; i < itemsArr.length; i++) {
+    coordMap[Number(itemsArr[i])] = Number(itemsArr[i]);
   }
 
   for (var key in coordMap) {
@@ -50,9 +50,9 @@ exports.parseColorIndexAttr = function(currentItem)
   var colorIndices = new Array();
   var colorIndex = currentItem.attr('colorIndex');
   if (utils.isDefined(colorIndex)) {
-    var indexArr = colorIndex.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
-    for (var i = 0; i < indexArr.length; i++) {
-      colorIndices.push(Number(indexArr[i]));
+    var itemsArr = colorIndex.trim().split(' ');
+    for (var i = 0; i < itemsArr.length; i++) {
+      colorIndices.push(Number(itemsArr[i]));
     }
   }
   return colorIndices;
