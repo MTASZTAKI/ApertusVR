@@ -9,17 +9,40 @@ var self = this;
 
 var nameCounter = 0;
 
-exports.parseCoordIndexAttr = function(currentItem)
+exports.parseCoordIndexAttr = function(currentItem, callback)
 {
+  if (!utils.isDefined(currentItem)) {
+    callback('currentItem is not defined!', null);
+    return false;
+  }
+
   var coordinates = new Array();
   var coordIndex = currentItem.attr('coordIndex');
-  if (utils.isDefined(coordIndex)) {
-    var indexArr = coordIndex.trim().split(' ');
-    for (var i = 0; i < indexArr.length; i++) {
-      coordinates.push(Number(indexArr[i]));
+  var coordMap = {};
+
+  if (!utils.isDefined(coordIndex)) {
+    callback('coordIndex is not defined!', null);
+    return false;
+  }
+
+  var indexArr = coordIndex.trim().split(' ');
+  if (indexArr.length < 3) {
+    callback('Array length is less than 3!', null);
+    return false;
+  }
+
+  for (var i = 0; i < indexArr.length; i++) {
+    coordMap[Number(indexArr[i])] = Number(indexArr[i]);
+  }
+
+  for (var key in coordMap) {
+    if (coordMap.hasOwnProperty(key)) {
+      coordinates.push(coordMap[key]);
     }
   }
-  return coordinates;
+
+  callback(null, coordinates);
+  return true;
 }
 
 exports.parseColorIndexAttr = function(currentItem)
@@ -27,7 +50,7 @@ exports.parseColorIndexAttr = function(currentItem)
   var colorIndices = new Array();
   var colorIndex = currentItem.attr('colorIndex');
   if (utils.isDefined(colorIndex)) {
-    var indexArr = colorIndex.trim().split(' ');
+    var indexArr = colorIndex.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
     for (var i = 0; i < indexArr.length; i++) {
       colorIndices.push(Number(indexArr[i]));
     }
@@ -35,24 +58,39 @@ exports.parseColorIndexAttr = function(currentItem)
   return colorIndices;
 }
 
-exports.parseCoordinatePointAttr = function(currentItem)
+exports.parseCoordinatePointAttr = function(currentItem, callback)
 {
+  if (!utils.isDefined(currentItem)) {
+    callback('currentItem is not defined!', null);
+    return false;
+  }
+
   var pointsArr = new Array();
   var coordinate = currentItem.find('Coordinate').first();
-  if (utils.isDefined(coordinate)) {
-    var pointAttr = coordinate.attr('point');
-    if (utils.isDefined(pointAttr)) {
-      var lines = pointAttr.split('\n');
-      for (var i = 0; i < lines.length; i++) {
-        var line = lines[i].trim();
-        var itemsArr = line.split(' ');
-        for (var j = 0; j < itemsArr.length; j++) {
-          pointsArr.push(Number(itemsArr[j]));
-        }
-      }
-    }
+
+  if (!utils.isDefined(coordinate)) {
+    callback('coordinate is not defined!', null);
+    return false;
   }
-  return pointsArr;
+
+  var pointAttr = coordinate.attr('point');
+  if (!utils.isDefined(pointAttr)) {
+    callback('pointAttr is not defined!', null);
+    return false;
+  }
+
+  var itemsArr = pointAttr.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+  if (itemsArr.length == 0) {
+    callback('Array length is 0!', null);
+    return false;
+  }
+
+  for (var j = 0; j < itemsArr.length; j++) {
+    pointsArr.push(Number(itemsArr[j]));
+  }
+
+  callback(null, pointsArr);
+  return true;
 }
 
 // Transform
@@ -150,11 +188,33 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       console.log('indexedFaceSet is created with name: ' + currentItem[0].itemName);
       console.log(indexedFaceSetObj.getParameters().toString());
 
-      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-      console.log(' - coordinate.point: ' + coordinatePointsArr);
+      var coordinatePointsArr;
+      var parseCoordinatePointAttrRes = self.parseCoordinatePointAttr(currentItem, function(error, pointsArr){
+        if (error) {
+          console.log('Error: ' + error);
+          return;
+        }
+        coordinatePointsArr = pointsArr;
+        console.log(' - coordinate.point: ' + coordinatePointsArr);
+      });
+      if (!parseCoordinatePointAttrRes) {
+        console.log('Error in parseCoordinatePointAttr(), returning.');
+        return;
+      }
 
-      var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-      console.log(' - coordIndex: ' + coordIndexArr);
+      var coordIndexArr;
+      var parseCoordIndexAttrRes = self.parseCoordIndexAttr(currentItem, function(error, indexArr) {
+        if (error) {
+          console.log('Error: ' + error);
+          return;
+        }
+        coordIndexArr = indexArr;
+        console.log(' - coordIndex: ' + coordIndexArr);
+      });
+      if (!parseCoordIndexAttrRes) {
+        console.log('Error in parseCoordIndexAttr(), returning.');
+        return;
+      }
 
       var solid = currentItem.attr('solid');
       if (utils.isDefined(solid)) {
@@ -222,7 +282,14 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
     return;
   }
-  var currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
+
+  var currentNode;
+  try {
+    currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
+  } catch (e) {
+    console.log('Exception cached: ' + e);
+    return;
+  }
   if (currentNode) {
     nodeLevelMap[nodeLevel] = currentNode;
   }
