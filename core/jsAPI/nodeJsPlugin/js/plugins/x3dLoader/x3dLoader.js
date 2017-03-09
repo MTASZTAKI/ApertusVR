@@ -13,11 +13,11 @@ function splitX3DAttr(str) {
   return str.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
 }
 
-exports.parseCoordIndexAttr = function(currentItem, callback)
+exports.parseCoordIndexAttr = function(currentItem)
 {
   if (!utils.isDefined(currentItem)) {
-    callback('currentItem is not defined!', null);
-    return false;
+    throw 'currentItem is not defined!';
+    return null;
   }
 
   var coordinates = new Array();
@@ -25,14 +25,14 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
   var coordIndex = currentItem.attr('coordIndex');
 
   if (!utils.isDefined(coordIndex)) {
-    callback('coordIndex is not defined!', null);
-    return false;
+    throw 'coordIndex is not defined!';
+    return null;
   }
 
   var itemsArr = splitX3DAttr(coordIndex);
   if (itemsArr.length < 4) {
-    callback('Array length is less than 4!', null);
-    return false;
+    throw 'itemsArr length is less than 4!';
+    return null;
   }
 
   for (var i = 0; i < itemsArr.length; i++) {
@@ -65,8 +65,7 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
     }
   }
 
-  callback(null, erdosCoordinates);
-  return true;
+  return erdosCoordinates;
 }
 
 exports.parseColorIndexAttr = function(currentItem)
@@ -82,39 +81,38 @@ exports.parseColorIndexAttr = function(currentItem)
   return colorIndices;
 }
 
-exports.parseCoordinatePointAttr = function(currentItem, callback)
+exports.parseCoordinatePointAttr = function(currentItem)
 {
   if (!utils.isDefined(currentItem)) {
-    callback('currentItem is not defined!', null);
-    return false;
+    throw 'currentItem is not defined!';
+    return null;
   }
 
   var pointsArr = new Array();
   var coordinate = currentItem.find('Coordinate').first();
 
   if (!utils.isDefined(coordinate)) {
-    callback('coordinate is not defined!', null);
-    return false;
+    throw 'coordinate attrib is not defined!';
+    return null;
   }
 
   var pointAttr = coordinate.attr('point');
   if (!utils.isDefined(pointAttr)) {
-    callback('pointAttr is not defined!', null);
-    return false;
+    throw 'point attrib is not defined!';
+    return null;
   }
 
   var itemsArr = splitX3DAttr(pointAttr);
   if (itemsArr.length == 0) {
-    callback('Array length is 0!', null);
-    return false;
+    throw 'pointAttr length is 0!';
+    return null;
   }
 
   for (var j = 0; j < itemsArr.length; j++) {
     pointsArr.push(Number(itemsArr[j]));
   }
 
-  callback(null, pointsArr);
-  return true;
+  return pointsArr;
 }
 
 // Transform
@@ -259,33 +257,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       console.log('indexedFaceSet is created with name: ' + currentItem[0].itemName);
       console.log(indexedFaceSetObj.getParameters().toString());
 
-      var coordinatePointsArr;
-      var parseCoordinatePointAttrRes = self.parseCoordinatePointAttr(currentItem, function(error, pointsArr){
-        if (error) {
-          console.log('Error: ' + error);
-          return;
-        }
-        coordinatePointsArr = pointsArr;
-        console.log(' - coordinate.point: ' + coordinatePointsArr);
-      });
-      if (!parseCoordinatePointAttrRes) {
-        console.log('Error in parseCoordinatePointAttr(), returning.');
-        return;
-      }
-
-      var coordIndexArr;
-      var parseCoordIndexAttrRes = self.parseCoordIndexAttr(currentItem, function(error, indexArr) {
-        if (error) {
-          console.log('Error: ' + error);
-          return;
-        }
-        coordIndexArr = indexArr;
-        console.log(' - coordIndex: ' + coordIndexArr);
-      });
-      if (!parseCoordIndexAttrRes) {
-        console.log('Error in parseCoordIndexAttr(), returning.');
-        return;
-      }
+      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+      var coordIndexArr = self.parseCoordIndexAttr(currentItem);
 
       var solid = currentItem.attr('solid');
       if (utils.isDefined(solid)) {
