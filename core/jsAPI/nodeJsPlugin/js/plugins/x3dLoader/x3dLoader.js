@@ -9,6 +9,10 @@ var self = this;
 
 var nameCounter = 0;
 
+function splitX3DAttr(str) {
+  return str.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+}
+
 exports.parseCoordIndexAttr = function(currentItem, callback)
 {
   if (!utils.isDefined(currentItem)) {
@@ -25,7 +29,7 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
     return false;
   }
 
-  var itemsArr = coordIndex.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+  var itemsArr = splitX3DAttr(coordIndex);
   if (itemsArr.length < 4) {
     callback('Array length is less than 4!', null);
     return false;
@@ -70,7 +74,7 @@ exports.parseColorIndexAttr = function(currentItem)
   var colorIndices = new Array();
   var colorIndex = currentItem.attr('colorIndex');
   if (utils.isDefined(colorIndex)) {
-    var itemsArr = colorIndex.trim().split(' ');
+    var itemsArr = splitX3DAttr(colorIndex);
     for (var i = 0; i < itemsArr.length; i++) {
       colorIndices.push(Number(itemsArr[i]));
     }
@@ -99,7 +103,7 @@ exports.parseCoordinatePointAttr = function(currentItem, callback)
     return false;
   }
 
-  var itemsArr = pointAttr.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+  var itemsArr = splitX3DAttr(pointAttr);
   if (itemsArr.length == 0) {
     callback('Array length is 0!', null);
     return false;
@@ -120,7 +124,7 @@ exports.parseTranslationAttr = function(currentItem)
   var translation = currentItem.attr('translation');
   if (utils.isDefined(translation)) {
     console.log(' - translation: ' + translation);
-    var itemArr = translation.trim().split(' ');
+    var itemArr = splitX3DAttr(translation);
       if (itemArr.length == 3) {
         return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
       }
@@ -133,7 +137,7 @@ exports.parseRotationAttr = function(currentItem)
   var rotation = currentItem.attr('rotation');
   if (utils.isDefined(rotation)) {
     console.log(' - rotation: ' + rotation);
-    var itemArr = rotation.trim().split(' ');
+    var itemArr = splitX3DAttr(rotation);
     if (itemArr.length == 4) {
       return new ape.nbind.Quaternion(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), Number(itemArr[3]));
     }
@@ -146,7 +150,7 @@ exports.parseScaleAttr = function(currentItem)
   var scale = currentItem.attr('scale');
   if (utils.isDefined(scale)) {
     console.log(' - scale: ' + scale);
-    var itemArr = scale.trim().split(' ');
+    var itemArr = splitX3DAttr(scale);
     if (itemArr.length == 3) {
       return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
     }
@@ -167,7 +171,7 @@ exports.parseDiffuseColorAttr = function (currentItem, transparency) {
     var diffuseColor = currentItem.attr('diffuseColor');
     if (utils.isDefined(diffuseColor)) {
         console.log(' - diffuseColor: ' + diffuseColor);
-        var itemArr = diffuseColor.trim().split(' ');
+        var itemArr = splitX3DAttr(diffuseColor);
         if (itemArr.length == 3) {
             return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1 - transparency);
         }
@@ -179,7 +183,7 @@ exports.parseSpecularColorAttr = function (currentItem, transparency) {
     var specularColor = currentItem.attr('specularColor');
     if (utils.isDefined(specularColor)) {
         console.log(' - specularColor: ' + specularColor);
-        var itemArr = specularColor.trim().split(' ');
+        var itemArr = splitX3DAttr(specularColor);
         if (itemArr.length == 3) {
             return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1 - transparency);
         }
