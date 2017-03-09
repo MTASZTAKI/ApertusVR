@@ -162,7 +162,9 @@ exports.parseRotationAttr = function(currentItem)
     console.log(' - rotation: ' + rotation);
     var itemArr = splitX3DAttr(rotation);
     if (itemArr.length == 4) {
-      return new ape.nbind.Quaternion(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), Number(itemArr[3]));
+      var axis = ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
+      var radian = ape.nbind.Radian(Number(itemArr[3]));
+      return new ape.nbind.Quaternion(radian, axis);
     }
   }
   return new ape.nbind.Quaternion();
