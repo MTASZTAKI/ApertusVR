@@ -26,8 +26,8 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
   }
 
   var itemsArr = coordIndex.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
-  if (itemsArr.length < 3) {
-    callback('Array length is less than 3!', null);
+  if (itemsArr.length < 4) {
+    callback('Array length is less than 4!', null);
     return false;
   }
 
