@@ -257,14 +257,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
       var coordIndexArr = self.parseCoordIndexAttr(currentItem);
       indexedFaceSetObj.setParameters(coordinatePointsArr, coordIndexArr);
+      var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+      self.parseMaterial(matItem, indexedFaceSetObj);
 
       if (parentNodeObj) {
         indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
         console.log(' - parentNode: ' + parentNodeObj.getName());
       }
-
-      var matItem = currentItem.siblings('Appearance').first().children('Material').first();
-      self.parseMaterial(matItem, indexedFaceSetObj);
     }
     else if (tagName == 'indexedlineset') {
       // var coordIndexArr = self.parseCoordIndexAttr(currentItem);
