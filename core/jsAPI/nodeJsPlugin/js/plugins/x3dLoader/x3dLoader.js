@@ -187,7 +187,7 @@ exports.parseTransparencyAttr = function (currentItem) {
         console.log(' - transparency: ' + transparency);
         return Number(transparency);
     }
-    return 1.0;
+    return 0.0;
 }
 
 exports.parseDiffuseColorAttr = function (currentItem, transparency) {
