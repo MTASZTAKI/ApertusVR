@@ -17,8 +17,8 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
   }
 
   var coordinates = new Array();
+  var erdosCoordinates = new Array();
   var coordIndex = currentItem.attr('coordIndex');
-  var coordMap = {};
 
   if (!utils.isDefined(coordIndex)) {
     callback('coordIndex is not defined!', null);
@@ -32,16 +32,36 @@ exports.parseCoordIndexAttr = function(currentItem, callback)
   }
 
   for (var i = 0; i < itemsArr.length; i++) {
-    coordMap[Number(itemsArr[i])] = Number(itemsArr[i]);
+    coordinates.push(itemsArr[i]);
   }
 
-  for (var key in coordMap) {
-    if (coordMap.hasOwnProperty(key)) {
-      coordinates.push(coordMap[key]);
+  var tempArr = new Array();
+  for (var i = 0; i < coordinates.length; i++) {
+    if (coordinates[i] == -1)
+    {
+      // erdos-specific mirroring
+      if (i % 5 == 0) {
+        tempArr.splice(0, 1);
+        tempArr.reverse();
+      }
+      erdosCoordinates.pushArray(tempArr);
+      erdosCoordinates.push(-1);
+
+      // create opposite face for the other side
+      // if (indexCount == 5) {
+      //   tempArr.reverse();
+      //   erdosCoordinates.pushArray(tempArr);
+      //   erdosCoordinates.push(-1);
+      // }
+
+      tempArr = new Array();
+    }
+    else {
+      tempArr.push(coordinates[i]);
     }
   }
 
-  callback(null, coordinates);
+  callback(null, erdosCoordinates);
   return true;
 }
 
