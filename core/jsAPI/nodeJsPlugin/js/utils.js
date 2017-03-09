@@ -41,6 +41,10 @@ Array.prototype.pushArray = function(arr) {
     this.push.apply(this, arr);
 };
 
+exports.roundDecimal = function(num) {
+  return Math.round(num * 100) / 100;
+};
+
 exports.isDefined = function(obj) {
 	return (typeof obj !== 'undefined');
 };
