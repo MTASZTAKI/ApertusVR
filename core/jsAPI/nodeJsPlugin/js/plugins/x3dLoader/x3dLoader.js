@@ -256,12 +256,6 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
       var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
       var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-
-      var solid = currentItem.attr('solid');
-      if (utils.isDefined(solid)) {
-        console.log(' - solid: ' + solid);
-      }
-
       indexedFaceSetObj.setParameters(coordinatePointsArr, coordIndexArr);
 
       if (parentNodeObj) {
