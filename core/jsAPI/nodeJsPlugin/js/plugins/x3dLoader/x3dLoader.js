@@ -65,6 +65,7 @@ exports.parseCoordIndexAttr = function(currentItem)
     }
   }
 
+  console.log(' - coordIndex: ' + erdosCoordinates);
   return erdosCoordinates;
 }
 
@@ -112,6 +113,7 @@ exports.parseCoordinatePointAttr = function(currentItem)
     pointsArr.push(Number(itemsArr[j]));
   }
 
+  console.log(' - coordinatePoints: ' + pointsArr);
   return pointsArr;
 }
 
@@ -195,8 +197,6 @@ exports.parseMaterial = function (currentItem, parentGeometry) {
     var transparency = self.parseTransparencyAttr(currentItem);
     var diffuseColor = self.parseDiffuseColorAttr(currentItem, transparency);
     var specularColor = self.parseSpecularColorAttr(currentItem, transparency);
-    console.log(diffuseColor.toString());
-    console.log(specularColor.toString());
     pbsPass.setDiffuseColor(diffuseColor);
     pbsPass.setSpecularColor(specularColor);
     manualMaterial.setPbsPass(pbsPass);
@@ -254,9 +254,6 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     }
     else if (tagName == 'indexedfaceset') {
       var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
-      console.log('indexedFaceSet is created with name: ' + currentItem[0].itemName);
-      console.log(indexedFaceSetObj.getParameters().toString());
-
       var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
       var coordIndexArr = self.parseCoordIndexAttr(currentItem);
 
@@ -266,12 +263,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       }
 
       indexedFaceSetObj.setParameters(coordinatePointsArr, coordIndexArr);
-      console.log(indexedFaceSetObj.getParameters().toString());
 
-      console.log('parentNodeObj: ' + parentNodeObj);
       if (parentNodeObj) {
-        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
         indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+        console.log(' - parentNode: ' + parentNodeObj.getName());
       }
 
       var matItem = currentItem.siblings('Appearance').first().children('Material').first();
@@ -294,38 +289,31 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     }
     else if (tagName == 'transform') {
       var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
-      console.log('node created with name: ' + nodeObj.getName());
       nodeLevel++;
 
       var position = self.parseTranslationAttr(currentItem);
       nodeObj.setPosition(position);
-      console.log(nodeObj.getPosition().toString());
 
       var orientation = self.parseRotationAttr(currentItem);
       nodeObj.setOrientation(orientation);
-      console.log(nodeObj.getOrientation().toString());
 
       var scale = self.parseScaleAttr(currentItem);
       nodeObj.setScale(scale);
-      console.log(nodeObj.getScale().toString());
 
-      console.log('parentNodeObj: ' + parentNodeObj);
       if (parentNodeObj) {
-        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
         nodeObj.setParentNodeJsPtr(parentNodeObj);
+        console.log(' - parentNode: ' + parentNodeObj.getName());
       }
 
       return nodeObj;
     }
     else if (tagName == 'group') {
       var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
-      console.log('group node created with name: ' + nodeObj.getName());
       nodeLevel++;
 
-      console.log('parentNodeObj: ' + parentNodeObj);
       if (parentNodeObj) {
-        console.log('parentNodeObj is not NULL, setting parentNode to: ' + parentNodeObj.getName());
         nodeObj.setParentNodeJsPtr(parentNodeObj);
+        console.log(' - parentNode: ' + parentNodeObj.getName());
       }
 
       return nodeObj;
@@ -353,13 +341,10 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
     console.log('Exception cached: ' + e);
     return;
   }
+
   if (currentNode) {
     nodeLevelMap[nodeLevel] = currentNode;
   }
-
-  console.log('currentNode: ' + currentNode);
-  console.log('nodeLevel: ' + nodeLevel);
-
   nodeLevelTmp = nodeLevel;
 
   $(childItem).children().each(function(i, elem) {
