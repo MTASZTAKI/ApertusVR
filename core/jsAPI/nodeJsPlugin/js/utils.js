@@ -23,47 +23,46 @@ SOFTWARE.*/
 var utils = this;
 var util = require('util');
 
-
 String.prototype.isEmpty = function() {
     return (this.length === 0 || !this.trim());
-};
+}
 
 String.prototype.contains = function(it) {
     return this.indexOf(it) != -1;
-};
+}
 
 String.prototype.replaceAll = function(search, replacement) {
   var target = this;
   return target.replace(new RegExp(search, 'g'), replacement);
-};
+}
 
 Array.prototype.pushArray = function(arr) {
     this.push.apply(this, arr);
-};
+}
 
 exports.roundDecimal = function(num) {
   return Math.round(num * 100) / 100;
-};
+}
 
 exports.isDefined = function(obj) {
 	return (typeof obj !== 'undefined');
-};
+}
 
 exports.isUndefined = function(obj) {
 	return !this.isDefined(obj);
-};
+}
 
 exports.log = function(tag, str) {
   console.log((this.moduleTag || '? ') + ': ' + tag + ': ' + str);
-};
+}
 
 exports.inspect = function(obj) {
   return util.inspect(obj, {depth: null}); // null = no depth limit
-};
+}
 
 exports.nameOf = function(exp) {
   return exp.toString().match(/[.](\w+)/)[1];
-};
+}
 
 exports.iterate = function(obj, nameOfObj, stack) {
   console.log('');
@@ -209,5 +208,5 @@ exports.responseObj = function() {
 			//return JSON.stringify(this.response);
 			return this.response;
 		}
-	}
-};
+	};
+}
