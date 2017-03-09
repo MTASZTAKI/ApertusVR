@@ -3,6 +3,7 @@ var ape = require('apertusvr/js/ape.js');
 var cheerio = require('cheerio');
 var fs = require('fs');
 const uuidV1 = require('uuid/v1');
+const path = require('path');
 var self = this;
 
 // IndexedFaceSet, IndexedLineSet
@@ -358,4 +359,10 @@ exports.parseX3D = function(x3dFilePath) {
     lowerCaseTags: true
   });
   self.parseTree($, null, $('X3D'), null);
+};
+
+exports.init = function(x3dFilePath) {
+  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d';
+  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d');
+  console.log('X3D-parsing done: ' + path.basename(fileName));
 };

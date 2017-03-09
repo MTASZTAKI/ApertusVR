@@ -29,7 +29,8 @@ var util = require('util');
 var utils = require('apertusvr/js/utils.js');
 var expressValidator = require('express-validator');
 var ape = require('apertusvr/js/ape.js');
-var x3dLoader = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
+var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
+var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
 
 const moduleTag = 'NodeJsExt';
 const apiVersion = 'v1';
@@ -140,30 +141,11 @@ app.listen(port, host,  function() {
   // console.log('apeColor2 toString(): ' + apeColor2.toString());
   // console.log('apeColor2 r: ' + apeColor2.r + ' g: ' + apeColor2.g + ' b: ' + apeColor2.b + ' a: ' + apeColor2.a);
 
-  var jsBindManager = ape.nbind.JsBindManager();
-  utils.iterate(jsBindManager, 'jsBindManager', '');
+  utils.iterate(ape.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
 
-  // if demoObjectNode found, attach a textGeometry and set caption
-  ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
-    if (error) {
-      console.log('error: ' + error);
-      return;
-    }
-    var textObj = jsBindManager.createText('textGeometry');
-    textObj.setParentNodeJsPtr(obj);
-
-    setInterval(function() {
-      var pos = obj.getPosition();
-      var ort = obj.getOrientation();
-      textObj.setCaption('x: ' + roundDecimal(pos.x) + ', y: ' + roundDecimal(pos.y) + ', z: ' + roundDecimal(pos.z) + '\n' +
-                         'w: ' + roundDecimal(ort.w) + ', x: ' + roundDecimal(ort.x) + ', y: ' + roundDecimal(ort.y) + ', z: ' + roundDecimal(ort.z)
-      );
-    }, 20);
-
-  });
-
-  x3dLoader.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d');
-  console.log('X3D-parse done.');
+  // start special plugins
+  engineeringScenePlugin.init();
+  x3dLoaderPlugin.init();
 });
 
 function roundDecimal(num) {
