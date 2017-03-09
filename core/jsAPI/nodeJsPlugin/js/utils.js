@@ -37,6 +37,9 @@ String.prototype.replaceAll = function(search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+Array.prototype.pushArray = function(arr) {
+    this.push.apply(this, arr);
+};
 
 exports.isDefined = function(obj) {
 	return (typeof obj !== 'undefined');
