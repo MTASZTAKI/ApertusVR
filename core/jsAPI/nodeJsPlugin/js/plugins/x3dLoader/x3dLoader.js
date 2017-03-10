@@ -33,7 +33,15 @@ var self = this;
 var nameCounter = 0;
 
 function splitX3DAttr(str) {
-  return str.replace('\n', ' ').replace(/ +(?= )/g,'').trim().split(' ');
+    var res = str;
+    res = res.replace(/[\r\n]+/g, '');
+    res = res.replace(/ +(?= )/g, '');
+    res = res.trim();
+    res = res.split(' ');
+    console.log('--------------------------------------------------------------------------------');
+    console.log('res: ' + res);
+    return res;
+    //return str.replace(/[\r\n]+/g, '').replace(/ +(?= )/g,'').trim().split(' ');
 }
 
 exports.parseCoordIndexAttr = function(currentItem)
@@ -65,29 +73,34 @@ exports.parseCoordIndexAttr = function(currentItem)
   }
 
   var tempArr = new Array();
-  for (var i = 0; i < coordinates.length; i++) {
+  var indexCount = 0;
+  for (var i = 0; i < coordinates.length; i++)
+  {
     if (coordinates[i] == -1)
     {
-      // erdos-specific mirroring
-      if (i % 5 == 0) {
-        tempArr.splice(0, 1);
-        tempArr.reverse();
-      }
-      erdosCoordinates.pushArray(tempArr);
-      erdosCoordinates.push(-1);
+        // erdos-specific mirroring
+        if (indexCount == 5)
+        {
+            tempArr.splice(0, 1);
+            tempArr.reverse();
+        }
+        erdosCoordinates.pushArray(tempArr);
+        erdosCoordinates.push(-1);
 
-      // create opposite face for the other side
-      // if (indexCount == 5) {
-      //   tempArr.reverse();
-      //   erdosCoordinates.pushArray(tempArr);
-      //   erdosCoordinates.push(-1);
-      // }
-
-      tempArr = new Array();
+        // create opposite face for the other side
+        // if (indexCount == 5) {
+        //   tempArr.reverse();
+        //   erdosCoordinates.pushArray(tempArr);
+        //   erdosCoordinates.push(-1);
+        // }
+        tempArr = new Array();
+        indexCount = 0;
     }
-    else {
-      tempArr.push(coordinates[i]);
+    else
+    {
+        tempArr.push(coordinates[i]);
     }
+    indexCount++;
   }
 
   console.log(' - coordIndex: ' + erdosCoordinates);
@@ -318,7 +331,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
       if (parentNodeObj) {
         indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - parentNode: ' + parentNodeObj.getName());
+        console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
       }
     }
     else if (tagName == 'box') {
@@ -330,7 +343,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
         if (parentNodeObj) {
             boxSetObj.setParentNodeJsPtr(parentNodeObj);
-            console.log(' - parentNode: ' + parentNodeObj.getName());
+            console.log(' - this: ' + boxSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
         }
     }
     else if (tagName == 'indexedlineset') {
@@ -342,7 +355,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
         if (parentNodeObj) {
             indexedLineSetObj.setParentNodeJsPtr(parentNodeObj);
-            console.log(' - parentNode: ' + parentNodeObj.getName());
+            console.log(' - this: ' + indexedLineSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
         }
     }
     else if (tagName == 'transform') {
@@ -360,7 +373,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
       if (parentNodeObj) {
         nodeObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - parentNode: ' + parentNodeObj.getName());
+        console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
       }
 
       return nodeObj;
@@ -371,7 +384,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 
       if (parentNodeObj) {
         nodeObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - parentNode: ' + parentNodeObj.getName());
+        console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
       }
 
       return nodeObj;
@@ -426,7 +439,7 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.init = function(x3dFilePath) {
-  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/Manipulator.x3d';
+  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
 }
