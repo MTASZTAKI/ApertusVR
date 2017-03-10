@@ -19,7 +19,7 @@
         <Viewpoint position="-2775.64 269.845 380. " orientation="0.57735 -0.57735 -0.57735 2.0944 " description="&quot;Left&quot;" />
         <ProximitySensor DEF="SENSOR" size="14360.8 14360.8 14360.8 " center="57.9963 -22.4698 380. " />
         <ROUTE fromNode="SENSOR" fromField="orientation_changed" toNode="LightRotation" toField="set_rotation" />
-        <Transform DEF="WORLD" scale="1.20065 1.29576 1. ">
+        <Transform DEF="WORLD" scale="1 1 1">
             <Transform translation="0 0 0 " rotation="0 0 1 0 ">
                 <Transform DEF="JOINT_Base-0" translation="0 0 0 " rotation="0 0 1 0 ">
                     <Transform DEF="Manip6R@link0" translation="0 0 0 " rotation="0 0 1 0 ">

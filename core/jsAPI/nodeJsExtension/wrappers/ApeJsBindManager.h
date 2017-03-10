@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "nbind/api.h"
 #include "ApeIScene.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
+#include "ApeIndexedLineSetGeometryJsBind.h"
 #include "ApeJsBindLightImpl.h"
 #include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindTextGeometryImpl.h"
@@ -149,6 +150,32 @@ public:
 		return false;
 	}
 
+	IndexedLineSetJsPtr createIndexedLineSet(std::string name)
+	{
+		std::cout << "createIndexedLineSet()" << std::endl;
+		return IndexedLineSetJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDLINESET));
+	}
+
+	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getIndexedLineSet()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto indexedLineSet = std::dynamic_pointer_cast<Ape::IIndexedLineSetGeometry>(entity))
+			{
+				done(false, IndexedLineSetJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
 	ManualMaterialJsPtr createManualMaterial(std::string name)
 	{
 		std::cout << "createManualMaterial()" << std::endl;
@@ -220,6 +247,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createIndexedFaceSet);
 	method(getIndexedFaceSet);
+
+	method(createIndexedLineSet);
+	method(getIndexedLineSet);
 
 	method(createManualMaterial);
 	method(getManualMaterial);

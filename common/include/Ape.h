@@ -80,6 +80,12 @@ namespace Ape
 
 	typedef std::shared_ptr<IIndexedFaceSetGeometry> IndexedFaceSetGeometrySharedPtr;
 
+	class IIndexedLineSetGeometry;
+
+	typedef std::weak_ptr<IIndexedLineSetGeometry> IndexedLineSetGeometryWeakPtr;
+
+	typedef std::shared_ptr<IIndexedLineSetGeometry> IndexedLineSetGeometrySharedPtr;
+
 	class IManualMaterial;
 
 	typedef std::weak_ptr<IManualMaterial> ManualMaterialWeakPtr;

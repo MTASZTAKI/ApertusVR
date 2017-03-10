@@ -52,6 +52,36 @@ namespace Ape
 			this->indices = indices;
 			this->color = color;
 		}
+
+		Ape::GeometryCoordinates getCoordinates()
+		{
+			return coordinates;
+		}
+
+		Ape::GeometryIndices getIndices()
+		{
+			return indices;
+		}
+
+		Ape::Color getColor()
+		{
+			return color;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+
+			buff << "Coordinates(";
+			for (auto const &item : coordinates) buff << item << ", ";
+			buff << ")" << std::endl;
+
+			buff << "Indices(";
+			for (auto const &item : indices) buff << item << ", ";
+			buff << ")" << std::endl;
+
+			return buff.str();
+		}
 	};
 	
 	class IIndexedLineSetGeometry : public Geometry

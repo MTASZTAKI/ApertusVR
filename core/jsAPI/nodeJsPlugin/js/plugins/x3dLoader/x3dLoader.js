@@ -53,10 +53,12 @@ exports.parseCoordIndexAttr = function(currentItem)
   }
 
   var itemsArr = splitX3DAttr(coordIndex);
-  if (itemsArr.length < 4) {
+
+    //@lineset it is valid
+  /*if (itemsArr.length < 4) {
     throw 'itemsArr length is less than 4!';
     return null;
-  }
+  }*/
 
   for (var i = 0; i < itemsArr.length; i++) {
     coordinates.push(itemsArr[i]);
@@ -228,6 +230,23 @@ exports.parseMaterial = function (currentItem, parentGeometry) {
     parentGeometry.setManualMaterial(manualMaterial);
 }
 
+exports.parseColorAttr = function (currentItem) {
+    var color = currentItem.find('color').first();
+    if (!utils.isDefined(color)) {
+        throw 'color attrib is not defined!';
+        return null;
+    }
+    var colorAttr = color.attr('color');
+    if (utils.isDefined(colorAttr)) {
+        console.log(' - color: ' + colorAttr);
+        var itemArr = splitX3DAttr(colorAttr);
+        if (itemArr.length == 3) {
+            return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1);
+        }
+    }
+    return new ape.nbind.Color(1, 1, 1, 1);
+}
+
 // ---
 
 exports.parseItem = function(parentItem, currentItem, parentNodeObj)
@@ -291,19 +310,16 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       }
     }
     else if (tagName == 'indexedlineset') {
-      // var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-      // console.log(' - coordIndex: ' + coordIndexArr);
-      //
-      // var colorIndexArr = self.parseCoordIndexAttr(currentItem);
-      // console.log(' - colorIndex: ' + colorIndexArr);
-      //
-      // var colorPerVertex = currentItem.attr('colorPerVertex');
-      // if (utils.isDefined(colorPerVertex)) {
-      //   console.log(' - colorPerVertex: ' + colorPerVertex);
-      // }
-      //
-      // var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-      // console.log(' - coordinate.point: ' + coordinatePointsArr);
+        var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(currentItem[0].itemName);
+        var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+        var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+        var color = self.parseColorAttr(currentItem);
+        indexedLineSetObj.setParameters(coordinatePointsArr, coordIndexArr, color);
+
+        if (parentNodeObj) {
+            indexedLineSetObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - parentNode: ' + parentNodeObj.getName());
+        }
     }
     else if (tagName == 'transform') {
       var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);

@@ -71,12 +71,12 @@ public:
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::IndexedFaceSetGeometrySharedPtr getTextGeometrySharedPtr()
+	Ape::IndexedFaceSetGeometrySharedPtr getIndexedFaceSetGeometrySharedPtr()
 	{
 		return std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mPtr.lock());
 	}
 
-	Ape::IndexedFaceSetGeometryWeakPtr getTextGeometryWeakPtr()
+	Ape::IndexedFaceSetGeometryWeakPtr getIndexedFaceSetGeometryWeakPtr()
 	{
 		return mPtr;
 	}
@@ -156,8 +156,8 @@ NBIND_CLASS(IndexedFaceSetJsPtr)
 	method(getEntitySharedPtr);
 	method(getGeometryWeakPtr);
 	method(getGeometrySharedPtr);
-	method(getTextGeometryWeakPtr);
-	method(getTextGeometrySharedPtr);
+	method(getIndexedFaceSetGeometryWeakPtr);
+	method(getIndexedFaceSetGeometrySharedPtr);
 
 	// ParentNode
 
