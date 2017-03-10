@@ -80,6 +80,8 @@ namespace Ape
 			for (auto const &item : indices) buff << item << ", ";
 			buff << ")" << std::endl;
 
+			buff << "Color(" << color.toString() << ")" << std::endl;
+
 			return buff.str();
 		}
 	};

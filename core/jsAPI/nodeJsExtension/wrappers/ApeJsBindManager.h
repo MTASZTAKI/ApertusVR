@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include "ApeIScene.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
 #include "ApeIndexedLineSetGeometryJsBind.h"
+#include "ApeBoxGeometryJsBind.h"
 #include "ApeJsBindLightImpl.h"
 #include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindTextGeometryImpl.h"
@@ -176,6 +177,32 @@ public:
 		return false;
 	}
 
+	BoxJsPtr createBox(std::string name)
+	{
+		std::cout << "createBox()" << std::endl;
+		return BoxJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_BOX));
+	}
+
+	bool getBox(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getBox()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto box = std::dynamic_pointer_cast<Ape::IBoxGeometry>(entity))
+			{
+				done(false, IndexedFaceSetJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
 	ManualMaterialJsPtr createManualMaterial(std::string name)
 	{
 		std::cout << "createManualMaterial()" << std::endl;
@@ -247,6 +274,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createIndexedFaceSet);
 	method(getIndexedFaceSet);
+
+	method(createBox);
+	method(getBox);
 
 	method(createIndexedLineSet);
 	method(getIndexedLineSet);

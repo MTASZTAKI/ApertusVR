@@ -46,6 +46,20 @@ namespace Ape
 		{
 			this->dimensions = dimensions;
 		}
+
+		Ape::Vector3 getDimensions()
+		{
+			return dimensions;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+
+			buff << "Dimensions(" << dimensions.toString() << ")" << std::endl;
+
+			return buff.str();
+		}
 	};
 
 	class IBoxGeometry : public Ape::Geometry

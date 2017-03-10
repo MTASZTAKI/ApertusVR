@@ -247,6 +247,18 @@ exports.parseColorAttr = function (currentItem) {
     return new ape.nbind.Color(1, 1, 1, 1);
 }
 
+exports.parseDimensionsAttr = function (currentItem) {
+    var dimensions = currentItem.attr('size');
+    if (utils.isDefined(dimensions)) {
+        console.log(' - dimensions: ' + dimensions);
+        var itemArr = splitX3DAttr(dimensions);
+        if (itemArr.length == 3) {
+            return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
+        }
+    }
+    return new ape.nbind.Vector3(1, 1, 1);
+}
+
 // ---
 
 exports.parseItem = function(parentItem, currentItem, parentNodeObj)
@@ -308,6 +320,18 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
         console.log(' - parentNode: ' + parentNodeObj.getName());
       }
+    }
+    else if (tagName == 'box') {
+        var boxSetObj = ape.nbind.JsBindManager().createBox(currentItem[0].itemName);
+        var dimensionsAtrr = self.parseDimensionsAttr(currentItem);
+        boxSetObj.setParameters(dimensionsAtrr);
+        var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+        self.parseMaterial(matItem, boxSetObj);
+
+        if (parentNodeObj) {
+            boxSetObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - parentNode: ' + parentNodeObj.getName());
+        }
     }
     else if (tagName == 'indexedlineset') {
         var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(currentItem[0].itemName);
