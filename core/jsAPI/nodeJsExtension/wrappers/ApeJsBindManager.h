@@ -31,6 +31,7 @@ SOFTWARE.*/
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
 #include "ApeIndexedLineSetGeometryJsBind.h"
 #include "ApeBoxGeometryJsBind.h"
+#include "ApeFileGeometryJsBind.h"
 #include "ApeJsBindLightImpl.h"
 #include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindTextGeometryImpl.h"
@@ -191,7 +192,33 @@ public:
 		{
 			if (auto box = std::dynamic_pointer_cast<Ape::IBoxGeometry>(entity))
 			{
-				done(false, IndexedFaceSetJsPtr(mpScene->getEntity(name)));
+				done(false, BoxJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
+	FileGeometryJsPtr createFileGeometry(std::string name)
+	{
+		std::cout << "createFileGeometry()" << std::endl;
+		return FileGeometryJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_FILE));
+	}
+
+	bool getFileGeometry(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getFileGeometry()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto box = std::dynamic_pointer_cast<Ape::IFileGeometry>(entity))
+			{
+				done(false, FileGeometryJsPtr(mpScene->getEntity(name)));
 				return true;
 			}
 
@@ -277,6 +304,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createBox);
 	method(getBox);
+
+	method(createFileGeometry);
+	method(getFileGeometry);
 
 	method(createIndexedLineSet);
 	method(getIndexedLineSet);

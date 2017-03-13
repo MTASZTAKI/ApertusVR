@@ -40,6 +40,7 @@ set (HEADERS
 	wrappers/ApePbsPassJsBind.h
 	wrappers/ApeIndexedLineSetGeometryJsBind.h
 	wrappers/ApeBoxGeometryJsBind.h
+	wrappers/ApeFileGeometryJsBind.h
 	)
 
 set (SOURCES

@@ -122,9 +122,9 @@ public:
 		return mPtr.lock()->getParameters();
 	}
 
-	void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices)
+	void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, ManualMaterialJsPtr manualMaterial)
 	{
-		mPtr.lock()->setParameters(coordinates, indices);
+		mPtr.lock()->setParameters(groupName, coordinates, indices, manualMaterial.getManualMaterialSharedPtr());
 	}
 
 	void setManualMaterial(ManualMaterialJsPtr manualMaterial)
@@ -137,7 +137,7 @@ using namespace Ape;
 NBIND_CLASS(GeometryIndexedFaceSetParameters)
 {
 	construct<>();
-	construct<GeometryCoordinates, GeometryIndices>();
+	construct<std::string, GeometryCoordinates, GeometryIndices, MaterialWeakPtr>();
 
 	method(getCoordinates);
 	method(getIndices);

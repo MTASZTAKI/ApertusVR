@@ -53,7 +53,7 @@ void ApeEngineeringScenePlugin::Init()
 				}
 			}
 		}
-	}*/
+	}
 	if (auto node = mpScene->createNode("sphereNode").lock())
 	{
 		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
@@ -96,7 +96,7 @@ void ApeEngineeringScenePlugin::Init()
 				1, 5, 6, 2, -1,
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
-			demoBox->setParameters(coordinates, indices);
+			demoBox->setParameters("", coordinates, indices, Ape::MaterialWeakPtr());
 			demoBox->setParentNode(demoObjectNode);
 			demoBox->setMaterial(demoObjectMaterial);
 		}
@@ -116,7 +116,7 @@ void ApeEngineeringScenePlugin::Init()
 				2, 3, 4, -1,
 				3, 0, 4, -1
 			};
-			demoPyramid->setParameters(coordinates, indices);
+			demoPyramid->setParameters("", coordinates, indices, Ape::MaterialWeakPtr());
 			demoPyramid->setParentNode(demoObjectNode);
 			demoPyramid->setMaterial(demoObjectMaterial);
 		}
@@ -331,7 +331,7 @@ void ApeEngineeringScenePlugin::Init()
 		10.0,
 		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
 	);
-	mInterpolators.push_back(std::move(rotateInterpolator));
+	mInterpolators.push_back(std::move(rotateInterpolator));*/
 }
 
 void ApeEngineeringScenePlugin::Run()

@@ -32,19 +32,25 @@ namespace Ape
 
 	struct GeometryIndexedFaceSetParameters
 	{
+		std::string groupName;
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
+		Ape::MaterialWeakPtr material;
 		
 		GeometryIndexedFaceSetParameters()
 		{
+			this->groupName = std::string();
 			this->coordinates = Ape::GeometryCoordinates();
 			this->indices = Ape::GeometryIndices();
+			this->material = Ape::MaterialWeakPtr();
 		}
 
-		GeometryIndexedFaceSetParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices)
+		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::MaterialWeakPtr material)
 		{
+			this->groupName = groupName;
 			this->coordinates = coordinates;
 			this->indices = indices;
+			this->material = material;
 		}
 
 		Ape::GeometryCoordinates getCoordinates()
@@ -81,7 +87,7 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices) = 0;
+		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::MaterialWeakPtr material) = 0;
 		
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
@@ -90,6 +96,7 @@ namespace Ape
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+
 	};
 }
 

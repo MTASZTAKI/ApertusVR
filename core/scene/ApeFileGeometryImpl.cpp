@@ -57,6 +57,23 @@ void Ape::FileGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 		mParentNode = Ape::NodeWeakPtr();
 }
 
+void Ape::FileGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+{
+	if (auto materialSP = material.lock())
+	{
+		mMaterial = material;
+		mMaterialName = materialSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MATERIAL));
+	}
+	else
+		mMaterial = Ape::MaterialWeakPtr();
+}
+
+Ape::MaterialWeakPtr Ape::FileGeometryImpl::getMaterial()
+{
+	return mMaterial;
+}
+
 void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -70,6 +87,7 @@ RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -90,6 +108,16 @@ void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
+	}
+	RakNet::RakString materialName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
+	{
+		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
+		{
+			mMaterial = material;
+			mMaterialName = material->getName();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MATERIAL));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

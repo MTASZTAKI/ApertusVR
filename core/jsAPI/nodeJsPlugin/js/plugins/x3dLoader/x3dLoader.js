@@ -240,7 +240,8 @@ exports.parseMaterial = function (currentItem, parentGeometry) {
     pbsPass.setDiffuseColor(diffuseColor);
     pbsPass.setSpecularColor(specularColor);
     manualMaterial.setPbsPass(pbsPass);
-    parentGeometry.setManualMaterial(manualMaterial);
+    return manualMaterial;
+    //parentGeometry.setManualMaterial(manualMaterial);
 }
 
 exports.parseColorAttr = function (currentItem) {
@@ -321,18 +322,27 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     else if (tagName == 'viewpoint') {
       //
     }
+    /*else if (tagName == 'shape') {
+        var use = currentItem.attr('USE');
+        if (utils.isDefined(use)) {
+            var geometryName = use + '.mesh';
+            var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(geometryName);
+            fileGeometryObj.setFileName(geometryName);
+            console.log('USE: ' + fileGeometryObj.getName());
+        }
+    }*/
     else if (tagName == 'indexedfaceset') {
-      var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
-      var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-      var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-      indexedFaceSetObj.setParameters(coordinatePointsArr, coordIndexArr);
-      var matItem = currentItem.siblings('Appearance').first().children('Material').first();
-      self.parseMaterial(matItem, indexedFaceSetObj);
+        var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
+        var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+        var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+        var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+        var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
+        indexedFaceSetObj.setParameters('', coordinatePointsArr, coordIndexArr, materialObj);
 
-      if (parentNodeObj) {
-        indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
-      }
+        if (parentNodeObj) {
+            indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+        }
     }
     else if (tagName == 'box') {
         var boxSetObj = ape.nbind.JsBindManager().createBox(currentItem[0].itemName);
@@ -359,35 +369,35 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }
     else if (tagName == 'transform') {
-      var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
-      nodeLevel++;
+        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        nodeLevel++;
 
-      var position = self.parseTranslationAttr(currentItem);
-      nodeObj.setPosition(position);
+        var position = self.parseTranslationAttr(currentItem);
+        nodeObj.setPosition(position);
 
-      var orientation = self.parseRotationAttr(currentItem);
-      nodeObj.setOrientation(orientation);
+        var orientation = self.parseRotationAttr(currentItem);
+        nodeObj.setOrientation(orientation);
 
-      var scale = self.parseScaleAttr(currentItem);
-      nodeObj.setScale(scale);
+        var scale = self.parseScaleAttr(currentItem);
+        nodeObj.setScale(scale);
 
-      if (parentNodeObj) {
-        nodeObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
-      }
+        if (parentNodeObj) {
+            nodeObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+        }
 
-      return nodeObj;
+        return nodeObj;
     }
     else if (tagName == 'group') {
-      var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
-      nodeLevel++;
+        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        nodeLevel++;
 
-      if (parentNodeObj) {
-        nodeObj.setParentNodeJsPtr(parentNodeObj);
-        console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
-      }
+        if (parentNodeObj) {
+            nodeObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+        }
 
-      return nodeObj;
+        return nodeObj;
     }
     else {
 
@@ -439,7 +449,7 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.init = function(x3dFilePath) {
-  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
+  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
 }

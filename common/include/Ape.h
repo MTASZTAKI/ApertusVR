@@ -80,6 +80,12 @@ namespace Ape
 
 	typedef std::shared_ptr<IBoxGeometry> BoxGeometrySharedPtr;
 
+	class IFileGeometry;
+
+	typedef std::weak_ptr<IFileGeometry> FileGeometryWeakPtr;
+
+	typedef std::shared_ptr<IFileGeometry> FileGeometrySharedPtr;
+
 	class IIndexedFaceSetGeometry;
 
 	typedef std::weak_ptr<IIndexedFaceSetGeometry> IndexedFaceSetGeometryWeakPtr;
