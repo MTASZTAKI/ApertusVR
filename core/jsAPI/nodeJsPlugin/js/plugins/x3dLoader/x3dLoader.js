@@ -24,7 +24,7 @@ var utils = require('apertusvr/js/utils.js');
 var ape = require('apertusvr/js/ape.js');
 var cheerio = require('cheerio');
 var exectimer = require("exectimer");
-var sleep = require("sleep");
+//var sleep = require("sleep");
 var fs = require('fs');
 const uuidV1 = require('uuid/v1');
 const path = require('path');
@@ -591,7 +591,7 @@ exports.Animate = function () {
                         //console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' ori: ' + interpolatorArr[i].keyValues[keyIndex]);
                         interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[keyIndex]);
                         //TODO calculate elapsed time for sleep by exectimer
-                        sleep.usleep(1);
+                        //sleep.usleep(1);
                     }
                     endAnimations = false;
                 }
