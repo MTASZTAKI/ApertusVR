@@ -32,6 +32,7 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mPosition = Ape::Vector3();
 	mScale = Ape::Vector3(1.0f, 1.0f, 1.0f);
 	mOrientation = Ape::Quaternion();
+	mChildrenVisibility = true;
 }
 
 Ape::NodeImpl::~NodeImpl()
@@ -83,6 +84,11 @@ Ape::Vector3 Ape::NodeImpl::getDerivedScale() const
 		return mScale;
 }
 
+bool Ape::NodeImpl::getChildrenVisibility()
+{
+	return mChildrenVisibility;
+}
+
 void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
@@ -116,6 +122,12 @@ void Ape::NodeImpl::setScale( Vector3 scale )
 {
 	mScale = scale;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));
+}
+
+void Ape::NodeImpl::setChildrenVisibility(bool visible)
+{
+	mChildrenVisibility = visible;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
 }
 
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
@@ -181,6 +193,7 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -202,5 +215,7 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

@@ -1,28 +1,28 @@
 #include <iostream>
-#include "ApeEngineeringScenePlugin.h"
+#include "ApeTesterPlugin.h"
 
-ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
+ApeTesterPlugin::ApeTesterPlugin()
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 }
 
-ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
+ApeTesterPlugin::~ApeTesterPlugin()
 {
-	std::cout << "ApeEngineeringScenePlugin dtor" << std::endl;
+	std::cout << "ApeTesterPlugin dtor" << std::endl;
 }
 
-void ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
+void ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeEngineeringScenePlugin::Init()
+void ApeTesterPlugin::Init()
 {
-	std::cout << "ApeEngineeringScenePlugin::init" << std::endl;
+	std::cout << "ApeTesterPlugin::init" << std::endl;
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -34,6 +34,120 @@ void ApeEngineeringScenePlugin::Init()
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
 		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
 		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
+	}
+	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	{
+		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
+			plane->setParentNode(planeNode);
+			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+			{
+				if (auto planeMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("planeMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+				{
+					planeMaterialPbsPass->setShininess(15.0f);
+					planeMaterialPbsPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
+					planeMaterialPbsPass->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
+					planeMaterial->setPass(planeMaterialPbsPass);
+					plane->setMaterial(planeMaterial);
+				}
+			}
+		}
+	}
+	if (auto node = mpScene->createNode("sphereNode").lock())
+	{
+		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			meshFile->setFileName("sphere.mesh");
+			meshFile->setParentNode(node);
+		}
+	}
+	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
+	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	{
+		if (auto demoObjectMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("demoObjectMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		{
+			demoObjectMaterialPbsPass->setShininess(15.0f);
+			demoObjectMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
+		}
+	}
+	auto demoObjectNode = mpScene->createNode("demoObjectNode").lock();
+	if (demoObjectNode)
+	{
+		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
+		if (auto demoBox = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoBox", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+		{
+			Ape::GeometryCoordinates coordinates = {
+				 10,  10, -10,
+				 10, -10, -10,
+				-10, -10, -10,
+				-10,  10, -10,
+				 10,  10,  10,
+				 10, -10,  10,
+				-10, -10,  10,
+				-10,  10,  10
+			};
+			Ape::GeometryIndices indices = { 
+				0, 1, 2, 3, -1,
+				4, 7, 6, 5, -1,
+				0, 4, 5, 1, -1,
+				1, 5, 6, 2, -1,
+				2, 6, 7, 3, -1,
+				4, 0, 3, 7, -1 };
+			demoBox->setParameters("", coordinates, indices, demoObjectMaterial);
+			demoBox->setParentNode(demoObjectNode);
+		}
+		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+		{
+			Ape::GeometryCoordinates coordinates = {
+				-10, 20, 10,
+				10, 20,  10,
+				10, 20, -10,
+				-10, 20, -10,
+				0, 40, 0
+			};
+			Ape::GeometryIndices indices = {
+				0, 3, 2, 1, -1,
+				0, 1, 4, -1,
+				1, 2, 4, -1,
+				2, 3, 4, -1,
+				3, 0, 4, -1
+			};
+			demoPyramid->setParameters("", coordinates, indices, demoObjectMaterial);
+			demoPyramid->setParentNode(demoObjectNode);
+		}
+		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+		{
+			Ape::GeometryCoordinates coordinates = {
+				10, 20, 10,
+				10, 10, 10,
+				10, 10, -10,
+				10, 20, -10,
+				-10, 20, 10,
+				-10, 10, 10,
+				-10, 10, -10,
+				-10, 20, -10
+			};
+			Ape::GeometryIndices indices = {
+				0, 1, -1,
+				1, 2, -1,
+				2, 3, -1,
+				3, 0, -1,
+				0, 4, -1,
+				4, 5, -1,
+				5, 1, -1,
+				5, 6, -1,
+				6, 7, -1,
+				7, 4, -1,
+				3, 7, -1,
+				2, 6, -1
+			};
+			Ape::Color color(1, 0, 0);
+			demoLine->setParameters(coordinates, indices, color);
+			demoLine->setParentNode(demoObjectNode);
+		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
@@ -187,33 +301,73 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
+	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 0),
+		Ape::Vector3(10, 10, 100),
+		10.0,
+		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
+	);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 100),
+		Ape::Vector3(10, 10, 0),
+		10.0,
+		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
+	);
+	mInterpolators.push_back(std::move(moveInterpolator));
+
+	auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(1, 0, 0, 0),
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		10.0,
+		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
+	);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		Ape::Quaternion(1, 0, 0, 0),
+		10.0,
+		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
+	);
+	mInterpolators.push_back(std::move(rotateInterpolator));
 }
 
-void ApeEngineeringScenePlugin::Run()
+void ApeTesterPlugin::Run()
 {
 	while (true)
 	{
+		if (!mInterpolators.empty())
+		{
+			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
+			{
+				(*it)->iterateTopSection();
+				if ((*it)->isQueueEmpty()) 
+					it = mInterpolators.erase(it);
+				else 
+					it++;
+			}
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeEngineeringScenePlugin::Step()
+void ApeTesterPlugin::Step()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Stop()
+void ApeTesterPlugin::Stop()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Suspend()
+void ApeTesterPlugin::Suspend()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Restart()
+void ApeTesterPlugin::Restart()
 {
 
 }

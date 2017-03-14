@@ -159,6 +159,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_SCALE:
 							ogreNode->setScale(Ape::ConversionToOgre(node->getScale()));
 							break;
+						case Ape::Event::Type::NODE_CHILDVISIBILITY:
+							ogreNode->setVisible(node->getChildrenVisibility());
+							break;
 						}
 					}
 				}
@@ -745,6 +748,17 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							}
 						}
 					}
+					else if (mpSceneMgr->hasEntity(geometryName))
+					{
+						if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+						{
+							if (mpSceneMgr->hasSceneNode(parentNodeName))
+							{
+								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+									ogreParentNode->attachObject(ogreEntity);
+							}
+						}
+					}
 				}
 					break;
 				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE:
@@ -752,22 +766,24 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL:
 				{
-					if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+					if (auto ogreEntity = mpSceneMgr->hasEntity(geometryName))
 					{
-						if (auto material = manual->getMaterial().lock())
+						if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
 						{
-							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-							ogreEntity->setMaterial(ogreMaterial);
-							//ogreMaterial->setCullingMode(Ogre::CullingMode::CULL_NONE);
-							if (auto pass = material->getPass().lock())
+							if (auto material = manual->getMaterial().lock())
 							{
-								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+								ogreEntity->setMaterial(ogreMaterial);
+								if (auto pass = material->getPass().lock())
 								{
-									size_t ogreSubEntitxCount = ogreEntity->getNumSubEntities();
-									for (size_t i = 0; i < ogreSubEntitxCount; i++)
+									if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
 									{
-										Ogre::SubEntity* ogreSubEntity = ogreEntity->getSubEntity(i);
-										mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+										size_t ogreSubEntitxCount = ogreEntity->getNumSubEntities();
+										for (size_t i = 0; i < ogreSubEntitxCount; i++)
+										{
+											Ogre::SubEntity* ogreSubEntity = ogreEntity->getSubEntity(i);
+											mpHlmsPbsManager->bind(ogreSubEntity, ogrePbsMaterial, pass->getName());
+										}
 									}
 								}
 							}

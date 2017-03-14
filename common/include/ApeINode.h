@@ -64,6 +64,8 @@ namespace Ape
 
 		virtual Vector3 getDerivedScale() const = 0;
 
+		virtual bool getChildrenVisibility() = 0;
+
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
@@ -77,6 +79,8 @@ namespace Ape
 		virtual void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
 
 		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
+
+		virtual void setChildrenVisibility(bool visible) = 0;
 	};
 }
 

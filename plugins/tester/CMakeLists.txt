@@ -20,37 +20,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-option(APE_PLUGIN_OgreRender "Use OgreRenderPlugin?" ON )
-option(APE_PLUGIN_OisUserInput "Use OisUserInputPlugin?" ON )
-option(APE_PLUGIN_SampleScene "Use SampleScenePlugin?" ON )
-option(APE_PLUGIN_EngineeringScene "Use EngineeringScenePlugin?" ON )
-option(APE_PLUGIN_PresentationScene "Use PresentationScenePlugin?" ON )
-option(APE_PLUGIN_ArtScene "Use ArtScenePlugin?" ON )
-option(APE_PLUGIN_FobHeadTracking "Use FobHeadTrackingPlugin?" ON )
-option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeTesterPlugin.h
+	)
+
+set (SOURCES 
+	ApeTesterPlugin.cpp
+	)
+
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeTesterPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeTesterPlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeTesterPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeTesterPlugin PROPERTY FOLDER "Plugins")
 
 
-if (${APE_PLUGIN_OgreRender})
-	add_subdirectory (ogreRender)
-endif ()	
-if (${APE_PLUGIN_OisUserInput})
-	add_subdirectory (oisUserInput)
-endif ()
-if (${APE_PLUGIN_SampleScene})
-	add_subdirectory (sampleScene)
-endif ()
-if (${APE_PLUGIN_EngineeringScene})
-	add_subdirectory (engineeringScene)
-endif ()
-if (${APE_PLUGIN_PresentationScene})
-	add_subdirectory (presentationScene)
-endif ()
-if (${APE_PLUGIN_ArtScene})
-	add_subdirectory (artScene)
-endif ()
-if (${APE_PLUGIN_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
-if (${APE_PLUGIN_Tester})
-	add_subdirectory (tester)
-endif ()
+

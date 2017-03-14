@@ -51,6 +51,8 @@ namespace Ape
 		Vector3 getScale() const override;
 		
 		Vector3 getDerivedScale() const override;
+
+		bool getChildrenVisibility() override;
 		
 		void setParentNode(Ape::NodeWeakPtr parentNode);
 
@@ -61,6 +63,8 @@ namespace Ape
 		void setOrientation(Quaternion orientation) override;
 		
 		void setScale(Vector3 scale) override;
+
+		void setChildrenVisibility(bool visible) override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -88,6 +92,8 @@ namespace Ape
 		Ape::Quaternion mOrientation;
 
 		Ape::Vector3 mScale;
+
+		bool mChildrenVisibility;
 	};
 }
 
