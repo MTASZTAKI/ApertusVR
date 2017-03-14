@@ -332,16 +332,20 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }*/
     else if (tagName == 'indexedfaceset') {
+        console.log('- indexedfaceset:' + groupNodeObj.getName());
         var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
         var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
         var coordIndexArr = self.parseCoordIndexAttr(currentItem);
         var matItem = currentItem.siblings('Appearance').first().children('Material').first();
         var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-        indexedFaceSetObj.setParameters('', coordinatePointsArr, coordIndexArr, materialObj);
+        indexedFaceSetObj.setParameters(groupNodeObj.getName(), coordinatePointsArr, coordIndexArr, materialObj);
 
-        if (parentNodeObj) {
-            indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-            console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+        if (lastGroupNodeObjName != groupNodeObj.getName()) {
+           if (groupNodeObj) {
+               indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
+               console.log('- groupNodeObj:' + groupNodeObj.getName());
+           }
+           lastGroupNodeObjName = groupNodeObj.getName();
         }
     }
     else if (tagName == 'box') {
@@ -396,7 +400,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             nodeObj.setParentNodeJsPtr(parentNodeObj);
             console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
         }
-
+        groupNodeObj = nodeObj;
+        console.log('groupChanged: ' + groupNodeObj.getName());
         return nodeObj;
     }
     else {
@@ -409,6 +414,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 var nodeLevelMap = {};
 var nodeLevel = 0;
 var nodeLevelTmp = 0;
+var lastGroupNodeObjName = '';
+var groupNodeObj = 0;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {

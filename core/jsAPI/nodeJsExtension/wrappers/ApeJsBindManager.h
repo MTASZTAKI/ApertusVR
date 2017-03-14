@@ -60,7 +60,7 @@ public:
 		auto entityWeakPtr = mpScene->getNode(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto textGeometry = std::dynamic_pointer_cast<Ape::INode>(entity))
+			if (auto node = std::dynamic_pointer_cast<Ape::INode>(entity))
 			{
 				done(false, NodeJsPtr(entityWeakPtr));
 				return true;

@@ -701,10 +701,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				Ape::GeometryIndexedFaceSetParameters parameters = manual->getParameters();
 				std::string geometryName = manual->getName();
 				if (parameters.groupName.size())
-				{
-					std::cout << std::endl << "c++" << std::endl;
 					geometryName = parameters.groupName;
-				}
 				std::string parentNodeName = "";
 				if (auto parentNode = manual->getParentNode().lock())
 					parentNodeName = parentNode->getName();
@@ -712,8 +709,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE:
 				{
-					if (!mpSceneMgr->hasManualObject(geometryName))
-						mpSceneMgr->createManualObject(geometryName);
+					
 				}
 					break;
 				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE:
@@ -766,6 +762,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					//meshFileName << geometryName << ".mesh";
 					//if (!Ogre::ResourceGroupManager::getSingleton().resourceExists(Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, meshFileName.str()))
 					//{
+					std::cout << std::endl;
+					std::cout << "c++: " << geometryName << std::endl;
+					if (!mpSceneMgr->hasManualObject(geometryName))
+					{
+						auto ogreManual = mpSceneMgr->createManualObject(geometryName);
+						ogreManual->setDynamic(true);
+					}
 					if (mpSceneMgr->hasManualObject(geometryName))
 					{
 						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
