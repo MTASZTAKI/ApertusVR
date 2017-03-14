@@ -339,7 +339,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
   var tagName = currentItem[0].tagName || currentItem[0].name;
   var itemName = (currentItem[0].itemName || currentItem.attr('DEF') || 'item' + nameCounter);
   nameCounter++;
-  currentItem[0].itemName = itemName;
+  currentItem[0].itemName = itemName + currentlyParsedFileName;
   console.log(itemName + ' - ' + typeName + ' - ' + tagName);
 
   if (!typeName || !tagName) {
@@ -383,7 +383,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     else if (tagName == 'shape') {
         var use = currentItem.attr('USE');
         if (utils.isDefined(use)) {
-            var geometryName = use;
+            var geometryName = use + currentlyParsedFileName;
             var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(currentItem[0].itemName);
             fileGeometryObj.setFileName(geometryName);
             console.log('USE: ' + fileGeometryObj.getName());
@@ -395,8 +395,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }
     else if (tagName == 'indexedfaceset') {
-        console.log('- indexedfaceset:' + groupNodeObj.getName());
-        var HANDLING = groupNodeObj.getName().indexOf("handling");
+        var groupNodeObjName = groupNodeObj.getName();
+        console.log('- indexedfaceset:' + groupNodeObjName);
+        var HANDLING = groupNodeObjName.indexOf("handling");
         console.log('- HANDLING:' + HANDLING);
         if (HANDLING < 0) {
             var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
@@ -404,14 +405,14 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var coordIndexArr = self.parseCoordIndexAttr(currentItem);
             var matItem = currentItem.siblings('Appearance').first().children('Material').first();
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-            indexedFaceSetObj.setParameters(groupNodeObj.getName(), coordinatePointsArr, coordIndexArr, materialObj);
+            indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, materialObj);
 
-            if (lastGroupNodeObjName != groupNodeObj.getName()) {
+            if (lastGroupNodeObjName != groupNodeObjName) {
                 if (groupNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
-                    console.log('- groupNodeObj:' + groupNodeObj.getName());
+                    console.log('- groupNodeObj:' + groupNodeObjName);
                 }
-                lastGroupNodeObjName = groupNodeObj.getName();
+                lastGroupNodeObjName = groupNodeObjName;
             }
         }
     }
@@ -446,7 +447,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         var position = self.parseTranslationAttr(currentItem);
         nodeObj.setPosition(position);
 
-        if (nodeObj.getName() == 'WORLD') {
+        if (nodeObj.getName() == 'WORLD' + currentlyParsedFileName) {
             console.log(' - WorldTransform: ');
             nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
             nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
@@ -496,8 +497,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log('PositionInterpolator: ' + currentItem[0].itemName);
     }
     else if (tagName == 'route') {
-        var interpolatorName = currentItem.attr('fromNode');
-        var nodeName = currentItem.attr('toNode');
+        var interpolatorName = currentItem.attr('fromNode') + currentlyParsedFileName;
+        var nodeName = currentItem.attr('toNode') + currentlyParsedFileName;
         console.log('ROUTE: ' + interpolatorName);
         for (var i = 0; i < interpolatorArr.length; i++) {
             if (interpolatorArr[i].name == interpolatorName) {
@@ -532,6 +533,7 @@ var interpolatorArr = new Array();
 var loopAnimation = false;
 var cycleIntervalAnimation = 1;
 var keyIndex = 0;
+var currentlyParsedFileName = '';
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
@@ -602,11 +604,13 @@ exports.Animate = function () {
 
 exports.init = function(x3dFilePath) {
   //'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
-  //'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
-  //self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d');
-  //console.log('X3D-parsing done: ' + 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d');
-  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d');
-  console.log('X3D-parsing done: ' + 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d');
+    //'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
+  currentlyParsedFileName = 'cell';
+  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  console.log('X3D-parsing done: ' + currentlyParsedFileName);
+  currentlyParsedFileName = 'cellAnim';
+  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  console.log('X3D-parsing done: ' + currentlyParsedFileName);
   self.Animate();
   if (loopAnimation) {
       setInterval(function () {
