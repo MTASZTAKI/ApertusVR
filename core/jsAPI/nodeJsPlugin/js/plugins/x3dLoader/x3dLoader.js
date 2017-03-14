@@ -384,11 +384,17 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         var position = self.parseTranslationAttr(currentItem);
         nodeObj.setPosition(position);
 
-        var orientation = self.parseRotationAttr(currentItem);
-        nodeObj.setOrientation(orientation);
-
-        var scale = self.parseScaleAttr(currentItem);
-        nodeObj.setScale(scale);
+        if (nodeObj.getName() == 'WORLD') {
+            console.log(' - WorldTransform: ');
+            nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+            nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+        }
+        else {
+            var orientation = self.parseRotationAttr(currentItem);
+            nodeObj.setOrientation(orientation);
+            var scale = self.parseScaleAttr(currentItem);
+            nodeObj.setScale(scale);
+        }
 
         if (parentNodeObj) {
             nodeObj.setParentNodeJsPtr(parentNodeObj);
@@ -428,8 +434,9 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   }
 
   var currentNode;
-  try {
-    currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
+    try {
+
+        currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
   } catch (e) {
     console.log('Exception cached: ' + e);
     return;

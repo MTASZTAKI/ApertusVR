@@ -150,7 +150,7 @@ void ApeEngineeringScenePlugin::Init()
 			demoLine->setParameters(coordinates, indices, color);
 			demoLine->setParentNode(demoObjectNode);
 		}
-	}
+	}*/
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -303,7 +303,7 @@ void ApeEngineeringScenePlugin::Init()
 			}
 		}
 	}
-	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
+	/*auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
 	moveInterpolator->addSection(
 		Ape::Vector3(10, 10, 0),
 		Ape::Vector3(10, 10, 100),
