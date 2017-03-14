@@ -758,7 +758,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
 							ogreEntity->setMaterial(ogreMaterial);
-							ogreMaterial->setCullingMode(Ogre::CullingMode::CULL_NONE);
+							//ogreMaterial->setCullingMode(Ogre::CullingMode::CULL_NONE);
 							if (auto pass = material->getPass().lock())
 							{
 								if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])

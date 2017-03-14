@@ -23,6 +23,8 @@ SOFTWARE.*/
 var utils = require('apertusvr/js/utils.js');
 var ape = require('apertusvr/js/ape.js');
 var cheerio = require('cheerio');
+var exectimer = require("exectimer");
+//var sleep = require("sleep");
 var fs = require('fs');
 const uuidV1 = require('uuid/v1');
 const path = require('path');
@@ -512,6 +514,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             }
         }
     }
+    else if (tagName == 'timesensor') {
+        loopAnimation = currentItem.attr('loop');
+        cycleIntervalAnimation = currentItem.attr('cycleInterval');
+    }
     else {
 
     }
@@ -525,7 +531,8 @@ var nodeLevelTmp = 0;
 var lastGroupNodeObjName = '';
 var groupNodeObj = 0;
 var interpolatorArr = new Array();
-var interpolatorID = 0;
+var loopAnimation = false;
+var cycleIntervalAnimation = 1;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
@@ -567,54 +574,38 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.Animate = function () {
-
-    /*function DoInterpolationStep(interpolatorIDCopy, keyIndex) {
-        var keyIndexCopy = keyIndex;
-        if (interpolatorArr[interpolatorIDCopy].type == 'position') {
-            console.log('interpolatorIDCopy: ' + interpolatorIDCopy + ' keyIndexCopy: ' + keyIndexCopy + ' pos: ' + interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
-            interpolatorArr[interpolatorIDCopy].nodeObj.setPosition(interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
-        }
-        else if (interpolatorArr[interpolatorIDCopy].type == 'orientation') {
-            console.log('interpolatorIDCopy: ' + interpolatorIDCopy + ' keyIndexCopy: ' + keyIndexCopy + ' ori: ' + interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
-            interpolatorArr[interpolatorIDCopy].nodeObj.setOrientation(interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
-        }
-    }
-
-    function DoInterpolation() {
+    console.log('X3D-animation play looped:');
+    while (loopAnimation) {
         var keyIndex = 0;
-        while (keyIndex < interpolatorArr[interpolatorID].keyValues.length) {
-            DoInterpolationStep(interpolatorID, keyIndex);
+        var endAnimations = false;
+        while (!endAnimations) {
+            endAnimations = true;
+            for (var i = 0; i < interpolatorArr.length; i++) {
+                if (keyIndex < interpolatorArr[i].keyValues.length) {
+                    if (interpolatorArr[i].type == 'position') {
+                        console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' pos: ' + interpolatorArr[i].keyValues[keyIndex]);
+                        interpolatorArr[i].nodeObj.setPosition(interpolatorArr[i].keyValues[keyIndex]);
+                        //sleep(0.01);
+                    }
+                    else if (interpolatorArr[i].type == 'orientation') {
+                        console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' ori: ' + interpolatorArr[i].keyValues[keyIndex]);
+                        interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[keyIndex]);
+                        //sleep(0.01);
+                    }
+                    endAnimations = false;
+                }
+            }
             keyIndex++;
         }
-        interpolatorID++;
-    }*/
-
-    console.log('X3D-animation play begin:');
-    var keyIndex = 0;
-    var endAnimations = false;
-    while (!endAnimations)
-    {
-        endAnimations = true;
-        for (var i = 0; i < interpolatorArr.length; i++) {
-            if (keyIndex < interpolatorArr[i].keyValues.length) {
-                if (interpolatorArr[i].type == 'position') {
-                    console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' pos: ' + interpolatorArr[i].keyValues[keyIndex]);
-                    interpolatorArr[i].nodeObj.setPosition(interpolatorArr[i].keyValues[keyIndex]);
-                }
-                else if (interpolatorArr[i].type == 'orientation') {
-                    console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' ori: ' + interpolatorArr[i].keyValues[keyIndex]);
-                    interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[keyIndex]);
-                }
-                endAnimations = false;
-            }
-        }
-        keyIndex++;
     }
     console.log('X3D-animation play end:');
 }
 
 exports.init = function(x3dFilePath) {
-    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
+    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
+    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
+    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
+    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
   self.Animate();
