@@ -526,7 +526,6 @@ var lastGroupNodeObjName = '';
 var groupNodeObj = 0;
 var interpolatorArr = new Array();
 var interpolatorID = 0;
-var keyIndex = 0;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
@@ -567,40 +566,57 @@ exports.parseX3D = function(x3dFilePath) {
   self.parseTree($, null, $('X3D'), null);
 }
 
-exports.sleep = function (delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
-
-exports.DoInterpolationStep = function () {
-    //console.log('interpolatorArr.length: ' + interpolatorArr.length + ' interpolatorID: ' + interpolatorID + ' keyIndex: ' + keyIndex);
-    if (interpolatorArr[interpolatorID].type == 'position') {
-        console.log('pos: ' + interpolatorArr[interpolatorID].keyValues[keyIndex]);
-        interpolatorArr[interpolatorID].nodeObj.setPosition(interpolatorArr[interpolatorID].keyValues[keyIndex]);
-    }
-    else if (interpolatorArr[interpolatorID].type == 'orientation') {
-        console.log('ori: ' + interpolatorArr[interpolatorID].keyValues[keyIndex]);
-        interpolatorArr[interpolatorID].nodeObj.setOrientation(interpolatorArr[interpolatorID].keyValues[keyIndex]);
-    }
-}
-
 exports.Animate = function () {
-    while (interpolatorID < interpolatorArr.length) {
+
+    /*function DoInterpolationStep(interpolatorIDCopy, keyIndex) {
+        var keyIndexCopy = keyIndex;
+        if (interpolatorArr[interpolatorIDCopy].type == 'position') {
+            console.log('interpolatorIDCopy: ' + interpolatorIDCopy + ' keyIndexCopy: ' + keyIndexCopy + ' pos: ' + interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
+            interpolatorArr[interpolatorIDCopy].nodeObj.setPosition(interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
+        }
+        else if (interpolatorArr[interpolatorIDCopy].type == 'orientation') {
+            console.log('interpolatorIDCopy: ' + interpolatorIDCopy + ' keyIndexCopy: ' + keyIndexCopy + ' ori: ' + interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
+            interpolatorArr[interpolatorIDCopy].nodeObj.setOrientation(interpolatorArr[interpolatorIDCopy].keyValues[keyIndexCopy]);
+        }
+    }
+
+    function DoInterpolation() {
+        var keyIndex = 0;
         while (keyIndex < interpolatorArr[interpolatorID].keyValues.length) {
-            self.sleep(20);
-            self.DoInterpolationStep();
+            DoInterpolationStep(interpolatorID, keyIndex);
             keyIndex++;
         }
-        keyIndex = 0;
         interpolatorID++;
+    }*/
+
+    console.log('X3D-animation play begin:');
+    var keyIndex = 0;
+    var endAnimations = false;
+    while (!endAnimations)
+    {
+        endAnimations = true;
+        for (var i = 0; i < interpolatorArr.length; i++) {
+            if (keyIndex < interpolatorArr[i].keyValues.length) {
+                if (interpolatorArr[i].type == 'position') {
+                    console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' pos: ' + interpolatorArr[i].keyValues[keyIndex]);
+                    interpolatorArr[i].nodeObj.setPosition(interpolatorArr[i].keyValues[keyIndex]);
+                }
+                else if (interpolatorArr[i].type == 'orientation') {
+                    console.log('interpolatorID: ' + i + ' keyIndex: ' + keyIndex + ' ori: ' + interpolatorArr[i].keyValues[keyIndex]);
+                    interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[keyIndex]);
+                }
+                endAnimations = false;
+            }
+        }
+        keyIndex++;
     }
+    console.log('X3D-animation play end:');
 }
 
 exports.init = function(x3dFilePath) {
     var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
-  console.log('X3D-animation play begin:');
   self.Animate();
-  console.log('X3D-animation play end:');
+  console.log("x3dLoader end")
 }
