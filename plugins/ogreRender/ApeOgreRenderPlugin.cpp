@@ -883,7 +883,19 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								}
 							}
 							if (auto material = parameters.material.lock())
+							{
+								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
 								ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+								if (auto pass = material->getPass().lock())
+								{
+									if (auto ogrePbsMaterial = mPbsMaterials[pass->getName()])
+									{
+										auto ogreCurrentManualSection = ogreManual->getSection(ogreManual->getNumSections() - 1);
+										mpHlmsPbsManager->bind(ogreCurrentManualSection, ogrePbsMaterial, pass->getName());
+										std::cout << "c++: " << ogreCurrentManualSection->getMaterialName();
+									}
+								}
+							}
 							else
 								ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
 							for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
@@ -1215,7 +1227,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									mpShaderGenerator->addSceneManager(mpSceneMgr);
 									mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
 									Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 									Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
 									pMainRenderState->reset();
 									pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
@@ -1224,6 +1235,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								else
 									std::cout << "Problem in the RTSS init" << std::endl;
 							}
+							viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 						}
 					}
 				}
