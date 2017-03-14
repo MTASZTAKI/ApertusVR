@@ -29,8 +29,8 @@ var util = require('util');
 var utils = require('apertusvr/js/utils.js');
 var expressValidator = require('express-validator');
 var ape = require('apertusvr/js/ape.js');
-//var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
-//var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
+var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
+var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
 
 const moduleTag = 'NodeJsExt';
 const apiVersion = 'v1';
@@ -145,7 +145,7 @@ app.listen(port, host,  function() {
 
   // start special plugins
   //engineeringScenePlugin.init();
-  //x3dLoaderPlugin.init();
+  x3dLoaderPlugin.init();
 });
 
 function roundDecimal(num) {

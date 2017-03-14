@@ -603,12 +603,12 @@ exports.Animate = function () {
 }
 
 exports.init = function(x3dFilePath) {
-    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
-    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
-    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
-    //var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
-  self.parseX3D(fileName);
-  console.log('X3D-parsing done: ' + path.basename(fileName));
+  //'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
+  //'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
+  //self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d');
+  //console.log('X3D-parsing done: ' + 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d');
+  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d');
+  console.log('X3D-parsing done: ' + 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d');
   self.Animate();
   console.log("x3dLoader end")
 }

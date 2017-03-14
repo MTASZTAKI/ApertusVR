@@ -20,8 +20,7 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeEngineeringScenePlugin"
+            "ApeLinkageDesignerVRPlugin"
         ]
     }
 }

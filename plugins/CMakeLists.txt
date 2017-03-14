@@ -28,6 +28,7 @@ option(APE_PLUGIN_PresentationScene "Use PresentationScenePlugin?" ON )
 option(APE_PLUGIN_ArtScene "Use ArtScenePlugin?" ON )
 option(APE_PLUGIN_FobHeadTracking "Use FobHeadTrackingPlugin?" ON )
 option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
+option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -54,3 +55,7 @@ endif ()
 if (${APE_PLUGIN_Tester})
 	add_subdirectory (tester)
 endif ()
+if (${APE_PLUGIN_LinkageDesignerVR})
+	add_subdirectory (linkageDesignerVR)
+endif ()
+
