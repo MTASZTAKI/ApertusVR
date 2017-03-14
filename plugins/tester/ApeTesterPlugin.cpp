@@ -8,6 +8,7 @@ ApeTesterPlugin::ApeTesterPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
+	mDemoObjectNode = Ape::NodeWeakPtr();
 }
 
 ApeTesterPlugin::~ApeTesterPlugin()
@@ -73,8 +74,8 @@ void ApeTesterPlugin::Init()
 			demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
 		}
 	}
-	auto demoObjectNode = mpScene->createNode("demoObjectNode").lock();
-	if (demoObjectNode)
+	mDemoObjectNode = mpScene->createNode("mDemoObjectNode").lock();
+	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
 		if (auto demoBox = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoBox", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
@@ -97,7 +98,7 @@ void ApeTesterPlugin::Init()
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
 			demoBox->setParameters("", coordinates, indices, demoObjectMaterial);
-			demoBox->setParentNode(demoObjectNode);
+			demoBox->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 		{
@@ -116,7 +117,7 @@ void ApeTesterPlugin::Init()
 				3, 0, 4, -1
 			};
 			demoPyramid->setParameters("", coordinates, indices, demoObjectMaterial);
-			demoPyramid->setParentNode(demoObjectNode);
+			demoPyramid->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 		{
@@ -146,7 +147,7 @@ void ApeTesterPlugin::Init()
 			};
 			Ape::Color color(1, 0, 0);
 			demoLine->setParameters(coordinates, indices, color);
-			demoLine->setParentNode(demoObjectNode);
+			demoLine->setParentNode(mDemoObjectNode);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
@@ -301,53 +302,70 @@ void ApeTesterPlugin::Init()
 			}
 		}
 	}
-	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
-	moveInterpolator->addSection(
-		Ape::Vector3(10, 10, 0),
-		Ape::Vector3(10, 10, 100),
-		10.0,
-		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
-	);
-	moveInterpolator->addSection(
-		Ape::Vector3(10, 10, 100),
-		Ape::Vector3(10, 10, 0),
-		10.0,
-		[&](Ape::Vector3 pos){ demoObjectNode->setPosition(pos); }
-	);
-	mInterpolators.push_back(std::move(moveInterpolator));
+	if (auto demoObjectNode = mDemoObjectNode.lock())
+	{
+		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
+		moveInterpolator->addSection(
+			Ape::Vector3(10, 10, 0),
+			Ape::Vector3(10, 10, 100),
+			10.0,
+			[&](Ape::Vector3 pos) { demoObjectNode->setPosition(pos); }
+		);
+		moveInterpolator->addSection(
+			Ape::Vector3(10, 10, 100),
+			Ape::Vector3(10, 10, 0),
+			10.0,
+			[&](Ape::Vector3 pos) { demoObjectNode->setPosition(pos); }
+		);
+		mInterpolators.push_back(std::move(moveInterpolator));
 
-	auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
-	rotateInterpolator->addSection(
-		Ape::Quaternion(1, 0, 0, 0),
-		Ape::Quaternion(0.7071, 0, 0.7071, 0),
-		10.0,
-		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
-	);
-	rotateInterpolator->addSection(
-		Ape::Quaternion(0.7071, 0, 0.7071, 0),
-		Ape::Quaternion(1, 0, 0, 0),
-		10.0,
-		[&](Ape::Quaternion ori){ demoObjectNode->setOrientation(ori); }
-	);
-	mInterpolators.push_back(std::move(rotateInterpolator));
+		auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
+		rotateInterpolator->addSection(
+			Ape::Quaternion(1, 0, 0, 0),
+			Ape::Quaternion(0.7071, 0, 0.7071, 0),
+			10.0,
+			[&](Ape::Quaternion ori) { demoObjectNode->setOrientation(ori); }
+		);
+		rotateInterpolator->addSection(
+			Ape::Quaternion(0.7071, 0, 0.7071, 0),
+			Ape::Quaternion(1, 0, 0, 0),
+			10.0,
+			[&](Ape::Quaternion ori) { demoObjectNode->setOrientation(ori); }
+		);
+		mInterpolators.push_back(std::move(rotateInterpolator));
+	}
 }
 
 void ApeTesterPlugin::Run()
 {
+	double duration;
 	while (true)
 	{
+		auto start = std::chrono::high_resolution_clock::now();
 		if (!mInterpolators.empty())
 		{
 			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
 			{
 				(*it)->iterateTopSection();
-				if ((*it)->isQueueEmpty()) 
+				if ((*it)->isQueueEmpty())
 					it = mInterpolators.erase(it);
 				else 
 					it++;
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		if (duration > 5000)
+		{
+			if (auto demoObjectNode = mDemoObjectNode.lock())
+			{
+				if (!demoObjectNode->getChildrenVisibility())
+					demoObjectNode->setChildrenVisibility(true);
+				else
+					demoObjectNode->setChildrenVisibility(false);
+			}
+			duration = 0;
+		}
+		duration = duration + std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }

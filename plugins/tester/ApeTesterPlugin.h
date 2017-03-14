@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <ctime>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -66,6 +67,9 @@ private:
 	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 	
 	void eventCallBack(const Ape::Event& event);
+	
+	Ape::NodeWeakPtr mDemoObjectNode;
+
 	
 public:
 	ApeTesterPlugin();
