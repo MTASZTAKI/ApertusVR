@@ -6,6 +6,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
@@ -19,6 +20,28 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mScenePoses = std::vector<ScenePose>();
 	mScenePoses.push_back(ScenePose(Ape::Vector3(20000, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
 	mScenePoses.push_back(ScenePose(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
+	mSwitchNodeVisibilityToggleIndex = 0;
+	mSwitchNodeVisibilityNames = std::vector<std::string>();
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@fixture_1Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base1Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base2Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base3Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base4Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p1Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p2Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p3Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p4Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_1Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_2Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_3Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_4Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_5Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_6Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_7Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_8Switch");
+	mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");
+	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
 }
 
 ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
@@ -34,6 +57,18 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			camera->setParentNode(mUserNode);
+	}
+	else if (event.type == Ape::Event::Type::NODE_CREATE)
+	{
+		if (auto node = mpScene->getNode(event.subjectName).lock())
+		{
+			for (auto switchNodeName : mSwitchNodeVisibilityNames)
+			{
+				std::size_t found = node->getName().find(switchNodeName);
+				if (found != std::string::npos)
+					mSwitchNodes.push_back(node);
+			}
+		}
 	}
 }
 
@@ -131,6 +166,23 @@ void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 		mSceneToggleIndex = 0;
 }
 
+void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
+{
+	if (mSwitchNodes.size() > 0)
+	{
+		if (auto switchNode = mSwitchNodes[mSwitchNodeVisibilityToggleIndex].lock())
+		{
+			if (!switchNode->getChildrenVisibility())
+				switchNode->setChildrenVisibility(true);
+			else
+				switchNode->setChildrenVisibility(false);
+		}
+		mSwitchNodeVisibilityToggleIndex++;
+		if (mSwitchNodes.size() == mSwitchNodeVisibilityToggleIndex)
+			mSwitchNodeVisibilityToggleIndex = 0;
+	}
+}
+
 
 void ApeLinkageDesignerVRPlugin::Run()
 {
@@ -144,6 +196,7 @@ void ApeLinkageDesignerVRPlugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void ApeLinkageDesignerVRPlugin::Step()
@@ -175,6 +228,8 @@ bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 			toggleScenePoses(userNode);
 	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_V])
+		toggleSwitchNodesVisibility();
 	return true;
 }
 

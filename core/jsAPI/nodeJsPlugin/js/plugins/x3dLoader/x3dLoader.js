@@ -481,6 +481,16 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log('groupChanged: ' + groupNodeObj.getName());
         return nodeObj;
     }
+    else if (tagName == 'switch') {
+        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        nodeLevel++;
+
+        if (parentNodeObj) {
+            nodeObj.setParentNodeJsPtr(parentNodeObj);
+            console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+        }
+        return nodeObj;
+    }
     else if (tagName == 'orientationinterpolator') {
         var orientationInterpolator = { type: 'orientation', name: currentItem[0].itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
         var keys = splitX3DAttr(currentItem.attr('key'));

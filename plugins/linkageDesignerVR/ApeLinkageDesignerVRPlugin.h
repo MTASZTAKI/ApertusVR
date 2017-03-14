@@ -97,6 +97,12 @@ private:
 
 	std::vector<ScenePose> mScenePoses;
 
+	int mSwitchNodeVisibilityToggleIndex;
+
+	std::vector<std::string> mSwitchNodeVisibilityNames;
+
+	std::vector<Ape::NodeWeakPtr> mSwitchNodes;
+
 	float mTranslateSpeedFactor;
 
 	float mRotateSpeedFactor;
@@ -104,6 +110,8 @@ private:
 	void moveUserNode();
 
 	void toggleScenePoses(Ape::NodeSharedPtr userNode);
+
+	void toggleSwitchNodesVisibility();
 	
 public:
 	ApeLinkageDesignerVRPlugin();
