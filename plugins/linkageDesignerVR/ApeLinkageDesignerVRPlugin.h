@@ -59,6 +59,20 @@ SOFTWARE.*/
 class ApeLinkageDesignerVRPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
+	struct ScenePose
+	{
+		Ape::Vector3 position;
+		Ape::Quaternion orientation;
+
+		ScenePose(
+			Ape::Vector3 position,
+			Ape::Quaternion orientation)
+		{
+			this->position = position;
+			this->orientation = orientation;
+		}
+	};
+
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
@@ -79,11 +93,17 @@ private:
 
 	OIS::Mouse* mpMouse;
 
+	int mSceneToggleIndex;
+
+	std::vector<ScenePose> mScenePoses;
+
 	float mTranslateSpeedFactor;
 
 	float mRotateSpeedFactor;
 
 	void moveUserNode();
+
+	void toggleScenePoses(Ape::NodeSharedPtr userNode);
 	
 public:
 	ApeLinkageDesignerVRPlugin();

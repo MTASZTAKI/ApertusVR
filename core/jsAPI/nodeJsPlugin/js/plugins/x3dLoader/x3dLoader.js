@@ -451,6 +451,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             console.log(' - WorldTransform: ');
             nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
             nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+            if (currentlyParsedFileName == 'weldingFixture') {
+                nodeObj.setPosition(new ape.nbind.Vector3(20000, 0, 0));
+            }
         }
         else {
             var orientation = self.parseRotationAttr(currentItem);
@@ -603,8 +606,9 @@ exports.Animate = function () {
 }
 
 exports.init = function(x3dFilePath) {
-  //'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
-    //'node_modules/apertusvr/js/plugins/x3dLoader/samples/whAnimation.x3d';
+  currentlyParsedFileName = 'weldingFixture';
+  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  console.log('X3D-parsing done: ' + currentlyParsedFileName);
   currentlyParsedFileName = 'cell';
   self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
   console.log('X3D-parsing done: ' + currentlyParsedFileName);

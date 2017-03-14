@@ -15,6 +15,10 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpMouse = NULL;
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
+	mSceneToggleIndex = 0;
+	mScenePoses = std::vector<ScenePose>();
+	mScenePoses.push_back(ScenePose(Ape::Vector3(20000, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
 }
 
 ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
@@ -119,6 +123,15 @@ void ApeLinkageDesignerVRPlugin::moveUserNode()
 	}
 }
 
+void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
+{
+	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
+	mSceneToggleIndex++;
+	if (mScenePoses.size() == mSceneToggleIndex)
+		mSceneToggleIndex = 0;
+}
+
+
 void ApeLinkageDesignerVRPlugin::Run()
 {
 	while (true)
@@ -156,6 +169,12 @@ void ApeLinkageDesignerVRPlugin::Restart()
 bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
+	auto userNode = mUserNode.lock();
+	if (userNode)
+	{
+		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
+			toggleScenePoses(userNode);
+	}
 	return true;
 }
 

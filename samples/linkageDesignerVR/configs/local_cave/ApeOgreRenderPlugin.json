@@ -10,7 +10,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -39,7 +39,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -68,7 +68,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -97,7 +97,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -126,7 +126,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -155,7 +155,7 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
