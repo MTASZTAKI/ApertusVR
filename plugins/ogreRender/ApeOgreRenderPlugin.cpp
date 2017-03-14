@@ -215,8 +215,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							ogreManual->convertToMesh(meshName.str());
 
 						mpSceneMgr->createEntity(geometryName, meshName.str());
-						std::cout << std::endl;
-						std::cout << "c++: " << geometryName << " file: " << meshName.str() << std::endl;
 					}
 				}
 					break;

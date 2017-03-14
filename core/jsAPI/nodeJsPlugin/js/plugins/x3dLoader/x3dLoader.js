@@ -338,19 +338,23 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     }
     else if (tagName == 'indexedfaceset') {
         console.log('- indexedfaceset:' + groupNodeObj.getName());
-        var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
-        var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-        var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-        var matItem = currentItem.siblings('Appearance').first().children('Material').first();
-        var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-        indexedFaceSetObj.setParameters(groupNodeObj.getName(), coordinatePointsArr, coordIndexArr, materialObj);
+        var HANDLING = groupNodeObj.getName().indexOf("handling");
+        console.log('- HANDLING:' + HANDLING);
+        if (HANDLING < 0) {
+            var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
+            var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+            var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+            var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+            var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
+            indexedFaceSetObj.setParameters(groupNodeObj.getName(), coordinatePointsArr, coordIndexArr, materialObj);
 
-        if (lastGroupNodeObjName != groupNodeObj.getName()) {
-           if (groupNodeObj) {
-               indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
-               console.log('- groupNodeObj:' + groupNodeObj.getName());
-           }
-           lastGroupNodeObjName = groupNodeObj.getName();
+            if (lastGroupNodeObjName != groupNodeObj.getName()) {
+                if (groupNodeObj) {
+                    indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
+                    console.log('- groupNodeObj:' + groupNodeObj.getName());
+                }
+                lastGroupNodeObjName = groupNodeObj.getName();
+            }
         }
     }
     else if (tagName == 'box') {
@@ -468,7 +472,7 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.init = function(x3dFilePath) {
-    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
+    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
 }
