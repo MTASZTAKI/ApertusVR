@@ -525,6 +525,8 @@ var nodeLevelTmp = 0;
 var lastGroupNodeObjName = '';
 var groupNodeObj = 0;
 var interpolatorArr = new Array();
+var interpolatorID = 0;
+var keyIndex = 0;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
@@ -565,31 +567,40 @@ exports.parseX3D = function(x3dFilePath) {
   self.parseTree($, null, $('X3D'), null);
 }
 
+exports.sleep = function (delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
+
+exports.DoInterpolationStep = function () {
+    //console.log('interpolatorArr.length: ' + interpolatorArr.length + ' interpolatorID: ' + interpolatorID + ' keyIndex: ' + keyIndex);
+    if (interpolatorArr[interpolatorID].type == 'position') {
+        console.log('pos: ' + interpolatorArr[interpolatorID].keyValues[keyIndex]);
+        interpolatorArr[interpolatorID].nodeObj.setPosition(interpolatorArr[interpolatorID].keyValues[keyIndex]);
+    }
+    else if (interpolatorArr[interpolatorID].type == 'orientation') {
+        console.log('ori: ' + interpolatorArr[interpolatorID].keyValues[keyIndex]);
+        interpolatorArr[interpolatorID].nodeObj.setOrientation(interpolatorArr[interpolatorID].keyValues[keyIndex]);
+    }
+}
+
+exports.Animate = function () {
+    while (interpolatorID < interpolatorArr.length) {
+        while (keyIndex < interpolatorArr[interpolatorID].keyValues.length) {
+            self.sleep(20);
+            self.DoInterpolationStep();
+            keyIndex++;
+        }
+        keyIndex = 0;
+        interpolatorID++;
+    }
+}
+
 exports.init = function(x3dFilePath) {
     var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
-
-
-  for (var i = 0; i < interpolatorArr.length; i++) {
-      for (var j = 0; j < interpolatorArr[i].keyValues.length; j++) {
-          if (interpolatorArr[i].type == 'position') {
-              //console.log('pos: ' + interpolatorArr[i].keyValues[j]);
-              interpolatorArr[i].nodeObj.setPosition(interpolatorArr[i].keyValues[j]);
-          }
-          else if (interpolatorArr[i].type == 'orientation') {
-              //console.log('ori: ' + interpolatorArr[i].keyValues[j]);
-              interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[j]);
-          }
-      }
-  }
-  console.log('X3D-animation play is done: ' + path.basename(fileName));
-  /*for (var i = 0; i < interpolatorArr[0].keys.length; i++) {
-      console.log('keys: ' + interpolatorArr[0].keys[i]);
-  }*/
-  /*setInterval(function () {
-      for (var i = 0; i < interpolatorArr.length; i++) {
-        console.log('interpolatorNodeName: ' + interpolatorArr[i].nodeName);
-      }
-  }, 20);*/
+  console.log('X3D-animation play begin:');
+  self.Animate();
+  console.log('X3D-animation play end:');
 }
