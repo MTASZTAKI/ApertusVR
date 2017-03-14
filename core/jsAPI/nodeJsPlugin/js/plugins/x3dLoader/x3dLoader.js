@@ -322,15 +322,20 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     else if (tagName == 'viewpoint') {
       //
     }
-    /*else if (tagName == 'shape') {
+    else if (tagName == 'shape') {
         var use = currentItem.attr('USE');
         if (utils.isDefined(use)) {
-            var geometryName = use + '.mesh';
-            var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(geometryName);
+            var geometryName = use;
+            var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(currentItem[0].itemName);
             fileGeometryObj.setFileName(geometryName);
             console.log('USE: ' + fileGeometryObj.getName());
+
+            if (parentNodeObj) {
+                fileGeometryObj.setParentNodeJsPtr(parentNodeObj);
+                console.log(' - this: ' + fileGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+            }
         }
-    }*/
+    }
     else if (tagName == 'indexedfaceset') {
         console.log('- indexedfaceset:' + groupNodeObj.getName());
         var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
@@ -456,7 +461,7 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.init = function(x3dFilePath) {
-  var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
+    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/weldingFixture.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
 }
