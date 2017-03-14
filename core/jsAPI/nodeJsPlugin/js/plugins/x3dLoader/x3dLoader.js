@@ -155,6 +155,64 @@ exports.parseCoordinatePointAttr = function(currentItem)
   return pointsArr;
 }
 
+exports.parsePositionInterpolatorKeyValuesAttr = function (currentItem) {
+    if (!utils.isDefined(currentItem)) {
+        throw 'currentItem is not defined!';
+        return null;
+    }
+
+    var items = new Array();
+
+    var keyValueArr = currentItem.attr('keyValue');
+    if (!utils.isDefined(keyValueArr)) {
+        throw 'keyValue attrib is not defined!';
+        return null;
+    }
+
+    var itemsArr = splitX3DAttr(keyValueArr);
+    if (itemsArr.length == 0) {
+        throw 'pointAttr length is 0!';
+        return null;
+    }
+
+    for (var j = 0; j < itemsArr.length; j = j + 3) {
+        items.push(new ape.nbind.Vector3(Number(itemsArr[j]), Number(itemsArr[j + 1]), Number(itemsArr[j + 2])));
+    }
+
+    console.log(' - keyValue: ' + items);
+    return items;
+}
+
+exports.parseOrientationInterpolatorKeyValuesAttr = function (currentItem) {
+    if (!utils.isDefined(currentItem)) {
+        throw 'currentItem is not defined!';
+        return null;
+    }
+
+    var items = new Array();
+
+    var keyValueArr = currentItem.attr('keyValue');
+    if (!utils.isDefined(keyValueArr)) {
+        throw 'keyValue attrib is not defined!';
+        return null;
+    }
+
+    var itemsArr = splitX3DAttr(keyValueArr);
+    if (itemsArr.length == 0) {
+        throw 'pointAttr length is 0!';
+        return null;
+    }
+
+    for (var j = 0; j < itemsArr.length; j = j + 4) {
+        var axis = ape.nbind.Vector3(Number(itemsArr[j]), Number(itemsArr[j + 1]), Number(itemsArr[j + 2]));
+        var radian = ape.nbind.Radian(Number(itemsArr[j + 3]));
+        items.push(new ape.nbind.Quaternion(radian, axis));
+    }
+
+    console.log(' - keyValue: ' + items);
+    return items;
+}
+
 // Transform
 
 exports.parseTranslationAttr = function(currentItem)
@@ -419,6 +477,41 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         console.log('groupChanged: ' + groupNodeObj.getName());
         return nodeObj;
     }
+    else if (tagName == 'orientationinterpolator') {
+        var orientationInterpolator = { type: 'orientation', name: currentItem[0].itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
+        var keys = splitX3DAttr(currentItem.attr('key'));
+        var keyValues = self.parseOrientationInterpolatorKeyValuesAttr(currentItem);
+        orientationInterpolator.keys = keys;
+        orientationInterpolator.keyValues = keyValues;
+        interpolatorArr.push(orientationInterpolator);
+        console.log('OrientationInterpolator: ' + currentItem[0].itemName);
+    }
+    else if (tagName == 'positioninterpolator') {
+        var positionInterpolator = { type: 'position', name: currentItem[0].itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
+        var keys = splitX3DAttr(currentItem.attr('key'));
+        var keyValues = self.parsePositionInterpolatorKeyValuesAttr(currentItem);
+        positionInterpolator.keys = keys;
+        positionInterpolator.keyValues = keyValues;
+        interpolatorArr.push(positionInterpolator);
+        console.log('PositionInterpolator: ' + currentItem[0].itemName);
+    }
+    else if (tagName == 'route') {
+        var interpolatorName = currentItem.attr('fromNode');
+        var nodeName = currentItem.attr('toNode');
+        console.log('ROUTE: ' + interpolatorName);
+        for (var i = 0; i < interpolatorArr.length; i++) {
+            if (interpolatorArr[i].name == interpolatorName) {
+                interpolatorArr[i].nodeName = nodeName;
+                ape.nbind.JsBindManager().getNode(interpolatorArr[i].nodeName, function (error, object) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    interpolatorArr[i].nodeObj = object;
+                });
+            }
+        }
+    }
     else {
 
     }
@@ -431,6 +524,7 @@ var nodeLevel = 0;
 var nodeLevelTmp = 0;
 var lastGroupNodeObjName = '';
 var groupNodeObj = 0;
+var interpolatorArr = new Array();
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   if (!childItem) {
@@ -472,7 +566,30 @@ exports.parseX3D = function(x3dFilePath) {
 }
 
 exports.init = function(x3dFilePath) {
-    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cell.x3d';
+    var fileName = 'node_modules/apertusvr/js/plugins/x3dLoader/samples/cellAnim.x3d';
   self.parseX3D(fileName);
   console.log('X3D-parsing done: ' + path.basename(fileName));
+
+
+  for (var i = 0; i < interpolatorArr.length; i++) {
+      for (var j = 0; j < interpolatorArr[i].keyValues.length; j++) {
+          if (interpolatorArr[i].type == 'position') {
+              //console.log('pos: ' + interpolatorArr[i].keyValues[j]);
+              interpolatorArr[i].nodeObj.setPosition(interpolatorArr[i].keyValues[j]);
+          }
+          else if (interpolatorArr[i].type == 'orientation') {
+              //console.log('ori: ' + interpolatorArr[i].keyValues[j]);
+              interpolatorArr[i].nodeObj.setOrientation(interpolatorArr[i].keyValues[j]);
+          }
+      }
+  }
+  console.log('X3D-animation play is done: ' + path.basename(fileName));
+  /*for (var i = 0; i < interpolatorArr[0].keys.length; i++) {
+      console.log('keys: ' + interpolatorArr[0].keys[i]);
+  }*/
+  /*setInterval(function () {
+      for (var i = 0; i < interpolatorArr.length; i++) {
+        console.log('interpolatorNodeName: ' + interpolatorArr[i].nodeName);
+      }
+  }, 20);*/
 }
