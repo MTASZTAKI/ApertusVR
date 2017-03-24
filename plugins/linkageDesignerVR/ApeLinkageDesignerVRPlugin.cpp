@@ -84,8 +84,15 @@ void ApeLinkageDesignerVRPlugin::Init()
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
-		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
+		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, 1));
+		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
 	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;

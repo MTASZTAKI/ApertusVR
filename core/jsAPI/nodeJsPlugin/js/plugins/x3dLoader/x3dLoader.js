@@ -428,7 +428,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             console.log(' - this: ' + boxSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
         }
     }
-    else if (tagName == 'indexedlineset') {
+    /*else if (tagName == 'indexedlineset') {
         var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(currentItem[0].itemName);
         var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
         var coordIndexArr = self.parseCoordIndexAttr(currentItem);
@@ -439,7 +439,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             indexedLineSetObj.setParentNodeJsPtr(parentNodeObj);
             console.log(' - this: ' + indexedLineSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
         }
-    }
+    }*/
     else if (tagName == 'transform') {
         var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
         nodeLevel++;
@@ -453,6 +453,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
             if (currentlyParsedFileName == 'weldingFixture') {
                 nodeObj.setPosition(new ape.nbind.Vector3(20000, 0, 0));
+            }
+	    if (currentlyParsedFileName == 'cellAnim') {
+                nodeObj.setPosition(new ape.nbind.Vector3(-30, 2, -35));
             }
         }
         else {
