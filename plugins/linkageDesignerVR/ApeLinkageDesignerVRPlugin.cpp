@@ -18,8 +18,8 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(20000, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(20000, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(0, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
 	mSwitchNodeVisibilityNames = std::vector<std::string>();
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
@@ -168,6 +168,7 @@ void ApeLinkageDesignerVRPlugin::moveUserNode()
 void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 {
 	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
+	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
 	mSceneToggleIndex++;
 	if (mScenePoses.size() == mSceneToggleIndex)
 		mSceneToggleIndex = 0;

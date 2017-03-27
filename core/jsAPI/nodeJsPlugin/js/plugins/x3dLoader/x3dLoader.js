@@ -454,8 +454,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             if (currentlyParsedFileName == 'weldingFixture') {
                 nodeObj.setPosition(new ape.nbind.Vector3(20000, 0, 0));
             }
-	    if (currentlyParsedFileName == 'cellAnim') {
-                nodeObj.setPosition(new ape.nbind.Vector3(-30, 2, -35));
+            if (currentlyParsedFileName == 'cellAnim') {
+                nodeObj.setPosition(new ape.nbind.Vector3(75, 0, -160));
+                nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, 0.5, 0.5));
             }
         }
         else {
