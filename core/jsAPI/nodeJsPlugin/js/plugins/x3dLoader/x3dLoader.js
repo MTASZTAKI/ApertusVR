@@ -398,8 +398,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         var groupNodeObjName = groupNodeObj.getName();
         console.log('- indexedfaceset:' + groupNodeObjName);
         var HANDLING = groupNodeObjName.indexOf("handling");
-        console.log('- HANDLING:' + HANDLING);
-        if (HANDLING < 0) {
+        var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
+        if (HANDLING < 0 && FIXTURE < 0) {
             var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
             var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
             var coordIndexArr = self.parseCoordIndexAttr(currentItem);
