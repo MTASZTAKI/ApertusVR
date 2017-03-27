@@ -112,6 +112,8 @@ private:
 	void toggleScenePoses(Ape::NodeSharedPtr userNode);
 
 	void toggleSwitchNodesVisibility();
+
+	void saveUserNodePose(Ape::NodeSharedPtr userNode);
 	
 public:
 	ApeLinkageDesignerVRPlugin();

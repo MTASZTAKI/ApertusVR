@@ -18,8 +18,8 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(20000, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(19984.9, -225, 73.2155), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
 	mSwitchNodeVisibilityNames = std::vector<std::string>();
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
@@ -191,6 +191,15 @@ void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 	}
 }
 
+void ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+{
+	std::ofstream userNodePoseFile;
+	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+	userNodePoseFile.close();
+}
+
 
 void ApeLinkageDesignerVRPlugin::Run()
 {
@@ -235,6 +244,8 @@ bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 	{
 		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 			toggleScenePoses(userNode);
+		else if (mKeyCodeMap[OIS::KeyCode::KC_C])
+			saveUserNodePose(userNode);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_V])
 		toggleSwitchNodesVisibility();

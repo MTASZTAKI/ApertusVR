@@ -10,13 +10,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -39,13 +39,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -68,13 +68,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -97,13 +97,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -126,13 +126,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -155,13 +155,13 @@
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
