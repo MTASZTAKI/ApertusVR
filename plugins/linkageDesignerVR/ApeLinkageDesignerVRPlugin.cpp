@@ -18,20 +18,19 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(19984.9, -225, 73.2155), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -225, 20060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
 	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
-	mSwitchNodeVisibilityNames = std::vector<std::string>();
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@fixture_1Switch");
+	/*mSwitchNodeVisibilityNames = std::vector<std::string>();
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base1Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base2Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base3Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base4Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p1Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base4Switch");*/
+	/*mSwitchNodeVisibilityNames.push_back("WeldingFixture@p1Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p2Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p3Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p4Switch");
+	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p4Switch");*/
+	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@fixture_1Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_1Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_2Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_3Switch");
@@ -40,7 +39,8 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_6Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_7Switch");
 	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_8Switch");
-	mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");
+	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
+	/*mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");*/
 	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
 }
 
