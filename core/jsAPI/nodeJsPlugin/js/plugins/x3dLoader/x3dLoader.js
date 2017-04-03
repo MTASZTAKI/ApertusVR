@@ -25,6 +25,7 @@ var ape = require('apertusvr/js/ape.js');
 var cheerio = require('cheerio');
 var htmlparser = require('htmlparser2');
 var fs = require('fs');
+var async = require('async');
 const uuidV1 = require('uuid/v1');
 const path = require('path');
 var request = require('request');
@@ -610,7 +611,7 @@ exports.parseX3DSync = function (x3dFilePath) {
     self.parseTree($, null, $('X3D'), null);
 }
 
-exports.parseX3DAsync = function (x3dFilePath) {
+exports.parseX3DAsync = function (x3dFilePath, callback) {
     var source = fs.createReadStream(x3dFilePath);
 
     var options = {
@@ -630,6 +631,7 @@ exports.parseX3DAsync = function (x3dFilePath) {
         console.log($);
 
         self.parseTree($, null, $('X3D'), null);
+        callback();
     });
 
     source.pipe(cheerioStream);
@@ -663,25 +665,61 @@ exports.Animate = function () {
     console.log('X3D-animation play end:');
 }
 
-exports.init = function(x3dFilePath) {
-  /*currentlyParsedFileName = 'weldingFixture';
-  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
-  console.log('X3D-parsing done: ' + currentlyParsedFileName);
-  currentlyParsedFileName = 'cell';
-  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
-  console.log('X3D-parsing done: ' + currentlyParsedFileName);
-  currentlyParsedFileName = 'ur5cellAnim';
-  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
-  console.log('X3D-parsing done: ' + currentlyParsedFileName);*/
-  currentlyParsedFileName = 'SuperChargerLinkage';
-  self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
-  console.log('X3D-parsing done: ' + currentlyParsedFileName);
-  /*self.Animate();
-  if (loopAnimation) {
-      setInterval(function () {
-          keyIndex = 0;
-          self.Animate();
-      }, 6000);
-  }*/
-  console.log("x3dLoader end");
+exports.init = function (x3dFilePath) {
+
+    async.waterfall(
+        [
+            function (callback) {
+                console.log('1. currentlyParsedFileName: ' + currentlyParsedFileName);
+                currentlyParsedFileName = 'weldingFixture';
+                console.log('1. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
+            },
+            function (callback) {
+                console.log('2. currentlyParsedFileName: ' + currentlyParsedFileName);
+                currentlyParsedFileName = 'cell';
+                console.log('2. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
+            },
+            function (callback) {
+                console.log('3. currentlyParsedFileName: ' + currentlyParsedFileName);
+                currentlyParsedFileName = 'ur5cellAnim';
+                console.log('3. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
+            },
+            function (callback) {
+                console.log('4. currentlyParsedFileName: ' + currentlyParsedFileName);
+                currentlyParsedFileName = 'SuperChargerLinkage';
+                console.log('4. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
+            }
+        ],
+        function (err, result) {
+            // result now equals 'done'
+            console.log("async tasks done");
+            console.log('done: currentlyParsedFileName: ' + currentlyParsedFileName);
+
+            self.Animate();
+            if (loopAnimation) {
+                setInterval(function () {
+                    keyIndex = 0;
+                    self.Animate();
+                }, 6000);
+            }
+        }
+    );
+
+    console.log("x3dLoader end");
 }

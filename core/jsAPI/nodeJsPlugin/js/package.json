@@ -8,6 +8,7 @@
     "body-parser": "^1.15.2",
     "cheerio": "*",
     "htmlparser2": "*",
+    "async": "*",
     "express": "^4.14.0",
     "express-validator": "^2.20.10",
     "morgan": "^1.7.0",
