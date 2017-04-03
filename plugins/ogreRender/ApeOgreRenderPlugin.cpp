@@ -744,7 +744,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (mpSceneMgr->hasSceneNode(parentNodeName))
 							{
 								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								{
 									ogreParentNode->attachObject(ogreManual);
+									//std::cout << "c++: " << ogreParentNode->getName() << std::endl;
+								}
 							}
 						}
 					}
@@ -892,7 +895,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									{
 										auto ogreCurrentManualSection = ogreManual->getSection(ogreManual->getNumSections() - 1);
 										mpHlmsPbsManager->bind(ogreCurrentManualSection, ogrePbsMaterial, pass->getName());
-										std::cout << "c++: " << ogreCurrentManualSection->getMaterialName();
 									}
 								}
 							}

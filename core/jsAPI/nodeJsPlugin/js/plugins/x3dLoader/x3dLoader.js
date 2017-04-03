@@ -23,9 +23,11 @@ SOFTWARE.*/
 var utils = require('apertusvr/js/utils.js');
 var ape = require('apertusvr/js/ape.js');
 var cheerio = require('cheerio');
+var htmlparser = require('htmlparser2');
 var fs = require('fs');
 const uuidV1 = require('uuid/v1');
 const path = require('path');
+var request = require('request');
 var self = this;
 
 // IndexedFaceSet, IndexedLineSet
@@ -395,7 +397,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }
     else if (tagName == 'indexedfaceset') {
-        var groupNodeObjName = groupNodeObj.getName();
+        var groupNodeObjName = currentItem[0].itemName;
+        if (groupNodeObj) {
+            groupNodeObjName = groupNodeObj.getName();
+        }
         console.log('- indexedfaceset:' + groupNodeObjName);
         var HANDLING = groupNodeObjName.indexOf("handling");
         var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
@@ -407,12 +412,20 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
             indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, materialObj);
 
+            var grouped = false;
             if (lastGroupNodeObjName != groupNodeObjName) {
                 if (groupNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
                     console.log('- groupNodeObj:' + groupNodeObjName);
+                    grouped = true;
                 }
                 lastGroupNodeObjName = groupNodeObjName;
+            }
+            if (!grouped) {
+                if (parentNodeObj) {
+                    indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+                    console.log('anyad');
+                }
             }
         }
     }
@@ -457,6 +470,12 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             if (currentlyParsedFileName == 'ur5cellAnim') {
                 nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
                 nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
+            }
+            if (currentlyParsedFileName == 'SuperChargerLinkage') {
+                nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 40000));
+                /*var textObj = ape.nbind.JsBindManager().createText('SuperChargerLinkage');
+                textObj.setParentNodeJsPtr(nodeObj);
+                textObj.setCaption('SuperChargerLinkage');*/
             }
         }
         else {
@@ -583,12 +602,37 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
   return;
 }
 
-exports.parseX3D = function(x3dFilePath) {
-  var $ = cheerio.load(fs.readFileSync(x3dFilePath), {
-    xmlMode: true,
-    lowerCaseTags: true
-  });
-  self.parseTree($, null, $('X3D'), null);
+exports.parseX3DSync = function (x3dFilePath) {
+    var $ = cheerio.load(fs.readFileSync(x3dFilePath), {
+        xmlMode: true,
+        lowerCaseTags: true
+    });
+    self.parseTree($, null, $('X3D'), null);
+}
+
+exports.parseX3DAsync = function (x3dFilePath) {
+    var source = fs.createReadStream(x3dFilePath);
+
+    var options = {
+        xmlMode: true,
+        lowerCaseTags: true
+    };
+
+    var cheerioStream = htmlparser.createDomStream(function done(err, dom) {
+        if (err) {
+            cheerioStream.emit('error', err);
+        } else {
+            cheerioStream.emit('finish', cheerio.load(dom));
+        }
+    }, options);
+    cheerioStream.on('finish', ($) => {
+        console.log('finish');
+        console.log($);
+
+        self.parseTree($, null, $('X3D'), null);
+    });
+
+    source.pipe(cheerioStream);
 }
 
 exports.Animate = function () {
@@ -620,21 +664,24 @@ exports.Animate = function () {
 }
 
 exports.init = function(x3dFilePath) {
-  currentlyParsedFileName = 'weldingFixture';
-  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  /*currentlyParsedFileName = 'weldingFixture';
+  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
   console.log('X3D-parsing done: ' + currentlyParsedFileName);
   currentlyParsedFileName = 'cell';
-  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
   console.log('X3D-parsing done: ' + currentlyParsedFileName);
   currentlyParsedFileName = 'ur5cellAnim';
-  self.parseX3D('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  self.parseX3DSync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
+  console.log('X3D-parsing done: ' + currentlyParsedFileName);*/
+  currentlyParsedFileName = 'SuperChargerLinkage';
+  self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d');
   console.log('X3D-parsing done: ' + currentlyParsedFileName);
-  self.Animate();
+  /*self.Animate();
   if (loopAnimation) {
       setInterval(function () {
           keyIndex = 0;
           self.Animate();
       }, 6000);
-  }
-  console.log("x3dLoader end")
+  }*/
+  console.log("x3dLoader end");
 }
