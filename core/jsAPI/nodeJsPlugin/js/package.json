@@ -9,6 +9,7 @@
     "cheerio": "*",
     "htmlparser2": "*",
     "async": "*",
+	"request": "*",
     "express": "^4.14.0",
     "express-validator": "^2.20.10",
     "morgan": "^1.7.0",
