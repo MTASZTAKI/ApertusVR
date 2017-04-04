@@ -398,9 +398,11 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }
     else if (tagName == 'indexedfaceset') {
+        var grouped = false;
         var groupNodeObjName = currentItem[0].itemName;
         if (groupNodeObj) {
             groupNodeObjName = groupNodeObj.getName();
+            grouped = true;
         }
         console.log('- indexedfaceset:' + groupNodeObjName);
         var HANDLING = groupNodeObjName.indexOf("handling");
@@ -413,19 +415,16 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
             indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, materialObj);
 
-            var grouped = false;
             if (lastGroupNodeObjName != groupNodeObjName) {
                 if (groupNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
                     console.log('- groupNodeObj:' + groupNodeObjName);
-                    grouped = true;
                 }
                 lastGroupNodeObjName = groupNodeObjName;
             }
             if (!grouped) {
                 if (parentNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-                    console.log('anyad');
                 }
             }
         }
@@ -474,9 +473,6 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             }
             if (currentlyParsedFileName == 'SuperChargerLinkage') {
                 nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 40000));
-                /*var textObj = ape.nbind.JsBindManager().createText('SuperChargerLinkage');
-                textObj.setParentNodeJsPtr(nodeObj);
-                textObj.setCaption('SuperChargerLinkage');*/
             }
         }
         else {
@@ -665,41 +661,44 @@ exports.Animate = function () {
     console.log('X3D-animation play end:');
 }
 
+exports.resetGlobalValues = function () {
+    nodeLevelMap = {};
+    nodeLevel = 0;
+    nodeLevelTmp = 0;
+    lastGroupNodeObjName = '';
+    groupNodeObj = 0;
+}
+
 exports.init = function (x3dFilePath) {
 
     async.waterfall(
         [
             function (callback) {
-                console.log('1. currentlyParsedFileName: ' + currentlyParsedFileName);
                 currentlyParsedFileName = 'weldingFixture';
-                console.log('1. currentlyParsedFileName: ' + currentlyParsedFileName);
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
             },
             function (callback) {
-                console.log('2. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.resetGlobalValues();
                 currentlyParsedFileName = 'cell';
-                console.log('2. currentlyParsedFileName: ' + currentlyParsedFileName);
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
             },
             function (callback) {
-                console.log('3. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.resetGlobalValues();
                 currentlyParsedFileName = 'ur5cellAnim';
-                console.log('3. currentlyParsedFileName: ' + currentlyParsedFileName);
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
             },
             function (callback) {
-                console.log('4. currentlyParsedFileName: ' + currentlyParsedFileName);
+                self.resetGlobalValues();
                 currentlyParsedFileName = 'SuperChargerLinkage';
-                console.log('4. currentlyParsedFileName: ' + currentlyParsedFileName);
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
@@ -707,9 +706,7 @@ exports.init = function (x3dFilePath) {
             }
         ],
         function (err, result) {
-            // result now equals 'done'
             console.log("async tasks done");
-            console.log('done: currentlyParsedFileName: ' + currentlyParsedFileName);
 
             self.Animate();
             if (loopAnimation) {
@@ -720,6 +717,4 @@ exports.init = function (x3dFilePath) {
             }
         }
     );
-
-    console.log("x3dLoader end");
 }
