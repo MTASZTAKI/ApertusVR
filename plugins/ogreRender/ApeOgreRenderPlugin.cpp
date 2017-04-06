@@ -1598,9 +1598,11 @@ void Ape::OgreRenderPlugin::Init()
 	mediaFolder << APE_SOURCE_DIR << "/plugins/ogreRender/media";
 
 	mpRoot->setRenderSystem(renderSystem);
-
-	renderSystem->setConfigOption("Resource Creation Policy", "Create on all devices");
-	renderSystem->setConfigOption("Multi device memory hint", "Auto hardware buffers management");
+	if (mOgreRenderPluginConfig.renderSystem == "DX9")
+	{
+		renderSystem->setConfigOption("Resource Creation Policy", "Create on all devices");
+		renderSystem->setConfigOption("Multi device memory hint", "Auto hardware buffers management");
+	}
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts",				 "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials", "FileSystem");

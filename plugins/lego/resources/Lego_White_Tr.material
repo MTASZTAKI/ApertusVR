@@ -1,0 +1,124 @@
+
+
+material Lego_White_Tr
+{
+
+	
+	technique HLSL
+	{
+		pass Tint_FP
+		{
+			depth_check on 				
+			depth_write off
+			depth_func less_equal 
+			//cull_hardware none //clockwise anticlockwise or comment this line :)
+			scene_blend alpha_blend //use modulate for darken glass use add for brighten and tuning with ambient :)
+			vertex_program_ref Glass_Effect_Group_ComplexGlass_Object_Vertex_Shader_main
+			{
+					param_named_auto 	worldviewproj 		worldviewproj_matrix
+					param_named_auto 	eyeposition			camera_position_object_space 
+					param_named_auto	LampPos     		light_position_object_space 0
+					param_named_auto	lightAttenuation 	light_attenuation 0 
+			}
+
+			fragment_program_ref Tint_FP
+			{
+				param_named	tintcolor float4 	0.0 0.2 0.2 0.1 
+	
+			}
+
+
+			
+			
+  	}			
+
+	pass light
+		{
+			iteration once_per_light
+			depth_check on 				
+			depth_write on
+			depth_func less_equal 
+			//cull_hardware clockwise //none anticlockwise or comment this line :)
+			scene_blend add
+			
+			vertex_program_ref Glass_Effect_Group_ComplexGlass_Object_Vertex_Shader_main
+			{
+					param_named_auto 	worldviewproj 		worldviewproj_matrix
+					param_named_auto 	eyeposition			camera_position_object_space 
+				 	param_named_auto	LampPos     		light_position_object_space 0
+					param_named_auto	lightAttenuation 	light_attenuation 0 
+				
+			}
+
+			fragment_program_ref Glass_Effect_Group_ComplexGlass_Object_Pixel_Shader_spec_main
+			{
+				
+					param_named_auto	SpecColor						light_specular_colour 0 	//	Specular base color
+					param_named 		Roughness			float 	0.3
+					param_named 		F0					float 	0.8
+					param_named 		specmult			float   8
+					
+			}
+
+			
+			
+  	}
+
+  	pass object
+		{
+			depth_check on 				
+			depth_write off
+			depth_func less_equal 
+			//cull_hardware none //clockwise anticlockwise or comment this line :)
+			scene_blend add //use modulate for darken glass use add for brighten and tuning with ambient :)
+			vertex_program_ref Glass_Effect_Group_ComplexGlass_Object_Vertex_Shader_main
+			{
+					param_named_auto 	worldviewproj 		worldviewproj_matrix
+					param_named_auto 	eyeposition			camera_position_object_space 
+					param_named_auto	LampPos     		light_position_object_space 0
+					param_named_auto	lightAttenuation 	light_attenuation 0 
+				
+			}
+
+			fragment_program_ref Glass_Effect_Group_ComplexGlass_Object_Pixel_Shader_main
+			{
+				
+					param_named_auto	LampColor   					light_diffuse_colour 0   	//	auto parameter from actual light color
+					//param_named 		refractionScale					float   0.0
+					//param_named 		rainbowScale					float 	0.0
+					//param_named 		rainbowSpread					float 	0.0
+					param_named 		baseColor 						float4 	0.8 0.8 0.8 1 
+					param_named 		ambient   						float 	0.1
+					param_named 		indexOfRefractionRatio			float 	1.4
+					param_named 		reflectionScale					float 	1
+					param_named 		reflblur						float 	2
+
+					param_named 		useFresnel						float 	1	 //not working properly
+					param_named 		g_fFresnelScale   				float 	0.3
+					param_named 		g_fFresnelBias					float 	0.0
+					param_named 		g_fFresnelPower					float 	1
+					param_named 		g_fFresnelColor					float4 	0.9 0.9 0.9 1
+				
+					
+	
+			}
+
+
+			
+			texture_unit //Reflection cube map
+					{
+						cubic_texture SaintPetersBasilica.dds combinedUVW
+						filtering linear linear linear
+					}
+			texture_unit 
+					{
+						texture rainbow.tga
+						filtering linear linear linear
+					}
+  	}
+
+		
+	}
+}
+
+

@@ -145,7 +145,7 @@ app.listen(port, host,  function() {
 
   // start special plugins
   //engineeringScenePlugin.init();
-  x3dLoaderPlugin.init();
+  //x3dLoaderPlugin.init();
 });
 
 function roundDecimal(num) {

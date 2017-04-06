@@ -29,6 +29,7 @@ option(APE_PLUGIN_ArtScene "Use ArtScenePlugin?" ON )
 option(APE_PLUGIN_FobHeadTracking "Use FobHeadTrackingPlugin?" ON )
 option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
 option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
+option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -57,5 +58,8 @@ if (${APE_PLUGIN_Tester})
 endif ()
 if (${APE_PLUGIN_LinkageDesignerVR})
 	add_subdirectory (linkageDesignerVR)
+endif ()
+if (${APE_PLUGIN_Lego})
+	add_subdirectory (lego)
 endif ()
 
