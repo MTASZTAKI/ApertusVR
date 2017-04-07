@@ -16,36 +16,56 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
 	mInterpolatorsToggleIndex = 0;
-	mInterpolatorCount = 1;
+	mInterpolatorCount = 56;
 	mAnimationNodes = std::vector<Ape::NodeWeakPtr>();
 	mMeshNames = std::vector<std::string>();
-	mMeshNames.push_back("Lego-Wheel.mesh");
-	mMeshNames.push_back("Lego-2x2_Pl.mesh");
-	mMeshNames.push_back("Lego_Rod3_.mesh");
-	mMeshNames.push_back("Lego_Pan.mesh");
-	mMeshNames.push_back("Lego_3x4_Ladder.mesh");
-	mMeshNames.push_back("Lego_32x32_PlRacing.mesh");
-	mMeshNames.push_back("Lego_2x6_Pl.mesh");
-	mMeshNames.push_back("Lego_2x4_PlWh.mesh");
-	mMeshNames.push_back("Lego_2x4_Pl.mesh");
-	mMeshNames.push_back("Lego_2x14_Brd.mesh");
-	mMeshNames.push_back("Lego_2r2_Ti.mesh");
-	mMeshNames.push_back("Lego_1x4_Ti.mesh");
-	mMeshNames.push_back("Lego_1x4_Pl.mesh");
-	mMeshNames.push_back("Lego_1x21_PlTi.mesh");
-	mMeshNames.push_back("Lego_1x21_Bru.mesh");
-	mMeshNames.push_back("Lego_1x2_Slr.mesh");
-	mMeshNames.push_back("Lego_1x2_SlGr.mesh");
-	mMeshNames.push_back("Lego_1x2_pl.mesh");
-	mMeshNames.push_back("Lego_1x2_Gr.mesh");
-	mMeshNames.push_back("Lego_1x2_Br.mesh");
-	mMeshNames.push_back("Lego_1x2_1vq.mesh");
-	mMeshNames.push_back("Lego_1x1_uq.mesh");
-	mMeshNames.push_back("Lego_1x1_Ti.mesh");
-	mMeshNames.push_back("Lego_1x1_Pl.mesh");
-	mMeshNames.push_back("Lego_1x1_Brhq.mesh");
+	mMeshNames.push_back("Lego_1r1_w_2.mesh");
 	mMeshNames.push_back("Lego_1r1-y.mesh");
-	mMeshNames.push_back("Lego_1r1_w.mesh");	
+	mMeshNames.push_back("Lego_1r1-y_2.mesh");
+	mMeshNames.push_back("Lego_1r1-y_3.mesh");
+	mMeshNames.push_back("Lego_1r1-y_4.mesh");
+	mMeshNames.push_back("Lego_1x1_Brhq.mesh");
+	mMeshNames.push_back("Lego_1x1_Brhq_2.mesh");
+	mMeshNames.push_back("Lego_1x1_Pl.mesh");
+	mMeshNames.push_back("Lego_1x1_Pl_2.mesh");
+	mMeshNames.push_back("Lego_1x1_Ti.mesh");
+	mMeshNames.push_back("Lego_1x1_Ti_2.mesh");
+	mMeshNames.push_back("Lego_1x1_uq.mesh");
+	mMeshNames.push_back("Lego_1x1_uq_2.mesh");
+	mMeshNames.push_back("Lego_1x2_1vq.mesh");
+	mMeshNames.push_back("Lego_1x2_Br.mesh");
+	mMeshNames.push_back("Lego_1x2_Br_2.mesh");
+	mMeshNames.push_back("Lego_1x2_Gr.mesh");
+	mMeshNames.push_back("Lego_1x2_pl.mesh");
+	mMeshNames.push_back("Lego_1x2_pl_2.mesh");
+	mMeshNames.push_back("Lego_1x2_SlGr.mesh");
+	mMeshNames.push_back("Lego_1x2_SlGr_2.mesh");
+	mMeshNames.push_back("Lego_1x2_Slr.mesh");
+	mMeshNames.push_back("Lego_1x2_Slr_2.mesh");
+	mMeshNames.push_back("Lego_1x21_Bru.mesh");
+	mMeshNames.push_back("Lego_1x21_Bru_2.mesh");
+	mMeshNames.push_back("Lego_1x21_PlTi.mesh");
+	mMeshNames.push_back("Lego_1x21_PlTi_2.mesh");
+	mMeshNames.push_back("Lego_1x4_Pl.mesh");
+	mMeshNames.push_back("Lego_1x4_Pl_2.mesh");
+	mMeshNames.push_back("Lego_1x4_Ti.mesh");
+	mMeshNames.push_back("Lego_1x4_Ti_2.mesh");
+	mMeshNames.push_back("Lego_2r2_Ti.mesh");
+	mMeshNames.push_back("Lego_2x14_Brd.mesh");
+	mMeshNames.push_back("Lego_2x14_Brd_2.mesh");
+	mMeshNames.push_back("Lego_2x4_Pl.mesh");
+	mMeshNames.push_back("Lego_2x4_PlWh.mesh");
+	mMeshNames.push_back("Lego_2x4_PlWh_2.mesh");
+	mMeshNames.push_back("Lego_2x6_Pl.mesh");
+	mMeshNames.push_back("Lego_32x32_PlRacing.mesh");
+	mMeshNames.push_back("Lego_3x4_Ladder.mesh");
+	mMeshNames.push_back("Lego_Pan.mesh");
+	mMeshNames.push_back("Lego_Rod3_.mesh");
+	mMeshNames.push_back("Lego-2x2_Pl.mesh");
+	mMeshNames.push_back("Lego-2x2_Pl_2.mesh");
+	mMeshNames.push_back("Lego-2x2_Pl_3.mesh");
+	mMeshNames.push_back("Lego-2x2_Pl_4.mesh");
+	mMeshNames.push_back("Lego-Wheel.mesh");
 }
 
 ApeLegoPlugin::~ApeLegoPlugin()
@@ -129,6 +149,8 @@ void ApeLegoPlugin::Init()
 		if (auto node = mpScene->createNode(meshName).lock())
 		{
 			node->setScale(Ape::Vector3(100, 100, 100));
+			if (node->getName() != "Lego_32x32_PlRacing.mesh")
+				node->setPosition(Ape::Vector3(1000, 0, 0));
 			mAnimationNodes.push_back(node);
 			if (auto geometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(meshName, Ape::Entity::GEOMETRY_FILE).lock()))
 			{
@@ -145,7 +167,9 @@ void ApeLegoPlugin::toggleInterpolators()
 	animationThread.detach();
 	mInterpolatorsToggleIndex++;
 	if (mInterpolatorCount == mInterpolatorsToggleIndex)
+	{
 		mInterpolatorsToggleIndex = 0;
+	}
 }
 
 void ApeLegoPlugin::interpolate(int interpolatorIndex)
@@ -156,8 +180,8 @@ void ApeLegoPlugin::interpolate(int interpolatorIndex)
 		{
 			auto interpolator = std::make_unique<Ape::Interpolator>();
 			interpolator->addSection(
-				Ape::Vector3(123, 2149, 16),
-				Ape::Vector3(123, 99, 16),
+				node->getPosition(),
+				Ape::Vector3(-79.592, 49.114, 16.422),
 				1.2,
 				[&](Ape::Vector3 pos) { node->setPosition(pos); }
 			);
@@ -165,6 +189,999 @@ void ApeLegoPlugin::interpolate(int interpolatorIndex)
 			{
 				interpolator->iterateTopSection();
 				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 1)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_Bru.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(159.087, 74.514, 16.423),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 2)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(98.308, 64.354, 16.427),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 3)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_1vq.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-122.891, 64.354, 16.427),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 4)
+	{
+		if (auto node = mpScene->getNode("Lego_Rod3_.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-155.874, 64.354, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 5)
+	{
+		if (auto node = mpScene->getNode("Lego_2x6_Pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(21.926, 84.674, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 6)
+	{
+		if (auto node = mpScene->getNode("Lego-2x2_Pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-79.674, 104.994, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 7)
+	{
+		if (auto node = mpScene->getNode("Lego-2x2_Pl_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(124.317, 104.994, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 8)
+	{
+		if (auto node = mpScene->getNode("Lego-2x2_Pl_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(124.317, 104.994, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 9)
+	{
+		if (auto node = mpScene->getNode("Lego_1x4_Pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(47.326, 104.994, 16.424),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 10)
+	{
+		if (auto node = mpScene->getNode("Lego_1x4_Pl_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-3.976, 104.994, 16.424),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 11)
+	{
+		if (auto node = mpScene->getNode("Lego_2x4_PlWh.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-79.674, 135.474, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 12)
+	{
+		if (auto node = mpScene->getNode("Lego_2x4_PlWh_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(123.67, 135.474, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 13)
+	{
+		if (auto node = mpScene->getNode("Lego_2x4_Pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(21.926, 125.314, 16.424),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 14)
+	{
+		if (auto node = mpScene->getNode("Lego_2x14_Brd.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-117.774, 130.394, 16.426),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 15)
+	{
+		if (auto node = mpScene->getNode("Lego_2x14_Brd_2.mesh").lock())
+		{
+			node->rotate(Ape::Degree(180).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(159.161, 130.394, 16.426),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 16)
+	{
+		if (auto node = mpScene->getNode("Lego-2x2_Pl_3.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-29.022, 145.539, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 17)
+	{
+		if (auto node = mpScene->getNode("Lego-2x2_Pl_4.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(72.754, 145.539, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 18)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_pl.mesh").lock())
+		{
+			node->rotate(Ape::Degree(90).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(22.017, 145.885, -59.864),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 19)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_pl_2.mesh").lock())
+		{
+			node->rotate(Ape::Degree(90).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(22.017, 145.88, 92.717),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 20)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1_w.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-158.393, 125.323, -59.771),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 21)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1_w_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-158.393, 125.323, 92.778),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 22)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Gr.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-153.318, 125.327, 16.429),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 23)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Br.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-5.536, 187.21, 67.143),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 24)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Br_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-5.536, 187.21, -33.981),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 25)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_SlGr.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-82.214, 170.374, -8.975),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 26)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_SlGr_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-82.214, 170.374, 41.735),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 27)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_Bru.mesh").lock())
+		{
+			node->rotate(Ape::Degree(180).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-13.65, 236.982, -34.525),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 28)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_Bru_2.mesh").lock())
+		{
+			node->rotate(Ape::Degree(180).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-13.65, 236.982, 67.043),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 29)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1-y.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-49.21, 237.053, -59.851),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 30)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1-y_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-49.21, 237.092, -9.125),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 31)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1-y_3.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-49.21, 237.053, 41.717),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 32)
+	{
+		if (auto node = mpScene->getNode("Lego_1r1-y_4.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-49.21, 237.092, 92.442),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 33)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_PlTi.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(98.126, 181.194, 16.425),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 34)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_PlTi_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(47.491, 181.194, 16.426),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 35)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Pl.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(148.679, 165.954, 92.619),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 36)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Pl_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(148.679, 165.954, -59.855),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 37)
+	{
+		if (auto node = mpScene->getNode("Lego_1x21_Bru.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(159.087, 176.227, 16.423),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 38)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Ti.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(194.664, 125.313, 92.626),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 39)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Ti_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(194.664, 125.313, -59.675),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 40)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_pl.mesh").lock())
+		{
+			node->rotate(Ape::Degree(270).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(199.621, 74.788, 16.427),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 41)
+	{
+		if (auto node = mpScene->getNode("Lego_2r2_Ti.mesh").lock())
+		{
+			node->rotate(Ape::Degree(90).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(204.898, 150.71, 16.373),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 42)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Slr.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(204.806, 74.514, 64.686),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 43)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Slr_2.mesh").lock())
+		{
+			node->rotate(Ape::Degree(180).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(204.806, 74.514, -37.408),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 44)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Brhq.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(166.484, 206.594, -59.781),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 45)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_Brhq.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(166.484, 206.594, 92.449),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 46)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Br.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(148.673, 206.594, 16.419),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 47)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_uq.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-3.478, 254.854, -8.975),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 48)
+	{
+		if (auto node = mpScene->getNode("Lego_1x1_uq_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(-3.478, 254.854, 41.749),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 49)
+	{
+		if (auto node = mpScene->getNode("Lego_1x2_Gr.mesh").lock())
+		{
+			node->rotate(Ape::Degree(270).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(148.639, 242.17, 16.429),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 50)
+	{
+		if (auto node = mpScene->getNode("Lego_1x4_Ti.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(72.734, 242.154, 92.627),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 51)
+	{
+		if (auto node = mpScene->getNode("Lego_1x4_Ti_2.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(72.734, 242.154, -59.817),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 52)
+	{
+		if (auto node = mpScene->getNode("Lego_3x4_Ladder.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(72.722, 265.015, 18.959),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 53)
+	{
+		if (auto node = mpScene->getNode("Lego_Rod3_.mesh").lock())
+		{
+			node->rotate(Ape::Degree(90).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(199.41, 231.368, 92.418),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 54)
+	{
+		if (auto node = mpScene->getNode("Lego_Pan.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				node->getPosition(),
+				Ape::Vector3(206.884, 238.341, -62.3259),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+	else if (interpolatorIndex == 55)
+	{
+		for (auto meshName : mMeshNames)
+		{
+			if (auto node = mpScene->getNode(meshName).lock())
+			{
+				if (node->getName() != "Lego_32x32_PlRacing.mesh")
+					node->setPosition(Ape::Vector3(1000, 0, 0));
 			}
 		}
 	}
