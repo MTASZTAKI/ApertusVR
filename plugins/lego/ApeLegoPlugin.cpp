@@ -8,7 +8,6 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
-	mInterpolators = std::map<int, std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mUserNode = Ape::NodeWeakPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -16,7 +15,8 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mpMouse = NULL;
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
-	mAnimationToggleIndex = 0;
+	mInterpolatorsToggleIndex = 0;
+	mInterpolatorCount = 1;
 	mAnimationNodes = std::vector<Ape::NodeWeakPtr>();
 	mMeshNames = std::vector<std::string>();
 	mMeshNames.push_back("Lego-Wheel.mesh");
@@ -137,35 +137,37 @@ void ApeLegoPlugin::Init()
 			}
 		}
 	}
-
-	for (int i = 0; i < mAnimationNodes.size(); i++)
-	{
-		if (auto animationNode = mAnimationNodes[i].lock())
-		{
-			auto moveInterpolator = std::make_unique<Ape::Interpolator>();
-			moveInterpolator->addSection(
-				Ape::Vector3(10, 10, 0),
-				Ape::Vector3(10, 10, 100),
-				10.0,
-				[&](Ape::Vector3 pos) { animationNode->setPosition(pos); }
-			);
-			moveInterpolator->addSection(
-				Ape::Vector3(10, 10, 100),
-				Ape::Vector3(10, 10, 0),
-				10.0,
-				[&](Ape::Vector3 pos) { animationNode->setPosition(pos); }
-			);
-			mInterpolators[i] = std::move(moveInterpolator);
-		}
-	}
 }
 
-void ApeLegoPlugin::toggleAnimation()
+void ApeLegoPlugin::toggleInterpolators()
 {
-	mAnimationToggleIndex++;
-	mInterpolators[mAnimationToggleIndex]->iterateTopSection();
-	if (mAnimationNodes.size() == mAnimationToggleIndex)
-		mAnimationToggleIndex = 0;
+	auto animationThread = std::thread(&ApeLegoPlugin::interpolate, this, mInterpolatorsToggleIndex);
+	animationThread.detach();
+	mInterpolatorsToggleIndex++;
+	if (mInterpolatorCount == mInterpolatorsToggleIndex)
+		mInterpolatorsToggleIndex = 0;
+}
+
+void ApeLegoPlugin::interpolate(int interpolatorIndex)
+{
+	if (interpolatorIndex == 0)
+	{
+		if (auto node = mpScene->getNode("Lego-Wheel.mesh").lock())
+		{
+			auto interpolator = std::make_unique<Ape::Interpolator>();
+			interpolator->addSection(
+				Ape::Vector3(123, 2149, 16),
+				Ape::Vector3(123, 99, 16),
+				1.2,
+				[&](Ape::Vector3 pos) { node->setPosition(pos); }
+			);
+			while (!interpolator->isQueueEmpty())
+			{
+				interpolator->iterateTopSection();
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
 }
 
 void ApeLegoPlugin::moveUserNode()
@@ -239,7 +241,7 @@ bool ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
 	if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
-		toggleAnimation();
+		toggleInterpolators();
 	return true;
 }
 

@@ -66,13 +66,13 @@ private:
 
 	Ape::ISystemConfig* mpSystemConfig;
 
-	int mAnimationToggleIndex;
+	int mInterpolatorsToggleIndex;
+
+	int mInterpolatorCount;
 
 	std::vector<std::string> mMeshNames;
 
 	std::vector<Ape::NodeWeakPtr> mAnimationNodes;
-
-	std::map<int, std::unique_ptr<Ape::Interpolator>> mInterpolators;
 	
 	void eventCallBack(const Ape::Event& event);
 
@@ -92,7 +92,9 @@ private:
 
 	void moveUserNode();
 
-	void toggleAnimation();
+	void toggleInterpolators();
+
+	void interpolate(int interpolatorIndex);
 	
 public:
 	ApeLegoPlugin();
