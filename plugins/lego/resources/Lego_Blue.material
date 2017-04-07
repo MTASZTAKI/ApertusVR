@@ -1,9 +1,5 @@
-
-
 material Lego_Blue
 {
-
-	
 	technique HLSL
 	{
 		pass ambient
@@ -48,7 +44,7 @@ material Lego_Blue
 					param_named 		SpecColor						float4  0.8 0.8 0.8 1 	//	Specular base color
 					
 					param_named 		useDiffusemap					float 	1					//	(accepted values 0,1) 0:diffusemap off 					1: diffusemap on
-					param_named 		useNormalmap					float 	0					//	(accepted values 0,1) 0:normalmap off 					1: normalmap on
+					param_named 		useNormalmap					float 	1					//	(accepted values 0,1) 0:normalmap off 					1: normalmap on
 					param_named 		useHeightmap					float 	0					//	PLEASE set same as vertex shader param!!! (accepted values 0,1) 0:paralax off 					1: paralax on
 					param_named 		useSpecCMap						float 	1					//	(accepted values 0,1) 0:Reflection off 					1:Reflection on
 					param_named 		specMult						float 	0.1					//	Specular multiplier
@@ -71,7 +67,7 @@ material Lego_Blue
 
 			texture_unit //Diffusemap
 					{
-						texture Lego_LBlue.jpg 2d
+						texture Lego_Yellow.jpg 2d
 						filtering anisotropic anisotropic linear
 					}
 

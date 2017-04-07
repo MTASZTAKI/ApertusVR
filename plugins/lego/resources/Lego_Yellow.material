@@ -1,9 +1,5 @@
-
-
 material Lego_Yellow
 {
-
-	
 	technique HLSL
 	{
 		pass ambient

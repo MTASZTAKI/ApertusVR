@@ -16,7 +16,7 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
 	mInterpolatorsToggleIndex = 0;
-	mInterpolatorCount = 56;
+	mInterpolatorCount = 55;
 	mAnimationNodes = std::vector<Ape::NodeWeakPtr>();
 	mMeshNames = std::vector<std::string>();
 	mMeshNames.push_back("Lego_1r1_w.mesh");
@@ -175,6 +175,22 @@ void ApeLegoPlugin::Init()
 			}
 		}
 	}
+}
+
+void ApeLegoPlugin::blowModel()
+{
+	for (auto meshName : mMeshNames)
+	{
+		if (auto node = mpScene->getNode(meshName).lock())
+		{
+			if (node->getName() != "Lego_32x32_PlRacing.mesh")
+			{
+				node->setPosition(Ape::Vector3(1000, 0, 0));
+				node->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+			}
+		}
+	}
+	mInterpolatorsToggleIndex = 0;
 }
 
 void ApeLegoPlugin::toggleInterpolators()
@@ -1190,20 +1206,6 @@ void ApeLegoPlugin::interpolate(int interpolatorIndex)
 			}
 		}
 	}
-	else if (interpolatorIndex == 55)
-	{
-		for (auto meshName : mMeshNames)
-		{
-			if (auto node = mpScene->getNode(meshName).lock())
-			{
-				if (node->getName() != "Lego_32x32_PlRacing.mesh")
-				{
-					node->setPosition(Ape::Vector3(1000, 0, 0));
-					node->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-				}
-			}
-		}
-	}
 }
 
 void ApeLegoPlugin::moveUserNode()
@@ -1278,6 +1280,8 @@ bool ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
 	mKeyCodeMap[e.key] = true;
 	if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 		toggleInterpolators();
+	if (mKeyCodeMap[OIS::KeyCode::KC_V])
+		blowModel();
 	return true;
 }
 

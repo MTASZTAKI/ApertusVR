@@ -95,6 +95,8 @@ private:
 	void toggleInterpolators();
 
 	void interpolate(int interpolatorIndex);
+
+	void blowModel();
 	
 public:
 	ApeLegoPlugin();
