@@ -7,7 +7,7 @@
         "participantType": "Local",
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": "/plugins/presentationScene/resources",
+        "sessionResourceLocation": "/plugins/lego/resources",
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -20,8 +20,7 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApePresentationScenePlugin",
+            "ApeLegoPlugin",
             "ApeFobHeadTrackingPlugin"
         ]
     }

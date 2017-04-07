@@ -20,6 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (art)
-add_subdirectory (presentation)
-add_subdirectory (lego)
+set (CONFIGS
+    ApeFobHeadTrackingPlugin.json
+	ApeOgreRenderPlugin.json
+	ApeSystem.json
+	)
+
+add_custom_target(
+    Configs_caveSystemLego ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_caveSystemLego PROPERTY FOLDER "Samples/CaveSystem/Configs")

@@ -36,6 +36,8 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\art";
 		else if (participantType == "presentation")
 			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\presentation";
+		else if (participantType == "lego")
+			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\lego";
 	}
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
