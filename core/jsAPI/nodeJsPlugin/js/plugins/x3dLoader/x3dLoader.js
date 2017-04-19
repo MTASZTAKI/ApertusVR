@@ -158,6 +158,40 @@ exports.parseCoordinatePointAttr = function(currentItem)
   return pointsArr;
 }
 
+exports.parseNormals = function (currentItem) {
+    if (!utils.isDefined(currentItem)) {
+        //throw 'currentItem is not defined!';
+        return normals;
+    }
+
+    var normals = new Array();
+    var normal = currentItem.find('Normal').first();
+
+    if (!utils.isDefined(normal)) {
+        console.log(' Normal was not defined ');
+        return normals;
+    }
+
+    var normalAttr = normal.attr('vector');
+    if (!utils.isDefined(normalAttr)) {
+        console.log(' Normal vector was not defined ');
+        return normals;
+    }
+
+    var itemsArr = splitX3DAttr(normalAttr);
+    if (itemsArr.length == 0) {
+        console.log(' Normal vector length is 0 ');
+        return normals;
+    }
+
+    for (var j = 0; j < itemsArr.length; j++) {
+        normals.push(Number(itemsArr[j]));
+    }
+
+    console.log(' - Normals: ' + normals);
+    return normals;
+}
+
 exports.parsePositionInterpolatorKeyValuesAttr = function (currentItem) {
     if (!utils.isDefined(currentItem)) {
         throw 'currentItem is not defined!';
@@ -411,9 +445,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
             var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
             var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+            var normals = self.parseNormals(currentItem);
             var matItem = currentItem.siblings('Appearance').first().children('Material').first();
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-            indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, materialObj);
+            indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, materialObj);
 
             if (lastGroupNodeObjName != groupNodeObjName) {
                 if (groupNodeObj) {

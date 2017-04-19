@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include <vector>
 #include <array>
 #include "Ape.h"
+#include "ApeVector3.h"
 #include "ApeEntity.h"
 #include "ApeMaterial.h"
 
@@ -36,6 +37,8 @@ namespace Ape
     typedef std::vector<float> GeometryCoordinates;
 	
 	typedef std::vector<int> GeometryIndices;	//-1 code for stop
+
+	typedef std::vector<float> GeometryNormals;
 	
 	class Geometry : public Entity
 	{

@@ -811,78 +811,81 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 						{
 							std::vector<Ogre::Vector3> normals;
-							normals.resize(parameters.coordinates.size() / 3);
-							for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
-								normals[normalIndex] = Ogre::Vector3::ZERO;
-							int indexIndex = 0;
-							while (indexIndex < parameters.indices.size())
+							if (parameters.normals.size() == 0)
 							{
-								int indexCount = 0;
-								while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
-									indexCount++;
-								if (indexCount == 4)
+								normals.resize(parameters.coordinates.size() / 3);
+								for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
+									normals[normalIndex] = Ogre::Vector3::ZERO;
+								int indexIndex = 0;
+								while (indexIndex < parameters.indices.size())
 								{
-									int coordinate0Index = parameters.indices[indexIndex] * 3;
-									Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
+									int indexCount = 0;
+									while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
+										indexCount++;
+									if (indexCount == 4)
+									{
+										int coordinate0Index = parameters.indices[indexIndex] * 3;
+										Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
 
-									int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
-									Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
+										int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
+										Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
 
-									int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
-									Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
+										int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
+										Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
 
-									int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
-									Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
+										int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
+										Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
 
-									Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate3 - coordinate0));
-									coordinate0Normal.normalise();
+										Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate3 - coordinate0));
+										coordinate0Normal.normalise();
 
-									Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
-									coordinate1Normal.normalise();
+										Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
+										coordinate1Normal.normalise();
 
-									Ogre::Vector3 coordinate2Normal((coordinate3 - coordinate2).crossProduct(coordinate1 - coordinate2));
-									coordinate2Normal.normalise();
+										Ogre::Vector3 coordinate2Normal((coordinate3 - coordinate2).crossProduct(coordinate1 - coordinate2));
+										coordinate2Normal.normalise();
 
-									Ogre::Vector3 coordinate3Normal((coordinate0 - coordinate3).crossProduct(coordinate2 - coordinate3));
-									coordinate3Normal.normalise();
+										Ogre::Vector3 coordinate3Normal((coordinate0 - coordinate3).crossProduct(coordinate2 - coordinate3));
+										coordinate3Normal.normalise();
 
-									normals[parameters.indices[indexIndex]] += coordinate0Normal;
-									normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
-									normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
-									normals[parameters.indices[indexIndex + 3]] += coordinate3Normal;
+										normals[parameters.indices[indexIndex]] += coordinate0Normal;
+										normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
+										normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
+										normals[parameters.indices[indexIndex + 3]] += coordinate3Normal;
 
-									indexIndex = indexIndex + 5;
-								}
-								else if (indexCount == 3)
-								{
-									int coordinate0Index = parameters.indices[indexIndex] * 3;
-									Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
+										indexIndex = indexIndex + 5;
+									}
+									else if (indexCount == 3)
+									{
+										int coordinate0Index = parameters.indices[indexIndex] * 3;
+										Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
 
-									int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
-									Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
+										int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
+										Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
 
-									int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
-									Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
+										int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
+										Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
 
-									Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate2 - coordinate0));
-									coordinate0Normal.normalise();
+										Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate2 - coordinate0));
+										coordinate0Normal.normalise();
 
-									Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
-									coordinate1Normal.normalise();
+										Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
+										coordinate1Normal.normalise();
 
-									Ogre::Vector3 coordinate2Normal((coordinate0 - coordinate2).crossProduct(coordinate1 - coordinate2));
-									coordinate2Normal.normalise();
+										Ogre::Vector3 coordinate2Normal((coordinate0 - coordinate2).crossProduct(coordinate1 - coordinate2));
+										coordinate2Normal.normalise();
 
-									normals[parameters.indices[indexIndex]] += coordinate0Normal;
-									normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
-									normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
+										normals[parameters.indices[indexIndex]] += coordinate0Normal;
+										normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
+										normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
 
-									indexIndex = indexIndex + 4;
-								}
-								else
-								{
-									// TODO
-									indexIndex = indexIndex + indexCount + 1;
+										indexIndex = indexIndex + 4;
+									}
+									else
+									{
+										// TODO
+										indexIndex = indexIndex + indexCount + 1;
+									}
 								}
 							}
 							if (auto material = parameters.material.lock())
@@ -903,10 +906,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
 							{
 								ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
-								normals[coordinateIndex / 3].normalise();
-								ogreManual->normal(normals[coordinateIndex / 3]);
+								if (parameters.normals.size() == 0)
+								{
+									normals[coordinateIndex / 3].normalise();
+									ogreManual->normal(normals[coordinateIndex / 3]);
+								}
 							}
-							indexIndex = 0;
+							if (parameters.normals.size() != 0)
+							{
+								for (int i = 0; i < parameters.normals.size(); i = i + 3)
+									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
+							}
+							int indexIndex = 0;
 							while (indexIndex < parameters.indices.size())
 							{
 								int indexCount = 0;

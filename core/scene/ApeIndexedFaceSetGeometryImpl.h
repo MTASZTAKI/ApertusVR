@@ -37,7 +37,7 @@ namespace Ape
 
 		~IndexedFaceSetGeometryImpl();
 
-		void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::MaterialWeakPtr material);
+		void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material);
 
 		Ape::GeometryIndexedFaceSetParameters getParameters();
 

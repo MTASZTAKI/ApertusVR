@@ -35,6 +35,7 @@ namespace Ape
 		std::string groupName;
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
+		Ape::GeometryNormals normals;
 		Ape::MaterialWeakPtr material;
 		
 		GeometryIndexedFaceSetParameters()
@@ -42,14 +43,16 @@ namespace Ape
 			this->groupName = std::string();
 			this->coordinates = Ape::GeometryCoordinates();
 			this->indices = Ape::GeometryIndices();
+			this->normals = Ape::GeometryNormals();
 			this->material = Ape::MaterialWeakPtr();
 		}
 
-		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::MaterialWeakPtr material)
+		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material)
 		{
 			this->groupName = groupName;
 			this->coordinates = coordinates;
 			this->indices = indices;
+			this->normals = normals;
 			this->material = material;
 		}
 
@@ -61,6 +64,11 @@ namespace Ape
 		Ape::GeometryIndices getIndices()
 		{
 			return indices;
+		}
+
+		Ape::GeometryNormals getNormals()
+		{
+			return normals;
 		}
 
 		std::string toString() const
@@ -75,6 +83,10 @@ namespace Ape
 			for (auto const &item : indices) buff << item << ", ";
 			buff << ")" << std::endl;
 
+			buff << "Normals(";
+			for (auto const &item : normals) buff << item << ", ";
+			buff << ")" << std::endl;
+
 			return buff.str();
 		}
 	};
@@ -87,7 +99,7 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::MaterialWeakPtr material) = 0;
+		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material) = 0;
 		
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
