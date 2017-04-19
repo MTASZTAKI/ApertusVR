@@ -37,6 +37,21 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 
+# dx9
+if (WIN32)
+	message("DirectX9 SDK: Starting installer...")
+	set(DX9SDK_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe")
+	execute_process(
+		COMMAND cmd /c ${DX9SDK_SETUP_PATH}
+		RESULT_VARIABLE DX9SDK_SETUP_RESULT
+	)
+	if (${DX9SDK_SETUP_RESULT} EQUAL 0)
+		message("DirectX9 SDK: Installation succeeded, exit code (${DX9SDK_SETUP_RESULT})")
+	else ()
+		message("DirectX9 SDK: Installation failed, exit code (${DX9SDK_SETUP_RESULT})")
+	endif ()
+endif ()
+
 set(PATH_OGREDEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies)
 set(PATH_OGREDEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
 set(PATH_OGRE ${CMAKE_SOURCE_DIR}/3rdParty/ogre)

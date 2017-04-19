@@ -36,35 +36,6 @@ set (APE_SOURCE_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH "Source root folder" )
 set (APE_OUTPUT_DIR_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 set (APE_OUTPUT_DIR_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
-# python
-find_package(PythonInterp)
-message("Python: version: ${PYTHON_VERSION_STRING}")
-if (NOT PYTHONINTERP_FOUND)
-	if (WIN32)
-
-		message("Python: Starting installer...")
-
-		set(PYTHON_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/python/python-2.7.12.msi")
-
-		execute_process(
-			COMMAND cmd /c ${PYTHON_SETUP_PATH}
-			RESULT_VARIABLE PYTHON_SETUP_RESULT
-		)
-		if (${PYTHON_SETUP_RESULT} EQUAL 0)
-			message("Python: Installation succeeded, exit code (${PYTHON_SETUP_RESULT})")
-		else ()
-			message("Python: Installation failed, exit code (${PYTHON_SETUP_RESULT})")
-		endif ()
-
-		find_package(PythonInterp)
-		message("Python: version: ${PYTHON_VERSION_STRING}")
-		if (NOT PYTHONINTERP_FOUND)
-			message(FATAL_ERROR "Python: Could not find python")
-		endif ()
-
-	endif ()
-endif ()
-
 #set-up rapidjson
 set(RAPIDJSON_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/3rdParty/rapidjson/include")	
 
