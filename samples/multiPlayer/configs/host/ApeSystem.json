@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Host",
         "uniqueUserNamePrefix": "HelloWorldHost",
-        "sessionGUID": "981785050430568311",
+        "sessionGUID": "549440378423959727",
         "sessionResourceLocation": "/plugins/sampleScene/resources",
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -23,7 +23,6 @@
             "ApeOisUserInputPlugin",
             "ApeSampleScenePlugin"
         ],
-        "jsplugins": [
-        ]
+        "jsplugins": []
     }
 }

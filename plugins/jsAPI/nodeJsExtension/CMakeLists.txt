@@ -44,7 +44,7 @@ set (HEADERS
 	)
 
 set (SOURCES
-    bindings.cpp
+	bindings.cpp
     ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Binding.cc
     ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Buffer.cc
     ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/common.cc
@@ -65,7 +65,7 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/3rdParty/nbind/include
 	${PROJECT_SOURCE_DIR}/3rdParty/nan
 	${PROJECT_SOURCE_DIR}/3rdParty/raknet/Source
-	${PROJECT_SOURCE_DIR}/core/jsAPI/nodeJsExtension/wrappers
+	${PROJECT_SOURCE_DIR}/plugins/jsAPI/nodeJsExtension/wrappers
 	)
 
 # Add the dynamic library target to the project
@@ -107,4 +107,4 @@ set_target_properties( ${MY_TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_REL
 target_compile_definitions(${MY_TARGET_NAME} PRIVATE NODE_GYP_MODULE_NAME=nbind USING_UV_SHARED=1 USING_V8_SHARED=1 V8_DEPRECATION_WARNINGS=1 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE BUILDING_NODE_EXTENSION)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Core/JsAPI" )
+set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )

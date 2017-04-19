@@ -30,6 +30,7 @@ option(APE_PLUGIN_FobHeadTracking "Use FobHeadTrackingPlugin?" ON )
 option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
 option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
 option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
+option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -61,5 +62,8 @@ if (${APE_PLUGIN_LinkageDesignerVR})
 endif ()
 if (${APE_PLUGIN_Lego})
 	add_subdirectory (lego)
+endif ()
+if (${APE_PLUGIN_JsAPI})
+	add_subdirectory (jsAPI)
 endif ()
 

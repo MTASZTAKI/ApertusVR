@@ -19,6 +19,7 @@
     },
     "pluginManager": {
         "plugins": [
+		    "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
             "ApeLinkageDesignerVRPlugin",
             "ApeFobHeadTrackingPlugin"

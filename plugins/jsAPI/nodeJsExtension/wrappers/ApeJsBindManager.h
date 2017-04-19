@@ -27,6 +27,11 @@ SOFTWARE.*/
 #include <iostream>
 #include "nbind/nbind.h"
 #include "nbind/api.h"
+#include "ApeJsBindColor.h"
+#include "ApeJsBindDegree.h"
+#include "ApeJsBindQuaternion.h"
+#include "ApeJsBindRadian.h"
+#include "ApeJsBindVector3.h"
 #include "ApeIScene.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
 #include "ApeIndexedLineSetGeometryJsBind.h"
@@ -117,7 +122,7 @@ public:
 				done(false, TextJsPtr(mpScene->getEntity(name)));
 				return true;
 			}
-			
+
 			done(true, std::string("Dynamic cast failed!"));
 			return false;
 		}

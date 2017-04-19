@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "Ape.h"
+#include "ApeColor.h"
 #include "ApeIPbsPass.h"
 
 #ifdef NBIND_CLASS
@@ -102,22 +103,22 @@ public:
 
 	// IPbsPass
 
-	void setDiffuseColor(Color diffuse)
+	void setDiffuseColor(Ape::Color diffuse)
 	{
 		mPtr.lock()->setDiffuseColor(diffuse);
 	}
 
-	void setSpecularColor(Color specular)
+	void setSpecularColor(Ape::Color specular)
 	{
 		mPtr.lock()->setSpecularColor(specular);
 	}
 
-	void setAmbientColor(Color ambient) 
+	void setAmbientColor(Ape::Color ambient)
 	{
 		mPtr.lock()->setAmbientColor(ambient);
 	}
 
-	void setEmissiveColor(Color emissive) 
+	void setEmissiveColor(Ape::Color emissive)
 	{
 		mPtr.lock()->setEmissiveColor(emissive);
 	}

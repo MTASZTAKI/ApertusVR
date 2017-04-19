@@ -29,8 +29,6 @@ var util = require('util');
 var utils = require('apertusvr/js/utils.js');
 var expressValidator = require('express-validator');
 var ape = require('apertusvr/js/ape.js');
-var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
-var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
 
 const moduleTag = 'NodeJsExt';
 const apiVersion = 'v1';
@@ -142,8 +140,9 @@ app.listen(port, host,  function() {
   // console.log('apeColor2 r: ' + apeColor2.r + ' g: ' + apeColor2.g + ' b: ' + apeColor2.b + ' a: ' + apeColor2.a);
 
   utils.iterate(ape.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
-
   // start special plugins
+  //var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
+  //var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
   //engineeringScenePlugin.init();
   //x3dLoaderPlugin.init();
 });
