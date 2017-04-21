@@ -38,7 +38,10 @@ function (reportError what and when)
 endfunction ()
 
 # dx9
-if (WIN32)
+if (WIN32 AND NOT EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe)
+    message("DirectX9 SDK: Starting download, please wait...")
+	file(DOWNLOAD https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe
+	${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe SHOW_PROGRESS)
 	message("DirectX9 SDK: Starting installer...")
 	set(DX9SDK_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe")
 	execute_process(
