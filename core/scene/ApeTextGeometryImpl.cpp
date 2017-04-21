@@ -22,9 +22,10 @@ SOFTWARE.*/
 
 #include "ApeTextGeometryImpl.h"
 
-Ape::TextGeometryImpl::TextGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::ITextGeometry(name, parentNodeName), Ape::Replica("TextGeometry", isHostCreated)
+Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : Ape::ITextGeometry(name), Ape::Replica("TextGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpScene = Ape::IScene::getSingletonPtr();
 	mCaption = "";
 	mOffset = Ape::Vector3();
 	mVisibility = false;
@@ -68,11 +69,22 @@ void Ape::TextGeometryImpl::setOffset( Vector3 position )
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_OFFSET));
 }
 
+void Ape::TextGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+{
+	if (auto parentNodeSP = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mParentNodeName = parentNodeSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+	}
+	else
+		mParentNode = Ape::NodeWeakPtr();
+}
+
 void Ape::TextGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-	allocationIdBitstream->Write(RakNet::RakString(mParentNodeName.c_str()));
 }
 
 RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
@@ -83,6 +95,7 @@ RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCaption.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOffset);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -101,5 +114,12 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_OFFSET));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
+	RakNet::RakString parentName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
+	{
+		mParentNodeName = parentName.C_String();
+		mParentNode = mpScene->getNode(mParentNodeName);
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

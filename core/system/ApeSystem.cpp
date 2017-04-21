@@ -28,7 +28,6 @@ SOFTWARE.*/
 #include "ApeSceneImpl.h"
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
-#include "ApeITextGeometry.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
@@ -45,24 +44,16 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
 
+	std::stringstream generatedUniqueUserName;
+	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
+	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
+	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
+
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
 		; //TODO open a paltform specific window
 
 	gpPluginManagerImpl = new PluginManagerImpl();
-	gpPluginManagerImpl->LoadPlugins();
-	std::stringstream generatedUniqueUserName;
-	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
-	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
-	std::string userNodeName = gpSystemConfigImpl->getSceneSessionConfig().generatedUniqueUserName;
-	if (auto userNode = gpSceneImpl->createNode(userNodeName).lock())
-	{
-		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNodeName, userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
-		{
-			userNameText->setCaption(userNodeName);
-			userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-		}
-	}
-	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
+	gpPluginManagerImpl->CreatePlugins();
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

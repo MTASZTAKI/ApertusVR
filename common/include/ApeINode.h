@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <string>
 #include <memory>
 #include <map>
+#include "Ape.h"
 #include "ApeVector3.h"
 #include "ApeQuaternion.h"
 
@@ -51,8 +52,6 @@ namespace Ape
 	public:
 		virtual std::string getName() const = 0;
 
-		virtual std::string getParentName() const = 0;
-
 		virtual Vector3 getPosition() const = 0;
 
 		virtual Vector3 getDerivedPosition() const = 0;
@@ -65,7 +64,11 @@ namespace Ape
 
 		virtual Vector3 getDerivedScale() const = 0;
 
-		virtual void setParent(std::string parentNodeName) = 0;
+		virtual bool getChildrenVisibility() = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual Ape::NodeWeakPtr getParentNode() = 0;
 
 		virtual void setPosition(Vector3 position) = 0;
 
@@ -76,19 +79,9 @@ namespace Ape
 		virtual void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
 
 		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
+
+		virtual void setChildrenVisibility(bool visible) = 0;
 	};
-
-	typedef std::shared_ptr<INode> NodeSharedPtr;
-
-	typedef std::weak_ptr<INode> NodeWeakPtr;
-	
-	typedef std::vector<NodeSharedPtr> NodeSharedPtrVector;
-	
-	typedef std::vector<NodeWeakPtr> NodeWeakPtrVector;
-
-	typedef std::map<std::string, NodeWeakPtr> NodeWeakPtrNameMap;
-	
-	typedef std::map<std::string, NodeSharedPtr> NodeSharedPtrNameMap;
 }
 
 #endif

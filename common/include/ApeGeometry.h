@@ -26,49 +26,35 @@ SOFTWARE.*/
 #include <memory>
 #include <string>
 #include <vector>
+#include <array>
+#include "Ape.h"
+#include "ApeVector3.h"
 #include "ApeEntity.h"
 #include "ApeMaterial.h"
 
 namespace Ape
-{		
-	typedef std::map<int, EntityWeakPtrVector> GeometryLodLevelVectorMap;	
+{			
+    typedef std::vector<float> GeometryCoordinates;
+	
+	typedef std::vector<int> GeometryIndices;	//-1 code for stop
+
+	typedef std::vector<float> GeometryNormals;
 	
 	class Geometry : public Entity
 	{
-	public:
-		enum OperationType
-		{
-			POINTLIST,
-			LINELIST,
-			LINESTRIP,
-			TRIANGLELIST,
-			TRIANGLESTRIP,
-			TRIANGLEFAN,
-			INVALID
-		};
-		
 	protected:
-	    Geometry(std::string name, std::string parentNodeName, Entity::Type entityType) : Entity(name, parentNodeName, entityType) 
-			, mGeometries(GeometryLodLevelVectorMap()), mMaterial(MaterialWeakPtr()), mOperationType(OperationType::INVALID) {};
+	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
+			,mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
 		
 		virtual ~Geometry() {};
-		
-		GeometryLodLevelVectorMap mGeometries;
-		
-		MaterialWeakPtr mMaterial;
-		
-		OperationType mOperationType;
+
+		Ape::NodeWeakPtr mParentNode;
+
+		std::string mParentNodeName;
 		
 	public:
-		
-		GeometryLodLevelVectorMap getGeometries() { return mGeometries; };
-		
-		MaterialWeakPtr getMaterial() { return mMaterial; };
-		
-		OperationType getOperationType() { return mOperationType; };	
+		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
 	};
-
-	typedef std::weak_ptr<Geometry> GeometryWeakPtr;
 }
 
 #endif

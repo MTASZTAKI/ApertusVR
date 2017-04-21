@@ -25,12 +25,35 @@
 # FindDirectX11.cmake (3rdParty/ogre/CMake/Packages/FindDirectX11.cmake) was patched to find DirectX11 on Windows 8.1
 # ogre patch log begin
 
+# ogre_procedural patch log begin
+# CMakeLists.txt was modified in the ogre_procedural root folder
+# FindOGRE.cmake was modified in the ogre_procedural root folder/Cmake/Packages folder
+# ogre_procedural patch log begin
+
 #error function
 function (reportError what and when)
 	if (${${when}})
 		message (${${what}})
 	endif ()
 endfunction ()
+
+# dx9
+if (WIN32 AND NOT EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe)
+    message("DirectX9 SDK: Starting download, please wait...")
+	file(DOWNLOAD https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe
+	${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe SHOW_PROGRESS)
+	message("DirectX9 SDK: Starting installer...")
+	set(DX9SDK_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe")
+	execute_process(
+		COMMAND cmd /c ${DX9SDK_SETUP_PATH}
+		RESULT_VARIABLE DX9SDK_SETUP_RESULT
+	)
+	if (${DX9SDK_SETUP_RESULT} EQUAL 0)
+		message("DirectX9 SDK: Installation succeeded, exit code (${DX9SDK_SETUP_RESULT})")
+	else ()
+		message("DirectX9 SDK: Installation failed, exit code (${DX9SDK_SETUP_RESULT})")
+	endif ()
+endif ()
 
 set(PATH_OGREDEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies)
 set(PATH_OGREDEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
@@ -63,7 +86,7 @@ set (CMAKE_SOURCE_DIR ${STORED_CMSD})
 set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${PATH_OGRE};${PATH_OGRE}/CMake/;${PATH_OGRE}/lib/OGRE/cmake;${PATH_OGRE}/CMake/Packages;${PATH_OGRE}/CMake/Utils)
 find_package (OGRE 1.10 QUIET)
-if (${OGRE_FOUND})
+if (OGRE_FOUND)
 	set(OGRE_READY TRUE)
 	message (STATUS "ogre is installed" )
 else ()
@@ -124,7 +147,7 @@ set (CMAKE_SOURCE_DIR ${STORED_CMSD})
 set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
 set (CMAKE_MODULE_PATH ${PATH_OGRE_PROCEDURAL}/CMake/Utils;${PATH_OGRE_PROCEDURAL}/CMake;${PATH_OGRE_PROCEDURAL}/CMake/Packages)
 find_package (OgreProcedural QUIET)
-if (${OgreProcedural_FOUND})
+if (OgreProcedural_FOUND)
 	set(OGRE_PROCEDURAL_READY TRUE)
 	message (STATUS "ogre_procedural is installed" )
 else ()
@@ -157,6 +180,7 @@ set (HEADERS
 	ApeOgreRenderPlugin.h
 	ApeOgreRenderPluginConfigs.h
 	ApeOgreMovableText.h
+	ApeOgreShaderGeneratorResolver.h
 	ApeOgreConversions.h
 	)
 set (SOURCES
@@ -170,6 +194,7 @@ include_directories(
 	${OGRE_HLMS_INCLUDE_DIRS}
 	${OGRE_MeshLodGenerator_INCLUDE_DIRS}
 	${OGRE_Plugin_ParticleFX_INCLUDE_DIRS}
+	${OGRE_RenderSystem_Direct3D9_INCLUDE_DIRS}
 	${OGRE_RenderSystem_Direct3D11_INCLUDE_DIRS}
 	${OGRE_RenderSystem_GL_INCLUDE_DIRS}
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
@@ -178,7 +203,7 @@ include_directories(
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
+${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
@@ -191,17 +216,23 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreOverlay_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreOverlay_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreOverlay_d.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreOverlay_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreHLMS_d.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreHLMS_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreRTShaderSystem_d.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreMeshLodGenerator_d.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreMeshLodGenerator_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_GL_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_GL_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D9_d.dll AND EXISTS ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/RenderSystem_Direct3D11_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreRTShaderSystem_d.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreProcedural_d.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
@@ -213,17 +244,23 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreOverlay.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreOverlay.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreOverlay.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreOverlay.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreHLMS.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreHLMS.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreRTShaderSystem.dll)
-		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreMeshLodGenerator.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMeshLodGenerator.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_GL.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_GL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D9.dll AND EXISTS ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D9.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D9.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/RenderSystem_Direct3D11.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreRTShaderSystem.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreProcedural.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)

@@ -21,20 +21,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include "ApeCameraImpl.h"
+#include <iostream>
 
-Ape::CameraImpl::CameraImpl(std::string name, std::string parentNodeName) : Ape::ICamera(name, parentNodeName)
+Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpScene = Ape::IScene::getSingletonPtr();
 	mFocalLength = 0.0f;
 	mFrustumOffset = Ape::Vector2();
 	mFOVy = 0.0f;
 	mNearClipDistance = 0.0f;
 	mFarClipDistance = 0.0f;
 	mAspectRatio = 0.0f;
+	mProjection = Ape::Matrix4();
 	mPositionOffset = Ape::Vector3();
 	mOrientationOffset = Ape::Quaternion();
-	mInitPositionOffset = Ape::Vector3();
-	mInitOrientationOffset = Ape::Quaternion();
+	mParentNode = Ape::NodeWeakPtr();
 }
 
 Ape::CameraImpl::~CameraImpl()
@@ -108,47 +110,52 @@ void Ape::CameraImpl::setAspectRatio(float aspectRatio)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ASPECTRATIO));
 }
 
-Ape::Vector3 Ape::CameraImpl::getPositionOffset()
+Ape::Matrix4 Ape::CameraImpl::getProjection()
+{
+	return mProjection;
+}
+
+void Ape::CameraImpl::setProjection(Ape::Matrix4 projection)
+{
+	mProjection = projection;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PROJECTION));
+}
+
+Ape::Vector3 Ape::CameraImpl::getPosition()
 {
 	return mPositionOffset;
 }
 
-void Ape::CameraImpl::setPositionOffset(Ape::Vector3 positionOffset)
+void Ape::CameraImpl::setPosition(Ape::Vector3 positionOffset)
 {
 	mPositionOffset = positionOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_POSITIONOFFSET));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_POSITION));
 }
 
-Ape::Quaternion Ape::CameraImpl::getOrientationOffset()
+Ape::Quaternion Ape::CameraImpl::getOrientation()
 {
 	return mOrientationOffset;
 }
 
-void Ape::CameraImpl::setOrientationOffset(Ape::Quaternion orientationOffset)
+void Ape::CameraImpl::setOrientation(Ape::Quaternion orientationOffset)
 {
 	mOrientationOffset = orientationOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORIENTATIONOFFSET));
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORIENTATION));
 }
 
-Ape::Vector3 Ape::CameraImpl::getInitPositionOffset()
+void Ape::CameraImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
-	return mInitPositionOffset;
+	if (auto parentNodeSP = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PARENTNODE));
+	}
+	else
+		mParentNode = Ape::NodeWeakPtr();
 }
 
-void Ape::CameraImpl::setInitPositionOffset(Ape::Vector3 initPositionOffset)
+Ape::NodeWeakPtr Ape::CameraImpl::getParentNode()
 {
-	mInitPositionOffset = initPositionOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_INITPOSITIONOFFSET));
-}
-
-Ape::Quaternion Ape::CameraImpl::getInitOrientationOffset()
-{
-	return mInitOrientationOffset;
-}
-
-void Ape::CameraImpl::setInitOrientationOffset(Ape::Quaternion initOrientationOffset)
-{
-	mInitOrientationOffset = initOrientationOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_INITORIENTATIONOFFSET));
+	return mParentNode;
 }
 

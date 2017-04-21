@@ -22,6 +22,7 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
+    Ape.h
 	ApeColor.h
 	ApeEntity.h
 	ApeEvent.h
@@ -29,6 +30,8 @@ set (HEADERS
 	ApeICamera.h
 	ApeILight.h
 	ApeMaterial.h
+	ApePass.h
+	ApeIPbsPass.h
 	ApeIManualMaterial.h
 	ApeIFileMaterial.h
 	ApeINode.h
@@ -43,20 +46,29 @@ set (HEADERS
 	ApeVector3.h
 	ApeVector4.h
 	ApeGeometry.h
-	ApeIManualGeometry.h
+	ApeSubGeometry.h
+	ApeIIndexedFaceSetGeometry.h
+	ApeIIndexedLineSetGeometry.h
 	ApeIFileGeometry.h
-	ApeIPrimitveBoxGeometry.h
+	ApeIPlaneGeometry.h
+	ApeITorusGeometry.h
+	ApeIConeGeometry.h
+	ApeITubeGeometry.h
+	ApeIBoxGeometry.h
+	ApeISphereGeometry.h
+	ApeICylinderGeometry.h
 	ApeSingleton.h
 	ApeIEventManager.h
 	ApeISceneSession.h
 	ApeDegree.h
 	ApeRadian.h
 	ApeEuler.h
+	ApeMatrix4.h
 	ApeSystem.h
 	ApeISystemConfig.h
 	ApeDoubleQueue.h
 	ApeIMainWindow.h
-	ApeISceneProperty.h
+	ApeInterpolator.h
 	)
 
 add_custom_target(

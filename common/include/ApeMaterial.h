@@ -26,52 +26,28 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
+#include "Ape.h"
 #include "ApeEntity.h"
 #include "ApeITexture.h"
 #include "ApeColor.h"
+#include "ApePass.h"
 
 namespace Ape
 {	
-	typedef std::map < Texture::Type, EntityWeakPtr> Textures;
-	
 	class Material : public Entity
 	{
 	protected:
-	    Material(std::string name, std::string parentNodeName, Entity::Type entityType) : Entity(name, parentNodeName, entityType) {}
+	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
 		
 		virtual ~Material() {};
-		
-		Color mDiffuseColor;
 
-		Color mSpecularColor;
+		Ape::PassWeakPtr mPass;
 
-		Color mAmbientColor;
+		std::string mPassName;
 
-		Color mEmissiveColor;
-
-		float mShininess;
-		
-		bool mSceneBlend;
-		
-		Textures mTextures;
-		
 	public:
-		Color getDiffuseColor() { return mDiffuseColor; };
-
-		Color getSpecularColor() { return mSpecularColor; };
-
-		Color getAmbientColor() { return mAmbientColor; };
-
-		Color getEmissiveColor() { return mEmissiveColor; };
-
-		float getShininess() { return mShininess; };
-		
-		bool getSceneBlend() { return mSceneBlend; };
-		
-		Textures getTextures() { return mTextures; };
+		Ape::PassWeakPtr getPass() { return mPass; };
 	};
-	
-	typedef std::weak_ptr<Material> MaterialWeakPtr;
 }
 
 #endif

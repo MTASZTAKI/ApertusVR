@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 #include "ApeVector2.h"
 #include "ApeVector4.h"
+#include "ApeMatrix4.h"
 #include "ApeQuaternion.h"
 #include "ApeColor.h"
 #include "ApeILight.h"
@@ -36,6 +37,7 @@ SOFTWARE.*/
 #include "OgreQuaternion.h"
 #include "OgreColourValue.h"
 #include "OgreLight.h"
+#include "OgreMatrix4.h"
 
 namespace Ape
 {
@@ -47,6 +49,26 @@ namespace Ape
 	inline Ape::Vector3 ConversionFromOgre(const Ogre::Vector3& p_vec)
 	{
 		return Ape::Vector3(p_vec.x, p_vec.y, p_vec.z);
+	}
+
+	inline Ogre::Matrix4 ConversionToOgre(const Ape::Matrix4& p_mat4)
+	{
+		return Ogre::Matrix4(
+			p_mat4.m[0][0], p_mat4.m[0][1], p_mat4.m[0][2], p_mat4.m[0][3],
+			p_mat4.m[1][0], p_mat4.m[1][1], p_mat4.m[1][2], p_mat4.m[1][3],
+			p_mat4.m[2][0], p_mat4.m[2][1], p_mat4.m[2][2], p_mat4.m[2][3],
+			p_mat4.m[3][0], p_mat4.m[3][1], p_mat4.m[3][2], p_mat4.m[3][3]
+			);
+	}
+
+	inline Ape::Matrix4 ConversionFromOgre(const Ogre::Matrix4& p_mat4)
+	{
+		return Ape::Matrix4(
+			p_mat4[0][0], p_mat4[0][1], p_mat4[0][2], p_mat4[0][3],
+			p_mat4[1][0], p_mat4[1][1], p_mat4[1][2], p_mat4[1][3],
+			p_mat4[2][0], p_mat4[2][1], p_mat4[2][2], p_mat4[2][3],
+			p_mat4[3][0], p_mat4[3][1], p_mat4[3][2], p_mat4[3][3]
+			);
 	}
 
 	inline Ogre::Vector2 ConversionToOgre(const Ape::Vector2& p_vec)
@@ -87,46 +109,6 @@ namespace Ape
 	inline Ape::Color ConversionFromOgre(const Ogre::ColourValue& p_colv)
 	{
 		return Ape::Color(p_colv.r, p_colv.g, p_colv.b, p_colv.a);
-	}
-
-	inline std::vector<Ogre::Vector3> ConversionToOgre(const Ape::Vector3Vector &vList)
-	{
-		std::vector<Ogre::Vector3> vec;
-		vec.reserve(vList.size());
-		for (auto it : vList) {
-			vec.push_back(ConversionToOgre(it));
-		}
-		return vec;
-	}
-
-	inline Ape::Vector3Vector ConversionFromOgre(std::vector < Ogre::Vector3 > p_v3v)
-	{
-		Ape::Vector3Vector v3l;
-		v3l.reserve(p_v3v.size());
-		for (auto it : p_v3v) {
-			v3l.push_back(ConversionFromOgre(it));
-		}
-		return v3l;
-	}
-
-	inline std::vector<Ogre::Vector4> ConversionToOgre(const Ape::Vector4Vector &vList)
-	{
-		std::vector<Ogre::Vector4> vec;
-		vec.reserve(vList.size());
-		for (auto it : vList) {
-			vec.push_back(ConversionToOgre(it));
-		}
-		return vec;
-	}
-
-	inline Ape::Vector4Vector ConversionFromOgre(std::vector < Ogre::Vector4 > p_v4v)
-	{
-		Ape::Vector4Vector v4l;
-		v4l.reserve(p_v4v.size());
-		for (auto it : p_v4v) {
-			v4l.push_back(ConversionFromOgre(it));
-		}
-		return v4l;
 	}
 
 	inline std::vector<Ogre::ColourValue> ConversionToOgre(const Ape::ColorVector &cList)
@@ -198,49 +180,6 @@ namespace Ape
 		default:
 			return Ogre::Light::LightTypes(-1);
 		}
-	}
-
-	inline Ape::Geometry::OperationType ConversionFromOgre(Ogre::RenderOperation::OperationType type)
-	{
-		switch (type)
-		{
-		case Ogre::RenderOperation::OT_POINT_LIST:
-			return Ape::Geometry::OperationType::POINTLIST;
-		case Ogre::RenderOperation::OT_LINE_LIST:
-			return Ape::Geometry::OperationType::LINELIST;
-		case Ogre::RenderOperation::OT_LINE_STRIP:
-			return Ape::Geometry::OperationType::LINESTRIP;
-		case Ogre::RenderOperation::OT_TRIANGLE_LIST:
-			return Ape::Geometry::OperationType::TRIANGLELIST;
-		case Ogre::RenderOperation::OT_TRIANGLE_STRIP:
-			return Ape::Geometry::OperationType::TRIANGLESTRIP;
-		case Ogre::RenderOperation::OT_TRIANGLE_FAN:
-			return Ape::Geometry::OperationType::TRIANGLEFAN;
-		default:
-			return Ape::Geometry::OperationType::INVALID;
-		}			
-	}
-
-	inline Ogre::RenderOperation::OperationType ConversionToOgre(Ape::Geometry::OperationType type)
-	{
-		switch (type)
-		{
-		case Ape::Geometry::OperationType::POINTLIST:
-			return Ogre::RenderOperation::OT_POINT_LIST;
-		case Ape::Geometry::OperationType::LINELIST:
-			return Ogre::RenderOperation::OT_LINE_LIST;
-		case Ape::Geometry::OperationType::LINESTRIP:
-			return Ogre::RenderOperation::OT_LINE_STRIP;
-		case Ape::Geometry::OperationType::TRIANGLELIST:
-			return Ogre::RenderOperation::OT_TRIANGLE_LIST;
-		case Ape::Geometry::OperationType::TRIANGLESTRIP:
-			return Ogre::RenderOperation::OT_TRIANGLE_STRIP;
-		case Ape::Geometry::OperationType::TRIANGLEFAN:
-			return Ogre::RenderOperation::OT_TRIANGLE_FAN;
-		case Ape::Geometry::OperationType::INVALID:
-		default:
-			return Ogre::RenderOperation::OperationType(-1);
-		}			
 	}
 }
 

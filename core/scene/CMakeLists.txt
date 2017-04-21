@@ -28,8 +28,18 @@ set (HEADERS
 	ApeCameraImpl.h
 	ApeSceneImpl.h
 	ApeFileGeometryImpl.h
+	ApePlaneGeometryImpl.h
+	ApeBoxGeometryImpl.h
+	ApeIndexedFaceSetGeometryImpl.h
+	ApeIndexedLineSetGeometryImpl.h
+	ApeCylinderGeometryImpl.h
+	ApeConeGeometryImpl.h
+	ApeTorusGeometryImpl.h
+	ApeTubeGeometryImpl.h
+	ApeSphereGeometryImpl.h
 	ApeFileMaterialImpl.h
-	ApeScenePropertyImpl.h
+	ApePbsPassImpl.h
+	ApeManualMaterialImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -45,8 +55,18 @@ set (SOURCES
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp
 	ApeFileGeometryImpl.cpp
+	ApePlaneGeometryImpl.cpp
+	ApeBoxGeometryImpl.cpp
+	ApeIndexedFaceSetGeometryImpl.cpp
+	ApeIndexedLineSetGeometryImpl.cpp
+	ApeCylinderGeometryImpl.cpp
+	ApeConeGeometryImpl.cpp
+	ApeTorusGeometryImpl.cpp
+	ApeTubeGeometryImpl.cpp
+	ApeSphereGeometryImpl.cpp
 	ApeFileMaterialImpl.cpp
-	ApeScenePropertyImpl.cpp
+	ApePbsPassImpl.cpp
+	ApeManualMaterialImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp

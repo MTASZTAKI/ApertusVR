@@ -1,1 +1,28 @@
-{"mainWindow":{"name":"Ape","creator":"ApeOgreRenderPlugin"},"sceneSession":{"participantType":"Host","uniqueUserNamePrefix":"HelloWorldHost","sessionGUID":"265712729140621244","sessionResourceLocation":"/samples/common/plugins/sampleScene/resources","natPunchThroughServer":{"ip":"195.111.2.95","port":"61666"},"lobbyServer":{"ip":"195.111.2.95","port":"8888"}},"pluginManager":{"plugins":["ApeOgreRenderPlugin","ApeOisUserInputPlugin","ApeSampleScenePlugin","ApeNodeJsPlugin"]}}
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Host",
+        "uniqueUserNamePrefix": "HelloWorldHost",
+        "sessionGUID": "549440378423959727",
+        "sessionResourceLocation": "/plugins/sampleScene/resources",
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "ip": "195.111.2.95",
+            "port": "8888"
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeOgreRenderPlugin",
+            "ApeOisUserInputPlugin",
+            "ApeSampleScenePlugin"
+        ],
+        "jsplugins": []
+    }
+}

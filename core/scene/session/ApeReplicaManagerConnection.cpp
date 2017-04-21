@@ -23,11 +23,21 @@ SOFTWARE.*/
 
 #include "ApeReplicaManagerConnection.h"
 #include "ApeNodeImpl.h" 
-#include "ApeFileGeometryImpl.h" 
-#include "ApeTextGeometryImpl.h" 
+#include "ApeFileGeometryImpl.h"
+#include "ApePlaneGeometryImpl.h"
+#include "ApeBoxGeometryImpl.h"
+#include "ApeCylinderGeometryImpl.h"
+#include "ApeTorusGeometryImpl.h"
+#include "ApeTubeGeometryImpl.h"
+#include "ApeSphereGeometryImpl.h"
+#include "ApeConeGeometryImpl.h"
+#include "ApeTextGeometryImpl.h"
+#include "ApeIndexedFaceSetGeometryImpl.h" 
+#include "ApeIndexedLineSetGeometryImpl.h" 
 #include "ApeLightImpl.h" 
 #include "ApeFileMaterialImpl.h"
-#include "ApeScenePropertyImpl.h"
+#include "ApeManualMaterialImpl.h"
+#include "ApePbsPassImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -44,54 +54,94 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 	RakNet::RakString objectType;
 	allocationIdBitstream->Read(objectType);
 	std::cout << "Received: " << objectType << std::endl;
-	if (objectType == "SceneProperty")
-	{
-		if (auto sceneProperty = mpSceneImpl->createProperty().lock())
-			return ((Ape::ScenePropertyImpl*)sceneProperty.get());
-	}
-	else if (objectType == "Node")
+	if (objectType == "Node")
 	{
 		RakNet::RakString nodeName;
 		allocationIdBitstream->Read(nodeName);
 		if (auto node = mpSceneImpl->createNode(nodeName.C_String()).lock())
 			return ((Ape::NodeImpl*)node.get());
 	}
-	else if (objectType == "FileGeometry")
+	else
 	{
-		RakNet::RakString fileGeometryName;
-		allocationIdBitstream->Read(fileGeometryName);
-		RakNet::RakString parentNodeName;
-		allocationIdBitstream->Read(parentNodeName);
-		if (auto fileGeometry = mpSceneImpl->createEntity(fileGeometryName.C_String(), parentNodeName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())
-			return ((Ape::FileGeometryImpl*)fileGeometry.get());
+		RakNet::RakString entityName;
+		allocationIdBitstream->Read(entityName);
+		if (objectType == "FileGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())
+				return ((Ape::FileGeometryImpl*)entity.get());
+		}
+		else if (objectType == "PlaneGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_PLANE).lock())
+				return ((Ape::PlaneGeometryImpl*)entity.get());
+		}
+		else if (objectType == "BoxGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_BOX).lock())
+				return ((Ape::BoxGeometryImpl*)entity.get());
+		}
+		else if (objectType == "ConeGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_CONE).lock())
+				return ((Ape::ConeGeometryImpl*)entity.get());
+		}
+		else if (objectType == "CylinderGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_CYLINDER).lock())
+				return ((Ape::CylinderGeometryImpl*)entity.get());
+		}
+		else if (objectType == "SphereGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_SPHERE).lock())
+				return ((Ape::SphereGeometryImpl*)entity.get());
+		}
+		else if (objectType == "TorusGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TORUS).lock())
+				return ((Ape::TorusGeometryImpl*)entity.get());
+		}
+		else if (objectType == "TubeGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TUBE).lock())
+				return ((Ape::TubeGeometryImpl*)entity.get());
+		}
+		else if (objectType == "TextGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TEXT).lock())
+				return ((Ape::TextGeometryImpl*)entity.get());
+		}
+		else if (objectType == "IndexedFaceSetGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDFACESET).lock())
+				return ((Ape::IndexedFaceSetGeometryImpl*)entity.get());
+		}
+		else if (objectType == "IndexedLineSetGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDLINESET).lock())
+				return ((Ape::IndexedLineSetGeometryImpl*)entity.get());
+		}
+		else if (objectType == "FileMaterial")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::MATERIAL_FILE).lock())
+				return ((Ape::FileMaterialImpl*)entity.get());
+		}
+		else if (objectType == "Light")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::LIGHT).lock())
+				return ((Ape::LightImpl*)entity.get());
+		}
+		else if (objectType == "ManualMaterial")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::MATERIAL_MANUAL).lock())
+				return ((Ape::ManualMaterialImpl*)entity.get());
+		}
+		else if (objectType == "PbsPass")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::PASS_PBS).lock())
+				return ((Ape::PbsPassImpl*)entity.get());
+		}
 	}
-	else if (objectType == "TextGeometry")
-	{
-		RakNet::RakString textGeometryName;
-		allocationIdBitstream->Read(textGeometryName);
-		RakNet::RakString parentNodeName;
-		allocationIdBitstream->Read(parentNodeName);
-		if (auto textGeometry = mpSceneImpl->createEntity(textGeometryName.C_String(), parentNodeName.C_String(), Ape::Entity::GEOMETRY_TEXT).lock())
-			return ((Ape::TextGeometryImpl*)textGeometry.get());
-	}
-	else if (objectType == "FileMaterial")
-	{
-		RakNet::RakString fileMaterialName;
-		allocationIdBitstream->Read(fileMaterialName);
-		RakNet::RakString parentNodeName;
-		allocationIdBitstream->Read(parentNodeName);
-		if (auto fileMaterial = mpSceneImpl->createEntity(fileMaterialName.C_String(), parentNodeName.C_String(), Ape::Entity::MATERIAL_FILE).lock())
-			return ((Ape::FileMaterialImpl*)fileMaterial.get());
-	}
-	else if (objectType == "Light")
-	{
-		RakNet::RakString lightName;
-		allocationIdBitstream->Read(lightName);
-		RakNet::RakString parentNodeName;
-		allocationIdBitstream->Read(parentNodeName);
-		if (auto light = mpSceneImpl->createEntity(lightName.C_String(), parentNodeName.C_String(), Ape::Entity::LIGHT).lock())
-			return ((Ape::LightImpl*)light.get());
-	}
+	
 	return NULL;
 }
 

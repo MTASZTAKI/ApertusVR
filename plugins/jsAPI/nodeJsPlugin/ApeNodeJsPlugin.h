@@ -31,12 +31,11 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
-#include "ApeIJsEventManager.h"
+//#include "ApeIJsEventManager.h"
 
 #include <map>
 #include <vector>
 #include "ApeEvent.h"
-#include "v8.h"
 
 class ApeNodeJsPlugin : public Ape::IPlugin
 {
@@ -45,7 +44,7 @@ private:
 
 	Ape::IScene* mpScene;
 
-	Ape::IJsEventManager* mpJsEventManager;
+	//Ape::IJsEventManager* mpJsEventManager;
 
 	Ape::NodeWeakPtr mNodeWeakPtr;
 

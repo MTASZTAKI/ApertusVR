@@ -25,6 +25,8 @@ SOFTWARE.*/
 
 #include "ApeIFileGeometry.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
 #include "ApeReplica.h"
 
 namespace Ape
@@ -32,13 +34,19 @@ namespace Ape
 	class FileGeometryImpl : public Ape::IFileGeometry, public Ape::Replica
 	{
 	public:
-		FileGeometryImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		FileGeometryImpl(std::string name, bool isHostCreated);
 
 		~FileGeometryImpl();
 		
 		void setFileName(std::string fileName);
 
 		std::string getfFileName();
+
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		void setMaterial(Ape::MaterialWeakPtr material);
+
+		Ape::MaterialWeakPtr getMaterial();
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -49,7 +57,13 @@ namespace Ape
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
+		Ape::IScene* mpScene;
+
 		std::string mFileName;
+
+		Ape::MaterialWeakPtr mMaterial;
+
+		std::string mMaterialName;
 	};
 }
 

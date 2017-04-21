@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
+#include "ApeITextGeometry.h"
 
 namespace Ape
 {
@@ -69,6 +70,19 @@ namespace Ape
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
 	private:
+		struct UserNodePose
+		{
+			Ape::Vector3 position;
+			Ape::Quaternion orientation;
+
+			UserNodePose(
+				Ape::Vector3 position,
+				Ape::Quaternion orientation)
+			{
+				this->position = position;
+				this->orientation = orientation;
+			}
+		};
 		OIS::Keyboard* mpKeyboard; 
 
 		OIS::Mouse* mpMouse;
@@ -81,15 +95,25 @@ namespace Ape
 
 		Ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mCameraNode;
+		Ape::NodeWeakPtr mUserNode;
 
-		bool mIsPressed;
+		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
-		OIS::KeyCode mKeyCode;
+		std::vector<UserNodePose> mUserNodePoses;
 
-		int mSpeedFactor;
+		int mUserNodePosesToggleIndex;
+
+		int mTranslateSpeedFactor;
+
+		int mRotateSpeedFactor;
+
+		bool mIsKeyPressed;
 
 		void moveUserNode();
+
+		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+
+		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 
 		void eventCallBack(const Ape::Event& event);
 	};

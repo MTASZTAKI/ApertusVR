@@ -1,0 +1,116 @@
+
+
+material Lego_DGrey
+{
+
+	
+	technique HLSL
+	{
+		pass ambient
+		{
+			vertex_program_ref Ambient_VP
+			{
+					param_named_auto worldViewProj worldviewproj_matrix
+					param_named ambient float4 0 0 0 1.0				
+			}
+		}
+		
+		pass one
+		{
+			iteration once_per_light
+			depth_check on 				
+			depth_write on 				
+			depth_func less_equal 
+			cull_hardware none 
+			scene_blend add
+
+			vertex_program_ref Ubershader_6_HLSL_VS
+			{
+					param_named_auto 	eyeposition			camera_position_object_space 
+					param_named_auto 	WvpXf				worldviewproj_matrix
+					param_named_auto	LampPos     		light_position_object_space 0
+					param_named_auto 	spotDirection 		light_direction_object_space 0
+					param_named 		useHeightmap		float 0					//PLEASE set same as vertex shader param!!! 	(accepted values 0,1) 0:paralax off 					1: paralax on  
+					param_named 		Offset_bias			float 0.0004
+					param_named			TileCount 			float 1
+					param_named			DetTileCount 		float 1
+				
+			}
+
+			fragment_program_ref Ubershader_6_HLSL_PS
+			{
+				
+					param_named_auto	AmbiColor   					ambient_light_colour 0   	//	auto parameter from scene ambient color
+					param_named_auto	LampColor   					light_diffuse_colour 0   	//	auto parameter from actual light color
+					param_named_auto 	spotParams 						spotlight_params 0
+					
+					param_named 		SurfaceColor					float3  1 1 1            	//	Surface base color 
+					param_named 		SpecColor						float4  0.8 0.8 0.8 1 	//	Specular base color
+					
+					param_named 		useDiffusemap					float 	1					//	(accepted values 0,1) 0:diffusemap off 					1: diffusemap on
+					param_named 		useNormalmap					float 	1					//	(accepted values 0,1) 0:normalmap off 					1: normalmap on
+					param_named 		useHeightmap					float 	0					//	PLEASE set same as vertex shader param!!! (accepted values 0,1) 0:paralax off 					1: paralax on
+					param_named 		useSpecCMap						float 	1					//	(accepted values 0,1) 0:Reflection off 					1:Reflection on
+					param_named 		specMult						float 	0.1					//	Specular multiplier
+					param_named 		useRoghnessMap					float 	0					//	(accepted values 0,1) 0:Use roughness value 			1:Use roughness map
+					
+					param_named 		useReflection					float 	0					//	(accepted values 0,1) 0:Use roughness value 			1:Use roughness map
+					param_named 		ReflectionPower					float 	0.4
+					param_named 		ReflBlurFactor					float 	5
+					
+					param_named 		useAO  							float 	0					//	(accepted values 0,1) 0:AO off 							1:Use AO map
+					
+					param_named 		Roughness						float 	0.4  					
+					param_named 		F0								float 	0.1
+					
+					param_named 		NumofMinSamples					float 	10 //min 1 max 200
+					param_named 		NumofMaxSamples					float 	20 //min 2 max 201
+
+					
+			}
+
+			texture_unit //Diffusemap
+					{
+						texture Lego_DGrey.jpg 2d
+						filtering anisotropic anisotropic linear
+					}
+
+			texture_unit //Nomalmap 
+					{
+						texture Lego_Normal.jpg
+						filtering anisotropic anisotropic linear
+					}
+
+			texture_unit //Specular color map
+					{
+						texture Lego_LGrey.jpg 2d
+						filtering anisotropic anisotropic linear
+					}
+
+			texture_unit //Roughness map
+					{
+						texture Lego_LGrey.jpg 2d
+						filtering anisotropic anisotropic linear
+					}
+			texture_unit //Height map for paralax
+					{
+						texture Lego_LGrey.jpg 2d
+						filtering anisotropic anisotropic linear
+					}
+
+			texture_unit //Ambient occlusion map
+					{
+						texture Lego_White.jpg 2d
+						filtering anisotropic anisotropic linear
+					}
+
+			texture_unit //Reflection cube map
+					{
+				        cubic_texture SaintPetersBasilica.dds combinedUVW
+						filtering anisotropic anisotropic linear
+					}
+  	}
+
+		
+	}
+}

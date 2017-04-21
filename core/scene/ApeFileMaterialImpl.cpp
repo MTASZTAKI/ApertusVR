@@ -22,10 +22,11 @@ SOFTWARE.*/
 
 #include "ApeFileMaterialImpl.h"
 
-Ape::FileMaterialImpl::FileMaterialImpl(std::string name, std::string parentNodeName, bool isHostCreated) : Ape::IFileMaterial(name, parentNodeName), Ape::Replica("FileMaterial", isHostCreated)
+Ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : Ape::IFileMaterial(name), Ape::Replica("FileMaterial", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();
+	mIsSkyBox = false;
 }
 
 Ape::FileMaterialImpl::~FileMaterialImpl()
@@ -44,11 +45,16 @@ void Ape::FileMaterialImpl::setFileName(std::string fileName)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_FILENAME));
 }
 
+void Ape::FileMaterialImpl::setAsSkyBox()
+{
+	mIsSkyBox = true;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
+}
+
 void Ape::FileMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-	allocationIdBitstream->Write(RakNet::RakString(mParentNodeName.c_str()));
 }
 
 RakNet::RM3SerializationResult Ape::FileMaterialImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
@@ -57,6 +63,7 @@ RakNet::RM3SerializationResult Ape::FileMaterialImpl::Serialize(RakNet::Serializ
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSkyBox);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -71,6 +78,8 @@ void Ape::FileMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mFileName = fileName.C_String();
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_FILENAME));
 	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSkyBox))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

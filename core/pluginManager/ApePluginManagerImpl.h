@@ -63,7 +63,13 @@ namespace Ape
 
 		~PluginManagerImpl();
 
-		void LoadPlugins();
+		void CreatePlugins();
+
+		void InitPlugins();
+
+		void RunPlugins();
+
+		void DestroyPlugins();
 
 		void joinPluginThreads();
 

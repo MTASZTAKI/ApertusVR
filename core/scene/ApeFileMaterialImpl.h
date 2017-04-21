@@ -33,13 +33,15 @@ namespace Ape
 	class FileMaterialImpl : public Ape::IFileMaterial, public Ape::Replica
 	{
 	public:
-		FileMaterialImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		FileMaterialImpl(std::string name, bool isHostCreated);
 
 		~FileMaterialImpl();
 		
 		void setFileName(std::string fileName);
 
 		std::string getfFileName();
+
+		void setAsSkyBox() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -51,6 +53,8 @@ namespace Ape
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		std::string mFileName;
+
+		bool mIsSkyBox;
 	};
 }
 

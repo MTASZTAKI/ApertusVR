@@ -37,9 +37,6 @@ set (HEADERS
 
 set (SOURCES
 	ApeNodeJsPlugin.cpp
-	js/apeHttpApi.js
-	js/apeServer.js
-	js/package.json
 	)
 
 include_directories(
@@ -67,7 +64,7 @@ endif ()
 # TODO: MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeJsAPICommon MY_NODEJS_LIB )
+target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene MY_NODEJS_LIB )
 
 # Add preprocessor definitions
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS )
@@ -90,23 +87,10 @@ if (NOT EXISTS ${BUILD_PATH_RELEASE}/apeServer.js)
 	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeServer.js DESTINATION ${BUILD_PATH_RELEASE})
 endif ()
 
-if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js/apeHttpApi.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_DEBUG}/js)
+if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js DESTINATION ${TARGET_MODULE_PATH_DEBUG})
 endif ()
-if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js/apeHttpApi.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeHttpApi.js DESTINATION ${TARGET_MODULE_PATH_RELEASE}/js)
-endif ()
+if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js DESTINATION ${TARGET_MODULE_PATH_RELEASE})
 
-# Run npm install command in output folder. This will install node module dependencies according to package.json
-add_custom_command(
-        TARGET ${MY_TARGET_NAME}
-        POST_BUILD
-        WORKING_DIRECTORY ${BUILD_PATH_DEBUG}
-        COMMAND npm install
-        )
-add_custom_command(
-        TARGET ${MY_TARGET_NAME}
-        POST_BUILD
-        WORKING_DIRECTORY ${BUILD_PATH_RELEASE}
-        COMMAND npm install
-        )
+endif ()

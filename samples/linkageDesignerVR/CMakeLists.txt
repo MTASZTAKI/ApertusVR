@@ -21,10 +21,9 @@
 #SOFTWARE.
 
 add_subdirectory (configs)
-add_subdirectory (plugins)
 
 set (SOURCES
-	ApeLinkageDesignerVRMain.cpp
+	ApeLinkageDesignerVR.cpp
 	)
 
 include_directories(

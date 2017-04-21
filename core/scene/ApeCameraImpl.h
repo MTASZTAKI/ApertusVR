@@ -25,13 +25,14 @@ SOFTWARE.*/
 
 #include "ApeICamera.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
 	class CameraImpl : public Ape::ICamera
 	{
 	public:
-		CameraImpl(std::string name, std::string parentNodeName);
+		CameraImpl(std::string name);
 
 		~CameraImpl();
 		
@@ -58,25 +59,27 @@ namespace Ape
 		float getAspectRatio() override;
 
 		void setAspectRatio(float aspectRatio) override;
+		
+		Ape::Matrix4 getProjection() override;
 
-		Ape::Vector3 getPositionOffset() override;
+		void setProjection(Ape::Matrix4 projection) override;
 
-		void setPositionOffset(Ape::Vector3 positionOffset) override;
+		Ape::Vector3 getPosition() override;
 
-		Ape::Quaternion getOrientationOffset() override;
+		void setPosition(Ape::Vector3 positionOffset) override;
 
-		void setOrientationOffset(Ape::Quaternion orientationOffset) override;
+		Ape::Quaternion getOrientation() override;
 
-		Ape::Vector3 getInitPositionOffset() override;
+		void setOrientation(Ape::Quaternion orientationOffset) override;
 
-		void setInitPositionOffset(Ape::Vector3 initPositionOffset) override;
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		Ape::Quaternion getInitOrientationOffset() override;
-
-		void setInitOrientationOffset(Ape::Quaternion initOrientationOffset) override;
+		Ape::NodeWeakPtr getParentNode() override;
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 
 		float mFocalLength;
 
@@ -89,14 +92,14 @@ namespace Ape
 		float mFarClipDistance;
 
 		float mAspectRatio;
+		
+		Ape::Matrix4 mProjection;
 
 		Ape::Quaternion mOrientationOffset;
 
 		Ape::Vector3 mPositionOffset;
 
-		Ape::Quaternion mInitOrientationOffset;
-
-		Ape::Vector3 mInitPositionOffset;
+		NodeWeakPtr mParentNode;
 
 	};
 }

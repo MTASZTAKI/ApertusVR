@@ -21,11 +21,9 @@
 #SOFTWARE.
 
 add_subdirectory (configs)
-add_subdirectory (plugins)
-add_subdirectory (fobLib)
 
 set (SOURCES
-	ApeFobHeadTrackingMain.cpp
+	ApeFobHeadTracking.cpp
 	)
 
 include_directories(

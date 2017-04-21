@@ -68,6 +68,27 @@ namespace Ape
 		}
 	};
 
+	struct OgreLodLevelsConfig
+	{
+		bool autoGenerateAndSave;
+
+		float bias;
+
+		OgreLodLevelsConfig()
+		{
+			this->autoGenerateAndSave = false;
+			this->bias = 0.0f;
+		}
+
+		OgreLodLevelsConfig(
+			bool autoGenerateAndSave,
+			float bias)
+		{
+			this->autoGenerateAndSave = autoGenerateAndSave;
+			this->bias = bias;
+		}
+	};
+
 	struct OgreViewPortConfig
 	{
 		OgreCameraConfig camera;
@@ -182,6 +203,30 @@ namespace Ape
 	};
 
 	typedef std::vector < Ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
+
+	struct OgreRenderPluginConfig
+	{
+		OgreRenderWindowConfigList ogreRenderWindowConfigList;
+		OgreLodLevelsConfig ogreLodLevelsConfig;
+		std::string renderSystem;
+
+		OgreRenderPluginConfig()
+		{
+			this->ogreRenderWindowConfigList = OgreRenderWindowConfigList();
+			this->ogreLodLevelsConfig = OgreLodLevelsConfig();
+			this->renderSystem = std::string();
+		}
+
+		OgreRenderPluginConfig(
+			OgreRenderWindowConfigList ogreRenderWindowConfigList,
+			OgreLodLevelsConfig ogreLodLevelsConfig,
+			std::string renderSystem)
+		{
+			this->ogreRenderWindowConfigList = ogreRenderWindowConfigList;
+			this->ogreLodLevelsConfig = ogreLodLevelsConfig;
+			this->renderSystem = renderSystem;
+		}
+	};
 }
 
 #endif

@@ -30,7 +30,7 @@ namespace Ape
 	class IFileMaterial : public Material
 	{
 	protected:
-	    IFileMaterial(std::string name, std::string parentNodeName) : Material(name, parentNodeName, Entity::MATERIAL_FILE) {}
+	    IFileMaterial(std::string name) : Material(name, Entity::MATERIAL_FILE) {}
 		
 		virtual ~IFileMaterial() {};
 		
@@ -38,6 +38,8 @@ namespace Ape
 		virtual void setFileName (std::string fileName) = 0;
 		
 		virtual std::string getfFileName () = 0;
+
+		virtual void setAsSkyBox() = 0;
 	};
 	
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;

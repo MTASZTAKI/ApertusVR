@@ -39,8 +39,6 @@ namespace Ape
 			x(_x), y(_y), z(_z), w(_w)
 		{}
 	};
-
-	typedef std::vector < Ape::Vector4 > Vector4Vector;
 }
 
 #endif

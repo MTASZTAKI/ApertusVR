@@ -41,6 +41,11 @@ namespace Ape
 		{
 			return float(radian * 180 / ape_PI);
 		};
+
+		float getRadian()
+		{
+			return radian;
+		}
 	};
 }
 

@@ -1728,6 +1728,7 @@ namespace OgreBites
                 mShaderGenerator->setShaderCachePath(shaderCachePath);
 #endif
 #endif
+				mShaderGenerator->setShaderCachePath(shaderCachePath);
                 // Create and register the material manager listener if it doesn't exist yet.
                 if (mMaterialMgrListener == NULL) {
                     mMaterialMgrListener = new ShaderGeneratorTechniqueResolverListener(mShaderGenerator);

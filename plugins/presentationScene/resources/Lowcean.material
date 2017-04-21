@@ -1,0 +1,159 @@
+material "sfeher_OgreMax"
+{
+	technique sfeher_OgreMax_technique
+	{
+		pass sfeher_OgreMax_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "sbarna1_OgreMax"
+{
+	technique sbarna1_OgreMax_technique
+	{
+		pass sbarna1_OgreMax_standard
+		{
+			ambient 0.25098 0.0745098 0.027451 1
+			diffuse 0.25098 0.0745098 0.027451 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "sbarna2_OgreMax"
+{
+	technique sbarna2_OgreMax_technique
+	{
+		pass sbarna2_OgreMax_standard
+		{
+			ambient 0.596078 0.317647 0.152941 1
+			diffuse 0.596078 0.317647 0.152941 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "sszurke_OgreMax"
+{
+	technique sszurke_OgreMax_technique
+	{
+		pass sszurke_OgreMax_standard
+		{
+			ambient 0.298039 0.25098 0.223529 1
+			diffuse 0.298039 0.25098 0.223529 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "sviz_OgreMax"
+{
+	technique sviz_OgreMax_technique
+	{
+		pass sviz_OgreMax_standard
+		{
+			ambient 0.1 0.4 0.8 0.8
+			diffuse 0.1 0.4 0.8 0.8
+			specular 0.9 0.9 0.9 1 100
+			emissive 0.1 0.4 0.8 0.8
+
+			scene_blend alpha_blend
+			depth_write off
+		}
+	}
+}
+material "sbarna3_OgreMax"
+{
+	technique sbarna3_OgreMax_technique
+	{
+		pass sbarna3_OgreMax_standard
+		{
+			ambient 0.345098 0.2 0.160784 1
+			diffuse 0.345098 0.2 0.160784 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "lowpolip-top_OgreMax"
+{
+	technique lowpolip-top_OgreMax_technique
+	{
+		pass lowpolip-top_OgreMax_standard
+		{
+			ambient 0.435294 0.435294 0.537255 1
+			diffuse 0.435294 0.435294 0.537255 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "lowpolip-eye_OgreMax"
+{
+	technique lowpolip-eye_OgreMax_technique
+	{
+		pass lowpolip-eye_OgreMax_standard
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0.387 0.387 0.387 0.43 53.55
+			emissive 0 0 0 1
+		}
+	}
+}
+material "lowpolip-bottom_OgreMax"
+{
+	technique lowpolip-bottom_OgreMax_technique
+	{
+		pass lowpolip-bottom_OgreMax_standard
+		{
+			ambient 0.898039 0.764706 0.654902 1
+			diffuse 0.898039 0.764706 0.654902 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "_17_-_Default_OgreMax"
+{
+	technique _17_-_Default_OgreMax_technique
+	{
+		pass _17_-_Default_OgreMax_standard
+		{
+			ambient 0.317647 0.596078 0.415686 1
+			diffuse 0.317647 0.596078 0.415686 1
+			specular 0.603 0.603 0.603 0.67 84.15
+			emissive 0 0 0 1
+		}
+	}
+}
+material "skek2_OgreMax"
+{
+	technique skek2_OgreMax_technique
+	{
+		pass skek2_OgreMax_standard
+		{
+			ambient 0.0352941 0.470588 0.717647 1
+			diffuse 0.0352941 0.470588 0.717647 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}
+material "szold2_OgreMax"
+{
+	technique szold2_OgreMax_technique
+	{
+		pass szold2_OgreMax_standard
+		{
+			ambient 0.231373 0.270588 0.0666667 1
+			diffuse 0.231373 0.270588 0.0666667 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+		}
+	}
+}

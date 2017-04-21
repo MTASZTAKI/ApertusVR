@@ -24,6 +24,7 @@ SOFTWARE.*/
 #define APE_COLOR_H
 
 #include <vector>
+#include <sstream>
 
 namespace Ape
 {
@@ -35,10 +36,21 @@ namespace Ape
 			r(0.0f), g(0.0f), b(0.0f), a(1.0f)
 		{}
 
-
 		Color(float _r, float _g, float _b, float _a = 1.0f) : 
 			r(_r), g(_g), b(_b), a(_a)
 		{}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << "Color(" << r << ", " << g << ", " << b << ", " << a << ")";
+			return buff.str();
+		}
+
+		float getR() { return r; }
+		float getG() { return g; }
+		float getB() { return b; }
+		float getA() { return a; }
 	};
 
 	typedef std::vector < Ape::Color > ColorVector;

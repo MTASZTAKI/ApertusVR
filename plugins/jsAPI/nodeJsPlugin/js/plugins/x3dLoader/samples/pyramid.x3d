@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation=" http://www.web3d.org/specifications/x3d-3.0.xsd ">
+    <head>
+        <meta name="title" content="Pyramid.x3d" />
+        <meta name="creator" content="MV4204 class" />
+        <meta name="created" content="8 July 2000" />
+        <meta name="modified" content="22 December 2011" />
+        <meta name="description" content="Constructing a Pyramid geometric primitive in order to show use of points and coordinate indices." />
+        <meta name="identifier" content=" http://www.web3d.org/x3d/content/examples/Basic/course/Pyramid.x3d " />
+        <meta name="generator" content="X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit" />
+        <meta name="license" content=" ../license.html" />
+    </head>
+    <Scene>
+        <!-- Viewpoint is 1m left of center to provide good contrast -->
+        <Viewpoint description="Pyramid" orientation="0 1 0 .2" position="4 0 25" />
+        <Transform DEF="pyramidNode01" translation="0 -5 0">
+            <Shape>
+                <IndexedFaceSet DEF="pyramidIndexedFaceSet01" coordIndex="0 1 2 -1 1 3 2 -1 2 3 0 -1 3 1 0">
+                    <Coordinate point="0 0 0 10 0 0 5 0 8.3 5 8.3 2.8" />
+                </IndexedFaceSet>
+                <Appearance>
+                    <Material diffuseColor="0.8 0.8 0.2" specularColor="0 0 0.5" />
+                </Appearance>
+            </Shape>
+        </Transform>
+    </Scene>
+</X3D>

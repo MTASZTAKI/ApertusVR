@@ -60,31 +60,51 @@ namespace Ape
 			x * rkVector.y - y * rkVector.x);
 		}
 
+		float dotProduct(const Vector3& vec) const
+		{
+			return x * vec.x + y * vec.y + z * vec.z;
+		}
+
 		Vector3& operator = ( const Vector3& rkVector )
 		{
 		     x = rkVector.x;
 		     y = rkVector.y;
 		     z = rkVector.z;
-		
+
 		     return *this;
 		}
-		
+
 		Vector3& operator = ( const float fScaler )
 		{
 		     x = fScaler;
 		     y = fScaler;
 		     z = fScaler;
-		
+
 		      return *this;
 		}
 		bool operator == ( const Vector3& rkVector ) const
 		{
-		     return ( x == rkVector.x && y == rkVector.y && z == rkVector.z );
+			return equalTo(rkVector);
 		}
-		
+
+		bool operator < (const Vector3& rkVector) const
+		{
+			return (x < rkVector.x && y < rkVector.y && z < rkVector.z);
+		}
+
+		bool operator > (const Vector3& rkVector) const
+		{
+			return (x > rkVector.x && y > rkVector.y && z > rkVector.z);
+		}
+
 		bool operator != ( const Vector3& rkVector ) const
 		{
-		     return ( x != rkVector.x || y != rkVector.y || z != rkVector.z );
+			return !equalTo(rkVector);
+		}
+
+		bool equalTo(const Vector3& rkVector) const
+		{
+			return (x == rkVector.x && y == rkVector.y && z == rkVector.z);
 		}
 
 		Vector3 operator * ( const float fScalar ) const
@@ -143,7 +163,7 @@ namespace Ape
 		std::string toString() const
 		{
 			std::ostringstream buff;
-			buff << "Vector3( " << x << ", " << y << ", " << z << ")";
+			buff << "Vector3(" << x << ", " << y << ", " << z << ")";
 			return buff.str();
 		}
 
@@ -159,9 +179,11 @@ namespace Ape
 			}
 			return fLength;
 		}
-	};
 
-	typedef std::vector<Ape::Vector3> Vector3Vector;
+		float getX() { return x; }
+		float getY() { return y; }
+		float getZ() { return z; }
+	};
 }
 
 #endif

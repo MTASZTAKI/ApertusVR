@@ -36,26 +36,31 @@ namespace Ape
 		enum Type
 		{
 			LIGHT,
-			GEOMETRY_FILE,
-			GEOMETRY_MANUAL,
-			GEOMETRY_TEXT,
-			GEOMETRY_PRIMITVE_BOX,
-			MATERIAL_FILE,
-			MATERIAL_MANUAL,
-			TEXTURE,
 			CAMERA,
-			COLLISION,
+			GEOMETRY_FILE,
+			GEOMETRY_INDEXEDFACESET,
+			GEOMETRY_INDEXEDLINESET,
+			GEOMETRY_TEXT,
+			GEOMETRY_BOX,
+			GEOMETRY_PLANE,
+			GEOMETRY_TUBE,
+			GEOMETRY_CYLINDER,
+			GEOMETRY_SPHERE,
+			GEOMETRY_TORUS,
+			GEOMETRY_CONE,
+			MATERIAL_MANUAL,
+			MATERIAL_FILE,
+			PASS_PBS,
+			TEXTURE,
 			INVALID
 		};
 		
 	protected:
-		Entity(std::string name, std::string parentNodeName, Type type) : mName(name), mParentNodeName(parentNodeName), mType(type) {};
+		Entity(std::string name, Type type) : mName(name), mType(type) {};
 		
 		virtual ~Entity() {};
 		
 		std::string mName;
-		
-		std::string mParentNodeName;
 		
 		Type mType;
 		
@@ -63,21 +68,7 @@ namespace Ape
 		std::string getName() { return mName; };
 
 		Type getType() { return mType; };
-
-		std::string getParentNodeName() { return mParentNodeName; };
 	};
-
-	typedef std::shared_ptr<Entity> EntitySharedPtr;
-
-	typedef std::weak_ptr<Entity> EntityWeakPtr;
-
-	typedef std::vector<EntitySharedPtr> EntitySharedPtrVector;
-	
-	typedef std::vector<EntityWeakPtr> EntityWeakPtrVector;
-	
-	typedef std::map<std::string, EntityWeakPtr> EntityWeakPtrNameMap;
-	
-	typedef std::map<std::string, EntitySharedPtr> EntitySharedPtrNameMap;
 }
 
 #endif

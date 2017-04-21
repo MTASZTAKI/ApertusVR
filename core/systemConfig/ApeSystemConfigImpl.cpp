@@ -24,7 +24,7 @@ SOFTWARE.*/
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
-#include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -124,6 +124,11 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					for (auto& plugin : pluginManager["plugins"].GetArray())
 						mPluginManagerConfig.pluginnames.push_back(plugin.GetString());
 				}
+				else if (pluginManagerMemberIterator->name == "jsplugins")
+				{
+					for (auto& jsplugin : pluginManager["jsplugins"].GetArray())
+						mPluginManagerConfig.jsPluginNames.push_back(jsplugin.GetString());
+				}
 			}
 		}
 		fclose(apeSystemConfigFile);
@@ -187,7 +192,7 @@ void Ape::SystemConfigImpl::writeSessionGUID(Ape::SceneSessionUniqueID sessionGU
 	}
 
 	rapidjson::StringBuffer writeBuffer;
-	rapidjson::Writer<rapidjson::StringBuffer> writer(writeBuffer);
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(writeBuffer);
 	jsonDocument.Accept(writer);
 
 	std::stringstream contentSS;

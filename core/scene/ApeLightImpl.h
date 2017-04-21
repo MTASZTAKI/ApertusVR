@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ApeILight.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
@@ -33,7 +34,7 @@ namespace Ape
 	{
 	public:
 
-		LightImpl(std::string name, std::string parentNodeName, bool isHostCreated);
+		LightImpl(std::string name, bool isHostCreated);
 
 		~LightImpl();
 		
@@ -61,6 +62,10 @@ namespace Ape
 		
 		void setLightDirection(Vector3 lightDirection) override;
 
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		Ape::NodeWeakPtr getParentNode() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -69,6 +74,8 @@ namespace Ape
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 
 		Light::Type mLightType;
 
@@ -81,6 +88,10 @@ namespace Ape
 		LightAttenuation mLightAttenuation;
 
 		Vector3 mLightDirection;
+
+		NodeWeakPtr mParentNode;
+
+		std::string mParentNodeName;
 	};
 }
 
