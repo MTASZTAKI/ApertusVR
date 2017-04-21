@@ -143,13 +143,22 @@ app.listen(port, host,  function() {
   // start special plugins
   var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
   var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
+  var q = async.queue(function (task, callback) {
+      console.log(task.name + ' init function called');
+      callback();
+  }, config.jsPlugins.length);
+  q.drain = function () {
+      console.log('all items have been processed');
+  };
   for (var i = 0; i < config.jsPlugins.length; i++)
   {
       var pluginFilePath = config.jsPlugins[i];
       var plugin = require(pluginFilePath);
-      plugin.init();
-      console.log('JsPlugin: ' + pluginFilePath + ' init function called');
+      q.push({ name: pluginFilePath }, function (err) {
+          plugin.init();
+      });
   }
+  
 });
 
 function roundDecimal(num) {
