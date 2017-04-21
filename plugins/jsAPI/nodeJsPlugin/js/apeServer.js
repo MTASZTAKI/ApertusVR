@@ -125,7 +125,7 @@ registerHttpPath(ape.httpMethodEnum.POST, textsPath + '/:name/caption', ape.http
 app.log('app', 'ApertusVR NodeJS Server');
 app.listen(port, host,  function() {
   app.log('app', 'Listening on ' + host + ':' + port);
-  ape.jsPluginLoader.loadPlugins();
+  //ape.jsPluginLoader.loadPlugins();
   app.log('app', '\n' + utils.inspect(ape));
 
   // ApeColor tests
@@ -141,10 +141,15 @@ app.listen(port, host,  function() {
 
   utils.iterate(ape.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
   // start special plugins
-  //var x3dLoaderPlugin = require('apertusvr/js/plugins/x3dLoader/x3dLoader.js');
-  //var engineeringScenePlugin = require('apertusvr/js/plugins/engineeringScene/engineeringScene.js');
-  //engineeringScenePlugin.init();
-  //x3dLoaderPlugin.init();
+  var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
+  var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
+  for (var i = 0; i < config.jsPlugins.length; i++)
+  {
+      var pluginFilePath = config.jsPlugins[i];
+      var plugin = require(pluginFilePath);
+      plugin.init();
+      console.log('JsPlugin: ' + pluginFilePath + ' init function called');
+  }
 });
 
 function roundDecimal(num) {

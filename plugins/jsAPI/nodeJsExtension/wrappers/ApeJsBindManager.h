@@ -33,6 +33,7 @@ SOFTWARE.*/
 #include "ApeJsBindRadian.h"
 #include "ApeJsBindVector3.h"
 #include "ApeIScene.h"
+#include "ApeISystemConfig.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
 #include "ApeIndexedLineSetGeometryJsBind.h"
 #include "ApeBoxGeometryJsBind.h"
@@ -51,6 +52,7 @@ public:
 	JsBindManager()
 	{
 		mpScene = Ape::IScene::getSingletonPtr();
+		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	}
 
 	NodeJsPtr createNode(std::string name)
@@ -287,8 +289,15 @@ public:
 		return false;
 	}
 
+	std::string getFolderPath()
+	{
+		std::cout << "getFolderPath()" << std::endl;
+		return mpSystemConfig->getFolderPath();
+	}
+
 private:
 	Ape::IScene* mpScene;
+	Ape::ISystemConfig* mpSystemConfig;
 };
 
 NBIND_CLASS(JsBindManager)
@@ -321,6 +330,8 @@ NBIND_CLASS(JsBindManager)
 
 	method(createPbsPass);
 	method(getPbsPass);
+
+	method(getFolderPath);
 }
 
 #endif
