@@ -91,11 +91,8 @@ exports.setPosition = function(req, res, next) {
   req.checkParams('name', 'UrlParam is not presented').notEmpty()
   req.checkParams('name', 'UrlParam must be a string').isAlpha();
   req.checkBody('x', 'BodyParam is not presented').notEmpty();
-  req.checkBody('x', 'BodyParam must be a number').isInt();
   req.checkBody('y', 'BodyParam is not presented').notEmpty();
-  req.checkBody('y', 'BodyParam must be a number').isInt();
   req.checkBody('z', 'BodyParam is not presented').notEmpty();
-  req.checkBody('z', 'BodyParam must be a number').isInt();
   if (!respObj.validateHttpParams(req, res)) {
     res.status(400).send(respObj.toJSonString());
     return;
@@ -116,16 +113,95 @@ exports.setPosition = function(req, res, next) {
     }
 
     var newPos = new ape.nbind.Vector3(Number(req.body.x), Number(req.body.y), Number(req.body.z));
-    if (newPos.notEqualTo(obj.getPosition())) {
-      respObj.addEvent({
-        group: 'NODE',
-        type: 'NODE_POSITION',
-        subjectName: obj.getName()
-      });
-    }
+    // if (newPos.notEqualTo(obj.getPosition())) {
+    //   respObj.addEvent({
+    //     group: 'NODE',
+    //     type: 'NODE_POSITION',
+    //     subjectName: obj.getName()
+    //   });
+    // }
     obj.setPosition(newPos);
     respObj.setData({
       position: utils.convertToJsObj(obj.getPosition())
+    });
+    res.send(respObj.toJSonString());
+  });
+};
+
+exports.getOrientation = function(req, res, next) {
+  console.log('ape.httpApi.nodes.getOrientation()');
+  var respObj = new utils.responseObj();
+
+  // handle http param validation errors
+  req.checkParams('name', 'UrlParam is not presented').notEmpty()
+  req.checkParams('name', 'UrlParam must be a string').isAlpha();
+  if (!respObj.validateHttpParams(req, res)) {
+    res.status(400).send(respObj.toJSonString());
+    return;
+  }
+
+  // get name from url
+  var name = req.params.name;
+
+  ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+    if (error) {
+      respObj.addError({
+        name: 'invalidCast',
+        msg: obj,
+        code: 666
+      });
+      res.status(400).send(respObj.toJSonString());
+      return;
+    }
+
+    respObj.setData({
+      orientation: utils.convertToJsObj(obj.getOrientation())
+    });
+    res.send(respObj.toJSonString());
+  });
+};
+
+exports.setOrientation = function(req, res, next) {
+  console.log('ape.httpApi.nodes.setOrientation()');
+  var respObj = new utils.responseObj();
+
+  // handle http param validation errors
+  req.checkParams('name', 'UrlParam is not presented').notEmpty()
+  req.checkParams('name', 'UrlParam must be a string').isAlpha();
+  req.checkBody('w', 'BodyParam is not presented').notEmpty();
+  req.checkBody('x', 'BodyParam is not presented').notEmpty();
+  req.checkBody('y', 'BodyParam is not presented').notEmpty();
+  req.checkBody('z', 'BodyParam is not presented').notEmpty();
+  if (!respObj.validateHttpParams(req, res)) {
+    res.status(400).send(respObj.toJSonString());
+    return;
+  }
+
+  // get node name from urlParam
+  var name = req.params.name;
+
+  ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+    if (error) {
+      respObj.addError({
+        name: 'invalidCast',
+        msg: obj,
+        code: 666
+      });
+      res.status(400).send(respObj.toJSonString());
+      return;
+    }
+
+    var newOrt = new ape.nbind.Quaternion(Number(req.body.w), Number(req.body.x), Number(req.body.y), Number(req.body.z));
+    // if (newOrt.notEqualTo(obj.getOrientation())) {
+    //   respObj.addEvent({
+    //     group: 'NODE',
+    //     type: 'NODE_ORIENTATION',
+    //     subjectName: obj.getName()
+    //   });
+    // }
+    obj.setOrientation(newOrt);
+    respObj.setData({
+      orientation: utils.convertToJsObj(obj.getOrientation())
     });
     res.send(respObj.toJSonString());
   });

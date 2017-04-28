@@ -103,6 +103,11 @@ registerHttpPath(ape.httpMethodEnum.GET, nodesPath + '/:name/position', ape.http
 // curl --silent --header "Content-Type: application/json" -X POST http://localhost:3000/api/v1/nodes/testNode/position --data '{"x": 10, "y": 20, "z": 30}' | python -m json.tool
 registerHttpPath(ape.httpMethodEnum.POST, nodesPath + '/:name/position', ape.httpApi.nodes.setPosition);
 
+// curl --silent --header "Content-Type: application/json" -X GET http://localhost:3000/api/v1/nodes/testNode/orientation | python -m json.tool
+registerHttpPath(ape.httpMethodEnum.GET, nodesPath + '/:name/orientation', ape.httpApi.nodes.getOrientation);
+
+// curl --silent --header "Content-Type: application/json" -X POST http://localhost:3000/api/v1/nodes/testNode/orientation --data '{"w": 90, "x": 10, "y": 20, "z": 30}' | python -m json.tool
+registerHttpPath(ape.httpMethodEnum.POST, nodesPath + '/:name/orientation', ape.httpApi.nodes.setOrientation);
 
 // Lights
 // curl --silent --header "Content-Type: application/json" -X POST http://localhost:3000/api/v1/lights/ --data '{"name": "testLight"}' | python -m json.tool
