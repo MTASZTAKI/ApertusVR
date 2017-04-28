@@ -38,6 +38,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
+Makefile.inc.cmake
 
 # Ogre
 !3rdParty/ogre/Dependencies/src/Cg/lib/*
@@ -61,7 +62,14 @@ CTestTestfile.cmake
 # Curl
 3rdParty/curl/DartConfiguration.tcl
 
+# NodeJs
+3rdParty/nodejs/**/source/config.mk
+3rdParty/nodejs/**/source/icu_config.gypi
+3rdParty/nodejs/**/nodedownload.pyc
+3rdParty/nodejs/**/getmoduleversion.pyc
+3rdParty/nodejs/**/genfiles/
+
 # Exclude thirdparties
-!3rdParty/node-v0.10.46/
 !3rdParty/oculus/LibOVR/Lib/*
 !3rdParty/oculusRT/*
+
