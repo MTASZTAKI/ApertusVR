@@ -31,6 +31,7 @@ option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
 option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
 option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
 option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
+option(APE_PLUGIN_OculusDK2 "Use OculusDK2Plugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -65,5 +66,8 @@ if (${APE_PLUGIN_Lego})
 endif ()
 if (${APE_PLUGIN_JsAPI})
 	add_subdirectory (jsAPI)
+endif ()
+if (${APE_PLUGIN_OculusDK2})
+	add_subdirectory (oculusDK2)
 endif ()
 
