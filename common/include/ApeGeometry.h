@@ -39,6 +39,8 @@ namespace Ape
 	typedef std::vector<int> GeometryIndices;	//-1 code for stop
 
 	typedef std::vector<float> GeometryNormals;
+
+	typedef std::vector<float> GeometryColors;
 	
 	class Geometry : public Entity
 	{

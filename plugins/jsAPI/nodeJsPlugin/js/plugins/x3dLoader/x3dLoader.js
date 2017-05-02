@@ -197,6 +197,45 @@ exports.parseNormals = function (currentItem) {
     return normals;
 }
 
+exports.parseColorRGBAs = function (currentItem) {
+    if (!utils.isDefined(currentItem)) {
+        //throw 'currentItem is not defined!';
+        return colorRGBAs;
+    }
+
+    var colorRGBAs = new Array();
+    var colorRGBA = currentItem.find('ColorRGBA').first();
+
+    if (!utils.isDefined(colorRGBA)) {
+        console.log(' ColorRGBA was not defined ');
+        return colorRGBAs;
+    }
+	
+	if (colorRGBA.length == 0) {
+        console.log(' ColorRGBA was not defined2 ');
+        return colorRGBAs;
+    }
+
+    var colorAttr = colorRGBA.attr('color');
+    if (!utils.isDefined(colorAttr)) {
+        console.log(' ColorRGBA color was not defined ');
+        return colorRGBAs;
+    }
+
+    var itemsArr = splitX3DAttr(colorAttr);
+    if (itemsArr.length == 0) {
+        console.log(' ColorRGBA color length is 0 ');
+        return colorRGBAs;
+    }
+
+    for (var j = 0; j < itemsArr.length; j++) {
+        colorRGBAs.push(Number(itemsArr[j]));
+    }
+
+    console.log(' - ColorRGBA: ' + colorRGBAs);
+    return colorRGBAs;
+}
+
 exports.parsePositionInterpolatorKeyValuesAttr = function (currentItem) {
     if (!utils.isDefined(currentItem)) {
         throw 'currentItem is not defined!';
@@ -333,8 +372,9 @@ exports.parseSpecularColorAttr = function (currentItem, transparency) {
 
 exports.parseMaterial = function (currentItem, parentGeometry) {
 	if (   !(  currentItem && currentItem[0] && currentItem[0].hasOwnProperty('itemName')  )  ) {
-		var materialName = parentGeometry.getName() + "material";
-        return ape.nbind.JsBindManager().createManualMaterial(materialName);
+		//var materialName = parentGeometry.getName() + "material";
+        //return ape.nbind.JsBindManager().createManualMaterial(materialName);
+		return null;
     }
     var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(currentItem[0].itemName);
     var pbsPass = ape.nbind.JsBindManager().createPbsPass(currentItem[0].itemName + 'PbsPass');
@@ -436,8 +476,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 		}
 		if (currentlyParsedFileName == 'stand') {
 			console.log(' scene world node created for: ' + currentlyParsedFileName);
-			nodeObj.setScale(new ape.nbind.Vector3(1, 1, 1));
-			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 0));
+			nodeObj.setScale(new ape.nbind.Vector3(10, 10, 10));
+			nodeObj.setPosition(new ape.nbind.Vector3(-1200, -20, -300));
 			nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 		}
 		return nodeObj;
@@ -481,10 +521,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
             var coordIndexArr = self.parseCoordIndexAttr(currentItem);
             var normals = self.parseNormals(currentItem);
+			var colors = self.parseColorRGBAs(currentItem);
             var matItem = currentItem.siblings('Appearance').first().children('Material').first();
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-            indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, materialObj);
-
+			if (utils.isDefined(materialObj))
+				indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
+			else
+				indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
             if (lastGroupNodeObjName != groupNodeObjName) {
                 if (groupNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);

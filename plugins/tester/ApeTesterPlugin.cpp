@@ -97,7 +97,7 @@ void ApeTesterPlugin::Init()
 				1, 5, 6, 2, -1,
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
-			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), demoObjectMaterial);
+			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), Ape::GeometryColors(), demoObjectMaterial);
 			demoBox->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
@@ -116,7 +116,7 @@ void ApeTesterPlugin::Init()
 				2, 3, 4, -1,
 				3, 0, 4, -1
 			};
-			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), demoObjectMaterial);
+			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), Ape::GeometryColors(), demoObjectMaterial);
 			demoPyramid->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))

@@ -902,20 +902,27 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								}
 							}
 							else
-								ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-							for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
 							{
-								ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
+								ogreManual->begin("FlatVertexColorLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+							}
+							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
+							{
+								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
 								if (parameters.normals.size() == 0)
 								{
-									normals[coordinateIndex / 3].normalise();
-									ogreManual->normal(normals[coordinateIndex / 3]);
+									normals[i / 3].normalise();
+									ogreManual->normal(normals[i / 3]);
 								}
-							}
-							if (parameters.normals.size() != 0)
-							{
-								for (int i = 0; i < parameters.normals.size(); i = i + 3)
+								else
+								{
 									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
+								}
+								if (parameters.colors.size() != 0)
+								{
+									int colorIndex = (i / 3) * 4;
+									Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);
+									ogreManual->colour(color);
+								}
 							}
 							int indexIndex = 0;
 							while (indexIndex < parameters.indices.size())
@@ -1248,7 +1255,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								else
 									std::cout << "Problem in the RTSS init" << std::endl;
 							}
-							viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+							//viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 						}
 					}
 				}

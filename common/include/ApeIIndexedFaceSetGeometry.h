@@ -36,6 +36,7 @@ namespace Ape
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
 		Ape::GeometryNormals normals;
+		Ape::GeometryColors colors;
 		Ape::MaterialWeakPtr material;
 		
 		GeometryIndexedFaceSetParameters()
@@ -44,15 +45,17 @@ namespace Ape
 			this->coordinates = Ape::GeometryCoordinates();
 			this->indices = Ape::GeometryIndices();
 			this->normals = Ape::GeometryNormals();
+			this->colors = Ape::GeometryColors();
 			this->material = Ape::MaterialWeakPtr();
 		}
 
-		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material)
+		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, Ape::MaterialWeakPtr material)
 		{
 			this->groupName = groupName;
 			this->coordinates = coordinates;
 			this->indices = indices;
 			this->normals = normals;
+			this->colors = colors;
 			this->material = material;
 		}
 
@@ -67,6 +70,11 @@ namespace Ape
 		}
 
 		Ape::GeometryNormals getNormals()
+		{
+			return normals;
+		}
+
+		Ape::GeometryNormals getColors()
 		{
 			return normals;
 		}
@@ -87,6 +95,10 @@ namespace Ape
 			for (auto const &item : normals) buff << item << ", ";
 			buff << ")" << std::endl;
 
+			buff << "Colors(";
+			for (auto const &item : colors) buff << item << ", ";
+			buff << ")" << std::endl;
+
 			return buff.str();
 		}
 	};
@@ -99,7 +111,7 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material) = 0;
+		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, Ape::MaterialWeakPtr material) = 0;
 		
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
