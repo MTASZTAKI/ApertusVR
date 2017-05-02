@@ -7,7 +7,6 @@ material FlatVertexColorLighting
          diffuse vertexcolour
          specular vertexcolour
          ambient vertexcolour
-         diffuse vertexcolour
          lighting on
          shader phong
       }

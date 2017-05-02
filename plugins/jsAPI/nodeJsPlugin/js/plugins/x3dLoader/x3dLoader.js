@@ -795,7 +795,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            },*/
+            },
             function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'cell';
@@ -803,7 +803,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            },/*
+            },
             function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'ur5cellAnim';
