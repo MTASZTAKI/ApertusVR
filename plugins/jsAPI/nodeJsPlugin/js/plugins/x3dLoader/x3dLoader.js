@@ -464,6 +464,11 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 		    nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 100000));
 		}
+		if (currentlyParsedFileName == 'cell') {
+			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 0));
+			nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+		}
 		if (currentlyParsedFileName == 'ur5cellAnim') {
 			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 			nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
@@ -476,9 +481,15 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 		}
 		if (currentlyParsedFileName == 'stand') {
 			console.log(' scene world node created for: ' + currentlyParsedFileName);
-			nodeObj.setScale(new ape.nbind.Vector3(10, 10, 10));
-			nodeObj.setPosition(new ape.nbind.Vector3(-1200, -20, -300));
+			nodeObj.setScale(new ape.nbind.Vector3(100, 100, 100));
+			nodeObj.setPosition(new ape.nbind.Vector3(-12000, -200, -3000));
 			nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+		}
+		if (currentlyParsedFileName == 'SZTAKIUr5Cell') {
+			console.log(' scene world node created for: ' + currentlyParsedFileName);
+			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+			nodeObj.setPosition(new ape.nbind.Vector3(-100, -100, -610));
+			nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
 		}
 		return nodeObj;
     }
@@ -804,6 +815,14 @@ exports.init = function (x3dFilePath) {
 			function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'stand';
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
+            },
+			function (callback) {
+                self.resetGlobalValues();
+                currentlyParsedFileName = 'SZTAKIUr5Cell';
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
