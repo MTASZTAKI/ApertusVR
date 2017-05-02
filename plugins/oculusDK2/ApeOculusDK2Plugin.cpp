@@ -6,6 +6,7 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	mpHMD = NULL;
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
@@ -22,13 +23,176 @@ void ApeOculusDK2Plugin::Init()
 {
 	std::cout << "ApeOculusDK2Plugin::init" << std::endl;
 	ovr_Initialize();
-	mpHMD = NULL;
+	mpHMD = ovrHmd_Create(0);
+	if (!mpHMD)
+	{
+		mpHMD = ovrHmd_CreateDebug(ovrHmdType::ovrHmd_DK2);
+		std::cout << "ApeOculusDK2Plugin: Virtual OVR device created." << std::endl;
+	}
+	std::cout << "ApeOculusDK2Plugin: OVR device found." << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Product Name: " << mpHMD->ProductName << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Product ID: " << mpHMD->ProductId << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Firmware: " << mpHMD->FirmwareMajor << "." << mpHMD->FirmwareMinor << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Display Resolution: " << mpHMD->Resolution.w << "x" << mpHMD->Resolution.h << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Monitor Index: " << mpHMD->DisplayId << std::endl;
+	if (!ovrHmd_ConfigureTracking(mpHMD, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0))
+	{
+		ovrHmd_Destroy(mpHMD);
+		std::cout << "ApeOculusDK2Plugin: This OVR device does not support all of the necessary features " << std::endl;
+		std::terminate();
+	}
+
+	OVR::Sizei recommendedTex0Size = ovrHmd_GetFovTextureSize(mpHMD, ovrEye_Left, mpHMD->DefaultEyeFov[0], 1.0f);
+	OVR::Sizei recommendedTex1Size = ovrHmd_GetFovTextureSize(mpHMD, ovrEye_Right, mpHMD->DefaultEyeFov[1], 1.0f);
+	std::cout << "ApeOculusDK2Plugin: Rendering resolution:" << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Left eye: " << recommendedTex0Size.w << "x" << recommendedTex0Size.h << std::endl;
+	std::cout << "ApeOculusDK2Plugin: Right eye: " << recommendedTex1Size.w << "x" << recommendedTex1Size.h << std::endl;
+	/*mLeftEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual(
+		"RiftRenderTextureLeft", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		Ogre::TEX_TYPE_2D, recommendedTex0Size.w, recommendedTex0Size.h, 0, Ogre::PF_R8G8B8,
+		Ogre::TU_RENDERTARGET);
+	mRightEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual(
+		"RiftRenderTextureRight", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		Ogre::TEX_TYPE_2D, recommendedTex1Size.w, recommendedTex1Size.h, 0, Ogre::PF_R8G8B8,
+		Ogre::TU_RENDERTARGET);
+
+	// Assign the textures to the eyes used later:
+	mMatLeft = Ogre::MaterialManager::getSingleton().getByName("Oculus/LeftEye_CG");
+	mMatLeft->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mLeftEyeRenderTexture);
+	mMatRight = Ogre::MaterialManager::getSingleton().getByName("Oculus/RightEye_CG");
+	mMatRight->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mRightEyeRenderTexture);*/
+	ovrEyeRenderDesc eyeRenderDesc[2];
+	eyeRenderDesc[0] = ovrHmd_GetRenderDesc(mpHMD, ovrEye_Left, mpHMD->DefaultEyeFov[0]);
+	eyeRenderDesc[1] = ovrHmd_GetRenderDesc(mpHMD, ovrEye_Right, mpHMD->DefaultEyeFov[1]);
+	std::cout << "ApeOculusDK2Plugin: FOV " << eyeRenderDesc[0].Fov.DownTan << std::endl;
+	std::cout << "ApeOculusDK2Plugin: eye " << eyeRenderDesc[0].Eye << std::endl;
+	ovrVector2f UVScaleOffset[2];
+	ovrRecti viewports[2];
+	viewports[0].Pos.x = 0;
+	viewports[0].Pos.y = 0;
+	viewports[0].Size.w = recommendedTex0Size.w;
+	viewports[0].Size.h = recommendedTex0Size.h;
+	viewports[1].Pos.x = 0;
+	viewports[1].Pos.y = 0;
+	viewports[1].Size.w = recommendedTex1Size.w;
+	viewports[1].Size.h = recommendedTex1Size.h;
+	//Ogre::SceneNode* meshNode = mpSceneMgr->getRootSceneNode()->createChildSceneNode();
+	for (int eyeNum = 0; eyeNum < 2; eyeNum++)
+	{
+		ovrDistortionMesh meshData;
+		ovrHmd_CreateDistortionMesh(mpHMD, eyeRenderDesc[eyeNum].Eye, eyeRenderDesc[eyeNum].Fov, 0, &meshData);
+		//Ogre::GpuProgramParametersSharedPtr params;
+		if (eyeNum == 0)
+		{
+			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov,
+				recommendedTex0Size, viewports[eyeNum],
+				UVScaleOffset);
+			//params = mMatLeft->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+		}
+		else {
+			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov,
+				recommendedTex1Size, viewports[eyeNum],
+				UVScaleOffset);
+			//params = mMatRight->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+		}
+		/*params->setNamedConstant("eyeToSourceUVScale",
+			Ogre::Vector3(UVScaleOffset[0].x, UVScaleOffset[0].y, 0));
+		params->setNamedConstant("eyeToSourceUVOffset",
+			Ogre::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0));*/
+		std::cout << "ApeOculusDK2Plugin: UVScaleOffset[0]: " << UVScaleOffset[0].x << ", " << UVScaleOffset[0].y << std::endl;
+		std::cout << "ApeOculusDK2Plugin: UVScaleOffset[1]: " << UVScaleOffset[1].x << ", " << UVScaleOffset[1].y << std::endl;
+		/*Ogre::ManualObject* manual;
+		if (eyeNum == 0)
+		{
+			manual = mpSceneMgr->createManualObject("RiftRenderObjectLeft");
+			manual->begin("Oculus/LeftEye_CG", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		}
+		else
+		{
+			manual = mpSceneMgr->createManualObject("RiftRenderObjectRight");
+			manual->begin("Oculus/RightEye_CG", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		}
+		for (unsigned int i = 0; i < meshData.VertexCount; i++)
+		{
+			ovrDistortionVertex v = meshData.pVertexData[i];
+			manual->position(v.ScreenPosNDC.x, v.ScreenPosNDC.y, 0);
+			manual->textureCoord(v.TanEyeAnglesR.x, v.TanEyeAnglesR.y);
+			manual->textureCoord(v.TanEyeAnglesG.x, v.TanEyeAnglesG.y);
+			manual->textureCoord(v.TanEyeAnglesB.x, v.TanEyeAnglesB.y);
+			float vig = std::max(v.VignetteFactor, (float)0.0);
+			manual->colour(vig, vig, vig, vig);
+		}
+		for (unsigned int i = 0; i < meshData.IndexCount; i++)
+		{
+			manual->index(meshData.pIndexData[i]);
+		}
+		manual->end();*/
+		ovrHmd_DestroyDistortionMesh(&meshData);
+		/*meshNode->attachObject(manual);
+		meshNode->setPosition(0, 0, -1);
+		meshNode->setScale(1, 1, -1);*/
+	}
+
+	/*mpCameraExternal = mpSceneMgr->createCamera("OculusRiftExternalCamera");
+	mpCameraExternal->setFarClipDistance(50);
+	mpCameraExternal->setNearClipDistance(0.001);
+	mpCameraExternal->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+	mpCameraExternal->setOrthoWindow(2, 2);
+	bool rotateView = false;
+	if (rotateView)
+	{
+		mpCameraExternal->roll(Ogre::Degree(-90));
+	}
+	mpSceneMgr->getRootSceneNode()->attachObject(mpCameraExternal);*/
+
+	/*mpCameraLeft = mpSceneMgr->createCamera("HmdLeftCamera");
+	mpCameraRight = mpSceneMgr->createCamera("HmdRightCamera");
+	mpBodyNode = mpSceneMgr->getRootSceneNode()->createChildSceneNode("BodyNode");
+	mpHeadNode = mpBodyNode->createChildSceneNode("HeadNode");
+	mpBodyNode->setFixedYawAxis(true);	
+	mpHeadNode->attachObject(mpCameraLeft);
+	mpHeadNode->attachObject(mpCameraRight);
+	mLeftEyeRenderTexture->getBuffer()->getRenderTarget()->addViewport(mpCameraLeft);
+	setRenderTextureProperties(mLeftEyeRenderTexture);
+	mRightEyeRenderTexture->getBuffer()->getRenderTarget()->addViewport(mpCameraRight);
+	setRenderTextureProperties(mRightEyeRenderTexture);
+	ovrFovPort fovLeft = hmd->DefaultEyeFov[ovrEye_Left];
+	ovrFovPort fovRight = hmd->DefaultEyeFov[ovrEye_Right];
+	setCameraProjectionMatrix(mpCameraLeft, fovLeft);
+	setCameraProjectionMatrix(mpCameraRight, fovRight);
+	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
+	float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
+	float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
+	mpCameraLeft->setAspectRatio(aspectRatio);
+	mpCameraRight->setAspectRatio(aspectRatio);
+	mIPD = ovrHmd_GetFloat(hmd, OVR_KEY_IPD, 0.064f) * 100;
+	mpCameraLeft->setPosition(-mIPD / 2.0f, 0.0f, 0.0f);
+	mpCameraRight->setPosition(mIPD / 2.0f, 0.0f, 0.0f);*/
+
+	/*Ogre::NameValuePairList miscParams;
+	if (mVirtualDevice)
+	{
+		miscParams["monitorIndex"] = "0";
+		mpWindowHmd = Ogre::Root::getSingleton().createRenderWindow("Oculus Rift Debug", hmd->Resolution.w / 2, hmd->Resolution.h / 2, false, &miscParams);
+	}*/
+
+	//mpViewport = mpRenderWindow->addViewport(mpCameraExternal);
 }
 
 void ApeOculusDK2Plugin::Run()
 {
-	while (true)
+	while (mpHMD)
 	{
+		ovrTrackingState ts = ovrHmd_GetTrackingState(mpHMD, 0);
+		OVR::Posef pose = ts.HeadPose.ThePose;
+		/*mpHeadNode->setOrientation(Ogre::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z));
+		mpHeadNode->setPosition(100 * Ogre::Vector3(pose.Translation.x, pose.Translation.y, pose.Translation.z));*/
+
+		ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
+		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
+		/*setCameraProjectionMatrix(mpCameraLeft, fovLeft, *mpDisplaySystemNearClip, *mpDisplaySystemFarClip);
+		setCameraProjectionMatrix(mpCameraRight, fovRight, *mpDisplaySystemNearClip, *mpDisplaySystemFarClip);*/
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::nodeEventCallBack, this, std::placeholders::_1));
