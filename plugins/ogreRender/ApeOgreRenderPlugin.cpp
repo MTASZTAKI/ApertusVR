@@ -1255,7 +1255,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								else
 									std::cout << "Problem in the RTSS init" << std::endl;
 							}
-							//viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+							viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 						}
 					}
 				}

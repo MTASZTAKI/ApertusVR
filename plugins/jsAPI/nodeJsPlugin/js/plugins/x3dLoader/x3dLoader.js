@@ -159,7 +159,8 @@ exports.parseCoordinatePointAttr = function(currentItem)
 }
 
 exports.parseNormals = function (currentItem) {
-    if (!utils.isDefined(currentItem)) {
+     var normals = new Array();
+	if (!utils.isDefined(currentItem)) {
         //throw 'currentItem is not defined!';
         return normals;
     }
@@ -198,12 +199,11 @@ exports.parseNormals = function (currentItem) {
 }
 
 exports.parseColorRGBAs = function (currentItem) {
-    if (!utils.isDefined(currentItem)) {
+    var colorRGBAs = new Array();
+	if (!utils.isDefined(currentItem)) {
         //throw 'currentItem is not defined!';
         return colorRGBAs;
     }
-
-    var colorRGBAs = new Array();
     var colorRGBA = currentItem.find('ColorRGBA').first();
 
     if (!utils.isDefined(colorRGBA)) {
@@ -370,22 +370,26 @@ exports.parseSpecularColorAttr = function (currentItem, transparency) {
     return new ape.nbind.Color(1, 1, 1, 1);
 }
 
-exports.parseMaterial = function (currentItem, parentGeometry) {
-	if (   !(  currentItem && currentItem[0] && currentItem[0].hasOwnProperty('itemName')  )  ) {
-		//var materialName = parentGeometry.getName() + "material";
-        //return ape.nbind.JsBindManager().createManualMaterial(materialName);
-		return null;
+exports.parseMaterial = function (matItem, parentGeometry) {
+	if (matItem && matItem[0]) {
+		var itemName = matItem[0].itemName || parentGeometry.getName() + 'material';
+		console.log('itemName: ' + itemName);
+		var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(itemName);
+		var pbsPass = ape.nbind.JsBindManager().createPbsPass(itemName + 'PbsPass');
+		var transparency = self.parseTransparencyAttr(matItem);
+		var diffuseColor = self.parseDiffuseColorAttr(matItem, transparency);
+		var specularColor = self.parseSpecularColorAttr(matItem, transparency);
+		pbsPass.setDiffuseColor(diffuseColor);
+		pbsPass.setSpecularColor(specularColor);
+		manualMaterial.setPbsPass(pbsPass);
+		return manualMaterial;
+		//parentGeometry.setManualMaterial(manualMaterial);
     }
-    var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(currentItem[0].itemName);
-    var pbsPass = ape.nbind.JsBindManager().createPbsPass(currentItem[0].itemName + 'PbsPass');
-    var transparency = self.parseTransparencyAttr(currentItem);
-    var diffuseColor = self.parseDiffuseColorAttr(currentItem, transparency);
-    var specularColor = self.parseSpecularColorAttr(currentItem, transparency);
-    pbsPass.setDiffuseColor(diffuseColor);
-    pbsPass.setSpecularColor(specularColor);
-    manualMaterial.setPbsPass(pbsPass);
-    return manualMaterial;
-    //parentGeometry.setManualMaterial(manualMaterial);
+	
+	//var materialName = parentGeometry.getName() + "material";
+	//return ape.nbind.JsBindManager().createManualMaterial(materialName);
+	console.log('parseMaterial return null');
+	return null;
 }
 
 exports.parseColorAttr = function (currentItem) {
@@ -534,9 +538,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             var normals = self.parseNormals(currentItem);
 			var colors = self.parseColorRGBAs(currentItem);
             var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+			
             var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
 			if (utils.isDefined(materialObj))
+			{
+				console.log('setParametersWithMaterial is called');
 				indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
+			}
 			else
 				indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
             if (lastGroupNodeObjName != groupNodeObjName) {
@@ -787,7 +795,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            },
+            },*/
             function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'cell';
@@ -795,7 +803,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            },
+            },/*
             function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'ur5cellAnim';
