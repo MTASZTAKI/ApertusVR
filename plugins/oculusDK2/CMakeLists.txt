@@ -32,8 +32,8 @@ set (SOURCES
 set(OCULUS_HOME ${CMAKE_SOURCE_DIR}/3rdParty/oculus)
 add_library(OCULUS_LIB STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET OCULUS_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${OCULUS_HOME}/LibOVR/Lib/x64/VS2015/libovr64d.lib winmm.lib)
-	set_property(TARGET OCULUS_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${OCULUS_HOME}/LibOVR/Lib/x64/VS2015/libovr64.lib winmm.lib)
+	set_property(TARGET OCULUS_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${OCULUS_HOME}/LibOVR/Lib/x64/VS2015/libovr64d.lib)
+	set_property(TARGET OCULUS_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${OCULUS_HOME}/LibOVR/Lib/x64/VS2015/libovr64.lib)
 endif ()	
 
 include_directories(
@@ -44,7 +44,9 @@ include_directories(
 add_library (ApeOculusDK2Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeScene ApeEventManager OCULUS_LIB)
+if (WIN32)
+target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeScene ApeEventManager OCULUS_LIB winmm.lib)
+endif ()
 
 set_property (TARGET ApeOculusDK2Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -171,6 +171,11 @@ exports.parseNormals = function (currentItem) {
         console.log(' Normal was not defined ');
         return normals;
     }
+	
+	if (normal.length == 0) {
+        console.log(' Normal was not defined2 ');
+        return normals;
+    }
 
     var normalAttr = normal.attr('vector');
     if (!utils.isDefined(normalAttr)) {
@@ -327,6 +332,10 @@ exports.parseSpecularColorAttr = function (currentItem, transparency) {
 }
 
 exports.parseMaterial = function (currentItem, parentGeometry) {
+	if (   !(  currentItem && currentItem[0] && currentItem[0].hasOwnProperty('itemName')  )  ) {
+		var materialName = parentGeometry.getName() + "material";
+        return ape.nbind.JsBindManager().createManualMaterial(materialName);
+    }
     var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(currentItem[0].itemName);
     var pbsPass = ape.nbind.JsBindManager().createPbsPass(currentItem[0].itemName + 'PbsPass');
     var transparency = self.parseTransparencyAttr(currentItem);
@@ -372,11 +381,13 @@ exports.parseDimensionsAttr = function (currentItem) {
 
 exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 {
+  if (!utils.isDefined(currentItem) && !utils.isDefined(currentItem[0]))
+	return false;
   var typeName = currentItem[0].type;
   var tagName = currentItem[0].tagName || currentItem[0].name;
-  var itemName = (currentItem[0].itemName || currentItem.attr('DEF') || 'item' + nameCounter);
+  var itemName = ((currentItem[0].hasOwnProperty('itemName') && currentItem[0].itemName) || currentItem.attr('DEF') || 'item' + nameCounter);
   nameCounter++;
-  currentItem[0].itemName = itemName + currentlyParsedFileName;
+  itemName = itemName + currentlyParsedFileName;
   console.log(itemName + ' - ' + typeName + ' - ' + tagName);
 
   if (!typeName || !tagName) {
@@ -401,11 +412,35 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
       var content = currentItem.attr('content');
       if (utils.isDefined(content)) {
         console.log(' - content: ' + content);
+			
         //  TODO: create a textGeometry
       }
     }
     else if (tagName == 'scene') {
-      //
+		var nodeObj = ape.nbind.JsBindManager().createNode(currentlyParsedFileName);
+		nodeLevel++;
+		if (currentlyParsedFileName == 'weldingFixture') {
+			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+		    nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 100000));
+		}
+		if (currentlyParsedFileName == 'ur5cellAnim') {
+			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+			nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
+			nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
+		}
+		if (currentlyParsedFileName == 'SuperChargerLinkage') {
+			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+		    nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 200000));
+		}
+		if (currentlyParsedFileName == 'stand') {
+			console.log(' scene world node created for: ' + currentlyParsedFileName);
+			nodeObj.setScale(new ape.nbind.Vector3(1, 1, 1));
+			nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 0));
+			nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
+		}
+		return nodeObj;
     }
     else if (tagName == 'worldinfo') {
       var info = currentItem.attr('info');
@@ -421,7 +456,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         var use = currentItem.attr('USE');
         if (utils.isDefined(use)) {
             var geometryName = use + currentlyParsedFileName;
-            var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(currentItem[0].itemName);
+            var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(itemName);
             fileGeometryObj.setFileName(geometryName);
             console.log('USE: ' + fileGeometryObj.getName());
 
@@ -433,7 +468,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
     }
     else if (tagName == 'indexedfaceset') {
         var grouped = false;
-        var groupNodeObjName = currentItem[0].itemName;
+        var groupNodeObjName = itemName;
         if (groupNodeObj) {
             groupNodeObjName = groupNodeObj.getName();
             grouped = true;
@@ -442,7 +477,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         var HANDLING = groupNodeObjName.indexOf("handling");
         var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
         if (HANDLING < 0 && FIXTURE < 0) {
-            var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(currentItem[0].itemName);
+            var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(itemName);
             var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
             var coordIndexArr = self.parseCoordIndexAttr(currentItem);
             var normals = self.parseNormals(currentItem);
@@ -460,12 +495,15 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
             if (!grouped) {
                 if (parentNodeObj) {
                     indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+					console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
                 }
+				else 
+					console.log('no parent, no group -> no node to attach the geometry');
             }
         }
     }
     else if (tagName == 'box') {
-        var boxSetObj = ape.nbind.JsBindManager().createBox(currentItem[0].itemName);
+        var boxSetObj = ape.nbind.JsBindManager().createBox(itemName);
         var dimensionsAtrr = self.parseDimensionsAttr(currentItem);
         boxSetObj.setParameters(dimensionsAtrr);
         var matItem = currentItem.siblings('Appearance').first().children('Material').first();
@@ -477,7 +515,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }
     /*else if (tagName == 'indexedlineset') {
-        var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(currentItem[0].itemName);
+        var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(itemName);
         var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
         var coordIndexArr = self.parseCoordIndexAttr(currentItem);
         var color = self.parseColorAttr(currentItem);
@@ -489,33 +527,15 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         }
     }*/
     else if (tagName == 'transform') {
-        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
         nodeLevel++;
 
         var position = self.parseTranslationAttr(currentItem);
         nodeObj.setPosition(position);
-
-        if (nodeObj.getName() == 'WORLD' + currentlyParsedFileName) {
-            console.log(' - WorldTransform: ');
-            nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-            nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
-            if (currentlyParsedFileName == 'weldingFixture') {
-                nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 100000));
-            }
-            if (currentlyParsedFileName == 'ur5cellAnim') {
-                nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
-                nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
-            }
-            if (currentlyParsedFileName == 'SuperChargerLinkage') {
-                nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 200000));
-            }
-        }
-        else {
-            var orientation = self.parseRotationAttr(currentItem);
-            nodeObj.setOrientation(orientation);
-            var scale = self.parseScaleAttr(currentItem);
-            nodeObj.setScale(scale);
-        }
+		var orientation = self.parseRotationAttr(currentItem);
+		nodeObj.setOrientation(orientation);
+		var scale = self.parseScaleAttr(currentItem);
+		nodeObj.setScale(scale);
 
         if (parentNodeObj) {
             nodeObj.setParentNodeJsPtr(parentNodeObj);
@@ -525,7 +545,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         return nodeObj;
     }
     else if (tagName == 'group') {
-        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
         nodeLevel++;
 
         if (parentNodeObj) {
@@ -537,7 +557,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         return nodeObj;
     }
     else if (tagName == 'switch') {
-        var nodeObj = ape.nbind.JsBindManager().createNode(currentItem[0].itemName);
+        var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
         nodeLevel++;
 
         if (parentNodeObj) {
@@ -547,22 +567,22 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
         return nodeObj;
     }
     else if (tagName == 'orientationinterpolator') {
-        var orientationInterpolator = { type: 'orientation', name: currentItem[0].itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
+        var orientationInterpolator = { type: 'orientation', name: itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
         var keys = splitX3DAttr(currentItem.attr('key'));
         var keyValues = self.parseOrientationInterpolatorKeyValuesAttr(currentItem);
         orientationInterpolator.keys = keys;
         orientationInterpolator.keyValues = keyValues;
         interpolatorArr.push(orientationInterpolator);
-        console.log('OrientationInterpolator: ' + currentItem[0].itemName);
+        console.log('OrientationInterpolator: ' + itemName);
     }
     else if (tagName == 'positioninterpolator') {
-        var positionInterpolator = { type: 'position', name: currentItem[0].itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
+        var positionInterpolator = { type: 'position', name: itemName, keys: new Array(), keyValues: new Array(), nodeName: '', nodeObj : 0 };
         var keys = splitX3DAttr(currentItem.attr('key'));
         var keyValues = self.parsePositionInterpolatorKeyValuesAttr(currentItem);
         positionInterpolator.keys = keys;
         positionInterpolator.keyValues = keyValues;
         interpolatorArr.push(positionInterpolator);
-        console.log('PositionInterpolator: ' + currentItem[0].itemName);
+        console.log('PositionInterpolator: ' + itemName);
     }
     else if (tagName == 'route') {
         var interpolatorName = currentItem.attr('fromNode') + currentlyParsedFileName;
@@ -610,7 +630,6 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
 
   var currentNode;
     try {
-
         currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
   } catch (e) {
     console.log('Exception cached: ' + e);
@@ -708,7 +727,7 @@ exports.init = function (x3dFilePath) {
 
     async.waterfall(
         [
-            function (callback) {
+            /*function (callback) {
                 currentlyParsedFileName = 'weldingFixture';
                 self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
@@ -738,13 +757,21 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
+            }*/
+			function (callback) {
+                self.resetGlobalValues();
+                currentlyParsedFileName = 'stand';
+                self.parseX3DAsync('node_modules/apertusvr/js/plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+                    console.log('X3D-parsing done: ' + currentlyParsedFileName);
+                    callback(null);
+                });
             }
         ],
         function (err, result) {
             console.log("async tasks done");
-
-            self.Animate();
+         
             if (loopAnimation) {
+				self.Animate();
                 setInterval(function () {
                     keyIndex = 0;
                     self.Animate();

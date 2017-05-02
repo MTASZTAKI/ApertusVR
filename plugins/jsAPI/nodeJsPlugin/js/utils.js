@@ -45,7 +45,7 @@ exports.roundDecimal = function(num) {
 }
 
 exports.isDefined = function(obj) {
-	return (typeof obj !== 'undefined');
+	return (obj && typeof obj !== 'undefined');
 }
 
 exports.isUndefined = function(obj) {
