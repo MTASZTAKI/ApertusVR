@@ -7,10 +7,10 @@
         "participantType": "Local",
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-      "sessionResourceLocation": [
-        "/plugins/lego/resources",
-        "/plugins/oculusDK2/resources"
-      ],
+        "sessionResourceLocation": [
+            "/plugins/robotMonitoring/resources",
+            "/plugins/oculusDK2/resources"
+        ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -22,9 +22,9 @@
     },
     "pluginManager": {
         "plugins": [
-          "ApeOgreRenderPlugin",
-          "ApeOculusDK2Plugin",
-          "ApeLegoPlugin"
+            "ApeNodeJsPlugin",
+            "ApeOgreRenderPlugin",
+            "ApeRobotMonitoringPlugin"
         ]
     }
 }

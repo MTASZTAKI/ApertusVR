@@ -492,7 +492,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj)
 		if (currentlyParsedFileName == 'SZTAKIUr5Cell') {
 			console.log(' scene world node created for: ' + currentlyParsedFileName);
 			nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-			nodeObj.setPosition(new ape.nbind.Vector3(-100, -100, -610));
+			nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
 			nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
 		}
 		return nodeObj;
@@ -819,7 +819,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            }*/
+            }
 			function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'stand';
@@ -827,7 +827,7 @@ exports.init = function (x3dFilePath) {
                     console.log('X3D-parsing done: ' + currentlyParsedFileName);
                     callback(null);
                 });
-            },
+            },*/
 			function (callback) {
                 self.resetGlobalValues();
                 currentlyParsedFileName = 'SZTAKIUr5Cell';

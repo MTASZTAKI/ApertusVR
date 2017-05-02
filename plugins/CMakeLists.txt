@@ -32,6 +32,7 @@ option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
 option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
 option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
 option(APE_PLUGIN_OculusDK2 "Use OculusDK2Plugin?" ON )
+option(APE_PLUGIN_RobotMonitoring "Use RobotMonitoringPlugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -69,5 +70,8 @@ if (${APE_PLUGIN_JsAPI})
 endif ()
 if (${APE_PLUGIN_OculusDK2})
 	add_subdirectory (oculusDK2)
+endif ()
+if (${APE_PLUGIN_RobotMonitoring})
+	add_subdirectory (robotMonitoring)
 endif ()
 
