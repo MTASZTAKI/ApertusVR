@@ -63,4 +63,5 @@ CTestTestfile.cmake
 
 # Exclude thirdparties
 !3rdParty/node-v0.10.46/
-!3rdParty/oculusRT/
+!3rdParty/oculus/LibOVR/Lib/*
+!3rdParty/oculusRT/*

@@ -1,27 +1,21 @@
 {
-    "mainWindow": {
-        "name": "Ape",
-        "creator": "ApeOgreRenderPlugin"
+  "mainWindow": {
+    "name": "Ape",
+    "creator": "ApeOgreRenderPlugin"
+  },
+  "sceneSession": {
+    "participantType": "Local",
+    "uniqueUserNamePrefix": "",
+    "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+    "sessionResourceLocation": [ "/plugins/linkageDesignerVR/resources" ],
+    "natPunchThroughServer": {
+      "ip": "195.111.2.95",
+      "port": "61666"
     },
-    "sceneSession": {
-        "participantType": "Local",
-        "uniqueUserNamePrefix": "",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": "/plugins/linkageDesignerVR/resources",
-        "natPunchThroughServer": {
-            "ip": "195.111.2.95",
-            "port": "61666"
-        },
-        "lobbyServer": {
-            "ip": "195.111.2.95",
-            "port": "8888"
-        }
-    },
-    "pluginManager": {
-        "plugins": [
-            "ApeNodeJsPlugin",
-            "ApeOgreRenderPlugin",
-            "ApeLinkageDesignerVRPlugin"
-        ]
+    "lobbyServer": {
+      "ip": "195.111.2.95",
+      "port": "8888"
     }
+  },
+  "pluginManager": { "plugins": [ "ApeNodeJsPlugin", "ApeOgreRenderPlugin", "ApeLinkageDesignerVRPlugin" ] }
 }

@@ -46,7 +46,9 @@ private:
 
 	Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mPlanetNode;
+	ovrHmd mpHMD;
+
+	ovrFrameTiming mHMDFrameTiming;
 	
 	void nodeEventCallBack(const Ape::Event& event);
 	

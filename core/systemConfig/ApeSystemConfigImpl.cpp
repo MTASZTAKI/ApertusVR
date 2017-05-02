@@ -109,9 +109,12 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					mSceneSessionConfig.sessionGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
 				{
-					std::stringstream sessionResourceLocation;
-					sessionResourceLocation << APE_SOURCE_DIR << jsonDocument["sceneSession"]["sessionResourceLocation"].GetString();
-					mSceneSessionConfig.sessionResourceLocation = sessionResourceLocation.str();
+					for (auto& resourceLocation : jsonDocument["sceneSession"]["sessionResourceLocation"].GetArray())
+					{
+						std::stringstream sessionResourceLocation;
+						sessionResourceLocation << APE_SOURCE_DIR << resourceLocation.GetString();
+						mSceneSessionConfig.sessionResourceLocation.push_back(sessionResourceLocation.str());
+					}
 				}
 			}
 			rapidjson::Value& pluginManager = jsonDocument["pluginManager"];
@@ -123,11 +126,6 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 				{
 					for (auto& plugin : pluginManager["plugins"].GetArray())
 						mPluginManagerConfig.pluginnames.push_back(plugin.GetString());
-				}
-				else if (pluginManagerMemberIterator->name == "jsplugins")
-				{
-					for (auto& jsplugin : pluginManager["jsplugins"].GetArray())
-						mPluginManagerConfig.jsPluginNames.push_back(jsplugin.GetString());
 				}
 			}
 		}

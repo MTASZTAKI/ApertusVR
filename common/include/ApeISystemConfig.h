@@ -118,7 +118,7 @@ namespace Ape
 
 		std::string generatedUniqueUserName;
 
-		std::string sessionResourceLocation;
+		std::vector<std::string> sessionResourceLocation;
 
 		std::string sessionGUID;
 
@@ -130,7 +130,7 @@ namespace Ape
 			this->sessionGUID = std::string();
 			this->uniqueUserNamePrefix = std::string();
 			this->generatedUniqueUserName = std::string();
-			this->sessionResourceLocation = std::string();
+			this->sessionResourceLocation = std::vector<std::string>();
 		}
 
 		SceneSessionConfig(
@@ -140,7 +140,7 @@ namespace Ape
 			std::string sessionName,
 			std::string uniqueUserNamePrefix,
 			std::string generatedUniqueUserName,
-			std::string sessionResourceLocation
+			std::vector<std::string> sessionResourceLocation
 			)
 		{
 			this->natPunchThroughServerConfig = natPunchThroughServerConfig;

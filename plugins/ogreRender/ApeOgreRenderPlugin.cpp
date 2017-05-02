@@ -1348,7 +1348,7 @@ void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* reques
 	mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(meshEntityName, mCurrentlyLoadingMeshEntityLodConfig.mesh);
 	mpCurrentlyLoadingMeshEntity->setMeshLodBias(mOgreRenderPluginConfig.ogreLodLevelsConfig.bias);
 	std::stringstream filePath;
-	filePath << mpSystemConfig->getSceneSessionConfig().sessionResourceLocation << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
+	filePath << mpSystemConfig->getSceneSessionConfig().sessionResourceLocation[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
 	Ogre::MeshSerializer meshSerializer;
 	meshSerializer.exportMesh(mCurrentlyLoadingMeshEntityLodConfig.mesh.getPointer(), filePath.str());
 }
@@ -1625,7 +1625,8 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
+	for (auto resourceLocation : mpSystemConfig->getSceneSessionConfig().sessionResourceLocation)
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
 	mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC);
