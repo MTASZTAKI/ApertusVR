@@ -596,7 +596,6 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
 
 	var currentNode;
 	try {
-
 		currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
 	} catch (e) {
 		console.log('Exception cached: ' + e);
@@ -690,51 +689,57 @@ exports.resetGlobalValues = function() {
 }
 
 exports.init = function(x3dFilePath) {
+	try {
+		async.waterfall(
+			[
+				function(callback) {
+					currentlyParsedFileName = 'weldingFixture';
+					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+						callback(null);
+					});
+				},
+				function(callback) {
+					self.resetGlobalValues();
+					currentlyParsedFileName = 'cell';
+					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+						callback(null);
+					});
+				},
+				function(callback) {
+					self.resetGlobalValues();
+					currentlyParsedFileName = 'ur5cellAnim';
+					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+						callback(null);
+					});
+				},
+				function(callback) {
+					self.resetGlobalValues();
+					currentlyParsedFileName = 'SuperChargerLinkage';
+					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+						callback(null);
+					});
+				}
+			],
+			function(err, result) {
+				console.log("async tasks done");
+				if (err) {
+					console.log('X3D-init error: ', err);
+				}
 
-	async.waterfall(
-		[
-			function (callback) {
-			    currentlyParsedFileName = 'weldingFixture';
-			    self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-			        console.log('X3D-parsing done: ' + currentlyParsedFileName);
-			        callback(null);
-			    });
-			},
-			function(callback) {
-				self.resetGlobalValues();
-				currentlyParsedFileName = 'cell';
-				self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-					console.log('X3D-parsing done: ' + currentlyParsedFileName);
-					callback(null);
-				});
-			},
-			function (callback) {
-			    self.resetGlobalValues();
-			    currentlyParsedFileName = 'ur5cellAnim';
-			    self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-			        console.log('X3D-parsing done: ' + currentlyParsedFileName);
-			        callback(null);
-			    });
-			},
-			function (callback) {
-			    self.resetGlobalValues();
-			    currentlyParsedFileName = 'SuperChargerLinkage';
-			    self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-			        console.log('X3D-parsing done: ' + currentlyParsedFileName);
-			        callback(null);
-			    });
+				self.Animate();
+				if (loopAnimation) {
+					setInterval(function() {
+						keyIndex = 0;
+						self.Animate();
+					}, 6000);
+				}
 			}
-		],
-		function(err, result) {
-			console.log("async tasks done");
-
-			self.Animate();
-			if (loopAnimation) {
-				setInterval(function() {
-					keyIndex = 0;
-					self.Animate();
-				}, 6000);
-			}
-		}
-	);
+		);
+	} catch (e) {
+		console.log('X3D-init exception cached: ' + e);
+	}
 }
