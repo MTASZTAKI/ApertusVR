@@ -20,36 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var utils = require('apertusvr/js/utils.js');
+var ape = require('../ape.js');
+var express = ape.requireNodeModule('express');
+var app = express();
+var utils = require('../utils.js');
 
-exports.pathMap = {};
-exports.moduleTag = 'ApeHTTPApi';
-exports.apiVersion = 'v1';
-exports.rootPath = '/api/' + this.apiVersion;
+app.use('*', function(req, res, next) {
+	console.log('all other routes');
+	next({
+		name: 'BadRequest',
+		message: 'Invalid Url!',
+		code: 404
+	});
+});
 
-var apeHTTPApiCommon = require('apertusvr/js/apeHttpApi/apeHTTPApiCommon.js');
-exports.common = apeHTTPApiCommon;
+app.use(function(err, req, res, next) {
+	console.log('error handling in server.js');
+	console.log(err);
+	var resObj = new utils.responseObj();
+	if (err) {
+		if (err.hasOwnProperty('name')) {
+			if (err.name === 'UnauthorizedError') {
+				if (!err.hasOwnProperty('message')) {
+					err.message = 'The API request has invalid token!';
+					err.code = 401;
+					res.status(401);
+				}
+			} else if (err.name == 'BadRequest') {
+				res.status(404);
+			}
+		}
 
-var apeHTTPApiNode = require('apertusvr/js/apeHttpApi/apeHTTPApiNode.js');
-exports.nodes = apeHTTPApiNode;
+		resObj.addErrorItem(err);
+		res.send(resObj.toJSonString());
+	}
+});
 
-var apeHTTPApiLight = require('apertusvr/js/apeHttpApi/apeHTTPApiLight.js');
-exports.lights = apeHTTPApiLight;
-
-var apeHTTPApiText = require('apertusvr/js/apeHttpApi/apeHTTPApiText.js');
-exports.texts = apeHTTPApiText;
-
-exports.handleUnkownRes = function(req, res) {
-  console.log('ape.httpApi.handleUnkownRes()');
-  var respObj = new utils.responseObj();
-  respObj.addError({
-    name: 'unknownResource',
-    msg: 'Resource ' + req.url + ' not found.',
-    code: 69
-  });
-  res.send(respObj.toJSonString());
-};
-
-exports.registerPath = function(path, func) {
-  this.pathMap[path] = func;
-};
+module.exports = app;

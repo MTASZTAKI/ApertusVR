@@ -1,38 +1,18 @@
 {
-  "name": "ApertusVR",
-  "version": "1.0.0",
-  "description": "Javascript interpreter and HTTP API extension for ApertusVR",
-  "main": "server.js",
-  "dependencies": {
-    "assert": "^1.4.1",
-    "body-parser": "^1.15.2",
-    "cheerio": "*",
-    "express": "^4.14.0",
-    "express-validator": "^2.20.10",
-    "morgan": "^1.7.0",
-    "nbind": "^0.3.9",
-    "node-gyp": "^3.5.0",
-    "util": "^0.10.3",
-    "uuid": "*"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node apeServer.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "//nas.mvv.sztaki.hu/repositories/apertusvr"
-  },
-  "keywords": [
-    "apertus",
-    "ape",
-    "vr",
-    "virtual",
-    "reality",
-    "node",
-    "api"
-  ],
-  "author": "ApertusVR Team",
-  "license": "ISC"
+	"name": "ApertusVRCppBindModule",
+	"version": "0.1.0",
+	"description": "Javascript interpreter and HTTP API extension for ApertusVR",
+	"dependencies": {},
+	"devDependencies": {},
+	"keywords": [
+		"apertus",
+		"ape",
+		"vr",
+		"virtual",
+		"reality",
+		"node",
+		"api"
+	],
+	"author": "ApertusVR Team",
+	"license": "MIT"
 }

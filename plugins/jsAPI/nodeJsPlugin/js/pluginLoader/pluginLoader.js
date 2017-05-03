@@ -20,16 +20,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var ape = require('apertusvr/js/ape.js');
-
-const moduleTag = 'ApeJsPluginLoader';
+var ape = require('../ape.js');
+var async = ape.requireNodeModule('async');
+exports.moduleTag = 'ApeJsPluginLoader';
 
 // extend ape module
 exports.loadPlugins = function() {
-	// TODO: create system config wrapper in cbindings
-	// foreach(pluginName in ape.cbindings.system.config.pluginNames) {
-	// 	var plugin = require(pluginName);
-	// 	plugin.Init();
-	// }
-	console.log(moduleTag, "test from ApeJsPluginLoader")
+	console.log(this.moduleTag, "test from ApeJsPluginLoader");
+
+	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
+	console.log('js configFolderPath: ' + configFolderPath);
+
+	var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
+	console.log('js plugins to start: ', config.jsPlugins);
+
+	var q = async.queue(function(task, callback) {
+		console.log(task.name + ' init function called');
+		callback();
+	}, config.jsPlugins.length);
+
+	q.drain = function() {
+		console.log('all js plugins have been started');
+	};
+
+	for (var i = 0; i < config.jsPlugins.length; i++) {
+		var pluginFilePath = config.jsPlugins[i];
+		var plugin = require(ape.sourcePath + pluginFilePath);
+		q.push({
+			name: pluginFilePath
+		}, function(err) {
+			plugin.init();
+		});
+	}
 }

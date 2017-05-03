@@ -20,25 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var utils = require('../../utils.js');
-var ape = require('../../ape.js');
+var ape = require('../ape.js');
+var express = ape.requireNodeModule('express');
+var app = express();
+var utils = require('../utils.js');
 
-exports.init = function() {
-	// if demoObjectNode found, attach a textGeometry and set caption
-	ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
-		if (error) {
-			console.log('error: ' + error);
-			return;
-		}
-		var textObj = ape.nbind.JsBindManager().createText('textGeometry');
-		textObj.setParentNodeJsPtr(obj);
+app.get('/', function(req, res, next) {
+	console.log('ape.httpApi.index');
+	var resObj = new utils.responseObj();
+	resObj.addDataItem('ApertusVR API Home');
+	res.send(resObj.toJSonString());
+});
 
-		setInterval(function() {
-			var pos = obj.getPosition();
-			var ort = obj.getOrientation();
-			textObj.setCaption('x: ' + utils.roundDecimal(pos.x) + ', y: ' + utils.roundDecimal(pos.y) + ', z: ' + utils.roundDecimal(pos.z) + '\n' +
-				'w: ' + utils.roundDecimal(ort.w) + ', x: ' + utils.roundDecimal(ort.x) + ', y: ' + utils.roundDecimal(ort.y) + ', z: ' + utils.roundDecimal(ort.z)
-			);
-		}, 20);
-	});
-}
+module.exports = app;

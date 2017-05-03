@@ -21,17 +21,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 const moduleTag = 'ApeJsPluginLoader';
+const nodeModulesPath = 'c:/Users/User/dev/repos/ape/v3/ApertusVR-build/bin/debug/node_modules/';
+const apertusModulePath = nodeModulesPath + 'apertusvr/';
+const sourcePath = 'c:/Users/User/dev/repos/ape/v3/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/';
 
-// nbind
-var apeBindings = require('apertusvr/nbind.node');
-exports.nbind = apeBindings;
+function requireNodeModule(moduleName) {
+	return require(nodeModulesPath + moduleName);
+}
 
-// pluginLoader
-var apePluginLoader = require('apertusvr/js/apePluginLoader/apePluginLoader.js');
+var express = requireNodeModule('express');
+var utils = require('./utils.js');
+
+exports.requireNodeModule = requireNodeModule;
+
+exports.moduleTag = moduleTag;
+exports.nodeModulesPath = nodeModulesPath;
+exports.apertusModulePath = apertusModulePath;
+exports.sourcePath = sourcePath;
+
+exports.nbind = require(apertusModulePath + 'nbind.node');
 exports.jsPluginLoader = {
-	loadPlugins: apePluginLoader.loadPlugins
+	loadPlugins: require(sourcePath + 'pluginLoader/pluginLoader.js').loadPlugins
 };
 
-// httpAPI
-var apeHttpApi = require('apertusvr/js/apeHttpApi/apeHttpApi.js');
-exports.httpApi = apeHttpApi;
+exports.initApi = function(app) {
+	var router = express.Router();
+	router.use(require(sourcePath + 'api/index.js'));
+	router.use(require(sourcePath + 'api/node.js'));
+	router.use(require(sourcePath + 'api/light.js'));
+	router.use(require(sourcePath + 'api/text.js'));
+
+	router.use(require(sourcePath + 'api/fallback.js'));
+	app.use('/api/v1', router);
+}
+
+exports.start = function(app) {
+	this.initApi(app);
+
+	// debugs
+	console.log(utils.inspect(this));
+	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
+
+	// start special plugins
+	this.jsPluginLoader.loadPlugins();
+};

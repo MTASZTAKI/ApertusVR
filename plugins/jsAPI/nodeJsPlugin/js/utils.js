@@ -24,28 +24,28 @@ var utils = this;
 var util = require('util');
 
 String.prototype.isEmpty = function() {
-    return (this.length === 0 || !this.trim());
+	return (this.length === 0 || !this.trim());
 }
 
 String.prototype.contains = function(it) {
-    return this.indexOf(it) != -1;
+	return this.indexOf(it) != -1;
 }
 
 String.prototype.replaceAll = function(search, replacement) {
-  var target = this;
-  return target.replace(new RegExp(search, 'g'), replacement);
+	var target = this;
+	return target.replace(new RegExp(search, 'g'), replacement);
 }
 
 Array.prototype.pushArray = function(arr) {
-    this.push.apply(this, arr);
+	this.push.apply(this, arr);
 }
 
 exports.roundDecimal = function(num) {
-  return Math.round(num * 100) / 100;
+	return Math.round(num * 100) / 100;
 }
 
 exports.isDefined = function(obj) {
-	return (obj && typeof obj !== 'undefined');
+	return (typeof obj !== 'undefined');
 }
 
 exports.isUndefined = function(obj) {
@@ -53,72 +53,70 @@ exports.isUndefined = function(obj) {
 }
 
 exports.log = function(tag, str) {
-  console.log((this.moduleTag || '? ') + ': ' + tag + ': ' + str);
+	console.log((this.moduleTag || '? ') + ': ' + tag + ': ' + str);
 }
 
 exports.inspect = function(obj) {
-  return util.inspect(obj, {depth: null}); // null = no depth limit
+	return util.inspect(obj, {
+		depth: null
+	}); // null = no depth limit
 }
 
 exports.nameOf = function(exp) {
-  return exp.toString().match(/[.](\w+)/)[1];
+	return exp.toString().match(/[.](\w+)/)[1];
 }
 
 exports.iterate = function(obj, nameOfObj, stack) {
-  console.log('');
-  console.log('[' + nameOfObj + ']');
-    for (var property in obj) {
-      var fnName = obj[property].toString();
-      if (fnName.contains('function')) {
-        fnName = fnName.replaceAll('function ', '');
-        fnName = fnName.substring(0, fnName.indexOf(' '));
-        console.log(' - ' + fnName);
-      }
-    }
-    console.log('');
+	console.log('');
+	console.log('[' + nameOfObj + ']');
+	for (var property in obj) {
+		var fnName = obj[property].toString();
+		if (fnName.contains('function')) {
+			fnName = fnName.replaceAll('function ', '');
+			fnName = fnName.substring(0, fnName.indexOf(' '));
+			console.log(' - ' + fnName);
+		}
+	}
+	console.log('');
 };
 
 exports.ObjToSource = function(o) {
-    if (!o) return 'null';
-    if (typeof(o) == "object") {
-        if (!this.ObjToSource.check) this.ObjToSource.check = new Array();
-        for (var i = 0, k = this.ObjToSource.check.length ; i < k ; ++i) {
-            if (this.ObjToSource.check[i] == o) {return '{}';}
-        }
-        this.ObjToSource.check.push(o);
-    }
-    var k = "", na = typeof(o.length) == "undefined" ? 1 : 0, str = "";
-    for(var p in o) {
-        if (na) k = '"' + p + '":';
-        if (typeof o[p] == "string") {
-          var val = o[p];
-          str += k + '"' + val + '",';
-        }
-        else if (typeof o[p] == "object") str += k + this.ObjToSource(o[p]) + ",\n";
-        else {
-          var val = o[p] + ' ';
-          if (val.indexOf('function') > -1) {
-            //val = 'function()';
-            //str += k + '"' + val + '",';
-          }
-          else {
-              str += k + '"' + val + '",';
-          }
-        }
-    }
-    if (typeof(o) == "object") this.ObjToSource.check.pop();
-    if (na) return "{" + str.slice(0, -1) + "}\n";
-    else return "[" + str.slice(0, -1) + "]\n";
+	if (!o) return 'null';
+	if (typeof(o) == "object") {
+		if (!this.ObjToSource.check) this.ObjToSource.check = new Array();
+		for (var i = 0, k = this.ObjToSource.check.length; i < k; ++i) {
+			if (this.ObjToSource.check[i] == o) {
+				return '{}';
+			}
+		}
+		this.ObjToSource.check.push(o);
+	}
+	var k = "",
+		na = typeof(o.length) == "undefined" ? 1 : 0,
+		str = "";
+	for (var p in o) {
+		if (na) k = '"' + p + '":';
+		if (typeof o[p] == "string") {
+			var val = o[p];
+			str += k + '"' + val + '",';
+		} else if (typeof o[p] == "object") str += k + this.ObjToSource(o[p]) + ",\n";
+		else {
+			var val = o[p] + ' ';
+			if (val.indexOf('function') > -1) {
+				//val = 'function()';
+				//str += k + '"' + val + '",';
+			} else {
+				str += k + '"' + val + '",';
+			}
+		}
+	}
+	if (typeof(o) == "object") this.ObjToSource.check.pop();
+	if (na) return "{" + str.slice(0, -1) + "}\n";
+	else return "[" + str.slice(0, -1) + "]\n";
 };
 
 exports.convertToJsObj = function(obj) {
-  return JSON.parse(utils.ObjToSource(obj));
-}
-
-exports.quaternionFromAngleAxis = function(angle, axisVec) {
-  var fHalfAngle = 0.5 * angle;
-  var fSin = Math.sin(fHalfAngle);
-  return new ape.nbind.Quaternion(Math.cos(fHalfAngle), fSin * axisVec.x, fSin * axisVec.y, fSin * axisVec.z);
+	return JSON.parse(utils.ObjToSource(obj));
 }
 
 exports.responseObj = function() {
@@ -151,16 +149,16 @@ exports.responseObj = function() {
 				//console.log(this);
 				this.addError(errorObj);
 				return false;
-			}
-			else {
+			} else {
 				return true;
 			}
 		},
-		addError: function(errorObj) {
-			this.response.result = 'error';
+
+		addErrorItem: function(errorObj) {
+			this.response.result.success = false;
 
 			if (utils.isUndefined(errorObj)) {
-				this.addError({name: 'undefinedVariable', msg: 'variable errorObj is undefined', code: 666});
+				this.addErrorItem(self.errorObj.items.undefinedVariable);
 				return;
 			}
 
@@ -188,12 +186,12 @@ exports.responseObj = function() {
 			}
 		},
 
-    addDataItem: function(item) {
-      if (item) {
-        this.response.data.items.push(item);
+		addDataItem: function(item) {
+			if (item) {
+				this.response.data.items.push(item);
 				this.response.data.count = this.response.data.items.length;
-      }
-    },
+			}
+		},
 		setData: function(data) {
 			if (data) {
 				this.response.data = data;

@@ -24,6 +24,12 @@
 set(MY_TARGET_NAME ApeNodeJsExtrension)
 set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
+set(BUILD_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
+set(BUILD_PATH_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+
+set(TARGET_MODULE_PATH_DEBUG ${BUILD_PATH_DEBUG}/${MY_TARGET_OUTPUT})
+set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
+
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	wrappers/ApeJsBindColor.h
@@ -109,3 +115,6 @@ target_compile_definitions(${MY_TARGET_NAME} PRIVATE NODE_GYP_MODULE_NAME=nbind 
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_DEBUG})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_RELEASE})

@@ -20,16 +20,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var ape = require('apertusvr/js/ape');
+var http = require("http");
+var express = require('express');
+var bodyParser = require('body-parser');
+var logger = require('morgan');
+var expressValidator = require('express-validator');
+var ape = require('c:/Users/User/dev/repos/ape/v3/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/ape.js');
 
-const moduleTag = 'ApeJsPluginLoader';
+var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
+var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
 
-// extend ape module
-exports.loadPlugins = function() {
-	// TODO: create system config wrapper in cbindings
-	// foreach(pluginName in ape.cbindings.system.config.pluginNames) {
-	// 	var plugin = require(pluginName);
-	// 	plugin.Init();
-	// }
-	console.log(moduleTag, "test from ApeJsPluginLoader")
-}
+var app = express();
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(expressValidator());
+
+app.listen(port, host, function() {
+	console.log('Listening on ' + host + ':' + port);
+	ape.start(app);
+});
