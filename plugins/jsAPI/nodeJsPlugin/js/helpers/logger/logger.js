@@ -20,25 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var http = require("http");
-var express = require('express');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var expressValidator = require('express-validator');
-var ape = require('c:/Users/User/dev/repos/ape/v3/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/ape.js');
+var moduleManager = require('../../helpers/module_manager/module_manager.js');
+var winston = moduleManager.requireNodeModule('winston');
+var config_manager = require('../../helpers/config_manager/config_manager');
 
-var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
-var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
+winston.emitErrs = true;
 
-var app = express();
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-	extended: true
-}));
-app.use(expressValidator());
+const env = process.env.NODE_ENV || 'development';
 
-app.listen(port, host, function() {
-	console.log('Listening on ' + host + ':' + port);
-	ape.start(app);
+// const tsFormat = () => (new Date()).toLocaleTimeString();
+var logger = new winston.Logger({
+	transports: [
+		// colorize the output to the console
+		new winston.transports.Console(config_manager.logger.console),
+		new(moduleManager.requireNodeModule('winston-daily-rotate-file'))(config_manager.logger.file)
+	],
+	exitOnError: config_manager.logger.exitOnError
 });
+
+module.exports = logger;
+module.exports.stream = {
+	write: function(message, encoding) {
+		logger.info(message);
+	}
+};

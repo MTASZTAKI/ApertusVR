@@ -21,31 +21,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 var ape = require('../ape.js');
-var async = ape.requireNodeModule('async');
+var moduleManager = require('../helpers/module_manager/module_manager.js');
+var async = moduleManager.requireNodeModule('async');
+var logger = require("../helpers/logger/logger.js");
 exports.moduleTag = 'ApeJsPluginLoader';
 
 // extend ape module
 exports.loadPlugins = function() {
-	console.log(this.moduleTag, "test from ApeJsPluginLoader");
+	logger.debug("PluginLoader.loadPlugins()");
 
 	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
-	console.log('js configFolderPath: ' + configFolderPath);
+	logger.debug('js configFolderPath: ' + configFolderPath);
 
 	var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
-	console.log('js plugins to start: ', config.jsPlugins);
+	logger.debug('js plugins to start: ', config.jsPlugins);
 
 	var q = async.queue(function(task, callback) {
-		console.log(task.name + ' init function called');
+		logger.debug(task.name + ' init function called');
 		callback();
 	}, config.jsPlugins.length);
 
 	q.drain = function() {
-		console.log('all js plugins have been started');
+		logger.debug('all js plugins have been started');
 	};
 
 	for (var i = 0; i < config.jsPlugins.length; i++) {
 		var pluginFilePath = config.jsPlugins[i];
-		var plugin = require(ape.sourcePath + pluginFilePath);
+		var plugin = require(moduleManager.sourcePath + pluginFilePath);
 		q.push({
 			name: pluginFilePath
 		}, function(err) {

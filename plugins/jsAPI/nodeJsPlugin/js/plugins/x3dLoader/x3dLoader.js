@@ -22,13 +22,14 @@ SOFTWARE.*/
 
 var utils = require('../../utils.js');
 var ape = require('../../ape.js');
-var cheerio = ape.requireNodeModule('cheerio');
-var htmlparser = ape.requireNodeModule('htmlparser2');
+var moduleManager = require('../../helpers/module_manager/module_manager.js');
+var cheerio = moduleManager.requireNodeModule('cheerio');
+var htmlparser = moduleManager.requireNodeModule('htmlparser2');
 var fs = require('fs');
-var async = ape.requireNodeModule('async');
-const uuidV1 = ape.requireNodeModule('uuid/v1');
+var async = moduleManager.requireNodeModule('async');
+const uuidV1 = moduleManager.requireNodeModule('uuid/v1');
 const path = require('path');
-var request = ape.requireNodeModule('request');
+var request = moduleManager.requireNodeModule('request');
 var self = this;
 
 // IndexedFaceSet, IndexedLineSet
@@ -694,7 +695,7 @@ exports.init = function(x3dFilePath) {
 			[
 				function(callback) {
 					currentlyParsedFileName = 'weldingFixture';
-					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
@@ -702,7 +703,7 @@ exports.init = function(x3dFilePath) {
 				function(callback) {
 					self.resetGlobalValues();
 					currentlyParsedFileName = 'cell';
-					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
@@ -710,7 +711,7 @@ exports.init = function(x3dFilePath) {
 				function(callback) {
 					self.resetGlobalValues();
 					currentlyParsedFileName = 'ur5cellAnim';
-					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
@@ -718,7 +719,7 @@ exports.init = function(x3dFilePath) {
 				function(callback) {
 					self.resetGlobalValues();
 					currentlyParsedFileName = 'SuperChargerLinkage';
-					self.parseX3DAsync(ape.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
+					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});

@@ -20,25 +20,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var http = require("http");
-var express = require('express');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var expressValidator = require('express-validator');
-var ape = require('c:/Users/User/dev/repos/ape/v3/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/ape.js');
+var config_manager = {};
 
-var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
-var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
+try {
+	var db_config = require('../../configs/dev/db.json');
+	var logger_config = require('../../configs/dev/logger.json');
+	var validators_config = require('../../configs/dev/validators.json');
 
-var app = express();
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-	extended: true
-}));
-app.use(expressValidator());
+	config_manager = {
+		db: db_config,
+		logger: logger_config,
+		validators: validators_config
+	}
+}
+catch (e) {
+	console.log('Could not load configuration files! Exiting...');
+	console.log(e);
+	process.exit(1);
+}
 
-app.listen(port, host, function() {
-	console.log('Listening on ' + host + ':' + port);
-	ape.start(app);
-});
+module.exports = config_manager;

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2017 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,17 @@ SOFTWARE.*/
 
 var utils = this;
 var util = require('util');
+var logger = require('../../helpers/logger/logger');
+
+String.prototype.format = function(placeholders) {
+	var s = this;
+	for(var propertyName in placeholders) {
+		var re = new RegExp('{' + propertyName + '}', 'gm');
+		if (placeholders.hasOwnProperty(propertyName))
+			s = s.replace(re, placeholders[propertyName]);
+	}
+	return s;
+};
 
 String.prototype.isEmpty = function() {
 	return (this.length === 0 || !this.trim());
@@ -44,12 +55,21 @@ exports.roundDecimal = function(num) {
 	return Math.round(num * 100) / 100;
 }
 
-exports.isDefined = function(obj) {
-	return (typeof obj !== 'undefined');
+exports.padStringLeft = function(num) {
+	var res;
+	var pad = "000";
+	var str = '' + num;
+	var pointPos = str.indexOf('.');
+	if (pointPos > -1) {
+		var prefix = str.substring(0, pointPos);
+		pad = pad.substring(0, pad.length - str.length) + str;
+		return pad;
+	}
+	return str;
 }
 
-exports.log = function(tag, str) {
-	console.log((this.moduleTag || '? ') + ': ' + tag + ': ' + str);
+exports.isDefined = function(obj) {
+	return (typeof obj !== 'undefined');
 }
 
 exports.inspect = function(obj) {
@@ -63,17 +83,17 @@ exports.nameOf = function(exp) {
 }
 
 exports.iterate = function(obj, nameOfObj, stack) {
-	console.log('');
-	console.log('[' + nameOfObj + ']');
+	logger.debug('');
+	logger.debug('[' + nameOfObj + ']');
 	for (var property in obj) {
 		var fnName = obj[property].toString();
 		if (fnName.contains('function')) {
 			fnName = fnName.replaceAll('function ', '');
 			fnName = fnName.substring(0, fnName.indexOf(' '));
-			console.log(' - ' + fnName);
+			logger.debug(' - ' + fnName);
 		}
 	}
-	console.log('');
+	logger.debug('');
 };
 
 exports.ObjToSource = function(o) {
@@ -95,8 +115,9 @@ exports.ObjToSource = function(o) {
 		if (typeof o[p] == "string") {
 			var val = o[p];
 			str += k + '"' + val + '",';
-		} else if (typeof o[p] == "object") str += k + this.ObjToSource(o[p]) + ",\n";
-		else {
+		} else if (typeof o[p] == "object") {
+			str += k + this.ObjToSource(o[p]) + ",\n";
+		} else {
 			var val = o[p] + ' ';
 			if (val.indexOf('function') > -1) {
 				//val = 'function()';
@@ -115,10 +136,37 @@ exports.convertToJsObj = function(obj) {
 	return JSON.parse(utils.ObjToSource(obj));
 }
 
+exports.errorObj = {
+	setMessage: function(errorName, msg) {
+		if (utils.errorObj.items.hasOwnProperty('errorName'))
+			utils.errorObj.items[errorName].msg = msg;
+	},
+	items: {
+		validationErrors: {
+			name: 'validationErrors',
+			msg: 'Some HTTP params are not presented or cannot be validated.',
+			code: 444,
+		},
+		undefinedVariable: {
+			name: 'undefinedVariable',
+			msg: 'Variable is undefined',
+			code: 666
+		}
+	}
+};
+
 exports.responseObj = function() {
 	return {
 		response: {
-			result: 'success',
+			result: {
+				success: true,
+				statuscode: 200,
+				url: ''
+			},
+			token: {
+				key: '',
+				expires: ''
+			},
 			errors: {
 				count: 0,
 				items: []
@@ -133,17 +181,17 @@ exports.responseObj = function() {
 			}
 		},
 
+		setUrl: function(req, res) {
+			this.response.result.url = req.url;
+		},
+
 		validateHttpParams: function(req, res) {
+			this.response.result.url = req.url;
 			var errors = req.validationErrors();
 			if (errors) {
-				var errorObj = {
-					name: 'validationErrors',
-					msg: 'Some HTTP params are not presented or cannot be validated.',
-					code: 444,
-					validationErrors: errors
-				};
-				//console.log(this);
-				this.addError(errorObj);
+				var errorObj = utils.errorObj.items.validationErrors;
+				errorObj.items = errors;
+				this.addErrorItem(errorObj);
 				return false;
 			} else {
 				return true;
@@ -165,11 +213,11 @@ exports.responseObj = function() {
 			if (items) {
 				this.response.errors.items = items;
 				this.response.errors.count = this.response.errors.items.length;
-				this.response.result = 'error';
+				this.response.result.success = false;
 			}
 		},
 
-		addEvent: function(event) {
+		addEventItem: function(event) {
 			if (event) {
 				this.response.events.items.push(event);
 				this.response.events.count = this.response.events.items.length;
@@ -182,15 +230,9 @@ exports.responseObj = function() {
 			}
 		},
 
-		addDataItem: function(item) {
-			if (item) {
-				this.response.data.items.push(item);
-				this.response.data.count = this.response.data.items.length;
-			}
-		},
-		setData: function(data) {
-			if (data) {
-				this.response.data = data;
+		addDataItem: function(dataItem) {
+			if (dataItem) {
+				this.response.data.items.push(dataItem);
 			}
 		},
 		setDataItems: function(items) {
@@ -200,14 +242,20 @@ exports.responseObj = function() {
 			}
 		},
 
+		setToken: function(tokenStr) {
+			if (tokenStr) {
+				this.response.token.key = tokenStr;
+			}
+		},
+
 		toJSonString: function() {
-			if (this.response.errors.hasOwnProperty('count') && this.response.errors.count == 0) {
+			if (this.response.errors && this.response.errors.hasOwnProperty('count') && this.response.errors.count == 0) {
 				delete this.response.errors;
 			}
-			if (this.response.events.hasOwnProperty('count') && this.response.events.count == 0) {
+			if (this.response.events && this.response.events.hasOwnProperty('count') && this.response.events.count == 0) {
 				delete this.response.events;
 			}
-			if (this.response.data.hasOwnProperty('count') && this.response.data.count == 0) {
+			if (this.response.data && this.response.data.hasOwnProperty('count') && this.response.data.count == 0) {
 				delete this.response.data;
 			}
 
