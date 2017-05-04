@@ -26,7 +26,7 @@ var logger = require('../../helpers/logger/logger');
 
 String.prototype.format = function(placeholders) {
 	var s = this;
-	for(var propertyName in placeholders) {
+	for (var propertyName in placeholders) {
 		var re = new RegExp('{' + propertyName + '}', 'gm');
 		if (placeholders.hasOwnProperty(propertyName))
 			s = s.replace(re, placeholders[propertyName]);
@@ -149,8 +149,13 @@ exports.errorObj = {
 		},
 		undefinedVariable: {
 			name: 'undefinedVariable',
-			msg: 'Variable is undefined',
+			msg: 'Variable is undefined.',
 			code: 666
+		},
+		dataNotPresented: {
+			name: 'dataNotPresented',
+			msg: 'Data object is not presented.',
+			code: 777
 		}
 	}
 };

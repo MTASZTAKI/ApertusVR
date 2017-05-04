@@ -28,7 +28,7 @@ var utils = require('../helpers/utils/utils.js');
 var logger = require("../helpers/logger/logger.js");
 
 app.get('/', function(req, res, next) {
-	console.log('ape.httpApi.index');
+	logger.debug('ape.httpApi.index');
 	var resObj = new utils.responseObj();
 	resObj.addDataItem('ApertusVR API Home');
 	res.send(resObj.toJSonString());
