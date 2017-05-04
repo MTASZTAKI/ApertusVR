@@ -23,11 +23,13 @@ SOFTWARE.*/
 var config_manager = {};
 
 try {
+	var paths_config = require('../../configs/dev/paths.json');
 	var db_config = require('../../configs/dev/db.json');
 	var logger_config = require('../../configs/dev/logger.json');
 	var validators_config = require('../../configs/dev/validators.json');
 
 	config_manager = {
+		paths: paths_config,
 		db: db_config,
 		logger: logger_config,
 		validators: validators_config
