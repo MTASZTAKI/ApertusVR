@@ -39,6 +39,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
+#include "ApeIIndexedFaceSetGeometry.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 

@@ -124,12 +124,12 @@ public:
 
 	void setParametersWithMaterial(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, ManualMaterialJsPtr manualMaterial)
 	{
-		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, colors, manualMaterial.getManualMaterialSharedPtr());
+		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, colors, Ape::GeometryTextureCoordinates(), manualMaterial.getManualMaterialSharedPtr());
 	}
 
 	void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors)
 	{
-		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, colors, Ape::MaterialWeakPtr());
+		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, colors, Ape::GeometryTextureCoordinates(), Ape::MaterialWeakPtr());
 	}
 
 	void setManualMaterial(ManualMaterialJsPtr manualMaterial)
@@ -142,11 +142,13 @@ using namespace Ape;
 NBIND_CLASS(GeometryIndexedFaceSetParameters)
 {
 	construct<>();
-	construct<std::string, GeometryCoordinates, GeometryIndices, GeometryNormals, GeometryColors, MaterialWeakPtr>();
+	construct<std::string, GeometryCoordinates, GeometryIndices, GeometryNormals, GeometryColors, GeometryTextureCoordinates, MaterialWeakPtr>();
 
 	method(getCoordinates);
 	method(getIndices);
 	method(getNormals);
+	method(getColors);
+	method(getTextureCoordinates);
 
 	method(toString);
 }
@@ -181,8 +183,8 @@ NBIND_CLASS(IndexedFaceSetJsPtr)
 	// IIndexedFaceSetGeometry
 
 	method(getParameters);
-	method(setParameters);
 	method(setParametersWithMaterial);
+	method(setParameters);
 	method(setManualMaterial);
 }
 

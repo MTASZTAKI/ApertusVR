@@ -41,6 +41,8 @@ namespace Ape
 	typedef std::vector<float> GeometryNormals;
 
 	typedef std::vector<float> GeometryColors;
+
+	typedef std::vector<float> GeometryTextureCoordinates;
 	
 	class Geometry : public Entity
 	{

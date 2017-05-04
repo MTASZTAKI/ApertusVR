@@ -926,6 +926,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									ogreManual->colour(color);
 								}
 							}
+							if (parameters.textureCoordinates.size() != 0)
+							{
+								for (int i = 0; i < parameters.textureCoordinates.size(); i = i + 2)
+									ogreManual->textureCoord(parameters.textureCoordinates[i], parameters.textureCoordinates[i + 1]);
+							}
 							int indexIndex = 0;
 							while (indexIndex < parameters.indices.size())
 							{

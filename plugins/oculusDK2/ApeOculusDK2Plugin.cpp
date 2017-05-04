@@ -97,7 +97,13 @@ void ApeOculusDK2Plugin::Init()
 	viewports[1].Pos.y = 0;
 	viewports[1].Size.w = recommendedTex1Size.w;
 	viewports[1].Size.h = recommendedTex1Size.h;
-	auto meshNode = mpScene->createNode("oculusDK2MeshNode");
+	Ape::NodeWeakPtr meshNode;
+	if (auto oculusDK2MeshNode = mpScene->createNode("oculusDK2MeshNode").lock())
+	{
+		oculusDK2MeshNode->setPosition(Ape::Vector3(0, 0, -1));
+		oculusDK2MeshNode->setScale(Ape::Vector3(1, 1, -1));
+		meshNode = oculusDK2MeshNode;
+	}
 	for (int eyeNum = 0; eyeNum < 2; eyeNum++)
 	{
 		ovrDistortionMesh meshData;
@@ -107,49 +113,60 @@ void ApeOculusDK2Plugin::Init()
 		params.push_back(Ape::PassGpuVector3Parameter("eyeToSourceUVOffset", Ape::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0)));
 		if (eyeNum == 0)
 		{
-			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov,
-				recommendedTex0Size, viewports[eyeNum],
-				UVScaleOffset);
+			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov, recommendedTex0Size, viewports[eyeNum], UVScaleOffset);
 			manualPassLeftEye.lock()->setPassGpuParameters(params);
 		}
-		else {
-			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov,
-				recommendedTex1Size, viewports[eyeNum],
-				UVScaleOffset);
+		else 
+		{
+			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov, recommendedTex1Size, viewports[eyeNum], UVScaleOffset);
 			manualPassRightEye.lock()->setPassGpuParameters(params);
 		}
 		std::cout << "ApeOculusDK2Plugin: UVScaleOffset[0]: " << UVScaleOffset[0].x << ", " << UVScaleOffset[0].y << std::endl;
 		std::cout << "ApeOculusDK2Plugin: UVScaleOffset[1]: " << UVScaleOffset[1].x << ", " << UVScaleOffset[1].y << std::endl;
-		/*Ogre::ManualObject* manual;
-		if (eyeNum == 0)
-		{
-			manual = mpSceneMgr->createManualObject("RiftRenderObjectLeft");
-			manual->begin("Oculus/LeftEye_CG", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-		}
-		else
-		{
-			manual = mpSceneMgr->createManualObject("RiftRenderObjectRight");
-			manual->begin("Oculus/RightEye_CG", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-		}
+		Ape::GeometryCoordinates coordinates;
+		Ape::GeometryIndices indices;
+		Ape::GeometryColors colors;
+		Ape::GeometryTextureCoordinates textureCoordinates;
 		for (unsigned int i = 0; i < meshData.VertexCount; i++)
 		{
 			ovrDistortionVertex v = meshData.pVertexData[i];
-			manual->position(v.ScreenPosNDC.x, v.ScreenPosNDC.y, 0);
-			manual->textureCoord(v.TanEyeAnglesR.x, v.TanEyeAnglesR.y);
-			manual->textureCoord(v.TanEyeAnglesG.x, v.TanEyeAnglesG.y);
-			manual->textureCoord(v.TanEyeAnglesB.x, v.TanEyeAnglesB.y);
+			coordinates.push_back(v.ScreenPosNDC.x);
+			coordinates.push_back(v.ScreenPosNDC.y);
+			coordinates.push_back(0);
+			coordinates.push_back(-1);
+			textureCoordinates.push_back(v.TanEyeAnglesR.x);
+			textureCoordinates.push_back(v.TanEyeAnglesR.y);
+			textureCoordinates.push_back(v.TanEyeAnglesG.x);
+			textureCoordinates.push_back(v.TanEyeAnglesG.y);
+			textureCoordinates.push_back(v.TanEyeAnglesB.x);
+			textureCoordinates.push_back(v.TanEyeAnglesB.y);
 			float vig = std::max(v.VignetteFactor, (float)0.0);
-			manual->colour(vig, vig, vig, vig);
+			colors.push_back(vig);
+			colors.push_back(vig);
+			colors.push_back(vig);
+			colors.push_back(vig);
 		}
 		for (unsigned int i = 0; i < meshData.IndexCount; i++)
 		{
-			manual->index(meshData.pIndexData[i]);
+			indices.push_back(meshData.pIndexData[i]);
 		}
-		manual->end();*/
+		if (eyeNum == 0)
+		{
+			if (auto manual = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("RiftRenderObjectLeft", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			{
+				manual->setParameters("", coordinates, indices, Ape::GeometryNormals(), colors, textureCoordinates, manualMaterialLeftEye);
+				manual->setParentNode(meshNode);
+			}
+		}
+		else
+		{
+			if (auto manual = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("RiftRenderObjectRight", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			{
+				manual->setParameters("", coordinates, indices, Ape::GeometryNormals(), colors, textureCoordinates, manualMaterialRightEye);
+				manual->setParentNode(meshNode);
+			}
+		}
 		ovrHmd_DestroyDistortionMesh(&meshData);
-		/*meshNode->attachObject(manual);
-		meshNode->setPosition(0, 0, -1);
-		meshNode->setScale(1, 1, -1);*/
 	}
 
 	/*mpCameraExternal = mpSceneMgr->createCamera("OculusRiftExternalCamera");
