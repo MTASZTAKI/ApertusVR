@@ -42,6 +42,10 @@ namespace Ape
 
 		Ape::ManualTextureParameters getParameters() override;
 
+		void setSourceCamera(Ape::CameraWeakPtr camera) override;
+
+		Ape::CameraWeakPtr getSourceCamera() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -54,6 +58,10 @@ namespace Ape
 		Ape::IScene* mpScene;
 
 		Ape::ManualTextureParameters mParameters;
+
+		std::string mCameraName;
+
+		Ape::CameraWeakPtr mCamera;
 	};
 }
 

@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "ApeEntity.h"
 #include "ApeTexture.h"
 #include "ApeVector2.h"
+#include "ApeICamera.h"
 
 namespace Ape
 {	
@@ -61,6 +62,10 @@ namespace Ape
 		virtual void setParameters(float width, float height) = 0;
 
 		virtual Ape::ManualTextureParameters getParameters() = 0;
+
+		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
+
+		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
 	};
 }
 

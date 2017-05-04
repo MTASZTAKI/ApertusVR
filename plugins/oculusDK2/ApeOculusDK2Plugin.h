@@ -40,6 +40,8 @@ SOFTWARE.*/
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
 #include "ApeIIndexedFaceSetGeometry.h"
+#include "ApeICamera.h"
+#include "ApeMatrix4.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
@@ -53,8 +55,18 @@ private:
 	ovrHmd mpHMD;
 
 	ovrFrameTiming mHMDFrameTiming;
+
+	Ape::CameraWeakPtr mCameraLeft;
+
+	Ape::CameraWeakPtr mCameraRight;
+
+	Ape::NodeWeakPtr mHeadNode;
+
+	Ape::NodeWeakPtr mBodyNode;
 	
 	void nodeEventCallBack(const Ape::Event& event);
+
+	Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 	
 public:
 	ApeOculusDK2Plugin();

@@ -53,6 +53,8 @@ namespace Ape
 		Vector3 getDerivedScale() const override;
 
 		bool getChildrenVisibility() override;
+
+		bool isFixedYaw() override;
 		
 		void setParentNode(Ape::NodeWeakPtr parentNode);
 
@@ -65,6 +67,8 @@ namespace Ape
 		void setScale(Vector3 scale) override;
 
 		void setChildrenVisibility(bool visible) override;
+
+		void setFixedYaw(bool fix) override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -94,6 +98,8 @@ namespace Ape
 		Ape::Vector3 mScale;
 
 		bool mChildrenVisibility;
+
+		bool mIsFixedYaw;
 	};
 }
 

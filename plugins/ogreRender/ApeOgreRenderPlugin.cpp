@@ -164,6 +164,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_CHILDVISIBILITY:
 							ogreNode->setVisible(node->getChildrenVisibility());
 							break;
+						case Ape::Event::Type::NODE_FIXEDYAW:
+							ogreNode->setFixedYawAxis(node->isFixedYaw());
+							break;
 						}
 					}
 				}
@@ -1256,6 +1259,27 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							Ogre::TU_RENDERTARGET);
 					}
 					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA:
+					{
+						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
+						if (!ogreTexture.isNull())
+						{
+							if (auto camera = textureManual->getSourceCamera().lock())
+							{
+								if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+								{
+									if (auto ogreRenderTexture = ogreTexture->getBuffer()->getRenderTarget())
+									{
+										ogreRenderTexture->addViewport(ogreCamera);
+										ogreRenderTexture->getViewport(0)->setClearEveryFrame(true);
+										ogreRenderTexture->getViewport(0)->setBackgroundColour(Ogre::ColourValue::Black);
+										ogreRenderTexture->getViewport(0)->setOverlaysEnabled(false);
+									}
+								}
+							}
+						}
+					}
+					break;
 				case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
 					;
 					break;
@@ -1419,6 +1443,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientation()));
 				}
 					break;
+				case Ape::Event::Type::CAMERA_PROJECTIONTYPE:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setProjectionType(ConversionToOgre(camera->getProjectionType()));
+					}
+					break;
+				case Ape::Event::Type::CAMERA_ORTHOWINDOWSIZE:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setOrthoWindow(camera->getOrthoWindowSize().x, camera->getOrthoWindowSize().y);
+				}
+				break;
 				}
 			}
 		}
@@ -1548,7 +1584,11 @@ void Ape::OgreRenderPlugin::Init()
 				for (rapidjson::Value::MemberIterator renderWindowMemberIterator = 
 					renderWindow.MemberBegin(); renderWindowMemberIterator != renderWindow.MemberEnd(); ++renderWindowMemberIterator)
 				{
-					if (renderWindowMemberIterator->name == "monitorIndex")
+					if (renderWindowMemberIterator->name == "enable")
+						ogreRenderWindowConfig.enable = renderWindowMemberIterator->value.GetBool();
+					else if (renderWindowMemberIterator->name == "name")
+						ogreRenderWindowConfig.name = renderWindowMemberIterator->value.GetString();
+					else if (renderWindowMemberIterator->name == "monitorIndex")
 						ogreRenderWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
 					else if (renderWindowMemberIterator->name == "resolution")
 					{
@@ -1608,7 +1648,9 @@ void Ape::OgreRenderPlugin::Init()
 										viewport[viewportMemberIterator->name].MemberBegin();
 										cameraMemberIterator != viewport[viewportMemberIterator->name].MemberEnd(); ++cameraMemberIterator)
 									{
-										if (cameraMemberIterator->name == "nearClip")
+										if (cameraMemberIterator->name == "name")
+											ogreViewPortConfig.camera.name = cameraMemberIterator->value.GetString();
+										else if (cameraMemberIterator->name == "nearClip")
 											ogreViewPortConfig.camera.nearClip = cameraMemberIterator->value.GetFloat();
 										else if (cameraMemberIterator->name == "farClip")
 											ogreViewPortConfig.camera.farClip = cameraMemberIterator->value.GetFloat();
@@ -1727,61 +1769,67 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::RenderWindowDescriptionList winDescList;
 	for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 	{
-		Ogre::RenderWindowDescription winDesc;
-		std::stringstream ss;
-		ss << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
-		winDesc.name = ss.str();
-		winDesc.height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height;
-		winDesc.width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width;
-		winDesc.useFullScreen = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fullScreen;
-		std::stringstream colourDepthSS;
-		colourDepthSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].colorDepth;
-		winDesc.miscParams["colourDepth"] = colourDepthSS.str().c_str();
-		winDesc.miscParams["vsync"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSync ? "Yes" : "No";
-		std::stringstream vsyncIntervalSS;
-		vsyncIntervalSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSyncInterval;
-		winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
-		std::stringstream fsaaSS;
-		fsaaSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaa;
-		winDesc.miscParams["FSAA"] = fsaaSS.str().c_str();
-		winDesc.miscParams["FSAAHint"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaaHint;
-		std::stringstream monitorIndexSS;
-		monitorIndexSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
-		winDesc.miscParams["monitorIndex"] = monitorIndexSS.str().c_str();
-		/*winDesc.miscParams["Allow NVPersHUD"] = "No";
-		winDesc.miscParams["Driver type"] = "Hardware";
-		winDesc.miscParams["Information Queue Exceptions Bottom Level"] = "Info (exception on any message)";
-		winDesc.miscParams["Max Requested Feature Levels"] = "11.0";
-		winDesc.miscParams["Min Requested Feature Levels"] = "9.1";
-		winDesc.miscParams["Floating-point mode"] = "Fastest";
-		winDesc.miscParams["sRGB Gamma Conversion"] = "No";
-		winDescList.push_back(winDesc);*/
-
-		if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
+		if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].enable)
 		{
-			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
-			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-			if (i == 0)
-			{
-				void* windowHnd = 0;
-				mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
-				std::ostringstream windowHndStr;
-				windowHndStr << windowHnd;
-				mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
+			Ogre::RenderWindowDescription winDesc;
+			std::stringstream ss;
+			ss << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name;
+			winDesc.name = ss.str();
+			winDesc.height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height;
+			winDesc.width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width;
+			winDesc.useFullScreen = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fullScreen;
+			std::stringstream colourDepthSS;
+			colourDepthSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].colorDepth;
+			winDesc.miscParams["colourDepth"] = colourDepthSS.str().c_str();
+			winDesc.miscParams["vsync"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSync ? "Yes" : "No";
+			std::stringstream vsyncIntervalSS;
+			vsyncIntervalSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSyncInterval;
+			winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
+			std::stringstream fsaaSS;
+			fsaaSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaa;
+			winDesc.miscParams["FSAA"] = fsaaSS.str().c_str();
+			winDesc.miscParams["FSAAHint"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaaHint;
+			std::stringstream monitorIndexSS;
+			monitorIndexSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
+			winDesc.miscParams["monitorIndex"] = monitorIndexSS.str().c_str();
+			/*winDesc.miscParams["Allow NVPersHUD"] = "No";
+			winDesc.miscParams["Driver type"] = "Hardware";
+			winDesc.miscParams["Information Queue Exceptions Bottom Level"] = "Info (exception on any message)";
+			winDesc.miscParams["Max Requested Feature Levels"] = "11.0";
+			winDesc.miscParams["Min Requested Feature Levels"] = "9.1";
+			winDesc.miscParams["Floating-point mode"] = "Fastest";
+			winDesc.miscParams["sRGB Gamma Conversion"] = "No";
+			winDescList.push_back(winDesc);*/
 
-				mpMainWindow->setHandle(windowHnd);
-				mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width);
-				mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
-			}
-			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
-			if (camera)
+			if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
 			{
-				//TODO why it is not ok
-				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-				camera->setFocalLength(1.0f);
-				camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
-				camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
-				camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+				mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
+				mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
+				if (i == 0)
+				{
+					void* windowHnd = 0;
+					mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
+					std::ostringstream windowHndStr;
+					windowHndStr << windowHnd;
+					mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
+
+					mpMainWindow->setHandle(windowHnd);
+					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width);
+					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+				}
+				if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size() > 0)
+				{
+					auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.name, Ape::Entity::Type::CAMERA).lock());
+					if (camera)
+					{
+						//TODO why it is not ok
+						//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+						camera->setFocalLength(1.0f);
+						camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
+						camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
+						camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+					}
+				}
 			}
 		}
 	}

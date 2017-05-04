@@ -7,12 +7,27 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpHMD = NULL;
+	mCameraLeft = Ape::CameraWeakPtr();
+	mCameraRight = Ape::CameraWeakPtr();
+	mHeadNode = Ape::NodeWeakPtr();
+	mBodyNode = Ape::NodeWeakPtr();
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
 {
 	std::cout << "ApeOculusDK2Plugin dtor" << std::endl;
 }
+
+Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
+{
+	Ape::Matrix4 matrix4(
+		ovrMatrix4.M[0][0], ovrMatrix4.M[0][1], ovrMatrix4.M[0][2], ovrMatrix4.M[0][3],
+		ovrMatrix4.M[1][0], ovrMatrix4.M[1][1], ovrMatrix4.M[1][2], ovrMatrix4.M[1][3],
+		ovrMatrix4.M[2][0], ovrMatrix4.M[2][1], ovrMatrix4.M[2][2], ovrMatrix4.M[2][3],
+		ovrMatrix4.M[3][0], ovrMatrix4.M[3][1], ovrMatrix4.M[3][2], ovrMatrix4.M[3][3]);
+	return matrix4;
+}
+
 
 void ApeOculusDK2Plugin::nodeEventCallBack(const Ape::Event& event)
 {
@@ -169,50 +184,55 @@ void ApeOculusDK2Plugin::Init()
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
 
-	/*mpCameraExternal = mpSceneMgr->createCamera("OculusRiftExternalCamera");
-	mpCameraExternal->setFarClipDistance(50);
-	mpCameraExternal->setNearClipDistance(0.001);
-	mpCameraExternal->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-	mpCameraExternal->setOrthoWindow(2, 2);
-	bool rotateView = false;
-	if (rotateView)
+	Ape::CameraWeakPtr cameraExternal;
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
 	{
-		mpCameraExternal->roll(Ogre::Degree(-90));
+		camera->setFarClipDistance(50);
+		camera->setNearClipDistance(0.001);
+		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
+		camera->setOrthoWindowSize(2, 2);
+		cameraExternal = camera;
 	}
-	mpSceneMgr->getRootSceneNode()->attachObject(mpCameraExternal);*/
-
-	/*mpCameraLeft = mpSceneMgr->createCamera("HmdLeftCamera");
-	mpCameraRight = mpSceneMgr->createCamera("HmdRightCamera");
-	mpBodyNode = mpSceneMgr->getRootSceneNode()->createChildSceneNode("BodyNode");
-	mpHeadNode = mpBodyNode->createChildSceneNode("HeadNode");
-	mpBodyNode->setFixedYawAxis(true);	
-	mpHeadNode->attachObject(mpCameraLeft);
-	mpHeadNode->attachObject(mpCameraRight);
-	mLeftEyeRenderTexture->getBuffer()->getRenderTarget()->addViewport(mpCameraLeft);
-	setRenderTextureProperties(mLeftEyeRenderTexture);
-	mRightEyeRenderTexture->getBuffer()->getRenderTarget()->addViewport(mpCameraRight);
-	setRenderTextureProperties(mRightEyeRenderTexture);
-	ovrFovPort fovLeft = hmd->DefaultEyeFov[ovrEye_Left];
-	ovrFovPort fovRight = hmd->DefaultEyeFov[ovrEye_Right];
-	setCameraProjectionMatrix(mpCameraLeft, fovLeft);
-	setCameraProjectionMatrix(mpCameraRight, fovRight);
-	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
-	float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
-	float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
-	mpCameraLeft->setAspectRatio(aspectRatio);
-	mpCameraRight->setAspectRatio(aspectRatio);
-	mIPD = ovrHmd_GetFloat(hmd, OVR_KEY_IPD, 0.064f) * 100;
-	mpCameraLeft->setPosition(-mIPD / 2.0f, 0.0f, 0.0f);
-	mpCameraRight->setPosition(mIPD / 2.0f, 0.0f, 0.0f);*/
-
-	/*Ogre::NameValuePairList miscParams;
-	if (mVirtualDevice)
+	if (auto node = mpScene->createNode("BodyNode").lock())
 	{
-		miscParams["monitorIndex"] = "0";
-		mpWindowHmd = Ogre::Root::getSingleton().createRenderWindow("Oculus Rift Debug", hmd->Resolution.w / 2, hmd->Resolution.h / 2, false, &miscParams);
-	}*/
-
-	//mpViewport = mpRenderWindow->addViewport(mpCameraExternal);
+		node->setFixedYaw(true);
+		mBodyNode = node;
+	}
+	if (auto node = mpScene->createNode("HeadNode").lock())
+		mHeadNode = node;
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
+	{
+		camera->setParentNode(mHeadNode);
+		manualTextureLeftEye.lock()->setSourceCamera(camera);
+		mCameraLeft = camera;
+	}
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdRightCamera", Ape::Entity::Type::CAMERA).lock()))
+	{
+		camera->setParentNode(mHeadNode);
+		manualTextureRightEye.lock()->setSourceCamera(camera);
+		mCameraRight = camera;
+	}
+	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
+	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
+	if (auto camera = cameraExternal.lock())
+	{
+		float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
+		float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
+		float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
+		float ipd = ovrHmd_GetFloat(mpHMD, OVR_KEY_IPD, 0.064f) * 100;
+		if (auto cameraLeft = mCameraLeft.lock())
+		{
+			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
+			cameraLeft->setAspectRatio(aspectRatio);
+			cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+		}
+		if (auto cameraRight = mCameraRight.lock())
+		{
+			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
+			cameraRight->setAspectRatio(aspectRatio);
+			cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+		}
+	}
 }
 
 void ApeOculusDK2Plugin::Run()
@@ -221,14 +241,21 @@ void ApeOculusDK2Plugin::Run()
 	{
 		ovrTrackingState ts = ovrHmd_GetTrackingState(mpHMD, 0);
 		OVR::Posef pose = ts.HeadPose.ThePose;
-		/*mpHeadNode->setOrientation(Ogre::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z));
-		mpHeadNode->setPosition(100 * Ogre::Vector3(pose.Translation.x, pose.Translation.y, pose.Translation.z));*/
-
 		ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-		/*setCameraProjectionMatrix(mpCameraLeft, fovLeft, *mpDisplaySystemNearClip, *mpDisplaySystemFarClip);
-		setCameraProjectionMatrix(mpCameraRight, fovRight, *mpDisplaySystemNearClip, *mpDisplaySystemFarClip);*/
-
+		if (auto headNode = mHeadNode.lock())
+		{
+			headNode->setOrientation(Ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z));
+			headNode->setPosition(Ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100));
+		}
+		if (auto cameraLeft = mCameraLeft.lock())
+		{
+			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance(), true)));
+		}
+		if (auto cameraRight = mCameraRight.lock())
+		{
+			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance(), true)));
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::nodeEventCallBack, this, std::placeholders::_1));

@@ -33,6 +33,7 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mScale = Ape::Vector3(1.0f, 1.0f, 1.0f);
 	mOrientation = Ape::Quaternion();
 	mChildrenVisibility = true;
+	mIsFixedYaw = false;
 }
 
 Ape::NodeImpl::~NodeImpl()
@@ -89,6 +90,11 @@ bool Ape::NodeImpl::getChildrenVisibility()
 	return mChildrenVisibility;
 }
 
+bool Ape::NodeImpl::isFixedYaw()
+{
+	return mIsFixedYaw;
+}
+
 void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
@@ -128,6 +134,12 @@ void Ape::NodeImpl::setChildrenVisibility(bool visible)
 {
 	mChildrenVisibility = visible;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
+}
+
+void Ape::NodeImpl::setFixedYaw(bool fix)
+{
+	mIsFixedYaw = fix;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
 }
 
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
@@ -194,6 +206,7 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -217,5 +230,7 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
