@@ -135,6 +135,12 @@ namespace Ape
 	typedef std::weak_ptr<Texture> TextureWeakPtr;
 
 	typedef std::shared_ptr<Texture> TextureSharedPtr;
+
+	class IManualTexture;
+
+	typedef std::weak_ptr<IManualTexture> ManualTextureWeakPtr;
+
+	typedef std::shared_ptr<IManualTexture> ManualTextureSharedPtr;
 }
 
 #endif

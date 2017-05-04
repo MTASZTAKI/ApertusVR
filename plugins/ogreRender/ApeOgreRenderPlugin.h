@@ -68,6 +68,7 @@ SOFTWARE.*/
 #include "OgrePixelCountLodStrategy.h"
 #include "OgreLodWorkQueueRequest.h"
 #include "OgreLodWorkQueueWorker.h"
+#include "OgreTextureManager.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "ApeIFileMaterial.h"

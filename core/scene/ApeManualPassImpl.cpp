@@ -76,6 +76,12 @@ void Ape::ManualPassImpl::setTexture(Ape::TextureWeakPtr texture)
 		mTexture = Ape::TextureWeakPtr();
 }
 
+void Ape::ManualPassImpl::setPassGpuParameters(Ape::PassGpuParameters passGpuParameters)
+{
+	mPassGpuParameters = passGpuParameters;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS));
+}
+
 void Ape::ManualPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);

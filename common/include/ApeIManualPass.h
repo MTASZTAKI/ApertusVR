@@ -53,6 +53,8 @@ namespace Ape
 		virtual void setShininess(float shininess) = 0;
 
 		virtual void setTexture(Ape::TextureWeakPtr texture) = 0;
+
+		virtual void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) = 0;
 	};
 }
 

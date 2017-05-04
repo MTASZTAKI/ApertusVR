@@ -50,6 +50,8 @@ namespace Ape
 
 		void setTexture(Ape::TextureWeakPtr texture) override;
 
+		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;

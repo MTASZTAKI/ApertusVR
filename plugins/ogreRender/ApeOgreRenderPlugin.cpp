@@ -1183,7 +1183,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == Ape::Event::Group::PASS_MANUAL)
 		{
-			if (auto passManual = std::static_pointer_cast<Ape::IPbsPass>(mpScene->getEntity(event.subjectName).lock()))
+			if (auto passManual = std::static_pointer_cast<Ape::IManualPass>(mpScene->getEntity(event.subjectName).lock()))
 			{
 				std::string passManualName = passManual->getName();
 				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
@@ -1210,10 +1210,50 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					case Ape::Event::Type::PASS_MANUAL_SHININESS:
 						ogreManualPassMaterial->setShininess(passManual->getShininess());
 						break;
+					case Ape::Event::Type::PASS_MANUAL_TEXTURE:
+					{
+						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(passManualName);
+						if (!ogreTexture.isNull())
+							ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+					}
+						break;
+					case Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS:
+					{
+						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreManualPassMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+						if (!ogreGpuParameters.isNull())
+						{
+							for (auto passGpuParameter : passManual->getPassGpuParameters())
+								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
+						}
+					}
+					break;
 					case Ape::Event::Type::PASS_MANUAL_DELETE:
 						;
 						break;
 					}
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::TEXTURE_MANUAL)
+		{
+			if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string textureManualName = textureManual->getName();
+				switch (event.type)
+				{
+				case Ape::Event::Type::TEXTURE_MANUAL_CREATE:
+					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
+					{
+						Ape::ManualTextureParameters parameters = textureManual->getParameters();
+						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ogre::PF_R8G8B8,
+							Ogre::TU_RENDERTARGET);
+					}
+					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+					;
+					break;
 				}
 			}
 		}
