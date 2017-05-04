@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include "nbind/api.h"
 #include "Ape.h"
 #include "ApeIManualMaterial.h"
+#include "ApeManualPassJsBind.h"
 #include "ApePbsPassJsBind.h"
 
 #ifdef NBIND_CLASS
@@ -86,9 +87,9 @@ public:
 		return mPtr.lock()->getPass();
 	}
 
-	PbsPassJsPtr getPbsPassJsPtr()
+	ManualPassJsPtr getManualPassJsPtr()
 	{
-		return PbsPassJsPtr(getPassWeakPtr());
+		return ManualPassJsPtr(getPassWeakPtr());
 	}
 
 	// Entity
@@ -104,6 +105,11 @@ public:
 	}
 
 	// IManualMaterial
+
+	void setManualPass(ManualPassJsPtr manualPass)
+	{
+		mPtr.lock()->setPass(manualPass.getManualPassSharedPtr());
+	}
 
 	void setPbsPass(PbsPassJsPtr pbsPass)
 	{
@@ -130,7 +136,7 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	// Pass
 
 	method(getPassWeakPtr);
-	method(getPbsPassJsPtr);
+	method(getManualPassJsPtr);
 
 	// Entity
 
@@ -138,6 +144,7 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(getType);
 
 	// IManualMaterial
+	method(setManualPass);
 	method(setPbsPass);
 }
 

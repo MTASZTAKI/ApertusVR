@@ -51,7 +51,8 @@ namespace Ape
 			MATERIAL_MANUAL,
 			MATERIAL_FILE,
 			PASS_PBS,
-			TEXTURE,
+			PASS_MANUAL,
+			TEXTURE_MANUAL,
 			INVALID
 		};
 		

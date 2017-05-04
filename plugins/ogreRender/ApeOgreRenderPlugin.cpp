@@ -51,6 +51,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
@@ -1173,6 +1175,42 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mPbsMaterials[passPbsName]->setLightRoughnessOffset(passPbs->getLightRoughnessOffset());
 						break;
 					case Ape::Event::Type::PASS_PBS_DELETE:
+						;
+						break;
+					}
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::PASS_MANUAL)
+		{
+			if (auto passManual = std::static_pointer_cast<Ape::IPbsPass>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string passManualName = passManual->getName();
+				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				Ogre::MaterialPtr ogreManualPassMaterial = result.first.staticCast<Ogre::Material>();
+				if (!ogreManualPassMaterial.isNull())
+				{
+					switch (event.type)
+					{
+					case Ape::Event::Type::PASS_MANUAL_CREATE:
+						ogreManualPassMaterial->createTechnique()->createPass();
+						break;
+					case Ape::Event::Type::PASS_MANUAL_AMBIENT:
+						ogreManualPassMaterial->setAmbient(ConversionToOgre(passManual->getAmbientColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_DIFFUSE:
+						ogreManualPassMaterial->setDiffuse(ConversionToOgre(passManual->getDiffuseColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_EMISSIVE:
+						ogreManualPassMaterial->setSelfIllumination(ConversionToOgre(passManual->getEmissiveColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_SPECULAR:
+						ogreManualPassMaterial->setSpecular(ConversionToOgre(passManual->getSpecularColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_SHININESS:
+						ogreManualPassMaterial->setShininess(passManual->getShininess());
+						break;
+					case Ape::Event::Type::PASS_MANUAL_DELETE:
 						;
 						break;
 					}

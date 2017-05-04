@@ -98,6 +98,8 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIPbsPass.h"
+#include "ApeIManualPass.h"
+#include "ApeIManualTexture.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"

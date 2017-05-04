@@ -118,11 +118,23 @@ namespace Ape
 
 	typedef std::shared_ptr<IPbsPass> PbsPassSharedPtr;
 
+	class IManualPass;
+
+	typedef std::weak_ptr<IManualPass> ManualPassWeakPtr;
+
+	typedef std::shared_ptr<IManualPass> ManualPassSharedPtr;
+
 	class Material;
 
 	typedef std::weak_ptr<Material> MaterialWeakPtr;
 
 	typedef std::shared_ptr<Material> MaterialSharedPtr;
+
+	class Texture;
+
+	typedef std::weak_ptr<Texture> TextureWeakPtr;
+
+	typedef std::shared_ptr<Texture> TextureSharedPtr;
 }
 
 #endif

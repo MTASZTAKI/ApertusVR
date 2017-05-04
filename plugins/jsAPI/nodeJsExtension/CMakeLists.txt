@@ -38,6 +38,7 @@ set (HEADERS
 	wrappers/ApeJsBindVector3.h
 	wrappers/ApeManualMaterialJsBind.h
 	wrappers/ApePbsPassJsBind.h
+	wrappers/ApeManualPassJsBind.h
 	wrappers/ApeIndexedLineSetGeometryJsBind.h
 	wrappers/ApeBoxGeometryJsBind.h
 	wrappers/ApeFileGeometryJsBind.h

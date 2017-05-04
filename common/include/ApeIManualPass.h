@@ -21,31 +21,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_MATERIAL_H
-#define APE_MATERIAL_H
+#ifndef APE_IMANUALPASS_H
+#define APE_IMANUALPASS_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
-#include "ApeEntity.h"
-#include "ApeColor.h"
 #include "ApePass.h"
+#include "ApeEntity.h"
+#include "ApeTexture.h"
+#include "ApeColor.h"
 
 namespace Ape
 {	
-	class Material : public Entity
+	class IManualPass : public Pass
 	{
 	protected:
-	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
+		IManualPass(std::string name) : Pass(name, Entity::PASS_MANUAL) {}
 		
-		virtual ~Material() {};
-
-		Ape::PassWeakPtr mPass;
-
-		std::string mPassName;
+		virtual ~IManualPass() {};
 
 	public:
-		Ape::PassWeakPtr getPass() { return mPass; };
+		virtual void setDiffuseColor(Color diffuse) = 0;
+
+		virtual void setSpecularColor(Color specular) = 0;
+
+		virtual void setAmbientColor(Color ambient) = 0;
+
+		virtual void setEmissiveColor(Color emissive) = 0;
+
+		virtual void setShininess(float shininess) = 0;
+
+		virtual void setTexture(Ape::TextureWeakPtr texture) = 0;
 	};
 }
 

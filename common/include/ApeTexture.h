@@ -21,41 +21,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_ITEXTURE_H
-#define APE_ITEXTURE_H
+#ifndef APE_TEXTURE_H
+#define APE_TEXTURE_H
 
 #include <string>
 #include <vector>
 #include "ApeEntity.h"
+#include "ApePass.h"
 
 namespace Ape
-{	
-	namespace Texture
-	{
-		enum Type
-		{
-			NORMAL,
-			DIFFUSE,
-			SPECULAR,
-			INVALID
-		};
-	}
-	
-	class ITexture : public Entity
+{		
+	class Texture : public Entity
 	{
 	protected:
-	    ITexture(std::string name) : Entity(name, Entity::TEXTURE) {}
-		
-		virtual ~ITexture() {};
-		
-	public:
-		virtual void setFileName (std::string fileName) = 0;
-		
-		virtual std::string getFileName () = 0;
+		Texture(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 
-		virtual void setTextureType(Texture::Type type) = 0;
-
-		virtual Texture::Type getTextureType() = 0;
+		virtual ~Texture() {};
+		
 	};
 }
 

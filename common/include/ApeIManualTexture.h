@@ -21,33 +21,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_MATERIAL_H
-#define APE_MATERIAL_H
+#ifndef APE_IMANUALTEXTURE_H
+#define APE_IMANUALTEXTURE_H
 
 #include <string>
 #include <vector>
-#include "Ape.h"
 #include "ApeEntity.h"
-#include "ApeColor.h"
-#include "ApePass.h"
+#include "ApeTexture.h"
+#include "ApeVector2.h"
 
 namespace Ape
 {	
-	class Material : public Entity
+	struct ManualTextureParameters
+	{
+		float height;
+		float width;
+
+		ManualTextureParameters()
+		{
+			this->height = 0.0f;
+			this->width = 0.0f;
+		}
+
+		ManualTextureParameters(float height, float width)
+		{
+			this->height = height;
+			this->width = width;
+		}
+	};
+
+	class IManualTexture : public Texture
 	{
 	protected:
-	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
-		
-		virtual ~Material() {};
+		IManualTexture(std::string name) : Texture(name, Entity::TEXTURE_MANUAL) {}
 
-		Ape::PassWeakPtr mPass;
-
-		std::string mPassName;
+		virtual ~IManualTexture() {};
 
 	public:
-		Ape::PassWeakPtr getPass() { return mPass; };
+		virtual void setParameters(float width, float height) = 0;
+
+		virtual Ape::ManualTextureParameters getParameters() = 0;
 	};
 }
 
 #endif
-

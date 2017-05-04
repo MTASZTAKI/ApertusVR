@@ -32,6 +32,7 @@ set (HEADERS
 	ApeMaterial.h
 	ApePass.h
 	ApeIPbsPass.h
+	ApeIManualPass.h
 	ApeIManualMaterial.h
 	ApeIFileMaterial.h
 	ApeINode.h
@@ -41,7 +42,8 @@ set (HEADERS
 	ApePluginDefines.h
 	ApeQuaternion.h
 	ApeIScene.h
-	ApeITexture.h
+	ApeTexture.h
+	ApeIManualTexture.h
 	ApeVector2.h
 	ApeVector3.h
 	ApeVector4.h

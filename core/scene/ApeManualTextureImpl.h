@@ -20,34 +20,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#ifndef APE_MANUALTEXTUREIMPL_H
+#define APE_MANUALTEXTUREIMPL_H
 
-#ifndef APE_MATERIAL_H
-#define APE_MATERIAL_H
-
-#include <string>
-#include <vector>
-#include "Ape.h"
-#include "ApeEntity.h"
-#include "ApeColor.h"
-#include "ApePass.h"
+#include "ApeIManualTexture.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
+#include "ApeReplica.h"
 
 namespace Ape
-{	
-	class Material : public Entity
+{
+	class ManualTextureImpl : public Ape::IManualTexture, public Ape::Replica
 	{
-	protected:
-	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
-		
-		virtual ~Material() {};
-
-		Ape::PassWeakPtr mPass;
-
-		std::string mPassName;
-
 	public:
-		Ape::PassWeakPtr getPass() { return mPass; };
+		ManualTextureImpl(std::string name, bool isHostCreated);
+
+		~ManualTextureImpl();
+
+		void setParameters(float width, float height) override;
+
+		Ape::ManualTextureParameters getParameters() override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
+
+		Ape::ManualTextureParameters mParameters;
 	};
 }
 
 #endif
-

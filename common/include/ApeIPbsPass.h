@@ -29,7 +29,7 @@ SOFTWARE.*/
 #include "Ape.h"
 #include "ApePass.h"
 #include "ApeEntity.h"
-#include "ApeITexture.h"
+#include "ApeTexture.h"
 #include "ApeColor.h"
 
 namespace Ape

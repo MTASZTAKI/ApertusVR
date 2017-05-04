@@ -28,8 +28,9 @@ SOFTWARE.*/
 #include <vector>
 #include "Ape.h"
 #include "ApeEntity.h"
-#include "ApeITexture.h"
+#include "ApeTexture.h"
 #include "ApeColor.h"
+#include "ApeTexture.h"
 
 namespace Ape
 {	
@@ -50,6 +51,10 @@ namespace Ape
 
 		float mShininess;
 
+		Ape::TextureWeakPtr mTexture;
+
+		std::string mTextureName;
+
 	public:
 		Ape::Color getDiffuseColor() { return mDiffuseColor; };
 
@@ -60,6 +65,8 @@ namespace Ape
 		Ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
+
+		Ape::TextureWeakPtr getTexture() { return mTexture; };
 	};
 }
 

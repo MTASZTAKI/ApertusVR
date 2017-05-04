@@ -38,34 +38,34 @@ void ApeEngineeringScenePlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowXMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowXMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowXMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowXMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowXMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowXMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterial->setPass(coordinateSystemArrowXMaterialPbsPass);
+			coordinateSystemArrowXMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowXMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			coordinateSystemArrowXMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			coordinateSystemArrowXMaterial->setPass(coordinateSystemArrowXMaterialManualPass);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowYMaterial;
 	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowYMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowYMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowYMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowYMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowYMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowYMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowYMaterialPbsPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterialPbsPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterial->setPass(coordinateSystemArrowYMaterialPbsPass);
+			coordinateSystemArrowYMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowYMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
+			coordinateSystemArrowYMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
+			coordinateSystemArrowYMaterial->setPass(coordinateSystemArrowYMaterialManualPass);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowZMaterial;
 	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowZMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowZMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowZMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowZMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowZMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowZMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowZMaterialPbsPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterialPbsPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialPbsPass);
+			coordinateSystemArrowZMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowZMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
+			coordinateSystemArrowZMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
+			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialManualPass);
 		}
 	}
 	if (auto coordinateSystemNode = mpScene->createNode("coordinateSystemNode").lock())
