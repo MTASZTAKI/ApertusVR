@@ -34,4 +34,65 @@ app.get('/', function(req, res, next) {
 	res.send(resObj.toJSonString());
 });
 
+exports.setProperties = function(req, res, next) {
+	logger.debug('ape.httpApi.index.setProperties()');
+	var respObj = new utils.responseObj();
+
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	if (!req.body.data) {
+		logger.debug('no data in http req body');
+		var errObj = new utils.errorObj();
+		errObj.setMessage(utils.errObj.items.dataNotPresented.name, 'Data object is not presented in Http Request body.');
+		respObj.addErrorItem(errObj);
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	if (!req.body.data.items) {
+		logger.debug('no items array in http req body.data');
+		var errObj = new utils.errorObj();
+		errObj.setMessage(utils.errObj.items.dataNotPresented.name, 'Items array is not presented in Http Request body.data.');
+		respObj.addErrorItem(errObj);
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	for (var i = 0; i < req.body.data.items.length; i++) {
+		var item = req.body.data.items[i];
+
+		if (!item.type || !item.name) {
+			logger.error('item has no type || name property');
+			return;
+		}
+
+		if (item.type == "node") {
+			ape.nbind.JsBindManager().getNode(item.name, function(error, obj) {
+				if (error) {
+					respObj.addError({
+						name: 'invalidCast',
+						msg: obj,
+						code: 666
+					});
+					res.status(400).send(respObj.toJSonString());
+					return;
+				}
+
+				var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
+				obj.setOrientation(q);
+			});
+		}
+	}
+
+	respObj.addEvent({
+		group: 'PROPERTIES',
+		type: 'PROPERTIES_SET',
+		subjectName: ''
+	});
+	res.send(respObj.toJSonString());
+};
+
 module.exports = app;

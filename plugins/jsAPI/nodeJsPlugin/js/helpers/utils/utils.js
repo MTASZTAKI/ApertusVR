@@ -269,3 +269,9 @@ exports.responseObj = function() {
 		}
 	};
 }
+
+exports.quaternionFromAngleAxis = function(angle, axisVec) {
+	var fHalfAngle = 0.5 * angle;
+	var fSin = Math.sin(fHalfAngle);
+	return new ape.nbind.Quaternion(Math.cos(fHalfAngle), fSin * axisVec.x, fSin * axisVec.y, fSin * axisVec.z);
+}
