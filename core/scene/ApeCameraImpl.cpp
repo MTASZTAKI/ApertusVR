@@ -39,6 +39,7 @@ Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 	mParentNode = Ape::NodeWeakPtr();
 	mProjectionType = Ape::Camera::ProjectionType::INVALID;
 	mOrthoWindowSize = Ape::Vector2();
+	mWindow = std::string();
 }
 
 Ape::CameraImpl::~CameraImpl()
@@ -182,5 +183,16 @@ void Ape::CameraImpl::setOrthoWindowSize(float width, float height)
 Ape::Vector2 Ape::CameraImpl::getOrthoWindowSize()
 {
 	return mOrthoWindowSize;
+}
+
+void Ape::CameraImpl::setWindow(std::string window)
+{
+	mWindow = window;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_WINDOW));
+}
+
+std::string Ape::CameraImpl::getWindow()
+{
+	return mWindow;
 }
 

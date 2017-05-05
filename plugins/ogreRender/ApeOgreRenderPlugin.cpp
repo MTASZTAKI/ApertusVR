@@ -1339,34 +1339,42 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::CAMERA_CREATE:
 				{
-					if (auto ogreCamera = mpSceneMgr->createCamera(event.subjectName))
+					mpSceneMgr->createCamera(event.subjectName);
+				}
+					break;
+				case Ape::Event::Type::CAMERA_WINDOW:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
 					{
-						if (auto viewPort = mRenderWindows[event.subjectName.c_str()]->addViewport(ogreCamera))
+						if (auto ogreCamera = mpSceneMgr->getCamera(event.subjectName))
 						{
-							//TODO why it is working instead of in the init phase?
-							ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
-							mOgreCameras.push_back(ogreCamera);
-							if (mOgreCameras.size() == 1)
+							if (auto viewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera))
 							{
-								if (Ogre::RTShader::ShaderGenerator::initialize())
+								//TODO why it is working instead of in the init phase?
+								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
+								mOgreCameras.push_back(ogreCamera);
+								if (mOgreCameras.size() == 1)
 								{
-									mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-									mpShaderGenerator->addSceneManager(mpSceneMgr);
-									mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
-									Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-									Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-									pMainRenderState->reset();
-									pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-									mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									if (Ogre::RTShader::ShaderGenerator::initialize())
+									{
+										mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+										mpShaderGenerator->addSceneManager(mpSceneMgr);
+										mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+										Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+										Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+										pMainRenderState->reset();
+										pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+										mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									}
+									else
+										std::cout << "Problem in the RTSS init" << std::endl;
 								}
-								else
-									std::cout << "Problem in the RTSS init" << std::endl;
+								viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 							}
-							viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 						}
 					}
 				}
-					break;
+				break;
 				case Ape::Event::Type::CAMERA_PARENTNODE:
 				{
 					if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
@@ -1767,10 +1775,12 @@ void Ape::OgreRenderPlugin::Init()
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
+	int enabledWindowCount = 0;
 	for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 	{
 		if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].enable)
 		{
+			enabledWindowCount++;
 			Ogre::RenderWindowDescription winDesc;
 			std::stringstream ss;
 			ss << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name;
@@ -1805,17 +1815,17 @@ void Ape::OgreRenderPlugin::Init()
 			{
 				mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 				mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-				if (i == 0)
+				if (enabledWindowCount == 1)
 				{
 					void* windowHnd = 0;
 					mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
 					std::ostringstream windowHndStr;
 					windowHndStr << windowHnd;
-					mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
-
+					mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].windowHandler = windowHndStr.str();
+					mpMainWindow->setName(winDesc.name);
 					mpMainWindow->setHandle(windowHnd);
-					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width);
-					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width);
+					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height);
 				}
 				if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size() > 0)
 				{
@@ -1824,6 +1834,7 @@ void Ape::OgreRenderPlugin::Init()
 					{
 						//TODO why it is not ok
 						//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+						camera->setWindow(winDesc.name);
 						camera->setFocalLength(1.0f);
 						camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 						camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);

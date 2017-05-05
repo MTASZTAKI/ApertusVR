@@ -84,6 +84,10 @@ namespace Ape
 
 		Ape::Vector2 getOrthoWindowSize() override;
 
+		void setWindow(std::string window) override;
+
+		std::string getWindow() override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -112,6 +116,8 @@ namespace Ape
 		Ape::Camera::ProjectionType mProjectionType;
 
 		Ape::Vector2 mOrthoWindowSize;
+
+		std::string mWindow;
 	};
 }
 

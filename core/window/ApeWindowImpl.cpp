@@ -20,45 +20,63 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IMAINWINDOW_H
-#define APE_IMAINWINDOW_H
+#include "ApeWindowImpl.h"
 
-#ifdef _WIN32
-#ifdef BUILDING_APE_MAINWINDOW_DLL
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllexport)
-#else
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_MAINWINDOW_DLL_EXPORT 
-#endif
+template<> Ape::IWindow* Ape::Singleton<Ape::IWindow>::msSingleton = 0;
 
-#include <string>
-#include "ApeSingleton.h"
-
-namespace Ape
-{	
-	class APE_MAINWINDOW_DLL_EXPORT IMainWindow : public Singleton<IMainWindow>
-	{
-	protected:
-		virtual ~IMainWindow() {};
-
-	public:
-		virtual void* getHandle () = 0;	
-
-		virtual unsigned int getWidth() = 0;
-
-		virtual unsigned int getHeight() = 0;
-
-		virtual void setHandle(void* handle) = 0;
-
-		virtual void setWidth(unsigned int width) = 0;
-
-		virtual void setHeight(unsigned int height) = 0;
-
-		virtual void setName(std::string name) = 0;
-
-		virtual std::string getName() = 0;
-	};
+Ape::WindowImpl::WindowImpl()
+{
+	msSingleton = this;
+	mpHandle = nullptr;
+	mWidth = 0;
+	mHeight = 0;
+	mIsMain = false;
 }
-#endif
+
+Ape::WindowImpl::~WindowImpl()
+{
+
+}
+
+void* Ape::WindowImpl::getHandle()
+{
+	return mpHandle;
+}
+
+unsigned int Ape::WindowImpl::getWidth()
+{
+	return mWidth;
+}
+
+unsigned int Ape::WindowImpl::getHeight()
+{
+	return mHeight;
+}
+
+void Ape::WindowImpl::setHandle(void* handle)
+{
+	mpHandle = handle;
+}
+
+void Ape::WindowImpl::setWidth(unsigned int width)
+{
+	mWidth = width;
+}
+
+void Ape::WindowImpl::setHeight(unsigned int height)
+{
+	mHeight = height;
+}
+
+void Ape::WindowImpl::setMain(bool isMain)
+{
+	mIsMain = isMain;
+}
+
+bool Ape::WindowImpl::isMain()
+{
+	return mIsMain;
+}
+
+
+

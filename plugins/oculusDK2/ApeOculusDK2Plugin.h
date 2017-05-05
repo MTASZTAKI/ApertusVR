@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeICamera.h"
 #include "ApeMatrix4.h"
+#include "ApeIMainWindow.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 

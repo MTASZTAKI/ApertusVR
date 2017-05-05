@@ -24,7 +24,6 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-            "ApeOculusDK2Plugin",
             "ApeRobotMonitoringPlugin"
         ]
     }

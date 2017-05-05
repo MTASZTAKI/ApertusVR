@@ -25,7 +25,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var expressValidator = require('express-validator');
-var ape = require('c:/Users/User/dev/repos/ape/v3/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/ape.js');
+var ape = require('c:/ApertusVR/plugins/jsAPI/nodeJsPlugin/js/ape.js');
 
 var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
 var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;

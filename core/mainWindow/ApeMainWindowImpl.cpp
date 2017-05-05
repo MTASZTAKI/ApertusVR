@@ -30,6 +30,7 @@ Ape::MainWindowImpl::MainWindowImpl()
 	mpHandle = nullptr;
 	mWidth = 0;
 	mHeight = 0;
+	mName = std::string();
 }
 
 Ape::MainWindowImpl::~MainWindowImpl()
@@ -67,5 +68,13 @@ void Ape::MainWindowImpl::setHeight(unsigned int height)
 	mHeight = height;
 }
 
+void Ape::MainWindowImpl::setName(std::string name)
+{
+	mName = name;
+}
 
+std::string Ape::MainWindowImpl::getName()
+{
+	return mName;
+}
 

@@ -20,45 +20,56 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IMAINWINDOW_H
-#define APE_IMAINWINDOW_H
+#ifndef APE_WINDOWIMPL_H
+#define APE_WINDOWIMPL_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_MAINWINDOW_DLL
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllexport)
+#ifdef BUILDING_APE_WINDOW_DLL
+#define APE_WINDOW_DLL_EXPORT __declspec(dllexport)
 #else
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllimport)
+#define APE_WINDOW_DLL_EXPORT __declspec(dllimport)
 #endif
 #else
-#define APE_MAINWINDOW_DLL_EXPORT 
+#define APE_WINDOW_DLL_EXPORT 
 #endif
 
-#include <string>
-#include "ApeSingleton.h"
+#include "ApeIWindow.h"
 
 namespace Ape
-{	
-	class APE_MAINWINDOW_DLL_EXPORT IMainWindow : public Singleton<IMainWindow>
+{ 
+	class APE_WINDOW_DLL_EXPORT WindowImpl : public IWindow
 	{
-	protected:
-		virtual ~IMainWindow() {};
+	private:
+		void* mpHandle;
+
+		unsigned int mWidth;
+
+		unsigned int mHeight;
+
+		bool mIsMain;
 
 	public:
-		virtual void* getHandle () = 0;	
+		WindowImpl();
 
-		virtual unsigned int getWidth() = 0;
+		~WindowImpl();
 
-		virtual unsigned int getHeight() = 0;
+		void* getHandle() override;
 
-		virtual void setHandle(void* handle) = 0;
+		unsigned int getWidth() override;
 
-		virtual void setWidth(unsigned int width) = 0;
+		unsigned int getHeight() override;
 
-		virtual void setHeight(unsigned int height) = 0;
+		void setHandle(void* handle) override;
 
-		virtual void setName(std::string name) = 0;
+		void setWidth(unsigned int width) override;
 
-		virtual std::string getName() = 0;
+		void setHeight(unsigned int height) override;
+
+		void setMain(bool isMain) override;
+
+		bool isMain() override;
 	};
 }
+
+
 #endif

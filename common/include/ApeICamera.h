@@ -100,6 +100,10 @@ namespace Ape
 		virtual void setOrthoWindowSize(float width, float height) = 0;
 
 		virtual Ape::Vector2 getOrthoWindowSize() = 0;
+
+		virtual void setWindow(std::string window) = 0;
+
+		virtual std::string getWindow() = 0;
 	};
 
 	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;
