@@ -1,5 +1,5 @@
 {
     "jsPlugins": [
-        "apertusvr/js/plugins/x3dLoader/x3dLoader.js"
+        "plugins/x3dLoader/x3dLoader.js"
     ]
 }
