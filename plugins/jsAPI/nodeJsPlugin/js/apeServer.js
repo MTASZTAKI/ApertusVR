@@ -29,6 +29,7 @@ var util = require('util');
 var utils = require('apertusvr/js/utils.js');
 var expressValidator = require('express-validator');
 var ape = require('apertusvr/js/ape.js');
+var async = require("async");
 
 const moduleTag = 'NodeJsExt';
 const apiVersion = 'v1';
