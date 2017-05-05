@@ -115,6 +115,12 @@ exports.convertToJsObj = function(obj) {
   return JSON.parse(utils.ObjToSource(obj));
 }
 
+exports.quaternionFromAngleAxis = function(angle, axisVec) {
+  var fHalfAngle = 0.5 * angle;
+  var fSin = Math.sin(fHalfAngle);
+  return new ape.nbind.Quaternion(Math.cos(fHalfAngle), fSin * axisVec.x, fSin * axisVec.y, fSin * axisVec.z);
+}
+
 exports.responseObj = function() {
 	return {
 		response: {
@@ -182,6 +188,12 @@ exports.responseObj = function() {
 			}
 		},
 
+    addDataItem: function(item) {
+      if (item) {
+        this.response.data.items.push(item);
+				this.response.data.count = this.response.data.items.length;
+      }
+    },
 		setData: function(data) {
 			if (data) {
 				this.response.data = data;

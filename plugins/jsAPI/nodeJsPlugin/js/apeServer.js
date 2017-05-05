@@ -89,6 +89,8 @@ app.get('/', function(req, res, next) {
   res.end("ApertusVR Home");
 });
 
+// common
+registerHttpPath(ape.httpMethodEnum.POST, rootPath + '/setproperties', ape.httpApi.common.setProperties);
 
 // Nodes
 // curl --silent --header "Content-Type: application/json" -X POST http://localhost:3000/api/v1/nodes/ --data '{"name": "testNode"}' | python -m json.tool

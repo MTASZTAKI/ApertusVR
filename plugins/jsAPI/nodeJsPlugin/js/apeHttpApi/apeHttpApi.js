@@ -27,6 +27,9 @@ exports.moduleTag = 'ApeHTTPApi';
 exports.apiVersion = 'v1';
 exports.rootPath = '/api/' + this.apiVersion;
 
+var apeHTTPApiCommon = require('apertusvr/js/apeHttpApi/apeHTTPApiCommon.js');
+exports.common = apeHTTPApiCommon;
+
 var apeHTTPApiNode = require('apertusvr/js/apeHttpApi/apeHTTPApiNode.js');
 exports.nodes = apeHTTPApiNode;
 
