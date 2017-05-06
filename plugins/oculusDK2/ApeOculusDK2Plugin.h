@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeMatrix4.h"
 #include "ApeIMainWindow.h"
+#include "ApeISystemConfig.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
@@ -52,6 +53,8 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
+
+	Ape::ISystemConfig* mpSystemConfig;
 
 	ovrHmd mpHMD;
 
@@ -63,9 +66,9 @@ private:
 
 	Ape::NodeWeakPtr mHeadNode;
 
-	Ape::NodeWeakPtr mBodyNode;
+	Ape::NodeWeakPtr mUserNode;
 	
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 
 	Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 	

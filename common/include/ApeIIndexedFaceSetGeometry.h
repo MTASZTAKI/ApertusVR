@@ -36,6 +36,7 @@ namespace Ape
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
 		Ape::GeometryNormals normals;
+		bool generateNormals;
 		Ape::GeometryColors colors;
 		Ape::GeometryTextureCoordinates textureCoordinates;
 		Ape::MaterialWeakPtr material;
@@ -46,17 +47,19 @@ namespace Ape
 			this->coordinates = Ape::GeometryCoordinates();
 			this->indices = Ape::GeometryIndices();
 			this->normals = Ape::GeometryNormals();
+			this->generateNormals = true;
 			this->colors = Ape::GeometryColors();
 			this->textureCoordinates = Ape::GeometryTextureCoordinates();
 			this->material = Ape::MaterialWeakPtr();
 		}
 
-		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
+		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
 		{
 			this->groupName = groupName;
 			this->coordinates = coordinates;
 			this->indices = indices;
 			this->normals = normals;
+			this->generateNormals = generateNormals;
 			this->colors = colors;
 			this->textureCoordinates = textureCoordinates;
 			this->material = material;
@@ -123,7 +126,7 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) = 0;
+		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) = 0;
 		
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
@@ -132,7 +135,6 @@ namespace Ape
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
-
 	};
 }
 

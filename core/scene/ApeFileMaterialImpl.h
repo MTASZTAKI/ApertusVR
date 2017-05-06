@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ApeIFileMaterial.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
@@ -43,6 +44,14 @@ namespace Ape
 
 		void setAsSkyBox() override;
 
+		void setPassTexture(Ape::TextureWeakPtr texture) override;
+
+		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
+
+		Ape::TextureWeakPtr getPassTexture() override;
+
+		Ape::PassGpuParameters getPassGpuParameters() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -52,9 +61,17 @@ namespace Ape
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
+		Ape::IScene* mpScene;
+
 		std::string mFileName;
 
 		bool mIsSkyBox;
+
+		Ape::TextureWeakPtr mTexture;
+
+		std::string mTextureName;
+
+		Ape::PassGpuParameters mPassGpuParameters;
 	};
 }
 

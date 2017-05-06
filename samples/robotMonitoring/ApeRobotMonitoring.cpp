@@ -20,38 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_IFILEMATERIAL_H
-#define APE_IFILEMATERIAL_H
 
-#include "ApeMaterial.h"
+#include <string>
+#include <sstream>
+#include <map>
+#include "ApeSystem.h"
 
-namespace Ape
-{	
-	class IFileMaterial : public Material
+int main (int argc, char** argv)
+{
+	std::stringstream configDir;
+	if (argc > 1)
 	{
-	protected:
-	    IFileMaterial(std::string name) : Material(name, Entity::MATERIAL_FILE) {}
-		
-		virtual ~IFileMaterial() {};
-		
-	public:
-		virtual void setFileName (std::string fileName) = 0;
-		
-		virtual std::string getfFileName () = 0;
-
-		virtual void setAsSkyBox() = 0;
-
-		virtual void setPassTexture(Ape::TextureWeakPtr texture) = 0;
-
-		virtual void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) = 0;
-
-		virtual Ape::TextureWeakPtr getPassTexture() = 0;
-
-		virtual Ape::PassGpuParameters getPassGpuParameters() = 0;
-	};
-	
-	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;
+		std::string participantType = argv[1];
+		if (participantType == "monitor")
+			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\monitor";
+		else if (participantType == "oculusDK2")
+			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\oculusDK2";
+	}
+	Ape::System::Start(configDir.str(), true);
+	Ape::System::Stop();
+	return 0;
 }
-
-#endif
-

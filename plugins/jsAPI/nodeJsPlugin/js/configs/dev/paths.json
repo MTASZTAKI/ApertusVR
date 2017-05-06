@@ -5,7 +5,7 @@
 	},
 	"build": {
 		"binPath": "c:/ApertusVR/build/bin/",
-		"configurationPath": "debug/",
+		"configurationPath": "release/",
 		"nodeModulesPath": "node_modules/",
 		"apertusModulePath": "apertusvr/"
 	}

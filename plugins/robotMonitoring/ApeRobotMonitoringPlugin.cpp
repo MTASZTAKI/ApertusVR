@@ -76,7 +76,7 @@ void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 void ApeRobotMonitoringPlugin::Init()
 {
 	std::cout << "ApeRobotMonitoringPlugin::init" << std::endl;
-	if (auto node = mpScene->createNode("sphereNode").lock())
+	if (auto node = mpScene->createNode("standNode").lock())
 	{
 		node->setPosition(Ape::Vector3(0, 0, 0));
 		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("stand.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
@@ -85,11 +85,11 @@ void ApeRobotMonitoringPlugin::Init()
 			meshFile->setParentNode(node);
 		}
 	}
-	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
-	}
+	}*/
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -101,6 +101,20 @@ void ApeRobotMonitoringPlugin::Init()
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
+		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(1, -1, 0));
+		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, 1));
 		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}

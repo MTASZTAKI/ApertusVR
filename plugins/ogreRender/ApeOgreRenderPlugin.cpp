@@ -815,8 +815,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 						{
-							std::vector<Ogre::Vector3> normals;
-							if (parameters.normals.size() == 0)
+							std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
+							if (parameters.normals.size() == 0 && parameters.generateNormals == true)
 							{
 								normals.resize(parameters.coordinates.size() / 3);
 								for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
@@ -913,12 +913,19 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
 							{
 								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
-								if (parameters.normals.size() == 0)
+								if (parameters.textureCoordinates.size() != 0)
+								{
+									int textCoordIndex = (i / 3) * 6;
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
+								}
+								if (parameters.normals.size() == 0 && normals.size() > 0)
 								{
 									normals[i / 3].normalise();
 									ogreManual->normal(normals[i / 3]);
 								}
-								else
+								else if (parameters.normals.size() > 0)
 								{
 									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
 								}
@@ -928,11 +935,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);
 									ogreManual->colour(color);
 								}
-							}
-							if (parameters.textureCoordinates.size() != 0)
-							{
-								for (int i = 0; i < parameters.textureCoordinates.size(); i = i + 2)
-									ogreManual->textureCoord(parameters.textureCoordinates[i], parameters.textureCoordinates[i + 1]);
 							}
 							int indexIndex = 0;
 							while (indexIndex < parameters.indices.size())
@@ -1087,6 +1089,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		{
 			if (auto materialFile = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
 			{
+				std::string materialName = materialFile->getName();
+				Ogre::MaterialPtr ogreMaterial;
+				if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
+				{
+					ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				}
 				switch (event.type)
 				{
 				case Ape::Event::Type::MATERIAL_FILE_CREATE:
@@ -1100,11 +1108,33 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX:
 				{
-					std::string skyBoxMaterialName = materialFile->getName();
-					if (Ogre::MaterialManager::getSingleton().resourceExists(skyBoxMaterialName))
-						mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
+					if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
+						mpSceneMgr->setSkyBox(true, materialName);
 				}
 					break;
+				case Ape::Event::Type::MATERIAL_FILE_TEXTURE:
+				{
+					if (auto texture = materialFile->getPassTexture().lock())
+					{
+						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
+						if (!ogreTexture.isNull() && !ogreMaterial.isNull())
+							ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+					}
+				}
+				break;
+				case Ape::Event::Type::MATERIAL_FILE_GPUPARAMETERS:
+				{
+					if (!ogreMaterial.isNull())
+					{
+						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+						if (!ogreGpuParameters.isNull())
+						{
+							for (auto passGpuParameter : materialFile->getPassGpuParameters())
+								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
+						}
+					}
+				}
+				break;
 				}
 			}
 		}
@@ -1220,9 +1250,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						break;
 					case Ape::Event::Type::PASS_MANUAL_TEXTURE:
 					{
-						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(passManualName);
-						if (!ogreTexture.isNull())
-							ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+						if (auto texture = passManual->getTexture().lock())
+						{
+							auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
+							if (!ogreTexture.isNull())
+								ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+						}
 					}
 						break;
 					case Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS:
@@ -1234,7 +1267,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
 						}
 					}
-					break;
+						break;
 					case Ape::Event::Type::PASS_MANUAL_DELETE:
 						;
 						break;
@@ -1270,10 +1303,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									if (auto ogreRenderTexture = ogreTexture->getBuffer()->getRenderTarget())
 									{
-										ogreRenderTexture->addViewport(ogreCamera);
-										ogreRenderTexture->getViewport(0)->setClearEveryFrame(true);
-										ogreRenderTexture->getViewport(0)->setBackgroundColour(Ogre::ColourValue::Black);
-										ogreRenderTexture->getViewport(0)->setOverlaysEnabled(false);
+										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
+										{
+											ogreViewport->setClearEveryFrame(true);
+											ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
+											ogreViewport->setOverlaysEnabled(false);
+											ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+										}
 									}
 								}
 							}
@@ -1725,6 +1761,7 @@ void Ape::OgreRenderPlugin::Init()
 			mpRoot->loadPlugin("RenderSystem_Direct3D9_d");
 		else 
 			mpRoot->loadPlugin( "RenderSystem_GL_d" );
+		mpRoot->loadPlugin("Plugin_CgProgramManager_d");
 	#else
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
 		if (mOgreRenderPluginConfig.renderSystem == "DX11")
@@ -1733,6 +1770,7 @@ void Ape::OgreRenderPlugin::Init()
 			mpRoot->loadPlugin("RenderSystem_Direct3D9");
 		else
 			mpRoot->loadPlugin("RenderSystem_GL");
+		mpRoot->loadPlugin("Plugin_CgProgramManager");
 	#endif
     
 	Ogre::RenderSystem* renderSystem = nullptr;

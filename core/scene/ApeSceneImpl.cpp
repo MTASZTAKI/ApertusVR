@@ -40,6 +40,7 @@ SOFTWARE.*/
 #include "ApeManualMaterialImpl.h"
 #include "ApePbsPassImpl.h"
 #include "ApeManualPassImpl.h"
+#include "ApeManualTextureImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -249,9 +250,18 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::PASS_MANUAL:
 		{
-			auto entity = std::make_shared<Ape::PbsPassImpl>(name, mpSceneSessionImpl->isHost());
+			auto entity = std::make_shared<Ape::ManualPassImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_MANUAL_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
+		case Ape::Entity::TEXTURE_MANUAL:
+		{
+			auto entity = std::make_shared<Ape::ManualTextureImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_MANUAL_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
 				replicaManager->Reference(entity.get());
 			return entity;
@@ -323,6 +333,9 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::PASS_MANUAL:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_MANUAL_DELETE));
+			break;
+		case Ape::Entity::TEXTURE_MANUAL:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_MANUAL_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

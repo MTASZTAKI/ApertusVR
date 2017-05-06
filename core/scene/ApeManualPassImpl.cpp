@@ -70,7 +70,7 @@ void Ape::ManualPassImpl::setTexture(Ape::TextureWeakPtr texture)
 	{
 		mTexture = texture;
 		mTextureName = textureSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_PASS));
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_TEXTURE));
 	}
 	else
 		mTexture = Ape::TextureWeakPtr();
