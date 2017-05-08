@@ -34,7 +34,7 @@ app.get('/', function(req, res, next) {
 	res.send(resObj.toJSonString());
 });
 
-exports.setProperties = function(req, res, next) {
+app.post('/setproperties', function(req, res, next) {
 	logger.debug('ape.httpApi.index.setProperties()');
 	var respObj = new utils.responseObj();
 
@@ -87,12 +87,12 @@ exports.setProperties = function(req, res, next) {
 		}
 	}
 
-	respObj.addEvent({
+	respObj.addEventItem({
 		group: 'PROPERTIES',
 		type: 'PROPERTIES_SET',
 		subjectName: ''
 	});
 	res.send(respObj.toJSonString());
-};
+});
 
 module.exports = app;

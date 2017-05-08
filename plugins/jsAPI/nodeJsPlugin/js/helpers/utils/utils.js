@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 var utils = this;
+var ape = require('../../ape.js');
 var util = require('util');
 var logger = require('../../helpers/logger/logger');
 
@@ -206,7 +207,7 @@ exports.responseObj = function() {
 		addErrorItem: function(errorObj) {
 			this.response.result.success = false;
 
-			if (utils.isUndefined(errorObj)) {
+			if (!utils.isDefined(errorObj)) {
 				this.addErrorItem(self.errorObj.items.undefinedVariable);
 				return;
 			}
