@@ -21,6 +21,9 @@ Currently, tested only on Windows Visual Studio Community 2015
 1. Clone the [repository](https://github.com/MTASZTAKI/ApertusVR)
 2. Build with [cmake](https://cmake.org/)
 
+### Windows 10 Visual Studio 2015 64bit SDK
+1. Download a SDK [downloads](http://www.apertusvr.org/downloads)
+2. Build with [Visual Stduio 2015 Community](https://imagine.microsoft.com/en-us/Catalog/Product/101)
 
 ### Precompiled binaries
 [Precompiled binaries](http://www.apertusvr.org/downloads/binaries) Coming soon...
@@ -28,19 +31,18 @@ Currently, tested only on Windows Visual Studio Community 2015
 
 ## Community
 * [Source](https://github.com/MTASZTAKI/ApertusVR)
-* [Website](http://www.apertusvr.org) Coming soon...
-* [Use Cases](http://www.apertusvr.org/samples) Coming soon...
+* [Website](http://www.apertusvr.org)
 * [Forum](http://www.apertusvr.org/forum) Coming soon...
-* [Issue Tracking](https://github.com/MTASZTAKI/ApertusVR/issues) Coming soon...
-* [Documentation](http://www.apertusvr.org/wiki) Coming soon...
-* [Downloads](http://www.apertusvr.org/downloads) Coming soon...
-* [Roadmap](http://www.apertusvr.org/roadmap) Coming soon...
+* [Issue Tracking](https://github.com/MTASZTAKI/ApertusVR/issues)
+* [Documentation](http://apertusvr.org/index.php/overview/#overview)
+* [Downloads](http://www.apertusvr.org/downloads)
+* [Roadmap](http://apertusvr.org/index.php/overview/#roadmap)
 
 
 ## Versions
 Version | Release Date
 ------- | ------------
-0.1.0   | Coming soon..
+0.1.0   | 2017.05.09.
 
 
 ##License
