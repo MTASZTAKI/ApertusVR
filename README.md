@@ -25,7 +25,7 @@ Currently, tested only on Windows Visual Studio Community 2015
 2. Build with [cmake](https://cmake.org/)
 
 ### Windows 10 Visual Studio 2015 64bit SDK
-1. Download a SDK [downloads](http://www.apertusvr.org/downloads)
+1. Download a SDK [downloads](http://apertusvr.org/index.php/services/)
 2. Build with [Visual Stduio 2015 Community](https://imagine.microsoft.com/en-us/Catalog/Product/101)
 
 ### Precompiled binaries
@@ -38,7 +38,7 @@ Currently, tested only on Windows Visual Studio Community 2015
 * [Forum](http://www.apertusvr.org/forum) Coming soon...
 * [Issue Tracking](https://github.com/MTASZTAKI/ApertusVR/issues)
 * [Documentation](http://apertusvr.org/index.php/overview/#overview)
-* [Downloads](http://www.apertusvr.org/downloads)
+* [Downloads](http://apertusvr.org/index.php/services/)
 * [Roadmap](http://apertusvr.org/index.php/overview/#roadmap)
 
 
