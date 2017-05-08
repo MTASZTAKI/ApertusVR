@@ -1,9 +1,11 @@
 # ApertusVR
-Distributed scene sharing engine for virtual and augmented reality on any platform
-
+Free virtual and augmented reality engine
+[apertusvr.org](http://www.apertusvr.org)
 
 
 ## About
+Distributed scene sharing engine for virtual and augmented reality on any platform
+
 ApertusVR has a loosely coupled structure in order to easily configure the
 engine capabilities and run these configuration instances on different machines
 and connect them together via internet. 
