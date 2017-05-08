@@ -110,3 +110,20 @@ file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"configuration\": \"release\",\n")
 file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
 file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
 file(APPEND ${CONFIG_FILE_PATH_RELEASE} "}\n")
+
+
+add_custom_target (
+	npmTargetDebug
+	COMMAND npm install
+	WORKING_DIRECTORY ${BUILD_PATH_DEBUG}
+	USES_TERMINAL
+)
+add_dependencies(${MY_TARGET_NAME} npmTargetDebug)
+
+add_custom_target (
+	npmTargetRelease
+	COMMAND npm install
+	WORKING_DIRECTORY ${BUILD_PATH_RELEASE}
+	USES_TERMINAL
+)
+add_dependencies(${MY_TARGET_NAME} npmTargetRelease)
