@@ -2,6 +2,7 @@
 Free virtual and augmented reality engine
 [apertusvr.org](http://www.apertusvr.org)
 
+![Overview](http://www.apertusvr.org/wp-content/uploads/2017/04/overview-998x1024.png)
 
 ## About
 Distributed scene sharing engine for virtual and augmented reality on any platform
