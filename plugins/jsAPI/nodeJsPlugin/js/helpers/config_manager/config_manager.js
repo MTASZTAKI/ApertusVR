@@ -41,4 +41,9 @@ catch (e) {
 	process.exit(1);
 }
 
+exports.setConfigType = function(configStr) {
+	config_manager.paths.build.configurationPath = configStr + '/';
+	module.exports = config_manager;
+}
+
 module.exports = config_manager;
