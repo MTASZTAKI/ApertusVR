@@ -482,7 +482,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				console.log(' scene world node created for: ' + currentlyParsedFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
-				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
+				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, 0.5, 0.5));
 			}
 			return nodeObj;
 		} else if (tagName == 'worldinfo') {
