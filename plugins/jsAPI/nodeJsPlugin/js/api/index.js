@@ -21,11 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 var ape = require('../ape.js');
-var moduleManager = require('../helpers/module_manager/module_manager.js');
+var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
-var utils = require('../helpers/utils/utils.js');
-var logger = require("../helpers/logger/logger.js");
+var utils = require('../modules/utils/utils.js');
+var logger = require("../modules/logger/logger.js");
 
 app.get('/', function(req, res, next) {
 	logger.debug('ape.httpApi.index');

@@ -28,7 +28,7 @@ var expressValidator = require('express-validator');
 
 // load ApertusVR
 var config = require('./config.json');
-var moduleManager = require(config.sourcePathJs + '/helpers/module_manager/module_manager.js');
+var moduleManager = require(config.sourcePathJs + '/modules/module_manager/module_manager.js');
 moduleManager.setConfigType(config.configuration);
 var ape = require(config.sourcePathJs + 'ape.js');
 

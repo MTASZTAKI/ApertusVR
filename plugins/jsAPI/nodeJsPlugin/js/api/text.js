@@ -22,11 +22,11 @@ SOFTWARE.*/
 
 var util = require('util');
 var ape = require('../ape.js');
-var moduleManager = require('../helpers/module_manager/module_manager.js');
+var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
-var utils = require('../helpers/utils/utils.js');
-var logger = require("../helpers/logger/logger.js");
+var utils = require('../modules/utils/utils.js');
+var logger = require("../modules/logger/logger.js");
 
 exports.moduleTag = 'ApeHTTPApiText';
 

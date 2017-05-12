@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 var utils = require('../../utils.js');
 var ape = require('../../ape.js');
-var moduleManager = require('../../helpers/module_manager/module_manager.js');
+var moduleManager = require('../../modules/module_manager/module_manager.js');
 var cheerio = moduleManager.requireNodeModule('cheerio');
 var htmlparser = moduleManager.requireNodeModule('htmlparser2');
 var fs = require('fs');

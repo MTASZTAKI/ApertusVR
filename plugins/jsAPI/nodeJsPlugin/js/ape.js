@@ -20,13 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var moduleManager = require('./helpers/module_manager/module_manager.js');
+var moduleManager = require('./modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
-var utils = require('./helpers/utils/utils.js');
-var logger = require("./helpers/logger/logger.js");
+var utils = require('./modules/utils/utils.js');
+var logger = require("./modules/logger/logger.js");
 
 exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
-exports.pluginLoader = require(moduleManager.sourcePath + 'pluginLoader/pluginLoader.js');
+exports.pluginLoader = require(moduleManager.sourcePath + 'plugins/pluginLoader/pluginLoader.js');
 
 exports.initApi = function(app) {
 	var router = express.Router();

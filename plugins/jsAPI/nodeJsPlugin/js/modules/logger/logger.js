@@ -20,9 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var moduleManager = require('../../helpers/module_manager/module_manager.js');
+var moduleManager = require('../../modules/module_manager/module_manager.js');
 var winston = moduleManager.requireNodeModule('winston');
-var config_manager = require('../../helpers/config_manager/config_manager');
+var config_manager = require('../../modules/config_manager/config_manager');
 
 winston.emitErrs = true;
 

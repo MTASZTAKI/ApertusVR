@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var config_manager = require('../../helpers/config_manager/config_manager');
+var config_manager = require('../../modules/config_manager/config_manager');
 
 exports.configType = '';
 

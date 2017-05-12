@@ -20,10 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var ape = require('../ape.js');
-var moduleManager = require('../helpers/module_manager/module_manager.js');
+var ape = require('../../ape.js');
+var moduleManager = require('../../modules/module_manager/module_manager.js');
 var async = moduleManager.requireNodeModule('async');
-var logger = require("../helpers/logger/logger.js");
+var logger = require("../../modules/logger/logger.js");
 exports.moduleTag = 'ApeJsPluginLoader';
 
 // extend ape module
