@@ -44,7 +44,7 @@ void ApeTesterPlugin::Init()
 			plane->setParentNode(planeNode);
 			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 			{
-				if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+				if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 				{
 					planeMaterialManualPass->setShininess(15.0f);
 					planeMaterialManualPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
@@ -66,7 +66,7 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto demoObjectMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("demoObjectMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+		if (auto demoObjectMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("demoObjectMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
 			demoObjectMaterialManualPass->setShininess(15.0f);
 			demoObjectMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
@@ -153,7 +153,7 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowXMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowXMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+		if (auto coordinateSystemArrowXMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowXMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
 			coordinateSystemArrowXMaterialManualPass->setShininess(15.0f);
 			coordinateSystemArrowXMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
@@ -164,7 +164,7 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowYMaterial;
 	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowYMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowYMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowYMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+		if (auto coordinateSystemArrowYMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowYMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
 			coordinateSystemArrowYMaterialManualPass->setShininess(15.0f);
 			coordinateSystemArrowYMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
@@ -175,7 +175,7 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowZMaterial;
 	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowZMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowZMaterialManualPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowZMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+		if (auto coordinateSystemArrowZMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowZMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
 			coordinateSystemArrowZMaterialManualPass->setShininess(15.0f);
 			coordinateSystemArrowZMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
@@ -338,7 +338,7 @@ void ApeTesterPlugin::Init()
 
 void ApeTesterPlugin::Run()
 {
-	double duration;
+	double duration = 0;
 	while (true)
 	{
 		auto start = std::chrono::high_resolution_clock::now();

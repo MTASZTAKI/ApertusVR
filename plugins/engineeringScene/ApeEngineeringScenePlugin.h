@@ -48,6 +48,7 @@ SOFTWARE.*/
 #include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
+#include "ApeIManualPass.h"
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
 
