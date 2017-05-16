@@ -4,11 +4,12 @@
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
-        "participantType": "Host",
-        "uniqueUserNamePrefix": "HelloWorldHost",
-        "sessionGUID": "229683602758498679",
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/sampleScene/resources"
+            "/plugins/lego/resources",
+            "/plugins/oculusDK2/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -22,9 +23,8 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeSampleScenePlugin"
-        ],
-        "jsplugins": []
+            "ApeOculusDK2Plugin",
+            "ApeLegoPlugin"
+        ]
     }
 }

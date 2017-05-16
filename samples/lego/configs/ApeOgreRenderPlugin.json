@@ -1,14 +1,14 @@
 {
-    "renderSystem" : "DX11",
-		"lodLevels" : {
-			"autoGenerateAndSave": true,
+	"renderSystem" : "DX9",
+	"lodLevels" : {
+			"autoGenerateAndSave": false,
 			"bias" : 0.5 
 		},
     "renderWindows": [
         {
             "enable": true,
-			"name": "1",
-			"monitorIndex": 1,
+            "monitorIndex": 0,
+			"name": "0",
             "resolution": {
                 "width": 1280,
                 "height": 720,
@@ -18,7 +18,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
+                "FSAA": 16,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -26,17 +26,16 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
-					    "name": "1",
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+						"name": "0",
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         }
     ]
 }
-

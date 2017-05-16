@@ -23,6 +23,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <map>
 #include "ApeSystem.h"
 
@@ -36,6 +37,11 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\host";
 		else if (participantType == "guest")
 			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\guest";
+	}
+	else
+	{
+		std::cout << "usage: host | guest " << std::endl;
+		return 0;
 	}
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();

@@ -23,6 +23,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <map>
 #include "ApeSystem.h"
 
@@ -36,6 +37,11 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\monitor";
 		else if (participantType == "oculusDK2")
 			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\oculusDK2";
+	}
+	else
+	{
+		std::cout << "usage: monitor | oculusDK2 " << std::endl;
+		return 0;
 	}
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();

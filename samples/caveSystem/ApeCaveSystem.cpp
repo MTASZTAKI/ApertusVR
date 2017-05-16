@@ -23,6 +23,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <map>
 #include "ApeSystem.h"
 
@@ -39,6 +40,13 @@ int main (int argc, char** argv)
 		else if (participantType == "lego")
 			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\lego";
 	}
+	else
+	{
+		std::cout << "usage: art | presentation | lego" << std::endl;
+		return 0;
+	}
+
+	
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;
