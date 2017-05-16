@@ -6,10 +6,12 @@
 		},
     "renderWindows": [
         {
+			"enable": true,
             "monitorIndex": 0,
+			"name": "0",
             "resolution": {
-                "width": 1280,
-                "height": 720,
+                "width": 1400,
+                "height": 1050,
                 "fullScreen": false
             },
             "miscParams": {
@@ -21,25 +23,27 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+					    "name": "0",
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         },
-		{
+        {
+            "enable": true,
             "monitorIndex": 1,
+			"name": "1",
             "resolution": {
-                "width": 1280,
-                "height": 720,
+                "width": 1400,
+                "height": 1050,
                 "fullScreen": false
             },
             "miscParams": {
@@ -51,20 +55,19 @@
             },
             "viewports": [
                 {
-                    "name": "viewport0",
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1400,
+                    "height": 1050,
                     "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
+						"name": "1",
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
                     }
                 }
             ]
         }
     ]
 }
-
