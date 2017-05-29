@@ -198,12 +198,13 @@ include_directories(
 	${OGRE_RenderSystem_Direct3D11_INCLUDE_DIRS}
 	${OGRE_RenderSystem_GL_INCLUDE_DIRS}
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
+	${OGRE_CgProgramManager_INCLUDE_DIRS}
 	${OgreProcedural_INCLUDE_DIRS}
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OgreProcedural_LIBRARIES} )
+${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} )
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
@@ -234,6 +235,12 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreRTShaderSystem_d.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/Plugin_CgProgramManager_d.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/Plugin_CgProgramManager_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/cg.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/debug/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreProcedural_d.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
@@ -261,6 +268,12 @@ if (WIN32)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreRTShaderSystem.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/Plugin_CgProgramManager.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/Plugin_CgProgramManager.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+        if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/cg.dll)
+		file(COPY ${OGRE_BINARY_DIR}/bin/release/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreProcedural.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)

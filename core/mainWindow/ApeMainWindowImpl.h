@@ -46,6 +46,8 @@ namespace Ape
 
 		unsigned int mHeight;
 
+		std::string mName;
+
 	public:
 		MainWindowImpl();
 
@@ -62,6 +64,10 @@ namespace Ape
 		void setWidth(unsigned int width) override;
 
 		void setHeight(unsigned int height) override;
+
+		void setName(std::string name) override;
+
+		std::string getName() override;
 	};
 }
 

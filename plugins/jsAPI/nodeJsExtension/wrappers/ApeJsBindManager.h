@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "ApeJsBindTextGeometryImpl.h"
 #include "ApeManualMaterialJsBind.h"
 #include "ApePbsPassJsBind.h"
+#include "ApeManualPassJsBind.h"
 
 #ifdef NBIND_CLASS
 
@@ -289,6 +290,32 @@ public:
 		return false;
 	}
 
+	ManualPassJsPtr createManualPass(std::string name)
+	{
+		std::cout << "createManualPass()" << std::endl;
+		return ManualPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_MANUAL));
+	}
+
+	bool getManualPass(std::string name, nbind::cbFunction &done)
+	{
+		std::cout << "getManualPass()" << std::endl;
+
+		if (auto entity = mpScene->getEntity(name).lock())
+		{
+			if (auto ManualPass = std::dynamic_pointer_cast<Ape::IManualPass>(entity))
+			{
+				done(false, ManualPassJsPtr(mpScene->getEntity(name)));
+				return true;
+			}
+
+			done(true, std::string("Dynamic cast failed!"));
+			return false;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
 	std::string getFolderPath()
 	{
 		std::cout << "getFolderPath()" << std::endl;
@@ -330,6 +357,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createPbsPass);
 	method(getPbsPass);
+
+	method(createManualPass);
+	method(getManualPass);
 
 	method(getFolderPath);
 }

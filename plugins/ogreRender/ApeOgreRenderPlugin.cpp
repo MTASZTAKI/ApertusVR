@@ -51,6 +51,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
@@ -161,6 +163,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							break;
 						case Ape::Event::Type::NODE_CHILDVISIBILITY:
 							ogreNode->setVisible(node->getChildrenVisibility());
+							break;
+						case Ape::Event::Type::NODE_FIXEDYAW:
+							ogreNode->setFixedYawAxis(node->isFixedYaw());
 							break;
 						}
 					}
@@ -810,8 +815,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 						{
-							std::vector<Ogre::Vector3> normals;
-							if (parameters.normals.size() == 0)
+							std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
+							if (parameters.normals.size() == 0 && parameters.generateNormals == true)
 							{
 								normals.resize(parameters.coordinates.size() / 3);
 								for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
@@ -902,20 +907,34 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								}
 							}
 							else
-								ogreManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-							for (int coordinateIndex = 0; coordinateIndex < parameters.coordinates.size(); coordinateIndex = coordinateIndex + 3)
 							{
-								ogreManual->position(parameters.coordinates[coordinateIndex], parameters.coordinates[coordinateIndex + 1], parameters.coordinates[coordinateIndex + 2]);
-								if (parameters.normals.size() == 0)
-								{
-									normals[coordinateIndex / 3].normalise();
-									ogreManual->normal(normals[coordinateIndex / 3]);
-								}
+								ogreManual->begin("FlatVertexColorLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
 							}
-							if (parameters.normals.size() != 0)
+							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
 							{
-								for (int i = 0; i < parameters.normals.size(); i = i + 3)
+								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
+								if (parameters.textureCoordinates.size() != 0)
+								{
+									int textCoordIndex = (i / 3) * 6;
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
+								}
+								if (parameters.normals.size() == 0 && normals.size() > 0)
+								{
+									normals[i / 3].normalise();
+									ogreManual->normal(normals[i / 3]);
+								}
+								else if (parameters.normals.size() > 0)
+								{
 									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
+								}
+								if (parameters.colors.size() != 0)
+								{
+									int colorIndex = (i / 3) * 4;
+									Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);
+									ogreManual->colour(color);
+								}
 							}
 							int indexIndex = 0;
 							while (indexIndex < parameters.indices.size())
@@ -1070,6 +1089,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		{
 			if (auto materialFile = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
 			{
+				std::string materialName = materialFile->getName();
+				Ogre::MaterialPtr ogreMaterial;
+				if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
+				{
+					ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				}
 				switch (event.type)
 				{
 				case Ape::Event::Type::MATERIAL_FILE_CREATE:
@@ -1083,11 +1108,33 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX:
 				{
-					std::string skyBoxMaterialName = materialFile->getName();
-					if (Ogre::MaterialManager::getSingleton().resourceExists(skyBoxMaterialName))
-						mpSceneMgr->setSkyBox(true, skyBoxMaterialName);
+					if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
+						mpSceneMgr->setSkyBox(true, materialName);
 				}
 					break;
+				case Ape::Event::Type::MATERIAL_FILE_TEXTURE:
+				{
+					if (auto texture = materialFile->getPassTexture().lock())
+					{
+						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
+						if (!ogreTexture.isNull() && !ogreMaterial.isNull())
+							ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+					}
+				}
+				break;
+				case Ape::Event::Type::MATERIAL_FILE_GPUPARAMETERS:
+				{
+					if (!ogreMaterial.isNull())
+					{
+						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+						if (!ogreGpuParameters.isNull())
+						{
+							for (auto passGpuParameter : materialFile->getPassGpuParameters())
+								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
+						}
+					}
+				}
+				break;
 				}
 			}
 		}
@@ -1172,6 +1219,109 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 			}
 		}
+		else if (event.group == Ape::Event::Group::PASS_MANUAL)
+		{
+			if (auto passManual = std::static_pointer_cast<Ape::IManualPass>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string passManualName = passManual->getName();
+				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				Ogre::MaterialPtr ogreManualPassMaterial = result.first.staticCast<Ogre::Material>();
+				if (!ogreManualPassMaterial.isNull())
+				{
+					switch (event.type)
+					{
+					case Ape::Event::Type::PASS_MANUAL_CREATE:
+						ogreManualPassMaterial->createTechnique()->createPass();
+						break;
+					case Ape::Event::Type::PASS_MANUAL_AMBIENT:
+						ogreManualPassMaterial->setAmbient(ConversionToOgre(passManual->getAmbientColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_DIFFUSE:
+						ogreManualPassMaterial->setDiffuse(ConversionToOgre(passManual->getDiffuseColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_EMISSIVE:
+						ogreManualPassMaterial->setSelfIllumination(ConversionToOgre(passManual->getEmissiveColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_SPECULAR:
+						ogreManualPassMaterial->setSpecular(ConversionToOgre(passManual->getSpecularColor()));
+						break;
+					case Ape::Event::Type::PASS_MANUAL_SHININESS:
+						ogreManualPassMaterial->setShininess(passManual->getShininess());
+						break;
+					case Ape::Event::Type::PASS_MANUAL_TEXTURE:
+					{
+						if (auto texture = passManual->getTexture().lock())
+						{
+							auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
+							if (!ogreTexture.isNull())
+								ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+						}
+					}
+						break;
+					case Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS:
+					{
+						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreManualPassMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
+						if (!ogreGpuParameters.isNull())
+						{
+							for (auto passGpuParameter : passManual->getPassGpuParameters())
+								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
+						}
+					}
+						break;
+					case Ape::Event::Type::PASS_MANUAL_DELETE:
+						;
+						break;
+					}
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::TEXTURE_MANUAL)
+		{
+			if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string textureManualName = textureManual->getName();
+				switch (event.type)
+				{
+				case Ape::Event::Type::TEXTURE_MANUAL_CREATE:
+					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
+					{
+						Ape::ManualTextureParameters parameters = textureManual->getParameters();
+						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ogre::PF_R8G8B8,
+							Ogre::TU_RENDERTARGET);
+					}
+					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA:
+					{
+						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
+						if (!ogreTexture.isNull())
+						{
+							if (auto camera = textureManual->getSourceCamera().lock())
+							{
+								if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+								{
+									if (auto ogreRenderTexture = ogreTexture->getBuffer()->getRenderTarget())
+									{
+										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
+										{
+											ogreViewport->setClearEveryFrame(true);
+											ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
+											ogreViewport->setOverlaysEnabled(false);
+											ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+										}
+									}
+								}
+							}
+						}
+					}
+					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+					;
+					break;
+				}
+			}
+		}
 		else if (event.group == Ape::Event::Group::LIGHT)
 		{
 			if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->getEntity(event.subjectName).lock()))
@@ -1225,34 +1375,42 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::CAMERA_CREATE:
 				{
-					if (auto ogreCamera = mpSceneMgr->createCamera(event.subjectName))
+					mpSceneMgr->createCamera(event.subjectName);
+				}
+					break;
+				case Ape::Event::Type::CAMERA_WINDOW:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
 					{
-						if (auto viewPort = mRenderWindows[event.subjectName.c_str()]->addViewport(ogreCamera))
+						if (auto ogreCamera = mpSceneMgr->getCamera(event.subjectName))
 						{
-							//TODO why it is working instead of in the init phase?
-							ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
-							mOgreCameras.push_back(ogreCamera);
-							if (mOgreCameras.size() == 1)
+							if (auto viewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera))
 							{
-								if (Ogre::RTShader::ShaderGenerator::initialize())
+								//TODO why it is working instead of in the init phase?
+								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
+								mOgreCameras.push_back(ogreCamera);
+								if (mOgreCameras.size() == 1)
 								{
-									mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-									mpShaderGenerator->addSceneManager(mpSceneMgr);
-									mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
-									Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-									Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-									pMainRenderState->reset();
-									pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-									mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									if (Ogre::RTShader::ShaderGenerator::initialize())
+									{
+										mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+										mpShaderGenerator->addSceneManager(mpSceneMgr);
+										mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+										Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+										Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+										pMainRenderState->reset();
+										pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+										mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+									}
+									else
+										std::cout << "Problem in the RTSS init" << std::endl;
 								}
-								else
-									std::cout << "Problem in the RTSS init" << std::endl;
+								viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 							}
-							viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 						}
 					}
 				}
-					break;
+				break;
 				case Ape::Event::Type::CAMERA_PARENTNODE:
 				{
 					if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
@@ -1329,6 +1487,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientation()));
 				}
 					break;
+				case Ape::Event::Type::CAMERA_PROJECTIONTYPE:
+					{
+						if (mpSceneMgr->hasCamera(event.subjectName))
+							mpSceneMgr->getCamera(event.subjectName)->setProjectionType(ConversionToOgre(camera->getProjectionType()));
+					}
+					break;
+				case Ape::Event::Type::CAMERA_ORTHOWINDOWSIZE:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setOrthoWindow(camera->getOrthoWindowSize().x, camera->getOrthoWindowSize().y);
+				}
+				break;
 				}
 			}
 		}
@@ -1348,7 +1518,7 @@ void Ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* reques
 	mpCurrentlyLoadingMeshEntity = mpSceneMgr->createEntity(meshEntityName, mCurrentlyLoadingMeshEntityLodConfig.mesh);
 	mpCurrentlyLoadingMeshEntity->setMeshLodBias(mOgreRenderPluginConfig.ogreLodLevelsConfig.bias);
 	std::stringstream filePath;
-	filePath << mpSystemConfig->getSceneSessionConfig().sessionResourceLocation << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
+	filePath << mpSystemConfig->getSceneSessionConfig().sessionResourceLocation[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
 	Ogre::MeshSerializer meshSerializer;
 	meshSerializer.exportMesh(mCurrentlyLoadingMeshEntityLodConfig.mesh.getPointer(), filePath.str());
 }
@@ -1360,11 +1530,11 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	#if defined (_DEBUG)
+	/*#if defined (_DEBUG)
 		if (mRenderWindows.size() > 0)
 			std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;
 	#else
-	#endif
+	#endif*/
 
 	processEventDoubleQueue();
 	
@@ -1458,7 +1628,11 @@ void Ape::OgreRenderPlugin::Init()
 				for (rapidjson::Value::MemberIterator renderWindowMemberIterator = 
 					renderWindow.MemberBegin(); renderWindowMemberIterator != renderWindow.MemberEnd(); ++renderWindowMemberIterator)
 				{
-					if (renderWindowMemberIterator->name == "monitorIndex")
+					if (renderWindowMemberIterator->name == "enable")
+						ogreRenderWindowConfig.enable = renderWindowMemberIterator->value.GetBool();
+					else if (renderWindowMemberIterator->name == "name")
+						ogreRenderWindowConfig.name = renderWindowMemberIterator->value.GetString();
+					else if (renderWindowMemberIterator->name == "monitorIndex")
 						ogreRenderWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
 					else if (renderWindowMemberIterator->name == "resolution")
 					{
@@ -1518,7 +1692,9 @@ void Ape::OgreRenderPlugin::Init()
 										viewport[viewportMemberIterator->name].MemberBegin();
 										cameraMemberIterator != viewport[viewportMemberIterator->name].MemberEnd(); ++cameraMemberIterator)
 									{
-										if (cameraMemberIterator->name == "nearClip")
+										if (cameraMemberIterator->name == "name")
+											ogreViewPortConfig.camera.name = cameraMemberIterator->value.GetString();
+										else if (cameraMemberIterator->name == "nearClip")
 											ogreViewPortConfig.camera.nearClip = cameraMemberIterator->value.GetFloat();
 										else if (cameraMemberIterator->name == "farClip")
 											ogreViewPortConfig.camera.farClip = cameraMemberIterator->value.GetFloat();
@@ -1585,6 +1761,7 @@ void Ape::OgreRenderPlugin::Init()
 			mpRoot->loadPlugin("RenderSystem_Direct3D9_d");
 		else 
 			mpRoot->loadPlugin( "RenderSystem_GL_d" );
+		mpRoot->loadPlugin("Plugin_CgProgramManager_d");
 	#else
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
 		if (mOgreRenderPluginConfig.renderSystem == "DX11")
@@ -1593,6 +1770,7 @@ void Ape::OgreRenderPlugin::Init()
 			mpRoot->loadPlugin("RenderSystem_Direct3D9");
 		else
 			mpRoot->loadPlugin("RenderSystem_GL");
+		mpRoot->loadPlugin("Plugin_CgProgramManager");
 	#endif
     
 	Ogre::RenderSystem* renderSystem = nullptr;
@@ -1625,7 +1803,8 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mpSystemConfig->getSceneSessionConfig().sessionResourceLocation, "FileSystem");
+	for (auto resourceLocation : mpSystemConfig->getSceneSessionConfig().sessionResourceLocation)
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
 	mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC);
@@ -1634,63 +1813,72 @@ void Ape::OgreRenderPlugin::Init()
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
+	int enabledWindowCount = 0;
 	for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 	{
-		Ogre::RenderWindowDescription winDesc;
-		std::stringstream ss;
-		ss << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
-		winDesc.name = ss.str();
-		winDesc.height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height;
-		winDesc.width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width;
-		winDesc.useFullScreen = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fullScreen;
-		std::stringstream colourDepthSS;
-		colourDepthSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].colorDepth;
-		winDesc.miscParams["colourDepth"] = colourDepthSS.str().c_str();
-		winDesc.miscParams["vsync"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSync ? "Yes" : "No";
-		std::stringstream vsyncIntervalSS;
-		vsyncIntervalSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSyncInterval;
-		winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
-		std::stringstream fsaaSS;
-		fsaaSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaa;
-		winDesc.miscParams["FSAA"] = fsaaSS.str().c_str();
-		winDesc.miscParams["FSAAHint"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaaHint;
-		std::stringstream monitorIndexSS;
-		monitorIndexSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
-		winDesc.miscParams["monitorIndex"] = monitorIndexSS.str().c_str();
-		/*winDesc.miscParams["Allow NVPersHUD"] = "No";
-		winDesc.miscParams["Driver type"] = "Hardware";
-		winDesc.miscParams["Information Queue Exceptions Bottom Level"] = "Info (exception on any message)";
-		winDesc.miscParams["Max Requested Feature Levels"] = "11.0";
-		winDesc.miscParams["Min Requested Feature Levels"] = "9.1";
-		winDesc.miscParams["Floating-point mode"] = "Fastest";
-		winDesc.miscParams["sRGB Gamma Conversion"] = "No";
-		winDescList.push_back(winDesc);*/
-
-		if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
+		if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].enable)
 		{
-			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
-			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-			if (i == 0)
-			{
-				void* windowHnd = 0;
-				mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
-				std::ostringstream windowHndStr;
-				windowHndStr << windowHnd;
-				mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].windowHandler = windowHndStr.str();
+			enabledWindowCount++;
+			Ogre::RenderWindowDescription winDesc;
+			std::stringstream ss;
+			ss << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name;
+			winDesc.name = ss.str();
+			winDesc.height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height;
+			winDesc.width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width;
+			winDesc.useFullScreen = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fullScreen;
+			std::stringstream colourDepthSS;
+			colourDepthSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].colorDepth;
+			winDesc.miscParams["colourDepth"] = colourDepthSS.str().c_str();
+			winDesc.miscParams["vsync"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSync ? "Yes" : "No";
+			std::stringstream vsyncIntervalSS;
+			vsyncIntervalSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].vSyncInterval;
+			winDesc.miscParams["vsyncInterval"] = vsyncIntervalSS.str().c_str();
+			std::stringstream fsaaSS;
+			fsaaSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaa;
+			winDesc.miscParams["FSAA"] = fsaaSS.str().c_str();
+			winDesc.miscParams["FSAAHint"] = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].fsaaHint;
+			std::stringstream monitorIndexSS;
+			monitorIndexSS << mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].monitorIndex;
+			winDesc.miscParams["monitorIndex"] = monitorIndexSS.str().c_str();
+			/*winDesc.miscParams["Allow NVPersHUD"] = "No";
+			winDesc.miscParams["Driver type"] = "Hardware";
+			winDesc.miscParams["Information Queue Exceptions Bottom Level"] = "Info (exception on any message)";
+			winDesc.miscParams["Max Requested Feature Levels"] = "11.0";
+			winDesc.miscParams["Min Requested Feature Levels"] = "9.1";
+			winDesc.miscParams["Floating-point mode"] = "Fastest";
+			winDesc.miscParams["sRGB Gamma Conversion"] = "No";
+			winDescList.push_back(winDesc);*/
 
-				mpMainWindow->setHandle(windowHnd);
-				mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width);
-				mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
-			}
-			auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(winDesc.name, Ape::Entity::Type::CAMERA).lock());
-			if (camera)
+			if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
 			{
-				//TODO why it is not ok
-				//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-				camera->setFocalLength(1.0f);
-				camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
-				camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
-				camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+				mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
+				mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
+				if (enabledWindowCount == 1)
+				{
+					void* windowHnd = 0;
+					mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
+					std::ostringstream windowHndStr;
+					windowHndStr << windowHnd;
+					mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].windowHandler = windowHndStr.str();
+					mpMainWindow->setName(winDesc.name);
+					mpMainWindow->setHandle(windowHnd);
+					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width);
+					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height);
+				}
+				if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size() > 0)
+				{
+					auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.name, Ape::Entity::Type::CAMERA).lock());
+					if (camera)
+					{
+						//TODO why it is not ok
+						//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+						camera->setWindow(winDesc.name);
+						camera->setFocalLength(1.0f);
+						camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
+						camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
+						camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+					}
+				}
 			}
 		}
 	}

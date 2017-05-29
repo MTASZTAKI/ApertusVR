@@ -1,0 +1,29 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": [
+            "/plugins/robotMonitoring/resources"
+        ],
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "ip": "195.111.2.95",
+            "port": "8888"
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeNodeJsPlugin",
+            "ApeOgreRenderPlugin",
+            "ApeRobotMonitoringPlugin"
+        ]
+    }
+}

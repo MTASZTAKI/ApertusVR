@@ -36,12 +36,15 @@ Ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
 	
 }
 
-void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::MaterialWeakPtr material)
+void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
 {
 	mParameters.groupName = groupName;
 	mParameters.coordinates = coordinates;
 	mParameters.indices = indices;
 	mParameters.normals = normals;
+	mParameters.generateNormals = generateNormals;
+	mParameters.colors = colors;
+	mParameters.textureCoordinates = textureCoordinates;
 	mParameters.material = material;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 }

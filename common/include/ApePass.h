@@ -28,11 +28,33 @@ SOFTWARE.*/
 #include <vector>
 #include "Ape.h"
 #include "ApeEntity.h"
-#include "ApeITexture.h"
+#include "ApeTexture.h"
 #include "ApeColor.h"
+#include "ApeTexture.h"
+#include "ApeVector3.h"
 
 namespace Ape
-{	
+{
+	struct PassGpuVector3Parameter
+	{
+		std::string name;
+		Ape::Vector3 value;
+
+		PassGpuVector3Parameter()
+		{
+			this->value = Ape::Vector3();
+			this->name = std::string();
+		}
+
+		PassGpuVector3Parameter(std::string name, Ape::Vector3 value)
+		{
+			this->value = value;
+			this->name = name;
+		}
+	};
+
+	typedef std::vector<PassGpuVector3Parameter> PassGpuParameters;
+
 	class Pass : public Entity
 	{
 	protected:
@@ -50,6 +72,12 @@ namespace Ape
 
 		float mShininess;
 
+		Ape::TextureWeakPtr mTexture;
+
+		std::string mTextureName;
+
+		Ape::PassGpuParameters mPassGpuParameters;
+
 	public:
 		Ape::Color getDiffuseColor() { return mDiffuseColor; };
 
@@ -60,6 +88,10 @@ namespace Ape
 		Ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
+
+		Ape::TextureWeakPtr getTexture() { return mTexture; };
+
+		Ape::PassGpuParameters getPassGpuParameters() { return mPassGpuParameters; };
 	};
 }
 

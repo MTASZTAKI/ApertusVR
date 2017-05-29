@@ -33,15 +33,23 @@ namespace Ape
     {
 	private:
 		Ogre::RTShader::ShaderGenerator* mpShaderGenerator;
+		std::vector<std::string> mIgnoreList;
 
     public:
 		ShaderGeneratorResolver(Ogre::RTShader::ShaderGenerator* shaderGenerator)
         {
 			mpShaderGenerator = shaderGenerator;
+			mIgnoreList = std::vector<std::string>();
+			mIgnoreList.push_back("FlatVertexColorLighting");
         }
 
         Ogre::Technique* handleSchemeNotFound(unsigned short schemeIndex, const Ogre::String& schemeName, Ogre::Material* originalMaterial, unsigned short lodIndex, const Ogre::Renderable* rend)
 		{
+			for (auto ignoreItem : mIgnoreList)
+			{
+				if (ignoreItem == originalMaterial->getName())
+					return NULL;
+			}
             if (schemeName != Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME)
                 return NULL;
 			bool techniqueCreated = mpShaderGenerator->createShaderBasedTechnique(originalMaterial->getName(), Ogre::MaterialManager::DEFAULT_SCHEME_NAME, schemeName);
@@ -71,6 +79,7 @@ namespace Ape
 
 		bool beforeIlluminationPassesCleared(Ogre::Technique* tech)
 		{
+
 			if(tech->getSchemeName() == Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME)
 			{
 				Ogre::Material* mat = tech->getParent();

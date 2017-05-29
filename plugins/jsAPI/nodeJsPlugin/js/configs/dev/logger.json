@@ -1,0 +1,16 @@
+{
+	"console": {
+		"level": "debug",
+		"handleExceptions": false,
+		"json": false,
+		"colorize": true,
+		"timestamp": true
+	},
+	"file": {
+		"level": "debug",
+		"filename": "node_modules/apertusvr/logs/.log",
+		"datePattern": "yyyy-MM-dd",
+		"prepend": true
+	},
+	"exitOnError": false
+}

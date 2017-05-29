@@ -76,6 +76,18 @@ namespace Ape
 
 		Ape::NodeWeakPtr getParentNode() override;
 
+		void setProjectionType(Ape::Camera::ProjectionType type) override;
+
+		Ape::Camera::ProjectionType getProjectionType() override;
+
+		void setOrthoWindowSize(float width, float height) override;
+
+		Ape::Vector2 getOrthoWindowSize() override;
+
+		void setWindow(std::string window) override;
+
+		std::string getWindow() override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -101,6 +113,11 @@ namespace Ape
 
 		NodeWeakPtr mParentNode;
 
+		Ape::Camera::ProjectionType mProjectionType;
+
+		Ape::Vector2 mOrthoWindowSize;
+
+		std::string mWindow;
 	};
 }
 

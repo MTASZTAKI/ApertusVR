@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2017 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var utils = require('apertusvr/js/utils.js');
-var ape = require('apertusvr/js/ape.js');
+var utils = require('../../utils.js');
+var ape = require('../../ape.js');
 
 exports.init = function() {
-  // if demoObjectNode found, attach a textGeometry and set caption
-  ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
-    if (error) {
-      console.log('error: ' + error);
-      return;
-    }
-    var textObj = ape.nbind.JsBindManager().createText('textGeometry');
-    textObj.setParentNodeJsPtr(obj);
+	// if demoObjectNode found, attach a textGeometry and set caption
+	ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
+		if (error) {
+			console.log('error: ' + error);
+			return;
+		}
+		var textObj = ape.nbind.JsBindManager().createText('textGeometry');
+		textObj.setParentNodeJsPtr(obj);
 
-    setInterval(function() {
-      var pos = obj.getPosition();
-      var ort = obj.getOrientation();
-      textObj.setCaption('x: ' + utils.roundDecimal(pos.x) + ', y: ' + utils.roundDecimal(pos.y) + ', z: ' + utils.roundDecimal(pos.z) + '\n' +
-                         'w: ' + utils.roundDecimal(ort.w) + ', x: ' + utils.roundDecimal(ort.x) + ', y: ' + utils.roundDecimal(ort.y) + ', z: ' + utils.roundDecimal(ort.z)
-      );
-    }, 20);
-  });
+		setInterval(function() {
+			var pos = obj.getPosition();
+			var ort = obj.getOrientation();
+			textObj.setCaption('x: ' + utils.roundDecimal(pos.x) + ', y: ' + utils.roundDecimal(pos.y) + ', z: ' + utils.roundDecimal(pos.z) + '\n' +
+				'w: ' + utils.roundDecimal(ort.w) + ', x: ' + utils.roundDecimal(ort.x) + ', y: ' + utils.roundDecimal(ort.y) + ', z: ' + utils.roundDecimal(ort.z)
+			);
+		}, 20);
+	});
 }

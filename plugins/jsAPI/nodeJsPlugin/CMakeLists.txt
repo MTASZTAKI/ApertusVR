@@ -73,24 +73,57 @@ set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS )
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
 
 
-if (NOT EXISTS ${BUILD_PATH_DEBUG}/package.json)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_DEBUG})
-endif ()
-if (NOT EXISTS ${BUILD_PATH_RELEASE}/package.json)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_RELEASE})
-endif ()
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_DEBUG})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_RELEASE})
 
-if (NOT EXISTS ${BUILD_PATH_DEBUG}/apeServer.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeServer.js DESTINATION ${BUILD_PATH_DEBUG})
-endif ()
-if (NOT EXISTS ${BUILD_PATH_RELEASE}/apeServer.js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/apeServer.js DESTINATION ${BUILD_PATH_RELEASE})
-endif ()
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/server.js DESTINATION ${BUILD_PATH_DEBUG})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/server.js DESTINATION ${BUILD_PATH_RELEASE})
 
-if (NOT EXISTS ${TARGET_MODULE_PATH_DEBUG}/js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js DESTINATION ${TARGET_MODULE_PATH_DEBUG})
-endif ()
-if (NOT EXISTS ${TARGET_MODULE_PATH_RELEASE}/js)
-	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js DESTINATION ${TARGET_MODULE_PATH_RELEASE})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/logs DESTINATION ${TARGET_MODULE_PATH_DEBUG})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/logs DESTINATION ${TARGET_MODULE_PATH_RELEASE})
 
-endif ()
+set(APEJS_FILE_PATH_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/js/)
+
+set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/configs/dev/paths.json)
+file(WRITE ${CONFIG_FILE_PATH_SOURCE} "{\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"source\": {\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apePath\": \"${APE_SOURCE_DIR}/\",\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"jsApiPath\": \"plugins/jsAPI/nodeJsPlugin/js/\"\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t},\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"build\": {\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"binPath\": \"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/\",\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"nodeModulesPath\": \"node_modules/\",\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apertusModulePath\": \"apertusvr/\"\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t}\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "}\n")
+
+set(CONFIG_FILE_PATH_DEBUG ${BUILD_PATH_DEBUG}/config.json)
+file(WRITE ${CONFIG_FILE_PATH_DEBUG} "{\n")
+file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"configuration\": \"debug\",\n")
+file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
+file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
+file(APPEND ${CONFIG_FILE_PATH_DEBUG} "}\n")
+
+set(CONFIG_FILE_PATH_RELEASE ${BUILD_PATH_RELEASE}/config.json)
+file(WRITE ${CONFIG_FILE_PATH_RELEASE} "{\n")
+file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"configuration\": \"release\",\n")
+file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
+file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
+file(APPEND ${CONFIG_FILE_PATH_RELEASE} "}\n")
+
+
+add_custom_target (
+	npmTargetDebug
+	COMMAND npm install
+	WORKING_DIRECTORY ${BUILD_PATH_DEBUG}
+	USES_TERMINAL
+)
+add_dependencies(${MY_TARGET_NAME} npmTargetDebug)
+
+add_custom_target (
+	npmTargetRelease
+	COMMAND npm install
+	WORKING_DIRECTORY ${BUILD_PATH_RELEASE}
+	USES_TERMINAL
+)
+add_dependencies(${MY_TARGET_NAME} npmTargetRelease)

@@ -68,6 +68,7 @@ SOFTWARE.*/
 #include "OgrePixelCountLodStrategy.h"
 #include "OgreLodWorkQueueRequest.h"
 #include "OgreLodWorkQueueWorker.h"
+#include "OgreTextureManager.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "ApeIFileMaterial.h"
@@ -98,6 +99,8 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIPbsPass.h"
+#include "ApeIManualPass.h"
+#include "ApeIManualTexture.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"

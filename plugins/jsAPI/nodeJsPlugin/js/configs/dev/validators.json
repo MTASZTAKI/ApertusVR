@@ -1,0 +1,33 @@
+{
+	"emailValidator": {
+		"'email'": {
+			"notEmpty": true,
+			"isLength": {
+				"options": [
+					{
+						"min": 8,
+						"max": 255
+					}
+				],
+				"errorMessage": "Must be minimum 8 chars long!"
+			},
+			"isEmail": {
+				"errorMessage": "Invalid Email syntax!"
+			}
+		}
+	},
+	"passwordValidator": {
+		"'password'": {
+			"notEmpty": true,
+			"isLength": {
+				"options": [
+					{
+						"min": 4,
+						"max": 255
+					}
+				],
+				"errorMessage": "Must be minimum 4 chars long!"
+			}
+		}
+	}
+}

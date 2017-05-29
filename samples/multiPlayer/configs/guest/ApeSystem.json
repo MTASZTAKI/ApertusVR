@@ -6,8 +6,10 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "HelloWorldGuest",
-        "sessionGUID": "999800341240019529",
-        "sessionResourceLocation": "/plugins/sampleScene/resources",
+        "sessionGUID": "31525219157231385",
+        "sessionResourceLocation": [
+            "/plugins/sampleScene/resources"
+        ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"

@@ -34,6 +34,16 @@ SOFTWARE.*/
 
 namespace Ape
 {	
+	namespace Camera
+	{
+		enum ProjectionType
+		{
+			ORTHOGRAPHIC,
+			PERSPECTIVE,
+			INVALID
+		};
+	}
+
 	class ICamera : public Entity
 	{
 	protected:
@@ -82,6 +92,18 @@ namespace Ape
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
+
+		virtual void setProjectionType(Ape::Camera::ProjectionType type) = 0;
+
+		virtual Ape::Camera::ProjectionType getProjectionType() = 0;
+
+		virtual void setOrthoWindowSize(float width, float height) = 0;
+
+		virtual Ape::Vector2 getOrthoWindowSize() = 0;
+
+		virtual void setWindow(std::string window) = 0;
+
+		virtual std::string getWindow() = 0;
 	};
 
 	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;

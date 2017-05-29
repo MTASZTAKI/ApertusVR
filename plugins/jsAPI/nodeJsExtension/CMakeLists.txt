@@ -24,6 +24,12 @@
 set(MY_TARGET_NAME ApeNodeJsExtrension)
 set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
+set(BUILD_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
+set(BUILD_PATH_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+
+set(TARGET_MODULE_PATH_DEBUG ${BUILD_PATH_DEBUG}/${MY_TARGET_OUTPUT})
+set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
+
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	wrappers/ApeJsBindColor.h
@@ -38,6 +44,7 @@ set (HEADERS
 	wrappers/ApeJsBindVector3.h
 	wrappers/ApeManualMaterialJsBind.h
 	wrappers/ApePbsPassJsBind.h
+	wrappers/ApeManualPassJsBind.h
 	wrappers/ApeIndexedLineSetGeometryJsBind.h
 	wrappers/ApeBoxGeometryJsBind.h
 	wrappers/ApeFileGeometryJsBind.h
@@ -106,5 +113,13 @@ set_target_properties( ${MY_TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_REL
 # Add preprocessor definitions
 target_compile_definitions(${MY_TARGET_NAME} PRIVATE NODE_GYP_MODULE_NAME=nbind USING_UV_SHARED=1 USING_V8_SHARED=1 V8_DEPRECATION_WARNINGS=1 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE BUILDING_NODE_EXTENSION)
 
+# Add compile options
+if (MSVC)
+	target_compile_options(${MY_TARGET_NAME} PRIVATE "$<$<CONFIG:Debug>:/bigobj>")
+endif()
+
 # Place target xxx into the specified folder in IDEs supporting it
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_DEBUG})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_RELEASE})

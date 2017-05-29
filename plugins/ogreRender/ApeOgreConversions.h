@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include "ApeQuaternion.h"
 #include "ApeColor.h"
 #include "ApeILight.h"
+#include "ApeICamera.h"
 #include "ApeIFileGeometry.h"
 #include "OgreVector3.h"
 #include "OgreVector2.h"
@@ -139,6 +140,22 @@ namespace Ape
 	inline Ape::Degree ConversionFromOgre(const Ogre::Degree& oDeg)
 	{
 		return Ape::Degree(oDeg.valueDegrees());
+	}
+
+	inline Ogre::ProjectionType ConversionToOgre(const Ape::Camera::ProjectionType type)
+	{
+		if (type == Ape::Camera::ProjectionType::ORTHOGRAPHIC)
+			return Ogre::ProjectionType::PT_ORTHOGRAPHIC;
+		else if (type == Ape::Camera::ProjectionType::PERSPECTIVE)
+			return Ogre::ProjectionType::PT_PERSPECTIVE;
+	}
+
+	inline Ape::Camera::ProjectionType ConversionFromOgre(const Ogre::ProjectionType type)
+	{
+		if (type == Ogre::ProjectionType::PT_ORTHOGRAPHIC)
+			return Ape::Camera::ProjectionType::ORTHOGRAPHIC;
+		else if (type == Ogre::ProjectionType::PT_PERSPECTIVE)
+			return Ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
 	inline Ogre::Radian ConversionToOgre(const Ape::Radian& mwRad)

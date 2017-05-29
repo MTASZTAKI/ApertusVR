@@ -1,12 +1,14 @@
 {
     "renderSystem" : "DX11",
-	"lodLevels" : {
+		"lodLevels" : {
 			"autoGenerateAndSave": true,
 			"bias" : 0.5 
 		},
     "renderWindows": [
         {
-            "monitorIndex": 0,
+            "enable": true,
+			"name": "0",
+			"monitorIndex": 0,
             "resolution": {
                 "width": 1280,
                 "height": 720,
@@ -27,6 +29,7 @@
                     "width": 1280,
                     "height": 720,
                     "camera": {
+					    "name": "0",
                         "nearClip": 1.0,
                         "farClip": 10000.0,
                         "fovY": 45.0

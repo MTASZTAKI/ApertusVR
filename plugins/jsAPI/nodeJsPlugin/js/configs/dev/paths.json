@@ -1,0 +1,11 @@
+{
+	"source": {
+		"apePath": "",
+		"jsApiPath": "plugins/jsAPI/nodeJsPlugin/js/"
+	},
+	"build": {
+		"binPath": "",
+		"nodeModulesPath": "node_modules/",
+		"apertusModulePath": "apertusvr/"
+	}
+}

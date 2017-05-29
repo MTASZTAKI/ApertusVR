@@ -37,6 +37,9 @@ Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 	mPositionOffset = Ape::Vector3();
 	mOrientationOffset = Ape::Quaternion();
 	mParentNode = Ape::NodeWeakPtr();
+	mProjectionType = Ape::Camera::ProjectionType::INVALID;
+	mOrthoWindowSize = Ape::Vector2();
+	mWindow = std::string();
 }
 
 Ape::CameraImpl::~CameraImpl()
@@ -157,5 +160,39 @@ void Ape::CameraImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 Ape::NodeWeakPtr Ape::CameraImpl::getParentNode()
 {
 	return mParentNode;
+}
+
+void Ape::CameraImpl::setProjectionType(Ape::Camera::ProjectionType type)
+{
+	mProjectionType = type;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PROJECTIONTYPE));
+}
+
+Ape::Camera::ProjectionType Ape::CameraImpl::getProjectionType()
+{
+	return mProjectionType;
+}
+
+void Ape::CameraImpl::setOrthoWindowSize(float width, float height)
+{
+	mOrthoWindowSize.x = width;
+	mOrthoWindowSize.y = height;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORTHOWINDOWSIZE));
+}
+
+Ape::Vector2 Ape::CameraImpl::getOrthoWindowSize()
+{
+	return mOrthoWindowSize;
+}
+
+void Ape::CameraImpl::setWindow(std::string window)
+{
+	mWindow = window;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_WINDOW));
+}
+
+std::string Ape::CameraImpl::getWindow()
+{
+	return mWindow;
 }
 

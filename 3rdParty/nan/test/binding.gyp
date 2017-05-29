@@ -2,6 +2,7 @@
   "target_defaults":
     {
         "cflags" : ["-Wall", "-Wextra", "-Wno-unused-parameter"],
+        "defines": [ "V8_DEPRECATION_WARNINGS=1" ],
         "include_dirs": ["<!(node -e \"require('..')\")"]
     },
   "targets": [
@@ -155,5 +156,13 @@
     , {
         "target_name" : "private"
       , "sources"     : [ "cpp/private.cpp" ]
+    }
+    , {
+        "target_name" : "parse"
+      , "sources"     : [ "cpp/json-parse.cpp" ]
+    }
+    , {
+        "target_name" : "stringify"
+      , "sources"     : [ "cpp/json-stringify.cpp" ]
     }
 ]}

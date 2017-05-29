@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2017 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-const moduleTag = 'ApeJsPluginLoader';
+var moduleManager = require('./modules/module_manager/module_manager.js');
+var express = moduleManager.requireNodeModule('express');
+var utils = require('./modules/utils/utils.js');
+var logger = require("./modules/logger/logger.js");
 
-// nbind
-var apeBindings = require('apertusvr/nbind.node');
-exports.nbind = apeBindings;
+exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
+exports.pluginLoader = require(moduleManager.sourcePath + 'plugins/pluginLoader/pluginLoader.js');
 
-// pluginLoader
-var apePluginLoader = require('apertusvr/js/apePluginLoader/apePluginLoader.js');
-exports.jsPluginLoader = {
-	loadPlugins: apePluginLoader.loadPlugins
+exports.initApi = function(app) {
+	var router = express.Router();
+	router.use(require(moduleManager.sourcePath + 'api/index.js'));
+	router.use(require(moduleManager.sourcePath + 'api/node.js'));
+	router.use(require(moduleManager.sourcePath + 'api/light.js'));
+	router.use(require(moduleManager.sourcePath + 'api/text.js'));
+
+	router.use(require(moduleManager.sourcePath + 'api/fallback.js'));
+	app.use('/api/v1', router);
+}
+
+exports.start = function(app) {
+	this.initApi(app);
+
+	// debugs
+	logger.debug(utils.inspect(this));
+	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
+
+	// start special plugins
+	this.pluginLoader.loadPlugins();
 };
-
-// httpAPI
-var apeHttpApi = require('apertusvr/js/apeHttpApi/apeHttpApi.js');
-exports.httpApi = apeHttpApi;

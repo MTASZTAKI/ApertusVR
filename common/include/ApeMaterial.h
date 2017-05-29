@@ -28,7 +28,6 @@ SOFTWARE.*/
 #include <vector>
 #include "Ape.h"
 #include "ApeEntity.h"
-#include "ApeITexture.h"
 #include "ApeColor.h"
 #include "ApePass.h"
 

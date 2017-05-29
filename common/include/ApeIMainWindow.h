@@ -33,6 +33,7 @@ SOFTWARE.*/
 #define APE_MAINWINDOW_DLL_EXPORT 
 #endif
 
+#include <string>
 #include "ApeSingleton.h"
 
 namespace Ape
@@ -54,6 +55,10 @@ namespace Ape
 		virtual void setWidth(unsigned int width) = 0;
 
 		virtual void setHeight(unsigned int height) = 0;
+
+		virtual void setName(std::string name) = 0;
+
+		virtual std::string getName() = 0;
 	};
 }
 #endif

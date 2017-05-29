@@ -66,6 +66,8 @@ namespace Ape
 
 		virtual bool getChildrenVisibility() = 0;
 
+		virtual bool isFixedYaw() = 0;
+
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
@@ -81,6 +83,8 @@ namespace Ape
 		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
 
 		virtual void setChildrenVisibility(bool visible) = 0;
+
+		virtual void setFixedYaw(bool fix) = 0;
 	};
 }
 

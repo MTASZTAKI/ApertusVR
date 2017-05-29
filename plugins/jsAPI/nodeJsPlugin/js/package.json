@@ -1,27 +1,29 @@
 {
   "name": "ApertusVR",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Javascript interpreter and HTTP API extension for ApertusVR",
   "main": "server.js",
   "dependencies": {
     "assert": "^1.4.1",
+    "async": "*",
     "body-parser": "^1.15.2",
     "cheerio": "*",
-    "htmlparser2": "*",
-    "async": "*",
-	"request": "*",
     "express": "^4.14.0",
     "express-validator": "^2.20.10",
+    "htmlparser2": "*",
     "morgan": "^1.7.0",
     "nbind": "^0.3.9",
     "node-gyp": "^3.5.0",
+    "request": "*",
     "util": "^0.10.3",
-    "uuid": "*"
+    "uuid": "*",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node apeServer.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -37,5 +39,5 @@
     "api"
   ],
   "author": "ApertusVR Team",
-  "license": "ISC"
+  "license": "MIT"
 }

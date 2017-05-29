@@ -1,6 +1,6 @@
 material FlatVertexColorLighting
 {
-   technique
+   technique vertexcolourlighting
    {
       pass
       {
@@ -8,7 +8,7 @@ material FlatVertexColorLighting
          specular vertexcolour
          ambient vertexcolour
          lighting on
-
+         shader phong
       }
    }
 }

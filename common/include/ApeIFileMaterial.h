@@ -40,6 +40,14 @@ namespace Ape
 		virtual std::string getfFileName () = 0;
 
 		virtual void setAsSkyBox() = 0;
+
+		virtual void setPassTexture(Ape::TextureWeakPtr texture) = 0;
+
+		virtual void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) = 0;
+
+		virtual Ape::TextureWeakPtr getPassTexture() = 0;
+
+		virtual Ape::PassGpuParameters getPassGpuParameters() = 0;
 	};
 	
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;

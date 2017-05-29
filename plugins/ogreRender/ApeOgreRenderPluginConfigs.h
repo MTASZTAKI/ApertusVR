@@ -34,6 +34,8 @@ namespace Ape
 {
 	struct OgreCameraConfig
 	{
+		std::string name;
+
 		Ape::Vector3 positionOffset;
 		
 		Ape::Quaternion orientationOffset;
@@ -46,6 +48,7 @@ namespace Ape
 
 		OgreCameraConfig()
 		{
+			this->name = std::string();
 			this->positionOffset = Ape::Vector3();
 			this->orientationOffset = Ape::Quaternion();
 			this->nearClip = 0.0f;
@@ -54,12 +57,14 @@ namespace Ape
 		}
 
 		OgreCameraConfig(
+			std::string name,
 			Ape::Vector3 positionOffset,
 			Ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
 			Degree fovY)
 		{
+			this->name = name;
 			this->positionOffset = positionOffset;
 			this->orientationOffset = orientationOffset;
 			this->nearClip = nearClip;
@@ -134,6 +139,8 @@ namespace Ape
 
 	struct OgreRenderWindowConfig
 	{
+		bool enable;
+
 		std::string name;
 		
 		int monitorIndex;
@@ -160,6 +167,7 @@ namespace Ape
 
 		OgreRenderWindowConfig()
 		{
+			this->enable = true;
 			this->name = "";
 			this->monitorIndex = 0;
 			this->width = 0;
@@ -174,7 +182,8 @@ namespace Ape
 			this->windowHandler = "";
 		}
 
-		OgreRenderWindowConfig(std::string name,
+		OgreRenderWindowConfig(bool enable,
+		std::string name,
 		int monitorIndex,
 		int width,
 		int height,
@@ -187,6 +196,7 @@ namespace Ape
 		Ape::OgreViewPortConfigList viewportList,
 		std::string windowHandler = "")
 		{
+			this->enable = enable;
 			this->name = name;
 			this->monitorIndex = monitorIndex;
 			this->width = width;

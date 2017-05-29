@@ -44,12 +44,12 @@ void ApeTesterPlugin::Init()
 			plane->setParentNode(planeNode);
 			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 			{
-				if (auto planeMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("planeMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+				if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 				{
-					planeMaterialPbsPass->setShininess(15.0f);
-					planeMaterialPbsPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
-					planeMaterialPbsPass->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
-					planeMaterial->setPass(planeMaterialPbsPass);
+					planeMaterialManualPass->setShininess(15.0f);
+					planeMaterialManualPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
+					planeMaterialManualPass->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
+					planeMaterial->setPass(planeMaterialManualPass);
 					plane->setMaterial(planeMaterial);
 				}
 			}
@@ -66,12 +66,12 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto demoObjectMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("demoObjectMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto demoObjectMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("demoObjectMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			demoObjectMaterialPbsPass->setShininess(15.0f);
-			demoObjectMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			demoObjectMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			demoObjectMaterial->setPass(demoObjectMaterialPbsPass);
+			demoObjectMaterialManualPass->setShininess(15.0f);
+			demoObjectMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			demoObjectMaterial->setPass(demoObjectMaterialManualPass);
 		}
 	}
 	mDemoObjectNode = mpScene->createNode("mDemoObjectNode").lock();
@@ -97,7 +97,7 @@ void ApeTesterPlugin::Init()
 				1, 5, 6, 2, -1,
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
-			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), demoObjectMaterial);
+			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial);
 			demoBox->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
@@ -116,7 +116,7 @@ void ApeTesterPlugin::Init()
 				2, 3, 4, -1,
 				3, 0, 4, -1
 			};
-			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), demoObjectMaterial);
+			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial);
 			demoPyramid->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -153,34 +153,34 @@ void ApeTesterPlugin::Init()
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowXMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowXMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowXMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowXMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowXMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowXMaterialPbsPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterialPbsPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterial->setPass(coordinateSystemArrowXMaterialPbsPass);
+			coordinateSystemArrowXMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowXMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			coordinateSystemArrowXMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+			coordinateSystemArrowXMaterial->setPass(coordinateSystemArrowXMaterialManualPass);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowYMaterial;
 	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowYMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowYMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowYMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowYMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowYMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowYMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowYMaterialPbsPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterialPbsPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterial->setPass(coordinateSystemArrowYMaterialPbsPass);
+			coordinateSystemArrowYMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowYMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
+			coordinateSystemArrowYMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
+			coordinateSystemArrowYMaterial->setPass(coordinateSystemArrowYMaterialManualPass);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowZMaterial;
 	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowZMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowZMaterialPbsPass = std::static_pointer_cast<Ape::IPbsPass>(mpScene->createEntity("coordinateSystemArrowZMaterialPbsPass", Ape::Entity::PASS_PBS).lock()))
+		if (auto coordinateSystemArrowZMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowZMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
 		{
-			coordinateSystemArrowZMaterialPbsPass->setShininess(15.0f);
-			coordinateSystemArrowZMaterialPbsPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterialPbsPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialPbsPass);
+			coordinateSystemArrowZMaterialManualPass->setShininess(15.0f);
+			coordinateSystemArrowZMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
+			coordinateSystemArrowZMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
+			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialManualPass);
 		}
 	}
 	if (auto coordinateSystemNode = mpScene->createNode("coordinateSystemNode").lock())
@@ -338,7 +338,7 @@ void ApeTesterPlugin::Init()
 
 void ApeTesterPlugin::Run()
 {
-	double duration;
+	double duration = 0;
 	while (true)
 	{
 		auto start = std::chrono::high_resolution_clock::now();

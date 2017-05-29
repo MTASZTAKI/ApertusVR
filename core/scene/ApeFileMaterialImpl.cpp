@@ -25,8 +25,12 @@ SOFTWARE.*/
 Ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : Ape::IFileMaterial(name), Ape::Replica("FileMaterial", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpScene = Ape::IScene::getSingletonPtr();
 	mFileName = std::string();
 	mIsSkyBox = false;
+	mTexture = Ape::TextureWeakPtr();
+	mTextureName = std::string();
+	mPassGpuParameters = Ape::PassGpuParameters();
 }
 
 Ape::FileMaterialImpl::~FileMaterialImpl()
@@ -51,6 +55,34 @@ void Ape::FileMaterialImpl::setAsSkyBox()
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
 }
 
+void Ape::FileMaterialImpl::setPassTexture(Ape::TextureWeakPtr texture)
+{
+	if (auto textureSP = texture.lock())
+	{
+		mTexture = texture;
+		mTextureName = textureSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_TEXTURE));
+	}
+	else
+		mTexture = Ape::TextureWeakPtr();
+}
+
+void Ape::FileMaterialImpl::setPassGpuParameters(Ape::PassGpuParameters passGpuParameters)
+{
+	mPassGpuParameters = passGpuParameters;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_GPUPARAMETERS));
+}
+
+Ape::TextureWeakPtr Ape::FileMaterialImpl::getPassTexture()
+{
+	return mTexture;
+}
+
+Ape::PassGpuParameters Ape::FileMaterialImpl::getPassGpuParameters()
+{
+	return mPassGpuParameters;
+}
+
 void Ape::FileMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -64,6 +96,7 @@ RakNet::RM3SerializationResult Ape::FileMaterialImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSkyBox);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -80,6 +113,13 @@ void Ape::FileMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSkyBox))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
+	RakNet::RakString textureName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
+	{
+		mTextureName = textureName.C_String();
+		mTexture = std::static_pointer_cast<Ape::Texture>(mpScene->getEntity(mTextureName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_FILE_TEXTURE));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

@@ -23,6 +23,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <map>
 #include "ApeSystem.h"
 
@@ -42,6 +43,11 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\local_cave";
 		else if (participantType == "host_cave")
 			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\host_cave";
+	}
+	else
+	{
+		std::cout << "usage: host | guest | local | local_cave | host_cave " << std::endl;
+		return 0;
 	}
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();

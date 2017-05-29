@@ -65,7 +65,7 @@ void ApeNodeJsPlugin::Run()
 {
 	std::cout << "ApeNodeJsPlugin::run" << std::endl;
 
-	char *args[] = { "", "apeServer.js" };
+	char *args[] = { "", "server.js" };
 	std::cout << "Initializing Node..." << std::endl;
 
 	int res = -1;

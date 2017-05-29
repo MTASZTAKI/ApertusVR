@@ -33,26 +33,18 @@ SOFTWARE.*/
 
 void runHost()
 {
-	std::stringstream exeDir;
+	std::stringstream exe;
 	//TODO platfrom specific new window command
-#ifdef _DEBUG
-	exeDir << "start "  APE_BIN_DIR << "\\debug\\ApeMultiPlayer.exe host";
-#else
-	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeMultiPlayer.exe host";
-#endif
-	std::system(exeDir.str().c_str());
+	exe << "start " << "ApeMultiPlayer.exe host";
+	std::system(exe.str().c_str());
 }
 
 void runGuest()
 {
-	std::stringstream exeDir;
+	std::stringstream exe;
 	//TODO platfrom specific new window command
-#ifdef _DEBUG
-	exeDir << "start " << APE_BIN_DIR << "\\debug\\ApeMultiPlayer.exe guest";
-#else
-	exeDir << "start "  APE_BIN_DIR << "\\release\\ApeMultiPlayer.exe guest";
-#endif
-	std::system(exeDir.str().c_str());
+	exe << "start " << "ApeMultiPlayer.exe guest";
+	std::system(exe.str().c_str());
 }
 
 int main (int argc, char** argv)
