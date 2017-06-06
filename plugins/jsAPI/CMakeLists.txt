@@ -89,49 +89,83 @@ if (NOT EXISTS ${NODE_SOURCE_DIR})
 	message(FATAL_ERROR "Could not find ${NODE_SOURCE_DIR}")
 endif ()
 
+message(STATUS "CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
+if (${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+	set(HOST_ARCH_X64 1)
+	message(STATUS "DetectHostPlatform: HOST_ARCH_X64")
+elseif (${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+	set(HOST_ARCH_X86 1)
+	message(STATUS "DetectHostPlatform: HOST_ARCH_X86")
+endif ()
+
 if (WIN32)
 	if (MSVC)
 
 		set(PF_X86 "PROGRAMFILES(X86)")
 		set(PF_X64 "PROGRAMFILES")
+		set(VS_PATH_2017 "")
 
 		set(VCBUILD false)
 		set(MSBUILD false)
 
-		# -------------------------------------------------------------------------------
+		SET(BINDIR32_ENV_NAME "ProgramFiles(x86)")
+		SET(ENV_PROGRAMFILES_X86 $ENV{${BINDIR32_ENV_NAME}})
+		SET(ENV_PROGRAMFILES $ENV{ProgramFiles})
+
+		message (STATUS "ENV{ProgramFiles}=${ENV_PROGRAMFILES}")
+		message (STATUS "ENV{ProgramFiles(x86)}=${ENV_PROGRAMFILES_X86}")
 
 		###
 		### DEVENV
 		###
-		# GET Visual Studio's Version and Path - https://en.wikipedia.org/wiki/Visual_C%2B%2B#Common_MSVC_version
-		if (MSVC14) # Visual Studio 2015
-			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\Setup\\VS;ProductDir] REALPATH CACHE)
+		# GET Visual Studio's Version and Path
+		# https://en.wikipedia.org/wiki/Visual_C%2B%2B#Common_MSVC_version
+		# https://blogs.msdn.microsoft.com/heaths/2017/04/21/vswhere-is-now-installed-with-visual-studio-2017/
+		if (MSVC14) # Visual Studio 2015 / 2017
+			message(STATUS "MSVC14")
+			set(VS_WHERE_PATH "${ENV_PROGRAMFILES_X86}/Microsoft Visual Studio/Installer/vswhere.exe")
+			message(STATUS "VSWhere: path: (${VS_WHERE_PATH})")
+			if (EXISTS ${VS_WHERE_PATH})
+				execute_process(
+					COMMAND cmd /c ${VS_WHERE_PATH} -latest -requires Microsoft.Component.MSBuild -property installationPath
+					RESULT_VARIABLE VS_WHERE_PATH_RESULT
+					OUTPUT_VARIABLE VS_WHERE_OUTPUT
+				)
+				if (${VS_WHERE_PATH_RESULT} EQUAL 0)
+					message(STATUS "VSWhere: exit code: '${VS_WHERE_PATH_RESULT}'")
+					string(REGEX REPLACE "\n$" "" VS_WHERE_OUTPUT "${VS_WHERE_OUTPUT}")
+					message(STATUS "VSWhere: stripped output: '${VS_WHERE_OUTPUT}'")
+					set(VS_PATH_2017 ${VS_WHERE_OUTPUT})
+				else ()
+					message(STATUS "VSWhere: exit code: (${VS_WHERE_PATH_RESULT})")
+				endif ()
+			else ()
+				message(STATUS "VSWhere: path (${VS_WHERE_PATH_RESULT}) does not exist")
+			endif ()
+
+			message(STATUS "VS_PATH_2017: ${VS_PATH_2017}")
+
+			if (NOT ${VS_PATH_2017} STREQUAL "")
+				set(VS_DIR ${VS_PATH_2017})
+			else ()
+				GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\Setup\\VS;ProductDir] REALPATH CACHE)
+			endif ()
 		elseif (MSVC12) # Visual Studio 2013
 			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\12.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		elseif (MSVC11) # Visual Studio 2012
 			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\11.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		elseif (MSVC10) # Visual Studio 2010
-		    GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\Setup\\VS;ProductDir] REALPATH CACHE)
+			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		elseif (MSVC90) # Visual Studio 2008
-		    GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\9.0\\Setup\\VS;ProductDir] REALPATH CACHE)
+			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\9.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		elseif (MSVC80) # Visual Studio 2005
-		    GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\8.0\\Setup\\VS;ProductDir] REALPATH CACHE)
+			GET_FILENAME_COMPONENT(VS_DIR [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\8.0\\Setup\\VS;ProductDir] REALPATH CACHE)
 		endif ()
 		message(STATUS "Visual Studio path: ${VS_DIR}")
 
 		# Check if devenv is installed
-		set(DEVENV_PATH_X86 "${VS_DIR}/Common7/IDE/devenv.exe")
-		set(DEVENV_PATH_X64 "${VS_DIR}/Common7/IDE/devenv.exe")
-		set(DEVENV_PATH "")
-		if (EXISTS ${DEVENV_PATH_X64})
-			set(HOST_ARCH_X64 1)
-			set(DEVENV_PATH ${DEVENV_PATH_X64})
-		elseif (EXISTS ${DEVENV_PATH_X86})
-			set(HOST_ARCH_X86 1)
-			set(DEVENV_PATH ${DEVENV_PATH_X86})
-		endif ()
-		message(STATUS "Devenv path: ${DEVENV_PATH}")
-
+		set(DEVENV_PATH "${VS_DIR}/Common7/IDE/devenv.exe")
+		message(STATUS "Devenv path: '${DEVENV_PATH}'")
 		if (NOT ${DEVENV_PATH} STREQUAL "")
 			set(VCBUILD true)
 		endif ()
@@ -216,8 +250,7 @@ if (WIN32)
 				execute_process(
 					COMMAND ${CMAKE_COMMAND} -E copy
 					${NODE_DLL_PATH_RELEASE} ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME}
-					RESULT_VARIABLE
-					COPY_SETUP_RESULT
+					RESULT_VARIABLE COPY_SETUP_RESULT
 				)
 				message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
 			endif ()
@@ -226,7 +259,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} release x64 nosign dll
+				COMMAND cmd /c ${NODE_VCBUILD_PATH} release x64 nosign dll vs2017
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
@@ -311,7 +344,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign dll
+				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 nosign dll vs2017
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
