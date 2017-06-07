@@ -157,7 +157,20 @@ set PLATFORM_TOOLSET=v140
 goto msbuild-found
 
 :msbuild-not-found
-echo Failed to find Visual Studio installation.
+echo Failed to find Visual Studio 2015 installation.
+
+@rem Look for Visual Studio 2017
+echo Looking for Visual Studio 2017
+if not exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" goto vs2017-not-found
+if "%VCVARS_VER%" NEQ "140" (
+  call "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+)
+set GYP_MSVS_VERSION=2015
+set PLATFORM_TOOLSET=v141
+goto msbuild-found
+
+:vs2017-not-found
+echo Failed to find Visual Studio 2017 installation.
 goto exit
 
 :wix-not-found
