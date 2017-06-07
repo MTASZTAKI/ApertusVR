@@ -10,6 +10,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 build/
+.vs/
 
 # Generated Files
 *.exe
@@ -69,6 +70,8 @@ Makefile.inc.cmake
 3rdParty/nodejs/**/nodedownload.pyc
 3rdParty/nodejs/**/getmoduleversion.pyc
 3rdParty/nodejs/**/genfiles/
+3rdParty/nodejs/**/Debug/
+3rdParty/nodejs/**/Release/
 
 # Exclude thirdparties
 !3rdParty/oculus/LibOVR/Lib/*
