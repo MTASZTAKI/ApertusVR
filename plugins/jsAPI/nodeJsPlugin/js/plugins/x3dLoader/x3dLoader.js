@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var utils = require('../../utils.js');
+var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
 var moduleManager = require('../../modules/module_manager/module_manager.js');
 var cheerio = moduleManager.requireNodeModule('cheerio');

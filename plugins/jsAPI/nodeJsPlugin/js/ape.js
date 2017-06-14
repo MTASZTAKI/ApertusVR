@@ -26,7 +26,7 @@ var utils = require('./modules/utils/utils.js');
 var logger = require("./modules/logger/logger.js");
 
 exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
-exports.pluginLoader = require(moduleManager.sourcePath + 'plugins/pluginLoader/pluginLoader.js');
+exports.pluginLoader = require('./modules/pluginLoader/pluginLoader.js');
 
 exports.initApi = function(app) {
 	var router = express.Router();
