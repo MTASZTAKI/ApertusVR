@@ -775,7 +775,6 @@ exports.init = function(x3dFilePath) {
 	try {
 		async.waterfall(
 			[
-				/*
 				function(callback) {
 					currentlyParsedFileName = 'weldingFixture';
 					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
@@ -806,7 +805,7 @@ exports.init = function(x3dFilePath) {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
-				}
+				},
 				function(callback) {
 					self.resetGlobalValues();
 					currentlyParsedFileName = 'stand';
@@ -814,8 +813,7 @@ exports.init = function(x3dFilePath) {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
-				},
-				*/
+				}/*,				
 				function(callback) {
 					self.resetGlobalValues();
 					currentlyParsedFileName = 'SZTAKIUr5Cell';
@@ -823,7 +821,7 @@ exports.init = function(x3dFilePath) {
 						console.log('X3D-parsing done: ' + currentlyParsedFileName);
 						callback(null);
 					});
-				}
+				}*/
 			],
 			function(err, result) {
 				console.log("async tasks done");

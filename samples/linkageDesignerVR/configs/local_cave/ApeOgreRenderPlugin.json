@@ -7,6 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
+			"name": "0",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -27,6 +28,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
+						"name": "0",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -36,6 +38,7 @@
         },
         {
             "monitorIndex": 1,
+			"name": "1",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -56,6 +59,38 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
+						"name": "1",
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
+                    }
+                }
+            ]
+        },
+		{
+            "monitorIndex": 2,
+			"name": "2",
+            "resolution": {
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
+            },
+            "miscParams": {
+                "vSync": true,
+                "vSyncInterval": 1,
+                "colorDepth": 32,
+                "FSAA": 16,
+                "FSAAHint": "Quality"
+            },
+            "viewports": [
+                {
+                    "zOrder": 0,
+                    "left": 0,
+                    "top": 0,
+                    "width": 1400,
+                    "height": 1050,
+                    "camera": {
+					    "name": "2",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -65,6 +100,7 @@
         },
         {
             "monitorIndex": 3,
+			"name": "3",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -85,35 +121,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
-                        "nearClip": 1,
-                        "farClip": 10000,
-                        "fovY": 45
-                    }
-                }
-            ]
-        },
-        {
-            "monitorIndex": 2,
-            "resolution": {
-                "width": 1400,
-                "height": 1050,
-                "fullScreen": true
-            },
-            "miscParams": {
-                "vSync": true,
-                "vSyncInterval": 1,
-                "colorDepth": 32,
-                "FSAA": 16,
-                "FSAAHint": "Quality"
-            },
-            "viewports": [
-                {
-                    "zOrder": 0,
-                    "left": 0,
-                    "top": 0,
-                    "width": 1400,
-                    "height": 1050,
-                    "camera": {
+						"name": "3",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -123,6 +131,7 @@
         },
         {
             "monitorIndex": 4,
+			"name": "4",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -143,6 +152,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
+						"name": "4",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -152,6 +162,7 @@
         },
         {
             "monitorIndex": 5,
+			"name": "5",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -172,6 +183,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
+						"name": "5",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
