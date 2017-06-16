@@ -23,6 +23,7 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
+			"ApeFobHeadTrackingPlugin",
             "ApeLinkageDesignerVRPlugin"
         ]
     }

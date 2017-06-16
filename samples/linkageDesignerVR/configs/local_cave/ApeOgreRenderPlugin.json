@@ -6,12 +6,13 @@
 		},
     "renderWindows": [
         {
+			"enable": true,
             "monitorIndex": 0,
 			"name": "0",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -37,12 +38,13 @@
             ]
         },
         {
+			"enable": true,
             "monitorIndex": 1,
 			"name": "1",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -68,12 +70,13 @@
             ]
         },
 		{
+			"enable": true,
             "monitorIndex": 2,
 			"name": "2",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -99,12 +102,13 @@
             ]
         },
         {
+			"enable": true,
             "monitorIndex": 3,
 			"name": "3",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -129,13 +133,14 @@
                 }
             ]
         },
-        {
+		{
+			"enable": true,
             "monitorIndex": 4,
 			"name": "4",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
@@ -161,12 +166,13 @@
             ]
         },
         {
+			"enable": true,
             "monitorIndex": 5,
 			"name": "5",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
-                "fullScreen": true
+                "fullScreen": false
             },
             "miscParams": {
                 "vSync": true,
