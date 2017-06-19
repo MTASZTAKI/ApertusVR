@@ -18,7 +18,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -50,7 +50,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -82,7 +82,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -114,7 +114,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -146,7 +146,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
@@ -178,7 +178,7 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 16,
+                "FSAA": 8,
                 "FSAAHint": "Quality"
             },
             "viewports": [
