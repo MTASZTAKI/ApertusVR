@@ -1,0 +1,6 @@
+{
+    "jsPlugins": [
+        "./plugins/x3dLoader/x3dLoader.js"
+    ]
+}
+

@@ -33,6 +33,7 @@ option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
 option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
 option(APE_PLUGIN_OculusDK2 "Use OculusDK2Plugin?" ON )
 option(APE_PLUGIN_RobotMonitoring "Use RobotMonitoringPlugin?" ON )
+option(APE_PLUGIN_Industry40 "Use Industry40Plugin?" ON )
 
 
 if (${APE_PLUGIN_OgreRender})
@@ -73,5 +74,8 @@ if (${APE_PLUGIN_OculusDK2})
 endif ()
 if (${APE_PLUGIN_RobotMonitoring})
 	add_subdirectory (robotMonitoring)
+endif ()
+if (${APE_PLUGIN_Industry40})
+	add_subdirectory (industry40)
 endif ()
 

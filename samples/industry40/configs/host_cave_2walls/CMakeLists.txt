@@ -23,12 +23,14 @@
 set (CONFIGS
     ApeFobHeadTrackingPlugin.json
 	ApeOgreRenderPlugin.json
+	ApeNodeJsPlugin.json
 	ApeSystem.json
+	ApeX3DLoaderPlugin.json
 	)
 
 add_custom_target(
-    Configs_linkageDesignerVRHost_cave ALL
+    Configs_industry40_host_cave_2walls ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_linkageDesignerVRHost_cave PROPERTY FOLDER "Samples/LinkageDesignerVR/Configs")
+set_property (TARGET Configs_industry40_host_cave_2walls PROPERTY FOLDER "Samples/Industry40/Configs")

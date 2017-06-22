@@ -4,10 +4,12 @@
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
-        "participantType": "Local",
-        "uniqueUserNamePrefix": "",
-        "sessionGUID": "",
-        "sessionResourceLocation": "",
+        "participantType": "Host",
+        "uniqueUserNamePrefix": "HostCave",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": [
+            "/plugins/industry40/resources"
+        ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -19,13 +21,10 @@
     },
     "pluginManager": {
         "plugins": [
+            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeLinkageDesignerVRPlugin",
-            "ApeFobHeadTrackingPlugin"
-        ],
-        "jsplugins": [
-            "/samples/linkageDesignerVR/plugins/x3dLoader/x3dLoader.js"
+			"ApeFobHeadTrackingPlugin",
+            "ApeIndustry40Plugin"
         ]
     }
 }

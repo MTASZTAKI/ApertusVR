@@ -21,14 +21,14 @@
 #SOFTWARE.
 
 set (CONFIGS
-    ApeFobHeadTrackingPlugin.json
 	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
 	ApeSystem.json
 	)
 
 add_custom_target(
-    Configs_linkageDesignerVRHost_cave ALL
+    Configs_industry40_guest_monitor ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_linkageDesignerVRHost_cave PROPERTY FOLDER "Samples/LinkageDesignerVR/Configs")
+set_property (TARGET Configs_industry40_guest_monitor PROPERTY FOLDER "Samples/Industry40/Configs")

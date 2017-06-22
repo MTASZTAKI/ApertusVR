@@ -423,7 +423,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 	var tagName = currentItem[0].tagName || currentItem[0].name;
 	var itemName = ((currentItem[0].hasOwnProperty('itemName') && currentItem[0].itemName) || currentItem.attr('DEF') || 'item' + nameCounter);
 	nameCounter++;
-	itemName = itemName + currentlyParsedFileName;
+	itemName = itemName + currentlyParsedFilePath;
 	currentItem[0].itemName = itemName
 	console.log(itemName + ' - ' + typeName + ' - ' + tagName);
 
@@ -450,36 +450,36 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				//  TODO: create a textGeometry
 			}
 		} else if (tagName == 'scene') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyParsedFileName);
+			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyParsedFilePath);
 			nodeLevel++;
-			if (currentlyParsedFileName == 'weldingFixture') {
+			if (currentlyParsedFilePath == 'weldingFixture') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 100000));
 			}
-			if (currentlyParsedFileName == 'cell') {
+			if (currentlyParsedFilePath == 'cell') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 0));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 			}
-			if (currentlyParsedFileName == 'ur5cellAnim') {
+			if (currentlyParsedFilePath == 'ur5cellAnim') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
 			}
-			if (currentlyParsedFileName == 'SuperChargerLinkage') {
+			if (currentlyParsedFilePath == 'SuperChargerLinkage') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 200000));
 			}
-			if (currentlyParsedFileName == 'stand') {
-				console.log(' scene world node created for: ' + currentlyParsedFileName);
+			if (currentlyParsedFilePath == 'stand') {
+				console.log(' scene world node created for: ' + currentlyParsedFilePath);
 				nodeObj.setScale(new ape.nbind.Vector3(100, 100, 100));
 				nodeObj.setPosition(new ape.nbind.Vector3(-12000, -200, -3000));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 			}
-			if (currentlyParsedFileName == 'SZTAKIUr5Cell') {
-				console.log(' scene world node created for: ' + currentlyParsedFileName);
+			if (currentlyParsedFilePath == 'SZTAKIUr5Cell') {
+				console.log(' scene world node created for: ' + currentlyParsedFilePath);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, 0.5, 0.5));
@@ -496,7 +496,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		} else if (tagName == 'shape') {
 			var use = currentItem.attr('USE');
 			if (utils.isDefined(use)) {
-				var geometryName = use + currentlyParsedFileName;
+				var geometryName = use + currentlyParsedFilePath;
 				var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(itemName);
 				fileGeometryObj.setFileName(geometryName);
 				console.log('USE: ' + fileGeometryObj.getName());
@@ -636,8 +636,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			interpolatorArr.push(positionInterpolator);
 			console.log('PositionInterpolator: ' + itemName);
 		} else if (tagName == 'route') {
-			var interpolatorName = currentItem.attr('fromNode') + currentlyParsedFileName;
-			var nodeName = currentItem.attr('toNode') + currentlyParsedFileName;
+			var interpolatorName = currentItem.attr('fromNode') + currentlyParsedFilePath;
+			var nodeName = currentItem.attr('toNode') + currentlyParsedFilePath;
 			console.log('ROUTE: ' + interpolatorName);
 			for (var i = 0; i < interpolatorArr.length; i++) {
 				if (interpolatorArr[i].name == interpolatorName) {
@@ -670,7 +670,7 @@ var interpolatorArr = new Array();
 var loopAnimation = false;
 var cycleIntervalAnimation = 1;
 var keyIndex = 0;
-var currentlyParsedFileName = '';
+var currentlyParsedFilePath = '';
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
 	if (!childItem) {
@@ -771,57 +771,37 @@ exports.resetGlobalValues = function() {
 	groupNodeObj = 0;
 }
 
-exports.init = function(x3dFilePath) {
-	try {
-		async.waterfall(
+exports.loadFiles = function() {
+	console.debug("X3DLoaderPlugin.loadFiles()");
+
+	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
+	console.debug('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
+
+	var config = require(configFolderPath + '\\ApeX3DLoaderPlugin.json');
+	console.debug('X3DLoaderPlugin files to load: ', config.files);
+
+	var filesPathArray = new Array();
+	for (var i = 0; i < config.files.length; i++) {
+		filesPathArray.push(moduleManager.sourcePath + config.files[i]);
+	}
+	
+	async.waterfall(
 			[
 				function(callback) {
-					currentlyParsedFileName = 'weldingFixture';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+					currentlyParsedFilePath = filesPathArray[0];
+					self.parseX3DAsync(currentlyParsedFilePath, function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFilePath);
 						callback(null);
 					});
 				},
 				function(callback) {
 					self.resetGlobalValues();
-					currentlyParsedFileName = 'cell';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
+					currentlyParsedFilePath = filesPathArray[1];
+					self.parseX3DAsync(currentlyParsedFilePath, function() {
+						console.log('X3D-parsing done: ' + currentlyParsedFilePath);
 						callback(null);
 					});
-				},
-				function(callback) {
-					self.resetGlobalValues();
-					currentlyParsedFileName = 'ur5cellAnim';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
-						callback(null);
-					});
-				},
-				function(callback) {
-					self.resetGlobalValues();
-					currentlyParsedFileName = 'SuperChargerLinkage';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
-						callback(null);
-					});
-				},
-				function(callback) {
-					self.resetGlobalValues();
-					currentlyParsedFileName = 'stand';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
-						callback(null);
-					});
-				}/*,				
-				function(callback) {
-					self.resetGlobalValues();
-					currentlyParsedFileName = 'SZTAKIUr5Cell';
-					self.parseX3DAsync(moduleManager.sourcePath + 'plugins/x3dLoader/samples/' + currentlyParsedFileName + '.x3d', function() {
-						console.log('X3D-parsing done: ' + currentlyParsedFileName);
-						callback(null);
-					});
-				}*/
+				}
 			],
 			function(err, result) {
 				console.log("async tasks done");
@@ -838,6 +818,11 @@ exports.init = function(x3dFilePath) {
 				}
 			}
 		);
+}
+
+exports.init = function(x3dFilePath) {
+	try {
+		self.loadFiles();
 	} catch (e) {
 		console.log('X3D-init exception cached: ' + e);
 	}

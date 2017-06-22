@@ -20,15 +20,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-    ApeFobHeadTrackingPlugin.json
-	ApeOgreRenderPlugin.json
-	ApeSystem.json
-	)
-
-add_custom_target(
-    Configs_linkageDesignerVRHost_cave ALL
-    SOURCES ${CONFIGS}
-)
-
-set_property (TARGET Configs_linkageDesignerVRHost_cave PROPERTY FOLDER "Samples/LinkageDesignerVR/Configs")
+add_subdirectory (host_monitor)
+add_subdirectory (guest_monitor)
+add_subdirectory (guest_oculusDK2)
+add_subdirectory (host_cave_2walls)
+add_subdirectory (host_cave_3walls)
