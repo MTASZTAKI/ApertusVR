@@ -25,6 +25,7 @@ SOFTWARE.*/
 #include <chrono>
 #include <string>
 #include <sstream> 
+#include <iostream> 
 #include <fstream>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
@@ -50,7 +51,9 @@ void runGuest()
 int main (int argc, char** argv)
 {
 	std::thread host((std::bind(runHost)));
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));//getchar();
+	//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	std::cout << "Please wait until the host is up an then press any key to starting the guest" << std::endl;
+	getchar();
 
 	std::string hostGUID;
 	std::stringstream hostConfigFilePath;

@@ -83,7 +83,7 @@ void Ape::OISUserInputPlugin::Init()
 
 	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
 	mUserNode = mpScene->createNode(userNodeName);
-	if (mpSystemConfig->getSceneSessionConfig().participantType == SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == SceneSession::ParticipantType::GUEST)
+	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
 	{
 		if (mUserNode.lock())
 		{

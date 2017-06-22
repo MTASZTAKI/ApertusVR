@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
+#include "ApeISceneSession.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
 #include "ApeICamera.h"

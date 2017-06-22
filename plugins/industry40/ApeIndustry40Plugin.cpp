@@ -76,6 +76,22 @@ void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 void ApeIndustry40Plugin::Init()
 {
 	std::cout << "ApeIndustry40Plugin::init" << std::endl;
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->createNode(userNodeName);
+	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
+	{
+		if (mUserNode.lock())
+		{
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
+			{
+				userNameText->setCaption(userNodeName);
+				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+				userNameText->setParentNode(mUserNode);
+			}
+		}
+	}
+
+
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -96,8 +112,6 @@ void ApeIndustry40Plugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->createNode(userNodeName);
 	std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

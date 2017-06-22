@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "GuestMonitor",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionGUID": "207166193419535624",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
         ],
@@ -22,7 +22,7 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-			"ApeOisUserInputPlugin"
+            "ApeOisUserInputPlugin"
         ]
     }
 }

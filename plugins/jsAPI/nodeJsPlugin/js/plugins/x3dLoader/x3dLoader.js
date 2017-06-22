@@ -671,6 +671,7 @@ var loopAnimation = false;
 var cycleIntervalAnimation = 1;
 var keyIndex = 0;
 var currentlyLoadingFileName = '';
+var config;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
 	if (!childItem) {
@@ -772,38 +773,30 @@ exports.resetGlobalValues = function() {
 }
 
 exports.loadFiles = function() {
-	console.debug("X3DLoaderPlugin.loadFiles()");
+	console.log("X3DLoaderPlugin.loadFiles()");
 
 	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
-	console.debug('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
-
-	var config = require(configFolderPath + '\\ApeX3DLoaderPlugin.json');
-	console.debug('X3DLoaderPlugin files to load: ', config.files);
-
-	var filesPathArray = new Array();
+	console.log('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
+		
+	config = require(configFolderPath + '\\ApeX3DLoaderPlugin.json');
+	console.log('X3DLoaderPlugin files to load: ', config.files);
+	config.files = config.files.reverse();
+	
+	asyncFunctions = new Array();
 	for (var i = 0; i < config.files.length; i++) {
-		filesPathArray.push(moduleManager.sourcePath + config.files[i]);
+		var fn = function(callback) {
+			var filePath = moduleManager.sourcePath + config.files.pop();
+			currentlyLoadingFileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+			self.parseX3DAsync(filePath, function() {
+				console.log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
+				callback(null);
+			});
+		}
+		asyncFunctions.push(fn);
 	}
 	
 	async.waterfall(
-			[
-				function(callback) {
-					var filePath = filesPathArray[0];
-					currentlyLoadingFileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-					self.parseX3DAsync(filePath, function() {
-						console.log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
-						callback(null);
-					});
-				},
-				function(callback) {
-					var filePath = filesPathArray[1];
-					currentlyLoadingFileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-					self.parseX3DAsync(filePath, function() {
-						console.log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
-						callback(null);
-					});
-				}
-			],
+			asyncFunctions,
 			function(err, result) {
 				console.log("async tasks done");
 				if (err) {
