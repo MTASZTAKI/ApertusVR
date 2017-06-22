@@ -27,8 +27,11 @@ Ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bo
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mParameters = Ape::GeometryIndexedFaceSetParameters();
-	mMaterial = Ape::MaterialWeakPtr();
-	mMaterialName = std::string();
+	mCoordinatesSize = 0;
+	mIndicesSize = 0;
+	mNormalsSize = 0;
+	mColorsSize = 0;
+	mTextureCoordinatesSize = 0;
 }
 
 Ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
@@ -38,14 +41,12 @@ Ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
 
 void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
 {
-	mParameters.groupName = groupName;
-	mParameters.coordinates = coordinates;
-	mParameters.indices = indices;
-	mParameters.normals = normals;
-	mParameters.generateNormals = generateNormals;
-	mParameters.colors = colors;
-	mParameters.textureCoordinates = textureCoordinates;
-	mParameters.material = material;
+	mCoordinatesSize = static_cast<int>(coordinates.size());
+	mIndicesSize = static_cast<int>(indices.size());
+	mNormalsSize = static_cast<int>(normals.size());
+	mColorsSize = static_cast<int>(colors.size());
+	mTextureCoordinatesSize = static_cast<int>(textureCoordinates.size());
+	mParameters = Ape::GeometryIndexedFaceSetParameters(groupName, coordinates, indices, normals, generateNormals, colors, textureCoordinates, material);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 }
 
@@ -66,21 +67,9 @@ void Ape::IndexedFaceSetGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 		mParentNode = Ape::NodeWeakPtr();
 }
 
-void Ape::IndexedFaceSetGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
-{
-	if (auto materialSP = material.lock())
-	{
-		mMaterial = material;
-		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL));
-	}
-	else
-		mMaterial = Ape::MaterialWeakPtr();
-}
-
 Ape::MaterialWeakPtr Ape::IndexedFaceSetGeometryImpl::getMaterial()
 {
-	return mMaterial;
+	return mParameters.material;
 }
 
 void Ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
@@ -94,9 +83,32 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.groupName.c_str()));
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
+	for (auto item : mParameters.coordinates)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIndicesSize);
+	for (auto item : mParameters.indices)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mNormalsSize);
+	for (auto item : mParameters.normals)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.generateNormals);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColorsSize);
+	for (auto item : mParameters.colors)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTextureCoordinatesSize);
+	for (auto item : mParameters.textureCoordinates)
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.materialName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -105,24 +117,70 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
+	RakNet::RakString groupName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, groupName))
+		mParameters.groupName = groupName.C_String();
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCoordinatesSize))
+	{
+		while (mParameters.coordinates.size() < mCoordinatesSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.coordinates.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIndicesSize))
+	{
+		while (mParameters.indices.size() < mIndicesSize)
+		{
+			int item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.indices.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mNormalsSize))
+	{
+		while (mParameters.normals.size() < mNormalsSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.normals.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.generateNormals))
+		;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColorsSize))
+	{
+		while (mParameters.colors.size() < mColorsSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.colors.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTextureCoordinatesSize))
+	{
+		while (mParameters.textureCoordinates.size() < mTextureCoordinatesSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.textureCoordinates.push_back(item);
+		}
+	}
+	RakNet::RakString materialName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
+	{
+		mParameters.materialName = materialName.C_String();
+		if (auto entity = mpScene->getEntity(mParameters.materialName).lock())
+			mParameters.material = std::static_pointer_cast<Ape::Material>(entity);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
+	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
-	}
-	RakNet::RakString materialName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
-	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
-		{
-			mMaterial = material;
-			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL));
-		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

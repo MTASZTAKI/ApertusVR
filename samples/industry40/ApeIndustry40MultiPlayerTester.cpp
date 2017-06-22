@@ -111,7 +111,7 @@ int main (int argc, char** argv)
 	apeSystemConfigFileOut.close();
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	std::cout << "Please wait until the host is up an then press any key to starting the guest" << std::endl;
+	std::cout << "Please wait until the host is up then press any key to starting the guest" << std::endl;
 	getchar();
 
 	std::thread guest((std::bind(runGuest)));

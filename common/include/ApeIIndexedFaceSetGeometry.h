@@ -40,6 +40,7 @@ namespace Ape
 		Ape::GeometryColors colors;
 		Ape::GeometryTextureCoordinates textureCoordinates;
 		Ape::MaterialWeakPtr material;
+		std::string materialName;
 		
 		GeometryIndexedFaceSetParameters()
 		{
@@ -51,6 +52,7 @@ namespace Ape
 			this->colors = Ape::GeometryColors();
 			this->textureCoordinates = Ape::GeometryTextureCoordinates();
 			this->material = Ape::MaterialWeakPtr();
+			this->materialName = std::string();
 		}
 
 		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
@@ -63,6 +65,10 @@ namespace Ape
 			this->colors = colors;
 			this->textureCoordinates = textureCoordinates;
 			this->material = material;
+			if (auto materialPtr = this->material.lock())
+				this->materialName = materialPtr->getName();
+			else
+				this->materialName = std::string();
 		}
 
 		Ape::GeometryCoordinates getCoordinates()
@@ -131,8 +137,6 @@ namespace Ape
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
-
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 	};

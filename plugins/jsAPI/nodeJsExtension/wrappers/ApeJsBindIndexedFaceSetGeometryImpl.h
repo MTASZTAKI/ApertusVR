@@ -1,4 +1,4 @@
-/*MIT License
+﻿/*MIT License
 
 Copyright (c) 2016 MTA SZTAKI
 
@@ -131,11 +131,6 @@ public:
 	{
 		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, Ape::GeometryTextureCoordinates(), Ape::MaterialWeakPtr());
 	}
-
-	void setManualMaterial(ManualMaterialJsPtr manualMaterial)
-	{
-		mPtr.lock()->setMaterial(manualMaterial.getManualMaterialSharedPtr());
-	}
 };
 
 using namespace Ape;
@@ -185,7 +180,6 @@ NBIND_CLASS(IndexedFaceSetJsPtr)
 	method(getParameters);
 	method(setParametersWithMaterial);
 	method(setParameters);
-	method(setManualMaterial);
 }
 
 #endif
