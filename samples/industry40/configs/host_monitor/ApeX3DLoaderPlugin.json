@@ -1,7 +1,6 @@
 {
     "files": [
-        "/plugins/x3dLoader/samples/cell.x3d",
-		"/plugins/x3dLoader/samples/ur5cellAnim.x3d"
+        "/plugins/x3dLoader/samples/test.x3d"
     ]
 }
 

@@ -51,9 +51,7 @@ void runGuest()
 int main (int argc, char** argv)
 {
 	std::thread host((std::bind(runHost)));
-	//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	std::cout << "Please wait until the host is up an then press any key to starting the guest" << std::endl;
-	getchar();
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	std::string hostGUID;
 	std::stringstream hostConfigFilePath;
@@ -111,6 +109,10 @@ int main (int argc, char** argv)
 	apeSystemConfigFileOut.write(content.c_str(), content.size());
 	apeSystemConfigFileOut.flush();
 	apeSystemConfigFileOut.close();
+
+	//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	std::cout << "Please wait until the host is up an then press any key to starting the guest" << std::endl;
+	getchar();
 
 	std::thread guest((std::bind(runGuest)));
 	host.join();
