@@ -365,13 +365,15 @@ exports.parseMaterial = function(matItem, parentGeometry) {
 		var itemName = matItem[0].itemName || parentGeometry.getName() + 'material';
 		console.log('itemName: ' + itemName);
 		var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(itemName);
-		/*var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
+		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
 		var transparency = self.parseTransparencyAttr(matItem);
 		var diffuseColor = self.parseDiffuseColorAttr(matItem, transparency);
 		var specularColor = self.parseSpecularColorAttr(matItem, transparency);
-		manualPass.setDiffuseColor(diffuseColor);
-		manualPass.setSpecularColor(specularColor);
-		manualMaterial.setManualPass(manualPass);*/
+		manualMaterial.setDiffuseColor(diffuseColor);
+		manualMaterial.setSpecularColor(specularColor);
+		//manualPass.setDiffuseColor(diffuseColor);
+		//manualPass.setSpecularColor(specularColor);
+		//manualMaterial.setManualPass(manualPass);
 		return manualMaterial;
 	}
 

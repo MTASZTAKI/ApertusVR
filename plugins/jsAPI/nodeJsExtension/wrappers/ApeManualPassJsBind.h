@@ -1,4 +1,4 @@
-/*MIT License
+﻿/*MIT License
 
 Copyright (c) 2016 MTA SZTAKI
 
@@ -105,7 +105,6 @@ public:
 
 	void setDiffuseColor(Ape::Color diffuse)
 	{
-		std::cout << "anyad: " << mPtr.lock() << std::endl;
 		mPtr.lock()->setDiffuseColor(diffuse);
 	}
 

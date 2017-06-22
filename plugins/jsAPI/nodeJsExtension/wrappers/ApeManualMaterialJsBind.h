@@ -1,4 +1,4 @@
-/*MIT License
+﻿/*MIT License
 
 Copyright (c) 2016 MTA SZTAKI
 
@@ -106,6 +106,20 @@ public:
 
 	// IManualMaterial
 
+	void setDiffuseColor(Ape::Color diffuse)
+	{
+		mPtr.lock()->setDiffuseColor(diffuse);
+	}
+
+	void setSpecularColor(Ape::Color specular)
+	{
+		mPtr.lock()->setSpecularColor(specular);
+	}
+
+	Ape::Color getDiffuseColor() { return mPtr.lock()->getDiffuseColor(); };
+
+	Ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
+
 	void setManualPass(ManualPassJsPtr manualPass)
 	{
 		mPtr.lock()->setPass(manualPass.getManualPassSharedPtr());
@@ -144,6 +158,10 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(getType);
 
 	// IManualMaterial
+	method(setDiffuseColor);
+	method(setSpecularColor);
+	method(getDiffuseColor);
+	method(getSpecularColor);
 	method(setManualPass);
 	method(setPbsPass);
 }

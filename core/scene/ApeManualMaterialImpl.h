@@ -38,6 +38,10 @@ namespace Ape
 
 		~ManualMaterialImpl();
 
+		void setDiffuseColor(Ape::Color diffuse) override;
+
+		void setSpecularColor(Ape::Color specular) override;
+
 		void setPass(Ape::PassWeakPtr pass) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;

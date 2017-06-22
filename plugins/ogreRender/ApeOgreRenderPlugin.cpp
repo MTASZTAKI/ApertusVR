@@ -1153,6 +1153,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::MATERIAL_MANUAL_DELETE:
 					;
 					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE:
+					ogreMaterial->setDiffuse(ConversionToOgre(materialManual->getDiffuseColor()));
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_SPECULAR:
+					ogreMaterial->setSpecular(ConversionToOgre(materialManual->getSpecularColor()));
+					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_PASS:
 				{
 					if (auto pass = materialManual->getPass().lock())

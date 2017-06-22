@@ -33,6 +33,18 @@ Ape::ManualMaterialImpl::~ManualMaterialImpl()
 	
 }
 
+void Ape::ManualMaterialImpl::setDiffuseColor(Ape::Color diffuse)
+{
+	mDiffuseColor = diffuse;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE));
+}
+
+void Ape::ManualMaterialImpl::setSpecularColor(Ape::Color specular)
+{
+	mSpecularColor = specular;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
+}
+
 void Ape::ManualMaterialImpl::setPass(Ape::PassWeakPtr pass)
 {
 	if (auto passSP = pass.lock())
@@ -56,6 +68,8 @@ RakNet::RM3SerializationResult Ape::ManualMaterialImpl::Serialize(RakNet::Serial
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDiffuseColor);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSpecularColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mPassName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -65,6 +79,10 @@ void Ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
 	RakNet::RakString passName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, passName))
 	{

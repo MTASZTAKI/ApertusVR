@@ -33,8 +33,20 @@ namespace Ape
 	    IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
 		
 		virtual ~IManualMaterial() {};
+
+		Ape::Color mDiffuseColor;
+
+		Ape::Color mSpecularColor;
 		
 	public:
+		virtual void setDiffuseColor(Color diffuse) = 0;
+
+		virtual void setSpecularColor(Color specular) = 0;
+
+		Ape::Color getDiffuseColor() { return mDiffuseColor; };
+
+		Ape::Color getSpecularColor() { return mSpecularColor; };
+
 		virtual void setPass(Ape::PassWeakPtr pass) = 0;
 	};
 }
