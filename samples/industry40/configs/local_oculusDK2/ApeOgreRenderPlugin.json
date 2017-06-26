@@ -6,7 +6,7 @@
     },
     "renderWindows": [
       {
-        "enable": false,
+        "enable": true,
         "name": "OculusDK2",
         "monitorIndex": 1,
         "resolution": {
@@ -23,7 +23,7 @@
         }
       },
       {
-        "enable": true,
+        "enable": false,
         "name": "Normal",
         "monitorIndex": 0,
         "resolution": {

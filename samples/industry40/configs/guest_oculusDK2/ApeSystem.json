@@ -6,10 +6,10 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "GuestOculusDK2",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionGUID": "1094374735961999121",
         "sessionResourceLocation": [
-            "/plugins/industry40/resources"
-			"/plugins/oculusDK2/resources"
+            "/plugins/industry40/resources",
+            "/plugins/oculusDK2/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -23,8 +23,8 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-			"ApeOisUserInputPlugin",
-			"ApeOculusDK2Plugin"
+            "ApeOisUserInputPlugin",
+            "ApeOculusDK2Plugin"
         ]
     }
 }
