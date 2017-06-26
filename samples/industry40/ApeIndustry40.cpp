@@ -35,10 +35,14 @@ int main (int argc, char** argv)
 		std::string participantType = argv[1];
 		if (participantType == "guest_monitor")
 			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_monitor";
+		else if (participantType == "local_monitor")
+			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\local_monitor";
 		else if (participantType == "host_monitor")
 			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_monitor";
 		else if (participantType == "guest_oculusDK2")
 			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_oculusDK2";
+		else if (participantType == "local_oculusDK2")
+			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\local_oculusDK2";
 		else if (participantType == "host_cave_2walls")
 			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_cave_2walls";
 		else if (participantType == "host_cave_3walls")
@@ -46,7 +50,7 @@ int main (int argc, char** argv)
 	}
 	else
 	{
-		std::cout << "usage: guest_monitor | host_monitor | guest_oculusDK2 | host_cave_2walls | host_cave_3walls" << std::endl;
+		std::cout << "usage: local_monitor | guest_monitor | host_monitor | local_oculusDK2 | guest_oculusDK2 | host_cave_2walls | host_cave_3walls" << std::endl;
 		return 0;
 	}
 	Ape::System::Start(configDir.str(), true);

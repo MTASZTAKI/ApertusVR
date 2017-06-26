@@ -8,8 +8,8 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/industry40/resources"
-			"/plugins/oculusDK2/resources"
+            "/plugins/robotMonitoring/resources",
+            "/plugins/oculusDK2/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -22,9 +22,10 @@
     },
     "pluginManager": {
         "plugins": [
+            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-			"ApeOisUserInputPlugin",
-			"ApeOculusDK2Plugin"
+            "ApeOculusDK2Plugin",
+            "ApeIndustry40Plugin"
         ]
     }
 }

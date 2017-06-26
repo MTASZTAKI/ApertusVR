@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_industry40_guest_monitor ALL
+    Configs_industry40_local_oculusDK2 ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_industry40_guest_monitor PROPERTY FOLDER "Samples/Industry40/Configs")
+set_property (TARGET Configs_industry40_local_oculusDK2 PROPERTY FOLDER "Samples/Industry40/Configs")

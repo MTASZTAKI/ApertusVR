@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Local",
         "uniqueUserNamePrefix": "",
-        "sessionGUID": "274720202738035200",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
         ],
@@ -21,8 +21,9 @@
     },
     "pluginManager": {
         "plugins": [
+            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin"
+            "ApeIndustry40Plugin"
         ]
     }
 }

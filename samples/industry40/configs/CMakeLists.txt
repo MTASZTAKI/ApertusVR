@@ -23,5 +23,7 @@
 add_subdirectory (host_monitor)
 add_subdirectory (guest_monitor)
 add_subdirectory (guest_oculusDK2)
+add_subdirectory (local_monitor)
+add_subdirectory (local_oculusDK2)
 add_subdirectory (host_cave_2walls)
 add_subdirectory (host_cave_3walls)
