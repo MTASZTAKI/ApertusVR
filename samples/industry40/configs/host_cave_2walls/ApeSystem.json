@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Host",
         "uniqueUserNamePrefix": "HostCave",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionGUID": "1022317739384616722",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
         ],
@@ -23,7 +23,7 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-			"ApeFobHeadTrackingPlugin",
+            "ApeFobHeadTrackingPlugin",
             "ApeIndustry40Plugin"
         ]
     }
