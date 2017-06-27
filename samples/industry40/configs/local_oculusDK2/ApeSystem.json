@@ -8,7 +8,7 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/robotMonitoring/resources",
+            "/plugins/industry40/resources",
             "/plugins/oculusDK2/resources"
         ],
         "natPunchThroughServer": {

@@ -65,7 +65,7 @@
            <Material diffuseColor='0.6 0.4 0.2 '
                transparency='0.0' />
           </Appearance>
-          <Box size='2500. 4000. 0.1 ' />
+          
          </Shape>
         </Transform>
         <Transform>
