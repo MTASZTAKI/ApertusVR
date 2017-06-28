@@ -10,7 +10,8 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -76,22 +77,6 @@ void ApeIndustry40Plugin::Init()
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;
-
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->createNode(userNodeName);
-	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
-	{
-		if (mUserNode.lock())
-		{
-			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
-			{
-				userNameText->setCaption(userNodeName);
-				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-				userNameText->setParentNode(mUserNode);
-			}
-		}
-	}
-
 
 	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{

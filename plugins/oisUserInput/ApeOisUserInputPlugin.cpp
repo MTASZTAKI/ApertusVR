@@ -38,7 +38,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
 	mUserNodePoses = std::vector<UserNodePose>();
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
 
@@ -70,27 +71,12 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	
+
 }
 
 void Ape::OISUserInputPlugin::Init()
 {
 	std::cout << "OISUserInputPlugin::Init" << std::endl;
-
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->createNode(userNodeName);
-	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
-	{
-		if (mUserNode.lock())
-		{
-			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNodeName, Ape::Entity::GEOMETRY_TEXT).lock()))
-			{
-				userNameText->setCaption(userNodeName);
-				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-				userNameText->setParentNode(mUserNode);
-			}
-		}
-	}
 
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;

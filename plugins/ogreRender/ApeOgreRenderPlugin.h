@@ -187,6 +187,8 @@ namespace Ape
 
 		Ape::OgreRenderPluginConfig mOgreRenderPluginConfig;
 
+		Ape::NodeWeakPtr mUserNode;
+
 		void processEventDoubleQueue();
 
 		void eventCallBack(const Ape::Event& event);

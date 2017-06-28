@@ -73,6 +73,9 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mOgreRenderPluginConfig = Ape::OgreRenderPluginConfig();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
+	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE)); //TODO
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1605,6 +1608,16 @@ void Ape::OgreRenderPlugin::Step()
 
 void Ape::OgreRenderPlugin::Init()
 {
+	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
+	{
+		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(mUserNode.lock()->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			userNameText->setCaption(mUserNode.lock()->getName());
+			userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			userNameText->setParentNode(mUserNode);
+		}
+	}
+
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -1883,6 +1896,7 @@ void Ape::OgreRenderPlugin::Init()
 						camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 						camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 						camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
+						camera->setParentNode(mUserNode);
 					}
 				}
 			}

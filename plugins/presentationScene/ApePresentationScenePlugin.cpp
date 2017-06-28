@@ -9,7 +9,8 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -19,21 +20,7 @@ ApePresentationScenePlugin::~ApePresentationScenePlugin()
 
 void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE)
-	{
-		if (event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
-		{
-			if (auto node = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName).lock())
-			{
-				mUserNode = node;
-			}
-		}
-	}
-	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
-	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-			camera->setParentNode(mUserNode);
-	}
+	
 }
 
 void ApePresentationScenePlugin::Init()

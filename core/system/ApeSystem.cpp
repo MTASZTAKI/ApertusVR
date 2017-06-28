@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include "ApeSceneImpl.h"
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
+#include "ApeITextGeometry.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
@@ -49,6 +50,8 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
 	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 
+	gpSceneImpl->createNode(generatedUniqueUserName.str());
+	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
 		; //TODO open a paltform specific window
 

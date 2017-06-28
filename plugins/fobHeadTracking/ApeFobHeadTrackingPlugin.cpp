@@ -19,7 +19,8 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
 	mCamerasNode = Ape::NodeWeakPtr();
 	mTrackedViewerPosition = Ape::Vector3();
 	mTrackedViewerOrientation = Ape::Quaternion();
@@ -37,7 +38,6 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			camera->setParentNode(mUserNode);
 			mCameraDoubleQueue.push(camera);
 		}
 	}

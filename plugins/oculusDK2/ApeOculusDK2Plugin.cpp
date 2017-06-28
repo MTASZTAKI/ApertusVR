@@ -12,7 +12,9 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
+	mUserNode.lock()->setFixedYaw(true);
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
@@ -33,17 +35,7 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 
 void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE)
-	{
-		if (event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
-		{
-			if (auto node = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName).lock())
-			{
-				node->setFixedYaw(true);
-				mUserNode = node;
-			}
-		}
-	}
+
 }
 
 void ApeOculusDK2Plugin::Init()
@@ -205,11 +197,6 @@ void ApeOculusDK2Plugin::Init()
 		camera->setOrthoWindowSize(2, 2);
 		cameraExternal = camera;
 	}
-
-	std::cout << "ApeOculusDK2Plugin waiting for user node" << std::endl;
-	while (!mUserNode.lock())
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	std::cout << "ApeOculusDK2Plugin main user node was found" << std::endl;
 
 	if (auto node = mpScene->createNode("HeadNode").lock())
 	{

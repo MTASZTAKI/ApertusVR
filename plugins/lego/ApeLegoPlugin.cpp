@@ -9,7 +9,8 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mUserNode = Ape::NodeWeakPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -75,6 +76,8 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mMeshNames.push_back("Lego-2x2_Pl_4.mesh");
 	mMeshNames.push_back("Lego-Wheel.mesh");
 	mMeshNames.push_back("Lego-Wheel_2.mesh");
+
+	
 }
 
 ApeLegoPlugin::~ApeLegoPlugin()
@@ -116,8 +119,7 @@ void ApeLegoPlugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->createNode(userNodeName);
+
 	std::cout << "ApeLegoPlugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
