@@ -306,11 +306,7 @@ void ApeFobHeadTrackingPlugin::Run()
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
 				mCameras.push_back(camera);
-				if (!mUserNode.lock())
-				{
-					mUserNode = camera->getParentNode();
-					mCamerasNode.lock()->setParentNode(mUserNode);
-				}
+				mCamerasNode.lock()->setParentNode(mUserNode);
 				camera->setParentNode(mCamerasNode);
 				cameraCount++;
 			}
