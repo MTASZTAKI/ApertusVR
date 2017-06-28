@@ -45,7 +45,7 @@ app.post('/texts', function(req, res) {
 	// get name from url
 	var name = req.body.name;
 	var textObj = ape.nbind.JsBindManager().createText(name);
-	respObj.addEvent({
+	respObj.addEventItem({
 		group: 'TEXT',
 		type: 'TEXT_CREATE',
 		subjectName: textObj.getName()
@@ -79,7 +79,7 @@ app.get('/texts/:name/caption', function(req, res) {
 			return;
 		}
 
-		respObj.setData({
+		respObj.addDataItem({
 			caption: obj.getCaption()
 		});
 		res.send(respObj.toJSonString());
@@ -115,14 +115,14 @@ app.post('/texts/:name/caption', function(req, res) {
 		}
 
 		if (caption != obj.getCaption()) {
-			respObj.addEvent({
+			respObj.addEventItem({
 				group: 'TEXT',
 				type: 'TEXT_CAPTION',
 				subjectName: obj.getName()
 			});
 		}
 		obj.setCaption(caption);
-		respObj.setData({
+		respObj.addDataItem({
 			caption: obj.getCaption()
 		});
 		res.send(respObj.toJSonString());

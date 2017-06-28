@@ -72,7 +72,7 @@ app.post('/setproperties', function(req, res, next) {
 		if (item.type == "node") {
 			ape.nbind.JsBindManager().getNode(item.name, function(error, obj) {
 				if (error) {
-					respObj.addError({
+					respObj.addErrorItem({
 						name: 'invalidCast',
 						msg: obj,
 						code: 666

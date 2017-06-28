@@ -239,6 +239,7 @@ exports.responseObj = function() {
 		addDataItem: function(dataItem) {
 			if (dataItem) {
 				this.response.data.items.push(dataItem);
+				this.response.data.count = this.response.data.items.length;
 			}
 		},
 		setDataItems: function(items) {

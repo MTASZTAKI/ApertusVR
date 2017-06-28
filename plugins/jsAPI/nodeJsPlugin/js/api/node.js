@@ -79,7 +79,7 @@ app.get('/nodes/:name/position', function(req, res) {
 			return;
 		}
 
-		respObj.setData({
+		respObj.addDataItem({
 			position: utils.convertToJsObj(obj.getPosition())
 		});
 		res.send(respObj.toJSonString());
@@ -124,7 +124,7 @@ app.post('/nodes/:name/position', function(req, res) {
 		//   });
 		// }
 		obj.setPosition(newPos);
-		respObj.setData({
+		respObj.addDataItem({
 			position: utils.convertToJsObj(obj.getPosition())
 		});
 		res.send(respObj.toJSonString());
@@ -157,7 +157,7 @@ app.get('/nodes/:name/orientation', function(req, res) {
 			return;
 		}
 
-		respObj.setData({
+		respObj.addDataItem({
 			orientation: utils.convertToJsObj(obj.getOrientation())
 		});
 		res.send(respObj.toJSonString());
@@ -203,7 +203,7 @@ app.post('/nodes/:name/orientation', function(req, res) {
 		//   });
 		// }
 		obj.setOrientation(newOrt);
-		respObj.setData({
+		respObj.addDataItem({
 			orientation: utils.convertToJsObj(obj.getOrientation())
 		});
 		res.send(respObj.toJSonString());
