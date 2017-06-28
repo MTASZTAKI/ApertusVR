@@ -23,13 +23,28 @@ SOFTWARE.*/
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <map>
 #include "ApeSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\oculusDK2\\configs";
+	if (argc > 1)
+	{
+		std::string participantType = argv[1];
+		if (participantType == "presentation")
+			configDir << APE_SOURCE_DIR << "\\samples\\oculusDK2\\configs\\presentation";
+		else if (participantType == "lego")
+			configDir << APE_SOURCE_DIR << "\\samples\\oculusDK2\\configs\\lego";
+	}
+	else
+	{
+		std::cout << "usage: presentation | lego" << std::endl;
+		return 0;
+	}
+
+
 	Ape::System::Start(configDir.str(), true);
 	Ape::System::Stop();
 	return 0;

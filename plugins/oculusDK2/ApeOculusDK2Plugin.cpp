@@ -205,9 +205,12 @@ void ApeOculusDK2Plugin::Init()
 		camera->setOrthoWindowSize(2, 2);
 		cameraExternal = camera;
 	}
-	
+
+	std::cout << "ApeOculusDK2Plugin waiting for user node" << std::endl;
 	while (!mUserNode.lock())
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "ApeOculusDK2Plugin main user node was found" << std::endl;
+
 	if (auto node = mpScene->createNode("HeadNode").lock())
 	{
 		node->setParentNode(mUserNode);

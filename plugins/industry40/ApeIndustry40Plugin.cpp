@@ -54,12 +54,7 @@ ApeIndustry40Plugin::~ApeIndustry40Plugin()
 
 void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
-	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-			camera->setParentNode(mUserNode);
-	}
-	else if (event.type == Ape::Event::Type::NODE_CREATE)
+	if (event.type == Ape::Event::Type::NODE_CREATE)
 	{
 		if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
@@ -76,6 +71,12 @@ void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 void ApeIndustry40Plugin::Init()
 {
 	std::cout << "ApeIndustry40Plugin::init" << std::endl;
+
+	std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
+	while (mpMainWindow->getHandle() == nullptr)
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;
+
 	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
 	mUserNode = mpScene->createNode(userNodeName);
 	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
@@ -92,11 +93,11 @@ void ApeIndustry40Plugin::Init()
 	}
 
 
-	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
-	}
+	}*/
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -112,10 +113,7 @@ void ApeIndustry40Plugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;
+	
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();

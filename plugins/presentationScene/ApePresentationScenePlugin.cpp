@@ -7,6 +7,9 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mUserNode = Ape::NodeWeakPtr();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -16,12 +19,32 @@ ApePresentationScenePlugin::~ApePresentationScenePlugin()
 
 void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE)
+	{
+		if (event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName)
+		{
+			if (auto node = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName).lock())
+			{
+				mUserNode = node;
+			}
+		}
+	}
+	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	{
+		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
+			camera->setParentNode(mUserNode);
+	}
 }
 
 void ApePresentationScenePlugin::Init()
 {
 	std::cout << "ApePresentationScenePlugin::init" << std::endl;
+
+	std::cout << "ApePresentationScenePlugin waiting for main window" << std::endl;
+	while (mpMainWindow->getHandle() == nullptr)
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	std::cout << "ApePresentationScenePlugin main window was found" << std::endl;
+
 	if (auto node = mpScene->createNode("presentationNode").lock())
 	{
 		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("metalroom.mesh", Ape::Entity::GEOMETRY_FILE).lock()))

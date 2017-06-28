@@ -20,5 +20,14 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (presentation)
-add_subdirectory (lego)
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeSystem.json
+	)
+
+add_custom_target(
+    Configs_oculusDK2_lego ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_oculusDK2_lego PROPERTY FOLDER "Samples/OculusDK2/Configs")

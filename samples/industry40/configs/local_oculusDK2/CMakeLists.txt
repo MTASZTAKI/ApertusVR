@@ -22,7 +22,8 @@
 
 set (CONFIGS
 	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
+	ApeX3DLoaderPlugin.json
+	ApeNodeJsPlugin.json
 	ApeSystem.json
 	)
 

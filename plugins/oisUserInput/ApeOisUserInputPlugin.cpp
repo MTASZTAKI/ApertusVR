@@ -70,11 +70,7 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
-	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-			camera->setParentNode(mUserNode);
-	}
+	
 }
 
 void Ape::OISUserInputPlugin::Init()

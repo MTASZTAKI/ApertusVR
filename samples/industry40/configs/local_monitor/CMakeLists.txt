@@ -22,13 +22,14 @@
 
 set (CONFIGS
 	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
+	ApeX3DLoaderPlugin.json
+	ApeNodeJsPlugin.json
 	ApeSystem.json
 	)
 
 add_custom_target(
-    Configs_industry40_local_oculusDK2 ALL
+    Configs_industry40_local_monitor ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_industry40_local_oculusDK2 PROPERTY FOLDER "Samples/Industry40/Configs")
+set_property (TARGET Configs_industry40_local_monitor PROPERTY FOLDER "Samples/Industry40/Configs")

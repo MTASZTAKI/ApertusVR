@@ -48,6 +48,7 @@ SOFTWARE.*/
 #include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
+#include "ApeIMainWindow.h"
 
 
 #define THIS_PLUGINNAME "ApePresentationScenePlugin"
@@ -60,6 +61,10 @@ private:
 	Ape::IScene* mpScene;
 
 	Ape::ISystemConfig* mpSystemConfig;
+
+	Ape::IMainWindow* mpMainWindow;
+
+	Ape::NodeWeakPtr mUserNode;
 	
 	void eventCallBack(const Ape::Event& event);
 	
