@@ -5,17 +5,20 @@ Free virtual and augmented reality engine
 ![Overview](http://www.apertusvr.org/wp-content/uploads/2017/04/overview-998x1024.png)
 
 ## About
-Distributed scene sharing engine for virtual and augmented reality on any platform and hardware
+ApertusVR offers a brand new "no vendor lock-in" approach for
+virtual and augmented reality on different operating systems
+and on different virtual and augmented reality hardware.
 
-ApertusVR has a loosely coupled structure in order to easily configure the
-engine capabilities and run these configuration instances on different machines
-and connect them together via internet. 
+This higher abstraction level enables that the business logic
+has to be implemented once and then it works on any platform.
+Moreover these different virtual and augmented reality hardware
+can be shared a same virtual reality scene at the same time.
 
-ApertusVR creates multiuser scenes which means that all of the participant shares
-the same things at the same time.
-
-ApertusVR has set-in-stone interfaces, language bindings and disjunct libraries therefore
-it is easily embeddable to an existing development.
+The ApertusVR engine only contains libraries in order to 
+easily integrate the virtual and augmented reality technologies
+into an already existing product.
+By the help of the factory plugins and samples
+ApertusVR could boosts up the creation of a minimum viable product from scratch.
 
 ## How to use
 ### From Source
