@@ -82,6 +82,21 @@ public:
 		return false;
 	}
 
+	bool getUserNode(nbind::cbFunction &done)
+	{
+		std::cout << "getUserNode()" << std::endl;
+
+		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName);
+		if (auto node = nodeWeakPtr.lock())
+		{
+			done(false, NodeJsPtr(nodeWeakPtr));
+			return true;
+		}
+
+		done(true, std::string("Return value of getEntity() is nullptr!"));
+		return false;
+	}
+
 	LightJsPtr createLight(std::string name)
 	{
 		std::cout << "createLight()" << std::endl;
@@ -333,6 +348,7 @@ NBIND_CLASS(JsBindManager)
 
 	method(createNode);
 	method(getNode);
+	method(getUserNode);
 
 	method(createLight);
 	method(getLight);

@@ -30,6 +30,29 @@ var logger = require("../modules/logger/logger.js");
 
 exports.moduleTag = 'ApeHTTPApiNode';
 
+app.get('/nodes/usernode/name', function(req, res) {
+	console.log('ape.httpApi.nodes.usernode.name()');
+	var respObj = new utils.responseObj();
+	ape.nbind.JsBindManager().getUserNode(function(error, obj) {
+		console.log('ape.nbind.JsBindManager().getUserNode() callback');
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		respObj.addDataItem({
+			name: obj.getName()
+		});
+		console.log('ape.nbind.JsBindManager().getUserNode() callback respObj:', respObj);
+		res.send(respObj.toJSonString());
+	});
+});
+
 app.post('/nodes', function(req, res) {
 	console.log('ape.httpApi.nodes.create()');
 	var respObj = new utils.responseObj();
