@@ -256,15 +256,15 @@ exports.responseObj = function() {
 		},
 
 		toJSonString: function() {
-			if (this.response.errors && this.response.errors.hasOwnProperty('count') && this.response.errors.count == 0) {
-				delete this.response.errors;
-			}
-			if (this.response.events && this.response.events.hasOwnProperty('count') && this.response.events.count == 0) {
-				delete this.response.events;
-			}
-			if (this.response.data && this.response.data.hasOwnProperty('count') && this.response.data.count == 0) {
-				delete this.response.data;
-			}
+			//if (this.response.errors && this.response.errors.hasOwnProperty('count') && this.response.errors.count == 0) {
+			//	delete this.response.errors;
+			//}
+			//if (this.response.events && this.response.events.hasOwnProperty('count') && this.response.events.count == 0) {
+			//	delete this.response.events;
+			//}
+			//if (this.response.data && this.response.data.hasOwnProperty('count') && this.response.data.count == 0) {
+			//	delete this.response.data;
+			//}
 
 			//return JSON.stringify(this.response);
 			return this.response;
