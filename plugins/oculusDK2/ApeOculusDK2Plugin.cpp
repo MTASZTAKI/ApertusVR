@@ -256,7 +256,7 @@ void ApeOculusDK2Plugin::Run()
 		if (auto cameraLeft = mCameraLeft.lock())
 			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
 		if (auto cameraRight = mCameraRight.lock())
-			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 1000, true)));
+			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
