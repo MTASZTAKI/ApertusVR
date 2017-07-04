@@ -34,7 +34,7 @@ option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
 option(APE_PLUGIN_OculusDK2 "Use OculusDK2Plugin?" ON )
 option(APE_PLUGIN_RobotMonitoring "Use RobotMonitoringPlugin?" ON )
 option(APE_PLUGIN_Industry40 "Use Industry40Plugin?" ON )
-
+option(APE_PLUGIN_360Image "Use 360ImagePlugin?" ON )
 
 if (${APE_PLUGIN_OgreRender})
 	add_subdirectory (ogreRender)
@@ -77,5 +77,8 @@ if (${APE_PLUGIN_RobotMonitoring})
 endif ()
 if (${APE_PLUGIN_Industry40})
 	add_subdirectory (industry40)
+endif ()
+if (${APE_PLUGIN_360Image})
+	add_subdirectory (360Image)
 endif ()
 
