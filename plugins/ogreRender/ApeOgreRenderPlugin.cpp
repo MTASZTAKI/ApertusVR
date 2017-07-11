@@ -1263,7 +1263,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
 							if (!ogreTexture.isNull())
-								ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+								ogreManualPassMaterial->getTechnique(0)->getPass(0)->createTextureUnitState()->setTexture(ogreTexture);
 						}
 					}
 						break;
