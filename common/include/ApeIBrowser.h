@@ -20,56 +20,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_IBROWSER_H
+#define APE_IBROWSER_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <map>
+#include "ApeEntity.h"
+#include "ApeGeometry.h"
 
 namespace Ape
 {
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			BROWSER,
-			INVALID
-		};
-		
+	class IBrowser : public Entity
+	{
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+	    IBrowser(std::string name) : Entity(name, Entity::BROWSER) {}
 		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
+		virtual ~IBrowser() {};
 		
 	public:
-		std::string getName() { return mName; };
+		virtual void setGeometry(Ape::GeometryWeakPtr geometry) = 0;
 
-		Type getType() { return mType; };
+		virtual Ape::GeometryWeakPtr getGeometry() = 0;
 	};
 }
 

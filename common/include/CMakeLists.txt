@@ -71,6 +71,7 @@ set (HEADERS
 	ApeDoubleQueue.h
 	ApeIMainWindow.h
 	ApeInterpolator.h
+	ApeIBrowser.h
 	)
 
 add_custom_target(

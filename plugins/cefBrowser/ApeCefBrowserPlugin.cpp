@@ -33,7 +33,7 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mBrowserCounter = 0;
 	mCefIsInintialzed = false;
 	mBrowserSettings = CefBrowserSettings();
-	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 }
 
@@ -46,30 +46,41 @@ Ape::CefBrowserPlugin::~CefBrowserPlugin()
 
 void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 {
-	if (event.group == Ape::Event::Group::TEXTURE_MANUAL)
+	if (event.group == Ape::Event::Group::BROWSER)
 	{
-		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			std::string textureManualName = textureManual->getName();
+			std::string browserName = browser->getName();
 			switch (event.type)
 			{
-			case Ape::Event::Type::TEXTURE_MANUAL_CREATE:
+			case Ape::Event::Type::BROWSER_CREATE:
 				break;
-			case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
+			case Ape::Event::Type::BROWSER_GEOMETRY:
 			{
-				mBrowserCounter++;
-				mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, textureManual);
-				CefWindowInfo cefWindowInfo;
-				cefWindowInfo.SetAsWindowless(0);
-				CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+				if (auto browserGeometry = browser->getGeometry().lock())
+				{
+					if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+					{
+						if (auto browserManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity(browserName + "_ManualPass", Ape::Entity::PASS_MANUAL).lock()))
+						{
+							if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
+							{
+								browserTexture->setParameters(800, 600);
+								browserManualPass->setTexture(browserTexture);
+								mBrowserCounter++;
+								mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+								CefWindowInfo cefWindowInfo;
+								cefWindowInfo.SetAsWindowless(0);
+								CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+							}
+							browserMaterial->setPass(browserManualPass);
+							std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
+						}
+					}
+				}
 			}
 			break;
-			case Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA:
-			{
-
-			}
-			break;
-			case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+			case Ape::Event::Type::BROWSER_DELETE:
 				;
 				break;
 			}
@@ -119,7 +130,7 @@ void Ape::CefBrowserPlugin::Run()
 		CefRunMessageLoop();
 		CefShutdown();
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::CefBrowserPlugin::Step()

@@ -70,6 +70,7 @@ Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 void Ape::ManualTextureImpl::setBuffer(const void* buffer)
 {
 	mpBuffer = buffer;
+	std::cout << mpBuffer << std::endl;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
 }
 

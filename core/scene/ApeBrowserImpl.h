@@ -20,56 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_BROWSERIMPL_H
+#define APE_BROWSERIMPL_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <map>
+#include "ApeIBrowser.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeReplica.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
-	class Entity
-	{ 
+	class BrowserImpl : public IBrowser, public Ape::Replica
+	{
 	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			BROWSER,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
 
-		Type getType() { return mType; };
+		BrowserImpl(std::string name, bool isHostCreated);
+
+		~BrowserImpl();
+
+		void setGeometry(Ape::GeometryWeakPtr geometry) override;
+
+		Ape::GeometryWeakPtr getGeometry() override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
+
+		Ape::GeometryWeakPtr mGeometry;
 	};
 }
 
