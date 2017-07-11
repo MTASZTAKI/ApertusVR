@@ -347,7 +347,7 @@ void ApeTesterPlugin::Init()
 		{
 			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("browserGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(80, 60), Ape::Vector2(1, 1));
+				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1024, 768), Ape::Vector2(1, 1));
 				browserGeometry->setParentNode(browserNode);
 				browser->setGeometry(browserGeometry);
 			}

@@ -22,7 +22,6 @@ SOFTWARE.*/
 
 #include "ApeCefRenderHandlerImpl.h"
 
-
 Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
 {
 	mBrowserIDTextures = std::map<int, Ape::ManualTextureWeakPtr>();

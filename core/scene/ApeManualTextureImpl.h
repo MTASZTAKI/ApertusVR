@@ -38,7 +38,7 @@ namespace Ape
 
 		~ManualTextureImpl();
 
-		void setParameters(float width, float height) override;
+		void setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
 
 		Ape::ManualTextureParameters getParameters() override;
 

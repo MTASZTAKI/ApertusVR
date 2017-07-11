@@ -65,13 +65,13 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 						{
 							if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
 							{
-								browserTexture->setParameters(800, 600);
+								browserTexture->setParameters(1024, 768, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 								browserManualPass->setTexture(browserTexture);
 								mBrowserCounter++;
 								mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
 								CefWindowInfo cefWindowInfo;
 								cefWindowInfo.SetAsWindowless(0);
-								CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+								CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "http://apertusvr.org", mBrowserSettings, nullptr);
 							}
 							browserMaterial->setPass(browserManualPass);
 							std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);

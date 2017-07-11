@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <iostream>
 #include "ApeManualTextureImpl.h"
 
 Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : Ape::IManualTexture(name), Ape::Replica("ManualTexture", isHostCreated)
@@ -38,10 +37,12 @@ Ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(float width, float height)
+void Ape::ManualTextureImpl::setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;
+	mParameters.pixelFormat = pixelFormat;
+	mParameters.usage = usage;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
@@ -70,7 +71,6 @@ Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 void Ape::ManualTextureImpl::setBuffer(const void* buffer)
 {
 	mpBuffer = buffer;
-	std::cout << mpBuffer << std::endl;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
 }
 

@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
 #include "ApeOgreRenderPlugin.h"
+#include "ApeOgreUtilities.h"
 
 Ape::OgreRenderPlugin::OgreRenderPlugin()
 {
@@ -1263,7 +1264,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
 							if (!ogreTexture.isNull())
-								ogreManualPassMaterial->getTechnique(0)->getPass(0)->createTextureUnitState()->setTexture(ogreTexture);
+								ogreManualPassMaterial->getTechnique(0)->getPass(0)->createTextureUnitState(texture->getName());
 						}
 					}
 						break;
@@ -1297,10 +1298,28 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						Ape::ManualTextureParameters parameters = textureManual->getParameters();
 						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ogre::PF_R8G8B8,
-							Ogre::TU_RENDERTARGET);
+							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ape::ConversionToOgre(parameters.pixelFormat),
+							Ape::ConversionToOgre(parameters.usage));
 					}
 					break;
+				case Ape::Event::Type::TEXTURE_MANUAL_BUFFER:
+				{
+					auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
+					if (!ogreTexture.isNull())
+					{
+						std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write begin" << std::endl;
+						Ogre::HardwarePixelBufferSharedPtr texBuf = ogreTexture->getBuffer();
+						texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+						memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
+						texBuf->unlock();
+						/*static int s = 1;
+						std::wostringstream oss;
+						oss << std::setw(4) << std::setfill(L'0') << s++ << L".bmp";
+						Ape::SaveVoidBufferToImage(oss.str(), textureManual->getBuffer(), textureManual->getParameters().width, textureManual->getParameters().height);*/
+						std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write end" << std::endl;
+					}
+				}
+				break;
 				case Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA:
 					{
 						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);

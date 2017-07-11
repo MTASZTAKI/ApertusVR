@@ -158,6 +158,38 @@ namespace Ape
 			return Ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
+	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)
+	{
+		if (type == Ape::Texture::PixelFormat::A8R8G8B8)
+			return Ogre::PixelFormat::PF_A8R8G8B8;
+		else if (type == Ape::Texture::PixelFormat::R8G8B8)
+			return Ogre::PixelFormat::PF_R8G8B8;
+	}
+
+	inline Ape::Texture::PixelFormat ConversionFromOgre(const Ogre::PixelFormat type)
+	{
+		if (type == Ogre::PixelFormat::PF_A8R8G8B8)
+			return Ape::Texture::PixelFormat::A8R8G8B8;
+		else if (type == Ogre::PixelFormat::PF_R8G8B8)
+			return Ape::Texture::PixelFormat::R8G8B8;
+	}
+
+	inline Ogre::TextureUsage ConversionToOgre(const Ape::Texture::Usage type)
+	{
+		if (type == Ape::Texture::Usage::RENDERTARGET)
+			return Ogre::TextureUsage::TU_RENDERTARGET;
+		else if (type == Ape::Texture::Usage::DYNAMIC_WRITE_ONLY)
+			return Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY;
+	}
+
+	inline Ape::Texture::Usage ConversionFromOgre(const Ogre::TextureUsage type)
+	{
+		if (type == Ogre::TextureUsage::TU_RENDERTARGET)
+			return Ape::Texture::Usage::RENDERTARGET;
+		else if (type == Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY)
+			return Ape::Texture::Usage::DYNAMIC_WRITE_ONLY;
+	}
+
 	inline Ogre::Radian ConversionToOgre(const Ape::Radian& mwRad)
 	{
 		return Ogre::Radian(mwRad.radian);
