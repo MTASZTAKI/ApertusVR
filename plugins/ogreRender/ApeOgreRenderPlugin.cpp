@@ -1331,7 +1331,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
 					if (!ogreTexture.isNull())
 					{
-						std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write begin" << std::endl;
+						//std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write begin" << std::endl;
 						Ogre::HardwarePixelBufferSharedPtr texBuf = ogreTexture->getBuffer();
 						texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 						memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
@@ -1340,7 +1340,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						std::wostringstream oss;
 						oss << std::setw(4) << std::setfill(L'0') << s++ << L".bmp";
 						Ape::SaveVoidBufferToImage(oss.str(), textureManual->getBuffer(), textureManual->getParameters().width, textureManual->getParameters().height);*/
-						std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write end" << std::endl;
+						//std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write end" << std::endl;
 					}
 				}
 				break;
@@ -1582,11 +1582,8 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	/*#if defined (_DEBUG)
-		if (mRenderWindows.size() > 0)
-			std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;
-	#else
-	#endif*/
+		/*if (mRenderWindows.size() > 0)
+			std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;*/
 
 	processEventDoubleQueue();
 	

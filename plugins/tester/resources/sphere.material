@@ -1,15 +1,20 @@
-material Metal_Aluminum_Anodized
+material sphere
 {
-   technique
-   {
-      pass
-      {
-         diffuse 1 1 1 1.0
-         texture_unit
-         {
-            texture Metal_Aluminum_Anodized.jpg
-         }
-      }
-   }
-}
+	technique sphere
+	{
+		pass sphere
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
 
+			texture_unit sphere
+			{
+				texture sphere.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

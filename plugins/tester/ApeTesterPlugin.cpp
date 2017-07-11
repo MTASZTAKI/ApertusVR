@@ -36,7 +36,7 @@ void ApeTesterPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
 		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
 	}
-	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
+	if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
@@ -53,14 +53,6 @@ void ApeTesterPlugin::Init()
 					plane->setMaterial(planeMaterial);
 				}
 			}
-		}
-	}
-	if (auto node = mpScene->createNode("sphereNode").lock())
-	{
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			meshFile->setFileName("sphere.mesh");
-			meshFile->setParentNode(node);
 		}
 	}
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
@@ -333,9 +325,9 @@ void ApeTesterPlugin::Init()
 			[&](Ape::Quaternion ori) { demoObjectNode->setOrientation(ori); }
 		);
 		mInterpolators.push_back(std::move(rotateInterpolator));
-	}*/
+	}
 
-	if (auto browserNode = mpScene->createNode("browserNode").lock())
+	/*if (auto browserNode = mpScene->createNode("browserNode").lock())
 	{
 		browserNode->setPosition(Ape::Vector3(0,100,0));
 		Ape::Radian angle(1.57f);
@@ -351,6 +343,17 @@ void ApeTesterPlugin::Init()
 				browserGeometry->setParentNode(browserNode);
 				browser->setGeometry(browserGeometry);
 			}
+		}
+	}*/
+	if (auto browserNode = mpScene->createNode("browserNode").lock())
+	{
+		browserNode->setPosition(Ape::Vector3(0, 300, 0));
+		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			browserGeometry->setFileName("sphere.mesh");
+			browserGeometry->setParentNode(browserNode);
+			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
+				browser->setGeometry(browserGeometry);
 		}
 	}
 }
