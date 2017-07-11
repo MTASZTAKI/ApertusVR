@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_render_handler.h"
+#include "views/cef_browser_view.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
@@ -40,6 +41,7 @@ SOFTWARE.*/
 #include "ApeITextGeometry.h"
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefClientImpl.h"
+
 
 namespace Ape
 {
@@ -76,9 +78,13 @@ namespace Ape
 
 		CefRefPtr<CefBrowser> mCefBrowser;
 
+		CefRefPtr<CefBrowserView> mCefBrowserView;
+
 		CefRefPtr<Ape::CefClientImpl> mApeCefClientImpl;
 
-		CefWindowInfo mWindowInfo;
+		bool mCefIsInintialzed;
+
+		CefWindowInfo mCefWindowInfo;
 
 		CefBrowserSettings mBrowserSettings;
 

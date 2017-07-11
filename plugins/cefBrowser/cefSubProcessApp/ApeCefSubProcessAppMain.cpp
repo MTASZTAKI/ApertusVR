@@ -20,30 +20,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefRenderHandlerImpl.h"
+#include "cef_app.h"
+#include "cef_client.h"
+#include "cef_render_handler.h"
 
-
-Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
+/*int main(int argc, char* argv[])
 {
+#if defined(OS_WIN)
+	CefMainArgs main_args(::GetModuleHandle(NULL));
+#endif
+	return CefExecuteProcess(main_args, nullptr, nullptr);
+}*/
 
-}
-
-Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
+#if defined(OS_WIN)
+#include <Windows.h>
+int WINAPI WinMain(HINSTANCE inst, HINSTANCE prev, LPSTR cmd, int show)
 {
+	CefMainArgs main_args(inst);
+	return CefExecuteProcess(main_args, nullptr, nullptr);
 }
-
-bool Ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
-{
-	std::cout << "GetViewRect" << std::endl;
-	rect = CefRect(0, 0, 800, 600);
-	return true;
-}
-
-void Ape::CefRenderHandlerImpl::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList & dirtyRects, const void * buffer, int width, int height)
-{
-	std::cout << "OnPaint" << std::endl;
-	/*Ogre::HardwarePixelBufferSharedPtr texBuf = m_renderTexture->getBuffer();
-	texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
-	memcpy(texBuf->getCurrentLock().data, buffer, width*height * 4);
-	texBuf->unlock();*/
-}
+#endif

@@ -48,7 +48,7 @@ namespace Ape
 
 		~CefRenderHandlerImpl();
 
-		bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect);
+		bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) override;
 
 		void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height) override;
 

@@ -21,9 +21,7 @@
     },
     "pluginManager": {
         "plugins": [
-            "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeTesterPlugin"
+            "ApeCefBrowserPlugin"
         ]
     }
 }

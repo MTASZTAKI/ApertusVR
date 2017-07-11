@@ -110,6 +110,12 @@ foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 		WORKING_DIRECTORY ${CEF_HOME}
 		RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 	reportError (output if error)
+	message (STATUS "Building cefsimple for ${CONF}, please wait.....")
+	execute_process ( 
+		COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target cefsimple
+		WORKING_DIRECTORY ${CEF_HOME}
+		RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+	reportError (output if error)
 endforeach ()
 #use cef_dll_wrapper
 add_library(MY_CEF_DLLWRAPPER_LIBS STATIC IMPORTED)
@@ -137,6 +143,58 @@ if (WIN32)
 	target_link_libraries (ApeCefBrowserPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
 endif()
 set_property (TARGET ApeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeCefBrowserPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET ApeCefBrowserPlugin PROPERTY FOLDER "Plugins/ApeCefBrowser")
+if (WIN32)
+	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# Copying the ogre bins to the desired place
+	# debug
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/chrome_elf.dll)
+		file(COPY ${CEF_HOME}/debug/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/d3dcompiler_43.dll)
+		file(COPY ${CEF_HOME}/debug/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/d3dcompiler_47.dll)
+		file(COPY ${CEF_HOME}/debug/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/libcef.dll)
+		file(COPY ${CEF_HOME}/debug/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/libEGL.dll)
+		file(COPY ${CEF_HOME}/debug/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/widevinecdmadapter.dll)
+		file(COPY ${CEF_HOME}/debug/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/cefsimple.exe)
+		file(COPY ${CEF_HOME}/tests/cefsimple/debug DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	endif()
+	# release
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/chrome_elf.dll)
+		file(COPY ${CEF_HOME}/release/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/d3dcompiler_43.dll)
+		file(COPY ${CEF_HOME}/release/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/d3dcompiler_47.dll)
+		file(COPY ${CEF_HOME}/release/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/libcef.dll)
+		file(COPY ${CEF_HOME}/release/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/libEGL.dll)
+		file(COPY ${CEF_HOME}/release/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/widevinecdmadapter.dll)
+		file(COPY ${CEF_HOME}/release/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/cefsimple.exe)
+		file(COPY ${CEF_HOME}/tests/cefsimple/release DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	endif()
+endif ()
+
+add_subdirectory (cefSubProcessApp)
+
+
 
 

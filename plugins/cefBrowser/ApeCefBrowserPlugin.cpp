@@ -24,7 +24,6 @@ SOFTWARE.*/
 
 Ape::CefBrowserPlugin::CefBrowserPlugin()
 {
-
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -32,7 +31,9 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mpApeCefRenderHandlerImpl = nullptr;
 	mApeCefClientImpl = nullptr;
 	mCefBrowser = nullptr;
-	mWindowInfo = CefWindowInfo();
+	mCefBrowserView = nullptr;
+	mCefIsInintialzed = false;
+	mCefWindowInfo = CefWindowInfo();
 	mBrowserSettings = CefBrowserSettings();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 }
@@ -40,9 +41,9 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
 	std::cout << "CefBrowserPlugin dtor" << std::endl;
+	CefShutdown();
 	mCefBrowser = nullptr;
 	mApeCefClientImpl = nullptr;
-	CefShutdown();
 	delete mpApeCefRenderHandlerImpl;
 }
 
@@ -54,32 +55,27 @@ void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 void Ape::CefBrowserPlugin::Init()
 {
 	std::cout << "CefBrowserPlugin::Init" << std::endl;
-	std::cout << "CefBrowserPlugin waiting for main window" << std::endl;
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "CefBrowserPlugin main window was found" << std::endl;
-	HINSTANCE hInst = (HINSTANCE)mpMainWindow->getHandle();
-	CefMainArgs args(hInst);
-	if(CefExecuteProcess(args, nullptr, nullptr))
+	CefSettings settings;
+	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
+#if defined(OS_WIN)
+	CefMainArgs main_args(::GetModuleHandle("ApeCefSubProcessApp.exe"));
+#endif
+	if (CefInitialize(main_args, settings, nullptr, nullptr))
 	{
-		CefSettings settings;
-		if (CefInitialize(args, settings, nullptr, nullptr))
-		{
-			mpApeCefRenderHandlerImpl = new Ape::CefRenderHandlerImpl();
-			HWND hwnd = (HWND)mpMainWindow->getHandle();
-			mWindowInfo.SetAsWindowless(hwnd);
-			mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl);
-			mCefBrowser = CefBrowserHost::CreateBrowserSync(mWindowInfo, mApeCefClientImpl.get(), "http://deanm.github.io/pre3d/monster.html", mBrowserSettings, nullptr);
-		}
+		mpApeCefRenderHandlerImpl = new Ape::CefRenderHandlerImpl();
+		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl);
+		mCefWindowInfo.SetAsWindowless(0);
+		mCefBrowser = CefBrowserHost::CreateBrowserSync(mCefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+		mCefIsInintialzed = true;
 	}
 }
 
 void Ape::CefBrowserPlugin::Run()
 {
-	while (true)
+	while (mCefIsInintialzed)
 	{
 		CefDoMessageLoopWork();
-		std::this_thread::sleep_for (std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 }
