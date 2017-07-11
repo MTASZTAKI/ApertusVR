@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
 {
-
+	mBrowserIDTextures = std::map<int, Ape::ManualTextureWeakPtr>();
 }
 
 Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
@@ -34,16 +34,18 @@ Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
 
 bool Ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
 {
-	std::cout << "GetViewRect" << std::endl;
-	rect = CefRect(0, 0, 800, 600);
+	if (auto texture = mBrowserIDTextures[browser->GetIdentifier()].lock())
+		rect = CefRect(0, 0, texture->getParameters().width, texture->getParameters().height);
 	return true;
 }
 
 void Ape::CefRenderHandlerImpl::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList & dirtyRects, const void * buffer, int width, int height)
 {
-	std::cout << "OnPaint" << std::endl;
-	/*Ogre::HardwarePixelBufferSharedPtr texBuf = m_renderTexture->getBuffer();
-	texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
-	memcpy(texBuf->getCurrentLock().data, buffer, width*height * 4);
-	texBuf->unlock();*/
+	if (auto texture = mBrowserIDTextures[browser->GetIdentifier()].lock())
+		texture->setBuffer(buffer);
+}
+
+void Ape::CefRenderHandlerImpl::addTexture(int browserID, Ape::ManualTextureWeakPtr texture)
+{
+	mBrowserIDTextures[browserID] = texture;
 }

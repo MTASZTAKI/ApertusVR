@@ -29,20 +29,15 @@ SOFTWARE.*/
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_render_handler.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeIScene.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
+#include "ApeIManualTexture.h"
 
 namespace Ape
 {
 	class CefRenderHandlerImpl : public CefRenderHandler
 	{
+	private:
+		std::map<int, Ape::ManualTextureWeakPtr> mBrowserIDTextures;
+
 	public:
 		CefRenderHandlerImpl();
 
@@ -51,6 +46,8 @@ namespace Ape
 		bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) override;
 
 		void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height) override;
+
+		void addTexture(int browserID, Ape::ManualTextureWeakPtr texture);
 
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
 	};

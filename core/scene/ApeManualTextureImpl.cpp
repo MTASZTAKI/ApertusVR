@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApeManualTextureImpl.h"
 
 Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : Ape::IManualTexture(name), Ape::Replica("ManualTexture", isHostCreated)
@@ -29,6 +30,7 @@ Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) 
 	mParameters = Ape::ManualTextureParameters();
 	mCameraName = std::string();
 	mCamera = Ape::CameraWeakPtr();
+	mpBuffer = nullptr;
 }
 
 Ape::ManualTextureImpl::~ManualTextureImpl()
@@ -63,6 +65,17 @@ void Ape::ManualTextureImpl::setSourceCamera(Ape::CameraWeakPtr camera)
 Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 {
 	return mCamera;
+}
+
+void Ape::ManualTextureImpl::setBuffer(const void* buffer)
+{
+	mpBuffer = buffer;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
+}
+
+const void* Ape::ManualTextureImpl::getBuffer()
+{
+	return mpBuffer;
 }
 
 void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

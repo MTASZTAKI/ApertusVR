@@ -30,29 +30,69 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpApeCefRenderHandlerImpl = nullptr;
 	mApeCefClientImpl = nullptr;
-	mCefBrowser = nullptr;
-	mCefBrowserView = nullptr;
+	mBrowserCounter = 0;
 	mCefIsInintialzed = false;
-	mCefWindowInfo = CefWindowInfo();
 	mBrowserSettings = CefBrowserSettings();
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 }
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
 	std::cout << "ApeCefBrowserPlugin dtor" << std::endl;
-	mCefBrowser = nullptr;
 	mApeCefClientImpl = nullptr;
 	delete mpApeCefRenderHandlerImpl;
 }
 
+void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
+{
+	if (event.group == Ape::Event::Group::TEXTURE_MANUAL)
+	{
+		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			std::string textureManualName = textureManual->getName();
+			switch (event.type)
+			{
+			case Ape::Event::Type::TEXTURE_MANUAL_CREATE:
+				break;
+			case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
+			{
+				mBrowserCounter++;
+				mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, textureManual);
+				CefWindowInfo cefWindowInfo;
+				cefWindowInfo.SetAsWindowless(0);
+				CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+			}
+			break;
+			case Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA:
+			{
+
+			}
+			break;
+			case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+				;
+				break;
+			}
+		}
+	}
+}
+
+void Ape::CefBrowserPlugin::processEventDoubleQueue()
+{
+	mEventDoubleQueue.swap();
+	while (!mEventDoubleQueue.emptyPop())
+	{
+		processEvent(mEventDoubleQueue.front());
+		mEventDoubleQueue.pop();
+	}
+}
+
 void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
-	{
-		mCefWindowInfo.SetAsWindowless(0);
-		CefBrowserHost::CreateBrowser(mCefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
-	}
+	if (!mCefIsInintialzed)
+		mEventDoubleQueue.push(event);
+	else
+		processEvent(event);
 }
 
 void Ape::CefBrowserPlugin::Init()
@@ -75,10 +115,11 @@ void Ape::CefBrowserPlugin::Run()
 {
 	if (mCefIsInintialzed)
 	{
+		processEventDoubleQueue();
 		CefRunMessageLoop();
 		CefShutdown();
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::CefBrowserPlugin::Step()

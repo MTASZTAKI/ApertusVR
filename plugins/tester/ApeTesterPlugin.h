@@ -52,6 +52,7 @@ SOFTWARE.*/
 #include "ApeIManualPass.h"
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIManualTexture.h"
 
 
 #define THIS_PLUGINNAME "ApeTesterPlugin"

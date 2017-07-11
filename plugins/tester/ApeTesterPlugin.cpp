@@ -334,6 +334,11 @@ void ApeTesterPlugin::Init()
 		);
 		mInterpolators.push_back(std::move(rotateInterpolator));
 	}
+
+	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("cefBrowserTester", Ape::Entity::TEXTURE_MANUAL).lock()))
+	{
+		manualTexture->setParameters(800, 600);
+	}
 }
 
 void ApeTesterPlugin::Run()

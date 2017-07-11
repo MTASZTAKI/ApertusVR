@@ -66,6 +66,10 @@ namespace Ape
 		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
 
 		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
+		
+		virtual void setBuffer(const void* buffer) = 0;
+
+		virtual const void* getBuffer() = 0;
 	};
 }
 

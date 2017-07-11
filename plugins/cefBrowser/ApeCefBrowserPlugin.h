@@ -39,8 +39,12 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
+#include "ApeIPlaneGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIManualTexture.h"
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefClientImpl.h"
+#include "ApeDoubleQueue.h"
 
 
 namespace Ape
@@ -75,18 +79,20 @@ namespace Ape
 		Ape::IEventManager* mpEventManager;
 
 		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
-
-		CefRefPtr<CefBrowser> mCefBrowser;
-
-		CefRefPtr<CefBrowserView> mCefBrowserView;
+		
+		int mBrowserCounter;
 
 		CefRefPtr<Ape::CefClientImpl> mApeCefClientImpl;
 
 		bool mCefIsInintialzed;
 
-		CefWindowInfo mCefWindowInfo;
-
 		CefBrowserSettings mBrowserSettings;
+
+		Ape::DoubleQueue<Event> mEventDoubleQueue;
+
+		void processEventDoubleQueue();
+
+		void processEvent(Ape::Event event);
 
 		void eventCallBack(const Ape::Event& event);
 	};

@@ -32,6 +32,8 @@ Ape::PluginManagerImpl::PluginManagerImpl()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<Ape::IPlugin*>();
+	mConstructedPluginCount = 0;
+	mPluginCount = 0;
 }
 
 Ape::PluginManagerImpl::~PluginManagerImpl()
@@ -42,6 +44,9 @@ Ape::PluginManagerImpl::~PluginManagerImpl()
 void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
 	Ape::IPlugin* plugin = Ape::PluginFactory::CreatePlugin(pluginname);
+	mConstructedPluginCount++;
+	while (mConstructedPluginCount < mPluginCount)
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	plugin->Init();
 	plugin->Run();
 	Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
@@ -52,6 +57,7 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
 	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
 	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
+	mPluginCount = pluginManagerConfig.pluginnames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
