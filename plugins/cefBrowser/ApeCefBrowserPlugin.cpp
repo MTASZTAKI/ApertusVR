@@ -40,8 +40,7 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
-	std::cout << "CefBrowserPlugin dtor" << std::endl;
-	CefShutdown();
+	std::cout << "ApeCefBrowserPlugin dtor" << std::endl;
 	mCefBrowser = nullptr;
 	mApeCefClientImpl = nullptr;
 	delete mpApeCefRenderHandlerImpl;
@@ -49,33 +48,35 @@ Ape::CefBrowserPlugin::~CefBrowserPlugin()
 
 void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	{
+		mCefWindowInfo.SetAsWindowless(0);
+		CefBrowserHost::CreateBrowser(mCefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
+	}
 }
 
 void Ape::CefBrowserPlugin::Init()
 {
-	std::cout << "CefBrowserPlugin::Init" << std::endl;
+	std::cout << "ApeCefBrowserPlugin::Init" << std::endl;
 	CefSettings settings;
 	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
 #if defined(OS_WIN)
-	CefMainArgs main_args(::GetModuleHandle("ApeCefSubProcessApp.exe"));
+	CefMainArgs main_args(::GetModuleHandle(0));
 #endif
 	if (CefInitialize(main_args, settings, nullptr, nullptr))
 	{
 		mpApeCefRenderHandlerImpl = new Ape::CefRenderHandlerImpl();
 		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl);
-		mCefWindowInfo.SetAsWindowless(0);
-		mCefBrowser = CefBrowserHost::CreateBrowserSync(mCefWindowInfo, mApeCefClientImpl.get(), "http://google.hu", mBrowserSettings, nullptr);
 		mCefIsInintialzed = true;
 	}
 }
 
 void Ape::CefBrowserPlugin::Run()
 {
-	while (mCefIsInintialzed)
+	if (mCefIsInintialzed)
 	{
-		CefDoMessageLoopWork();
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		CefRunMessageLoop();
+		CefShutdown();
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 }
