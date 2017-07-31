@@ -36,6 +36,8 @@ option(APE_PLUGIN_RobotMonitoring "Use RobotMonitoringPlugin?" ON )
 option(APE_PLUGIN_Industry40 "Use Industry40Plugin?" ON )
 option(APE_PLUGIN_360Image "Use 360ImagePlugin?" ON )
 option(APE_PLUGIN_CefBrowser "Use CefBrowserPlugin?" ON )
+option(APE_PLUGIN_CefBrowser_VideoCodecsSupport "Use CefBrowserPlugin VideoCodecsSupport?" OFF )
+option(APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource "Use CefBrowserPlugin VideoCodecsSupport_FromSource?" OFF )
 
 if (${APE_PLUGIN_OgreRender})
 	add_subdirectory (ogreRender)

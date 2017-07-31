@@ -28,8 +28,6 @@ function (reportError what and when)
 endfunction ()
 
 #cef
-# Specify the CEF distribution version.
-set(CEF_VERSION "3.3071.1643.ga83b8e9")
 # Determine the platform.
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
   set(CEF_PLATFORM "macosx64")
@@ -46,9 +44,40 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     set(CEF_PLATFORM "windows32")
   endif()
 endif()
+
+if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource})
+	if (MSVC15)
+		if (CEF_PLATFORM EQUAL "windows64")
+			message (STATUS "Try to get and build cef, this require at least 200GB free space and around 48 hours @i7 CPU")
+			execute_process ( 
+					COMMAND 
+					set CEF_USE_GN=1
+					set GN_ARGUMENTS=--ide=vs2017 --sln=cef --filters=//cef/*
+					set GN_DEFINES=proprietary_codecs=true ffmpeg_branding="Chrome"
+					set CEF_ARCHIVE_FORMAT=tar.bz2
+					python ${CMAKE_SOURCE_DIR}\3rdParty\cef_source\automate-git.py --download-dir=${CMAKE_SOURCE_DIR}\3rdParty\cef_source --branch=trunk --x64-build
+					RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+					)		
+			reportError (output if error)
+			message (STATUS "Cef build succesfully finished")	
+		endif()
+	endif()
+	#todo copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
+endif ()
+
+if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
+	set(CEF_VERSION "3.3113.1650.g6da2bbf")
+	set(CEF_DOWNLOAD_SERVER "http://srv.mvv.sztaki.mta.hu/Ape/3rdPartiesBin/cef_ffmpeg/")
+else()
+	set(CEF_VERSION "3.3071.1643.ga83b8e9")
+	set(CEF_DOWNLOAD_SERVER "http://opensource.spotify.com/cefbuilds/")
+endif()	
+
+# Specify the CEF distribution version.
+
 set(CEF_DISTRIBUTION "cef_binary_${CEF_VERSION}_${CEF_PLATFORM}")
 set(CEF_HOME ${CMAKE_SOURCE_DIR}/3rdParty/${CEF_DISTRIBUTION})
-set(CEF_DLLWRAPPER_HOME ${CMAKE_SOURCE_DIR}/3rdParty/${CEF_DISTRIBUTION}/libcef_dll)
+set(CEF_DLLWRAPPER_HOME ${CEF_HOME}/libcef_dll)
 set(CEF_DOWNLOAD_DIR ${CMAKE_SOURCE_DIR}/3rdParty/)
 # The location where we expect the extracted binary distribution.
 set(CEF_ROOT "${CEF_DOWNLOAD_DIR}/${CEF_DISTRIBUTION}" CACHE INTERNAL "CEF_ROOT")
@@ -57,7 +86,7 @@ if(NOT IS_DIRECTORY "${CEF_ROOT}")
 set(CEF_DOWNLOAD_FILENAME "${CEF_DISTRIBUTION}.tar.bz2")
 set(CEF_DOWNLOAD_PATH "${CEF_DOWNLOAD_DIR}/${CEF_DOWNLOAD_FILENAME}")
 if(NOT EXISTS "${CEF_DOWNLOAD_PATH}")
-	set(CEF_DOWNLOAD_URL "http://opensource.spotify.com/cefbuilds/${CEF_DOWNLOAD_FILENAME}")
+	set(CEF_DOWNLOAD_URL "${CEF_DOWNLOAD_SERVER}${CEF_DOWNLOAD_FILENAME}")
 	# Download the SHA1 hash for the binary distribution.
 	message(STATUS "Downloading ${CEF_DOWNLOAD_PATH}.sha1...")
 	file(DOWNLOAD "${CEF_DOWNLOAD_URL}.sha1" "${CEF_DOWNLOAD_PATH}.sha1")
