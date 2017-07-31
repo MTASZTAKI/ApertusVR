@@ -139,12 +139,12 @@ foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 		WORKING_DIRECTORY ${CEF_HOME}
 		RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 	reportError (output if error)
-	message (STATUS "Building cefsimple for ${CONF}, please wait.....")
-	execute_process ( 
-		COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target cefsimple
-		WORKING_DIRECTORY ${CEF_HOME}
-		RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
-	reportError (output if error)
+	#message (STATUS "Building cefsimple for ${CONF}, please wait.....")
+	#execute_process ( 
+	#	COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target cefsimple
+	#	WORKING_DIRECTORY ${CEF_HOME}
+	#	RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+	#reportError (output if error)
 endforeach ()
 #use cef_dll_wrapper
 add_library(MY_CEF_DLLWRAPPER_LIBS STATIC IMPORTED)
@@ -195,8 +195,8 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/widevinecdmadapter.dll)
 		file(COPY ${CEF_HOME}/debug/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/cefsimple.exe)
-		file(COPY ${CEF_HOME}/tests/cefsimple/debug DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/icudtl.dat)
+		file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 	endif()
 	# release
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/chrome_elf.dll)
@@ -217,8 +217,8 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/widevinecdmadapter.dll)
 		file(COPY ${CEF_HOME}/release/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/cefsimple.exe)
-		file(COPY ${CEF_HOME}/tests/cefsimple/release DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/icudtl.dat)
+		file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 	endif()
 endif ()
 
