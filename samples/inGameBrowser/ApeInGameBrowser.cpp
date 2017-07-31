@@ -21,62 +21,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_360IMAGEPLUGIN_H
-#define APE_360IMAGEPLUGIN_H
-
+#include <string>
+#include <sstream>
 #include <iostream>
-#include <thread>
-#include <chrono>
-#include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
+#include <map>
+#include "ApeSystem.h"
 
-#define THIS_PLUGINNAME "Ape360ImagePlugin"
-
-class Ape360ImagePlugin : public Ape::IPlugin
+int main(int argc, char** argv)
 {
-private:
-	Ape::IScene* mpScene;
-	
-public:
-	Ape360ImagePlugin();
+	std::stringstream configDir;
+	if (argc > 1)
+	{
+		std::string participantType = argv[1];
+		if (participantType == "monitor")
+			configDir << APE_SOURCE_DIR << "\\samples\\inGameBrowser\\configs\\monitor";
+		else if (participantType == "oculusDK2")
+			configDir << APE_SOURCE_DIR << "\\samples\\inGameBrowser\\configs\\oculusDK2";
+	}
+	else
+	{
+		std::cout << "usage: monitor | oculusDK2" << std::endl;
+		return 0;
+	}
 
-	~Ape360ImagePlugin();
-	
-	void Init() override;
 
-	void Run() override;
-
-	void Step() override;
-
-	void Stop() override;
-
-	void Suspend() override;
-
-	void Restart() override;
-};
-
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360ImagePlugin()
-{
-
-	return new Ape360ImagePlugin;
-}
-
-APE_PLUGIN_FUNC void DestroyApe360ImagePlugin(Ape::IPlugin *plugin)
-{
-	delete (Ape360ImagePlugin*)plugin;
-}
-
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
-
-APE_PLUGIN_ALLOC()
-{
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
+	Ape::System::Start(configDir.str(), true);
+	Ape::System::Stop();
 	return 0;
 }
-
-#endif

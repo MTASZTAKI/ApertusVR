@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#ifndef APE_360IMAGEPLUGIN_H
-#define APE_360IMAGEPLUGIN_H
+#ifndef APE_INGAMEBROWSERLUGIN_H
+#define APE_INGAMEBROWSERLUGIN_H
 
 #include <iostream>
 #include <thread>
@@ -31,20 +31,21 @@ SOFTWARE.*/
 #include "ApePluginAPI.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
-#include "ApeIFileGeometry.h"
+#include "ApeIPlaneGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeIBrowser.h"
 
-#define THIS_PLUGINNAME "Ape360ImagePlugin"
+#define THIS_PLUGINNAME "ApeInGameBrowserSamplePlugin"
 
-class Ape360ImagePlugin : public Ape::IPlugin
+class ApeInGameBrowserSamplePlugin : public Ape::IPlugin
 {
 private:
 	Ape::IScene* mpScene;
 	
 public:
-	Ape360ImagePlugin();
+	ApeInGameBrowserSamplePlugin();
 
-	~Ape360ImagePlugin();
+	~ApeInGameBrowserSamplePlugin();
 	
 	void Init() override;
 
@@ -59,15 +60,15 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360ImagePlugin()
+APE_PLUGIN_FUNC Ape::IPlugin* CreateApeInGameBrowserSamplePlugin()
 {
 
-	return new Ape360ImagePlugin;
+	return new ApeInGameBrowserSamplePlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApe360ImagePlugin(Ape::IPlugin *plugin)
+APE_PLUGIN_FUNC void DestroyApeInGameBrowserSamplePlugin(Ape::IPlugin *plugin)
 {
-	delete (Ape360ImagePlugin*)plugin;
+	delete (ApeInGameBrowserSamplePlugin*)plugin;
 }
 
 APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -75,7 +76,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 APE_PLUGIN_ALLOC()
 {
 	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeInGameBrowserSamplePlugin, DestroyApeInGameBrowserSamplePlugin);
 	return 0;
 }
 

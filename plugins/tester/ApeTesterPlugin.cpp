@@ -326,36 +326,6 @@ void ApeTesterPlugin::Init()
 		);
 		mInterpolators.push_back(std::move(rotateInterpolator));
 	}
-
-	/*if (auto browserNode = mpScene->createNode("browserNode").lock())
-	{
-		browserNode->setPosition(Ape::Vector3(0,100,0));
-		Ape::Radian angle(1.57f);
-		Ape::Vector3 axis(1, 0, 0);
-		Ape::Quaternion orientation;
-		orientation.FromAngleAxis(angle, axis);
-		browserNode->setOrientation(orientation);
-		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
-		{
-			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("browserGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
-			{
-				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1024, 768), Ape::Vector2(1, 1));
-				browserGeometry->setParentNode(browserNode);
-				browser->setGeometry(browserGeometry);
-			}
-		}
-	}*/
-	if (auto browserNode = mpScene->createNode("browserNode").lock())
-	{
-		browserNode->setPosition(Ape::Vector3(0, 300, 0));
-		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			browserGeometry->setFileName("sphere.mesh");
-			browserGeometry->setParentNode(browserNode);
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
-				browser->setGeometry(browserGeometry);
-		}
-	}
 }
 
 void ApeTesterPlugin::Run()
