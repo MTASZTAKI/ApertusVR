@@ -27,11 +27,37 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mGeometry = Ape::GeometryWeakPtr();
+	mURL = std::string();
+	mResoultion = Ape::Vector2();
+	mGeometryName = std::string();
 }
 
 Ape::BrowserImpl::~BrowserImpl()
 {
 	
+}
+
+void Ape::BrowserImpl::setURL(std::string url)
+{
+	mURL = url;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_URL));
+}
+
+std::string Ape::BrowserImpl::getURL()
+{
+	return mURL;
+}
+
+void Ape::BrowserImpl::setResoultion(float vertical, float horizontal)
+{
+	mResoultion.x = vertical;
+	mResoultion.y = horizontal;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
+}
+
+Ape::Vector2 Ape::BrowserImpl::getResoultion()
+{
+	return mResoultion;
 }
 
 void Ape::BrowserImpl::setGeometry(Ape::GeometryWeakPtr geometry)
@@ -60,6 +86,9 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mURL);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mResoultion);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -68,5 +97,20 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	RakNet::RakString url;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, url))
+	{
+		mURL = url.C_String();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_URL));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mResoultion))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
+	RakNet::RakString geometryName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
+	{
+		mGeometryName = geometryName.C_String();
+		mGeometry = std::static_pointer_cast<Ape::Geometry>(mpScene->getEntity(mGeometryName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_GEOMETRY));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

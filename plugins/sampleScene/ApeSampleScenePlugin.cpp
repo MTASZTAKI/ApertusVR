@@ -21,14 +21,15 @@ void ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
 void ApeSampleScenePlugin::Init()
 {
 	std::cout << "ApeSampleScenePlugin::init" << std::endl;
+	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
+	{
+		universeSkyBoxMaterial->setFileName("universe.material");
+		universeSkyBoxMaterial->setAsSkyBox();
+	}
 	mPlanetNode = mpScene->createNode("planetNode");
 	if (auto planetNode = mPlanetNode.lock())
 	{
-		if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
-		{
-			universeSkyBoxMaterial->setFileName("universe.material");
-			universeSkyBoxMaterial->setAsSkyBox();
-		}
+		planetNode->setPosition(Ape::Vector3(0, 0, -100));
 		if (auto planetMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("planet.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			planetMeshFile->setFileName("planet.mesh");

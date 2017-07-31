@@ -64,13 +64,13 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 						browserMaterial->setEmissiveColor(Ape::Color(0.5f, 0.5f, 0.5f));
 						if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
 						{
-							browserTexture->setParameters(2048, 1024, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+							browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 							browserMaterial->setPassTexture(browserTexture);
 							mBrowserCounter++;
 							mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
 							CefWindowInfo cefWindowInfo;
 							cefWindowInfo.SetAsWindowless(0);
-							CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), "https://www.youtube.com/embed/WRW84FRYPkk?vq=hd1080&autoplay=1&loop=1", mBrowserSettings, nullptr);
+							CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
 						}
 						std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
 					}

@@ -20,7 +20,12 @@ void Ape360VideoSamplePlugin::Init()
 			browserGeometry->setFileName("sphere.mesh");
 			browserGeometry->setParentNode(browserNode);
 			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
+			{
+				browser->setResoultion(2048, 1024);
+				//browser->setURL("https://www.youtube.com/embed/9b4VCYLOL8Q?vq=hd1080&autoplay=1&loop=1");
+				browser->setURL("https://www.youtube.com/embed/WRW84FRYPkk?vq=hd1080&autoplay=1&loop=1");
 				browser->setGeometry(browserGeometry);
+			}
 		}
 	}
 	std::cout << "Ape360VideoSamplePlugin::init" << std::endl;

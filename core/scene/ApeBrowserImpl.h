@@ -38,6 +38,14 @@ namespace Ape
 
 		~BrowserImpl();
 
+		void setURL(std::string url) override;
+
+		std::string getURL() override;
+
+		void setResoultion(float vertical, float horizontal) override;
+
+		Ape::Vector2 getResoultion() override;
+
 		void setGeometry(Ape::GeometryWeakPtr geometry) override;
 
 		Ape::GeometryWeakPtr getGeometry() override;
@@ -54,6 +62,12 @@ namespace Ape
 		Ape::IScene* mpScene;
 
 		Ape::GeometryWeakPtr mGeometry;
+
+		std::string mGeometryName;
+
+		std::string mURL;
+
+		Ape::Vector2 mResoultion;
 	};
 }
 

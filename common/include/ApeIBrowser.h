@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "ApeEntity.h"
 #include "ApeGeometry.h"
+#include "ApeVector2.h"
 
 namespace Ape
 {
@@ -36,6 +37,14 @@ namespace Ape
 		virtual ~IBrowser() {};
 		
 	public:
+		virtual void setURL(std::string url) = 0;
+
+		virtual std::string getURL() = 0;
+
+		virtual void setResoultion(float vertical, float horizontal) = 0;
+
+		virtual Ape::Vector2 getResoultion() = 0;
+
 		virtual void setGeometry(Ape::GeometryWeakPtr geometry) = 0;
 
 		virtual Ape::GeometryWeakPtr getGeometry() = 0;
