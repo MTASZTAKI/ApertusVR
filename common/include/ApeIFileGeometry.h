@@ -45,6 +45,8 @@ namespace Ape
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+
+		virtual void exportMesh() = 0;
 	};
 }
 

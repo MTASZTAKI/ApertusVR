@@ -41,6 +41,8 @@ namespace Ape
 		Ape::GeometryTextureCoordinates textureCoordinates;
 		Ape::MaterialWeakPtr material;
 		std::string materialName;
+		bool convert2Mesh;
+		bool export2MeshFile;
 		
 		GeometryIndexedFaceSetParameters()
 		{
@@ -53,9 +55,11 @@ namespace Ape
 			this->textureCoordinates = Ape::GeometryTextureCoordinates();
 			this->material = Ape::MaterialWeakPtr();
 			this->materialName = std::string();
+			this->convert2Mesh = false;
+			this->export2MeshFile = false;
 		}
 
-		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
+		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material, bool convert2Mesh, bool export2MeshFile)
 		{
 			this->groupName = groupName;
 			this->coordinates = coordinates;
@@ -69,6 +73,8 @@ namespace Ape
 				this->materialName = materialPtr->getName();
 			else
 				this->materialName = std::string();
+			this->convert2Mesh = convert2Mesh;
+			this->export2MeshFile = export2MeshFile;
 		}
 
 		Ape::GeometryCoordinates getCoordinates()
@@ -132,7 +138,7 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) = 0;
+		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material, bool convert2Mesh, bool export2MeshFile) = 0;
 		
 		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 

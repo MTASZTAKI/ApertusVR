@@ -38,15 +38,17 @@ namespace Ape
 
 		~FileGeometryImpl();
 		
-		void setFileName(std::string fileName);
+		void setFileName(std::string fileName) override;
 
-		std::string getfFileName();
+		std::string getfFileName() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
+
+		void exportMesh() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

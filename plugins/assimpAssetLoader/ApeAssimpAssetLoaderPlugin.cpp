@@ -195,7 +195,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					}
 					std::cout << "AssimpAssetLoaderPlugin::hasNormal " << assimpMesh->mName.C_Str() << std::endl;
 				}
-				mesh->setParameters("", coordinates, indices, normals, true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), material);
+				mesh->setParameters("", coordinates, indices, normals, true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), material, true, true);
 				mesh->setParentNode(node);
 				std::cout << "AssimpAssetLoaderPlugin::createIndexedFaceSetGeometry " << mesh->getName() << std::endl;
 			}

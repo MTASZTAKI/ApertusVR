@@ -40,6 +40,7 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
+#include "ApeIFileGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"

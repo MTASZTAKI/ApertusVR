@@ -75,6 +75,11 @@ Ape::MaterialWeakPtr Ape::FileGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+void Ape::FileGeometryImpl::exportMesh()
+{
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_EXPORT));
+}
+
 void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
