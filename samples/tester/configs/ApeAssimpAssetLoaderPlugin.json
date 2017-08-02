@@ -1,6 +1,7 @@
 {
-    "assets": [
-        "/plugins/assimpAssetLoader/resources/AC14-FZK-Haus.ifc"
-    ]
+  "assets": [
+    "/plugins/assimpAssetLoader/resources/Dds_BardNa.Ifc"
+  ],
+  "mergeAndExportMeshes": true
 }
 

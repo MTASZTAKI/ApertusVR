@@ -43,6 +43,20 @@ void ApeTesterPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, 1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(-1, -1, 0));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
 	if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
 		planeNode->setPosition(Ape::Vector3(0, -10, 0));
@@ -97,7 +111,7 @@ void ApeTesterPlugin::Init()
 				1, 5, 6, 2, -1,
 				2, 6, 7, 3, -1,
 				4, 0, 3, 7, -1 };
-			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial, false, false);
+			demoBox->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial);
 			demoBox->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoPyramid = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoPyramid", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
@@ -116,7 +130,7 @@ void ApeTesterPlugin::Init()
 				2, 3, 4, -1,
 				3, 0, 4, -1
 			};
-			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial, false, false);
+			demoPyramid->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), demoObjectMaterial);
 			demoPyramid->setParentNode(mDemoObjectNode);
 		}
 		if (auto demoLine = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("demoLine", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))

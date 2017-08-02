@@ -8,7 +8,8 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/tester/resources"
+            "/plugins/tester/resources",
+            "/plugins/assimpAssetLoader/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",

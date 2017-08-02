@@ -1,0 +1,24 @@
+
+material Colour(RGB)(00255)KANALNETTFORBALANSERTVENTILASJONDds_BardNa.Ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 1 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 1 1
+		}
+
+	}
+
+}

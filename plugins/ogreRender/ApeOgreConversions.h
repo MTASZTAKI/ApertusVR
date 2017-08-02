@@ -158,6 +158,26 @@ namespace Ape
 			return Ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
+	inline Ogre::SceneBlendType ConversionToOgre(const Ape::Pass::SceneBlendingType type)
+	{
+		if (type == Ape::Pass::SceneBlendingType::ADD)
+			return Ogre::SceneBlendType::SBT_ADD;
+		else if (type == Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
+		else if (type == Ape::Pass::SceneBlendingType::REPLACE)
+			return Ogre::SceneBlendType::SBT_REPLACE;
+	}
+
+	inline Ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
+	{
+		if (type == Ogre::SceneBlendType::SBT_ADD)
+			return Ape::Pass::SceneBlendingType::ADD;
+		else if (type == Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA)
+			return Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA;
+		else if (type == Ogre::SceneBlendType::SBT_REPLACE)
+			return Ape::Pass::SceneBlendingType::REPLACE;
+	}
+
 	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)
 	{
 		if (type == Ape::Texture::PixelFormat::A8R8G8B8)

@@ -82,6 +82,12 @@ void Ape::ManualPassImpl::setPassGpuParameters(Ape::PassGpuParameters passGpuPar
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS));
 }
 
+void Ape::ManualPassImpl::setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType)
+{
+	mSceneBlendingType = sceneBlendingType;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
+}
+
 void Ape::ManualPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -98,6 +104,7 @@ RakNet::RM3SerializationResult Ape::ManualPassImpl::Serialize(RakNet::SerializeP
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSpecularColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mEmissiveColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mShininess);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSceneBlendingType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -117,6 +124,8 @@ void Ape::ManualPassImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_EMISSIVE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mShininess))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SHININESS));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
 	RakNet::RakString textureName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
 	{

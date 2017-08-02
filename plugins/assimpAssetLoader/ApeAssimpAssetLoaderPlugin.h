@@ -84,6 +84,12 @@ namespace Ape
 
 		std::vector<std::string> mAssimpAssetFileNames;
 
+		int mObjectCount;
+
+		bool mMergeAndExportMeshes;
+
+		int mSceneUnitScale;
+
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 	};
 	

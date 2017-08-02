@@ -39,14 +39,14 @@ Ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
 	
 }
 
-void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material, bool convert2Mesh, bool export2MeshFile)
+void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
 {
 	mCoordinatesSize = static_cast<int>(coordinates.size());
 	mIndicesSize = static_cast<int>(indices.size());
 	mNormalsSize = static_cast<int>(normals.size());
 	mColorsSize = static_cast<int>(colors.size());
 	mTextureCoordinatesSize = static_cast<int>(textureCoordinates.size());
-	mParameters = Ape::GeometryIndexedFaceSetParameters(groupName, coordinates, indices, normals, generateNormals, colors, textureCoordinates, material, convert2Mesh, export2MeshFile);
+	mParameters = Ape::GeometryIndexedFaceSetParameters(groupName, coordinates, indices, normals, generateNormals, colors, textureCoordinates, material);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 }
 
