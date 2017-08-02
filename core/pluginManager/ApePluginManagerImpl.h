@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 #include "ApeISystemConfig.h"
+#include "ApeIScene.h"
 
 namespace Ape
 { 
@@ -67,6 +68,14 @@ namespace Ape
 		unsigned int mConstructedPluginCount;
 
 		unsigned int mPluginCount;
+
+		Ape::IScene* mpScene;
+
+		std::string mUniqueUserNodeName;
+
+		void createUserBodyNodes();
+
+		bool isCreateUserBodyNodesFunctionCalled;
 
 	public:
 		PluginManagerImpl();

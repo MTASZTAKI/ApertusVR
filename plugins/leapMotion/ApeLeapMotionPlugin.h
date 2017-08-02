@@ -110,6 +110,10 @@ namespace Ape
 		float mPreviousFrameRoll;
 
 		bool mHandOrientationFlag;
+
+		Ape::NodeWeakPtr mLeftHandNode;
+
+		Ape::NodeWeakPtr mRightHandNode;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateLeapMotionPlugin()

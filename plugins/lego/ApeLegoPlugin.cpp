@@ -9,8 +9,6 @@ ApeLegoPlugin::ApeLegoPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -89,7 +87,9 @@ ApeLegoPlugin::~ApeLegoPlugin()
 
 void ApeLegoPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			camera->setParentNode(mUserNode);

@@ -21,6 +21,13 @@ void ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
 void ApeSampleScenePlugin::Init()
 {
 	std::cout << "ApeSampleScenePlugin::init" << std::endl;
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(1, 0, 0));
+		light->setDiffuseColor(Ape::Color(0.8f, 0.8f, 0.8f));
+		light->setSpecularColor(Ape::Color(0.8f, 0.8f, 0.8f));
+	}
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");

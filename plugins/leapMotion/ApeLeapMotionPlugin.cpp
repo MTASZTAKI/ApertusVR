@@ -30,9 +30,7 @@ Ape::LeapMotionPlugin::LeapMotionPlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	mLeapController = Leap::Controller();
 	mFingerNames = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
 	mBoneNames = {"Metacarpal", "Proximal", "Middle", "Distal"};
@@ -48,7 +46,12 @@ Ape::LeapMotionPlugin::~LeapMotionPlugin()
 
 void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
+		mRightHandNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
+		mLeftHandNode = mpScene->getNode(event.subjectName);
 }
 
 void Ape::LeapMotionPlugin::Init()
@@ -109,7 +112,7 @@ void Ape::LeapMotionPlugin::Run()
 		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::LeapMotionPlugin::Step()

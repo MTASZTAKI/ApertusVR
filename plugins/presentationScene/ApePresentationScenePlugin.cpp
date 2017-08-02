@@ -9,8 +9,6 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -20,7 +18,8 @@ ApePresentationScenePlugin::~ApePresentationScenePlugin()
 
 void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
-	
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
 }
 
 void ApePresentationScenePlugin::Init()
@@ -129,6 +128,7 @@ void ApePresentationScenePlugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void ApePresentationScenePlugin::Step()

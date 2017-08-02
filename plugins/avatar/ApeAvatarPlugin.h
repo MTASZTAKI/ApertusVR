@@ -30,11 +30,17 @@ SOFTWARE.*/
 #include <memory>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeISystemConfig.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeISphereGeometry.h"
+#include "ApeIManualPass.h"
+#include "ApeInterpolator.h"
+#include "ApeIManualTexture.h"
+#include "ApeIManualMaterial.h"
 
 #define THIS_PLUGINNAME "ApeAvatarPlugin"
 
@@ -44,10 +50,14 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
-
-	Ape::NodeWeakPtr mPlanetNode;
 	
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
+
+	Ape::ISystemConfig* mpSystemConfig;
+
+	Ape::NodeWeakPtr mLeftHandNode;
+
+	Ape::NodeWeakPtr mRightHandNode;
 	
 public:
 	ApeAvatarPlugin();

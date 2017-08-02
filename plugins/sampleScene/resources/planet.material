@@ -7,18 +7,18 @@ material _1_-_Default2
          scene_blend alpha_blend
          depth_check on
          depth_write off
-		 //ambient 1 1 1 1.0
-         //diffuse 1 1 1 1.0
-		 //specular 1 1 1 1.0
-		 emissive 0.5 0.5 0.5 1.0
+	 //ambient 0 0 0 1.0
+         //diffuse 0 0 0 1.0
+	 //specular 1 1 1 1.0
+	 emissive 0.1 0.1 0.1 1.0
          texture_unit
          {
-            texture earth.jpg
+            	texture earth.jpg
          }
-		 rtshader_system
- 		 {	 				
- 			lighting_stage per_pixel				
- 		 }
+         rtshader_system
+ 	 {	 				
+ 		lighting_stage per_pixel				
+ 	 }
       }
    }
 }

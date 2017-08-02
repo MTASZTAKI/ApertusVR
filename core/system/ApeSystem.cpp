@@ -37,60 +37,6 @@ Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
 
-void createUserBodyNodes(std::string uniqueUserNodeName)
-{
-	if (auto userNode = gpSceneImpl->createNode(uniqueUserNodeName).lock())
-	{
-		if (auto hipNode = gpSceneImpl->createNode(uniqueUserNodeName + "_hip").lock())
-		{
-			hipNode->setParentNode(userNode);
-			if (auto torsoNode = gpSceneImpl->createNode(uniqueUserNodeName + "_torso").lock())
-			{
-				torsoNode->setParentNode(hipNode);
-				if (auto leftShoulderNode = gpSceneImpl->createNode(uniqueUserNodeName + "_leftShoulder").lock())
-				{
-					leftShoulderNode->setParentNode(torsoNode);
-					if (auto leftUpperArmNode = gpSceneImpl->createNode(uniqueUserNodeName + "_leftUpperArm").lock())
-					{
-						leftUpperArmNode->setParentNode(leftShoulderNode);
-						if (auto leftForeArmNode = gpSceneImpl->createNode(uniqueUserNodeName + "_leftForeArm").lock())
-						{
-							leftForeArmNode->setParentNode(leftUpperArmNode);
-							if (auto leftHandNode = gpSceneImpl->createNode(uniqueUserNodeName + "_leftHandNode").lock())
-							{
-								leftHandNode->setParentNode(leftForeArmNode);
-							}
-						}
-					}
-				}
-				if (auto rightShoulderNode = gpSceneImpl->createNode(uniqueUserNodeName + "_rightShoulder").lock())
-				{
-					rightShoulderNode->setParentNode(torsoNode);
-					if (auto rightUpperArmNode = gpSceneImpl->createNode(uniqueUserNodeName + "_rightUpperArm").lock())
-					{
-						rightUpperArmNode->setParentNode(rightShoulderNode);
-						if (auto rightForeArmNode = gpSceneImpl->createNode(uniqueUserNodeName + "_rightForeArm").lock())
-						{
-							rightForeArmNode->setParentNode(rightUpperArmNode);
-							if (auto rightHandNode = gpSceneImpl->createNode(uniqueUserNodeName + "_rightHandNode").lock())
-							{
-								rightHandNode->setParentNode(rightForeArmNode);
-							}
-						}
-					}
-				}
-				if (auto neckNode = gpSceneImpl->createNode(uniqueUserNodeName + "_neck").lock())
-				{
-					neckNode->setParentNode(torsoNode);
-					if (auto headNode = gpSceneImpl->createNode(uniqueUserNodeName + "_head").lock())
-					{
-						headNode->setParentNode(neckNode);
-					}
-				}
-			}
-		}
-	}
-}
 
 void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 {
@@ -104,11 +50,9 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	uniqueUserNodeName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
 	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
 	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
-
-	createUserBodyNodes(uniqueUserNodeName.str());
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
-		; //TODO open a paltform specific window
+		; //TODO open a platform specific window if needed
 
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();

@@ -28,16 +28,13 @@ SOFTWARE.*/
 #include "ApeOgreRenderPlugin.h"
 #include "ApeOgreUtilities.h"
 
-Ape::OgreRenderPlugin::OgreRenderPlugin()
+Ape::OgreRenderPlugin::OgreRenderPlugin( )
 {
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
-	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::LIGHT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -1648,13 +1645,19 @@ void Ape::OgreRenderPlugin::Step()
 
 void Ape::OgreRenderPlugin::Init()
 {
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
 	{
-		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(mUserNode.lock()->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
+		if (auto userNode = mUserNode.lock())
 		{
-			userNameText->setCaption(mUserNode.lock()->getName());
-			userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-			userNameText->setParentNode(mUserNode);
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNode->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
+			{
+				userNameText->setCaption(userNode->getName());
+				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+				userNameText->setParentNode(userNode);
+			}
 		}
 	}
 
@@ -1936,7 +1939,8 @@ void Ape::OgreRenderPlugin::Init()
 						camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.nearClip);
 						camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.farClip);
 						camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.fovY.toRadian());
-						camera->setParentNode(mUserNode);
+						if (auto userNode = mUserNode.lock())
+							camera->setParentNode(mUserNode);
 					}
 				}
 			}

@@ -12,9 +12,6 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
-	mUserNode.lock()->setFixedYaw(true);
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
@@ -35,7 +32,11 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 
 void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+	{
+		mUserNode = mpScene->getNode(event.subjectName);
+		mUserNode.lock()->setFixedYaw(true);
+	}
 }
 
 void ApeOculusDK2Plugin::Init()

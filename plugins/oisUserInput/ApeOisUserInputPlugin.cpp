@@ -37,9 +37,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
 
@@ -71,7 +69,8 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
 }
 
 void Ape::OISUserInputPlugin::Init()
@@ -241,7 +240,7 @@ void Ape::OISUserInputPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::OISUserInputPlugin::Step()
