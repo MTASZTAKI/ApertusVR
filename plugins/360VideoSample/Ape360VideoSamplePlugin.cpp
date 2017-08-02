@@ -15,6 +15,7 @@ void Ape360VideoSamplePlugin::Init()
 {
 	if (auto browserNode = mpScene->createNode("browserNode").lock())
 	{
+		//browserNode->setScale(Ape::Vector3(10, 10, 10));
 		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			browserGeometry->setFileName("sphere.mesh");
@@ -22,8 +23,7 @@ void Ape360VideoSamplePlugin::Init()
 			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
 			{
 				browser->setResoultion(2048, 1024);
-				//browser->setURL("https://www.youtube.com/embed/9b4VCYLOL8Q?vq=hd1080&autoplay=1&loop=1");
-				browser->setURL("https://www.youtube.com/embed/WRW84FRYPkk?vq=hd1080&autoplay=1&loop=1");
+				browser->setURL("https://www.youtube.com/embed/ubBrznOxtQo?vq=hd1080&autoplay=1&loop=1&playlist=ubBrznOxtQo");
 				browser->setGeometry(browserGeometry);
 			}
 		}

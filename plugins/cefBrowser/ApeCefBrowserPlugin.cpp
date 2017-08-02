@@ -61,7 +61,7 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 				{
 					if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
 					{
-						browserMaterial->setEmissiveColor(Ape::Color(0.5f, 0.5f, 0.5f));
+						browserMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
 						if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
 						{
 							browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
