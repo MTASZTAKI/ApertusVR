@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <string>
 #include <thread> 
 #include "Leap.h"
+#include "LeapMath.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
@@ -37,9 +38,11 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
 
+#define THIS_PLUGINNAME "ApeLeapMotionPlugin"
+
 namespace Ape
 {
-	class LeapMotionPlugin : public Ape::IPlugin
+	class LeapMotionPlugin : public Ape::IPlugin, public Leap::Listener 
 	{
 	public:
 		LeapMotionPlugin();
@@ -58,6 +61,25 @@ namespace Ape
 
 		void Restart() override;
 
+		void onInit(const Leap::Controller& controller) override;
+
+		void onConnect(const Leap::Controller& controller) override;
+
+		void onDisconnect(const Leap::Controller& controller) override;
+
+		void onExit(const Leap::Controller& controller) override;
+
+		void onFrame(const Leap::Controller& controller) override;
+
+		void onFocusGained(const Leap::Controller& controller) override;
+
+		void onFocusLost(const Leap::Controller& controller) override;
+
+		void onDeviceChange(const Leap::Controller& controller) override;
+
+		void onServiceConnect(const Leap::Controller& controller) override;
+
+		void onServiceDisconnect(const Leap::Controller& controller) override;
 
 	private:
 
@@ -72,6 +94,22 @@ namespace Ape
 		Ape::NodeWeakPtr mUserNode;
 
 		void eventCallBack(const Ape::Event& event);
+
+		Leap::Controller mLeapController;
+
+		std::vector<std::string> mFingerNames;
+		
+		std::vector<std::string> mBoneNames;
+		
+		std::vector<std::string> mStateNames;
+
+		float mPreviousFramePitch;
+
+		float mPreviousFrameYaw;
+
+		float mPreviousFrameRoll;
+
+		bool mHandOrientationFlag;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateLeapMotionPlugin()
@@ -84,12 +122,12 @@ namespace Ape
 		delete (LeapMotionPlugin*)plugin;
 	}
 
-	APE_PLUGIN_DISPLAY_NAME("LeapMotionPlugin");
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << "LeapMotionPlugin_CREATE" << std::endl;
-		ApeRegisterPlugin("LeapMotionPlugin", CreateLeapMotionPlugin, DestroyLeapMotionPlugin);
+		std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateLeapMotionPlugin, DestroyLeapMotionPlugin);
 		return 0;
 	}
 }

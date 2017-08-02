@@ -9,7 +9,8 @@
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/avatar/resources",
-            "/plugins/oculusDK2/resources"
+            "/plugins/oculusDK2/resources",
+            "/plugins/sampleScene/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -25,7 +26,8 @@
             "ApeOgreRenderPlugin",
             "ApeLeapMotionPlugin",
             "ApeAvatarPlugin",
-			"ApeOculusDK2Plugin"
+			"ApeOculusDK2Plugin",
+			"ApeSampleScenePlugin"
         ]
     }
 }

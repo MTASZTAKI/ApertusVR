@@ -35,6 +35,9 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
+	mUserNode = mpScene->getNode(userNodeName);
+	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::LIGHT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -74,9 +77,6 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mOgreRenderPluginConfig = Ape::OgreRenderPluginConfig();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
-	mUserNode = mpScene->getNode(userNodeName);
-	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE));
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
