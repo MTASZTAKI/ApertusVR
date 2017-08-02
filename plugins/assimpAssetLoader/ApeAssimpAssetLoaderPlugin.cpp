@@ -83,7 +83,11 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 						if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
 						{
 							meshFile->setFileName(fileName);
-							meshFile->setParentNode(node);
+							meshFile->mergeSubMeshes();
+							//TODO how to use it when static geomtery is created?
+							//meshFile->setParentNode(node);
+							//TODO how to export the optimized mesh when static geomtery is created?
+							//meshFile->exportMesh();
 						}
 					}
 				}

@@ -47,6 +47,8 @@ namespace Ape
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
 
 		virtual void exportMesh() = 0;
+
+		virtual void mergeSubMeshes() = 0;
 	};
 }
 
