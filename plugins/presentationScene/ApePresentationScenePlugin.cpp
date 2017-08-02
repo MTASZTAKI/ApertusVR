@@ -9,7 +9,7 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mUserNode = mpScene->getNode(userNodeName);
 }
 

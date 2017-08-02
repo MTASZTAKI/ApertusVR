@@ -74,9 +74,9 @@ Ape::OgreRenderPlugin::OgreRenderPlugin()
 	mOgreRenderPluginConfig = Ape::OgreRenderPluginConfig();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
+	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mUserNode = mpScene->getNode(userNodeName);
-	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE)); //TODO
+	mEventDoubleQueue.push(Ape::Event(userNodeName, Ape::Event::Type::NODE_CREATE));
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()

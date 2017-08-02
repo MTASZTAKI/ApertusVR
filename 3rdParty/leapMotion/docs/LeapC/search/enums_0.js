@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['eleapdevicecaps',['eLeapDeviceCaps',['../a00037.html#ga5d5cfae19b88160a1a5c14cc46faf435',1,'LeapC.h']]],
+  ['eleapdeviceflag',['eLeapDeviceFlag',['../a00037.html#ga79d965220a31e4111f12506c6ad01ec4',1,'LeapC.h']]],
+  ['eleapdevicepid',['eLeapDevicePID',['../a00037.html#ga5ed369865afe29bdadc65c450eb44c75',1,'LeapC.h']]],
+  ['eleapdevicestatus',['eLeapDeviceStatus',['../a00037.html#ga1d2b70b83923751202242cbfcf56072b',1,'LeapC.h']]],
+  ['eleapeventtype',['eLeapEventType',['../a00037.html#ga04f93b375f7c8040178ec5be2bf658ec',1,'LeapC.h']]],
+  ['eleaphandtype',['eLeapHandType',['../a00037.html#ga6d751aedb178355c21ec1cac4706e044',1,'LeapC.h']]],
+  ['eleapimageformat',['eLeapImageFormat',['../a00037.html#ga88575674641d03abef07b3a6712c0e95',1,'LeapC.h']]],
+  ['eleapimageframerequeststatus',['eLeapImageFrameRequestStatus',['../a00037.html#ga6e07f468463a8461790a078a659e09df',1,'LeapC.h']]],
+  ['eleapimagerequesterror',['eLeapImageRequestError',['../a00037.html#ga2c3b942c5040078f987001d9ffdbe8da',1,'LeapC.h']]],
+  ['eleapimagetype',['eLeapImageType',['../a00037.html#gab85c92adbf1b49d95cf472defadbaf50',1,'LeapC.h']]],
+  ['eleaplogseverity',['eLeapLogSeverity',['../a00037.html#ga03d3b2203fa8af12c5436b6974a10fbb',1,'LeapC.h']]],
+  ['eleapperspectivetype',['eLeapPerspectiveType',['../a00037.html#ga2bbde1c3af778eba35f0b1a8cf1338c2',1,'LeapC.h']]],
+  ['eleappolicyflag',['eLeapPolicyFlag',['../a00037.html#gaf9b8fb0f14bd75188519ab4eaedd6a47',1,'LeapC.h']]],
+  ['eleaprecordingflags',['eLeapRecordingFlags',['../a00037.html#ga7f321cfd29f8d1b74589cde5dfb3a1ed',1,'LeapC.h']]],
+  ['eleaprs',['eLeapRS',['../a00037.html#ga10647f52cdf6742a654aab0054ce3d3e',1,'LeapC.h']]],
+  ['eleapvaluetype',['eLeapValueType',['../a00037.html#ga81c626895007f01c99427ed9760523e8',1,'LeapC.h']]]
+];

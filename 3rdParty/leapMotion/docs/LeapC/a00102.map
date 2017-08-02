@@ -1,0 +1,4 @@
+<map id="LEAP_IMAGE_FRAME_REQUEST_ERROR_EVENT" name="LEAP_IMAGE_FRAME_REQUEST_ERROR_EVENT">
+<area shape="rect" id="node2" href="$a00029.html#a00059" title="Describes the image to request. " alt="" coords="5,5,264,127"/>
+<area shape="rect" id="node3" href="$a00029.html#a00061" title="Opaque struct that identifies an image request. " alt="" coords="288,20,520,112"/>
+</map>

@@ -1,0 +1,487 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CompressibleUI &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/unity/Unity.CompressibleUI.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity.CompressibleUI.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity.CompressibleUI.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/unity/Unity.CompressibleUI.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity.CompressibleUI.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  CompressibleUI
+</span> -->
+        
+  <div class="section" id="compressibleui">
+<h1>CompressibleUI<a class="headerlink" href="#compressibleui" title="Permalink to this headline">¶</a></h1>
+<div class="line-block" id="unitycorea00036">
+<div class="line"><em>class</em> <strong>Leap::Unity::InputModule::CompressibleUI</strong></div>
+</div>
+<blockquote>
+<div><p>Supports layer-based, compressible animations that lend a 3D affordance to otherwise flat UI elements. </p>
+<p>The <a class="reference internal" href="#unitycorea00036"><em>CompressibleUI</em></a> script lets you separate the components of a UI and individual controls into floating layers that depress when the user touches them. The <a class="reference internal" href="#unitycorea00036"><em>CompressibleUI</em></a> can make it easier for a user to use a control. </p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="unitycorea00036_1a3d45837d61d7ae4108ab8ea27ad4cca9"></span><div class="line-block">
+<div class="line">void <strong>Expand</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Move the layer members to their, extended, floating positions. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1a46b1c42340d8ad9203ecfce0e5cbd4a3"></span><div class="line-block">
+<div class="line">void <strong>HoverDistance</strong>(float distance)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Manually sets the current hover distance. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">distance</span></tt> - <p>the distance above the base of the button in millimeters. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1a0d8acf3ccd8483b86ffabdc60d50f017"></span><div class="line-block">
+<div class="line">void <strong>Retract</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Restore the layer members to their non-floating positions. </p>
+<p></p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="unitycorea00036_1ae2aa14ac2f15474781a14857e4426c0e"></span>float <strong>ContractSpeed</strong></p>
+<blockquote>
+<div><p>How fast the layer will move to its retracted position. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1ace8325e4a645b1900f54852a7af1d049"></span>float <strong>ExpandSpeed</strong></p>
+<blockquote>
+<div><p>How fast the layer will move to its distended position. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1a6c4a7386f3f804e3cde27143253cd241"></span>UnityEvent <strong>LayerCollapse</strong></p>
+<blockquote>
+<div><p>Dispatched when the layer retracts, if TriggerLayerEvent is set to true. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1ada6d41788e2bca1ef0100f1857601a07"></span>UnityEvent <strong>LayerDepress</strong></p>
+<blockquote>
+<div><p>Dispatched when the layer is depressed, if TriggerLayerEvent is set to true. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1a7e11eada7f36e6f3b44535fc311b946b"></span>UnityEvent <strong>LayerExpand</strong></p>
+<blockquote>
+<div><p>Dispatched when the layer expands, if TriggerLayerEvent is set to true. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1aef275e8d78b091d8051c71febf0395ec"></span><a class="reference internal" href="#unitycorea00712"><em>Layer</em></a> [] <strong>Layers</strong></p>
+<blockquote>
+<div><p>The layers created for this <a class="reference internal" href="#unitycorea00036"><em>CompressibleUI</em></a> instance. </p>
+<p>All layers move together, but can have different float distances. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00036_1acb1d53f01e8cbe23ba4e497b886c432d"></span>float <strong>PushPaddingDistance</strong></p>
+<blockquote>
+<div><p>Padding added before a control enters the hovered state. </p>
+<p></p>
+</div></blockquote>
+</div></blockquote>
+<p><p id="unitycorea00712"><em>class</em> <strong>Layer</strong></p>
+<blockquote>
+<div><p>The properties of a <a class="reference internal" href="#unitycorea00036"><em>CompressibleUI</em></a> layer. </p>
+<p></p>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="unitycorea00712_1ac197b3c772e67b1b9af9b35f1c5bf461"></span>float <strong>CurrentFloatingDistance</strong></p>
+<blockquote>
+<div><p>The current distance at which members of the layer are floating. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1a006b78787b0177775f4437b08c1fe5da"></span>float <strong>distanceToAboveLayer</strong></p>
+<blockquote>
+<div><p>The distance to the parent layer. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1ad68e3759c8d7529e460bf535df95179a"></span>string <strong>Label</strong></p>
+<blockquote>
+<div><p>A name for the layer. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1add591b30bcde445e177ee382f29907c7"></span>RectTransform <strong>LayerTransform</strong></p>
+<blockquote>
+<div><p>The child UI Element to float above the parent element. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1aa25b7d10238bf8f9133a00e9f87326bd"></span>float <strong>maxDistanceToAboveLayer</strong></p>
+<blockquote>
+<div><p>The maximum allowed distance to the parent layer. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1a265a11a1b7c3082461767578c9cf1bb0"></span>float <strong>MaxFloatDistance</strong></p>
+<blockquote>
+<div><p>The height above this (base) element that the <a class="reference internal" href="#unitycorea00712"><em>Layer</em></a> will float. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1a2f859c29c3707887afc28aac53e0a454"></span>float <strong>MaxShadowOpacity</strong></p>
+<blockquote>
+<div><p>The maximum value used for drop shadow opacity. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1aa059600e03bee841644d1afd57b1a710"></span>float <strong>MinFloatDistance</strong></p>
+<blockquote>
+<div><p>The minimum height that this layer can be compressed to. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1abd0c664ace06138e094473e79bf7d64a"></span>UnityEngine.UI.Image <strong>Shadow</strong></p>
+<blockquote>
+<div><p>An optional dropshadow image component. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1acb9e09daddff0911c2ac42aed5a68b1e"></span>bool <strong>ShadowOnAboveLayer</strong></p>
+<blockquote>
+<div><p>Whether the shadow effect is not a child of this layer, but rather, a child of the layer above it (for masking purposes). </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1afda44c7d8100e375a9e75279bef1a888"></span>bool <strong>touchingFinger</strong></p>
+<blockquote>
+<div><p>Whether or not a finger is touching members of this layer. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00712_1acdef772577e9249aa2c435e795964eb9"></span>bool <strong>TriggerLayerEvent</strong></p>
+<blockquote>
+<div><p>Whether a layer event is triggered upon touching this layer. </p>
+<p></p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</p>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

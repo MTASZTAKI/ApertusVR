@@ -1,0 +1,563 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Arm &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Bone" href="Leap.Bone.html" />
+    <link rel="prev" title="API Reference" href="Leap_Classes.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Arm.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Arm.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Arm.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Arm.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Classes.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Bone.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Arm.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Arm.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Arm.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Arm.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Arm.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Arm.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Arm
+</span> -->
+        
+  <div class="section" id="id23">
+<h1>Arm<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h1>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Arm.basis" title="Leap.Arm.basis"><tt class="xref py py-attr docutils literal"><span class="pre">basis</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Arm.direction" title="Leap.Arm.direction"><tt class="xref py py-attr docutils literal"><span class="pre">direction</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Arm.elbow_position" title="Leap.Arm.elbow_position"><tt class="xref py py-attr docutils literal"><span class="pre">elbow_position</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Arm.is_valid" title="Leap.Arm.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Arm.width" title="Leap.Arm.width"><tt class="xref py py-attr docutils literal"><span class="pre">width</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Arm.wrist_position" title="Leap.Arm.wrist_position"><tt class="xref py py-attr docutils literal"><span class="pre">wrist_position</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Arm">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Arm</tt><a class="headerlink" href="#Leap.Arm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Arm class represents a tracked arm.</p>
+<p>Note that Arm objects can be invalid, which means that they do not contain
+valid tracking data and do not correspond to a physical arm. Invalid Arm
+objects can be the result of asking for an Arm object from an invalid Hand object.
+An Arm object created with the Arm constructor is also invalid.
+Test for validity with the <a class="reference internal" href="#Leap.Arm.is_valid" title="Leap.Arm.is_valid"><tt class="xref py py-func docutils literal"><span class="pre">Arm.is_valid()</span></tt></a> attribute.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Arm.Arm">
+<em class="property">classmethod </em><tt class="descname">Arm</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Arm.Arm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an invalid Arm object.</p>
+<p>Get valid Arm objects from a <a class="reference internal" href="Leap.Hand.html#Leap.Hand" title="Leap.Hand"><tt class="xref py py-class docutils literal"><span class="pre">Hand</span></tt></a> object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hands</span><span class="o">.</span><span class="n">frontmost</span>
+<span class="n">arm</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">arm</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#Leap.Arm" title="Leap.Arm"><tt class="xref py py-class docutils literal"><span class="pre">Arm</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Arm.basis">
+<tt class="descname">basis</tt><a class="headerlink" href="#Leap.Arm.basis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Matrix.html#Leap.Matrix" title="Leap.Matrix"><tt class="xref py py-class docutils literal"><span class="pre">Matrix</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The orthonormal basis vectors for this Arm as a Matrix.</p>
+<p>Basis vectors specify the orientation of a arm.</p>
+<ul class="simple">
+<li>x_basis. Perpendicular to the longitudinal axis of the arm; exits leterally through the sides of the wrist.</li>
+<li>y_basis or up vector. Perpendicular to the longitudinal axis of the arm; exits the top and bottom of the arm. More positive in the upward direction.</li>
+<li>z_basis. Aligned with the longitudinal axis of the arm. More positive toward the elbow.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">basis</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">basis</span>
+<span class="n">x_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">x_basis</span>
+<span class="n">y_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">y_basis</span>
+<span class="n">z_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">z_basis</span>
+<span class="n">center</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">elbow_position</span> <span class="o">+</span> <span class="p">(</span><span class="n">arm</span><span class="o">.</span><span class="n">wrist_position</span> <span class="o">-</span> <span class="n">arm</span><span class="o">.</span><span class="n">elbow_position</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mo">05</span>
+
+<span class="n">arm_transform</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">x_basis</span><span class="p">,</span> <span class="n">y_basis</span><span class="p">,</span> <span class="n">z_basis</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The bases provided for the right arm use the right-hand rule; those for the left arm use the left-hand rule. Thus, the positive direction of the x-basis is to the right for the right arm and to the left for the left arm. You can change from right-hand to left-hand rule by multiplying the basis vectors by -1.</p>
+<p>You can use the basis vectors for such purposes as measuring complex finger poses and skeletal animation.</p>
+<p>Note that converting the basis vectors directly into a quaternion representation is not mathematically valid. If you use quaternions, create them from the derived rotation matrix not directly from the bases.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Arm.direction">
+<tt class="descname">direction</tt><a class="headerlink" href="#Leap.Arm.direction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The normalized direction of the arm from elbow to wrist.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">direction</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">direction</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Arm.elbow_position">
+<tt class="descname">elbow_position</tt><a class="headerlink" href="#Leap.Arm.elbow_position" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The position of the elbow.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">elbow</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">elbow_position</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Arm.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Arm.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Reports whether this Arm object contains valid data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">arm</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hand</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">arm</span>
+<span class="k">if</span><span class="p">(</span><span class="n">arm</span><span class="o">.</span><span class="n">is_valid</span><span class="p">):</span>
+    <span class="c"># ... Use the arm data</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Arm.width">
+<tt class="descname">width</tt><a class="headerlink" href="#Leap.Arm.width" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The average width of the arm.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">width</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">width</span>
+
+<span class="n">displacement</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">wrist_position</span> <span class="o">-</span> <span class="n">arm</span><span class="o">.</span><span class="n">elbow_position</span><span class="p">;</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">magnitude</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Arm.wrist_position">
+<tt class="descname">wrist_position</tt><a class="headerlink" href="#Leap.Arm.wrist_position" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The position of the wrist.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wrist</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">wrist_position</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="data container">
+<dl class="data">
+<dt id="Leap.Arm.invalid">
+<tt class="descname">invalid</tt><a class="headerlink" href="#Leap.Arm.invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Arm" title="Leap.Arm"><tt class="xref py py-class docutils literal"><span class="pre">Arm</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>An invalid Arm object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">arm</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Arm</span><span class="o">.</span><span class="n">invalid</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id23">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id27">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id16">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id32">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id8">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id5">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id20">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id29">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id53">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id24">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

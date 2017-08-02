@@ -1,0 +1,455 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Connecting to the Controller &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Tracking Model" href="Leap_Tracking.html" />
+    <link rel="prev" title="Using the Tracking API" href="Leap_Guides2.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/devguide/Leap_Controllers.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Controllers.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/devguide/Leap_Controllers.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Guides2.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Tracking.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_Controllers.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_Controllers.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Controllers.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Controllers.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Connecting to the Controller
+</span> -->
+        
+  <div class="section" id="connecting-to-the-controller">
+<h1>Connecting to the Controller<a class="headerlink" href="#connecting-to-the-controller" title="Permalink to this headline">¶</a></h1>
+<p>To connect to the Leap Motion device, create a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object. The <tt class="docutils literal"><span class="pre">Controller</span></tt> object automatically establishes a connection to the Leap Motion daemon or service which then passes tracking data, in the form of <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects to your application.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">controller</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Use the <tt class="docutils literal"><span class="pre">Controller</span></tt> object to get information about the state of the connection and connected hardware and to set connection options for your application.</p>
+<div class="section" id="getting-frames">
+<h2>Getting Frames<a class="headerlink" href="#getting-frames" title="Permalink to this headline">¶</a></h2>
+<p>Get <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects containing tracking data by calling the <a class="reference external" href="../api/Leap.Controller.html#Leap.Controller.frame">Controller.frame()</a> function. You can call this function whenever your application is ready to process data to get the most recent set of data generated by the Leap Motion device. You can also implement a <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> object defining a callback function and the <tt class="docutils literal"><span class="pre">Controller</span></tt> will invoke this function when a new frame of data is ready.</p>
+<p>See <a class="reference internal" href="Leap_Frames.html"><em>Frames</em></a> for more information.</p>
+</div>
+<div class="section" id="foreground-and-background-applications">
+<h2>Foreground and Background Applications<a class="headerlink" href="#foreground-and-background-applications" title="Permalink to this headline">¶</a></h2>
+<p>Ordinarily, the Leap Motion service/daemon only sends tracking data to the application that has the operating system input focus. This prevents applications idling in the background from receiving input intended for another applications.</p>
+<p>If your application runs in the foreground and you want to know whether the service/daemon considers your application to be the foreground application, you can check <a href="#id302"><span class="problematic" id="id303">|Controller.hasFocus|_</span></a> or listen to events dispatched by the controller. The service/daemon gets changes in application focus status directly from the operating system. Note that the Linux operating system does not provide this information, so applications running on Linux always receive tracking data.</p>
+<p>Note that applications connecting to the Leap Motion service/daemon through the WebSocket server do not automatically start receiving data when they gain the operating system focus. Applications using the WebSocket server must explicitly request focus from the service when they move to the foreground. (The LeapJS JavaScript library does manage the foreground-background transition for you, however.)</p>
+<p>You can tell the controller that your application wants data even when it is in the background using <a class="reference external" href="../api/Leap.Controller.html#Leap.Controller.set_policy">Controller.set_policy()</a>. Set the BACKGROUND_POLICY_FLAG policy for applications such as mouse emulators or operating system controls that need data when they are not the focused application. The <strong>Allow Background Apps</strong> setting in the Leap Motion control panel must be checked or the attempt to set the policy is denied.</p>
+<p>Note that your application does not receive frames if another
+Leap-enabled application is in the foreground, even when the background
+frames policy is in effect. The policy only matters when a non-Leap-enabled app
+has the operating system input focus.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">controller</span><span class="o">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="o">.</span><span class="n">POLICY_BACKGROUND_FRAMES</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="o">.</span><span class="n">POLICY_IMAGES</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="o">.</span><span class="n">POLICY_OPTIMIZE_HMD</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="access-to-images">
+<h2>Access to Images<a class="headerlink" href="#access-to-images" title="Permalink to this headline">¶</a></h2>
+<p>In order for your application to receive images from the Leap Motion cameras, you must set the <strong>Images</strong> policy. The <strong>Allow Images</strong> setting in the Leap Motion control panel must be checked or the attempt to set the policy is denied. See <a class="reference internal" href="Leap_Images.html"><em>Camera Images</em></a>.</p>
+</div>
+<div class="section" id="connection-state">
+<h2>Connection State<a class="headerlink" href="#connection-state" title="Permalink to this headline">¶</a></h2>
+<p>When you create a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a>, the object attempts to establish a connection to the Leap Motion service/daemon. If it succeeds, the <a href="#id304"><span class="problematic" id="id305">|Controller.isServiceConnected|_</span></a> property changes to true. Likewise, if the Leap Motion hardware is plugged in and detected by the service/daemon, the <a class="reference external" href="../api/Leap.Controller.html#Leap.Controller.is_connected">Controller.is_connected</a> property changes to true.</p>
+<p>The is_service_connected and is_connected properties can change while your application is running. You can monitor their values or <a class="reference external" href="ListeningforControllerEvents">listen for events</a> dispatched by the controller when the connection status changes.</p>
+</div>
+<div class="section" id="listening-for-controller-events">
+<h2>Listening for Controller Events<a class="headerlink" href="#listening-for-controller-events" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object dispatches a number of events using the <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> mechanism. To handle these events, you can extend the <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> class to implement callback functions. The <tt class="docutils literal"><span class="pre">Controller</span></tt> invokes the relevant callback function when an event occurs.</p>
+<p>The events include:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id306"><span class="problematic" id="id307">|Listener_onConnect|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> connects to the Leap Motion service/daemon and the Leap Motion hardware is attached.</td>
+</tr>
+<tr class="row-even"><td><a href="#id308"><span class="problematic" id="id309">|Listener_onDeviceChange|_</span></a></td>
+<td>The status of a Leap Motion hardware device changes.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id310"><span class="problematic" id="id311">|Listener_onDisconnect|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> disconnects from the Leap Motion service/daemon or the Leap Motion hardware is removed.</td>
+</tr>
+<tr class="row-even"><td><a href="#id312"><span class="problematic" id="id313">|Listener_onExit|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> object is destroyed.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id314"><span class="problematic" id="id315">|Listener_onFocusGained|_</span></a></td>
+<td>The application has gained operating system input focus and will start receiving tracking data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id316"><span class="problematic" id="id317">|Listener_onFocusLost|_</span></a></td>
+<td>The application has lost operating system input focus. The application will stop receiving tracking data unless it has set the <a class="reference external" href="../devguide/Leap_Controllers.html#foreground-and-background-applications">BACKGROUND_FRAMES_POLICY</a>.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id318"><span class="problematic" id="id319">|Listener_onFrame|_</span></a></td>
+<td>A new <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> of tracking data is available.</td>
+</tr>
+<tr class="row-even"><td><a href="#id320"><span class="problematic" id="id321">|Listener_onInit|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> object is initialized.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id322"><span class="problematic" id="id323">|Listener_onServiceConnect|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> has connected to the Leap Motion service/daemon.</td>
+</tr>
+<tr class="row-even"><td><a href="#id324"><span class="problematic" id="id325">|Listener_onServiceDisconnect|_</span></a></td>
+<td>The <tt class="docutils literal"><span class="pre">Controller</span></tt> has lost its connection to the Leap Motion service/daemon.</td>
+</tr>
+</tbody>
+</table>
+<p>The dispatching <tt class="docutils literal"><span class="pre">Controller</span></tt> passes itself to the callback, which makes it easy to then query the <tt class="docutils literal"><span class="pre">Controller</span></tt> for more information in the body of the callback function.</p>
+<p>The following example shows a simplistic implementation of a Listener subclass with some representative callback functions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">Leap</span><span class="o">,</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">LeapEventListener</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Listener</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Connected&quot;</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">enable_gesture</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">TYPE_SWIPE</span><span class="p">)</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.Swipe.MinLength&quot;</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">)</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="c"># Note: not dispatched when running in a debugger.</span>
+        <span class="k">print</span> <span class="s">&quot;Disconnected&quot;</span>
+
+    <span class="k">def</span> <span class="nf">on_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Frame available&quot;</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span>
+        <span class="c">#Process frame data</span>
+</pre></div>
+</div>
+<p>You can then add an instance of your listener implementation to a controller:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">listener</span> <span class="o">=</span> <span class="n">LeapEventListener</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="p">()</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Each event callback function is invoked on an independent thread created by the Leap Motion library. The tracking data objects created by the library are thread safe, but you must make sure that other application data accessed from the callback function can be safely altered from seprate threads. You can avoid the complications associated with multithreaded applications by polling the <tt class="docutils literal"><span class="pre">Controller</span></tt> for frames and state when convenient for your application instead of using listeners.</p>
+</div>
+<div class="section" id="device-types">
+<h2>Device Types<a class="headerlink" href="#device-types" title="Permalink to this headline">¶</a></h2>
+<p>There are currently three types of Leap Motion hardware available: the standard controller as a separate computer peripheral, a controller embedded in a computer keyboard, and a controller embedded in a laptop computer  The performance of all of these devices is equivalent. However, be aware that the devices are very different physically. For example, devices embedded in laptops cannot be unplugged, but rather are activated or deactivated with keyboard shortcuts.</p>
+<p>You can get the device type from <a class="reference external" href="../api/Leap.Device.html#Leap.Device.type">Device.type</a>. Use <a class="reference external" href="../api/Leap.Controller.html#Leap.Controller.devices">Controller.devices</a> to get the list of attached devices (currently only one device is recognized at a time).</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Connecting to the Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames">Getting Frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foreground-and-background-applications">Foreground and Background Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#access-to-images">Access to Images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connection-state">Connection State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listening-for-controller-events">Listening for Controller Events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#device-types">Device Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Frames.html">Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

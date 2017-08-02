@@ -1,0 +1,483 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hello World &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="Setting Up a Project" href="Project_Setup.html" />
+    <link rel="prev" title="SDK Libraries" href="Leap_SDK_Overview.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/devguide/Sample_Tutorial.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Sample_Tutorial.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/devguide/Sample_Tutorial.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_SDK_Overview.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Project_Setup.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Sample_Tutorial.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Sample_Tutorial.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Sample_Tutorial.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Sample_Tutorial.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Sample_Tutorial.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Hello World
+</span> -->
+        
+  <div class="section" id="id47">
+<h1>Hello World<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h1>
+<p>This article discusses the JavaScript sample application included with the Leap SDK. After reading this article, you should be ready to access Leap Motion hand tracking data from your own Web applications.</p>
+<p>In the Leap SDK folder, you can find the following file used for this article:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">LeapSDK/samples/Sample.html</span></tt> — JavaScript sample application</li>
+</ul>
+<p>You will also need the Leap JavaScript client library available from <a class="reference external" href="https://github.com/leapmotion/leapjs">Leap Motion&#8217;s LeapJS repository on GitHub</a>.</p>
+<div class="section" id="id48">
+<h2>Overview<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h2>
+<p>In a nutshell, the Leap Motion tracking device detects and tracks hands and fingers placed within its field of view. The Leap captures this data one <em>frame</em> at a time. Web applications can use the Leap Motion JavaScript API to access this data. The Leap Motion controller sends tracking information through the socket connection as a JSON formatted message. The JavaScript API takes the JSON message and evaluates it into proper objects.</p>
+<p>The sample application demonstrates how to use the Leap Motion JavaScript API. The example is contained in a single Web page, <tt class="docutils literal"><span class="pre">Sample.html</span></tt>. The application displays several properties from the key tracking data objects in the Leap Motion API, including:</p>
+<ul class="simple">
+<li><a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> — contains a set of hand and pointable tracking data</li>
+<li><a class="reference external" href="../api/Leap.Hand.html"><tt class="docutils literal"><span class="pre">Hand</span></tt></a> — contains tracking data for a detected hand</li>
+<li><a class="reference external" href="../api/Leap.Pointable.html"><tt class="docutils literal"><span class="pre">Pointable</span></tt></a> — contains tracking data for a detected finger</li>
+</ul>
+</div>
+<div class="section" id="javascript-client-library">
+<h2>JavaScript client library<a class="headerlink" href="#javascript-client-library" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion JavaScript client library is available from <a class="reference external" href="https://github.com/leapmotion/leapjs">Leap Motion&#8217;s LeapJS repository on GitHub</a>. The library handles the connection to the Leap Motion service or daemon and passes frames of tracking data to your application. LeapJS is an open-source project and distributed separately from the main Leap SDK. We encourage community contributions to this library.</p>
+</div>
+<div class="section" id="setting-up-the-page">
+<h2>Setting up the page<a class="headerlink" href="#setting-up-the-page" title="Permalink to this headline">¶</a></h2>
+<p>To use the JavaScript API, you must include the <tt class="docutils literal"><span class="pre">leap.js</span></tt> file (or the minified version, <tt class="docutils literal"><span class="pre">leap.min.js</span></tt>). The <tt class="docutils literal"><span class="pre">Sample.html</span></tt> file uses a simple HTML structure to display the Leap data and include the <tt class="docutils literal"><span class="pre">leap.js</span></tt> file in the usual way using script tags:</p>
+<div class="code html highlight-python"><div class="highlight"><pre>&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Leap JavaScript Sample&lt;/title&gt;
+    &lt;script src=&quot;leap.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;// JavaScript code goes here&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body onload=&quot;checkLibrary()&quot;&gt;
+    &lt;h1&gt;Leap JavaScript Sample&lt;/h1&gt;
+    &lt;div id=&quot;main&quot;&gt;
+      &lt;h3&gt;Frame data:&lt;/h3&gt;
+      &lt;div id=&quot;frameData&quot;&gt;&lt;/div&gt;
+      &lt;div style=&quot;clear:both;&quot;&gt;&lt;/div&gt;
+      &lt;h3&gt;Hand data:&lt;/h3&gt;
+      &lt;div id=&quot;handData&quot;&gt;&lt;/div&gt;
+      &lt;div style=&quot;clear:both;&quot;&gt;&lt;/div&gt;
+      &lt;h3&gt;Finger data:&lt;/h3&gt;
+      &lt;div id=&quot;pointableData&quot;&gt;&lt;/div&gt;
+      &lt;div style=&quot;clear:both;&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<p>To keep things simple, all the example code in the example is in the main HTML file.</p>
+</div>
+<div class="section" id="setting-up-the-event-loop">
+<h2>Setting up the event loop<a class="headerlink" href="#setting-up-the-event-loop" title="Permalink to this headline">¶</a></h2>
+<p>Since the Leap Motion controller provides data continuously, you need to set up an event loop to handle individual frames of data. You can either set up a loop that handles the data as the Leap Motion controller produces each frame, or you can set up a loop that handles the data when your application is ready to do something with it. The Leap Motion JavaScript client library supports both options.</p>
+<p>This example demonstrates the second method since there is no need in this app to process the data faster than the browser can draw it to the screen. The Leap Motion API provides the <tt class="docutils literal"><span class="pre">Leap.loop()</span></tt> function, which invokes a callback function you provide whenever the browser is ready to draw. In this sample, the callback is an anonymous function that prints out the tracking data to the body of the web page. The first parameter of the <tt class="docutils literal"><span class="pre">loop()</span></tt> function contains optional settings parameters that are passed to the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object. This is the skeleton of the function:</p>
+<div class="code js highlight-python"><div class="highlight"><pre>// Setup Leap loop with frame callback function
+var controllerOptions = {};
+
+Leap.loop(controllerOptions, function(frame) {
+  // Body of callback function
+})
+</pre></div>
+</div>
+<p>Internally, <tt class="docutils literal"><span class="pre">Leap.loop()</span></tt> uses the browser&#8217;s <tt class="docutils literal"><span class="pre">requestAnimationFrame()</span></tt> feature and passes the latest frame of Leap Motion data to the application on each browser animation cycle.</p>
+</div>
+<div class="section" id="accessing-tracking-data">
+<h2>Accessing tracking data<a class="headerlink" href="#accessing-tracking-data" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object passed to the <tt class="docutils literal"><span class="pre">loop()</span></tt> callback function as the <tt class="docutils literal"><span class="pre">frame</span></tt> parameter is root of the tracking data model and provides access to all the tracked objects, like hands and fingers. To display the data, the example creates a string of HTML containing the object properties and assigns the string to a <tt class="docutils literal"><span class="pre">div</span></tt> element on the page.</p>
+<div class="section" id="frame-data">
+<h3>Frame data<a class="headerlink" href="#frame-data" title="Permalink to this headline">¶</a></h3>
+<p>Displaying the basic frame data is a simple matter of constructing a string using the <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object properties:</p>
+<div class="code js highlight-python"><div class="highlight"><pre>var frameString = &quot;Frame ID: &quot; + frame.id  + &quot;&lt;br /&gt;&quot;
+                + &quot;Timestamp: &quot; + frame.timestamp + &quot; &amp;micro;s&lt;br /&gt;&quot;
+                + &quot;Hands: &quot; + frame.hands.length + &quot;&lt;br /&gt;&quot;
+                + &quot;Fingers: &quot; + frame.fingers.length + &quot;&lt;br /&gt;&quot;;
+</pre></div>
+</div>
+</div>
+<div class="section" id="hand-data">
+<h3>Hand data<a class="headerlink" href="#hand-data" title="Permalink to this headline">¶</a></h3>
+<p>Hands can be accessed from the <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object using the <tt class="docutils literal"><span class="pre">hands</span></tt> property, which is an array. The example code iterates through the list of hands and prints out the <a class="reference external" href="../api/Leap.Hand.html"><tt class="docutils literal"><span class="pre">Hand</span></tt></a> object properties, IDs for associated fingers, and the motion data for each hand.</p>
+<div class="code js highlight-python"><div class="highlight"><pre>// Display Hand object data
+var handString = &quot;&quot;;
+if (frame.hands.length &gt; 0) {
+  for (var i = 0; i &lt; frame.hands.length; i++) {
+    var hand = frame.hands[i];
+
+    handString += &quot;Hand ID: &quot; + hand.id + &quot;&lt;br /&gt;&quot;;
+    handString += &quot;Direction: &quot; + vectorToString(hand.direction, 2) + &quot;&lt;br /&gt;&quot;;
+    handString += &quot;Palm normal: &quot; + vectorToString(hand.palmNormal, 2) + &quot;&lt;br /&gt;&quot;;
+    handString += &quot;Palm position: &quot; + vectorToString(hand.palmPosition) + &quot; mm&lt;br /&gt;&quot;;
+    handString += &quot;Palm velocity: &quot; + vectorToString(hand.palmVelocity) + &quot; mm/s&lt;br /&gt;&quot;;
+    handString += &quot;Sphere center: &quot; + vectorToString(hand.sphereCenter) + &quot; mm&lt;br /&gt;&quot;;
+    handString += &quot;Sphere radius: &quot; + hand.sphereRadius.toFixed(1) + &quot; mm&lt;br /&gt;&quot;;
+
+    // And so on...
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="finger-data">
+<h3>Finger data<a class="headerlink" href="#finger-data" title="Permalink to this headline">¶</a></h3>
+<p>Fingers are represented by <a class="reference external" href="../api/Leap.Pointable.html"><tt class="docutils literal"><span class="pre">Pointable</span></tt></a> objects in the JavaScript API. The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object provides a <tt class="docutils literal"><span class="pre">pointables</span></tt> property, which is an array containing all the fingers detected in that frame. <a class="reference external" href="../api/Leap.Hand.html"><tt class="docutils literal"><span class="pre">Hand</span></tt></a> objects also contain a <tt class="docutils literal"><span class="pre">pointables</span></tt> list, which contains only the pointable objects representing the fingers of that hand.</p>
+<div class="code js highlight-python"><div class="highlight"><pre>// Display Pointable (finger) object data
+var pointableString = &quot;&quot;;
+if (frame.pointables.length &gt; 0) {
+  for (var i = 0; i &lt; frame.pointables.length; i++) {
+    var pointable = frame.pointables[i];
+
+    pointableString += &quot;Pointable ID: &quot; + pointable.id + &quot;&lt;br /&gt;&quot;;
+    pointableString += &quot;Belongs to hand with ID: &quot; + pointable.handId + &quot;&lt;br /&gt;&quot;;
+    pointableString += &quot;Length: &quot; + pointable.length.toFixed(1) + &quot; mm&lt;br /&gt;&quot;;
+    pointableString += &quot;Width: &quot;  + pointable.width.toFixed(1) + &quot; mm&lt;br /&gt;&quot;;
+    pointableString += &quot;Direction: &quot; + vectorToString(pointable.direction, 2) + &quot;&lt;br /&gt;&quot;;
+    pointableString += &quot;Tip position: &quot; + vectorToString(pointable.tipPosition) + &quot; mm&lt;br /&gt;&quot;;
+    pointableString += &quot;Tip velocity: &quot; + vectorToString(pointable.tipVelocity) + &quot; mm/s&lt;br /&gt;&quot;;
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id49">
+<h2>Running the sample<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h2>
+<p>To run the sample application:</p>
+<ol class="arabic">
+<li><p class="first">Plug the Leap device into a USB port and place it in front of you.</p>
+</li>
+<li><p class="first">If you haven’t already, install the Leap Motion software.</p>
+</li>
+<li><p class="first">The Leap Motion software should start automatically.</p>
+<p>The Leap Motion control panel icon appears in the notification area of the task bar (on Windows) or finder bar (on Mac) and turns green when ready. A service or daemon runs in the background and provides data to client applications through the Leap Motion API. You can use the <a class="reference internal" href="../supplements/Leap_Visualizer.html"><em>diagnostic visualizer</em></a> to check whether the software is set up and running correctly.</p>
+</li>
+<li><p class="first">Open Sample.html in a browser that supports WebSockets.</p>
+</li>
+</ol>
+<p>When you place a hand above the Leap, you should see the Frame, Hand, and Finger information printed out on the page.</p>
+<p>Now that you have seen how to access motion tracking data with the Leap Motion API, you can begin developing your own JavaScript applications that integrate the Leap Motion controller.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id47">Hello World</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id48">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#javascript-client-library">JavaScript client library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-page">Setting up the page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-event-loop">Setting up the event loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accessing-tracking-data">Accessing tracking data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#frame-data">Frame data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hand-data">Hand data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finger-data">Finger data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id49">Running the sample</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Setup.html#id14">Setting Up a Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

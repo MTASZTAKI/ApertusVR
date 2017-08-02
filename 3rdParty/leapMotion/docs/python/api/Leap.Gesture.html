@@ -1,0 +1,977 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Gesture &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Gesture.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Gesture.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Gesture.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Gesture.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/index.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Gesture.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Gesture.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Gesture.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Gesture
+</span> -->
+        
+  <div class="section" id="id17">
+<h1>Gesture<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h1>
+<p><strong>Notice</strong> Gestures are deprecated in version 3.0 and may not behave the same
+as they did in earlier versions.</p>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Gesture.duration" title="Leap.Gesture.duration"><tt class="xref py py-attr docutils literal"><span class="pre">duration</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.duration_seconds" title="Leap.Gesture.duration_seconds"><tt class="xref py py-attr docutils literal"><span class="pre">duration_seconds</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.frame" title="Leap.Gesture.frame"><tt class="xref py py-attr docutils literal"><span class="pre">frame</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.hands" title="Leap.Gesture.hands"><tt class="xref py py-attr docutils literal"><span class="pre">hands</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.id" title="Leap.Gesture.id"><tt class="xref py py-attr docutils literal"><span class="pre">id</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.is_valid" title="Leap.Gesture.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.pointables" title="Leap.Gesture.pointables"><tt class="xref py py-attr docutils literal"><span class="pre">pointables</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.state" title="Leap.Gesture.state"><tt class="xref py py-attr docutils literal"><span class="pre">state</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.type" title="Leap.Gesture.type"><tt class="xref py py-attr docutils literal"><span class="pre">type</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Constants:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Gesture.TYPE_INVALID" title="Leap.Gesture.TYPE_INVALID"><tt class="xref py py-data docutils literal"><span class="pre">TYPE_INVALID</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.TYPE_CIRCLE" title="Leap.Gesture.TYPE_CIRCLE"><tt class="xref py py-data docutils literal"><span class="pre">TYPE_CIRCLE</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.TYPE_KEY_TAP" title="Leap.Gesture.TYPE_KEY_TAP"><tt class="xref py py-data docutils literal"><span class="pre">TYPE_KEY_TAP</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.TYPE_SCREEN_TAP" title="Leap.Gesture.TYPE_SCREEN_TAP"><tt class="xref py py-data docutils literal"><span class="pre">TYPE_SCREEN_TAP</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.TYPE_SWIPE" title="Leap.Gesture.TYPE_SWIPE"><tt class="xref py py-data docutils literal"><span class="pre">TYPE_SWIPE</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.STATE_START" title="Leap.Gesture.STATE_START"><tt class="xref py py-data docutils literal"><span class="pre">STATE_START</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.STATE_STOP" title="Leap.Gesture.STATE_STOP"><tt class="xref py py-data docutils literal"><span class="pre">STATE_STOP</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Gesture.STATE_UPDATE" title="Leap.Gesture.STATE_UPDATE"><tt class="xref py py-data docutils literal"><span class="pre">STATE_UPDATE</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Gesture">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Gesture</tt><a class="headerlink" href="#Leap.Gesture" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Gesture class represents a recognized movement by the user.</p>
+<p>The Leap Motion Controller watches the activity within its field of view for certain movement
+patterns typical of a user gesture or command. For example, a movement from side to
+side with the hand can indicate a swipe gesture, while a finger poking forward
+can indicate a screen tap gesture.</p>
+<p>When the Leap Motion software recognizes a gesture, it assigns an ID and adds a
+Gesture object to the frame gesture list. For continuous gestures, which
+occur over many frames, the Leap Motion software updates the gesture by adding
+a Gesture object having the same ID and updated properties in each
+subsequent frame.</p>
+<p><em>Important:</em> Recognition for each type of gesture must be enabled using the
+<a class="reference internal" href="Leap.Controller.html#Leap.Controller.enable_gesture" title="Leap.Controller.enable_gesture"><tt class="xref py py-func docutils literal"><span class="pre">Controller.enable_gesture()</span></tt></a> function; otherwise <em>no gestures are recognized or
+reported</em>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">controller</span><span class="o">.</span><span class="n">enable_gesture</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_CIRCLE</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">enable_gesture</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SWIPE</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">enable_gesture</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_KEY_TAP</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">enable_gesture</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SCREEN_TAP</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Subclasses of Gesture define the properties for the specific movement patterns
+recognized by the Leap Motion software.</p>
+<p>The Gesture subclasses for include:</p>
+<ul class="simple">
+<li><a class="reference internal" href="Leap.CircleGesture.html#Leap.CircleGesture" title="Leap.CircleGesture"><tt class="xref py py-class docutils literal"><span class="pre">CircleGesture</span></tt></a> &#8211; A circular movement by a finger.</li>
+<li><a class="reference internal" href="Leap.SwipeGesture.html#Leap.SwipeGesture" title="Leap.SwipeGesture"><tt class="xref py py-class docutils literal"><span class="pre">SwipeGesture</span></tt></a> &#8211; A straight line movement by the hand with fingers extended.</li>
+<li><a class="reference internal" href="Leap.ScreenTapGesture.html#Leap.ScreenTapGesture" title="Leap.ScreenTapGesture"><tt class="xref py py-class docutils literal"><span class="pre">ScreenTapGesture</span></tt></a> &#8211; A forward tapping movement by a finger.</li>
+<li><a class="reference internal" href="Leap.KeyTapGesture.html#Leap.KeyTapGesture" title="Leap.KeyTapGesture"><tt class="xref py py-class docutils literal"><span class="pre">KeyTapGesture</span></tt></a> &#8211; A downward tapping movement by a finger.</li>
+</ul>
+<p>Circle and swipe gestures are continuous and these objects can have a
+state of start, update, and stop.</p>
+<p>The screen tap gesture is a discrete gesture. The Leap Motion software only creates a single
+ScreenTapGesture object for each tap and it always has a stop state.</p>
+<p>Get valid Gesture instances from a Frame object. You can get a list of gestures
+with the <a class="reference internal" href="Leap.Frame.html#Leap.Frame.gestures" title="Leap.Frame.gestures"><tt class="xref py py-func docutils literal"><span class="pre">Frame.gestures()</span></tt></a> method. You can get a list of gestures since a
+specified frame by passing an earlier frame to this method. You can also
+use the <a class="reference internal" href="Leap.Frame.html#Leap.Frame.gesture" title="Leap.Frame.gesture"><tt class="xref py py-func docutils literal"><span class="pre">Frame.gesture()</span></tt></a> method to find a gesture in the current frame using
+an ID value obtained in a previous frame.</p>
+<p>Gesture objects can be invalid. For example, when you get a gesture by ID
+using <tt class="docutils literal"><span class="pre">Frame.gesture()</span></tt>, and there is no gesture with that ID in the current
+frame, then <tt class="docutils literal"><span class="pre">gesture()</span></tt> returns an Invalid Gesture object (rather than a null
+value). Always check object validity in situations where a gesture might be
+invalid.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;Valid gesture&quot;</span>
+</pre></div>
+</div>
+<p>The following keys can be used with the Config class to configure the gesture
+recognizer:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="15%" />
+<col width="20%" />
+<col width="11%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key string</th>
+<th class="head">Value type</th>
+<th class="head">Default value</th>
+<th class="head">Units</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Gesture.Circle.MinRadius</td>
+<td>float</td>
+<td>5.0</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.Circle.MinArc</td>
+<td>float</td>
+<td>1.5 * pi</td>
+<td>radians</td>
+</tr>
+<tr class="row-even"><td>Gesture.Swipe.MinLength</td>
+<td>float</td>
+<td>150</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.Swipe.MinVelocity</td>
+<td>float</td>
+<td>1000</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-even"><td>Gesture.KeyTap.MinDownVelocity</td>
+<td>float</td>
+<td>50</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-odd"><td>Gesture.KeyTap.HistorySeconds</td>
+<td>float</td>
+<td>0.1</td>
+<td>s</td>
+</tr>
+<tr class="row-even"><td>Gesture.KeyTap.MinDistance</td>
+<td>float</td>
+<td>3.0</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.ScreenTap.MinForwardVelocity</td>
+<td>float</td>
+<td>50</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-even"><td>Gesture.ScreenTap.HistorySeconds</td>
+<td>float</td>
+<td>0.1</td>
+<td>s</td>
+</tr>
+<tr class="row-odd"><td>Gesture.ScreenTap.MinDistance</td>
+<td>float</td>
+<td>5.0</td>
+<td>mm</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.Circle.MinRadius&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.Circle.MinArc&quot;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.Swipe.MinLength&quot;</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.Swipe.MinVelocity&quot;</span><span class="p">,</span> <span class="mi">750</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.KeyTap.MinDownVelocity&quot;</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.KeyTap.HistorySeconds&quot;</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.KeyTap.MinDistance&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.ScreenTap.MinForwardVelocity&quot;</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.ScreenTap.HistorySeconds&quot;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Gesture.ScreenTap.MinDistance&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+<div class="data container">
+<dl class="data">
+<dt id="Leap.Gesture.TYPE_INVALID">
+<tt class="descname">TYPE_INVALID</tt><a class="headerlink" href="#Leap.Gesture.TYPE_INVALID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>An invalid type.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.TYPE_SWIPE">
+<tt class="descname">TYPE_SWIPE</tt><a class="headerlink" href="#Leap.Gesture.TYPE_SWIPE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>A straight line movement by the hand with fingers extended.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SWIPE</span><span class="p">:</span>
+        <span class="n">swipe</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">SwipeGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.TYPE_CIRCLE">
+<tt class="descname">TYPE_CIRCLE</tt><a class="headerlink" href="#Leap.Gesture.TYPE_CIRCLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>A circular movement by a finger.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_CIRCLE</span><span class="p">:</span>
+        <span class="n">circle</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">CircleGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.TYPE_SCREEN_TAP">
+<tt class="descname">TYPE_SCREEN_TAP</tt><a class="headerlink" href="#Leap.Gesture.TYPE_SCREEN_TAP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>A forward tapping movement by a finger.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SCREEN_TAP</span><span class="p">:</span>
+        <span class="n">screen_tap</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">ScreenTapGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.TYPE_KEY_TAP">
+<tt class="descname">TYPE_KEY_TAP</tt><a class="headerlink" href="#Leap.Gesture.TYPE_KEY_TAP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>A downward tapping movement by a finger.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_KEY_TAP</span><span class="p">:</span>
+        <span class="n">key_tap</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">KeyTapGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.STATE_INVALID">
+<tt class="descname">STATE_INVALID</tt><a class="headerlink" href="#Leap.Gesture.STATE_INVALID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>An invalid state</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.STATE_START">
+<tt class="descname">STATE_START</tt><a class="headerlink" href="#Leap.Gesture.STATE_START" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture is starting. Just enough has happened to recognize it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">STATE_START</span><span class="p">:</span>
+        <span class="c">#Start tracking a continuous gesture (swipe or circle)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.STATE_UPDATE">
+<tt class="descname">STATE_UPDATE</tt><a class="headerlink" href="#Leap.Gesture.STATE_UPDATE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture is in progress. (Note: not all gestures have updates).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">STATE_UPDATE</span><span class="p">:</span>
+        <span class="c">#Update an in-progress gesture (swipe or circle)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.STATE_STOP">
+<tt class="descname">STATE_STOP</tt><a class="headerlink" href="#Leap.Gesture.STATE_STOP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture has completed or stopped.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">STATE_STOP</span><span class="p">:</span>
+        <span class="c">#End a tracked gesture</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Gesture.invalid">
+<tt class="descname">invalid</tt><a class="headerlink" href="#Leap.Gesture.invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">An invalid Gesture object.</td>
+</tr>
+</tbody>
+</table>
+<p>You can use the instance returned by this function in comparisons testing
+whether a given Gesture instance is valid or invalid. (You can also use the
+<a class="reference internal" href="#Leap.Gesture.is_valid" title="Leap.Gesture.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a> attribute.)</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Gesture.Gesture">
+<em class="property">classmethod </em><tt class="descname">Gesture</tt><big>(</big><span class="optional">[</span><em>gesture</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Leap.Gesture.Gesture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a new copy of an Gesture object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">gesture</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">gestures</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_CIRCLE</span><span class="p">:</span>
+        <span class="n">circle</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">CircleGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SWIPE</span><span class="p">:</span>
+        <span class="n">swipe</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">SwipeGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_KEY_TAP</span><span class="p">:</span>
+        <span class="n">key_tap</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">KeyTapGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_SCREEN_TAP</span><span class="p">:</span>
+        <span class="n">screen_tap</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">ScreenTapGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Arguments</strong></p>
+<p><tt class="docutils literal"><span class="pre">gesture</span></tt> (<a class="reference internal" href="#Leap.Gesture" title="Leap.Gesture"><tt class="xref py py-class docutils literal"><span class="pre">Gesture</span></tt></a>) &#8211; a Gesture object or one of its subclasses. If no
+gesture parameter is supplied, an invalid Gesture object is returned.</p>
+<p>Get valid instances of the Gesture class, which will be one of the Gesture subclasses, from a
+Frame object.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Gesture.type">
+<tt class="descname">type</tt><a class="headerlink" href="#Leap.Gesture.type" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture type.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">TYPE_CIRCLE</span><span class="p">:</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">CircleGesture</span><span class="p">(</span><span class="n">gesture</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.state">
+<tt class="descname">state</tt><a class="headerlink" href="#Leap.Gesture.state" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture state.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Gesture</span><span class="o">.</span><span class="n">STATE_START</span><span class="p">:</span>
+    <span class="c">#Start tracking a continuous gesture (swipe or circle)</span>
+</pre></div>
+</div>
+<p>Recognized movements occur over time and have a beginning, a middle,
+and an end. The <tt class="docutils literal"><span class="pre">state</span></tt> attribute reports where in that sequence this
+Gesture object falls.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.id">
+<tt class="descname">id</tt><a class="headerlink" href="#Leap.Gesture.id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The gesture ID.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">id</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>All Gesture objects belonging to the same recognized movement share the
+same ID value. Use the ID value with the <a class="reference internal" href="Leap.Frame.html#Leap.Frame.gesture" title="Leap.Frame.gesture"><tt class="xref py py-func docutils literal"><span class="pre">Frame.gesture()</span></tt></a> method to
+find updates related to this Gesture object in subsequent frames.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#Leap.Gesture.duration" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">long</td>
+</tr>
+</tbody>
+</table>
+<p>The elapsed duration of the recognized movement up to the
+frame containing this Gesture object, in microseconds.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">microseconds</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">duration</span>
+</pre></div>
+</div>
+<p>The duration reported for the first Gesture in the sequence (with the
+STATE_START state) will typically be a small positive number since
+the movement must progress far enough for the Leap Motion software to recognize it as
+an intentional gesture.</p>
+<p>See also: <a class="reference internal" href="#Leap.Gesture.duration_seconds" title="Leap.Gesture.duration_seconds"><tt class="xref py py-attr docutils literal"><span class="pre">duration_seconds</span></tt></a></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.duration_seconds">
+<tt class="descname">duration_seconds</tt><a class="headerlink" href="#Leap.Gesture.duration_seconds" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The elapsed duration in seconds.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">seconds</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">duration_seconds</span>
+</pre></div>
+</div>
+<p>See also: <a class="reference internal" href="#Leap.Gesture.duration" title="Leap.Gesture.duration"><tt class="xref py py-attr docutils literal"><span class="pre">duration</span></tt></a></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.frame">
+<tt class="descname">frame</tt><a class="headerlink" href="#Leap.Gesture.frame" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The Frame containing this Gesture instance.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">owning_frame</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">frame</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.hands">
+<tt class="descname">hands</tt><a class="headerlink" href="#Leap.Gesture.hands" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.HandList.html#Leap.HandList" title="Leap.HandList"><tt class="xref py py-class docutils literal"><span class="pre">HandList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of hands associated with this Gesture, if any.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gesturing_hands</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">hands</span>
+</pre></div>
+</div>
+<p>If no hands are related to this gesture, the list is empty.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.pointables">
+<tt class="descname">pointables</tt><a class="headerlink" href="#Leap.Gesture.pointables" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.PointableList.html#Leap.PointableList" title="Leap.PointableList"><tt class="xref py py-class docutils literal"><span class="pre">PointableList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of fingers associated with this Gesture, if any.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gesturing_pointables</span> <span class="o">=</span> <span class="n">gesture</span><span class="o">.</span><span class="n">pointables</span>
+</pre></div>
+</div>
+<p>If no Pointable objects are related to this gesture, the list is empty.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Gesture.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Gesture.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p>Reports whether this Gesture instance represents a valid Gesture.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">gesture</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;Valid gesture&quot;</span>
+</pre></div>
+</div>
+<p>An invalid Gesture object does not represent a snapshot of a recognized
+movement. Invalid Gesture objects are returned when a valid object cannot
+be provided. For example, when you get an gesture by ID
+using <a class="reference internal" href="Leap.Frame.html#Leap.Frame.gesture" title="Leap.Frame.gesture"><tt class="xref py py-func docutils literal"><span class="pre">Frame.gesture()</span></tt></a>, and there is no gesture with that ID in the current
+frame, then <tt class="docutils literal"><span class="pre">gesture()</span></tt> returns an invalid Gesture object (rather than a null
+value). Always check object validity in situations where an gesture might be
+invalid.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="operators container">
+<dl class="method">
+<dt id="Leap.Gesture.eq">
+<tt class="descname">eq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Gesture.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Gesture object equality.</p>
+<p>Two Gestures are equal if they represent the same snapshot of the same
+recognized movement.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Gesture.ne">
+<tt class="descname">ne</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Gesture.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Gesture object inequality.</p>
+<p>Two Gestures are equal only if they represent the same snapshot of the same
+recognized movement.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

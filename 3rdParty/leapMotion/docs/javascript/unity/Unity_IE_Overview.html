@@ -1,0 +1,406 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interaction Engine Overview &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/unity/Unity_IE_Overview.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity_IE_Overview.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity_IE_Overview.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/unity/Unity_IE_Overview.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity_IE_Overview.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Interaction Engine Overview
+</span> -->
+        
+  <div class="section" id="interaction-engine-overview">
+<h1>Interaction Engine Overview<a class="headerlink" href="#interaction-engine-overview" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion Interaction Engine addresses the limitations of traditional real-time physics engines when manually manipulating virtual objects. It provides extensible components for controlling interactions between hands and 3D objects in an application.</p>
+<div class="section" id="real-time-physics">
+<h2>Real-time Physics<a class="headerlink" href="#real-time-physics" title="Permalink to this headline">¶</a></h2>
+<p>Real-time physics engines are designed with the requirement that rigid bodies (the objects being simulated) are not allowed interpenetrate each other. When interpenetration occurs, the physics engine has to move the objects apart, often violently, to preserve the physical integrity of the scene. (For an overview of rigid body real-time physics as implemented in Unity 3D see <a class="reference external" href="https://docs.unity3d.com/Manual/class-Rigidbody.html">https://docs.unity3d.com/Manual/class-Rigidbody.html</a>.) At the same time, physics enigines are often optimized for large forces operating on large bodies, such as full human bodies and vehicles.</p>
+<p>A problem with this design arises when using a rigid body representation of hands in order to allow users to directly influence other objects in the scene.  It is very easy to position your fingers in a way where there is no suitable outcome for the objects being touched.  For example, if you squish an object against the floor, or crush something in your hand, the physics engine might send the object flying in a desperate attempt to keep your fingers out of it. Even trying to pick up an object gently can be problematic as the physics engine tries to push the object away at the same time that you try to grasp it in your fingers.</p>
+<p>To make this work in a way that satisfies the user&#8217;s expectations, the Interaction Engine implements an alternate set of physics rules for what it means to have your hands embedded inside a virtual object. While the results from this are impossible in reality, they also provide better, more satisfying hand-object interaction.</p>
+<p>The <a class="reference external" href="https://github.com/leapmotion/InteractionEngine101">Interaction Engine 101</a> example was created to allow you to explore the limitations of the built-in Unity physics engine (limitations that are not unique to Unity) and to verify the solutions provided by the Interaction Engine yourself.</p>
+</div>
+<div class="section" id="grasp-detection">
+<h2>Grasp Detection<a class="headerlink" href="#grasp-detection" title="Permalink to this headline">¶</a></h2>
+<p>The Interaction Engine has made groundbreaking advances in the simulation of virtual objects that are being touched. However, to pick objects up and hold them in a way that feels solid and satisfying still requires explicitly recognizing when an object is grasped.</p>
+<p>Determining whether a user intended to grasp something firmly turns out to be a bit tricky. People sometimes have difficulty performing precise, physically correct actions in Virtual Reality (VR). The absence of tactile feedback when holding virtual objects discourages users from treating virtual objects as if they were as truly solid, and thus encourages non-realistic holding postures.</p>
+<p>The Interaction Engine provides a sophisticated solution to grasp detection that will continue to be refined using extensive User Experience (UX) testing.</p>
+</div>
+<div class="section" id="brush-hands">
+<h2>Brush Hands<a class="headerlink" href="#brush-hands" title="Permalink to this headline">¶</a></h2>
+<p>Brush hands are the Interaction Engine&#8217;s physical hand models. The standard rigid body-based physical hand models are not compatible with the Interaction Engine.</p>
+<p>In addition to modifying collision response while hands are embedded inside an object, the Interaction Engine uses a real-time physics representation of the hands that enables more subtle interactions. This representation, called &#8220;Brush Hands,&#8221; consists of a set of rigid bodies registered with Unity physics engine that attempt to push their way to the tracked hands location. If a brush hand cannot follow the tracked hand location closely enough, the Interaction Engine disables the brush hand until it can do so.</p>
+<p>This technique allows hands to have access to the Unity physics friction model. It does so at the expense of introducing a per-bone mass parameter that may require tuning to be effective.</p>
+</div>
+<div class="section" id="extensible-technology">
+<h2>Extensible Technology<a class="headerlink" href="#extensible-technology" title="Permalink to this headline">¶</a></h2>
+<p>Integrating the Interaction Engine into a Unity scene is intended to be easy. However, it is also a complex product which allows for a high degree of customization across a wide range of features.</p>
+<p>In order to use the Interaction Engine, any rigid body that can be touched must have an InteractionBehaviour component as part of its GameObject. This component will integrate the physics features described above and provide a programmable interface into the Interaction Engine as well. While this should be all that is needed for simple object interactions, there is an extension mechanism that allows you to swap out and replace the different aspects of the system. Most extensions are specified through the InteractionMaterial component, something that is a property of every InteractionBehaviour. The InteractionMaterial is also a normal Unity 3D asset which can be created and assigned in the Unity Editor.</p>
+<p>An InteractionMaterial defines several classes that control different aspects of the Interaction Engine simulation. You can modify the parameters used by these controller classes or replace the classes entirely with your own implementations. An InteractionMaterial provides for the following types of controllers you can modify or replace:</p>
+<ul class="simple">
+<li>IHoldingPoseController - Determines the desired position that an object will occupy while it is held.</li>
+<li>IMoveToController - Attempts to move an object to its desired holding pose when grasped.</li>
+<li>ISuspensionController - Controls what happens to a held object when the tracking of the holding hand is lost and regained (i.e. when you move the object outside the Leap Motion device&#8217;s field of view and back).</li>
+<li>IThrowingController - Calculates how the hand imparts velocity to a thrown object.</li>
+<li>ILayerController - Handles how an object is moved between the layers that control collisions between interactable objects and hands.</li>
+</ul>
+</div>
+<div class="section" id="interaction-engine-concepts">
+<h2>Interaction Engine Concepts<a class="headerlink" href="#interaction-engine-concepts" title="Permalink to this headline">¶</a></h2>
+<p>Familiarity with the following concepts should improve your ability to make effective use of the Interaction Engine.</p>
+<div class="section" id="elasticity">
+<h3>Elasticity<a class="headerlink" href="#elasticity" title="Permalink to this headline">¶</a></h3>
+<p>All Unity colliders have an associated physics material; physics materials define a bounciness property. If the bounciness of the material assigned to an interaction object is non-zero, the Interaction Engine must switch in a non-bouncy version of the material for anything touching hands.</p>
+</div>
+<div class="section" id="physics-framerate">
+<h3>Physics Framerate<a class="headerlink" href="#physics-framerate" title="Permalink to this headline">¶</a></h3>
+<p>Unity has an Update cycle and a FixedUpdate cycle. Rendering runs on the Update cycle, while the Unity physics engine and the Interaction Engine run on the FixedUpdate cycle. Since Update and FixedUpdate run at different framerates, the physics framerate can be potentially very different than the rendering framerate. Currently for best results with the Interaction Engine, we recommend using a physics framerate of around 100 frames per second.  You can set this by going to Edit-&gt;Project Settings-&gt;Time and setting Fixed Timestep to 0.01, or you can use the FramerateControls component included in the core assets.</p>
+</div>
+<div class="section" id="suspension">
+<h3>Suspension<a class="headerlink" href="#suspension" title="Permalink to this headline">¶</a></h3>
+<p>When a hand that is grasping an object becomes untracked, the object becomes ‘suspended’ until either the hand becomes tracked again, or until a timeout occurs.  This feature allows the engine to remember that you were holding an object, even if your hand is no longer being tracked.</p>
+<p>The InteractionBehaviour component lets you adjust the maximum suspension time using the InteractionMaterial. You can also specify whether or not the object’s Renderers are hidden during suspension.  The default interaction material specifies that objects should be hidden, but you may find a different approach is better for some cases.</p>
+</div>
+<div class="section" id="teleportation">
+<h3>Teleportation<a class="headerlink" href="#teleportation" title="Permalink to this headline">¶</a></h3>
+<p>If you move an object by changing its world position, you have essentially teleported that object within the physics simulation maintained by the Interaction Engine. If you do not inform the engine that such a teleportation has occured, the simulation results can become unstable. The InteractionBehaviour component, which you must attach to any Unity GameObjects you use with the Interaction Engine, has a NotifyTeleport() method to call when you move the object&#8217;s position directly (rather than applying forces through its rigid body).</p>
+</div>
+<div class="section" id="layers">
+<h3>Layers<a class="headerlink" href="#layers" title="Permalink to this headline">¶</a></h3>
+<p>The Interaction uses three Unity layers. One contains the &#8220;brush&#8221; hand objects; one contains the interactable objects &#8211; i.e. those with an InteractionBehavior component; and one that contains interactable objects in special cases where the objects must not collide with the hands. An ILayerManager component controls when an interactable object moves from one object layer to the other. You can create your own layer manager to override the default implementation.</p>
+</div>
+<div class="section" id="kabsch">
+<h3>Kabsch<a class="headerlink" href="#kabsch" title="Permalink to this headline">¶</a></h3>
+<p>Kabsch, named after Wolfgang Kabsch, is an algorithm that produces a rotation matirx that finds the minimum difference between two sets of points. The Interaction Engine use a Kabsch algorithm to move a held object as close as possible to its desired holding pose.</p>
+<p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Kabsch_algorithm">https://en.wikipedia.org/wiki/Kabsch_algorithm</a>.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

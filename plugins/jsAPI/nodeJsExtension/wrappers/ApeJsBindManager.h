@@ -86,7 +86,7 @@ public:
 	{
 		std::cout << "getUserNode()" << std::endl;
 
-		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName);
+		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName);
 		if (auto node = nodeWeakPtr.lock())
 		{
 			done(false, NodeJsPtr(nodeWeakPtr));

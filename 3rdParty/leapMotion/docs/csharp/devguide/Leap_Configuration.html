@@ -1,0 +1,771 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Runtime Configuration &mdash; Leap Motion C# SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C# SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="API Reference" href="../api/Leap_Classes.html" />
+    <link rel="prev" title="System Architecture" href="Leap_Architecture.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'csharp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unreal = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'csharp/devguide/Leap_Configuration.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Configuration.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Configuration.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'csharp/devguide/Leap_Configuration.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Architecture.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("../api/Leap_Classes.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/devguide/Leap_Configuration.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      C#
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_Configuration.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Configuration.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Configuration.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Configuration.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/devguide/Leap_Configuration.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Runtime Configuration
+</span> -->
+        
+  <div class="section" id="runtime-configuration">
+<h1>Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion system stores many options in configuration files. These include most of the user-settable options in the Leap Motion Control Panel, service control settings, and feature control settings. These options can be set at runtime using the <a class="reference external" href="../api/Leap.Config.html"><tt class="docutils literal"><span class="pre">Config</span></tt></a> class, when starting the Leap Motion service/daemon as a command line option, or in a JSON-formatted configuration file.</p>
+<p><strong>Important</strong> These settings affect all running Leap-enabled applications, not just your own. Use caution when changing settings on computers that you don&#8217;t personally control. Changes could interfere with the operation of the user&#8217;s other applications.</p>
+<div class="section" id="tracking-control-settings">
+<h2>Tracking Control Settings<a class="headerlink" href="#tracking-control-settings" title="Permalink to this headline">¶</a></h2>
+<p>The tracking settings control the tracking data available to an application.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">images_mode</span></tt> : integer</p>
+<p>Enables or disables tool tracking. Set to a value of 0 to disable images; set to a value of 2 to enable images.</p>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+<p>Note that applications must still invoke the image policy API at runtime to receive images. Simply enabling images on the service is not sufficient.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;(</span><span class="s">&quot;tracking_images_mode&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="n">Int32</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Show dialog to request permission to turn on images</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">permissionGranted</span><span class="p">){</span>
+            <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;(</span><span class="s">&quot;tracking_images_mode&quot;</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+                <span class="k">if</span><span class="p">(!</span><span class="n">success</span><span class="p">)</span>
+                    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Warning: could not enable images.&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">image_processing_auto_flip</span></tt> : boolean</p>
+<p>When enabled, the Leap Motion device can be used with either the long side of the device with the green LED facing toward or away from the user. The service detects the orientation and flips the images from the device before analyzing them. When disabled, the images are never flipped and tracking recognizes hands much better when the green LED side of the device is facing the user (or downward in a HMD mount).</p>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;tracking_processing_auto_flip&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Auto-orientation is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;tracking_processing_auto_flip&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="service-control-settings">
+<h2>Service Control Settings<a class="headerlink" href="#service-control-settings" title="Permalink to this headline">¶</a></h2>
+<p>The service control settings change how the Leap Motion service (Windows) or daemon (OS X and Linux) operate.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">robust_mode_enabled</span></tt> : boolean</p>
+<p>Robust mode improves tracking when excessive ambient IR light is present. However, it also lowers the framerate significantly. If the resulting framerate is too low, turning on robust mode might cause worse tracking performance than not enabling it in the first place.</p>
+<p>Robust mode can be enabled in the control panel and by setting the <tt class="docutils literal"><span class="pre">robust_mode_enabled</span></tt> configuration parameter. When enabled, the system enters robust mode when excessive ambient IR light is detected.</p>
+<p>Set this parameter to <tt class="docutils literal"><span class="pre">true</span></tt> to enable; <tt class="docutils literal"><span class="pre">false</span></tt> to disable.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;robust_mode_enabled&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Robust mode is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;robust_mode_enabled&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">avoid_poor_performance</span></tt> : boolean</p>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;avoid_poor_performance&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Avoid poor performance is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;avoid_poor_performance&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">background_app_mode</span> <span class="pre">arg</span></tt> : integer</p>
+<p>Determines whether applications can receive tracking data when not the focused, foreground application.</p>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;(</span><span class="s">&quot;background_app_mode&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="n">Int32</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Show dialog to request permission to turn on images</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">permissionGranted</span><span class="p">){</span>
+            <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;(</span><span class="s">&quot;background_app_mode&quot;</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+                <span class="k">if</span><span class="p">(!</span><span class="n">success</span><span class="p">)</span>
+                    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Warning: could not enable background mode.&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">cpu_affinity_mask</span> <span class="pre">arg</span></tt> : integer</p>
+<p>Processor affinity controls which CPU cores that a process will run on in a multi-core system. You can control the processor affinity of the Leap Motion service using the <tt class="docutils literal"><span class="pre">cpu_affinity_mask</span></tt> configuration parameter. This parameter takes an integer value that is converted into a bitmask that specifies which CPU cores the threads of the service will run on (i.e. 3, which is 0011 in binary, would specify that the threads will run on cores 1 and 2). A value of 0 means that the default OS-defined behavior is unchanged.</p>
+<p>The mask is passed to the Windows SetProcessorAffinityMask() API. This configuration parameter is not supported on other operating systems.</p>
+<p>Changes to this value only take affect when the service is restarted. Generally, it makes sense to set this value in the config.json file or on the command line to LeapSvc:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;cpu_affinity_mask&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;process_niceness&quot;</span><span class="p">:</span> <span class="mi">6</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">process_niceness</span></tt> arg : integer</p>
+<p>Thread priority controls the priority of threads spawned by the Leap Motion service. Thread priority is controlled by the <tt class="docutils literal"><span class="pre">process_niceness</span></tt> configuration parameter. Specifying 0 means that the OS default priority is assigined; a value of 1-9 assigns a specific priority (1 = lowest, 9 = highest).</p>
+<p>Changes to this value only take affect when the service is restarted. Generally, it makes sense to set this value in the config.json file or on the command line to LeapSvc. This setting is used on Windows only.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">no_cp_startup</span></tt> : boolean</p>
+<p>Detemines whether the Leap Motion Control panel application launches when the computer boots up. Set to true to suppress automatically launching the control panel; false (the default) to allow.</p>
+<div class="highlight-csharp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;no_cp_startup&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;No Control Panel on startup is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;no_cp_startup&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">auto_check_updates</span></tt> : boolean</p>
+<p>Determines whether the Leap Motion service will automatically check for software updates.</p>
+<p>Since this setting is controlled by the user, you should ask for permission before changing its value.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;auto_check_updates&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Auto update check is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;auto_check_updates&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">auto_install_updates</span></tt> : boolean</p>
+<p>Determines whether the Leap Motion service will automatically install software updates. the auto_check_updates setting must be true for the srvice to discover updates in the first place.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;auto_install_updates&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Auto install updates is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;auto_install_updates&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">show_tray_messages</span></tt> : boolean</p>
+<p>Allow  notification area messages to be displayed by the service/daemon icon. Set true (the default) to allow; false to supress messages.</p>
+<p>This setting should only be used on computers you control.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;show_tray_messages&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Show notification messages is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;show_tray_messages&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">metrics_enabled</span></tt> : boolean</p>
+<p>Allows metric collection.</p>
+<p>This setting should only be used on computers you control.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;metrics_enabled&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Send metric data is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;metrics_enabled&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="section" id="power-saving-options">
+<h3>Power Saving Options<a class="headerlink" href="#power-saving-options" title="Permalink to this headline">¶</a></h3>
+<p>Power saving options include the Control Panel Power Saving and Low Resource Mode settings. Power savings for computers running on battery power is on by default, but can be turned off using a configuration parameter.</p>
+<p>The power-saving-related configuration parameters are:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">power_saving_adapter</span></tt> : boolean</p>
+<p>Limits the frame rate to save power, even when the computer is plugged into AC power.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;power_saving_adapter&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Energy saving on adapter power is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;power_saving_adapter&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">power_saving_battery</span></tt>  : boolean</p>
+<p>Limits the frame rate to save power when the computer is running on battery power.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;power_saving_battery&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Energy saving on battery power is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;power_saving_battery&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">low_resource_mode_enabled</span></tt> : boolean</p>
+<p>Limits the frame rate to reduce USB bandwidth.</p>
+<div class="highlight-csharp"><div class="highlight"><pre>           <span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;low_resource_mode_enabled&quot;</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">currentSetting</span><span class="p">){</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Low resource mode is &quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">currentSetting</span> <span class="p">?</span> <span class="s">&quot;on.&quot;</span> <span class="p">:</span> <span class="s">&quot;off.&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+<span class="n">controller</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;(</span><span class="s">&quot;low_resource_mode_enabled&quot;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">delegate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">success</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Setting changed.&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Setting a value of <tt class="docutils literal"><span class="pre">false</span></tt> for one of these options disables it; a value of <tt class="docutils literal"><span class="pre">true</span></tt> enables it.</p>
+<p>The effects of these options are not additive. If you enable both power saving and low resource modes, the resulting framerate will be the minimum value set by either option alone.</p>
+<p>The power saving configuration parameters are ignored when images are enabled. (Low resource mode is still effective.)</p>
+</div>
+<div class="section" id="websocket-options">
+<h3>WebSocket Options<a class="headerlink" href="#websocket-options" title="Permalink to this headline">¶</a></h3>
+<p>The WebSocket options control how programs can connect to the WebSocket server provided by the Leap Motion service.</p>
+<p><strong>Important</strong> If you change these values, other programs on the client computer that expect the default WebSocket settings will fail to connect.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="11%" />
+<col width="14%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key string</th>
+<th class="head">Value type</th>
+<th class="head">Default value</th>
+<th class="head">Purpose</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">websockets_enabled</span></tt></td>
+<td>boolean</td>
+<td>true</td>
+<td>Enables or disables all connections</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">websockets_allow_remote</span></tt></td>
+<td>boolean</td>
+<td>false</td>
+<td>Allows non-localhost clients to connect</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">ws_port</span></tt></td>
+<td>integer</td>
+<td>6437</td>
+<td>Used for connections from HTTP clients</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">wss_port</span></tt></td>
+<td>integer</td>
+<td>6436</td>
+<td>Used for connections from HTTPS clients</td>
+</tr>
+</tbody>
+</table>
+<p>Note that changes to the port numbers do not take effect until the Leap Motion service or daemon restarts. Generally, it makes more sense to set these values on the command line or in the config.json file rather than using the <tt class="docutils literal"><span class="pre">Config</span></tt> class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;websockets_enabled&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;websockets_allow_remote&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s">&quot;ws_port&quot;</span><span class="p">:</span> <span class="mi">51000</span><span class="p">,</span>
+    <span class="s">&quot;wss_port&quot;</span><span class="p">:</span> <span class="mi">51001</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="feature-control-settings">
+<h2>Feature Control Settings<a class="headerlink" href="#feature-control-settings" title="Permalink to this headline">¶</a></h2>
+<p>Two sets of configuration settings control how individual tracking features operate.</p>
+<div class="section" id="interactionbox-options">
+<h3>InteractionBox Options<a class="headerlink" href="#interactionbox-options" title="Permalink to this headline">¶</a></h3>
+<p>The interaction box options control the size and location of the region used by the InteractionBox class to compute normalized coordinates.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="11%" />
+<col width="14%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key string</th>
+<th class="head">Value type</th>
+<th class="head">Default value</th>
+<th class="head">Purpose</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">interaction_box_auto</span></tt></td>
+<td>boolean</td>
+<td>true</td>
+<td>Sets the height based on the user&#8217;s hands</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">interaction_box_height</span></tt></td>
+<td>integer</td>
+<td>200 mm</td>
+<td>The current height setting</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">interaction_box_scale</span></tt></td>
+<td>float</td>
+<td>0.8</td>
+<td>Scales the dimensions of the box</td>
+</tr>
+</tbody>
+</table>
+<p>The height parameter sets the center height of the interaction area above the Leap Motion device. The size of the box also changes with height to maximize the interaction area while keeping the entire box within the field of view. You can view the interaction box in the Visualizer by pressing the L key (twice).</p>
+<p>Note that there is currently (version 2.2.5+) a bug that prevents setting the InteractionBox height manually. The height only changes when the <strong>interaction_box_auto</strong> setting is true and only in respose to the user&#8217;s hand movement.</p>
+<p>Since the <tt class="docutils literal"><span class="pre">interaction_box_auto</span></tt> and <tt class="docutils literal"><span class="pre">interaction_box_height</span></tt> settings can be set by the user, you should ask for permission before changing the values.</p>
+<p>For more information, see <a class="reference external" href="../api/Leap.InteractionBox.html"><tt class="docutils literal"><span class="pre">InteractionBox</span></tt></a>.</p>
+</div>
+</div>
+<div class="section" id="setting-configuration-options">
+<h2>Setting Configuration Options<a class="headerlink" href="#setting-configuration-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration prameters can be set on the command line when invoking the Leap Motion service/daemon executable, (<tt class="docutils literal"><span class="pre">LeapSvc</span></tt> on Windows and <tt class="docutils literal"><span class="pre">leapd</span></tt> on OS X and Linux), in a configuration file, and in application code using the Leap Motion API.</p>
+<div class="section" id="on-the-command-line">
+<h3>On the Command Line<a class="headerlink" href="#on-the-command-line" title="Permalink to this headline">¶</a></h3>
+<p>To set configration parameters on the command line, run LeapSvc in a console window, specifying the desired options:</p>
+<ul>
+<li><p class="first">Windows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">LeapSvc</span> <span class="o">--</span><span class="n">option_name</span><span class="o">=</span><span class="n">value</span> <span class="o">--</span><span class="n">another_option</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mac and Linux:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">leapd</span>   <span class="o">--</span><span class="n">option_name</span><span class="o">=</span><span class="n">value</span> <span class="o">--</span><span class="n">another_option</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Normally LeapSvc or leapd are installed as a service or daemon and run automatically. Before running LeapSvc manually, you must stop the service if it is already running. You can do this using the standard Windows net command (using an admin account):</p>
+<ul>
+<li><p class="first">Windows:</p>
+<div class="highlight-python"><div class="highlight"><pre>net stop LeapService
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mac:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo launchctl unload /Library/LaunchDaemons/com.leapmotion.leapd.plist
+</pre></div>
+</div>
+</li>
+<li><p class="first">Linux:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo service leapd stop
+</pre></div>
+</div>
+</li>
+</ul>
+<p>As an example, the following command runs the service with auto-orientation and images turned on:</p>
+<ul>
+<li><p class="first">Windows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">LeapSvc</span>  <span class="o">--</span><span class="n">image_processing_auto_flip</span><span class="o">=</span><span class="n">true</span>  <span class="o">--</span><span class="n">images_mode</span><span class="o">=</span><span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mac and Linux</p>
+<blockquote>
+<div><p>leapd    &#8211;image_processing_auto_flip=true  &#8211;images_mode=2</p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Important:</strong> Command line configuration settings can be ignored when the Leap Motion Control Panel is already running.</p>
+</div>
+<div class="section" id="in-a-configuration-file">
+<h3>In a Configuration file<a class="headerlink" href="#in-a-configuration-file" title="Permalink to this headline">¶</a></h3>
+<p>You can add options to a JSON-formatted configuration file. The options file can be specified on the LeapSvc command line using the <tt class="docutils literal"><span class="pre">--config</span></tt> parameter or you can add your options to the standard config file.</p>
+<p>A configuration file must be valid JSON. A configuration file specifying the options discussed in this document looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;cpu_affinity_mask&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s">&quot;images_mode&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&quot;power_saving_adapter&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s">&quot;power_saving_battery&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s">&quot;process_niceness&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s">&quot;robust_mode_enabled&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s">&quot;tracking_hand_enabled&quot;</span><span class="p">:</span> <span class="n">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>On the command line, you can specify the config file as follows:</p>
+<blockquote>
+<div><p>LeapSvc &#8211;config=/path/to/config.json</p>
+<p>leapd &#8211;config=/path/to/config.json</p>
+</div></blockquote>
+<p>The Leap Motion system also maintains two standard JSON-formatted configuration files. One is used by the service/daemon, the other is used by the Leap Motion Control Panel application. When both the service and the control panel are running, shared settings are kept in sync. Otherwise, the control panel settings take precedence. In other words, if the service/daemon is already running when the control panel launches, settings are updated to match those found in the control panel configuration file. If the control panel is running when the service/daemon starts, the control panel settings still take precedence over any found in the service configuration file &#8211; or set on the command line.</p>
+<p>Editing these configuration files while the service/daemon or control panel is running does not change the current runtime setting. We recommend quitting the control panel and shutting down the service/daemon before making changes.</p>
+<p>The configuration files are named <tt class="docutils literal"><span class="pre">config.json</span></tt> and can be found in the following locations:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="49%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">OS</th>
+<th class="head">Control Panel Config Location</th>
+<th class="head">Service/Daemon Config Location</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Android</td>
+<td>/sdcard/user/Leap\ Motion</td>
+<td>/sdcard/Leap\ Motion</td>
+</tr>
+<tr class="row-odd"><td>Linux</td>
+<td>$HOME/Leap\ Motion</td>
+<td>/var/Leap\ Motion</td>
+</tr>
+<tr class="row-even"><td>OS X</td>
+<td>$HOME/Library/Application\ Support/Leap\ Motion</td>
+<td>/Library/Application\ Support/Leap\ Motion</td>
+</tr>
+<tr class="row-odd"><td>Windows</td>
+<td>%AppData%/Leap Motion</td>
+<td>%ProgramData%/Leap Motion</td>
+</tr>
+</tbody>
+</table>
+<p>Note that some of these folders are located within hidden directories.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C# Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_Tutorial.html#id5">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Setup.html#setting-up-a-windows-forms-or-wpf-project">Setting Up a Windows Forms or WPF Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Runtime Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-control-settings">Tracking Control Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#service-control-settings">Service Control Settings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#power-saving-options">Power Saving Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#websocket-options">WebSocket Options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-control-settings">Feature Control Settings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interactionbox-options">InteractionBox Options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-configuration-options">Setting Configuration Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#on-the-command-line">On the Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#in-a-configuration-file">In a Configuration file</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C# and Unity</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

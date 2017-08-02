@@ -1,0 +1,770 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Listener &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Matrix" href="Leap.Matrix.html" />
+    <link rel="prev" title="InteractionBox" href="Leap.InteractionBox.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/api/Leap.Listener.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Listener.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Listener.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/api/Leap.Listener.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.InteractionBox.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Matrix.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Listener.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Listener.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Listener.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Listener
+</span> -->
+        
+  <div class="section" id="listener">
+<h1>Listener<a class="headerlink" href="#listener" title="Permalink to this headline">¶</a></h1>
+</div>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a9d5e4fb3349a6d39f973a4c1715f696f">Listener()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a06446e436cca86cdd72c0d88c487d52d">onConnect(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5dfba44f6447f03ddee5d0aa7f8dab6e">onDeviceChange(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1acc72a3a055fbfe01f1da80769cbf4bc9">onDeviceFailure(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a9575249e28e755cb7fa64acb22881855">onDisconnect(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1addb475e5ef54812e9d2732a364360c52">onExit(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8a6df5023e965bcd20be41ab501de85b">onFocusGained(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1aa28eaae0a0e92acc70479474d1febf8d">onFocusLost(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ac4ef53fd4b84617ef3e4b22c5da4939f">onFrame(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8c68d242494860d1dbac7627dd6727e2">onImages(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1abdc47bf4875feae068d8c52fc5df05f1">onInit(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a16c378bd935b156252bbc8b0f8b79b17">onLogMessage(Controller arg0, MessageSeverity severity, long timestamp, String msg)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5292cbfc39140dc857880a0360c568e8">onServiceChange(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a193b246b12f6f532c49ee4a08757fc78">onServiceConnect(Controller arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ae6b757e7f8152d5e3f7b6c87b26445b5">onServiceDisconnect(Controller arg0)</a></li>
+</ul>
+</div>
+<div class="line-block" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener">
+<div class="line"><em>class</em> <strong>com::leapmotion::leap::Listener</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> class defines a set of callback functions that you can override in a subclass to respond to events dispatched by the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object. </p>
+<p><p>To handle Leap Motion events, create an instance of a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> subclass and assign it to the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> instance. The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> calls the relevant <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> callback function when an event occurs, passing in a reference to itself. You do not have to implement callbacks for events you do not want to handle.</p>
+<p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object calls these <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> functions from a thread created by the Leap Motion library, not the thread used to create or set the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> instance. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a9d5e4fb3349a6d39f973a4c1715f696f"></span><div class="line-block">
+<div class="line"> <strong>Listener</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a06446e436cca86cdd72c0d88c487d52d"></span><div class="line-block">
+<div class="line">void <strong>onConnect</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object connects to the Leap Motion software and the Leap Motion hardware device is plugged in, or when this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> object is added to a <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> that is already connected. </p>
+<p><p>When this callback is invoked, <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a8c8da1ee11e2a1da2e9b7e16b31279d8"><em>Controller::isServiceConnected</em></a> is true, <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1aefd686440cfcbb63eb31dd5004ffacfe"><em>Controller::devices()</em></a> is not empty, and, for at least one of the <a class="reference internal" href="Leap.Device.html#javaclasscom_1_1leapmotion_1_1leap_1_1_device"><em>Device</em></a> objects in the list, <a class="reference internal" href="Leap.Device.html#javaclasscom_1_1leapmotion_1_1leap_1_1_device_1a15ba25329f70b151202340d252b44370"><em>Device::isStreaming()</em></a> is true.</p>
+<p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a06446e436cca86cdd72c0d88c487d52d"><em>onConnect</em></a> (Controller controller){
+    System.out.println(&quot;Connected&quot;);
+}
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5dfba44f6447f03ddee5d0aa7f8dab6e"></span><div class="line-block">
+<div class="line">void <strong>onDeviceChange</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when a Leap Motion controller is plugged in, unplugged, or the device changes state. </p>
+<p><p>State changes include entering or leaving robust mode and low resource mode. Note that there is no direct way to query whether the device is in these modes, although you can use Controller::isLightingBad() to check if there are environmental IR lighting problems.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5dfba44f6447f03ddee5d0aa7f8dab6e"><em>onDeviceChange</em></a> (Controller controller){
+    System.out.println(&quot;Device changed&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.2 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1acc72a3a055fbfe01f1da80769cbf4bc9"></span><div class="line-block">
+<div class="line">void <strong>onDeviceFailure</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when a Leap Motion controller device is plugged into the client computer, but fails to operate properly. </p>
+<p><p>Get the list containing all failed devices using <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1acb5e9faaa2ec668860e169e5978caf59"><em>Controller::failedDevices()</em></a>. The members of this list provide the device pnpID and reason for failure.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1acc72a3a055fbfe01f1da80769cbf4bc9"><em>onDeviceFailure</em></a> (Controller controller)
+{
+    System.out.println (&quot;A device was plugged in, but failed.&quot;);
+    FailedDeviceList badDevices = controller.failedDevices();
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a9575249e28e755cb7fa64acb22881855"></span><div class="line-block">
+<div class="line">void <strong>onDisconnect</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object disconnects from the Leap Motion software or the Leap Motion hardware is unplugged. </p>
+<p><p>The controller can disconnect when the Leap Motion device is unplugged, the user shuts the Leap Motion software down, or the Leap Motion software encounters an unrecoverable error.</p>
+<p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a9575249e28e755cb7fa64acb22881855"><em>onDisconnect</em></a> (Controller controller){
+    System.out.println(&quot;Disconnected&quot;);
+}
+</pre>
+</p>
+<p>Note: When you launch a Leap-enabled application in a debugger, the Leap Motion library does not disconnect from the application. This is to allow you to step through code without losing the connection because of time outs.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1addb475e5ef54812e9d2732a364360c52"></span><div class="line-block">
+<div class="line">void <strong>onExit</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> object is removed from the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> or the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> instance is destroyed. </p>
+<p><p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1addb475e5ef54812e9d2732a364360c52"><em>onExit</em></a> (Controller controller){
+    System.out.println(&quot;Exited&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8a6df5023e965bcd20be41ab501de85b"></span><div class="line-block">
+<div class="line">void <strong>onFocusGained</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when this application becomes the foreground application. </p>
+<p><p>Only the foreground application receives tracking data from the Leap Motion <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. This function is only called when the controller object is in a connected state.</p>
+<p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8a6df5023e965bcd20be41ab501de85b"><em>onFocusGained</em></a> (Controller controller){
+    System.out.println(&quot;Focus gained&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1aa28eaae0a0e92acc70479474d1febf8d"></span><div class="line-block">
+<div class="line">void <strong>onFocusLost</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when this application loses the foreground focus. </p>
+<p><p>Only the foreground application receives tracking data from the Leap Motion <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. This function is only called when the controller object is in a connected state.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1aa28eaae0a0e92acc70479474d1febf8d"><em>onFocusLost</em></a> (Controller controller){
+    System.out.println(&quot;Focus lost&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ac4ef53fd4b84617ef3e4b22c5da4939f"></span><div class="line-block">
+<div class="line">void <strong>onFrame</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when a new frame of hand and finger tracking data is available. </p>
+<p><p>Access the new frame data using the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a927587df126a877842a884f4a536dd8c"><em>Controller::frame()</em></a> function.</p>
+<p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ac4ef53fd4b84617ef3e4b22c5da4939f"><em>onFrame</em></a> (Controller controller){
+    System.out.println(&quot;New Frame&quot;);
+    Frame frame = controller.frame ();
+}
+</pre>
+</p>
+<p>Note, the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> skips any pending onFrame events while your onFrame handler executes. If your implementation takes too long to return, one or more frames can be skipped. The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> still inserts the skipped frames into the frame history. You can access recent frames by setting the history parameter when calling the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a927587df126a877842a884f4a536dd8c"><em>Controller::frame()</em></a> function. You can determine if any pending onFrame events were skipped by comparing the ID of the most recent frame with the ID of the last received frame.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8c68d242494860d1dbac7627dd6727e2"></span><div class="line-block">
+<div class="line">void <strong>onImages</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when new images are available. </p>
+<p><p>Access the new frame data using the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a8e938145723e4bf003333106474ac59e"><em>Controller::images()</em></a> function.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a8c68d242494860d1dbac7627dd6727e2"><em>onImages</em></a> (Controller controller){
+    System.out.println(&quot;New images available&quot;);        
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.1 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1abdc47bf4875feae068d8c52fc5df05f1"></span><div class="line-block">
+<div class="line">void <strong>onInit</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called once, when this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener"><em>Listener</em></a> object is newly added to a <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p><pre class="literal-block">
+public void <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1abdc47bf4875feae068d8c52fc5df05f1"><em>onInit</em></a> (Controller controller){
+    System.out.println(&quot;Initialized&quot;);
+}
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a16c378bd935b156252bbc8b0f8b79b17"></span><div class="line-block">
+<div class="line">void <strong>onLogMessage</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0, MessageSeverity severity, long timestamp, String msg)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when the service emits a log message to report an error, warning, or status change. </p>
+<p><p>Log message text is provided as ASCII-encoded english.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">severity</span></tt> - <p>The severity of the error, if known. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">timestamp</span></tt> - <p>The timestamp of the error in microseconds. (Use <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a2072886c5950cbfcb0e6713c20a9330a"><em>Controller::now()</em></a> - timestamp to compute the age of the message.) </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">msg</span></tt> - <p>The log message. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5292cbfc39140dc857880a0360c568e8"></span><div class="line-block">
+<div class="line">void <strong>onServiceChange</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when the Leap Motion service is paused or resumed or when a controller policy is changed. </p>
+<p><p>The service can change states because the computer user changes settings in the Leap Motion Control Panel application or because an application connected to the service triggers a change. Any application can pause or unpause the service, but only runtime policy changes you make apply to your own application.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a5292cbfc39140dc857880a0360c568e8"><em>onServiceChange</em></a> (Controller controller)
+{
+    System.out.println (&quot;Service state change.&quot;);
+}
+</pre>
+</p>
+<p>You can query the pause state of the controller with <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a9cfc516923ff1fa8f395f52fa6ff9927"><em>Controller::isPaused()</em></a>. You can check the state of those policies you are interested in with <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a36ddadd5c199218f40a4c2d43c5167c3"><em>Controller::isPolicySet()</em></a>.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a193b246b12f6f532c49ee4a08757fc78"></span><div class="line-block">
+<div class="line">void <strong>onServiceConnect</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called when the Leap Motion daemon/service connects to your application <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a193b246b12f6f532c49ee4a08757fc78"><em>onServiceConnect</em></a> (Controller controller){
+    System.out.println(&quot;Service connected&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.2 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ae6b757e7f8152d5e3f7b6c87b26445b5"></span><div class="line-block">
+<div class="line">void <strong>onServiceDisconnect</strong>(<a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called if the Leap Motion daemon/service disconnects from your application <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p>Normally, this callback is not invoked. It is only called if some external event or problem shuts down the service or otherwise interrupts the connection.</p>
+<p><pre class="literal-block">
+public void  <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1ae6b757e7f8152d5e3f7b6c87b26445b5"><em>onServiceDisconnect</em></a> (Controller controller){
+    System.out.println(&quot;Service connection lost&quot;);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.2 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">controller</span></tt> - <p>The <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> object invoking this callback function. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id12">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id14">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id5">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id12">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id3">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id3">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id15">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id12">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id24">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id5">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

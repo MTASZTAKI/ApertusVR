@@ -1,0 +1,855 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="ImageList" href="Leap.ImageList.html" />
+    <link rel="prev" title="HandList" href="Leap.HandList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Image.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Image.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Image.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.HandList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.ImageList.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Image.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Image.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Image.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Image.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Image.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Image
+</span> -->
+        
+  <div class="section" id="image">
+<h1>Image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h1>
+</div>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Image.bytes_per_pixel" title="Leap.Image.bytes_per_pixel"><tt class="xref py py-attr docutils literal"><span class="pre">bytes_per_pixel</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.data" title="Leap.Image.data"><tt class="xref py py-attr docutils literal"><span class="pre">data</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.data_pointer" title="Leap.Image.data_pointer"><tt class="xref py py-attr docutils literal"><span class="pre">data_pointer</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.distortion" title="Leap.Image.distortion"><tt class="xref py py-attr docutils literal"><span class="pre">distortion</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.distortion_pointer" title="Leap.Image.distortion_pointer"><tt class="xref py py-attr docutils literal"><span class="pre">distortion_pointer</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.distortion_height" title="Leap.Image.distortion_height"><tt class="xref py py-attr docutils literal"><span class="pre">distortion_height</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.distortion_width" title="Leap.Image.distortion_width"><tt class="xref py py-attr docutils literal"><span class="pre">distortion_width</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.format" title="Leap.Image.format"><tt class="xref py py-attr docutils literal"><span class="pre">format</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.height" title="Leap.Image.height"><tt class="xref py py-attr docutils literal"><span class="pre">height</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.id" title="Leap.Image.id"><tt class="xref py py-attr docutils literal"><span class="pre">id</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.is_valid" title="Leap.Image.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.ray_offset_x" title="Leap.Image.ray_offset_x"><tt class="xref py py-attr docutils literal"><span class="pre">ray_offset_x</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.ray_offset_y" title="Leap.Image.ray_offset_y"><tt class="xref py py-attr docutils literal"><span class="pre">ray_offset_y</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.ray_scale_x" title="Leap.Image.ray_scale_x"><tt class="xref py py-attr docutils literal"><span class="pre">ray_scale_x</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.ray_scale_y" title="Leap.Image.ray_scale_y"><tt class="xref py py-attr docutils literal"><span class="pre">ray_scale_y</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.sequence_id" title="Leap.Image.sequence_id"><tt class="xref py py-attr docutils literal"><span class="pre">sequence_id</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.timestamp" title="Leap.Image.timestamp"><tt class="xref py py-attr docutils literal"><span class="pre">timestamp</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.width" title="Leap.Image.width"><tt class="xref py py-attr docutils literal"><span class="pre">width</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Image.rectify" title="Leap.Image.rectify"><tt class="xref py py-meth docutils literal"><span class="pre">rectify()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Image.warp" title="Leap.Image.warp"><tt class="xref py py-meth docutils literal"><span class="pre">warp()</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Constants:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Image.FORMAT_INFRARED" title="Leap.Image.FORMAT_INFRARED"><tt class="xref py py-data docutils literal"><span class="pre">FORMAT_INFRARED</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Image">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Image</tt><a class="headerlink" href="#Leap.Image" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The Image class represents a single greyscale image from one of the the Leap Motion cameras.</p>
+<p>In addition to image data, the Image object provides a distortion map for correcting
+lens distortion.</p>
+<p>Note that Image objects can be invalid, which means that they do not contain
+valid image data. Get valid Image objects from <a class="reference internal" href="Leap.Frame.html#Leap.Frame.images" title="Leap.Frame.images"><tt class="xref py py-meth docutils literal"><span class="pre">Frame.images()</span></tt></a>. Test for
+validity with <a class="reference internal" href="#Leap.Image.is_valid" title="Leap.Image.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</div></blockquote>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Image.Image">
+<em class="property">classmethod </em><tt class="descname">Image</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Image.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Image object.</p>
+<p>An uninitialized image is considered invalid.
+Get valid Image objects from a ImageList object obtained from the
+:py:meth`Frame.images()` method.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Image.bytes_per_pixel">
+<tt class="descname">bytes_per_pixel</tt><a class="headerlink" href="#Leap.Image.bytes_per_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The number of bytes stored for each pixel in the image data array.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bufferSize</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">bytes_per_pixel</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span>
+</pre></div>
+</div>
+<p>Current Leap Motion hardware records one byte of data per pixel. Future
+devices may store more than this.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.data">
+<tt class="descname">data</tt><a class="headerlink" href="#Leap.Image.data" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">byte_array</td>
+</tr>
+</tbody>
+</table>
+<p>The image data.</p>
+<p>The image data is a set of 8-bit intensity values. The buffer is
+<a class="reference internal" href="#Leap.Image.width" title="Leap.Image.width"><tt class="xref py py-attr docutils literal"><span class="pre">width</span></tt></a> times <a class="reference internal" href="#Leap.Image.height" title="Leap.Image.height"><tt class="xref py py-attr docutils literal"><span class="pre">height</span></tt></a> bytes long.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">image_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.data_pointer">
+<tt class="descname">data_pointer</tt><a class="headerlink" href="#Leap.Image.data_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">pointer</td>
+</tr>
+</tbody>
+</table>
+<p>A pointer to the image data buffer.</p>
+<p>Use this address to directly access the memory in the data buffer using
+ctypes or numpy.</p>
+<p>The image data is a set of 8-bit intensity values. The buffer is
+<a class="reference internal" href="#Leap.Image.width" title="Leap.Image.width"><tt class="xref py py-attr docutils literal"><span class="pre">width</span></tt></a> times <a class="reference internal" href="#Leap.Image.height" title="Leap.Image.height"><tt class="xref py py-attr docutils literal"><span class="pre">height</span></tt></a> bytes long.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">image_buffer_ptr</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">data_pointer</span>
+<span class="n">ctype_array_def</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_ubyte</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span>
+
+<span class="c"># as ctypes array</span>
+<span class="n">as_ctype_array</span> <span class="o">=</span> <span class="n">ctype_array_def</span><span class="o">.</span><span class="n">from_address</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">image_buffer_ptr</span><span class="p">))</span>
+<span class="c"># as numpy array</span>
+<span class="n">as_numpy_array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">as_array</span><span class="p">(</span><span class="n">as_ctype_array</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.distortion">
+<tt class="descname">distortion</tt><a class="headerlink" href="#Leap.Image.distortion" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distortion calibration map for this image.</p>
+<p>The calibration map is a 64x64 grid of points. Each point is defined by
+a pair of 32-bit floating point values. Each point in the map
+represents a ray projected into the camera. The value of
+a grid point defines the pixel in the image data containing the brightness
+value produced by the light entering along the corresponding ray. By
+interpolating between grid data points, you can find the brightness value
+for any projected ray. Grid values that fall outside the range [0..1] do
+not correspond to a value in the image data and those points should be ignored.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">distortion_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">distortion</span>
+</pre></div>
+</div>
+<p>The calibration map can be used to render an undistorted image as well as to
+find the true angle from the camera to a feature in the raw image. The
+distortion map itself is designed to be used with GLSL shader programs.
+In other contexts, it may be more convenient to use the <a class="reference internal" href="#Leap.Image.rectify" title="Leap.Image.rectify"><tt class="xref py py-meth docutils literal"><span class="pre">rectify()</span></tt></a>
+and :py:meth:<a href="#id40"><span class="problematic" id="id41">`</span></a>warp&#8217; functions.</p>
+<p>Distortion is caused by the lens geometry as well as imperfections in the
+lens and sensor window. The calibration map is created by the calibration
+process run for each device at the factory (and which can be rerun by the
+user).</p>
+<p>Note, in a future release, there may be two distortion maps per image;
+one containing the horizontal values and the other containing the vertical values.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.distortion_pointer">
+<tt class="descname">distortion_pointer</tt><a class="headerlink" href="#Leap.Image.distortion_pointer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">pointer</td>
+</tr>
+</tbody>
+</table>
+<p>A pointer to the image distortion buffer.</p>
+<p>Use this address to directly access the memory in the distortion buffer using
+ctypes or numpy.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">distortion_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">distortion_pointer</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.distortion_height">
+<tt class="descname">distortion_height</tt><a class="headerlink" href="#Leap.Image.distortion_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distortion map height.</p>
+<p>Currently fixed at 64.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">correctionGridHeight</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">distortion_height</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.distortion_width">
+<tt class="descname">distortion_width</tt><a class="headerlink" href="#Leap.Image.distortion_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stride of the distortion map.</p>
+<p>Since each point on the 64x64 element distortion map has two values in the
+buffer, the stride is 2 times the size of the grid. (Stride is currently fixed
+at 2   64 = 128).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">correctionGridWidth</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">distortion_width</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.format">
+<tt class="descname">format</tt><a class="headerlink" href="#Leap.Image.format" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The format identifier describing the information in the image data array.</p>
+<p>Current Leap Motion hardware stores data in the INFRARED format. Future
+devices may use different formats.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.height">
+<tt class="descname">height</tt><a class="headerlink" href="#Leap.Image.height" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The image height.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.id">
+<tt class="descname">id</tt><a class="headerlink" href="#Leap.Image.id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The image ID.</p>
+<p>Images with ID of 0 are from the left camera; those with an ID of 1 are from the
+right camera (with the device in its standard operating position with the
+green LED facing the operator).</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Image.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports whether this Image instance contains valid data.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.ray_offset_x">
+<tt class="descname">ray_offset_x</tt><a class="headerlink" href="#Leap.Image.ray_offset_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The horizontal ray offset.</p>
+<p>Used to convert between normalized coordinates in the range [0..1] and the
+ray slope range [-4..4].</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">raySlopes</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">3.28</span><span class="p">,</span> <span class="mf">1.76</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">normRay</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="n">raySlopes</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_scale_x</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_x</span><span class="p">,</span>
+                      <span class="n">raySlopes</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_scale_y</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.ray_offset_y">
+<tt class="descname">ray_offset_y</tt><a class="headerlink" href="#Leap.Image.ray_offset_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The vertical ray offset.</p>
+<p>Used to convert between normalized coordinates in the range [0..1] and the
+ray slope range [-4..4].</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">normSlopes</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="o">.</span><span class="mi">09</span><span class="p">,</span> <span class="o">.</span><span class="mi">72</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">((</span><span class="n">normSlopes</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_x</span><span class="p">)</span><span class="o">/</span><span class="n">image</span><span class="o">.</span><span class="n">ray_scale_x</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">normSlopes</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_y</span><span class="p">)</span><span class="o">/</span><span class="n">image</span><span class="o">.</span><span class="n">ray_scale_y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.ray_scale_x">
+<tt class="descname">ray_scale_x</tt><a class="headerlink" href="#Leap.Image.ray_scale_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The horizontal ray scale factor.</p>
+<p>Used to convert between normalized coordinates in the range [0..1] and the
+ray slope range [-4..4].</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">raySlopes</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">3.28</span><span class="p">,</span> <span class="mf">1.76</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">normRay</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="n">raySlopes</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_scale_x</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_x</span><span class="p">,</span>
+                      <span class="n">raySlopes</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_scale_y</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.ray_scale_y">
+<tt class="descname">ray_scale_y</tt><a class="headerlink" href="#Leap.Image.ray_scale_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The vertical ray scale factor.</p>
+<p>Used to convert between normalized coordinates in the range [0..1] and the
+ray slope range [-4..4].</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">normSlopes</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="o">.</span><span class="mi">09</span><span class="p">,</span> <span class="o">.</span><span class="mi">72</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">((</span><span class="n">normSlopes</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_x</span><span class="p">)</span><span class="o">/</span><span class="n">image</span><span class="o">.</span><span class="n">ray_scale_x</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">normSlopes</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">ray_offset_y</span><span class="p">)</span><span class="o">/</span><span class="n">image</span><span class="o">.</span><span class="n">ray_scale_y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.sequence_id">
+<tt class="descname">sequence_id</tt><a class="headerlink" href="#Leap.Image.sequence_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>An ordinal id indicating the order in which this image was produced.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lastImage</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">done</span><span class="p">):</span>
+    <span class="n">leftImage</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">leftImage</span><span class="o">.</span><span class="n">sequence_id</span> <span class="o">!=</span> <span class="n">lastImage</span><span class="p">):</span>
+        <span class="n">rightImage</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">lastImage</span> <span class="o">=</span> <span class="n">leftImage</span><span class="o">.</span><span class="n">sequence_id</span>
+        <span class="c"># Use images...</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.timestamp">
+<tt class="descname">timestamp</tt><a class="headerlink" href="#Leap.Image.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">long</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>The timestamp, in microseconds, when image capture began.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.2.7.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Image.width">
+<tt class="descname">width</tt><a class="headerlink" href="#Leap.Image.width" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>The image width.</p>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<dl class="method">
+<dt id="Leap.Image.rectify">
+<tt class="descname">rectify</tt><big>(</big><em>uv</em><big>)</big><a class="headerlink" href="#Leap.Image.rectify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the corrected camera ray intercepting the specified point on the image.</p>
+<p>Given a point on the image, <tt class="docutils literal"><span class="pre">rectify()</span></tt> corrects for camera distortion
+and returns the true direction from the camera to the source of that image point
+within the Leap Motion field of view.</p>
+<p>This direction vector has an x and y component [x, y, 0], with the third element
+always zero. Note that this vector uses the 2D camera coordinate system
+where the x-axis parallels the longer (typically horizontal) dimension and
+the y-axis parallels the shorter (vertical) dimension. The camera coordinate
+system does not correlate to the 3D Leap Motion coordinate system.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">feature</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="mi">127</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">feature_slopes</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">rectify</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uv</strong> (<em>Vector</em>) &#8211; A Vector containing the position of a pixel in the image.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> containing the ray direction (the z-component of the vector is always 0).</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Image.warp">
+<tt class="descname">warp</tt><big>(</big><em>xy</em><big>)</big><a class="headerlink" href="#Leap.Image.warp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the point in the image corresponding to a ray projecting
+from the camera.</p>
+<p>Given a ray projected from the camera in the specified direction, py:meth:<cite>warp`</cite>
+corrects for camera distortion and returns the corresponding pixel
+coordinates in the image.</p>
+<p>The ray direction is specified in relationship to the camera. The first
+vector element corresponds to the &#8220;horizontal&#8221; view angle; the second
+corresponds to the &#8220;vertical&#8221; view angle.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">horizontal_slope</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="mi">65</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span>
+<span class="n">vertical_slope</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span>
+<span class="n">pixel</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="n">horizontal_slope</span><span class="p">,</span> <span class="n">vertical_slope</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="k">if</span><span class="p">(</span><span class="n">pixel</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pixel</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pixel</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="n">pixel</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span><span class="p">):</span>
+    <span class="n">data_index</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">pixel</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">pixel</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">brightness</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">data_index</span><span class="p">)]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>xy</strong> (<em>Vector</em>) &#8211; A Vector containing the ray direction.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Vector containing the pixel coordinates [x, y, 0] (with z always zero).</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Image.invalid">
+<tt class="descname">invalid</tt><a class="headerlink" href="#Leap.Image.invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Image</td>
+</tr>
+</tbody>
+</table>
+<p>An invalid Image object.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Image.FORMAT_INFRARED">
+<tt class="descname">FORMAT_INFRARED</tt><a class="headerlink" href="#Leap.Image.FORMAT_INFRARED" title="Permalink to this definition">¶</a></dt>
+<dd><p>The data format for 8-bit, infrared Leap Motion sensor images.</p>
+<p>The INFRARED format contains a single 8-bit value per pixel. This value represents the brightness recorded for the corresponding sensor location. Pixels are stored in the image data array line by horizontal line. The first element in the data array represents the bottom, left corner of the image.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.2.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id23">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id27">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id16">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id32">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id8">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id5">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id20">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id29">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id53">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id24">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>
