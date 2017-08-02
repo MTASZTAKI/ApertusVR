@@ -26,7 +26,8 @@
             "ApeTesterPlugin",
             "ApeNodeJsPlugin",
             "ApeLeapMotionPlugin",
-            "ApeAvatarPlugin"
+            "ApeAvatarPlugin",
+            "ApeAssimpAssetLoaderPlugin"
         ]
     }
 }

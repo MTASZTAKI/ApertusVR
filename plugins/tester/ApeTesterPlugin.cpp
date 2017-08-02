@@ -45,6 +45,7 @@ void ApeTesterPlugin::Init()
 	}
 	if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
+		planeNode->setPosition(Ape::Vector3(0, -10, 0));
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
 			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
