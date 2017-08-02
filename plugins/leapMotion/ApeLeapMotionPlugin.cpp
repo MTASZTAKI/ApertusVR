@@ -77,7 +77,7 @@ void Ape::LeapMotionPlugin::Run()
 		{
 			rightHandNode->setPosition(Ape::Vector3(rightMost.palmPosition().x / 10, rightMost.palmPosition().z / 10, -rightMost.palmPosition().y / 10));
 			//rightHandNode->setPosition(Ape::Vector3(0, 0, -100));
-			std::cout << rightHandNode->getPosition().toString() << std::endl;
+			//std::cout << rightHandNode->getPosition().toString() << std::endl;
 		}
 		mPreviousFramePitch = rightMost.direction().pitch() * Leap::RAD_TO_DEG;
 		mPreviousFrameYaw = rightMost.direction().yaw() * Leap::RAD_TO_DEG;

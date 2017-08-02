@@ -33,8 +33,15 @@ void ApeTesterPlugin::Init()
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
-		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, -1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
 	if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{

@@ -24,7 +24,9 @@
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeTesterPlugin",
-            "ApeCefBrowserPlugin"
+            "ApeNodeJsPlugin",
+            "ApeLeapMotionPlugin",
+            "ApeAvatarPlugin"
         ]
     }
 }
