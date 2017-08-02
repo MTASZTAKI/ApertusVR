@@ -183,7 +183,19 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						std::cout << "AssimpAssetLoaderPlugin::createManualMaterial " << material->getName() << std::endl;
 					}
 				}
-				mesh->setParameters("", coordinates, indices, Ape::GeometryNormals(), true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), material);
+				Ape::GeometryNormals normals = Ape::GeometryNormals();
+				if (assimpMesh->HasNormals())
+				{
+					for (int i = 0; i < assimpMesh->mNumFaces; i++)
+					{
+						aiVector3D assimpNormal = assimpMesh->mNormals[i];
+						normals.push_back(assimpNormal.x);
+						normals.push_back(assimpNormal.y);
+						normals.push_back(assimpNormal.z);
+					}
+					std::cout << "AssimpAssetLoaderPlugin::hasNormal " << assimpMesh->mName.C_Str() << std::endl;
+				}
+				mesh->setParameters("", coordinates, indices, normals, true, Ape::GeometryColors(), Ape::GeometryTextureCoordinates(), material);
 				mesh->setParentNode(node);
 				std::cout << "AssimpAssetLoaderPlugin::createIndexedFaceSetGeometry " << mesh->getName() << std::endl;
 			}

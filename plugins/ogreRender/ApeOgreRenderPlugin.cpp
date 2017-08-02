@@ -819,6 +819,22 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
 							if (parameters.normals.size() == 0 && parameters.generateNormals == true)
 							{
+								/*for (int i = 0; i < parameters.coordinates.size(); i = i + 9)
+								{
+									Ogre::Vector3 coordinate0(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
+									Ogre::Vector3 coordinate1(parameters.coordinates[i + 3], parameters.coordinates[i + 4], parameters.coordinates[i + 5]);
+									Ogre::Vector3 coordinate2(parameters.coordinates[i + 6], parameters.coordinates[i + 7], parameters.coordinates[i + 8]);
+									Ogre::Vector3 v1;
+									v1.x = coordinate2.x - coordinate0.x;
+									v1.y = coordinate2.y - coordinate0.y;
+									v1.z = coordinate2.z - coordinate0.z;
+									Ogre::Vector3 v2;
+									v2.x = coordinate1.x - coordinate0.x;
+									v2.y = coordinate1.y - coordinate0.y;
+									v2.z = coordinate1.z - coordinate0.z;
+									Ogre::Vector3 coordinateNormal((v1).crossProduct(v2));
+									normals.push_back(coordinateNormal);
+								}*/
 								normals.resize(parameters.coordinates.size() / 3);
 								for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
 									normals[normalIndex] = Ogre::Vector3::ZERO;
@@ -842,22 +858,21 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 										int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
 										Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
 
-										Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate3 - coordinate0));
-										coordinate0Normal.normalise();
+										Ogre::Vector3 v1;
+										v1.x = coordinate2.x - coordinate0.x;
+										v1.y = coordinate2.y - coordinate0.y;
+										v1.z = coordinate2.z - coordinate0.z;
+										Ogre::Vector3 v2;
+										v2.x = coordinate1.x - coordinate0.x;
+										v2.y = coordinate1.y - coordinate0.y;
+										v2.z = coordinate1.z - coordinate0.z;
+										Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-										Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
-										coordinate1Normal.normalise();
-
-										Ogre::Vector3 coordinate2Normal((coordinate3 - coordinate2).crossProduct(coordinate1 - coordinate2));
-										coordinate2Normal.normalise();
-
-										Ogre::Vector3 coordinate3Normal((coordinate0 - coordinate3).crossProduct(coordinate2 - coordinate3));
-										coordinate3Normal.normalise();
-
-										normals[parameters.indices[indexIndex]] += coordinate0Normal;
-										normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
-										normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
-										normals[parameters.indices[indexIndex + 3]] += coordinate3Normal;
+										//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+										normals[parameters.indices[indexIndex]] += coordinateNormal;
+										normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
+										normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
+										normals[parameters.indices[indexIndex + 3]] += coordinateNormal;
 
 										indexIndex = indexIndex + 5;
 									}
@@ -872,18 +887,20 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 										int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
 										Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
 
-										Ogre::Vector3 coordinate0Normal((coordinate1 - coordinate0).crossProduct(coordinate2 - coordinate0));
-										coordinate0Normal.normalise();
+										Ogre::Vector3 v1;
+										v1.x = coordinate2.x - coordinate0.x;
+										v1.y = coordinate2.y - coordinate0.y;
+										v1.z = coordinate2.z - coordinate0.z;
+										Ogre::Vector3 v2;
+										v2.x = coordinate1.x - coordinate0.x;
+										v2.y = coordinate1.y - coordinate0.y;
+										v2.z = coordinate1.z - coordinate0.z;
+										Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-										Ogre::Vector3 coordinate1Normal((coordinate2 - coordinate1).crossProduct(coordinate0 - coordinate1));
-										coordinate1Normal.normalise();
-
-										Ogre::Vector3 coordinate2Normal((coordinate0 - coordinate2).crossProduct(coordinate1 - coordinate2));
-										coordinate2Normal.normalise();
-
-										normals[parameters.indices[indexIndex]] += coordinate0Normal;
-										normals[parameters.indices[indexIndex + 1]] += coordinate1Normal;
-										normals[parameters.indices[indexIndex + 2]] += coordinate2Normal;
+										//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+										normals[parameters.indices[indexIndex]] += coordinateNormal;
+										normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
+										normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
 
 										indexIndex = indexIndex + 4;
 									}
@@ -914,13 +931,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
 							{
 								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
-								if (parameters.textureCoordinates.size() != 0)
-								{
-									int textCoordIndex = (i / 3) * 6;
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
-								}
 								if (parameters.normals.size() == 0 && normals.size() > 0)
 								{
 									normals[i / 3].normalise();
@@ -929,6 +939,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								else if (parameters.normals.size() > 0)
 								{
 									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
+								}
+								if (parameters.textureCoordinates.size() != 0)
+								{
+									int textCoordIndex = (i / 3) * 6;
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
+									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
 								}
 								if (parameters.colors.size() != 0)
 								{
