@@ -1526,23 +1526,26 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								mOgreCameras.push_back(ogreCamera);
-								if (mOgreCameras.size() == 1)
+								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 								{
-									if (Ogre::RTShader::ShaderGenerator::initialize())
+									if (mOgreCameras.size() == 1)
 									{
-										mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-										mpShaderGenerator->addSceneManager(mpSceneMgr);
-										mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
-										Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-										Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-										pMainRenderState->reset();
-										pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-										mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+										if (Ogre::RTShader::ShaderGenerator::initialize())
+										{
+											mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+											mpShaderGenerator->addSceneManager(mpSceneMgr);
+											mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+											Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+											Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+											pMainRenderState->reset();
+											pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+											mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+										}
+										else
+											std::cout << "Problem in the RTSS init" << std::endl;
 									}
-									else
-										std::cout << "Problem in the RTSS init" << std::endl;
+									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 								}
-								viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 							}
 						}
 					}
@@ -1666,8 +1669,8 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	/*if (mRenderWindows.size() > 0)
-		std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;*/
+	if (mRenderWindows.size() > 0)
+		std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << std::endl;
 
 	processEventDoubleQueue();
 	
@@ -1769,6 +1772,11 @@ void Ape::OgreRenderPlugin::Init()
 					mOgreRenderPluginConfig.ogreLodLevelsConfig.autoGenerateAndSave = lodLevelsMemberIterator->value.GetBool();
 				else if (lodLevelsMemberIterator->name == "bias")
 					mOgreRenderPluginConfig.ogreLodLevelsConfig.bias = lodLevelsMemberIterator->value.GetFloat();
+			}
+			if (jsonDocument.HasMember("shading"))
+			{
+				rapidjson::Value& shading = jsonDocument["shading"];
+				mOgreRenderPluginConfig.shading = shading.GetString();
 			}
 			rapidjson::Value& renderWindows = jsonDocument["renderWindows"];
 			for (auto& renderWindow : renderWindows.GetArray())
