@@ -38,13 +38,13 @@ void ApeAvatarPlugin::Init()
 	}
 	if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("leftHandGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
 	{
-		leftHandGeometry->setParameters(10.0f, Ape::Vector2(1, 1));
+		leftHandGeometry->setParameters(1.0f, Ape::Vector2(1, 1));
 		leftHandGeometry->setParentNode(mLeftHandNode);
 		leftHandGeometry->setMaterial(handMaterial);
 	}
 	if (auto rightHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("rightHandGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
 	{
-		rightHandGeometry->setParameters(10.0f, Ape::Vector2(1, 1));
+		rightHandGeometry->setParameters(1.0f, Ape::Vector2(1, 1));
 		rightHandGeometry->setParentNode(mRightHandNode);
 		rightHandGeometry->setMaterial(handMaterial);
 	}
