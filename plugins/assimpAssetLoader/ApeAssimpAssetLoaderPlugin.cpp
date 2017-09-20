@@ -87,6 +87,7 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 							//TODO how to use it when static geomtery is created?
 							//meshFile->setParentNode(node);
 							//TODO how to export the optimized mesh when static geomtery is created?
+							//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
 							//meshFile->exportMesh();
 						}
 					}

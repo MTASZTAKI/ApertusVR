@@ -78,6 +78,10 @@ Makefile.inc.cmake
 3rdParty/nodejs/**/Debug/
 3rdParty/nodejs/**/Release/
 
+#leapMotion
+!3rdParty/leapMotion/lib/x64/*
+!3rdParty/leapMotion/lib/x86/*
+
 # Exclude thirdparties
 !3rdParty/oculus/LibOVR/Lib/*
 !3rdParty/oculusRT/*
