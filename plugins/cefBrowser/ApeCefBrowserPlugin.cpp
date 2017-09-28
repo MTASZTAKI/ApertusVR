@@ -66,6 +66,8 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 						{
 							browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 							browserMaterial->setPassTexture(browserTexture);
+							browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE);
+							browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 							mBrowserCounter++;
 							mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
 							CefWindowInfo cefWindowInfo;

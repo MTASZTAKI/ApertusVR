@@ -178,6 +178,26 @@ namespace Ape
 			return Ape::Pass::SceneBlendingType::REPLACE;
 	}
 
+	inline Ogre::CullingMode ConversionToOgre(const Ape::Material::CullingMode type)
+	{
+		if (type == Ape::Material::CullingMode::NONE)
+			return Ogre::CullingMode::CULL_NONE;
+		else if (type == Ape::Material::CullingMode::CLOCKWISE)
+			return Ogre::CullingMode::CULL_CLOCKWISE;
+		else if (type == Ape::Material::CullingMode::ANTICLOCKWISE)
+			return Ogre::CullingMode::CULL_ANTICLOCKWISE;
+	}
+
+	inline Ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)
+	{
+		if (type == Ogre::CullingMode::CULL_NONE)
+			return Ape::Material::CullingMode::NONE;
+		else if (type == Ogre::CullingMode::CULL_CLOCKWISE)
+			return Ape::Material::CullingMode::CLOCKWISE;
+		else if (type == Ogre::CullingMode::CULL_ANTICLOCKWISE)
+			return Ape::Material::CullingMode::ANTICLOCKWISE;
+	}
+
 	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)
 	{
 		if (type == Ape::Texture::PixelFormat::A8R8G8B8)

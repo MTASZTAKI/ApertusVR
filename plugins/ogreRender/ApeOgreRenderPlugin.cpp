@@ -1296,6 +1296,19 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						}
 					}
 					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE:
+					{
+						ogreMaterial->setCullingMode(Ape::ConversionToOgre(materialManual->getCullingMode()));
+					}
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING:
+					{
+						ogreMaterial->setCullingMode(Ape::ConversionToOgre(materialManual->getCullingMode()));
+						ogreMaterial->setSceneBlending(Ape::ConversionToOgre(materialManual->getSceneBlendingType()));
+						if (materialManual->getSceneBlendingType() == Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+							ogreMaterial->setDepthWriteEnabled(false);
+					}
+					break;
 				}
 			}
 		}

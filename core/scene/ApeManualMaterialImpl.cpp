@@ -28,6 +28,7 @@ Ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated
 	mpScene = Ape::IScene::getSingletonPtr();
 	mTexture = Ape::TextureWeakPtr();
 	mTextureName = std::string();
+	mCullingMode = Ape::Material::CullingMode::CLOCKWISE;
 }
 
 Ape::ManualMaterialImpl::~ManualMaterialImpl()
@@ -88,6 +89,18 @@ void Ape::ManualMaterialImpl::setPass(Ape::PassWeakPtr pass)
 		mPass = Ape::PassWeakPtr();
 }
 
+void Ape::ManualMaterialImpl::setCullingMode(Ape::Material::CullingMode cullingMode)
+{
+	mCullingMode = cullingMode;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
+}
+
+void Ape::ManualMaterialImpl::setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType)
+{
+	mSceneBlendingType = sceneBlendingType;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
+}
+
 void Ape::ManualMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -105,6 +118,8 @@ RakNet::RM3SerializationResult Ape::ManualMaterialImpl::Serialize(RakNet::Serial
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mEmissiveColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mPassName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCullingMode);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSceneBlendingType);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -135,6 +150,10 @@ void Ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		mTexture = std::static_pointer_cast<Ape::Texture>(mpScene->getEntity(mTextureName).lock());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_TEXTURE));
 	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCullingMode))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

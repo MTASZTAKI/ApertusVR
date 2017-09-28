@@ -36,3 +36,10 @@ CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
 {
 	return mCefRenderHandlerImpl;
 }
+
+bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
+{
+	const std::string& message_name = message->GetName();
+	std::cout << "Ape::CefClientImpl::OnProcessMessageReceived: " << message_name << std::endl;
+	return true;
+}

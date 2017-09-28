@@ -35,6 +35,14 @@ namespace Ape
 {	
 	class Material : public Entity
 	{
+	public:
+		enum CullingMode
+		{
+			NONE,
+			CLOCKWISE,
+			ANTICLOCKWISE,
+			INVALID
+		};
 	protected:
 	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
 		
@@ -42,10 +50,18 @@ namespace Ape
 
 		Ape::PassWeakPtr mPass;
 
+		CullingMode mCullingMode;
+
+		Ape::Pass::SceneBlendingType mSceneBlendingType;
+
 		std::string mPassName;
 
 	public:
 		Ape::PassWeakPtr getPass() { return mPass; };
+
+		CullingMode getCullingMode() { return mCullingMode; };
+
+		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 	};
 }
 

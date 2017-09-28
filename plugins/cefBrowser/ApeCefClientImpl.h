@@ -45,6 +45,8 @@ namespace Ape
 
 		virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
 
+		virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
+
 		IMPLEMENT_REFCOUNTING(CefClientImpl);
 	};
 }

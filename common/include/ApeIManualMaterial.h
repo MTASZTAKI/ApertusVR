@@ -64,6 +64,10 @@ namespace Ape
 		virtual Ape::TextureWeakPtr getPassTexture() = 0;
 
 		virtual void setPass(Ape::PassWeakPtr pass) = 0;
+
+		virtual void setCullingMode(Ape::Material::CullingMode cullingMode) = 0;
+
+		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
 	};
 }
 

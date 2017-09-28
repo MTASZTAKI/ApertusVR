@@ -49,13 +49,50 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
 #include "ApeIMainWindow.h"
+#include "ApeIBrowser.h"
+#include "ApeInterpolator.h"
+#include "ApeEuler.h"
+#include "OIS.h"
 
 
 #define THIS_PLUGINNAME "ApePresentationScenePlugin"
 
-class ApePresentationScenePlugin : public Ape::IPlugin
+class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener
 {
 private:
+	struct StoryElement
+	{
+		Ape::Vector3 cameraPosition;
+		Ape::Quaternion cameraOrientation;
+		std::string browserName;
+		std::string browserURL;
+		Ape::Vector3 browserPosition;
+		Ape::Quaternion browserOrientation;
+		int browserWidth;
+		int browserHeight;
+
+		StoryElement(
+			Ape::Vector3 cameraPosition,
+			Ape::Quaternion cameraOrientation,
+			std::string browserName = std::string(),
+			std::string browserURL = std::string(),
+			Ape::Vector3 browserPosition = Ape::Vector3(),
+			Ape::Quaternion browserOrientation = Ape::Quaternion(),
+			int browserWidth = int(),
+			int browserHeight = int()
+			)
+		{
+			this->cameraPosition = cameraPosition;
+			this->cameraOrientation = cameraOrientation;
+			this->browserName = browserName;
+			this->browserURL = browserURL;
+			this->browserPosition = browserPosition;
+			this->browserOrientation = browserOrientation;
+			this->browserWidth = browserWidth;
+			this->browserHeight = browserHeight;
+		}
+	};
+
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
@@ -67,7 +104,35 @@ private:
 	Ape::NodeWeakPtr mUserNode;
 	
 	void eventCallBack(const Ape::Event& event);
+
+	Ape::Vector3 mOldXMLFormatTranslateVector;
+
+	Ape::Vector3 mOldXMLFormatTranslateVectorCamera;
 	
+	Ape::Quaternion mOldXMLFormatRotationQuaternion;
+
+	int mCurrentStoryElementIndex;
+
+	std::vector<StoryElement> mStoryElements;
+
+	float mTranslateSpeedFactor;
+
+	float mRotateSpeedFactor;
+
+	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+	OIS::Keyboard* mpKeyboard;
+
+	void moveUserNode();
+
+	void animateToStoryElements(Ape::NodeSharedPtr userNode);
+
+	void jumpToStoryElement(Ape::NodeSharedPtr userNode);
+
+	void createBrowser(std::string name, std::string url, Ape::Vector3 position, Ape::Quaternion orientation, int width, int height, int resolutionVertical = 1024, int resolutionHorizontal = 768);
+
+	void createMesh(std::string name, Ape::Vector3 position = Ape::Vector3(), Ape::Quaternion orientation = Ape::Quaternion());
+
 public:
 	ApePresentationScenePlugin();
 
@@ -84,6 +149,11 @@ public:
 	void Suspend() override;
 
 	void Restart() override;
+
+	bool keyPressed(const OIS::KeyEvent& e) override;
+
+	bool keyReleased(const OIS::KeyEvent& e) override;
+
 };
 
 APE_PLUGIN_FUNC Ape::IPlugin* CreateApePresentationScenePlugin()
