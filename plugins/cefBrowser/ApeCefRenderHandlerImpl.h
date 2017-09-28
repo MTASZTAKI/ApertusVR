@@ -53,6 +53,8 @@ namespace Ape
 
 		void setZoomLevel(int browserID, int zoomLevel);
 
+		void setURL(int browserID, std::string url);
+
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
 	};
 }

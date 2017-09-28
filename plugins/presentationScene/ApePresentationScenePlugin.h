@@ -71,6 +71,24 @@ private:
 		Ape::Quaternion browserOrientation;
 		int browserWidth;
 		int browserHeight;
+		int browserZoom;
+		int browserResolutionVertical;
+		int browserResolutionHorizontal;
+
+		StoryElement()
+		{
+			this->cameraPosition = Ape::Vector3();
+			this->cameraOrientation = Ape::Quaternion();
+			this->browserName = std::string();
+			this->browserURL = std::string();
+			this->browserPosition = Ape::Vector3();
+			this->browserOrientation = Ape::Quaternion();
+			this->browserWidth = int();
+			this->browserHeight = int();
+			this->browserZoom = int();
+			this->browserResolutionVertical = int();
+			this->browserResolutionHorizontal = int();
+		}
 
 		StoryElement(
 			Ape::Vector3 cameraPosition,
@@ -80,7 +98,10 @@ private:
 			Ape::Vector3 browserPosition = Ape::Vector3(),
 			Ape::Quaternion browserOrientation = Ape::Quaternion(),
 			int browserWidth = int(),
-			int browserHeight = int()
+			int browserHeight = int(),
+			int browserZoom = 0,
+			int browserResolutionVertical = 1024,
+			int browserResolutionHorizontal = 768
 			)
 		{
 			this->cameraPosition = cameraPosition;
@@ -91,6 +112,9 @@ private:
 			this->browserOrientation = browserOrientation;
 			this->browserWidth = browserWidth;
 			this->browserHeight = browserHeight;
+			this->browserZoom = browserZoom;
+			this->browserResolutionVertical = browserResolutionVertical;
+			this->browserResolutionHorizontal = browserResolutionHorizontal;
 		}
 	};
 
@@ -136,7 +160,7 @@ private:
 
 	void jumpToStoryElement(Ape::NodeSharedPtr userNode);
 
-	void createBrowser(std::string name, std::string url, Ape::Vector3 position, Ape::Quaternion orientation, int width, int height, int resolutionVertical = 1024, int resolutionHorizontal = 768);
+	void manageBrowser(StoryElement storyElement);
 
 	void createMesh(std::string name, Ape::Vector3 position = Ape::Vector3(), Ape::Quaternion orientation = Ape::Quaternion());
 

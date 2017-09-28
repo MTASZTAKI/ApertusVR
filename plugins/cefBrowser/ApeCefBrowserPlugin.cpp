@@ -67,7 +67,14 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 				break;
 			case Ape::Event::Type::BROWSER_ZOOM:
 				{
-					mpApeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
+					if (mBrowserIDNames[browser->getName()])
+						mpApeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
+				}
+				break;
+			case Ape::Event::Type::BROWSER_URL:
+				{
+					if (mBrowserIDNames[browser->getName()])
+						mpApeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
 				}
 				break;
 			case Ape::Event::Type::BROWSER_DELETE:

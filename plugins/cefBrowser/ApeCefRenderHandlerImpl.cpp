@@ -56,5 +56,12 @@ void Ape::CefRenderHandlerImpl::addTexture(int browserID, Ape::ManualTextureWeak
 
 void Ape::CefRenderHandlerImpl::setZoomLevel(int browserID, int zoomLevel)
 {
-	mBrowsers[browserID]->GetHost()->SetZoomLevel(zoomLevel);
+	if (mBrowsers.size() && mBrowsers[browserID])
+		mBrowsers[browserID]->GetHost()->SetZoomLevel(zoomLevel);
+}
+
+void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
+{
+	if (mBrowsers.size() && mBrowsers[browserID])
+		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
 }
