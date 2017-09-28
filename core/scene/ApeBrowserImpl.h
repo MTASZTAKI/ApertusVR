@@ -50,6 +50,8 @@ namespace Ape
 
 		Ape::GeometryWeakPtr getGeometry() override;
 
+		void showOnOverlay(bool enable) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;

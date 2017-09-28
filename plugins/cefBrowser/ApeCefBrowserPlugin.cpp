@@ -50,33 +50,17 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 	{
 		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			std::string browserName = browser->getName();
 			switch (event.type)
 			{
 			case Ape::Event::Type::BROWSER_CREATE:
 				break;
 			case Ape::Event::Type::BROWSER_GEOMETRY:
 			{
-				if (auto browserGeometry = browser->getGeometry().lock())
-				{
-					if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
-					{
-						browserMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-						if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
-						{
-							browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
-							browserMaterial->setPassTexture(browserTexture);
-							browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE);
-							browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-							mBrowserCounter++;
-							mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
-							CefWindowInfo cefWindowInfo;
-							cefWindowInfo.SetAsWindowless(0);
-							CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
-						}
-						std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
-					}
-				}
+				createBrowser(browser);
+			}
+			case Ape::Event::Type::BROWSER_OVERLAY:
+			{
+				createBrowser(browser);
 			}
 			break;
 			case Ape::Event::Type::BROWSER_DELETE:
@@ -103,6 +87,31 @@ void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 		mEventDoubleQueue.push(event);
 	else
 		processEvent(event);
+}
+
+void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
+{
+	std::string browserName = browser->getName();
+	if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+	{
+		browserMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+		if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
+		{
+			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+			browserMaterial->setPassTexture(browserTexture);
+			browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE);
+			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			mBrowserCounter++;
+			mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+			CefWindowInfo cefWindowInfo;
+			cefWindowInfo.SetAsWindowless(0);
+			CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
+		}
+		if (auto browserGeometry = browser->getGeometry().lock())
+			std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
+		else
+			browserMaterial->showOnOverlay(true);
+	}
 }
 
 void Ape::CefBrowserPlugin::Init()

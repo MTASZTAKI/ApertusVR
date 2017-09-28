@@ -74,6 +74,12 @@ Ape::GeometryWeakPtr Ape::BrowserImpl::getGeometry()
 	return mGeometry;
 }
 
+void Ape::BrowserImpl::showOnOverlay(bool enable)
+{
+	if (enable)
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_OVERLAY));
+}
+
 
 void Ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {

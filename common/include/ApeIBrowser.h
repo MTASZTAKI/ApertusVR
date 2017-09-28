@@ -48,6 +48,8 @@ namespace Ape
 		virtual void setGeometry(Ape::GeometryWeakPtr geometry) = 0;
 
 		virtual Ape::GeometryWeakPtr getGeometry() = 0;
+
+		virtual void showOnOverlay(bool enable) = 0;
 	};
 }
 

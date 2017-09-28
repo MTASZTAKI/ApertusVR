@@ -28,25 +28,6 @@ SOFTWARE.*/
 #include "ApeOgreRenderPlugin.h"
 #include "ApeOgreUtilities.h"
 
-// Convert a wide Unicode string to an UTF8 string
-std::string utf8_encode(const std::wstring &wstr)
-{
-	if (wstr.empty()) return std::string();
-	int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
-	std::string strTo(size_needed, 0);
-	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
-	return strTo;
-}
-
-// Convert an UTF8 string to a wide Unicode String
-std::wstring utf8_decode(const std::string &str)
-{
-	if (str.empty()) return std::wstring();
-	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-	std::wstring wstrTo(size_needed, 0);
-	MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-	return wstrTo;
-}
 
 Ape::OgreRenderPlugin::OgreRenderPlugin( )
 {
@@ -81,10 +62,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpOgreMovableTextFactory = NULL;
 	mpOverlayMgr = NULL;
 	mpOverlay = NULL;
-	mpOverlayContainer = NULL;
-	mpOverlayTextArea = NULL;
-	mpOverlayFontManager = NULL;
-	mpOverlayFont = NULL;
+	mpOverlayPanelElement = NULL;
 	mpHlmsPbsManager = NULL;
 	mpShaderGenerator = NULL;
 	mpShaderGeneratorResolver = NULL;
@@ -1307,6 +1285,21 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						ogreMaterial->setSceneBlending(Ape::ConversionToOgre(materialManual->getSceneBlendingType()));
 						if (materialManual->getSceneBlendingType() == Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
 							ogreMaterial->setDepthWriteEnabled(false);
+					}
+					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_OVERLAY:
+					{
+						if (!mpOverlayPanelElement && !mpOverlay)
+						{
+							mpOverlayPanelElement = static_cast<Ogre::PanelOverlayElement*>(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", "OverlayPanelElement0"));
+							mpOverlayPanelElement->setMetricsMode(Ogre::GMM_PIXELS);
+							mpOverlayPanelElement->setMaterialName(ogreMaterial->getName());
+							mpOverlayPanelElement->setDimensions(1920, 1080);
+							mpOverlay = Ogre::OverlayManager::getSingleton().create("Overlay0");
+							mpOverlay->add2D(mpOverlayPanelElement);
+							mpOverlay->show();
+							mpOverlay->setZOrder(270);
+						}
 					}
 					break;
 				}

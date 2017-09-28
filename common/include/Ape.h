@@ -141,6 +141,12 @@ namespace Ape
 	typedef std::weak_ptr<IManualTexture> ManualTextureWeakPtr;
 
 	typedef std::shared_ptr<IManualTexture> ManualTextureSharedPtr;
+
+	class IBrowser;
+
+	typedef std::weak_ptr<IBrowser> BrowserWeakPtr;
+
+	typedef std::shared_ptr<IBrowser> BrowserSharedPtr;
 }
 
 #endif

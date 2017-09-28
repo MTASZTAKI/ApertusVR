@@ -101,6 +101,12 @@ void Ape::ManualMaterialImpl::setSceneBlending(Ape::Pass::SceneBlendingType scen
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
 }
 
+void Ape::ManualMaterialImpl::showOnOverlay(bool enable)
+{
+	if (enable)
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_OVERLAY));
+}
+
 void Ape::ManualMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);

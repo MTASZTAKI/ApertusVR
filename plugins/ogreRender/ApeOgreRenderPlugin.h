@@ -150,13 +150,7 @@ namespace Ape
 
 		Ogre::Overlay* mpOverlay;
 
-		Ogre::OverlayContainer* mpOverlayContainer;
-
-		Ogre::TextAreaOverlayElement* mpOverlayTextArea;
-
-		Ogre::FontManager* mpOverlayFontManager;
-
-		Ogre::Font* mpOverlayFont;
+		Ogre::PanelOverlayElement* mpOverlayPanelElement;
 
 		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
 		

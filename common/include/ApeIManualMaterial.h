@@ -68,6 +68,8 @@ namespace Ape
 		virtual void setCullingMode(Ape::Material::CullingMode cullingMode) = 0;
 
 		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
+
+		virtual void showOnOverlay(bool enable) = 0;
 	};
 }
 

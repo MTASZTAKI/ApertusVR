@@ -98,6 +98,8 @@ namespace Ape
 		void processEvent(Ape::Event event);
 
 		void eventCallBack(const Ape::Event& event);
+
+		void createBrowser(Ape::BrowserSharedPtr browser);
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateCefBrowserPlugin()

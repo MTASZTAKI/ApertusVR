@@ -68,7 +68,6 @@ void ApePresentationScenePlugin::Init()
 		mpKeyboard = keyboard;
 		mpKeyboard->setEventCallback(this);
 	}
-
 	/*static elements begin*/
 	std::string name = "metalroom";
 	Ape::Vector3 position = Ape::Vector3();
@@ -113,8 +112,7 @@ void ApePresentationScenePlugin::Init()
 	height = 157;
 	createBrowser(name, url, position, orientation, width, height);
 	name = "indigo_first";
-	//url = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
-	url = "http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html";
+	url = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
 	position = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
 	orientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
 	width = 267;
@@ -421,6 +419,16 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		{
 			mCurrentStoryElementIndex = 0;
 			jumpToStoryElement(userNode);
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_O])
+		{
+			/*overlay begin*/
+			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+			{
+				browser->setResoultion(2048, 1024);
+				browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
+				browser->showOnOverlay(true);
+			}
 		}
 	}
 	return true;
