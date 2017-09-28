@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <fstream>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -123,7 +124,13 @@ private:
 
 	OIS::Keyboard* mpKeyboard;
 
+	std::map<std::string, Ape::BrowserWeakPtr> mBrowsers;
+
+	bool mIsFirstSpacePressed;
+
 	void moveUserNode();
+
+	void saveUserNodePose(Ape::NodeSharedPtr userNode);
 
 	void animateToStoryElements(Ape::NodeSharedPtr userNode);
 

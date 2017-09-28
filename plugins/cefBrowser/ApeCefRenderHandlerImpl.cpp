@@ -25,16 +25,21 @@ SOFTWARE.*/
 Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
 {
 	mBrowserIDTextures = std::map<int, Ape::ManualTextureWeakPtr>();
+	mBrowsers = std::map<int, CefRefPtr<CefBrowser>>();
 }
 
 Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
 {
+
 }
 
 bool Ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
 {
 	if (auto texture = mBrowserIDTextures[browser->GetIdentifier()].lock())
+	{
 		rect = CefRect(0, 0, texture->getParameters().width, texture->getParameters().height);
+		mBrowsers[browser->GetIdentifier()] = browser;
+	}
 	return true;
 }
 
@@ -47,4 +52,9 @@ void Ape::CefRenderHandlerImpl::OnPaint(CefRefPtr<CefBrowser> browser, PaintElem
 void Ape::CefRenderHandlerImpl::addTexture(int browserID, Ape::ManualTextureWeakPtr texture)
 {
 	mBrowserIDTextures[browserID] = texture;
+}
+
+void Ape::CefRenderHandlerImpl::setZoomLevel(int browserID, int zoomLevel)
+{
+	mBrowsers[browserID]->GetHost()->SetZoomLevel(zoomLevel);
 }

@@ -93,6 +93,8 @@ namespace Ape
 
 		Ape::DoubleQueue<Event> mEventDoubleQueue;
 
+		std::map<std::string, int> mBrowserIDNames;
+
 		void processEventDoubleQueue();
 
 		void processEvent(Ape::Event event);

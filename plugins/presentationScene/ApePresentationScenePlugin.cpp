@@ -22,10 +22,12 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	orientation2.FromAngleAxis(angle, axis);
 	mOldXMLFormatRotationQuaternion = orientation * orientation2;
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mTranslateSpeedFactor = 3;
-	mRotateSpeedFactor = 1;
+	mTranslateSpeedFactor = 0.5;
+	mRotateSpeedFactor = 0.5;
 	mCurrentStoryElementIndex = 0;
 	mStoryElements = std::vector<StoryElement>();
+	mBrowsers = std::map<std::string, Ape::BrowserWeakPtr>();
+	mIsFirstSpacePressed = false;
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -68,6 +70,13 @@ void ApePresentationScenePlugin::Init()
 		mpKeyboard = keyboard;
 		mpKeyboard->setEventCallback(this);
 	}
+	/*overlay begin*/
+	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	{
+		browser->setResoultion(2048, 1024);
+		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
+		browser->showOnOverlay(true);
+	}
 	/*static elements begin*/
 	std::string name = "metalroom";
 	Ape::Vector3 position = Ape::Vector3();
@@ -87,6 +96,7 @@ void ApePresentationScenePlugin::Init()
 	orientation = Ape::Quaternion(-0.924, -0, 0.383, -0) *  mOldXMLFormatRotationQuaternion;
 	int width = 278;
 	int height = 157;
+	int zoom = 0;
 	int resolutionVertical = 1024;
 	int resolutionHorizontal = 768;
 	createBrowser(name, url, position, orientation, width, height);
@@ -113,6 +123,8 @@ void ApePresentationScenePlugin::Init()
 	createBrowser(name, url, position, orientation, width, height);
 	name = "indigo_first";
 	url = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
+	//url = "https://srv.mvv.sztaki.hu/demos/demo_instant_messaging_rooms.html";
+	//url = "https://www.youtube.com/";
 	position = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
 	orientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
 	width = 267;
@@ -247,8 +259,8 @@ void ApePresentationScenePlugin::Init()
 	height = 78;
 	createBrowser(name, url, position, orientation, width, height);
 	/*story begin*/
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0))); //indigo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 409.5), Ape::Quaternion(1, 0, 0, 0))); //indigo
 	mStoryElements.push_back(StoryElement(Ape::Vector3(13, 359, -52) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
 		"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-234, 770, 258) - mOldXMLFormatTranslateVectorCamera, Ape::Euler(Ape::Degree(131).toRadian(), 0, 0).toQuaternion())); //smartProfile
@@ -333,6 +345,7 @@ void ApePresentationScenePlugin::createBrowser(std::string name, std::string url
 					browser->setResoultion(resolutionVertical, resolutionHorizontal);
 					browser->setURL(url);
 					browser->setGeometry(browserGeometry);
+					mBrowsers[name] = browser;
 				}
 			}
 		}
@@ -385,6 +398,15 @@ void ApePresentationScenePlugin::moveUserNode()
 	}
 }
 
+void ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+{
+	std::ofstream userNodePoseFile;
+	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+	userNodePoseFile.close();
+}
+
 bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
@@ -397,6 +419,13 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 			{
 				mCurrentStoryElementIndex++;
 				animateToStoryElements(userNode);
+			}
+			if (!mIsFirstSpacePressed)
+			{
+				/*setting up zoom levels*/
+				if (auto browserEndo = mBrowsers["endo"].lock())
+					browserEndo->setZoomLevel(4);
+				mIsFirstSpacePressed = true;
 			}
 		}
 		if (mKeyCodeMap[OIS::KeyCode::KC_M])
@@ -420,15 +449,19 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 			mCurrentStoryElementIndex = 0;
 			jumpToStoryElement(userNode);
 		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_O])
+		if (mKeyCodeMap[OIS::KeyCode::KC_MINUS])
 		{
-			/*overlay begin*/
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
-			{
-				browser->setResoultion(2048, 1024);
-				browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
-				browser->showOnOverlay(true);
-			}
+			mTranslateSpeedFactor -= 0.5;
+			mRotateSpeedFactor -= 0.5;
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_ADD])
+		{
+			mTranslateSpeedFactor += 0.5;
+			mRotateSpeedFactor += 0.5;
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_C])
+		{
+			saveUserNodePose(userNode);
 		}
 	}
 	return true;

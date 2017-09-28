@@ -35,6 +35,7 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mBrowserSettings = CefBrowserSettings();
 	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
+	mBrowserIDNames = std::map<std::string, int>();
 }
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
@@ -55,14 +56,20 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 			case Ape::Event::Type::BROWSER_CREATE:
 				break;
 			case Ape::Event::Type::BROWSER_GEOMETRY:
-			{
-				createBrowser(browser);
-			}
+				{
+					createBrowser(browser);
+				}
+				break;
 			case Ape::Event::Type::BROWSER_OVERLAY:
-			{
-				createBrowser(browser);
-			}
-			break;
+				{
+					createBrowser(browser);
+				}
+				break;
+			case Ape::Event::Type::BROWSER_ZOOM:
+				{
+					mpApeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
+				}
+				break;
 			case Ape::Event::Type::BROWSER_DELETE:
 				;
 				break;
@@ -103,6 +110,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+			mBrowserIDNames[browserName] = mBrowserCounter;
 			CefWindowInfo cefWindowInfo;
 			cefWindowInfo.SetAsWindowless(0);
 			CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
@@ -118,6 +126,7 @@ void Ape::CefBrowserPlugin::Init()
 {
 	std::cout << "ApeCefBrowserPlugin::Init" << std::endl;
 	CefSettings settings;
+	settings.ignore_certificate_errors = true;
 	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
 #if defined(OS_WIN)
 	CefMainArgs main_args(::GetModuleHandle(0));

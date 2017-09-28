@@ -12,7 +12,7 @@
             "resolution": {
                 "width": 1920,
                 "height": 1080,
-                "fullScreen": false
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -26,8 +26,8 @@
                 "zOrder": 0,
                 "left": 0,
                 "top": 0,
-                "width": 1280,
-                "height": 720,
+                "width": 1920,
+                "height": 1080,
                 "camera": {
                   "name": "0",
                   "nearClip": 1,
