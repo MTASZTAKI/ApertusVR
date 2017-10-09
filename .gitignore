@@ -69,6 +69,7 @@ Makefile.inc.cmake
 3rdParty/cef_ffmpeg/
 
 # NodeJs
+node_modules/
 3rdParty/nodejs/**/source/config.mk
 3rdParty/nodejs/**/source/config.gypi
 3rdParty/nodejs/**/source/icu_config.gypi
