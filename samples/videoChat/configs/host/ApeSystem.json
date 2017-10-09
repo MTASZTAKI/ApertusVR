@@ -1,0 +1,32 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Host",
+        "uniqueUserNamePrefix": "HelloWorldHost",
+        "sessionGUID": "1134907127491049312",
+        "sessionResourceLocation": [
+            "/plugins/sampleScene/resources"
+        ],
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "ip": "195.111.2.95",
+            "port": "8888"
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeOgreRenderPlugin",
+            "ApeOisUserInputPlugin",
+            "ApeCefBrowserPlugin",
+            "ApeInGameBrowserSamplePlugin",
+            "ApeSampleScenePlugin"
+        ],
+        "jsplugins": []
+    }
+}
