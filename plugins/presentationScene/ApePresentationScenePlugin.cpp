@@ -88,7 +88,7 @@ void ApePresentationScenePlugin::Init()
 	{
 		browser->setResoultion(2048, 1024);
 		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
-		//browser->showOnOverlay(true);
+		browser->showOnOverlay(true, 0);
 		/*mouse begin*/
 		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 		{
@@ -104,7 +104,7 @@ void ApePresentationScenePlugin::Init()
 				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
 				mMouseTexture = mouseTexture;
 			}
-			mouseMaterial->showOnOverlay(true);
+			mouseMaterial->showOnOverlay(true, 1);
 		}
 	}
 	/*static elements begin*/

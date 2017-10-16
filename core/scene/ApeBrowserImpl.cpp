@@ -31,6 +31,7 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mResoultion = Ape::Vector2();
 	mGeometryName = std::string();
 	mZoomLevel = 0;
+	mZOrder = 0;
 }
 
 Ape::BrowserImpl::~BrowserImpl()
@@ -75,10 +76,13 @@ Ape::GeometryWeakPtr Ape::BrowserImpl::getGeometry()
 	return mGeometry;
 }
 
-void Ape::BrowserImpl::showOnOverlay(bool enable)
+void Ape::BrowserImpl::showOnOverlay(bool enable, int zOrder)
 {
 	if (enable)
+	{
+		mZOrder = zOrder;
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_OVERLAY));
+	}
 }
 
 void Ape::BrowserImpl::setZoomLevel(int level)
@@ -90,6 +94,11 @@ void Ape::BrowserImpl::setZoomLevel(int level)
 int Ape::BrowserImpl::getZoomLevel()
 {
 	return mZoomLevel;
+}
+
+int Ape::BrowserImpl::getZOrder()
+{
+	return mZOrder;
 }
 
 

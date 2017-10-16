@@ -149,10 +149,6 @@ namespace Ape
 
 		Ogre::OverlayManager* mpOverlayMgr;
 
-		Ogre::Overlay* mpOverlay;
-
-		Ogre::PanelOverlayElement* mpOverlayPanelElement;
-
 		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
 		
 		Ogre::Entity* mpCurrentlyLoadingMeshEntity;

@@ -35,6 +35,7 @@ Ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated
 	mDepthBias.x = 0.0f;
 	mDepthBias.y = 0.0f;
 	mLightingEnabled = true;
+	mZOrder = 0;
 }
 
 Ape::ManualMaterialImpl::~ManualMaterialImpl()
@@ -138,10 +139,18 @@ void Ape::ManualMaterialImpl::setDepthBias(float constantBias, float slopeScaleB
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHBIAS));
 }
 
-void Ape::ManualMaterialImpl::showOnOverlay(bool enable)
+void Ape::ManualMaterialImpl::showOnOverlay(bool enable, int zOrder)
 {
 	if (enable)
+	{
+		mZOrder = zOrder;
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_OVERLAY));
+	}
+}
+
+int Ape::ManualMaterialImpl::getZOrder()
+{
+	return mZOrder;
 }
 
 void Ape::ManualMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

@@ -79,7 +79,9 @@ namespace Ape
 
 		virtual void setDepthBias(float constantBias, float slopeScaleBias) = 0;
 
-		virtual void showOnOverlay(bool enable) = 0;
+		virtual void showOnOverlay(bool enable, int zOrder) = 0;
+
+		virtual int getZOrder() = 0;
 	};
 }
 

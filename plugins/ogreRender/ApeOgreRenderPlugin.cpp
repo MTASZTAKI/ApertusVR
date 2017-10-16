@@ -62,8 +62,6 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpOverlaySys = NULL;
 	mpOgreMovableTextFactory = NULL;
 	mpOverlayMgr = NULL;
-	mpOverlay = NULL;
-	mpOverlayPanelElement = NULL;
 	mpHlmsPbsManager = NULL;
 	mpShaderGenerator = NULL;
 	mpShaderGeneratorResolver = NULL;
@@ -1303,17 +1301,14 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_OVERLAY:
 					{
-						if (!mpOverlayPanelElement && !mpOverlay)
-						{
-							mpOverlayPanelElement = static_cast<Ogre::PanelOverlayElement*>(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", "OverlayPanelElement0"));
-							mpOverlayPanelElement->setMetricsMode(Ogre::GMM_PIXELS);
-							mpOverlayPanelElement->setMaterialName(ogreMaterial->getName());
-							mpOverlayPanelElement->setDimensions(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
-							mpOverlay = Ogre::OverlayManager::getSingleton().create("Overlay0");
-							mpOverlay->add2D(mpOverlayPanelElement);
-							mpOverlay->show();
-							mpOverlay->setZOrder(270);
-						}
+						auto overlayPanelElement = static_cast<Ogre::PanelOverlayElement*>(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", materialName));
+						overlayPanelElement->setMetricsMode(Ogre::GMM_PIXELS);
+						overlayPanelElement->setMaterialName(materialName);
+						overlayPanelElement->setDimensions(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+						auto overlay = Ogre::OverlayManager::getSingleton().create(materialName);
+						overlay->add2D(overlayPanelElement);
+						overlay->show();
+						overlay->setZOrder(materialManual->getZOrder());
 					}
 					break;
 				}

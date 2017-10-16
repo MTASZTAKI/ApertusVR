@@ -125,7 +125,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 		if (auto browserGeometry = browser->getGeometry().lock())
 			std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
 		else
-			browserMaterial->showOnOverlay(true);
+			browserMaterial->showOnOverlay(true, browser->getZOrder());
 	}
 }
 

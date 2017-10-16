@@ -66,7 +66,9 @@ namespace Ape
 
 		void setDepthBias(float constantBias, float slopeScaleBias) override;
 
-		void showOnOverlay(bool enable) override;
+		void showOnOverlay(bool enable, int zOrder) override;
+
+		int getZOrder() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -82,6 +84,8 @@ namespace Ape
 		Ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
+
+		int mZOrder;
 	};
 }
 

@@ -50,11 +50,13 @@ namespace Ape
 
 		Ape::GeometryWeakPtr getGeometry() override;
 
-		void showOnOverlay(bool enable) override;
+		void showOnOverlay(bool enable, int zOrder) override;
 
 		void setZoomLevel(int level) override;
 
 		int getZoomLevel() override;
+
+		int getZOrder() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -76,6 +78,8 @@ namespace Ape
 		Ape::Vector2 mResoultion;
 
 		int mZoomLevel;
+
+		int mZOrder;
 	};
 }
 
