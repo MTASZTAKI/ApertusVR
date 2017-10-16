@@ -111,23 +111,6 @@ void ApePresentationScenePlugin::Init()
 		}
 		rayNode->setParentNode(mUserNode);
 		mRayOverlayNode = rayNode;
-
-		if (auto handMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("handMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-		{
-			if (auto handMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("handMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-			{
-				handMaterialManualPass->setShininess(15.0f);
-				handMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
-				handMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
-				handMaterial->setPass(handMaterialManualPass);
-			}
-			if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("leftHandGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
-			{
-				leftHandGeometry->setParameters(1.0f, Ape::Vector2(1, 1));
-				leftHandGeometry->setParentNode(mRayOverlayNode);
-				leftHandGeometry->setMaterial(handMaterial);
-			}
-		}
 	}
 	/*overlay begin*/
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
