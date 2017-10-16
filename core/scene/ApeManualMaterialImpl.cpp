@@ -36,6 +36,7 @@ Ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated
 	mDepthBias.y = 0.0f;
 	mLightingEnabled = true;
 	mZOrder = 0;
+	mIsShowOnOverlay = false;
 }
 
 Ape::ManualMaterialImpl::~ManualMaterialImpl()
@@ -144,8 +145,11 @@ void Ape::ManualMaterialImpl::showOnOverlay(bool enable, int zOrder)
 	if (enable)
 	{
 		mZOrder = zOrder;
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_OVERLAY));
+		mIsShowOnOverlay = true;
 	}
+	else
+		mIsShowOnOverlay = false;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_OVERLAY));
 }
 
 int Ape::ManualMaterialImpl::getZOrder()

@@ -131,6 +131,8 @@ private:
 	Ape::IMainWindow* mpMainWindow;
 
 	Ape::NodeWeakPtr mUserNode;
+
+	Ape::CameraWeakPtr mCamera;
 	
 	void eventCallBack(const Ape::Event& event);
 
@@ -158,13 +160,27 @@ private:
 
 	std::map<std::string, Ape::UnitTextureWeakPtr> mGeometriesMouseTextures;
 
+	std::map<std::string, Ape::BrowserWeakPtr> mBrowserMouseTextures;
+
 	Ape::UnitTextureWeakPtr mActiveMouseTexture;
 
+	Ape::BrowserWeakPtr mActiveBrowser;
+
+	Ape::BrowserWeakPtr mOverlayBrowser;
+
 	Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+	Ape::ManualMaterialWeakPtr mOverlayMouseMaterial;
 
 	Ape::RayGeometryWeakPtr mRayGeometry;
 
 	Ape::NodeWeakPtr mRayOverlayNode;
+
+	clock_t mLastLeftClickTime;
+
+	Ape::Vector3 mUserNodePositionBeforeFullScreen;
+
+	Ape::Quaternion mUserNodeOrientationBeforeFullScreen;
 
 	bool mIsFirstSpacePressed;
 

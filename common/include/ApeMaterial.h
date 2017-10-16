@@ -75,6 +75,8 @@ namespace Ape
 
 		std::string mPassName;
 
+		bool mIsShowOnOverlay;
+
 	public:
 		Ape::PassWeakPtr getPass() { return mPass; };
 
@@ -91,6 +93,8 @@ namespace Ape
 		bool getLightingEnabled() { return mLightingEnabled; };
 
 		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
+
+		bool isShowOnOverlay() { return mIsShowOnOverlay; };
 	};
 }
 

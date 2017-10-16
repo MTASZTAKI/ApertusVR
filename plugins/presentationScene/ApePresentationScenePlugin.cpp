@@ -35,7 +35,15 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mRayGeometry = Ape::RayGeometryWeakPtr();
 	mRayOverlayNode = Ape::NodeWeakPtr();
 	mGeometriesMouseTextures = std::map<std::string, Ape::UnitTextureWeakPtr>();
+	mBrowserMouseTextures = std::map<std::string, Ape::BrowserWeakPtr>();
 	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
+	mOverlayMouseMaterial = Ape::ManualMaterialWeakPtr();
+	mLastLeftClickTime = 0;
+	mActiveBrowser = Ape::BrowserWeakPtr();
+	mOverlayBrowser = Ape::BrowserWeakPtr();
+	mCamera = Ape::CameraWeakPtr();
+	mUserNodePositionBeforeFullScreen = Ape::Vector3();
+	mUserNodeOrientationBeforeFullScreen = Ape::Quaternion();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -47,6 +55,8 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
 		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock());
 	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
 		if (auto rayGeometry = mRayGeometry.lock())
@@ -59,7 +69,10 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 					if (auto mouseTexture = mGeometriesMouseTextures[geometry->getName()].lock())
 					{
 						mActiveMouseTexture = mouseTexture;
-						std::cout << mouseTexture->getName() << std::endl;
+						if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
+							overlayMouseMaterial->showOnOverlay(false, 1);
+						if (auto browser = mBrowserMouseTextures[mouseTexture->getName()].lock())
+							mActiveBrowser = browser;
 					}
 				}
 			}
@@ -123,6 +136,8 @@ void ApePresentationScenePlugin::Init()
 		browser->setResoultion(2048, 1024);
 		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
 		browser->showOnOverlay(true, 0);
+		mOverlayBrowser = browser;
+		mActiveBrowser = browser;
 		/*mouse begin*/
 		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 		{
@@ -136,6 +151,7 @@ void ApePresentationScenePlugin::Init()
 				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
 				mActiveMouseTexture = mouseTexture;
 				mOverlayMouseTexture = mouseTexture;
+				mOverlayMouseMaterial = mouseMaterial;
 			}
 			mouseMaterial->showOnOverlay(true, 1);
 		}
@@ -409,20 +425,30 @@ void ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 					browser->setURL(storyElement.browserURL);
 					browser->setGeometry(browserGeometry);
 					mBrowsers[storyElement.browserName] = browser;
-					if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+					if (auto browserMouseNode = mpScene->createNode(storyElement.browserName + "mouse").lock())
 					{
-						mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-						mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-						//mouseMaterial->setDepthBias(1.0f, 0.0f);
-						mouseMaterial->setLightingEnabled(false);
-						if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+						browserMouseNode->setParentNode(browserNode);
+						browserMouseNode->setPosition(Ape::Vector3(0, -1, 0));
+						if (auto mouseGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(storyElement.browserName + "mouseGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 						{
-							mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
-							mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
-							mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
-							mGeometriesMouseTextures[browserGeometry->getName()] = mouseTexture;
+							mouseGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(storyElement.browserWidth, storyElement.browserHeight), Ape::Vector2(1, 1));
+							mouseGeometry->setParentNode(browserMouseNode);
+							if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+							{
+								mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+								mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+								mouseMaterial->setLightingEnabled(false);
+								if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+								{
+									mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+									mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+									mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+									mGeometriesMouseTextures[mouseGeometry->getName()] = mouseTexture;
+									mBrowserMouseTextures[mouseTexture->getName()] = browser;
+								}
+								std::static_pointer_cast<Ape::IPlaneGeometry>(mouseGeometry)->setMaterial(mouseMaterial);
+							}
 						}
-						//std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(mouseMaterial);
 					}
 				}
 			}
@@ -557,6 +583,11 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		if (mKeyCodeMap[OIS::KeyCode::KC_ESCAPE])
 		{
 			mActiveMouseTexture = mOverlayMouseTexture;
+			mActiveBrowser = mOverlayBrowser;
+			if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
+				overlayMouseMaterial->showOnOverlay(true, 1);
+			userNode->setPosition(mUserNodePositionBeforeFullScreen);
+			userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
 		}
 	}
 	return true;
@@ -577,11 +608,56 @@ bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 
 bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
-	if (auto rayOverlayNode = mRayOverlayNode.lock())
+	if (id == OIS::MouseButtonID::MB_Left)
 	{
-		rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
-		if (auto rayGeomtery = mRayGeometry.lock())
-			rayGeomtery->fireIntersectionQuery();
+		if (auto rayOverlayNode = mRayOverlayNode.lock())
+		{
+			rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
+			if (auto rayGeomtery = mRayGeometry.lock())
+				rayGeomtery->fireIntersectionQuery();
+		}
+		clock_t currentLeftClickTime;
+		currentLeftClickTime = clock();
+		double elapsedTimInMSecs = (currentLeftClickTime - mLastLeftClickTime) / (CLOCKS_PER_SEC / 1000);
+		if (elapsedTimInMSecs < 250)
+		{
+			float planeWidth, planeHeight, windowHeight, windowWidth, planeRatio, windowRatio, cameraDistance = 0.0f;
+			if (auto activeBrowser = mActiveBrowser.lock())
+			{
+				if (auto geometry = std::static_pointer_cast<Ape::IPlaneGeometry>(activeBrowser->getGeometry().lock()))
+				{
+					planeHeight = geometry->getParameters().size.x;
+					planeWidth = geometry->getParameters().size.y;
+					windowWidth = mpMainWindow->getWidth();
+					windowHeight = mpMainWindow->getHeight();
+					planeRatio = planeWidth / planeHeight;
+					windowRatio = windowWidth / windowHeight;
+					if (auto camera = mCamera.lock())
+					{
+						if (windowRatio < planeRatio)
+						{
+							float fieldOfViewX = 2 * atan(tan(camera->getFOVy().getRadian() * 0.5) * windowRatio);
+							cameraDistance = (planeWidth / 2) / (tan(fieldOfViewX / 2));
+						}
+						else
+							cameraDistance = (planeHeight / 2) / (tan(camera->getFOVy().getRadian() / 2));
+					}
+					if (auto userNode = mUserNode.lock())
+					{
+						if (auto geometryNode = geometry->getParentNode().lock())
+						{
+							Ape::Vector3 position = geometryNode->getDerivedOrientation() * Ape::Vector3(0, -cameraDistance, 0) + geometryNode->getDerivedPosition();
+							Ape::Quaternion orientation = geometryNode->getDerivedOrientation();
+							mUserNodePositionBeforeFullScreen = userNode->getPosition();
+							mUserNodeOrientationBeforeFullScreen = userNode->getOrientation();
+							userNode->setPosition(position);
+							userNode->setOrientation(orientation * mOldXMLFormatRotationQuaternion.Inverse());
+						}
+					}
+				}
+			}
+		}
+		mLastLeftClickTime = currentLeftClickTime;
 	}
 	return true;
 }
