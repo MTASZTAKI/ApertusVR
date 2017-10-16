@@ -1,0 +1,1 @@
+/* Written by Fedak Laszlo <fedak.laszlo@gmail.com>, May 2016 */

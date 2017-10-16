@@ -1,0 +1,130 @@
+cmake_minimum_required( VERSION 2.8 )
+
+project( dolphin )
+
+#set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" )
+
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
+set ( OGRE_SOURCE_HOME "C:/Projects/ogre/dependencies/ogre110" CACHE PATH "Folder for the required dependencies" )
+
+set ( OGRE_BINARY_HOME "C:/Projects/ogre/dependencies/ogre110/bin" CACHE PATH "Folder for the required dependencies" )
+
+set ( OGRE_DEPEND_HOME "C:/Projects/ogre/dependencies/ogre110/Dependencies" CACHE PATH "Folder for the required dependencies" )
+
+set ( BOOST_HOME "C:/Projects/ogre/dependencies/boost" CACHE PATH "Folder for the required dependencies" )
+
+set ( DEPENDENCIES "${CMAKE_SOURCE_DIR}/dependencies" CACHE PATH "Folder for the required dependencies" )
+
+set( OGRE_SOURCE ${OGRE_SOURCE_HOME} )
+if( WIN32 )
+	set( OGRE_BINARIES ${OGRE_BINARY_HOME} )
+	link_directories( "${OGRE_BINARIES}/sdk/lib" )
+
+else()
+	set( OGRE_BINARIES ${OGRE_BINARY_HOME} )
+	link_directories( "${OGRE_BINARIES}/sdk/lib" )
+endif()
+
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/bulletloader" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreBase" )
+include_directories( "${OGRE_SOURCE_HOME}/ogremain/include" )
+include_directories( "${BOOST_HOME}" )
+include_directories( "${OGRE_BINARIES}/sdk/include/ogre" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OIS" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Overlay" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/RTShaderSystem" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/HLMS" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Terrain" )
+include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Paging" )
+include_directories( "${DEPENDENCIES}/tinyxml" )
+include_directories( "${DEPENDENCIES}/bullet/src" )
+include_directories( "${DEPENDENCIES}/bullet/src/BulletCollision/CollisionShapes" )
+include_directories( "${DEPENDENCIES}/hydrax/src" )
+include_directories( "${DEPENDENCIES}/skyx/src" )
+
+link_directories ("${DEPENDENCIES}/tinyxml/x64/Release")
+
+link_directories ("${DEPENDENCIES}/tinyxml/x64/Debug")
+
+link_directories ( "${DEPENDENCIES}/bullet/bin" )
+
+link_directories ( "${DEPENDENCIES}/hydrax/lib/${CMAKE_BUILD_TYPE}" )
+
+link_directories ( "${DEPENDENCIES}/skyx/lib/${CMAKE_BUILD_TYPE}" )
+
+link_directories( "${BOOST_HOME}/stage/lib" )
+
+file( GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/include/ocean/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/include/sky/*.h")
+
+file( GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"  "${CMAKE_CURRENT_SOURCE_DIR}/src/ocean/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/sky/*.cpp")
+
+file( GLOB BULLETLOADERSOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/bulletloader/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/bulletloader/*.h")
+
+file( GLOB RES "${CMAKE_CURRENT_SOURCE_DIR}/res/*.rc")
+
+set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+
+set( OGRE_LIBRARIES
+	debug OgreMain_d
+	debug OgreHLMS_d
+	debug OgreRTShaderSystem_d
+	debug OIS_d
+	debug OgreOverlay_d
+	debug OgreTerrain_d
+	debug OgrePaging_d
+	debug libboost_thread-vc120-mt-gd-1_59.lib
+	debug libboost_date_time-vc120-mt-gd-1_59.lib
+	debug libboost_system-vc120-mt-gd-1_59.lib
+	debug libboost_atomic-vc120-mt-gd-1_59.lib
+	debug libboost_chrono-vc120-mt-gd-1_59.lib
+	
+	
+	optimized OgreMain
+	optimized OgreHLMS
+	optimized OgreRTShaderSystem
+	optimized OIS
+	optimized OgreOverlay
+	optimized OgreTerrain
+	optimized OgrePaging
+	optimized libboost_thread-vc120-mt-1_59.lib
+	optimized libboost_date_time-vc120-mt-1_59.lib
+	optimized libboost_system-vc120-mt-1_59.lib
+	optimized libboost_atomic-vc120-mt-1_59.lib
+	optimized libboost_chrono-vc120-mt-1_59.lib
+	
+	)
+
+set( BULLET_LIBRARIES
+	debug BulletDynamics_vs2010_x64_debug.lib
+	debug BulletCollision_vs2010_x64_debug.lib
+	debug LinearMath_vs2010_x64_debug.lib
+	optimized BulletDynamics_vs2010_x64_release.lib
+	optimized BulletCollision_vs2010_x64_release.lib
+	optimized LinearMath_vs2010_x64_release.lib
+	)
+
+
+set( TINYXML_LIBRARIES
+	debug tinyxml.lib 
+	optimized tinyxml.lib
+	)
+
+set( HYDRAX_LIBARIES 
+	debug HydraX_d.lib
+	optimized HydraX.lib)
+
+set( SKYX_LIBARIES 
+	debug SkyX_d.lib
+	optimized SkyX.lib)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+
+
+add_executable( dolphin WIN32  ${HEADERS}  ${SOURCES} ${BULLETLOADERSOURCES} ${RES})
+
+source_group("bulletloader" FILES ${BULLETLOADERSOURCES})
+target_link_libraries( dolphin ${OGRE_LIBRARIES} ${BULLET_LIBRARIES} ${TINYXML_LIBRARIES} ${HYDRAX_LIBARIES} ${SKYX_LIBARIES} )

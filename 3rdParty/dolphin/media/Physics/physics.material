@@ -1,0 +1,13 @@
+material "DebugLines"
+{
+   receive_shadows off
+   technique
+   {
+      pass
+      {
+         ambient 1 0 0 1
+         diffuse 1 0 0 1
+         emissive 1 0 0 1
+      }
+   }
+}
