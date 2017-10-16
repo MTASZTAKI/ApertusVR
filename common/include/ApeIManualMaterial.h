@@ -69,6 +69,16 @@ namespace Ape
 
 		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
 
+		virtual void setDepthWriteEnabled(bool enable) = 0;
+
+		virtual void setDepthCheckEnabled(bool enable) = 0;
+
+		virtual void setLightingEnabled(bool enable) = 0;
+
+		virtual void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) = 0;
+
+		virtual void setDepthBias(float constantBias, float slopeScaleBias) = 0;
+
 		virtual void showOnOverlay(bool enable) = 0;
 	};
 }

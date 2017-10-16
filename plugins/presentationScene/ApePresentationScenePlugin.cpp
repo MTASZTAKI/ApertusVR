@@ -3,6 +3,8 @@
 
 ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
+	mpKeyboard = NULL;
+	mpMouse = NULL;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
@@ -28,6 +30,8 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mStoryElements = std::vector<StoryElement>();
 	mBrowsers = std::map<std::string, Ape::BrowserWeakPtr>();
 	mIsFirstSpacePressed = false;
+	mMouseTexture = Ape::UnitTextureWeakPtr();
+	mMouseMaterial = Ape::ManualMaterialWeakPtr();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -70,12 +74,38 @@ void ApePresentationScenePlugin::Init()
 		mpKeyboard = keyboard;
 		mpKeyboard->setEventCallback(this);
 	}
+	if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
+	{
+		OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+		mpMouse = mouse;
+		mpMouse->setEventCallback(this);
+		const OIS::MouseState &ms = mouse->getMouseState();
+		ms.width = mpMainWindow->getWidth();
+		ms.height = mpMainWindow->getHeight();
+	}
 	/*overlay begin*/
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
 		browser->setResoultion(2048, 1024);
 		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
-		browser->showOnOverlay(true);
+		//browser->showOnOverlay(true);
+		/*mouse begin*/
+		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			//mouseMaterial->setDepthBias(1.0f, 0.0f);
+			mouseMaterial->setLightingEnabled(false);
+			mMouseMaterial = mouseMaterial;
+			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+			{
+				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+				mMouseTexture = mouseTexture;
+			}
+			mouseMaterial->showOnOverlay(true);
+		}
 	}
 	/*static elements begin*/
 	std::string name = "metalroom";
@@ -486,12 +516,35 @@ bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 	return true;
 }
 
+bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
+{
+	/*e.state.X.abs, e.state.X.rel
+	e.state.Y.abs, e.state.Y.rel
+	e.state.Z.abs, e.state.Z.rel*/
+	if (auto mouseTexture = mMouseTexture.lock())
+		//mouseTexture->setTextureScroll(0, -0.5);
+		mouseTexture->setTextureScroll(-e.state.X.abs / ((float) 1920), -e.state.Y.abs / ((float)1080));
+	return true;
+}
+
+bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+{
+	return true;
+}
+
+bool ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+{
+	return true;
+}
+
 void ApePresentationScenePlugin::Run()
 {
 	while (true)
 	{
 		if (mpKeyboard)
 			mpKeyboard->capture();
+		if (mpMouse)
+			mpMouse->capture();
 		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}

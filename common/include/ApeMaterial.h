@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "Ape.h"
+#include "ApeVector2.h"
 #include "ApeEntity.h"
 #include "ApeColor.h"
 #include "ApePass.h"
@@ -38,11 +39,19 @@ namespace Ape
 	public:
 		enum CullingMode
 		{
-			NONE,
+			NONE_CM,
 			CLOCKWISE,
 			ANTICLOCKWISE,
-			INVALID
+			INVALID_CM
 		};
+		enum ManualCullingMode
+		{
+			NONE_MCM,
+			BACK,
+			FRONT,
+			INVALID_MCM
+		};
+
 	protected:
 	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
 		
@@ -52,7 +61,17 @@ namespace Ape
 
 		CullingMode mCullingMode;
 
+		ManualCullingMode mManualCullingMode;
+
 		Ape::Pass::SceneBlendingType mSceneBlendingType;
+
+		bool mDepthWriteEnabled;
+
+		bool mDepthCheckEnabled;
+
+		bool mLightingEnabled;
+
+		Ape::Vector2 mDepthBias;
 
 		std::string mPassName;
 
@@ -60,6 +79,16 @@ namespace Ape
 		Ape::PassWeakPtr getPass() { return mPass; };
 
 		CullingMode getCullingMode() { return mCullingMode; };
+
+		ManualCullingMode getManualCullingMode() { return mManualCullingMode; };
+
+		bool getDepthWriteEnabled() { return mDepthWriteEnabled; };
+
+		bool getDepthCheckEnabled() { return mDepthCheckEnabled; };
+
+		Ape::Vector2 getDepthBias() { return mDepthBias; };
+
+		bool getLightingEnabled() { return mLightingEnabled; };
 
 		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 	};

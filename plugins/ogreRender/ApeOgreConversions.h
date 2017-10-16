@@ -180,7 +180,7 @@ namespace Ape
 
 	inline Ogre::CullingMode ConversionToOgre(const Ape::Material::CullingMode type)
 	{
-		if (type == Ape::Material::CullingMode::NONE)
+		if (type == Ape::Material::CullingMode::NONE_CM)
 			return Ogre::CullingMode::CULL_NONE;
 		else if (type == Ape::Material::CullingMode::CLOCKWISE)
 			return Ogre::CullingMode::CULL_CLOCKWISE;
@@ -191,11 +191,55 @@ namespace Ape
 	inline Ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)
 	{
 		if (type == Ogre::CullingMode::CULL_NONE)
-			return Ape::Material::CullingMode::NONE;
+			return Ape::Material::CullingMode::NONE_CM;
 		else if (type == Ogre::CullingMode::CULL_CLOCKWISE)
 			return Ape::Material::CullingMode::CLOCKWISE;
 		else if (type == Ogre::CullingMode::CULL_ANTICLOCKWISE)
 			return Ape::Material::CullingMode::ANTICLOCKWISE;
+	}
+
+	inline Ogre::TextureUnitState::TextureAddressingMode ConversionToOgre(const Ape::Texture::AddressingMode type)
+	{
+		if (type == Ape::Texture::AddressingMode::BORDER)
+			return Ogre::TextureUnitState::TextureAddressingMode::TAM_BORDER;
+		else if (type == Ape::Texture::AddressingMode::CLAMP)
+			return Ogre::TextureUnitState::TextureAddressingMode::TAM_CLAMP;
+		else if (type == Ape::Texture::AddressingMode::MIRROR)
+			return Ogre::TextureUnitState::TextureAddressingMode::TAM_MIRROR;
+		else if (type == Ape::Texture::AddressingMode::WRAP)
+			return Ogre::TextureUnitState::TextureAddressingMode::TAM_WRAP;
+	}
+
+	inline Ape::Texture::AddressingMode ConversionFromOgre(const Ogre::TextureUnitState::TextureAddressingMode type)
+	{
+		if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_BORDER)
+			return Ape::Texture::AddressingMode::BORDER;
+		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_CLAMP)
+			return Ape::Texture::AddressingMode::CLAMP;
+		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_MIRROR)
+			return Ape::Texture::AddressingMode::MIRROR;
+		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_WRAP)
+			return Ape::Texture::AddressingMode::WRAP;
+	}
+
+	inline Ogre::FilterOptions ConversionToOgre(const Ape::Texture::Filtering type)
+	{
+		if (type == Ape::Texture::Filtering::ANISOTROPIC)
+			return Ogre::FilterOptions::FO_ANISOTROPIC;
+		else if (type == Ape::Texture::Filtering::LINEAR)
+			return Ogre::FilterOptions::FO_LINEAR;
+		else if (type == Ape::Texture::Filtering::POINT)
+			return Ogre::FilterOptions::FO_POINT;
+	}
+
+	inline Ape::Texture::Filtering ConversionFromOgre(const Ogre::FilterOptions type)
+	{
+		if (type == Ogre::FilterOptions::FO_ANISOTROPIC)
+			return Ape::Texture::Filtering::ANISOTROPIC;
+		else if (type == Ogre::FilterOptions::FO_LINEAR)
+			return Ape::Texture::Filtering::LINEAR;
+		else if (type == Ogre::FilterOptions::FO_POINT)
+			return Ape::Texture::Filtering::POINT;
 	}
 
 	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)

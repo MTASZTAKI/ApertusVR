@@ -147,6 +147,12 @@ namespace Ape
 	typedef std::weak_ptr<IBrowser> BrowserWeakPtr;
 
 	typedef std::shared_ptr<IBrowser> BrowserSharedPtr;
+
+	class IUnitTexture;
+
+	typedef std::weak_ptr<IUnitTexture> UnitTextureWeakPtr;
+
+	typedef std::shared_ptr<IUnitTexture> UnitTextureSharedPtr;
 }
 
 #endif

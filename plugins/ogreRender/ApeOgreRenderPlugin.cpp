@@ -55,6 +55,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
@@ -1276,9 +1277,22 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE:
 					{
-						ogreMaterial->setCullingMode(Ape::ConversionToOgre(materialManual->getCullingMode()));
+						 ogreMaterial->setCullingMode(Ape::ConversionToOgre(materialManual->getCullingMode()));
 					}
 					break;
+				case Ape::Event::Type::MATERIAL_MANUAL_DEPTHBIAS:
+					{
+						ogreMaterial->setDepthBias(materialManual->getDepthBias().x, materialManual->getDepthBias().x);
+					}
+				break;
+				case Ape::Event::Type::MATERIAL_MANUAL_LIGHTING:
+					{
+						ogreMaterial->setLightingEnabled(materialManual->getLightingEnabled());
+						if (mpShaderGenerator)
+							mpShaderGenerator->removeAllShaderBasedTechniques(ogreMaterial->getName());
+						mpShaderGeneratorResolver->appendIgnoreList(ogreMaterial->getName());
+					}
+				break;
 				case Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING:
 					{
 						ogreMaterial->setCullingMode(Ape::ConversionToOgre(materialManual->getCullingMode()));
@@ -1294,7 +1308,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							mpOverlayPanelElement = static_cast<Ogre::PanelOverlayElement*>(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", "OverlayPanelElement0"));
 							mpOverlayPanelElement->setMetricsMode(Ogre::GMM_PIXELS);
 							mpOverlayPanelElement->setMaterialName(ogreMaterial->getName());
-							mpOverlayPanelElement->setDimensions(1920, 1080);
+							mpOverlayPanelElement->setDimensions(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
 							mpOverlay = Ogre::OverlayManager::getSingleton().create("Overlay0");
 							mpOverlay->add2D(mpOverlayPanelElement);
 							mpOverlay->show();
@@ -1489,6 +1503,61 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 			}
 		}
+		else if (event.group == Ape::Event::Group::TEXTURE_UNIT)
+		{
+			if (auto textureUnit = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string textureUnitName = textureUnit->getName();
+				Ape::IUnitTexture::Parameters parameters = textureUnit->getParameters();
+				Ogre::MaterialPtr ogreMaterial;
+				if (auto material = parameters.material.lock())
+					ogreMaterial = Ogre::MaterialManager::getSingletonPtr()->getByName(material->getName());
+				switch (event.type)
+				{
+				case Ape::Event::Type::TEXTURE_UNIT_CREATE:
+					break;
+				case Ape::Event::Type::TEXTURE_UNIT_PARAMETERS:
+					{
+						if (!ogreMaterial.isNull())
+							ogreMaterial->getTechnique(0)->getPass(0)->createTextureUnitState(parameters.fileName);
+					}
+				break;
+				case Ape::Event::Type::TEXTURE_UNIT_SCROLL:
+					{
+						if (!ogreMaterial.isNull())
+						{
+							auto ogreTextureUnit = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+							if (ogreTextureUnit)
+								ogreTextureUnit->setTextureScroll(textureUnit->getTextureScroll().x, textureUnit->getTextureScroll().y);
+						}
+					}
+				break;
+				case Ape::Event::Type::TEXTURE_UNIT_ADDRESSING:
+					{
+						if (!ogreMaterial.isNull())
+						{
+							auto ogreTextureUnit = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+							if (ogreTextureUnit)
+								ogreTextureUnit->setTextureAddressingMode(Ape::ConversionToOgre(textureUnit->getTextureAddressingMode()));
+						}
+					}
+				break;
+				case Ape::Event::Type::TEXTURE_UNIT_FILTERING:
+					{
+						if (!ogreMaterial.isNull())
+						{
+							auto ogreTextureUnit = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+							if (ogreTextureUnit)
+								ogreTextureUnit->setTextureFiltering(Ape::ConversionToOgre(textureUnit->getTextureFiltering().minFilter), Ape::ConversionToOgre(textureUnit->getTextureFiltering().magFilter), Ape::ConversionToOgre(textureUnit->getTextureFiltering().mipFilter));
+						}
+					}
+				break;
+				case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+					;
+					break;
+				}
+			}
+		}
 		else if (event.group == Ape::Event::Group::LIGHT)
 		{
 			if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->getEntity(event.subjectName).lock()))
@@ -1565,6 +1634,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 											mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 											mpShaderGenerator->addSceneManager(mpSceneMgr);
 											mpShaderGeneratorResolver = new Ape::ShaderGeneratorResolver(mpShaderGenerator);
+											mpShaderGeneratorResolver->appendIgnoreList("FlatVertexColorLighting");
 											Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
 											Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
 											pMainRenderState->reset();
@@ -2040,18 +2110,6 @@ void Ape::OgreRenderPlugin::Init()
 			{
 				mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 				mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-				if (enabledWindowCount == 1)
-				{
-					void* windowHnd = 0;
-					mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
-					std::ostringstream windowHndStr;
-					windowHndStr << windowHnd;
-					mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].windowHandler = windowHndStr.str();
-					mpMainWindow->setName(winDesc.name);
-					mpMainWindow->setHandle(windowHnd);
-					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width);
-					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height);
-				}
 				if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size() > 0)
 				{
 					auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.name, Ape::Entity::Type::CAMERA).lock());
@@ -2068,21 +2126,35 @@ void Ape::OgreRenderPlugin::Init()
 							camera->setParentNode(mUserNode);
 					}
 				}
+				if (enabledWindowCount == 1)
+				{
+					void* windowHnd = 0;
+					mRenderWindows[winDesc.name]->getCustomAttribute("WINDOW", &windowHnd);
+					std::ostringstream windowHndStr;
+					windowHndStr << windowHnd;
+					mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].windowHandler = windowHndStr.str();
+					mpMainWindow->setName(winDesc.name);
+					mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].width);
+					mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].height);
+
+					Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+					mpOverlaySys = new Ogre::OverlaySystem();
+					mpSceneMgr->addRenderQueueListener(mpOverlaySys);
+
+					mpHlmsPbsManager = new Ogre::HlmsManager(mpSceneMgr);
+
+					mpOgreMovableTextFactory = new Ape::OgreMovableTextFactory();
+					mpRoot->addMovableObjectFactory(mpOgreMovableTextFactory);
+
+					mpMeshLodGenerator = new  Ogre::MeshLodGenerator();
+					mpMeshLodGenerator->_initWorkQueue();
+					Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(this);
+
+					/*Has to be the last call because of the sync if needed*/
+					mpMainWindow->setHandle(windowHnd);
+				}
 			}
 		}
 	}
-	
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
-	mpOverlaySys = new Ogre::OverlaySystem();
-	mpSceneMgr->addRenderQueueListener(mpOverlaySys);
-
-	mpHlmsPbsManager = new Ogre::HlmsManager(mpSceneMgr);
-
-	mpOgreMovableTextFactory = new Ape::OgreMovableTextFactory();
-	mpRoot->addMovableObjectFactory(mpOgreMovableTextFactory);
-
-	mpMeshLodGenerator = new  Ogre::MeshLodGenerator();
-	mpMeshLodGenerator->_initWorkQueue();
-	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(this);
 }

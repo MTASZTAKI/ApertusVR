@@ -99,6 +99,7 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIUnitTexture.h"
 #include "ApeIPbsPass.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"

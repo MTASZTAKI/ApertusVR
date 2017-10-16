@@ -40,6 +40,7 @@ SOFTWARE.*/
 #include "ApePbsPassImpl.h"
 #include "ApeManualPassImpl.h"
 #include "ApeBrowserImpl.h"
+#include "ApeUnitTextureImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -151,6 +152,11 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::BROWSER).lock())
 				return ((Ape::BrowserImpl*)entity.get());
+		}
+		else if (objectType == "UnitTexture")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_UNIT).lock())
+				return ((Ape::UnitTextureImpl*)entity.get());
 		}
 	}
 	

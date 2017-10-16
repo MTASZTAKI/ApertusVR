@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include "ApeManualPassImpl.h"
 #include "ApeManualTextureImpl.h"
 #include "ApeBrowserImpl.h"
+#include "ApeUnitTextureImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -274,6 +275,13 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::BROWSER_CREATE));
 			return entity;
 		}
+		case Ape::Entity::TEXTURE_UNIT:
+		{
+			auto entity = std::make_shared<Ape::UnitTextureImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_CREATE));
+			return entity;
+		}
 		case Ape::Entity::CAMERA:
 		{
 			auto entity = std::make_shared<Ape::CameraImpl>(name);
@@ -347,6 +355,9 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::BROWSER:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::BROWSER_DELETE));
+			break;
+		case Ape::Entity::TEXTURE_UNIT:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

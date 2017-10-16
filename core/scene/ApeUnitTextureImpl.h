@@ -20,10 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_MANUALMATERIALIMPL_H
-#define APE_MANUALMATERIALIMPL_H
+#ifndef APE_UNITTEXTUREIMPL_H
+#define APE_UNITTEXTUREIMPL_H
 
-#include "ApeIManualMaterial.h"
+#include "ApeIUnitTexture.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
@@ -31,42 +31,28 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class ManualMaterialImpl : public Ape::IManualMaterial, public Ape::Replica
+	class UnitTextureImpl : public Ape::IUnitTexture, public Ape::Replica
 	{
 	public:
-		ManualMaterialImpl(std::string name, bool isHostCreated);
+		UnitTextureImpl(std::string name, bool isHostCreated);
 
-		~ManualMaterialImpl();
+		~UnitTextureImpl();
 
-		void setDiffuseColor(Ape::Color diffuse) override;
+		void setParameters(Ape::MaterialWeakPtr material, std::string fileName) override;
 
-		void setSpecularColor(Ape::Color specular) override;
+		Ape::IUnitTexture::Parameters getParameters() override;
 
-		void setPassTexture(Ape::TextureWeakPtr texture) override;
+		void setTextureScroll(float u, float v) override;
 
-		void setAmbientColor(Color ambient) override;
+		Ape::Vector2 getTextureScroll() override;
 
-		void setEmissiveColor(Color emissive) override;
+		void setTextureAddressingMode(Ape::Texture::AddressingMode addressingMode) override;
 
-		Ape::TextureWeakPtr getPassTexture() override;
+		Ape::Texture::AddressingMode getTextureAddressingMode() override;
 
-		void setPass(Ape::PassWeakPtr pass) override;
+		void setTextureFiltering(Ape::Texture::Filtering minFilter, Ape::Texture::Filtering magFilter, Ape::Texture::Filtering mipFilter) override;
 
-		void setCullingMode(Ape::Material::CullingMode cullingMode) override;
-
-		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
-
-		void setDepthWriteEnabled(bool enable) override;
-
-		void setDepthCheckEnabled(bool enable) override;
-
-		void setLightingEnabled(bool enable) override;
-
-		void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) override;
-
-		void setDepthBias(float constantBias, float slopeScaleBias) override;
-
-		void showOnOverlay(bool enable) override;
+		Filtering getTextureFiltering() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -79,9 +65,14 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		Ape::TextureWeakPtr mTexture;
+		Ape::Vector2 mScroll;
 
-		std::string mTextureName;
+		Ape::Texture::AddressingMode mAddressingMode;
+
+		Ape::IUnitTexture::Filtering mFiltering;
+
+		Ape::IUnitTexture::Parameters mParameters;
+
 	};
 }
 

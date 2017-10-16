@@ -31,6 +31,7 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <fstream>
+#include "Ape.h"
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -51,6 +52,7 @@ SOFTWARE.*/
 #include "ApeIPbsPass.h"
 #include "ApeIMainWindow.h"
 #include "ApeIBrowser.h"
+#include "ApeIUnitTexture.h"
 #include "ApeInterpolator.h"
 #include "ApeEuler.h"
 #include "OIS.h"
@@ -58,7 +60,7 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApePresentationScenePlugin"
 
-class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener
+class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
 	struct StoryElement
@@ -148,7 +150,13 @@ private:
 
 	OIS::Keyboard* mpKeyboard;
 
+	OIS::Mouse* mpMouse;
+
 	std::map<std::string, Ape::BrowserWeakPtr> mBrowsers;
+
+	Ape::UnitTextureWeakPtr mMouseTexture;
+
+	Ape::ManualMaterialWeakPtr mMouseMaterial;
 
 	bool mIsFirstSpacePressed;
 
@@ -184,6 +192,12 @@ public:
 	bool keyPressed(const OIS::KeyEvent& e) override;
 
 	bool keyReleased(const OIS::KeyEvent& e) override;
+
+	bool mouseMoved(const OIS::MouseEvent& e) override;
+
+	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+
+	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
 };
 

@@ -40,8 +40,12 @@ namespace Ape
         {
 			mpShaderGenerator = shaderGenerator;
 			mIgnoreList = std::vector<std::string>();
-			mIgnoreList.push_back("FlatVertexColorLighting");
         }
+
+		void appendIgnoreList(std::string materialName)
+		{
+			mIgnoreList.push_back(materialName);
+		}
 
         Ogre::Technique* handleSchemeNotFound(unsigned short schemeIndex, const Ogre::String& schemeName, Ogre::Material* originalMaterial, unsigned short lodIndex, const Ogre::Renderable* rend)
 		{
