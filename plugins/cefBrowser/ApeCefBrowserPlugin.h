@@ -48,6 +48,7 @@ SOFTWARE.*/
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefClientImpl.h"
 #include "ApeDoubleQueue.h"
+#include "ApeIRayGeometry.h"
 
 
 namespace Ape
@@ -84,6 +85,8 @@ namespace Ape
 		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
 		
 		int mBrowserCounter;
+
+		Ape::NodeWeakPtr mRayOverlayNode;
 
 		CefRefPtr<Ape::CefClientImpl> mApeCefClientImpl;
 

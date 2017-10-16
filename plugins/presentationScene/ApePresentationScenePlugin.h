@@ -55,6 +55,8 @@ SOFTWARE.*/
 #include "ApeIUnitTexture.h"
 #include "ApeInterpolator.h"
 #include "ApeEuler.h"
+#include "ApeIManualPass.h"
+#include "ApeIRayGeometry.h"
 #include "OIS.h"
 
 
@@ -157,6 +159,10 @@ private:
 	Ape::UnitTextureWeakPtr mMouseTexture;
 
 	Ape::ManualMaterialWeakPtr mMouseMaterial;
+
+	Ape::RayGeometryWeakPtr mRayGeometry;
+
+	Ape::NodeWeakPtr mRayOverlayNode;
 
 	bool mIsFirstSpacePressed;
 

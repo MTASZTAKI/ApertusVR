@@ -44,6 +44,7 @@ set (HEADERS
 	ApeManualMaterialImpl.h
 	ApeManualTextureImpl.h
 	ApeUnitTextureImpl.h
+	ApeRayGeometryImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -75,6 +76,7 @@ set (SOURCES
 	ApeManualMaterialImpl.cpp
 	ApeManualTextureImpl.cpp
 	ApeUnitTextureImpl.cpp
+	ApeRayGeometryImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp

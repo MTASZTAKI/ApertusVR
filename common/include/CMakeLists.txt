@@ -73,6 +73,7 @@ set (HEADERS
 	ApeInterpolator.h
 	ApeIBrowser.h
 	ApeIUnitTexture.h
+	ApeIRayGeometry.h
 	)
 
 add_custom_target(

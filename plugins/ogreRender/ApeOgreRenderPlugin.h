@@ -81,6 +81,7 @@ SOFTWARE.*/
 #include "ApeICylinderGeometry.h"
 #include "ApeITorusGeometry.h"
 #include "ApeITubeGeometry.h"
+#include "ApeIRayGeometry.h"
 #include "ApeISphereGeometry.h"
 #include "ApeIConeGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"

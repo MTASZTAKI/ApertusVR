@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "ApeManualTextureImpl.h"
 #include "ApeBrowserImpl.h"
 #include "ApeUnitTextureImpl.h"
+#include "ApeRayGeometryImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -282,6 +283,13 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_CREATE));
 			return entity;
 		}
+		case Ape::Entity::GEOMETRY_RAY:
+		{
+			auto entity = std::make_shared<Ape::RayGeometryImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_CREATE));
+			return entity;
+		}
 		case Ape::Entity::CAMERA:
 		{
 			auto entity = std::make_shared<Ape::CameraImpl>(name);
@@ -358,6 +366,9 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::TEXTURE_UNIT:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_DELETE));
+			break;
+		case Ape::Entity::GEOMETRY_RAY:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

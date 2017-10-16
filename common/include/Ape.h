@@ -153,6 +153,12 @@ namespace Ape
 	typedef std::weak_ptr<IUnitTexture> UnitTextureWeakPtr;
 
 	typedef std::shared_ptr<IUnitTexture> UnitTextureSharedPtr;
+
+	class IRayGeometry;
+
+	typedef std::weak_ptr<IRayGeometry> RayGeometryWeakPtr;
+
+	typedef std::shared_ptr<IRayGeometry> RayGeometrySharedPtr;
 }
 
 #endif

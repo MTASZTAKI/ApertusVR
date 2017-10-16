@@ -56,6 +56,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = NULL;
 	mpSceneMgr = NULL;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
@@ -1523,7 +1524,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreTextureUnit = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
 							if (ogreTextureUnit)
-								ogreTextureUnit->setTextureScroll(textureUnit->getTextureScroll().x, textureUnit->getTextureScroll().y);
+								ogreTextureUnit->setTextureScroll(-textureUnit->getTextureScroll().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
+									-textureUnit->getTextureScroll().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
 						}
 					}
 				break;
@@ -1548,6 +1550,47 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 				break;
 				case Ape::Event::Type::TEXTURE_MANUAL_DELETE:
+					;
+					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::GEOMETRY_RAY)
+		{
+			if (auto geometryRay = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				switch (event.type)
+				{
+				case Ape::Event::Type::GEOMETRY_RAY_CREATE:
+					break;
+				case Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY:
+					{
+						if (auto rayOverlayNode = geometryRay->getParentNode().lock())
+						{
+							if (auto raySpaceNode = rayOverlayNode->getParentNode().lock())
+							{
+								Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
+									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+								Ogre::RaySceneQuery *raySceneQuery = mpSceneMgr->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
+								if (raySceneQuery != NULL)
+								{
+									raySceneQuery->setSortByDistance(true);
+									raySceneQuery->execute();
+									Ogre::RaySceneQueryResult query_result = raySceneQuery->getLastResults();
+									std::vector<Ape::GeometryWeakPtr> intersections;
+									for (size_t i = 0, size = query_result.size(); i < size; ++i)
+									{
+										if (auto geometry = std::static_pointer_cast<Ape::Geometry>(mpScene->getEntity(query_result[i].movable->getName()).lock()))
+											intersections.push_back(geometry);
+									}
+									if (intersections.size())
+										geometryRay->setIntersections(intersections);
+								}
+							}
+						}
+					}
+					break;
+				case Ape::Event::Type::GEOMETRY_RAY_DELETE:
 					;
 					break;
 				}

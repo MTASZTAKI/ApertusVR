@@ -20,52 +20,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_GEOMETRY_H
-#define APE_GEOMETRY_H
+#ifndef APE_RAYGEOMETRYIMPL_H
+#define APE_RAYGEOMETRYIMPL_H
 
-#include <memory>
-#include <string>
-#include <vector>
-#include <array>
-#include "Ape.h"
-#include "ApeVector3.h"
-#include "ApeEntity.h"
-#include "ApeMaterial.h"
+#include "ApeIRayGeometry.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
+#include "ApeReplica.h"
 
 namespace Ape
-{			
-    typedef std::vector<float> GeometryCoordinates;
-	
-	typedef std::vector<int> GeometryIndices;	//-1 code for stop
-
-	typedef std::vector<float> GeometryNormals;
-
-	typedef std::vector<float> GeometryColors;
-
-	typedef std::vector<float> GeometryTextureCoordinates;
-	
-	class Geometry : public Entity
+{
+	class RayGeometryImpl : public Ape::IRayGeometry, public Ape::Replica
 	{
-	protected:
-	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
-			,mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
-		
-		virtual ~Geometry() {};
-
-		Ape::NodeWeakPtr mParentNode;
-
-		std::string mParentNodeName;
-
-		bool mIntersectingEnabled;
-
-		std::vector<Ape::GeometryWeakPtr> mIntersections;
-		
 	public:
-		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
+		RayGeometryImpl(std::string name, bool isHostCreated);
 
-		bool isIntersectingEnabled() { return mIntersectingEnabled; };
+		~RayGeometryImpl();
 
-		std::vector<Ape::GeometryWeakPtr> getIntersections() { return mIntersections; };
+		void setIntersectingEnabled(bool enable) override;
+
+		void setIntersections(std::vector<Ape::GeometryWeakPtr> intersections) override;
+
+		void fireIntersectionQuery() override;
+
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
 	};
 }
 

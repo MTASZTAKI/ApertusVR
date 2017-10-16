@@ -20,52 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_GEOMETRY_H
-#define APE_GEOMETRY_H
+#ifndef APE_IRAYGEOMETRY_H
+#define APE_IRAYGEOMETRY_H
 
-#include <memory>
 #include <string>
 #include <vector>
-#include <array>
-#include "Ape.h"
-#include "ApeVector3.h"
-#include "ApeEntity.h"
-#include "ApeMaterial.h"
+#include "ApeGeometry.h"
 
 namespace Ape
-{			
-    typedef std::vector<float> GeometryCoordinates;
-	
-	typedef std::vector<int> GeometryIndices;	//-1 code for stop
-
-	typedef std::vector<float> GeometryNormals;
-
-	typedef std::vector<float> GeometryColors;
-
-	typedef std::vector<float> GeometryTextureCoordinates;
-	
-	class Geometry : public Entity
+{	
+	class IRayGeometry : public Geometry
 	{
 	protected:
-	    Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType) 
-			,mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
-		
-		virtual ~Geometry() {};
+		IRayGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_RAY) {}
 
-		Ape::NodeWeakPtr mParentNode;
-
-		std::string mParentNodeName;
-
-		bool mIntersectingEnabled;
-
-		std::vector<Ape::GeometryWeakPtr> mIntersections;
+		virtual ~IRayGeometry() {};
 		
 	public:
-		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
+		virtual void setIntersectingEnabled(bool enable) = 0;
 
-		bool isIntersectingEnabled() { return mIntersectingEnabled; };
+		virtual void setIntersections(std::vector<Ape::GeometryWeakPtr> intersections) = 0;
 
-		std::vector<Ape::GeometryWeakPtr> getIntersections() { return mIntersections; };
+		virtual void fireIntersectionQuery() = 0;
+
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

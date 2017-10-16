@@ -11,6 +11,7 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mOldXMLFormatTranslateVector = Ape::Vector3(26.809, 637.943, -22.163);
 	mOldXMLFormatTranslateVectorCamera = Ape::Vector3(0, 637.943, 0);
 	mOldXMLFormatRotationQuaternion = Ape::Quaternion();
@@ -32,6 +33,8 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mIsFirstSpacePressed = false;
 	mMouseTexture = Ape::UnitTextureWeakPtr();
 	mMouseMaterial = Ape::ManualMaterialWeakPtr();
+	mRayGeometry = Ape::RayGeometryWeakPtr();
+	mRayOverlayNode = Ape::NodeWeakPtr();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -43,6 +46,20 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
 		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
+	{
+		if (auto rayGeometry = mRayGeometry.lock())
+		{
+			auto intersections = rayGeometry->getIntersections();
+			std::cout << "intersections: ";
+			for (auto intersection : intersections)
+			{
+				if (auto geometry = intersection.lock())
+					std::cout << geometry->getName() << ", ";
+			}
+			std::cout << std::endl;
+		}
+	}
 }
 
 void ApePresentationScenePlugin::Init()
@@ -82,6 +99,35 @@ void ApePresentationScenePlugin::Init()
 		const OIS::MouseState &ms = mouse->getMouseState();
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
+	}
+	/*rayGeomtery for rayquery*/
+	if (auto rayNode = mpScene->createNode("rayNode").lock())
+	{
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery", Ape::Entity::GEOMETRY_RAY).lock()))
+		{
+			rayGeometry->setIntersectingEnabled(true);
+			rayGeometry->setParentNode(rayNode);
+			mRayGeometry = rayGeometry;
+		}
+		rayNode->setParentNode(mUserNode);
+		mRayOverlayNode = rayNode;
+
+		if (auto handMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("handMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto handMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("handMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				handMaterialManualPass->setShininess(15.0f);
+				handMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
+				handMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
+				handMaterial->setPass(handMaterialManualPass);
+			}
+			if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("leftHandGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				leftHandGeometry->setParameters(1.0f, Ape::Vector2(1, 1));
+				leftHandGeometry->setParentNode(mRayOverlayNode);
+				leftHandGeometry->setMaterial(handMaterial);
+			}
+		}
 	}
 	/*overlay begin*/
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
@@ -518,17 +564,19 @@ bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 
 bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 {
-	/*e.state.X.abs, e.state.X.rel
-	e.state.Y.abs, e.state.Y.rel
-	e.state.Z.abs, e.state.Z.rel*/
 	if (auto mouseTexture = mMouseTexture.lock())
-		//mouseTexture->setTextureScroll(0, -0.5);
-		mouseTexture->setTextureScroll(-e.state.X.abs / ((float) 1920), -e.state.Y.abs / ((float)1080));
+		mouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
 	return true;
 }
 
 bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
+	if (auto rayOverlayNode = mRayOverlayNode.lock())
+	{
+		rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
+		if (auto rayGeomtery = mRayGeometry.lock())
+			rayGeomtery->fireIntersectionQuery();
+	}
 	return true;
 }
 

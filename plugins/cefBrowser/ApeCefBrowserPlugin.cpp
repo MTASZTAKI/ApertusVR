@@ -34,8 +34,10 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mCefIsInintialzed = false;
 	mBrowserSettings = CefBrowserSettings();
 	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mBrowserIDNames = std::map<std::string, int>();
+	mRayOverlayNode = Ape::NodeWeakPtr();
 }
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
@@ -82,6 +84,16 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 				break;
 			}
 		}
+	}
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_PARENTNODE)
+	{
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			mRayOverlayNode = rayGeometry->getParentNode();
+	}
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
+	{
+		if (auto rayOverlayNode = mRayOverlayNode.lock())
+			rayOverlayNode->getPosition();//send it to cef
 	}
 }
 
