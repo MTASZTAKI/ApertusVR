@@ -2,44 +2,84 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( dolphin )
 
+set (CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Semicolon separated list" FORCE)
+
+set (HYDRAX_HOME "${DEPENDENCIES}/hydrax)
+set (HYDRAX_READY FALSE)
+#error function
+function (reportError what and when)
+	if (${${when}})
+		message (${${what}})
+	endif ()
+endfunction ()
+#find hydrax
+if(EXISTS ${HYDRAX_HOME}/lib/Debug/HydraX_d.lib AND EXISTS ${HYDRAX_HOME}/lib/Release/HydraX.lib)
+	set(HYDRAX_READY TRUE)
+	message (STATUS "hydrax is installed" )
+else ()
+	set(HYDRAX_READY FALSE)
+	message (STATUS "hydrax is not installed" )
+endif ()
+if (NOT HYDRAX_READY)
+#build hydrax
+	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+		message (STATUS "Configuring hydrax for ${CONF}, please wait.....")
+		execute_process ( 
+				COMMAND ${CMAKE_COMMAND} 
+				-G ${CMAKE_GENERATOR} 
+				.
+				WORKING_DIRECTORY ${HYDRAX_HOME}
+				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+				)		
+		reportError (output if error)
+		message (STATUS "Building hydrax for ${CONF}, please wait.....")
+		execute_process ( 
+			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${HYDRAX_HOME}
+			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+		reportError (output if error)
+	endforeach ()
+endif ()
+#use hydrax
+add_library(MY_HYDRAX STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${HYDRAX_HOME}/lib/Debug/HydraX_d.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${HYDRAX_HOME}/lib/Release/HydraX.lib)
+endif ()
+
 #set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" )
 
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
-set ( OGRE_SOURCE_HOME "C:/Projects/ogre/dependencies/ogre110" CACHE PATH "Folder for the required dependencies" )
+set ( OGRE_SOURCE_HOME "../ogre" CACHE PATH "Folder for the required dependencies" )
 
-set ( OGRE_BINARY_HOME "C:/Projects/ogre/dependencies/ogre110/bin" CACHE PATH "Folder for the required dependencies" )
+set ( OGRE_DEBUG_LIB_HOME "../ogre/lib/Debug" CACHE PATH "Folder for the required dependencies" )
 
-set ( OGRE_DEPEND_HOME "C:/Projects/ogre/dependencies/ogre110/Dependencies" CACHE PATH "Folder for the required dependencies" )
+set ( OGRE_RELEASE_LIB_HOME "../ogre/lib/Debug" CACHE PATH "Folder for the required dependencies" )
 
-set ( BOOST_HOME "C:/Projects/ogre/dependencies/boost" CACHE PATH "Folder for the required dependencies" )
+set ( OGRE_DEPEND_HOME "../ogre/Dependencies" CACHE PATH "Folder for the required dependencies" )
+
+set ( BOOST_HOME "../ogre/dependencies/boost" CACHE PATH "Folder for the required dependencies" )
 
 set ( DEPENDENCIES "${CMAKE_SOURCE_DIR}/dependencies" CACHE PATH "Folder for the required dependencies" )
 
 set( OGRE_SOURCE ${OGRE_SOURCE_HOME} )
-if( WIN32 )
-	set( OGRE_BINARIES ${OGRE_BINARY_HOME} )
-	link_directories( "${OGRE_BINARIES}/sdk/lib" )
 
-else()
-	set( OGRE_BINARIES ${OGRE_BINARY_HOME} )
-	link_directories( "${OGRE_BINARIES}/sdk/lib" )
-endif()
 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/bulletloader" )
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreBase" )
 include_directories( "${OGRE_SOURCE_HOME}/ogremain/include" )
 include_directories( "${BOOST_HOME}" )
-include_directories( "${OGRE_BINARIES}/sdk/include/ogre" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OIS" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Overlay" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/RTShaderSystem" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/HLMS" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Terrain" )
-include_directories( "${OGRE_BINARIES}/sdk/include/OGRE/Paging" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/ogre" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OIS" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OGRE/Overlay" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OGRE/RTShaderSystem" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OGRE/HLMS" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OGRE/Terrain" )
+include_directories( "${OGRE_SOURCE_HOME}/sdk/include/OGRE/Paging" )
 include_directories( "${DEPENDENCIES}/tinyxml" )
 include_directories( "${DEPENDENCIES}/bullet/src" )
 include_directories( "${DEPENDENCIES}/bullet/src/BulletCollision/CollisionShapes" )
@@ -68,35 +108,21 @@ file( GLOB RES "${CMAKE_CURRENT_SOURCE_DIR}/res/*.rc")
 
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}" )
 
-set( OGRE_LIBRARIES
-	debug OgreMain_d
-	debug OgreHLMS_d
-	debug OgreRTShaderSystem_d
-	debug OIS_d
-	debug OgreOverlay_d
-	debug OgreTerrain_d
-	debug OgrePaging_d
-	debug libboost_thread-vc120-mt-gd-1_59.lib
-	debug libboost_date_time-vc120-mt-gd-1_59.lib
-	debug libboost_system-vc120-mt-gd-1_59.lib
-	debug libboost_atomic-vc120-mt-gd-1_59.lib
-	debug libboost_chrono-vc120-mt-gd-1_59.lib
-	
-	
-	optimized OgreMain
-	optimized OgreHLMS
-	optimized OgreRTShaderSystem
-	optimized OIS
-	optimized OgreOverlay
-	optimized OgreTerrain
-	optimized OgrePaging
-	optimized libboost_thread-vc120-mt-1_59.lib
-	optimized libboost_date_time-vc120-mt-1_59.lib
-	optimized libboost_system-vc120-mt-1_59.lib
-	optimized libboost_atomic-vc120-mt-1_59.lib
-	optimized libboost_chrono-vc120-mt-1_59.lib
-	
-	)
+add_library(MY_OGRE STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgreMain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgreHLMS_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgreRTShaderSystem_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgreOverlay_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgreTerrain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_DEBUG_LIB_HOME}/OgrePaging_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgreMain.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgreHLMS.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgreRTShaderSystem.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgreOverlay.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgreTerrain.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_RELEASE_LIB_HOME}/OgrePaging.lib)
+endif ()
 
 set( BULLET_LIBRARIES
 	debug BulletDynamics_vs2010_x64_debug.lib
@@ -126,5 +152,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 add_executable( dolphin WIN32  ${HEADERS}  ${SOURCES} ${BULLETLOADERSOURCES} ${RES})
 
-source_group("bulletloader" FILES ${BULLETLOADERSOURCES})
-target_link_libraries( dolphin ${OGRE_LIBRARIES} ${BULLET_LIBRARIES} ${TINYXML_LIBRARIES} ${HYDRAX_LIBARIES} ${SKYX_LIBARIES} )
+#source_group("bulletloader" FILES ${BULLETLOADERSOURCES})
+target_link_libraries( dolphin MY_OGRE )
+#target_link_libraries( dolphin MY_OGRE ${BULLET_LIBRARIES} ${TINYXML_LIBRARIES} ${HYDRAX_LIBARIES} ${SKYX_LIBARIES} )
