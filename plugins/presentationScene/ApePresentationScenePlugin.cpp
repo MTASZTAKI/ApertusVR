@@ -31,10 +31,11 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mStoryElements = std::vector<StoryElement>();
 	mBrowsers = std::map<std::string, Ape::BrowserWeakPtr>();
 	mIsFirstSpacePressed = false;
-	mMouseTexture = Ape::UnitTextureWeakPtr();
-	mMouseMaterial = Ape::ManualMaterialWeakPtr();
+	mActiveMouseTexture = Ape::UnitTextureWeakPtr();
 	mRayGeometry = Ape::RayGeometryWeakPtr();
 	mRayOverlayNode = Ape::NodeWeakPtr();
+	mGeometriesMouseTextures = std::map<std::string, Ape::UnitTextureWeakPtr>();
+	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -51,13 +52,17 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
-			std::cout << "intersections: ";
 			for (auto intersection : intersections)
 			{
 				if (auto geometry = intersection.lock())
-					std::cout << geometry->getName() << ", ";
+				{
+					if (auto mouseTexture = mGeometriesMouseTextures[geometry->getName()].lock())
+					{
+						mActiveMouseTexture = mouseTexture;
+						std::cout << mouseTexture->getName() << std::endl;
+					}
+				}
 			}
-			std::cout << std::endl;
 		}
 	}
 }
@@ -123,15 +128,14 @@ void ApePresentationScenePlugin::Init()
 		{
 			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
 			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-			//mouseMaterial->setDepthBias(1.0f, 0.0f);
 			mouseMaterial->setLightingEnabled(false);
-			mMouseMaterial = mouseMaterial;
 			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
 			{
 				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
 				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
-				mMouseTexture = mouseTexture;
+				mActiveMouseTexture = mouseTexture;
+				mOverlayMouseTexture = mouseTexture;
 			}
 			mouseMaterial->showOnOverlay(true, 1);
 		}
@@ -405,6 +409,21 @@ void ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 					browser->setURL(storyElement.browserURL);
 					browser->setGeometry(browserGeometry);
 					mBrowsers[storyElement.browserName] = browser;
+					if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+					{
+						mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+						mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+						//mouseMaterial->setDepthBias(1.0f, 0.0f);
+						mouseMaterial->setLightingEnabled(false);
+						if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+						{
+							mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+							mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+							mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+							mGeometriesMouseTextures[browserGeometry->getName()] = mouseTexture;
+						}
+						//std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(mouseMaterial);
+					}
 				}
 			}
 		}
@@ -535,6 +554,10 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		{
 			saveUserNodePose(userNode);
 		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_ESCAPE])
+		{
+			mActiveMouseTexture = mOverlayMouseTexture;
+		}
 	}
 	return true;
 }
@@ -547,8 +570,8 @@ bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 
 bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 {
-	if (auto mouseTexture = mMouseTexture.lock())
-		mouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
+	if (auto activeMouseTexture = mActiveMouseTexture.lock())
+		activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
 	return true;
 }
 

@@ -156,9 +156,11 @@ private:
 
 	std::map<std::string, Ape::BrowserWeakPtr> mBrowsers;
 
-	Ape::UnitTextureWeakPtr mMouseTexture;
+	std::map<std::string, Ape::UnitTextureWeakPtr> mGeometriesMouseTextures;
 
-	Ape::ManualMaterialWeakPtr mMouseMaterial;
+	Ape::UnitTextureWeakPtr mActiveMouseTexture;
+
+	Ape::UnitTextureWeakPtr mOverlayMouseTexture;
 
 	Ape::RayGeometryWeakPtr mRayGeometry;
 
