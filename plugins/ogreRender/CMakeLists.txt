@@ -30,6 +30,14 @@
 # FindOGRE.cmake was modified in the ogre_procedural root folder/Cmake/Packages folder
 # ogre_procedural patch log begin
 
+# ogre_skyx patch log begin
+# CMakeLists.txt was modified in the ogre_skyx folder
+# ogre_skyx patch log begin
+
+# ogre_hydrax patch log begin
+# CMakeLists.txt was modified in the ogre_hydrax folder
+# ogre_hydrax patch log begin
+
 #error function
 function (reportError what and when)
 	if (${${when}})
@@ -175,6 +183,78 @@ if (NOT OGRE_PROCEDURAL_READY)
 		reportError (output if error)
 	endforeach ()
 endif ()
+#find ogre_hydrax
+set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax)
+set (HYDRAX_READY FALSE)
+if(EXISTS ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.dll AND EXISTS ${HYDRAX_HOME}/srcdemo/Release/Hydrax.dll)
+	set(HYDRAX_READY TRUE)
+	message (STATUS "ogre_hydrax is installed" )
+else ()
+	set(HYDRAX_READY FALSE)
+	message (STATUS "ogre_hydrax is not installed" )
+endif ()
+if (NOT HYDRAX_READY)
+#build ogre_hydrax
+	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+		message (STATUS "Configuring ogre_hydrax for ${CONF}, please wait.....")
+		execute_process ( 
+				COMMAND ${CMAKE_COMMAND} 
+				-G ${CMAKE_GENERATOR} 
+				${HYDRAX_HOME}/src
+				WORKING_DIRECTORY ${HYDRAX_HOME}/src
+				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+				)		
+		reportError (output if error)
+		message (STATUS "Building ogre_hydrax for ${CONF}, please wait.....")
+		execute_process ( 
+			COMMAND ${CMAKE_COMMAND} --build ${HYDRAX_HOME}/src --config ${CONF} --target Hydrax
+			WORKING_DIRECTORY ${HYDRAX_HOME}/src
+			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+		reportError (output if error)
+	endforeach ()
+endif ()
+#use ogre_hydrax
+add_library(MY_HYDRAX STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${HYDRAX_HOME}/srcdemo/Release/Hydrax.lib)
+endif ()
+#find ogre_skyx
+set (SKYX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_skyx)
+set (SKYX_READY FALSE)
+if(EXISTS ${SKYX_HOME}/Debug/Skyx.lib AND EXISTS ${SKYX_HOME}/Release/Skyx.lib)
+	set(SKYX_READY TRUE)
+	message (STATUS "ogre_skyx is installed" )
+else ()
+	set(SKYX_READY FALSE)
+	message (STATUS "ogre_skyx is not installed" )
+endif ()
+if (NOT SKYX_READY)
+#build ogre_skyx
+	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+		message (STATUS "Configuring ogre_skyx for ${CONF}, please wait.....")
+		execute_process ( 
+				COMMAND ${CMAKE_COMMAND} 
+				-G ${CMAKE_GENERATOR} 
+				${SKYX_HOME}
+				WORKING_DIRECTORY ${SKYX_HOME}
+				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+				)		
+		reportError (output if error)
+		message (STATUS "Building ogre_skyx for ${CONF}, please wait.....")
+		execute_process ( 
+			COMMAND ${CMAKE_COMMAND} --build ${SKYX_HOME} --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${SKYX_HOME}
+			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+		reportError (output if error)
+	endforeach ()
+endif ()
+#use ogre_skyx
+add_library(MY_SKYX STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_DEBUG ${SKYX_HOME}/Debug/Skyx.lib)
+	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_RELEASE ${SKYX_HOME}/Release/Skyx.lib)
+endif ()
 # ApeOgreRenderPlugin
 set (HEADERS
 	ApeOgreRenderPlugin.h
@@ -201,11 +281,16 @@ include_directories(
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
 	${OGRE_CgProgramManager_INCLUDE_DIRS}
 	${OgreProcedural_INCLUDE_DIRS}
+	${HYDRAX_HOME}/src
+	${HYDRAX_HOME}/src/Modules
+	${HYDRAX_HOME}/src/Noise
+	${SKYX_HOME}/src
+	${SKYX_HOME}/src/VClouds
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} )
+${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} MY_HYDRAX MY_SKYX )
 set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
@@ -245,6 +330,9 @@ if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreProcedural_d.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/Hydrax.dll)
+		file(COPY ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
 	# release dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreMain.dll)
 		file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
@@ -278,6 +366,9 @@ if (WIN32)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OgreProcedural.dll)
 		file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/Hydrax.dll)
+		file(COPY ${HYDRAX_HOME}/srcdemo/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 endif ()
 

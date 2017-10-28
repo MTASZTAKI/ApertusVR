@@ -43,7 +43,6 @@ option(APE_PLUGIN_InGameBrowserSample "Use InGameBrowserSamplePlugin?" ON )
 option(APE_PLUGIN_LeapMotion "Use LeapMotionPlugin?" ON )
 option(APE_PLUGIN_Avatar "Use AvatarPlugin?" ON )
 option(APE_PLUGIN_AssimpAssetLoader "Use AssimpAssetLoaderPlugin?" ON )
-option(APE_PLUGIN_DolphinEnvironmentSimulator "Use DolphinEnvironmentSimulatorPlugin?" ON )
 
 if (${APE_PLUGIN_OgreRender})
 	add_subdirectory (ogreRender)
@@ -107,9 +106,6 @@ if (${APE_PLUGIN_Avatar})
 endif ()
 if (${APE_PLUGIN_AssimpAssetLoader})
 	add_subdirectory (assimpAssetLoader)
-endif ()
-if (${APE_PLUGIN_DolphinEnvironmentSimulator})
-	add_subdirectory (dolphinEnvironmentSimulator)
 endif ()
 
 
