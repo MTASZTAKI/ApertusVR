@@ -22,65 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-    Ape.h
-	ApeColor.h
-	ApeEntity.h
-	ApeEvent.h
-	ApeITextGeometry.h
-	ApeICamera.h
-	ApeILight.h
-	ApeMaterial.h
-	ApePass.h
-	ApeIPbsPass.h
-	ApeIManualPass.h
-	ApeIManualMaterial.h
-	ApeIFileMaterial.h
-	ApeINode.h
-	ApeIPluginManager.h
-	ApeIPlugin.h
-	ApePluginAPI.h
-	ApePluginDefines.h
-	ApeQuaternion.h
-	ApeIScene.h
-	ApeTexture.h
-	ApeIManualTexture.h
-	ApeVector2.h
-	ApeVector3.h
-	ApeVector4.h
-	ApeGeometry.h
-	ApeSubGeometry.h
-	ApeIIndexedFaceSetGeometry.h
-	ApeIIndexedLineSetGeometry.h
-	ApeIFileGeometry.h
-	ApeIPlaneGeometry.h
-	ApeITorusGeometry.h
-	ApeIConeGeometry.h
-	ApeITubeGeometry.h
-	ApeIBoxGeometry.h
-	ApeISphereGeometry.h
-	ApeICylinderGeometry.h
-	ApeSingleton.h
-	ApeIEventManager.h
-	ApeISceneSession.h
-	ApeDegree.h
-	ApeRadian.h
-	ApeEuler.h
-	ApeMatrix4.h
-	ApeSystem.h
-	ApeISystemConfig.h
-	ApeDoubleQueue.h
-	ApeIMainWindow.h
-	ApeInterpolator.h
-	ApeIBrowser.h
-	ApeIUnitTexture.h
-	ApeIRayGeometry.h
-	ApeISky.h
-	ApeIWater.h
+	ApeSkyWaterTerrainScenePlugin.h
 	)
 
-add_custom_target(
-    Include ALL
-    SOURCES ${HEADERS}
-)
+set (SOURCES 
+	ApeSkyWaterTerrainScenePlugin.cpp
+	)
 
-set_property (TARGET Include PROPERTY FOLDER "Common")
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (ApeSkyWaterTerrainScenePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (ApeSkyWaterTerrainScenePlugin ApePluginManager ApeScene ApeEventManager)
+
+set_property (TARGET ApeSkyWaterTerrainScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeSkyWaterTerrainScenePlugin PROPERTY FOLDER "Plugins")
+
+

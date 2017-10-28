@@ -57,21 +57,31 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpRoot = NULL;
-	mpSceneMgr = NULL;
+	mpEventManager->connectEvent(Ape::Event::Group::SKY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::WATER, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpRoot = nullptr;
+	mpSceneMgr = nullptr;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
-	mpOverlaySys = NULL;
-	mpOgreMovableTextFactory = NULL;
-	mpOverlayMgr = NULL;
-	mpHlmsPbsManager = NULL;
-	mpShaderGenerator = NULL;
-	mpShaderGeneratorResolver = NULL;
-	mpMeshLodGenerator = NULL;
+	mpOverlaySys = nullptr;
+	mpOgreMovableTextFactory = nullptr;
+	mpOverlayMgr = nullptr;
+	mpHlmsPbsManager = nullptr;
+	mpShaderGenerator = nullptr;
+	mpShaderGeneratorResolver = nullptr;
+	mpMeshLodGenerator = nullptr;
 	mCurrentlyLoadingMeshEntityLodConfig = Ogre::LodConfig();
-	mpCurrentlyLoadingMeshEntity = NULL;
+	mpCurrentlyLoadingMeshEntity = nullptr;
 	mOgreRenderPluginConfig = Ape::OgreRenderPluginConfig();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mPbsMaterials = std::map<std::string, Ogre::PbsMaterial*>();
+	mpHydrax = nullptr;
+	mpSkyx = nullptr;
+	mpSkyxSunlight = nullptr;
+	mpSkyxSkylight = nullptr;
+	mSkyxWaterGradient = SkyX::ColorGradient();
+	mSkyxSunGradient = SkyX::ColorGradient();
+	mSkyxAmbientGradient = SkyX::ColorGradient();
+	mpSkyxBasicController = nullptr;
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1650,6 +1660,61 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 			}
 		}
+		else if (event.group == Ape::Event::Group::SKY)
+		{
+			if (auto sky = std::static_pointer_cast<Ape::ISky>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				switch (event.type)
+				{
+				case Ape::Event::Type::SKY_CREATE:
+					{
+						SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, mOgreCameras[0]);
+						skyxCFG->load("SkyXDefault.skx");
+						mpSkyx->create();
+						mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
+						mpRoot->addFrameListener(mpSkyx);
+						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
+						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
+					}
+					break;
+				case Ape::Event::Type::SKY_PARENTNODE:
+				{
+					;
+				}
+				break;
+				case Ape::Event::Type::SKY_DELETE:
+					;
+					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::WATER)
+		{
+			if (auto water = std::static_pointer_cast<Ape::IWater>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				switch (event.type)
+				{
+				case Ape::Event::Type::WATER_CREATE:
+					{
+						Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
+						Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
+						mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
+						mpHydrax->loadCfg("HydraxDemo.hdx");
+						mpHydrax->create();
+						mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+					}
+					break;
+				case Ape::Event::Type::WATER_PARENTNODE:
+				{
+					;
+				}
+				break;
+				case Ape::Event::Type::WATER_DELETE:
+					;
+					break;
+				}
+			}
+		}
 		else if (event.group == Ape::Event::Group::CAMERA)
 		{
 			if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
@@ -1693,6 +1758,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									}
 									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 								}
+								mpHydrax = new Hydrax::Hydrax(mpSceneMgr, mOgreCameras[0], mRenderWindows[mpMainWindow->getName()]->getViewport(0));
+								mpSkyxBasicController = new SkyX::BasicController();
+								mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
 							}
 						}
 					}

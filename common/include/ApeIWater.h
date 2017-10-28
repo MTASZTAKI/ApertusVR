@@ -20,60 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_IWATER_H
+#define APE_IWATER_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <map>
+#include "ApeEntity.h"
+#include "ApeVector3.h"
+#include "ApeColor.h"
+#include "ApeDegree.h"
+#include "ApeRadian.h"
+#include "ApeINode.h"
 
 namespace Ape
 {
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			INVALID
-		};
-		
+	class IWater : public Entity
+	{
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+	    IWater(std::string name) : Entity(name, Entity::WATER) {}
 		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
+		virtual ~IWater() {};
 		
 	public:
-		std::string getName() { return mName; };
+		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
-		Type getType() { return mType; };
+		virtual Ape::NodeWeakPtr getParentNode() = 0;
+
 	};
 }
 

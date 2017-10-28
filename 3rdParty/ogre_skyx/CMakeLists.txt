@@ -22,6 +22,7 @@ set (SKYX_HEADER_FILES
   src/MeshManager.h
   src/MoonManager.h
   src/Prerequisites.h
+  src/SCfgFileManager.h
   src/SkyX.h
   src/VCloudsManager.h
 )
@@ -34,6 +35,7 @@ set (SKYX_SOURCE_FILES
   src/GPUManager.cpp
   src/MeshManager.cpp
   src/MoonManager.cpp
+  src/SCfgFileManager.cpp
   src/SkyX.cpp
   src/VCloudsManager.cpp
 )
@@ -73,9 +75,9 @@ include_directories(
 add_definitions(-DSKYX_LIB -D_USRDLL)
 
 # Add static flag if needed
-if(SKYX_STATIC)
-  add_definitions(-DSKYX_STATIC_LIB)
-endif()
+#if(SKYX_STATIC)
+#  add_definitions(-DSKYX_STATIC_LIB)
+#endif()
 
 #set ogre
 set (OGRE_HOME ../ogre)
@@ -97,7 +99,7 @@ set(LIBRARIES
 )
 
 # setup SkyX target
-add_library(SkyX
+add_library(SkyX SHARED
   ${SKYX_LIB_TYPE}
   ${SKYX_HEADER_FILES}
   ${SKYX_SOURCE_FILES}

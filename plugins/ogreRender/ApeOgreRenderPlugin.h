@@ -72,6 +72,10 @@ SOFTWARE.*/
 #include "OgreTextureManager.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
+#include "Hydrax.h"
+#include "Noise/Perlin/Perlin.h"
+#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#include "SkyX.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
@@ -104,6 +108,8 @@ SOFTWARE.*/
 #include "ApeIPbsPass.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
+#include "ApeISky.h"
+#include "ApeIWater.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
@@ -169,6 +175,22 @@ namespace Ape
 		Ogre::MeshSerializer mMeshSerializer;
 
 		Ogre::MaterialSerializer mMaterialSerializer;
+
+		Hydrax::Hydrax *mpHydrax;
+
+		SkyX::SkyX* mpSkyx;
+
+		Ogre::Light* mpSkyxSunlight;
+
+		Ogre::Light* mpSkyxSkylight;
+
+		SkyX::ColorGradient mSkyxWaterGradient;
+		
+		SkyX::ColorGradient	mSkyxSunGradient;
+		
+		SkyX::ColorGradient	mSkyxAmbientGradient;
+
+		SkyX::BasicController* mpSkyxBasicController;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 

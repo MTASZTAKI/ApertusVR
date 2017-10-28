@@ -20,67 +20,14 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Add all header and cpp files in the directory to the project
-set (HEADERS
-    Ape.h
-	ApeColor.h
-	ApeEntity.h
-	ApeEvent.h
-	ApeITextGeometry.h
-	ApeICamera.h
-	ApeILight.h
-	ApeMaterial.h
-	ApePass.h
-	ApeIPbsPass.h
-	ApeIManualPass.h
-	ApeIManualMaterial.h
-	ApeIFileMaterial.h
-	ApeINode.h
-	ApeIPluginManager.h
-	ApeIPlugin.h
-	ApePluginAPI.h
-	ApePluginDefines.h
-	ApeQuaternion.h
-	ApeIScene.h
-	ApeTexture.h
-	ApeIManualTexture.h
-	ApeVector2.h
-	ApeVector3.h
-	ApeVector4.h
-	ApeGeometry.h
-	ApeSubGeometry.h
-	ApeIIndexedFaceSetGeometry.h
-	ApeIIndexedLineSetGeometry.h
-	ApeIFileGeometry.h
-	ApeIPlaneGeometry.h
-	ApeITorusGeometry.h
-	ApeIConeGeometry.h
-	ApeITubeGeometry.h
-	ApeIBoxGeometry.h
-	ApeISphereGeometry.h
-	ApeICylinderGeometry.h
-	ApeSingleton.h
-	ApeIEventManager.h
-	ApeISceneSession.h
-	ApeDegree.h
-	ApeRadian.h
-	ApeEuler.h
-	ApeMatrix4.h
-	ApeSystem.h
-	ApeISystemConfig.h
-	ApeDoubleQueue.h
-	ApeIMainWindow.h
-	ApeInterpolator.h
-	ApeIBrowser.h
-	ApeIUnitTexture.h
-	ApeIRayGeometry.h
-	ApeISky.h
-	ApeIWater.h
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeSystem.json
 	)
 
 add_custom_target(
-    Include ALL
-    SOURCES ${HEADERS}
+    Configs_texasEEG_monitor ALL
+    SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Include PROPERTY FOLDER "Common")
+set_property (TARGET Configs_texasEEG_monitor PROPERTY FOLDER "Samples/TexasEEG/Configs")

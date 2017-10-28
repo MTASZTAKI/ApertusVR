@@ -44,6 +44,8 @@ SOFTWARE.*/
 #include "ApeBrowserImpl.h"
 #include "ApeUnitTextureImpl.h"
 #include "ApeRayGeometryImpl.h"
+#include "ApeSkyImpl.h"
+#include "ApeWaterImpl.h"
 
 template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
 
@@ -290,6 +292,20 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_CREATE));
 			return entity;
 		}
+		case Ape::Entity::SKY:
+		{
+			auto entity = std::make_shared<Ape::SkyImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::SKY_CREATE));
+			return entity;
+		}
+		case Ape::Entity::WATER:
+		{
+			auto entity = std::make_shared<Ape::WaterImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_CREATE));
+			return entity;
+		}
 		case Ape::Entity::CAMERA:
 		{
 			auto entity = std::make_shared<Ape::CameraImpl>(name);
@@ -369,6 +385,12 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::GEOMETRY_RAY:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_DELETE));
+			break;
+		case Ape::Entity::SKY:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::SKY_DELETE));
+			break;
+		case Ape::Entity::WATER:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

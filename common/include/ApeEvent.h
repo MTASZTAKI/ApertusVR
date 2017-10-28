@@ -54,6 +54,8 @@ namespace Ape
 			TEXTURE_MANUAL,
 			TEXTURE_UNIT,
 			BROWSER,
+			WATER,
+			SKY,
 			EG_INVALID
 		};
 
@@ -215,6 +217,12 @@ namespace Ape
 			BROWSER_OVERLAY,
 			BROWSER_ZOOM,
 			BROWSER_DELETE,
+			WATER_CREATE = (WATER << 8) + 1,
+			WATER_PARENTNODE,
+			WATER_DELETE,
+			SKY_CREATE = (SKY << 8) + 1,
+			SKY_PARENTNODE,
+			SKY_DELETE,
 			ET_INVALID
 		};
 		

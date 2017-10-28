@@ -20,61 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
 
 #include <string>
-#include <vector>
-#include <memory>
+#include <sstream>
+#include <iostream>
 #include <map>
+#include "ApeSystem.h"
 
-namespace Ape
+int main (int argc, char** argv)
 {
-	class Entity
-	{ 
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
-
-		Type getType() { return mType; };
-	};
+	std::stringstream configDir;
+	if (argc > 1)
+	{
+		std::string participantType = argv[1];
+		if (participantType == "monitor")
+			configDir << APE_SOURCE_DIR << "\\samples\\texasEEG\\configs\\monitor";
+		else if (participantType == "oculusDK2")
+			configDir << APE_SOURCE_DIR << "\\samples\\texasEEG\\configs\\oculusDK2";
+	}
+	else
+	{
+		std::cout << "usage: monitor | oculusDK2 " << std::endl;
+		return 0;
+	}
+	Ape::System::Start(configDir.str(), true);
+	Ape::System::Stop();
+	return 0;
 }
-
-#endif
