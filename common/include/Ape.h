@@ -159,6 +159,18 @@ namespace Ape
 	typedef std::weak_ptr<IRayGeometry> RayGeometryWeakPtr;
 
 	typedef std::shared_ptr<IRayGeometry> RayGeometrySharedPtr;
+
+	class IWater;
+
+	typedef std::weak_ptr<IWater> WaterWeakPtr;
+
+	typedef std::shared_ptr<IWater> WaterSharedPtr;
+
+	class ISky;
+
+	typedef std::weak_ptr<ISky> SkyWeakPtr;
+
+	typedef std::shared_ptr<ISky> SkySharedPtr;
 }
 
 #endif

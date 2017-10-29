@@ -28,22 +28,51 @@ SOFTWARE.*/
 #include "ApeColor.h"
 #include "ApeDegree.h"
 #include "ApeRadian.h"
+#include "ApeILight.h"
 #include "ApeINode.h"
 
 namespace Ape
 {
 	class ISky : public Entity
 	{
+	public:
+		struct Time
+		{
+			float currentTime;
+			float sunRiseTime;
+			float sunSetTime;
+
+			Time()
+			{
+				this->currentTime = 0.0f;
+				this->sunRiseTime = 0.0f;
+				this->sunSetTime = 0.0f;
+			}
+
+			Time(float currentTime, float sunRiseTime = 6.0f, float sunSetTime = 18.0f)
+			{
+				this->currentTime = currentTime;
+				this->sunRiseTime = sunRiseTime;
+				this->sunSetTime = sunSetTime;
+			}
+		};
 	protected:
 		ISky(std::string name) : Entity(name, Entity::SKY) {}
 
 		virtual ~ISky() {};
 
 	public:
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setTime(float startTime, float sunRiseTime = 6.0f, float sunSetTime = 18.0f) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+		virtual Time getTime() = 0;
 
+		virtual void setSunLight(Ape::LightWeakPtr sunLight) = 0;
+
+		virtual Ape::LightWeakPtr getSunLight() = 0;
+
+		virtual void setSkyLight(Ape::LightWeakPtr skyLight) = 0;
+
+		virtual Ape::LightWeakPtr getSkyLight() = 0;
 	};
 }
 

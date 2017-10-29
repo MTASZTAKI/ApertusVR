@@ -84,7 +84,7 @@ add_library (ApeTexasEEGPlugin SHARED ${SOURCES} ${HEADERS})
 	
 
 # Link with dependency libraries
-target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow MY_OIS)
+target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow ApeSystemConfig MY_OIS)
 
 if (WIN32)
 	# we have to link to some DirectX libraries 

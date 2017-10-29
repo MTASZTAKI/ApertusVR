@@ -24,7 +24,7 @@
             "ApeOgreRenderPlugin",
             "ApeOculusDK2Plugin",
             "ApeSkyWaterTerrainScenePlugin",
-			"ApeTexasEEGPlugin"
+            "ApeTexasEEGPlugin"
         ]
     }
 }

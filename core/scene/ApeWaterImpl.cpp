@@ -26,8 +26,8 @@ Ape::WaterImpl::WaterImpl(std::string name, bool isHostCreated) : Ape::IWater(na
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
-	mParentNode = Ape::NodeWeakPtr();
-	mParentNodeName = std::string();
+	mSky = Ape::SkyWeakPtr();
+	mSkyName = std::string();
 }
 
 Ape::WaterImpl::~WaterImpl()
@@ -35,21 +35,21 @@ Ape::WaterImpl::~WaterImpl()
 
 }
 
-Ape::NodeWeakPtr Ape::WaterImpl::getParentNode()
+void Ape::WaterImpl::setSky(Ape::SkyWeakPtr sky)
 {
-	return mParentNode;
-}
-
-void Ape::WaterImpl::setParentNode(Ape::NodeWeakPtr parentNode)
-{
-	if (auto parentNodeSP = parentNode.lock())
+	if (auto skySP = sky.lock())
 	{
-		mParentNode = parentNode;
-		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_PARENTNODE));
+		mSky = sky;
+		mSkyName = skySP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_SKY));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mSky = Ape::SkyWeakPtr();
+}
+
+Ape::SkyWeakPtr Ape::WaterImpl::getSky()
+{
+	return mSky;
 }
 
 void Ape::WaterImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
@@ -63,7 +63,7 @@ RakNet::RM3SerializationResult Ape::WaterImpl::Serialize(RakNet::SerializeParame
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSkyName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -72,12 +72,12 @@ void Ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParam
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	RakNet::RakString parentName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
+	RakNet::RakString skyName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, skyName))
 	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_PARENTNODE));
+		mSkyName = skyName.C_String();
+		mSky = std::static_pointer_cast<Ape::ISky>(mpScene->getEntity(mSkyName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_SKY));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

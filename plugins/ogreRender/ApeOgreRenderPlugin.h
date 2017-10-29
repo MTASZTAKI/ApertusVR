@@ -184,12 +184,6 @@ namespace Ape
 
 		Ogre::Light* mpSkyxSkylight;
 
-		SkyX::ColorGradient mSkyxWaterGradient;
-		
-		SkyX::ColorGradient	mSkyxSunGradient;
-		
-		SkyX::ColorGradient	mSkyxAmbientGradient;
-
 		SkyX::BasicController* mpSkyxBasicController;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;

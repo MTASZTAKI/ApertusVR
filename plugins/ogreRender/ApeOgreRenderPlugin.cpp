@@ -78,9 +78,6 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyx = nullptr;
 	mpSkyxSunlight = nullptr;
 	mpSkyxSkylight = nullptr;
-	mSkyxWaterGradient = SkyX::ColorGradient();
-	mSkyxSunGradient = SkyX::ColorGradient();
-	mSkyxAmbientGradient = SkyX::ColorGradient();
 	mpSkyxBasicController = nullptr;
 }
 
@@ -1668,6 +1665,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::SKY_CREATE:
 					{
+						mpSkyxBasicController = new SkyX::BasicController();
+						mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
+						mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 						SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, mOgreCameras[0]);
 						skyxCFG->load("SkyXDefault.skx");
 						mpSkyx->create();
@@ -1675,12 +1675,24 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpRoot->addFrameListener(mpSkyx);
 						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
 						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
+						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
 					}
 					break;
-				case Ape::Event::Type::SKY_PARENTNODE:
-				{
-					;
-				}
+				case Ape::Event::Type::SKY_TIME:
+					{
+						Ape::ISky::Time time = sky->getTime();
+						mpSkyxBasicController->setTime(Ogre::Vector3(time.currentTime, time.sunRiseTime, time.sunSetTime));
+					}
+				break;
+				case Ape::Event::Type::SKY_SKYLIGHT:
+					{
+						;
+					}
+				break;
+				case Ape::Event::Type::SKY_SUNLIGHT:
+					{
+						;
+					}
 				break;
 				case Ape::Event::Type::SKY_DELETE:
 					;
@@ -1696,6 +1708,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::WATER_CREATE:
 					{
+						mpHydrax = new Hydrax::Hydrax(mpSceneMgr, mOgreCameras[0], mRenderWindows[mpMainWindow->getName()]->getViewport(0));
 						Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
 						Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
 						mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
@@ -1704,10 +1717,24 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
 					}
 					break;
-				case Ape::Event::Type::WATER_PARENTNODE:
-				{
-					;
-				}
+				case Ape::Event::Type::WATER_SKY:
+					{
+						if (auto sky = water->getSky().lock())
+						{
+							if (auto skyLight = sky->getSkyLight().lock())
+							{
+								mpSkyxSkylight = mpSceneMgr->getLight(skyLight->getName());
+								mpHydrax->setSunPosition(mpSkyxSkylight->getPosition());
+							}
+							if (auto sunLight = sky->getSunLight().lock())
+							{
+								Ape::Color sunColor = sunLight->getSpecularColor();
+								mpHydrax->setSunColor(Ogre::Vector3(Ogre::Real(sunColor.r), Ogre::Real(sunColor.g), Ogre::Real(sunColor.b)));
+							}
+							/*Ape::Color waterColor;
+							mpHydrax->setWaterColor(Ogre::Vector3(Ogre::Real(waterColor.r), Ogre::Real(waterColor.g), Ogre::Real(waterColor.b)));*/
+						}
+					}
 				break;
 				case Ape::Event::Type::WATER_DELETE:
 					;
@@ -1758,9 +1785,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									}
 									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 								}
-								mpHydrax = new Hydrax::Hydrax(mpSceneMgr, mOgreCameras[0], mRenderWindows[mpMainWindow->getName()]->getViewport(0));
-								mpSkyxBasicController = new SkyX::BasicController();
-								mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
 							}
 						}
 					}
@@ -1888,7 +1912,11 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 		std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount() << std::endl;
 */
 	processEventDoubleQueue();
-	
+	if (mpHydrax && mpSkyxSkylight)
+	{
+		mpHydrax->setSunPosition(mpSkyxSkylight->getPosition());
+		mpHydrax->update(evt.timeSinceLastFrame);
+	}
 	return Ogre::FrameListener::frameRenderingQueued( evt );
 }
 
@@ -2175,8 +2203,8 @@ void Ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");
 	for (auto resourceLocation : mpSystemConfig->getSceneSessionConfig().sessionResourceLocation)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	

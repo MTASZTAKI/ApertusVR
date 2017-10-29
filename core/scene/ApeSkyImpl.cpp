@@ -26,8 +26,9 @@ Ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : Ape::ISky(name), A
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
-	mParentNode = Ape::NodeWeakPtr();
-	mParentNodeName = std::string();
+	mSkyLight = Ape::LightWeakPtr();
+	mSunLight = Ape::LightWeakPtr();
+	mTime = Ape::ISky::Time();
 }
 
 Ape::SkyImpl::~SkyImpl()
@@ -35,21 +36,39 @@ Ape::SkyImpl::~SkyImpl()
 	
 }
 
-Ape::NodeWeakPtr Ape::SkyImpl::getParentNode()
+void Ape::SkyImpl::setTime(float startTime, float sunRiseTime, float sunSetTime)
 {
-	return mParentNode;
+	mTime.currentTime = startTime;
+	mTime.sunRiseTime = sunRiseTime;
+	mTime.sunSetTime = sunSetTime;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
 }
 
-void Ape::SkyImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+Ape::ISky::Time Ape::SkyImpl::getTime()
 {
-	if (auto parentNodeSP = parentNode.lock())
-	{
-		mParentNode = parentNode;
-		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_PARENTNODE));
-	}
-	else
-		mParentNode = Ape::NodeWeakPtr();
+	return mTime;
+}
+
+void Ape::SkyImpl::setSunLight(Ape::LightWeakPtr sunLight)
+{
+	mSunLight = sunLight;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SUNLIGHT));
+}
+
+Ape::LightWeakPtr Ape::SkyImpl::getSunLight()
+{
+	return mSunLight;
+}
+
+void Ape::SkyImpl::setSkyLight(Ape::LightWeakPtr skyLight)
+{
+	mSkyLight = skyLight;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
+}
+
+Ape::LightWeakPtr Ape::SkyImpl::getSkyLight()
+{
+	return mSkyLight;
 }
 
 void Ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
@@ -63,7 +82,9 @@ RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParamete
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSunLight);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSkyLight);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTime);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -72,12 +93,11 @@ void Ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParamet
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	RakNet::RakString parentName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
-	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_PARENTNODE));
-	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSunLight))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SUNLIGHT));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSkyLight))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTime))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

@@ -38,9 +38,17 @@ namespace Ape
 
 		~SkyImpl();
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setTime(float startTime, float sunRiseTime = 6.0f, float sunSetTime = 18.0f) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		Ape::ISky::Time getTime() override;
+
+		void setSunLight(Ape::LightWeakPtr sunLight) override;
+
+		Ape::LightWeakPtr getSunLight() override;
+
+		void setSkyLight(Ape::LightWeakPtr skyLight) override;
+
+		Ape::LightWeakPtr getSkyLight() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -53,9 +61,11 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		NodeWeakPtr mParentNode;
+		Ape::LightWeakPtr mSkyLight;
 
-		std::string mParentNodeName;
+		Ape::LightWeakPtr mSunLight;
+
+		Ape::ISky::Time mTime;
 	};
 }
 

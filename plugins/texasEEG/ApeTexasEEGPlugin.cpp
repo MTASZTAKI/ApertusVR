@@ -3,10 +3,17 @@
 
 ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 {
+	mpKeyboard = NULL;
+	mpMouse = NULL;
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
+	mUserNode = Ape::NodeWeakPtr();
+	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
+	mTranslateSpeedFactor = 3;
+	mRotateSpeedFactor = 1;
 }
 
 ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
@@ -14,9 +21,10 @@ ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 	std::cout << "ApeTexasEEGPlugin dtor" << std::endl;
 }
 
-void ApeTexasEEGPlugin::nodeEventCallBack(const Ape::Event& event)
+void ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
 {
-	//std::cout  << "event called on the " << event.subjectName << " node" << std::endl;
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
 }
 
 void ApeTexasEEGPlugin::Init()
@@ -40,9 +48,15 @@ void ApeTexasEEGPlugin::Init()
 #endif
 	OIS::InputManager* inputManager = OIS::InputManager::createInputSystem(pl);
 
+	if (inputManager->getNumberOfDevices(OIS::OISKeyboard) > 0)
+	{
+		OIS::Keyboard* keyboard = static_cast<OIS::Keyboard*>(inputManager->createInputObject(OIS::OISKeyboard, true));
+		mpKeyboard = keyboard;
+		mpKeyboard->setEventCallback(this);
+	}
 	if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
 	{
-		OIS::Mouse*    mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+		OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 		mpMouse = mouse;
 		mpMouse->setEventCallback(this);
 		const OIS::MouseState &ms = mouse->getMouseState();
@@ -51,15 +65,50 @@ void ApeTexasEEGPlugin::Init()
 	}
 }
 
+void ApeTexasEEGPlugin::moveUserNode()
+{
+	auto userNode = mUserNode.lock();
+	if (userNode)
+	{
+		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
+			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
+			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_D])
+			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_A])
+			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_W])
+			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_S])
+			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
+			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
+			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+	}
+}
+
 void ApeTexasEEGPlugin::Run()
 {
 	while (true)
 	{
-		if (mpMouse)
+		if (mpKeyboard)
+			mpKeyboard->capture();
+		else if (mpMouse)
 			mpMouse->capture();
+		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void ApeTexasEEGPlugin::Step()
@@ -82,6 +131,18 @@ void ApeTexasEEGPlugin::Restart()
 
 }
 
+bool ApeTexasEEGPlugin::keyPressed(const OIS::KeyEvent & e)
+{
+	mKeyCodeMap[e.key] = true;
+	return true;
+}
+
+bool ApeTexasEEGPlugin::keyReleased(const OIS::KeyEvent & e)
+{
+	mKeyCodeMap[e.key] = false;
+	return true;
+}
+
 bool ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
 {
 	return true;
@@ -89,6 +150,11 @@ bool ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
 
 bool ApeTexasEEGPlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
+	if (auto userNode = mUserNode.lock())
+	{
+		userNode->translate(Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+		userNode->rotate(-0.017f, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+	}
 	return true;
 }
 

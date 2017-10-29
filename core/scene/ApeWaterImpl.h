@@ -38,9 +38,9 @@ namespace Ape
 
 		~WaterImpl();
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setSky(Ape::SkyWeakPtr sky) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		Ape::SkyWeakPtr getSky() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -53,9 +53,9 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
-		NodeWeakPtr mParentNode;
+		Ape::SkyWeakPtr mSky;
 
-		std::string mParentNodeName;
+		std::string mSkyName;
 	};
 }
 

@@ -37,22 +37,37 @@ SOFTWARE.*/
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeISystemConfig.h"
 #include "OIS.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
 
-class ApeTexasEEGPlugin : public Ape::IPlugin, public OIS::MouseListener
+class ApeTexasEEGPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
 	
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 
 	OIS::Mouse* mpMouse;
 
+	OIS::Keyboard* mpKeyboard;
+
 	Ape::IMainWindow* mpMainWindow;
+
+	Ape::ISystemConfig* mpSystemConfig;
+
+	Ape::NodeWeakPtr mUserNode;
+
+	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+	void moveUserNode();
+
+	int mTranslateSpeedFactor;
+
+	int mRotateSpeedFactor;
 	
 public:
 	ApeTexasEEGPlugin();
@@ -70,6 +85,10 @@ public:
 	void Suspend() override;
 
 	void Restart() override;
+
+	bool keyPressed(const OIS::KeyEvent& e) override;
+
+	bool keyReleased(const OIS::KeyEvent& e) override;
 
 	bool mouseMoved(const OIS::MouseEvent& e) override;
 

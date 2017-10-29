@@ -23,12 +23,14 @@ SOFTWARE.*/
 #ifndef APE_IWATER_H
 #define APE_IWATER_H
 
+#include "Ape.h"
 #include "ApeEntity.h"
 #include "ApeVector3.h"
 #include "ApeColor.h"
 #include "ApeDegree.h"
 #include "ApeRadian.h"
 #include "ApeINode.h"
+#include "ApeISky.h"
 
 namespace Ape
 {
@@ -40,10 +42,9 @@ namespace Ape
 		virtual ~IWater() {};
 		
 	public:
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setSky(Ape::SkyWeakPtr sky) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
-
+		virtual Ape::SkyWeakPtr getSky() = 0;
 	};
 }
 

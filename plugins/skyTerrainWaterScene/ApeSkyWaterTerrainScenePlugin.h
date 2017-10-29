@@ -36,6 +36,9 @@ SOFTWARE.*/
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeISky.h"
+#include "ApeIWater.h"
+#include "ApeIMainWindow.h"
 
 #define THIS_PLUGINNAME "ApeSkyWaterTerrainScenePlugin"
 
@@ -45,8 +48,20 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
+
+	Ape::WaterWeakPtr mWater;
+
+	Ape::SkyWeakPtr mSky;
+
+	Ape::IMainWindow* mpMainWindow;
+
+	Ape::NodeWeakPtr mSkyLightNode;
+
+	Ape::LightWeakPtr mSkyLight;
+
+	Ape::LightWeakPtr mSunLight;
 	
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 	
 public:
 	ApeSkyWaterTerrainScenePlugin();
