@@ -38,6 +38,7 @@ SOFTWARE.*/
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
 #include "ApeISystemConfig.h"
+#include "ApeICamera.h"
 #include "OIS.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"

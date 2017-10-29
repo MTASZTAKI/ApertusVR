@@ -28,6 +28,8 @@ Ape::WaterImpl::WaterImpl(std::string name, bool isHostCreated) : Ape::IWater(na
 	mpScene = Ape::IScene::getSingletonPtr();
 	mSky = Ape::SkyWeakPtr();
 	mSkyName = std::string();
+	mCamera = Ape::CameraWeakPtr();
+	mCameraName = std::string();
 }
 
 Ape::WaterImpl::~WaterImpl()
@@ -52,6 +54,23 @@ Ape::SkyWeakPtr Ape::WaterImpl::getSky()
 	return mSky;
 }
 
+void Ape::WaterImpl::setCamera(Ape::CameraWeakPtr camera)
+{
+	if (auto cameraSP = camera.lock())
+	{
+		mCamera = camera;
+		mCameraName = cameraSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_CAMERA));
+	}
+	else
+		mCamera = Ape::CameraWeakPtr();
+}
+
+Ape::CameraWeakPtr Ape::WaterImpl::getCamera()
+{
+	return mCamera;
+}
+
 void Ape::WaterImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -64,6 +83,7 @@ RakNet::RM3SerializationResult Ape::WaterImpl::Serialize(RakNet::SerializeParame
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSkyName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -78,6 +98,13 @@ void Ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParam
 		mSkyName = skyName.C_String();
 		mSky = std::static_pointer_cast<Ape::ISky>(mpScene->getEntity(mSkyName).lock());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_SKY));
+	}
+	RakNet::RakString cameraName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, cameraName))
+	{
+		mCameraName = cameraName.C_String();
+		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(mCameraName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_CAMERA));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

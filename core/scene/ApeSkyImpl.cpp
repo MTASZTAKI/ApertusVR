@@ -29,6 +29,8 @@ Ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : Ape::ISky(name), A
 	mSkyLight = Ape::LightWeakPtr();
 	mSunLight = Ape::LightWeakPtr();
 	mTime = Ape::ISky::Time();
+	mCamera = Ape::CameraWeakPtr();
+	mCameraName = std::string();
 }
 
 Ape::SkyImpl::~SkyImpl()
@@ -71,6 +73,23 @@ Ape::LightWeakPtr Ape::SkyImpl::getSkyLight()
 	return mSkyLight;
 }
 
+void Ape::SkyImpl::setCamera(Ape::CameraWeakPtr camera)
+{
+	if (auto cameraSP = camera.lock())
+	{
+		mCamera = camera;
+		mCameraName = cameraSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_CAMERA));
+	}
+	else
+		mCamera = Ape::CameraWeakPtr();
+}
+
+Ape::CameraWeakPtr Ape::SkyImpl::getCamera()
+{
+	return mCamera;
+}
+
 void Ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -85,6 +104,7 @@ RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParamete
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSunLight);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSkyLight);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTime);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -99,5 +119,12 @@ void Ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParamet
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTime))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
+	RakNet::RakString cameraName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, cameraName))
+	{
+		mCameraName = cameraName.C_String();
+		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(mCameraName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_CAMERA));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

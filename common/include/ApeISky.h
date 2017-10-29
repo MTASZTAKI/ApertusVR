@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_ISKY_H
 #define APE_ISKY_H
 
+#include "Ape.h"
 #include "ApeEntity.h"
 #include "ApeVector3.h"
 #include "ApeColor.h"
@@ -30,6 +31,7 @@ SOFTWARE.*/
 #include "ApeRadian.h"
 #include "ApeILight.h"
 #include "ApeINode.h"
+#include "ApeICamera.h"
 
 namespace Ape
 {
@@ -73,6 +75,10 @@ namespace Ape
 		virtual void setSkyLight(Ape::LightWeakPtr skyLight) = 0;
 
 		virtual Ape::LightWeakPtr getSkyLight() = 0;
+
+		virtual void setCamera(Ape::CameraWeakPtr camera) = 0;
+
+		virtual Ape::CameraWeakPtr getCamera() = 0;
 	};
 }
 

@@ -1665,19 +1665,30 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::SKY_CREATE:
 					{
-						mpSkyxBasicController = new SkyX::BasicController();
-						mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
-						mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
-						SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, mOgreCameras[0]);
-						skyxCFG->load("SkyXDefault.skx");
-						mpSkyx->create();
-						mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
-						mpRoot->addFrameListener(mpSkyx);
-						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
-						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
-						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
+						;
 					}
 					break;
+				case Ape::Event::Type::SKY_CAMERA:
+					{
+						if (auto camera = sky->getCamera().lock())
+						{
+							if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+							{
+								mpSkyxBasicController = new SkyX::BasicController();
+								mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
+								mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
+								SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, ogreCamera);
+								skyxCFG->load("SkyXDefault.skx");
+								mpSkyx->create();
+								mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
+								mpRoot->addFrameListener(mpSkyx);
+								mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
+								mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
+								static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
+							}
+						}
+					}
+				break;
 				case Ape::Event::Type::SKY_TIME:
 					{
 						Ape::ISky::Time time = sky->getTime();
@@ -1708,13 +1719,28 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::WATER_CREATE:
 					{
-						mpHydrax = new Hydrax::Hydrax(mpSceneMgr, mOgreCameras[0], mRenderWindows[mpMainWindow->getName()]->getViewport(0));
-						Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
-						Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
-						mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
-						mpHydrax->loadCfg("HydraxDemo.hdx");
-						mpHydrax->create();
-						mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+						;
+					}
+					break;
+				case Ape::Event::Type::WATER_CAMERA:
+					{
+						if (auto camera = water->getCamera().lock())
+						{
+							if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+							{
+								auto ogreViewport = ogreCamera->getViewport();
+								if (ogreViewport)
+								{
+									mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCamera, ogreViewport);
+									Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
+										Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
+									mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
+									mpHydrax->loadCfg("HydraxDemo.hdx");
+									mpHydrax->create();
+									mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+								}
+							}
+						}
 					}
 					break;
 				case Ape::Event::Type::WATER_SKY:
@@ -1749,9 +1775,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				switch (event.type)
 				{
 				case Ape::Event::Type::CAMERA_CREATE:
-				{
-					mpSceneMgr->createCamera(event.subjectName);
-				}
+					{
+						mOgreCameras.push_back(mpSceneMgr->createCamera(event.subjectName));
+					}
 					break;
 				case Ape::Event::Type::CAMERA_WINDOW:
 				{
@@ -1763,7 +1789,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							{
 								//TODO why it is working instead of in the init phase?
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
-								mOgreCameras.push_back(ogreCamera);
 								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 								{
 									if (mOgreCameras.size() == 1)

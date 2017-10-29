@@ -50,6 +50,10 @@ namespace Ape
 
 		Ape::LightWeakPtr getSkyLight() override;
 
+		void setCamera(Ape::CameraWeakPtr camera) override;
+
+		Ape::CameraWeakPtr getCamera() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -66,6 +70,10 @@ namespace Ape
 		Ape::LightWeakPtr mSunLight;
 
 		Ape::ISky::Time mTime;
+
+		Ape::CameraWeakPtr mCamera;
+
+		std::string mCameraName;
 	};
 }
 

@@ -38,6 +38,7 @@ SOFTWARE.*/
 #include "ApeIFileMaterial.h"
 #include "ApeISky.h"
 #include "ApeIWater.h"
+#include "ApeIManualTexture.h"
 #include "ApeIMainWindow.h"
 
 #define THIS_PLUGINNAME "ApeSkyWaterTerrainScenePlugin"
@@ -60,8 +61,14 @@ private:
 	Ape::LightWeakPtr mSkyLight;
 
 	Ape::LightWeakPtr mSunLight;
+
+	Ape::CameraWeakPtr mCamera;
 	
 	void eventCallBack(const Ape::Event& event);
+
+	void createSky();
+
+	void createWater();
 	
 public:
 	ApeSkyWaterTerrainScenePlugin();
