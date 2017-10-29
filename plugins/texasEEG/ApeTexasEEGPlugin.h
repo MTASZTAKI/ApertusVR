@@ -39,6 +39,7 @@ SOFTWARE.*/
 #include "ApeIFileMaterial.h"
 #include "ApeISystemConfig.h"
 #include "ApeICamera.h"
+#include "ApeEuler.h"
 #include "OIS.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
@@ -64,11 +65,21 @@ private:
 
 	std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
-	void moveUserNode();
+	void moveUserNodeByKeyBoard();
+
+	void moveUserNodeByMouse();
+
+	bool mIsMouseMoved;
 
 	int mTranslateSpeedFactor;
 
 	int mRotateSpeedFactor;
+
+	bool mIsSwim;
+
+	int mMouseMoveRelativeX;
+
+	int mMouseMoveRelativeY;
 	
 public:
 	ApeTexasEEGPlugin();

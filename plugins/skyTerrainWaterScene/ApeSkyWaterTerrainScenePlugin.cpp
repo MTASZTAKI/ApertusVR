@@ -29,21 +29,13 @@ void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 		if (auto texture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
 		{
 			if (auto camera = texture->getSourceCamera().lock())
-			{
 				mCamera = camera;
-				createSky();
-				createWater();
-			}
 		}
 	}
 	else if (event.type == Ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera") //when simple camera is ready to use
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-		{
 			mCamera = camera;
-			createSky();
-			createWater();
-		}
 	}
 }
 
@@ -52,7 +44,7 @@ void ApeSkyWaterTerrainScenePlugin::createSky()
 	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpScene->createEntity("sky", Ape::Entity::SKY).lock()))
 	{
 		sky->setCamera(mCamera);
-		sky->setTime(16.00);
+		sky->setTime(14.00);
 		if (auto skyLight = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("skylight", Ape::Entity::Type::LIGHT).lock()))
 		{
 			sky->setSkyLight(skyLight);
@@ -86,6 +78,14 @@ void ApeSkyWaterTerrainScenePlugin::Init()
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	std::cout << "ApeSkyWaterTerrainScenePlugin main window was found" << std::endl;
+	auto camera = mCamera.lock();
+	while (!camera)
+	{
+		camera = mCamera.lock();
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	}
+	createSky();
+	createWater();
 }
 
 void ApeSkyWaterTerrainScenePlugin::Run()
