@@ -59,6 +59,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::SKY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::WATER, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpRoot = nullptr;
 	mpSceneMgr = nullptr;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
@@ -1763,6 +1764,33 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 				break;
 				case Ape::Event::Type::WATER_DELETE:
+					;
+					break;
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::POINT_CLOUD)
+		{
+			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string pointCloudName = pointCloud->getName();
+				Ape::PointCloudSetParameters pointCloudParameters = pointCloud->getParameters();
+				switch (event.type)
+				{
+				case Ape::Event::Type::POINT_CLOUD_CREATE:
+				{
+					;
+				}
+				break;
+				case Ape::Event::Type::POINT_CLOUD_PARAMETERS:
+				{
+					int size = pointCloudParameters.points.size();
+					float* points = &pointCloudParameters.points[0];
+					float* colors = &pointCloudParameters.colors[0];
+					auto ogrePointCloud = new Ape::OgrePointCloud(pointCloud->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors);
+				}
+				break;
+				case Ape::Event::Type::POINT_CLOUD_DELETE:
 					;
 					break;
 				}

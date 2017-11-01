@@ -47,6 +47,7 @@ set (HEADERS
 	ApeRayGeometryImpl.h
 	ApeWaterImpl.h
 	ApeSkyImpl.h
+	ApePointCloudImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -81,6 +82,7 @@ set (SOURCES
 	ApeRayGeometryImpl.cpp
 	ApeWaterImpl.cpp
 	ApeSkyImpl.cpp
+	ApePointCloudImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp

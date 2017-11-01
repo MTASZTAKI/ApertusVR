@@ -20,61 +20,48 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_POINTCLOUDIMPL_H
+#define APE_POINTCLOUDIMPL_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <map>
+#include "ApeIPointCloud.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeReplica.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
-	class Entity
-	{ 
+	class PointCloudImpl : public IPointCloud, public Ape::Replica
+	{
 	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
 
-		Type getType() { return mType; };
+		PointCloudImpl(std::string name, bool isHostCreated);
+
+		~PointCloudImpl();
+
+		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors) override;
+
+		Ape::PointCloudSetParameters getParameters() override;
+
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		Ape::NodeWeakPtr getParentNode() override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
+
+		Ape::NodeWeakPtr mParentNode;
+
+		std::string mParentNodeName;
+
+		Ape::PointCloudSetParameters mParameters;
 	};
 }
 

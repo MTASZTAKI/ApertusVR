@@ -95,10 +95,12 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
 #include "ApeICamera.h"
+#include "ApeIPointCloud.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
 #include "ApeOgreMovableText.h"
+#include "ApeOgrePointCloud.h"
 #include "ApeOgreConversions.h"
 #include "ApeOgreRenderPluginConfigs.h"
 #include "ApeISystemConfig.h"

@@ -171,6 +171,12 @@ namespace Ape
 	typedef std::weak_ptr<ISky> SkyWeakPtr;
 
 	typedef std::shared_ptr<ISky> SkySharedPtr;
+
+	class IPointCloud;
+
+	typedef std::weak_ptr<IPointCloud> PointCloudWeakPtr;
+
+	typedef std::shared_ptr<IPointCloud> PointCloudSharedPtr;
 }
 
 #endif

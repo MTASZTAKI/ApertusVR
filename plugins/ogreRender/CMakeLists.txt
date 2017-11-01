@@ -260,6 +260,7 @@ set (HEADERS
 	ApeOgreRenderPlugin.h
 	ApeOgreRenderPluginConfigs.h
 	ApeOgreMovableText.h
+	ApeOgrePointCloud.h
 	ApeOgreShaderGeneratorResolver.h
 	ApeOgreConversions.h
 	ApeOgreUtilities.h
@@ -267,6 +268,7 @@ set (HEADERS
 set (SOURCES
 	ApeOgreRenderPlugin.cpp
 	ApeOgreMovableText.cpp
+	ApeOgrePointCloud.cpp
 	)
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include 

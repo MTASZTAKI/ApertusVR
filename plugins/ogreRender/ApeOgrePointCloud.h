@@ -20,62 +20,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_OGREPOINTCLOUD_H
+#define APE_OGREPOINTCLOUD_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <map>
+#include "Ogre.h"
 
-namespace Ape
-{
-	class Entity
-	{ 
+namespace Ape {
+	class OgrePointCloud
+	{
 	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID
-		};
-		
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
+		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray);
 
-		Type getType() { return mType; };
+		void updateVertexPositions(int size, float *points);
+
+		void updateVertexColours(int size, float *colours);
+
+		virtual ~OgrePointCloud();
+
+	private:
+		int mSize;
+
+		Ogre::HardwareVertexBufferSharedPtr mVbuf;
+
+		Ogre::HardwareVertexBufferSharedPtr mCbuf;
 	};
 }
-
 #endif

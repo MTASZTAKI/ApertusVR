@@ -76,6 +76,7 @@ set (HEADERS
 	ApeIRayGeometry.h
 	ApeISky.h
 	ApeIWater.h
+	ApeIPointCloud.h
 	)
 
 add_custom_target(
