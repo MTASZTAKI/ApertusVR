@@ -45,8 +45,8 @@ app.post('/setproperties', function(req, res, next) {
 
 	if (!req.body.data) {
 		logger.debug('no data in http req body');
-		var errObj = new utils.errorObj();
-		errObj.setMessage(utils.errObj.items.dataNotPresented.name, 'Data object is not presented in Http Request body.');
+		var errObj = utils.errorObj;
+		errObj.setMessage(utils.errorObj.items.dataNotPresented.name, 'Data object is not presented in Http Request body.');
 		respObj.addErrorItem(errObj);
 		res.status(400).send(respObj.toJSonString());
 		return;
@@ -54,8 +54,8 @@ app.post('/setproperties', function(req, res, next) {
 
 	if (!req.body.data.items) {
 		logger.debug('no items array in http req body.data');
-		var errObj = new utils.errorObj();
-		errObj.setMessage(utils.errObj.items.dataNotPresented.name, 'Items array is not presented in Http Request body.data.');
+		var errObj = utils.errorObj;
+		errObj.setMessage(utils.errorObj.items.dataNotPresented.name, 'Items array is not presented in Http Request body.data.');
 		respObj.addErrorItem(errObj);
 		res.status(400).send(respObj.toJSonString());
 		return;
