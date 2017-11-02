@@ -31,10 +31,11 @@ const uuidV1 = moduleManager.requireNodeModule('uuid/v1');
 const path = require('path');
 var request = moduleManager.requireNodeModule('request');
 var self = this;
-
-// IndexedFaceSet, IndexedLineSet
-
 var nameCounter = 0;
+
+function log(...args) {
+	// console.log(args);
+}
 
 function splitX3DAttr(str) {
 	var res = str;
@@ -42,8 +43,8 @@ function splitX3DAttr(str) {
 	res = res.replace(/ +(?= )/g, '');
 	res = res.trim();
 	res = res.split(' ');
-	console.log('--------------------------------------------------------------------------------');
-	console.log('res: ' + res);
+	log('--------------------------------------------------------------------------------');
+	log('res: ' + res);
 	return res;
 	//return str.replace(/[\r\n]+/g, '').replace(/ +(?= )/g,'').trim().split(' ');
 }
@@ -101,7 +102,7 @@ exports.parseCoordIndexAttr = function(currentItem) {
 		indexCount++;
 	}
 
-	console.log(' - coordIndex: ' + erdosCoordinates);
+	log(' - coordIndex: ' + erdosCoordinates);
 	return erdosCoordinates;
 }
 
@@ -147,7 +148,7 @@ exports.parseCoordinatePointAttr = function(currentItem) {
 		pointsArr.push(Number(itemsArr[j]));
 	}
 
-	console.log(' - coordinatePoints: ' + pointsArr);
+	log(' - coordinatePoints: ' + pointsArr);
 	return pointsArr;
 }
 
@@ -155,31 +156,31 @@ exports.parseNormals = function(currentItem) {
 	var normals = new Array();
 
 	if (!utils.isDefined(currentItem)) {
-		console.log(' currentItem is not defined ');
+		log(' currentItem is not defined ');
 		return normals;
 	}
 
 	var normal = currentItem.find('Normal').first();
 
 	if (!utils.isDefined(normal)) {
-		console.log(' Normal was not defined ');
+		log(' Normal was not defined ');
 		return normals;
 	}
 
 	if (normal.length == 0) {
-		console.log(' Normal was not defined2 ');
+		log(' Normal was not defined2 ');
 		return normals;
 	}
 
 	var normalAttr = normal.attr('vector');
 	if (!utils.isDefined(normalAttr)) {
-		console.log(' Normal vector was not defined ');
+		log(' Normal vector was not defined ');
 		return normals;
 	}
 
 	var itemsArr = splitX3DAttr(normalAttr);
 	if (itemsArr.length == 0) {
-		console.log(' Normal vector length is 0 ');
+		log(' Normal vector length is 0 ');
 		return normals;
 	}
 
@@ -187,7 +188,7 @@ exports.parseNormals = function(currentItem) {
 		normals.push(Number(itemsArr[j]));
 	}
 
-	console.log(' - Normals: ' + normals);
+	log(' - Normals: ' + normals);
 	return normals;
 }
 
@@ -200,24 +201,24 @@ exports.parseColorRGBAs = function(currentItem) {
 	var colorRGBA = currentItem.find('ColorRGBA').first();
 
 	if (!utils.isDefined(colorRGBA)) {
-		console.log(' ColorRGBA was not defined ');
+		log(' ColorRGBA was not defined ');
 		return colorRGBAs;
 	}
 
 	if (colorRGBA.length == 0) {
-		console.log(' ColorRGBA was not defined2 ');
+		log(' ColorRGBA was not defined2 ');
 		return colorRGBAs;
 	}
 
 	var colorAttr = colorRGBA.attr('color');
 	if (!utils.isDefined(colorAttr)) {
-		console.log(' ColorRGBA color was not defined ');
+		log(' ColorRGBA color was not defined ');
 		return colorRGBAs;
 	}
 
 	var itemsArr = splitX3DAttr(colorAttr);
 	if (itemsArr.length == 0) {
-		console.log(' ColorRGBA color length is 0 ');
+		log(' ColorRGBA color length is 0 ');
 		return colorRGBAs;
 	}
 
@@ -225,7 +226,7 @@ exports.parseColorRGBAs = function(currentItem) {
 		colorRGBAs.push(Number(itemsArr[j]));
 	}
 
-	console.log(' - ColorRGBA: ' + colorRGBAs);
+	log(' - ColorRGBA: ' + colorRGBAs);
 	return colorRGBAs;
 }
 
@@ -253,7 +254,7 @@ exports.parsePositionInterpolatorKeyValuesAttr = function(currentItem) {
 		items.push(new ape.nbind.Vector3(Number(itemsArr[j]), Number(itemsArr[j + 1]), Number(itemsArr[j + 2])));
 	}
 
-	console.log(' - keyValue: ' + items);
+	log(' - keyValue: ' + items);
 	return items;
 }
 
@@ -283,16 +284,14 @@ exports.parseOrientationInterpolatorKeyValuesAttr = function(currentItem) {
 		items.push(new ape.nbind.Quaternion(radian, axis));
 	}
 
-	console.log(' - keyValue: ' + items);
+	log(' - keyValue: ' + items);
 	return items;
 }
-
-// Transform
 
 exports.parseTranslationAttr = function(currentItem) {
 	var translation = currentItem.attr('translation');
 	if (utils.isDefined(translation)) {
-		console.log(' - translation: ' + translation);
+		log(' - translation: ' + translation);
 		var itemArr = splitX3DAttr(translation);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
@@ -304,7 +303,7 @@ exports.parseTranslationAttr = function(currentItem) {
 exports.parseRotationAttr = function(currentItem) {
 	var rotation = currentItem.attr('rotation');
 	if (utils.isDefined(rotation)) {
-		console.log(' - rotation: ' + rotation);
+		log(' - rotation: ' + rotation);
 		var itemArr = splitX3DAttr(rotation);
 		if (itemArr.length == 4) {
 			var axis = ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
@@ -318,7 +317,7 @@ exports.parseRotationAttr = function(currentItem) {
 exports.parseScaleAttr = function(currentItem) {
 	var scale = currentItem.attr('scale');
 	if (utils.isDefined(scale)) {
-		console.log(' - scale: ' + scale);
+		log(' - scale: ' + scale);
 		var itemArr = splitX3DAttr(scale);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
@@ -330,7 +329,7 @@ exports.parseScaleAttr = function(currentItem) {
 exports.parseTransparencyAttr = function(currentItem) {
 	var transparency = currentItem.attr('transparency');
 	if (utils.isDefined(transparency)) {
-		console.log(' - transparency: ' + transparency);
+		log(' - transparency: ' + transparency);
 		return Number(transparency);
 	}
 	return 0.0;
@@ -339,7 +338,7 @@ exports.parseTransparencyAttr = function(currentItem) {
 exports.parseDiffuseColorAttr = function(currentItem, transparency) {
 	var diffuseColor = currentItem.attr('diffuseColor');
 	if (utils.isDefined(diffuseColor)) {
-		console.log(' - diffuseColor: ' + diffuseColor);
+		log(' - diffuseColor: ' + diffuseColor);
 		var itemArr = splitX3DAttr(diffuseColor);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1 - transparency);
@@ -351,7 +350,7 @@ exports.parseDiffuseColorAttr = function(currentItem, transparency) {
 exports.parseSpecularColorAttr = function(currentItem, transparency) {
 	var specularColor = currentItem.attr('specularColor');
 	if (utils.isDefined(specularColor)) {
-		console.log(' - specularColor: ' + specularColor);
+		log(' - specularColor: ' + specularColor);
 		var itemArr = splitX3DAttr(specularColor);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1 - transparency);
@@ -363,7 +362,7 @@ exports.parseSpecularColorAttr = function(currentItem, transparency) {
 exports.parseMaterial = function(matItem, parentGeometry) {
 	if (matItem && matItem[0]) {
 		var itemName = matItem[0].itemName || parentGeometry.getName() + 'material';
-		console.log('itemName: ' + itemName);
+		log('itemName: ' + itemName);
 		var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(itemName);
 		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
 		var transparency = self.parseTransparencyAttr(matItem);
@@ -378,7 +377,7 @@ exports.parseMaterial = function(matItem, parentGeometry) {
 	}
 
 
-	console.log('parseMaterial return null');
+	log('parseMaterial return null');
 	return null;
 }
 
@@ -390,7 +389,7 @@ exports.parseColorAttr = function(currentItem) {
 	}
 	var colorAttr = color.attr('color');
 	if (utils.isDefined(colorAttr)) {
-		console.log(' - color: ' + colorAttr);
+		log(' - color: ' + colorAttr);
 		var itemArr = splitX3DAttr(colorAttr);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Color(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]), 1);
@@ -402,7 +401,7 @@ exports.parseColorAttr = function(currentItem) {
 exports.parseDimensionsAttr = function(currentItem) {
 	var dimensions = currentItem.attr('size');
 	if (utils.isDefined(dimensions)) {
-		console.log(' - dimensions: ' + dimensions);
+		log(' - dimensions: ' + dimensions);
 		var itemArr = splitX3DAttr(dimensions);
 		if (itemArr.length == 3) {
 			return new ape.nbind.Vector3(Number(itemArr[0]), Number(itemArr[1]), Number(itemArr[2]));
@@ -423,10 +422,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 	nameCounter++;
 	itemName = itemName + currentlyLoadingFileName;
 	currentItem[0].itemName = itemName
-	console.log(itemName + ' - ' + typeName + ' - ' + tagName);
+	log(itemName + ' - ' + typeName + ' - ' + tagName);
 
 	if (!typeName || !tagName) {
-		console.log('currentItem has no typeName or tagName, returning.');
+		log('currentItem has no typeName or tagName, returning.');
 		return true; // continue;
 	}
 
@@ -438,13 +437,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		} else if (tagName == 'meta') {
 			var name = currentItem.attr('name');
 			if (utils.isDefined(name)) {
-				console.log(' - name: ' + name);
+				log(' - name: ' + name);
 				//  TODO: create a textGeometry
 			}
 
 			var content = currentItem.attr('content');
 			if (utils.isDefined(content)) {
-				console.log(' - content: ' + content);
+				log(' - content: ' + content);
 				//  TODO: create a textGeometry
 			}
 		} else if (tagName == 'scene') {
@@ -476,13 +475,13 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 200000));
 			}
 			if (currentlyLoadingFileName == 'stand') {
-				console.log(' scene world node created for: ' + currentlyLoadingFileName);
+				log(' scene world node created for: ' + currentlyLoadingFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(100, 100, 100));
 				nodeObj.setPosition(new ape.nbind.Vector3(-12000, -200, -3000));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 			}
 			if (currentlyLoadingFileName == 'SZTAKIUr5Cell') {
-				console.log(' scene world node created for: ' + currentlyLoadingFileName);
+				log(' scene world node created for: ' + currentlyLoadingFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, 0.5, 0.5));
@@ -496,7 +495,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		} else if (tagName == 'worldinfo') {
 			var info = currentItem.attr('info');
 			if (utils.isDefined(info)) {
-				console.log(' - info: ' + info);
+				log(' - info: ' + info);
 				//  TODO: create a textGeometry
 			}
 		} else if (tagName == 'viewpoint') {
@@ -507,11 +506,11 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var geometryName = use + currentlyLoadingFileName;
 				var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(itemName);
 				fileGeometryObj.setFileName(geometryName);
-				console.log('USE: ' + fileGeometryObj.getName());
+				log('USE: ' + fileGeometryObj.getName());
 
 				if (parentNodeObj) {
 					fileGeometryObj.setParentNodeJsPtr(parentNodeObj);
-					console.log(' - this: ' + fileGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+					log(' - this: ' + fileGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 				}
 			}
 		} else if (tagName == 'indexedfaceset') {
@@ -521,7 +520,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				groupNodeObjName = groupNodeObj.getName();
 				grouped = true;
 			}
-			console.log('- indexedfaceset:' + groupNodeObjName);
+			log('- indexedfaceset:' + groupNodeObjName);
 			var HANDLING = groupNodeObjName.indexOf("handling");
 			var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
 			if (HANDLING < 0 && FIXTURE < 0) {
@@ -533,23 +532,23 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var matItem = currentItem.siblings('Appearance').first().children('Material').first();
 				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
 				if (utils.isDefined(materialObj)) {
-					console.log('setParametersWithMaterial is called');
+					log('setParametersWithMaterial is called');
 					indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
 				} else
 					indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
 				if (lastGroupNodeObjName != groupNodeObjName) {
 					if (groupNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
-						console.log('- groupNodeObj:' + groupNodeObjName);
+						log('- groupNodeObj:' + groupNodeObjName);
 					}
 					lastGroupNodeObjName = groupNodeObjName;
 				}
 				if (!grouped) {
 					if (parentNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-						console.log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+						log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 					} else
-						console.log('no parent, no group -> no node to attach the geometry');
+						log('no parent, no group -> no node to attach the geometry');
 				}
 			}
 		} else if (tagName == 'box') {
@@ -561,7 +560,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			if (parentNodeObj) {
 				boxSetObj.setParentNodeJsPtr(parentNodeObj);
-				console.log(' - this: ' + boxSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+				log(' - this: ' + boxSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 			}
 		}
 		/*else if (tagName == 'indexedlineset') {
@@ -573,7 +572,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 		    if (parentNodeObj) {
 		        indexedLineSetObj.setParentNodeJsPtr(parentNodeObj);
-		        console.log(' - this: ' + indexedLineSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+		        log(' - this: ' + indexedLineSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 		    }
 		}*/
 		else if (tagName == 'transform') {
@@ -589,7 +588,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			if (parentNodeObj) {
 				nodeObj.setParentNodeJsPtr(parentNodeObj);
-				console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+				log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 			}
 
 			return nodeObj;
@@ -599,10 +598,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			if (parentNodeObj) {
 				nodeObj.setParentNodeJsPtr(parentNodeObj);
-				console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+				log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 			}
 			groupNodeObj = nodeObj;
-			console.log('groupChanged: ' + groupNodeObj.getName());
+			log('groupChanged: ' + groupNodeObj.getName());
 			return nodeObj;
 		} else if (tagName == 'switch') {
 			var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
@@ -610,7 +609,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			if (parentNodeObj) {
 				nodeObj.setParentNodeJsPtr(parentNodeObj);
-				console.log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+				log(' - this: ' + nodeObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 			}
 			return nodeObj;
 		} else if (tagName == 'orientationinterpolator') {
@@ -627,7 +626,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			orientationInterpolator.keys = keys;
 			orientationInterpolator.keyValues = keyValues;
 			interpolatorArr.push(orientationInterpolator);
-			console.log('OrientationInterpolator: ' + itemName);
+			log('OrientationInterpolator: ' + itemName);
 		} else if (tagName == 'positioninterpolator') {
 			var positionInterpolator = {
 				type: 'position',
@@ -642,17 +641,17 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			positionInterpolator.keys = keys;
 			positionInterpolator.keyValues = keyValues;
 			interpolatorArr.push(positionInterpolator);
-			console.log('PositionInterpolator: ' + itemName);
+			log('PositionInterpolator: ' + itemName);
 		} else if (tagName == 'route') {
 			var interpolatorName = currentItem.attr('fromNode') + currentlyLoadingFileName;
 			var nodeName = currentItem.attr('toNode') + currentlyLoadingFileName;
-			console.log('ROUTE: ' + interpolatorName);
+			log('ROUTE: ' + interpolatorName);
 			for (var i = 0; i < interpolatorArr.length; i++) {
 				if (interpolatorArr[i].name == interpolatorName) {
 					interpolatorArr[i].nodeName = nodeName;
 					ape.nbind.JsBindManager().getNode(interpolatorArr[i].nodeName, function(error, object) {
 						if (error) {
-							console.log(error);
+							log(error);
 							return;
 						}
 						interpolatorArr[i].nodeObj = object;
@@ -690,7 +689,7 @@ exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
 	try {
 		currentNode = self.parseItem(parentItem, childItem, parentNodeObj);
 	} catch (e) {
-		console.log('Exception cached: ' + e);
+		log('Exception cached: ' + e);
 		return;
 	}
 
@@ -735,8 +734,8 @@ exports.parseX3DAsync = function(x3dFilePath, callback) {
 		}
 	}, options);
 	cheerioStream.on('finish', ($) => {
-		console.log('finish');
-		console.log($);
+		log('finish');
+		log($);
 
 		self.parseTree($, null, $('X3D'), null);
 		callback();
@@ -748,7 +747,7 @@ exports.parseX3DAsync = function(x3dFilePath, callback) {
 exports.Animate = function() {
 
 	function DoInterpolationSteps() {
-		//console.log('keyIndex:' + keyIndex);
+		//log('keyIndex:' + keyIndex);
 		for (var interpolatorID = 0; interpolatorID < interpolatorArr.length; interpolatorID++) {
 			if (keyIndex < interpolatorArr[interpolatorID].keyValues.length) {
 				if (interpolatorArr[interpolatorID].type == 'position') {
@@ -760,16 +759,16 @@ exports.Animate = function() {
 		}
 		keyIndex++;
 	}
-	console.log('X3D-animation play begin:');
+	log('X3D-animation play begin:');
 
 	for (var i = 0; i < 200; i++) {
 		setTimeout(function() {
 			DoInterpolationSteps();
 		}, 25 * i);
-		//console.log('timed out for:' + 25 * i);
+		//log('timed out for:' + 25 * i);
 	}
 
-	console.log('X3D-animation play end:');
+	log('X3D-animation play end:');
 }
 
 exports.resetGlobalValues = function() {
@@ -781,34 +780,34 @@ exports.resetGlobalValues = function() {
 }
 
 exports.loadFiles = function() {
-	console.log("X3DLoaderPlugin.loadFiles()");
+	log("X3DLoaderPlugin.loadFiles()");
 
 	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
-	console.log('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
-		
+	log('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
+
 	config = require(configFolderPath + '\\ApeX3DLoaderPlugin.json');
-	console.log('X3DLoaderPlugin files to load: ', config.files);
+	log('X3DLoaderPlugin files to load: ', config.files);
 	config.files = config.files.reverse();
-	
+
 	asyncFunctions = new Array();
 	for (var i = 0; i < config.files.length; i++) {
 		var fn = function(callback) {
 			var filePath = moduleManager.sourcePath + config.files.pop();
 			currentlyLoadingFileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
 			self.parseX3DAsync(filePath, function() {
-				console.log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
+				log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
 				callback(null);
 			});
 		}
 		asyncFunctions.push(fn);
 	}
-	
+
 	async.waterfall(
 			asyncFunctions,
 			function(err, result) {
-				console.log("async tasks done");
+				log("async tasks done");
 				if (err) {
-					console.log('X3D-init error: ', err);
+					log('X3D-init error: ', err);
 				}
 
 				if (loopAnimation) {
@@ -826,6 +825,6 @@ exports.init = function(x3dFilePath) {
 	try {
 		self.loadFiles();
 	} catch (e) {
-		console.log('X3D-init exception cached: ' + e);
+		log('X3D-init exception cached: ' + e);
 	}
 }
