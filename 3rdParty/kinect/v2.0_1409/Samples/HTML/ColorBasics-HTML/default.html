@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ColorBasics_HTML</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- ColorBasics_HTML references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/ImageHelpers.js"></script>
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <div id="header">
+        <div id="logo1"><img src="images/kinectlogo.png" alt="Kinect for Windows" height="32" width="81"></div>  
+        <div id="logo2"><img src="images/Status.png" alt="Sensor Logo"></div>
+        <div id="apptext"><p>Color Basics</p></div>
+    </div>
+
+    <div id="canvas_container">
+        <canvas id="mainCanvas" width="1920" height="1080"></canvas>
+    </div>
+    
+    <div id="ender">
+        <div id="status"><p id="statustext">Running</p></div>
+        <div id="controls">
+            <input id="snapshotbutton" type="button" onclick="takeScreenshot()" value="Screenshot"/>
+        </div>
+    </div>
+
+</body>
+</html>

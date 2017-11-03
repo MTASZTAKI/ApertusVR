@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+    <Words>
+        <Recognized>
+            <Word>normals</Word>
+            <Word>vpm</Word>
+            <Word>relocalization</Word>
+            <Word>downsample</Word>
+            <Word>downsampled</Word>
+            <Word>raycast</Word>
+        </Recognized>
+    </Words>
+    <Acronyms>
+        <CasingExceptions>
+            <Acronym>vpm</Acronym>
+        </CasingExceptions>
+    </Acronyms>
+</Dictionary>

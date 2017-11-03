@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="8eac2f30-290b-4494-9904-7f144eb10914" Version="1.2.0.0" Publisher="CN=Kinect for Windows Samples" />
+  <Properties>
+    <DisplayName>CoordinateMappingBasics-HTML</DisplayName>
+    <PublisherDisplayName>Kinect for Windows Samples</PublisherDisplayName>
+    <Logo>images\storelogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" StartPage="default.html">
+      <m2:VisualElements DisplayName="CoordinateMappingBasics-HTML" Description="CoordinateMappingBasics-HTML" BackgroundColor="#464646" ForegroundText="light" Square150x150Logo="images\logo.png" Square30x30Logo="images\smalllogo.png">
+        <m2:DefaultTile>
+          <m2:ShowNameOnTiles>
+            <m2:ShowOn Tile="square150x150Logo" />
+          </m2:ShowNameOnTiles>
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="images\splashscreen.png" />
+      </m2:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="picturesLibrary" />
+    <Capability Name="internetClient" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="microphone" />
+  </Capabilities>
+</Package>

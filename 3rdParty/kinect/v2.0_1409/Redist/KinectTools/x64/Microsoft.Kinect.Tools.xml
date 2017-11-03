@@ -1,0 +1,3046 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "Microsoft.Kinect.Tools"
+    </assembly>
+    <members>
+        <member name="M:Microsoft.Kinect.Tools.Helper.AudioPlayer.PlayAudio(System.UInt32,System.Single*,System.UInt32,System.UInt32)">
+            <summary>
+Plays the given audio samples.
+</summary>
+            <param name="samplesCount">The number of samples to play.</param>
+            <param name="pSamples">A pointer to the first sample in the buffer to play.</param>
+            <param name="sampleRate">The rate at which to play the samples.</param>
+            <param name="stride">The stride of the samples in the sample buffer.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.Helper.AudioPlayer.#ctor">
+            <summary>
+Constructs an AudioPlayer object.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.Helper.AudioPlayer">
+            <summary>
+Provides the ability to play Kinect audio.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.Helper.MatrixHelper.CalculateBeamMatrix(System.Single,System.Single*)">
+            <summary>
+Fills in the sixteen floats of a matrix describing a beam angle.
+</summary>
+            <param name="beamAngle">The beam angle (in radians) for which to calculate the matrix.</param>
+            <param name="pMatrix">The array of sixteen floats with in which to fill with the caluclated matrix.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.Helper.MatrixHelper">
+            <summary>
+Provides a helper function for matrix generation.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.UncompressedColor">
+            <summary>
+The Data Type ID for the Kinect Uncompressed Color Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Uncompressed Color Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.LongExposureIr">
+            <summary>
+The Data Type ID for the Kinect Long Exposure Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Long Exposure Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.CompressedColor">
+            <summary>
+The Data Type ID for the Kinect Compressed Color Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Compressed Color Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.RawIr">
+            <summary>
+The Data Type ID for the Kinect Raw IR Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Raw IR Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.BodyIndex">
+            <summary>
+The Data Type ID for the Kinect Body Index Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Body Index Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.Body">
+            <summary>
+The Data Type ID for the Kinect Body Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Body Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.Depth">
+            <summary>
+The Data Type ID for the Kinect Depth Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect Depth Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.Ir">
+            <summary>
+The Data Type ID for the Kinect IR Event Stream.
+</summary>
+            <value>The Data Type ID for the Kinect IR Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds.Null">
+            <summary>
+Empty ID (used when a DataTypeId is not needed).
+</summary>
+            <value>Empty ID (used when a DataTypeId is not needed).</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamDataTypeIds">
+            <summary>
+Specifies the Data Type IDs of Kinect supplied Event Streams.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSemanticIds.KinectDefaultSensorMonitor">
+            <summary>
+The Semantic ID for Kinect Event Streams that produce Kinect data for monitoring from the default Kinect Sensor.
+</summary>
+            <value>The Semantic ID for Kinect Event Streams that produce Kinect data for monitoring from the default Kinect Sensor.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSemanticIds.KinectDefaultSensorConsumer">
+            <summary>
+The Semantic ID for Kinect Event Streams that consume Kinect data for playback to the default Kinect Sensor.
+</summary>
+            <value>The Semantic ID for Kinect Event Streams that consume Kinect data for playback to the default Kinect Sensor.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSemanticIds.KinectDefaultSensorProducer">
+            <summary>
+The Semantic ID for Kinect Event Streams that produce Kinect data for recording from the default Kinect Sensor.
+</summary>
+            <value> The Semantic ID for Kinect Event Streams that produce Kinect data for recording from the default Kinect Sensor.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSemanticIds.Null">
+            <summary>
+Empty ID (used when a SemanticId is not needed to uniquely identify a stream).
+</summary>
+            <value>Empty ID (used when a SemanticId is not needed to uniquely identify a stream).</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamSemanticIds">
+            <summary>
+Specifies the Semantic IDs of Kinect supplied Event Streams.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.ProcessNotifications">
+            <summary>
+Processes certain notifications from KStudio objects. In order to be notified of non-client initiated situtations
+(such as reaching a pause point in a playback, or reaching the end of a timed recording, or receiving an event
+from a Monitor), this method must be called. If doing activities that are fully client driven (such as inspecting
+the contents of a file, starting/stopping a recording) or for which can poll state (such as checking the state of
+a playback regularly), it is not necessary to ProcessNotifications. If any clients are created with the
+KStudioClientFlags.ProcessNotification flag, ProcessNotification must be called, or the notifications will block
+the system.
+</summary>
+            <remarks>When using clients created with the KStudioClientFlags.ProcessNotifications flag, this function should 
+be called with regular frequency from the Application code (every frame). For a WPF application, it is suggested 
+that this be called by adding an event handler to CompositionTarget.Rendering.
+</remarks>
+            <code>
+// For WPF:
+CompositionTarget.Rendering += (source, e) =&gt;
+  {
+    KStudio.ProcessNotifications();
+  };
+</code>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.KStudioEventInitializer">
+            <summary>
+Gets or sets the function that is called for every Event object created to allow the optional attachement of 
+User Data or other processing.
+</summary>
+            <value>The function that is called for every Event object created.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.KStudioEventHeaderInitializer">
+            <summary>
+Gets or sets the function that is called for every Event Header object created to allow the optional attachement of 
+User Data or other processing.
+</summary>
+            <value>The function that is called for every Event Header object created.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.KStudioObjectInitializer">
+            <summary>
+Gets or sets the function that is called for every KStudio object created (except Events and Event Headers) to allow
+the optional attachement of User Data or other processing.
+</summary>
+            <value>The function that is called for every KStudio object created (except Events and Event Headers).</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.DefaultPropertyUpdateTime">
+            <summary>
+Gets the default frequency at which the system automatically updates certain properties of Clients, Recordings,
+Playbacks, Monitors, Event Streams, and Files. This is a constant.
+</summary>
+            <value>The default frequency at which the system automatically updates certain properties of KStudio objects.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.PropertyUpdateTime">
+            <summary>
+Gets or sets the frequency at which the system automatically updates certain properties of Clients, Recordings,
+Playbacks, Monitors, Event Streams, and Files. The default frequency is specified by DefaultPropertyUpdateTime.
+</summary>
+            <value>The frequency at which the system automatically updates certain properties of KStudio objects.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.CreateClient(System.Guid,System.String,Microsoft.Kinect.Tools.KStudioClientFlags)">
+            <summary>
+Creates a Client from which Recordings, Playbacks, Monitors, Files, and Streams can be created.
+Call this method to create a client when the code will not be calling KStudio::ProcessNotifications
+(and passing KStudioClientFlags.None) or when the code will be calling KStudio::ProcessNotification (and w
+passing KStudioClientFlags.ProcessNotification) and when a consistent client ID/Name is desired run 
+over run.
+</summary>
+            <param name="id">The unique ID of the Client.</param>
+            <param name="name">The name of the Client.</param>
+            <param name="clientFlags">Options for client creation.</param>
+            <returns>A newly created Client from which Recordings, Playbacks, Monitors, Files, and 
+Event Streams can be created.</returns>
+            <seealso cref="M:Microsoft.Kinect.Tools.KStudio.ProcessNotifications" />
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.CreateClient(System.Guid,System.String)">
+            <summary>
+Creates a Client from which Recordings, Playbacks, Monitors, Files, and Streams can be created.
+Call this method to create a client when the code will not be calling KStudio::ProcessNotifications
+and when a consistent client ID/Name is desired run over run.
+</summary>
+            <param name="id">The unique ID of the Client.</param>
+            <param name="name">The name of the Client.</param>
+            <returns>A newly created Client from which Recordings, Playbacks, Monitors, Files, and 
+Event Streams can be created.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.CreateClient(Microsoft.Kinect.Tools.KStudioClientFlags)">
+            <summary>
+Creates a Client from which Recordings, Playbacks, Monitors, Files, and Streams can be created. An ID
+and name for the client is randomly created.
+Call this method to create a client when the code will not be calling KStudio::ProcessNotifications
+(and passing KStudioClientFlags.None) or when the code will be calling KStudio::ProcessNotification (and w
+passing KStudioClientFlags.ProcessNotification) and when a consistent client ID/Name is not required run 
+over run.
+</summary>
+            <param name="clientFlags">Options for client creation.</param>
+            <returns>A newly created Client from which Recordings, Playbacks, Monitors, Files, and 
+Event Streams can be created.</returns>
+            <remarks>Do not pass KStudioClientFlags.ProcessNotification unless KStudio.ProcessNotifications will be
+called on a regular basis.</remarks>
+            <seealso cref="M:Microsoft.Kinect.Tools.KStudio.ProcessNotifications" />
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.CreateClient">
+            <summary>
+Creates a Client from which Recordings, Playbacks, Monitors, Files, and Streams can be created. An ID
+and name for the client is randomly created.
+Call this method to create a client when the code will not be calling KStudio::ProcessNotifications
+and when a consistent client ID/Name is not required run over run.
+</summary>
+            <returns>A newly created Client from which Recordings, Playbacks, Monitors, Files, and 
+Event Streams can be created.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudio.GetCurrentRelativeTime">
+            <summary>
+Gets the KStudio timestamp used when writing events to an Event Stream.
+</summary>
+            <returns>The KStudio timestamp used when writing events to an Event Stream.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudio.InvalidRelativeTime">
+            <summary>
+Gets the timestamp that represents an invalid timestamp. This is a constant.
+</summary>
+            <value>The timestamp that represents an invalid timestamp.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudio">
+            <summary>
+Provides a set of static (Shared in Visual Basic) methods and properties for creating KStudio clients, 
+processing client notifications, specifying frequency of property value update checks, and specifying
+routines to augment KStudio object upon their creation.
+<para>The KStudio API allows a local PC to create Kinect recording files on a remote machine and to play 
+those files back on the remote machine. The API allows the local PC to monitor Kinect events happening
+on the remote machine. The API also allows traversal of files/directories on the remote (or local) machine, 
+inspection of remote (or local) files, and allows timed traversal of local files (local playback).</para></summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateRerecording(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,System.TimeSpan,Microsoft.Kinect.Tools.KStudioRecordingFlags)">
+            <summary>
+Creates a Recording to record NUI Events that will be generated from a Playback.
+</summary>
+            <param name="filePath">The full path of the file to which to write the Recording, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to record.</param>
+            <param name="playbackStartRelativeTime">The relative time of the first Calibration event. The recording will not
+start until it has processed the Calibration Event at this given time delivered by the Playback. This is to 
+ensure the recording does not inadvertently pick up live camera events.</param>
+            <param name="recordingFlags">Options for recording creation.</param>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateRerecording(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,System.TimeSpan)">
+            <summary>
+Creates a Recording to record NUI Events that will be generated from a Playback.
+</summary>
+            <param name="filePath">The full path of the file to which to write the Recording, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to record.</param>
+            <param name="playbackStartRelativeTime">The relative time of the first Calibration event. The recording will not
+start until it has processed the Calibration Event at this given time delivered by the Playback. This is to 
+ensure the recording does not inadvertently pick up live camera events.</param>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioClient.EventDataAvailable">
+            <summary>
+Occurs when KStudio has an Event for the Client from either monitoring or playing back a File to the Client.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioClient.IsServiceConnectedChanged">
+            <summary>
+Occurs when the connection to the Remote Service changes.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.DeleteFile(System.String)">
+            <summary>
+Deletes the specified file.
+</summary>
+            <param name="filePath">The path of the file to delete.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.GetFileList(System.String,Microsoft.Kinect.Tools.KStudioFileListFlags)">
+            <summary>
+Returns a collection of files matching a given file spec.
+</summary>
+            <param name="fileSpec">The file spec of the files or directories to find (e.g., D:\*.xef).</param>
+            <param name="fileListFlags">The flags to use when searching for files.</param>
+            <returns>A collection of File Info on files or directories that match the given file spec.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.GetFileList(System.String)">
+            <summary>
+Returns a collection of files matching a given file spec.
+</summary>
+            <param name="fileSpec">The file spec of the files or directories to find (e.g., D:\*.xef).</param>
+            <returns>A collection of File Info on files or directories that match the given file spec.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.PingService">
+            <summary>
+Tests the connection to the Remote Service and returns the time of the ping.
+</summary>
+            <returns>The time of the ping to the Remote Service.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.GetEventStream(System.Guid,System.Guid)">
+            <summary>
+Returns a specific live available Event Stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to return.</param>
+            <returns>The live available Event Stream in the File with the given DataTypeId and SemanticId.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClient.EventStreams">
+            <summary>
+Gets the Event Streams that are currently live in KStudio (if a remote service is connected, its Event Streams are included).
+</summary>
+            <value>The Event Streams that are currently live in KStudio.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(Microsoft.Kinect.Tools.KStudioEventFile,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates an enumerator for iterating over Events in selected Event Streams in a File in order of timestamp.
+</summary>
+            <param name="file">The File whose Events to enumerate.</param>
+            <param name="streamSelectorCollection">The set of Event Streams over which to enumerate.</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.
+<para>When giving a File to a Event Reader, it is the caller's responsibilty to Dispose the File object when the caller 
+and the Event Reader are done with it.</para></remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(Microsoft.Kinect.Tools.KStudioEventFile)">
+            <summary>
+Creates an enumerator for iterating over Events in all Event Streams in a File in order of timestamp.
+</summary>
+            <param name="file">The File whose Events to enumerate.</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.
+<para>When giving a File to a Event Reader, it is the caller's responsibilty to Dispose the File object when the caller 
+and the Event Reader are done with it.</para></remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,Microsoft.Kinect.Tools.KStudioEventReaderFlags)">
+            <summary>
+Creates an enumerator for iterating over Events in selected Event Streams in a File in order of timestamp.
+</summary>
+            <param name="filePath">The full path of the File whose Events to enumerate, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams over which to enumerate.</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(System.String,Microsoft.Kinect.Tools.KStudioEventReaderFlags)">
+            <summary>
+Creates an enumerator for iterating over Events in all Event Streams in a File in order of timestamp.
+</summary>
+            <param name="filePath">The full path of the File whose Events to enumerate, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates an enumerator for iterating over Events in selected Event Streams in a File in order of timestamp.
+</summary>
+            <param name="filePath">The full path of the File whose Events to enumerate, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams over which to enumerate.</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventReader(System.String)">
+            <summary>
+Creates an enumerator for iterating over Events in all Event Streams in a File in order of timestamp.
+</summary>
+            <param name="filePath">The full path of the File whose Events to enumerate, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <returns>An Event Reader to enumerate the Events in the File in order.</returns>
+            <remarks>In order to read the events on a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(Microsoft.Kinect.Tools.KStudioEventFile,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,Microsoft.Kinect.Tools.KStudioPlaybackFlags)">
+            <summary>
+Creates a Playback to play Events from a File to the specified live consumer Event Streams.
+</summary>
+            <param name="file">The File from which to run the Playback.</param>
+            <param name="streamSelectorCollection">The set of Event Streams to play back.</param>
+            <param name="playbackFlags">Options for playback creation.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file needs to be a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(Microsoft.Kinect.Tools.KStudioEventFile,Microsoft.Kinect.Tools.KStudioPlaybackFlags)">
+            <summary>
+Creates a Playback to play Events from a File to the live consumer Event Streams based on all Event
+Streams in the file.
+</summary>
+            <param name="file">The File from which to run the Playback.</param>
+            <param name="playbackFlags">Options for playback creation.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file needs to be a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(Microsoft.Kinect.Tools.KStudioEventFile,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates a Playback to play Events from a File to the specified live consumer Event Streams.
+</summary>
+            <param name="file">The File from which to run the Playback.</param>
+            <param name="streamSelectorCollection">The set of Event Streams to play back.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file needs to be a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(Microsoft.Kinect.Tools.KStudioEventFile)">
+            <summary>
+Creates a Playback to play Events from a File to the live consumer Event Streams based on all Event
+Streams in the file.
+</summary>
+            <param name="file">The File from which to run the Playback.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file needs to be a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,Microsoft.Kinect.Tools.KStudioPlaybackFlags)">
+            <summary>
+Creates a Playback to play Events from a File to the specified live consumer Event Streams.
+</summary>
+            <param name="filePath">The full path of the File from which to run the Playback, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to play back.</param>
+            <param name="playbackFlags">Options for playback creation.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(System.String,Microsoft.Kinect.Tools.KStudioPlaybackFlags)">
+            <summary>
+Creates a Playback to play Events from a File to the live consumer Event Streams based on all Event
+Streams in the file.
+</summary>
+            <param name="filePath">The full path of the File from which to run the Playback, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="playbackFlags">Options for playback creation.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates a Playback to play Events from a File to the specified live consumer Event Streams.
+</summary>
+            <param name="filePath">The full path of the File from which to run the Playback, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to play back.</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreatePlayback(System.String)">
+            <summary>
+Creates a Playback to play Events from a File to the live consumer Event Streams based on all Event
+Streams in the file.
+</summary>
+            <param name="filePath">The full path of the File from which to run the Playback, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <returns>A Playback that handles playing the Events from the File to the live Event Streams.</returns>
+            <remarks>In order to playback to streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote file.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateMonitor(Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,Microsoft.Kinect.Tools.KStudioMonitorFlags)">
+            <summary>
+Creates a Monitor to monitor Events from the specified live producer Event Streams.
+</summary>
+            <param name="streamSelectorCollection">The set of Event Streams to monitor.</param>
+            <param name="monitorFlags">Options for monitor creation.</param>
+            <returns>A Monitor that handles watching Events from the specified live Event Streams.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateMonitor(Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates a Monitor to monitor Events from the specified live producer Event Streams.
+</summary>
+            <param name="streamSelectorCollection">The set of Event Streams to monitor.</param>
+            <returns>A Monitor that handles watching Events from the specified live Event Streams.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateRecording(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,System.UInt32,Microsoft.Kinect.Tools.KStudioRecordingFlags)">
+            <summary>
+Creates a Recording to record Events from the specified live producer Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to which to write the Recording, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to record.</param>
+            <param name="bufferSizeInMegabytes">The size of the memory buffer to allocate, in megabytes.</param>
+            <param name="recordingFlags">Options for recording creation.</param>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateRecording(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection,Microsoft.Kinect.Tools.KStudioRecordingFlags)">
+            <summary>
+Creates a Recording to record Events from the specified live producer Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to which to write the Recording, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to record.</param>
+            <param name="recordingFlags">Options for recording creation.</param>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateRecording(System.String,Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection)">
+            <summary>
+Creates a Recording to record Events from the specified live producer Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to which to write the Recording, such as remote file 
+"xd:\clips\test.xef" or local file "c:\temp\test.xef".</param>
+            <param name="streamSelectorCollection">The set of Event Streams to record.</param>
+            <returns>A Recording that records Events from the live Event Streams.</returns>
+            <remarks>In order to record streams from the remote service, the client needs to be connected to the
+service and the file path needs to specify a remote path.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.OpenEventFileForEdit(System.String,Microsoft.Kinect.Tools.KStudioEventFileFlags)">
+            <summary>
+Opens an existing File that has Event Streams for read/write.
+</summary>
+            <param name="filePath">The full path of the file to open, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <param name="fileFlags">Options for opening files.</param>
+            <returns>A File that can have Event Streams that can be read.</returns>
+            <remarks>In order to open a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.OpenEventFileForEdit(System.String)">
+            <summary>
+Opens an existing File that has Event Streams for read/write.
+</summary>
+            <param name="filePath">The full path of the file to open, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <returns>A File that can have Event Streams that can be read.</returns>
+            <remarks>In order to open a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.OpenEventFile(System.String,Microsoft.Kinect.Tools.KStudioEventFileFlags)">
+            <summary>
+Opens an existing File that has Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to open, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <param name="fileFlags">Options for opening files.</param>
+            <returns>A File that can have Event Streams that can be read.</returns>
+            <remarks>In order to open a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.OpenEventFile(System.String)">
+            <summary>
+Opens an existing File that has Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to open, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <returns>A File that can have Event Streams that can be read.</returns>
+            <remarks>In order to open a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventFile(System.String,System.UInt32,Microsoft.Kinect.Tools.KStudioEventFileFlags)">
+            <summary>
+Creates a new File that can have Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to create, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <param name="fileFlags">Options for opening files.</param>
+            <param name="bufferSizeInMegabytes">The size of the memory buffer to allocate, in megabytes.</param>
+            <returns>A File that can have Event Streams created in it and Events written to those streams.</returns>
+            <remarks>In order to create a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventFile(System.String,System.UInt32)">
+            <summary>
+Creates a new File that can have Event Streams.
+</summary>
+            <param name="filePath">The full path of the file to create, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <param name="bufferSizeInMegabytes">The size of the memory buffer to allocate, in megabytes.</param>
+            <returns>A File that can have Event Streams created in it and Events written to those streams.</returns>
+            <remarks>In order to create a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventFile(System.String)">
+            <summary>
+Creates a new File that can have Event Streams, with no extra buffering.
+</summary>
+            <param name="filePath">The full path of the file to create, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <returns>A File that can have Event Streams created in it and Events written to those streams.</returns>
+            <remarks>In order to create a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventFile(System.String,Microsoft.Kinect.Tools.KStudioEventFileFlags)">
+            <summary>
+Creates a new File that can have Event Streams, with no extra buffering.
+</summary>
+            <param name="filePath">The full path of the file to create, such as remote file "xd:\clips\test.xef"
+or local file "c:\temp\test.xef".</param>
+            <param name="fileFlags">Options for opening files.</param>
+            <returns>A File that can have Event Streams created in it and Events written to those streams.</returns>
+            <remarks>In order to create a remote file, the client needs to be connected to the service.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventStream(System.Guid,System.Guid,System.String,System.String,System.UInt32,Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement[],Microsoft.Kinect.Tools.KStudioEventStreamFlags)">
+            <summary>
+Creates a local event stream that can consume or produce events.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to create.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to create.</param>
+            <param name="dataTypeName">The name of the data type of the Event Stream to create.</param>
+            <param name="name">The name of the Event Stream.</param>
+            <param name="tagSize">The size of the tag data on each Event.</param>
+            <param name="streamSelectorRequirements">The other Event Streams that are required or prohibited when this Event Stream 
+is selected for recording, playing, or monitoring.</param>
+            <param name="eventStreamFlags">Options for stream creation.</param>
+            <returns>An Event Stream that can be read and/or written to.</returns>
+            <remarks>When specifying a stream that can produce events, the returned Event Stream will be a KStudioEventWritableStream.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.CreateEventStream(System.Guid,System.Guid,System.String,System.String,System.UInt32,Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement[])">
+            <summary>
+Creates a local event stream that can consume or produce events.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to create.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to create.</param>
+            <param name="dataTypeName">The name of the data type of the Event Stream to create.</param>
+            <param name="name">The name of the Event Stream.</param>
+            <param name="tagSize">The size of the tag data on each Event.</param>
+            <param name="streamSelectorRequirements">The other Event Streams that are required or prohibited when this Event Stream 
+is selected for recording, playing, or monitoring.</param>
+            <returns>An Event Stream that can be read and/or written to.</returns>
+            <remarks>When specifying a stream that can produce events, the returned Event Stream will be a KStudioEventWritableStream.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClient.Flags">
+            <summary>
+Gets the flags that characterize the Client.
+</summary>
+            <value>The flags that characterize the Client.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClient.Id">
+            <summary>
+Gets the identifier of the client.
+</summary>
+            <value>The identifier of the client.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClient.Name">
+            <summary>
+Gets the name of the Client.
+</summary>
+            <value>The name of the Client.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClient.IsServiceConnected">
+            <summary>
+Gets a value indicating whether the Client is currently connected to a remote device.
+</summary>
+            <value>true if the remote device is connected; otherwise false.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.DisconnectFromService">
+            <summary>
+Disconnects the Client from the Service from which it is currently connected.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.ConnectToService(System.Net.IPAddress)">
+            <summary>
+Connects the Client to the Service running on the device specified by the given IP Address.
+</summary>
+            <param name="ipAddress">The IP address of the remote device to which to connect.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.ConnectToService">
+            <summary>
+Connects the Client to the Service running on the defaut device.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClient.Dispose">
+            <summary>
+Enables a Client to dispose all objects created by it and perform final clean up before it is released from memory.
+<remarks>Call Dispose when you are finished using the Client. The Dispose method leaves the Client and all 
+objects created by the Client in an unusable state. After calling this method, you must release all references 
+to the Client and its created objects so the memory they were occupying can be reclaimed by garbage collection.</remarks></summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioClient">
+            <summary>
+Represents a Client that allows file manipulation, and recording, playback, and monitoring of Event Streams.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.CurrentLoopIteration">
+            <summary>
+Gets or sets the number of times the Event Reader has looped between the InPoint and OutPoint.
+</summary>
+            <value>The number of times the Event Reader has looped between the InPoint and OutPoint.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.LoopCount">
+            <summary>
+Gets or sets the number of times to loop the Event Reader between the InPoint and OutPoint.
+</summary>
+            <value>The number of times to loop the Event Reader between the InPoint and OutPoint.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.CurrentRelativeTime">
+            <summary>
+Gets the current timestamp of the Event Reader. 
+</summary>
+            <value>The current timestamp of the Event Reader.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.SeekByRelativeTime(System.TimeSpan)">
+            <summary>
+Jumps the current position of the Event Reader to the specified timestamp.
+</summary>
+            <param name="relativeTime">The timestamp to which to jump.</param>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.Duration">
+            <summary>
+Gets the duration of the File.
+</summary>
+            <value>The duration of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.StartRelativeTime">
+            <summary>
+Gets the first timestamp of the File.
+</summary>
+            <value>The first timestamp of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.OutPointByRelativeTime">
+            <summary>
+Gets or sets the time at which to end the Event Reader.
+</summary>
+            <value>The time at which to end the Event Reader.</value>
+            <remark>This defaults to the Duration.</remark>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.InPointByRelativeTime">
+            <summary>
+Gets or sets the time at which to start the Event Reader.
+</summary>
+            <value>The time at which to start the Event Reader.</value>
+            <remark>This defaults to the StartRelativeTime.</remark>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetNextEvent">
+            <summary>
+Gets the next Event of the selected streams of the File in timestamp order.
+</summary>
+            <returns>The next Event if available; otherwise, null.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetMarkersForStream(System.Guid,System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Event Reader.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetMarkersForStream(System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Event Reader if the 
+specification results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.Markers">
+            <summary>
+Gets the Marker collection for the File of the Event Reader.
+</summary>
+            <returns>The Marker collection for the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Event Reader if the 
+specification results in a found unique stream.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Event Reader.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.GetMetadata(Microsoft.Kinect.Tools.KStudioMetadataType)">
+            <summary>
+Gets the specified Metadata collection for the File of the Event Reader.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection for the File of the Event Reader.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.Source">
+            <summary>
+Gets the Source (File) of the Event Reader.
+</summary>
+            <value>The Source (File) of the Event Reader.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.FilePath">
+            <summary>
+Gets the file path of the Event Reader.
+</summary>
+            <value>The file path of the Event Reader.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventReader.Flags">
+            <summary>
+Gets the flags used to create the Event Reader.
+</summary>
+            <value>The flags used to create the Event Reader.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventReader.Dispose">
+            <summary>
+Enables a Event Reader to close the file and perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the Event Reader. The Dispose method leaves the  
+Event Reader and its Metadata collections in an unusable state. After calling this method, you must 
+release all references to the Event Reader and its Metadata/Marker collections so the memory it was occupying 
+can be reclaimed by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventReader">
+            <summary>
+Represents an Event Reader of selected Event Streams in a File in order of timestamp across Event Streams.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioMonitor.StateChanged">
+            <summary>
+Occurs when the state of the Monitor changes.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMonitor.Stop">
+            <summary>
+Stops monitoring the Event Streams.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMonitor.Start">
+            <summary>
+Starts to monitor the Event Streams and send the Events to the Client.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMonitor.State">
+            <summary>
+Gets the current state of the Monitor.
+</summary>
+            <value>The current state of the Monitor.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMonitor.Dispose">
+            <summary>
+Enables a Montor to perform final clean up before it is released from memory.        
+</summary>
+            <remarks>Call Dispose when you are finished using the Monitor. The Dispose method leaves the Monitor 
+in an unusable state. After calling this method, you must release all references to the Monitor so the 
+memory it was occupying can be reclaimed by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMonitor">
+            <summary>
+Represents a Monitor of selected live producer Event Streams to the Client.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioPlayback.Looped">
+            <summary>
+Occurs when the Playback has been looped.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioPlayback.Seeked">
+            <summary>
+Occurs when Playback has been seeked.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioPlayback.StateChanged">
+            <summary>
+Occurs when the state of the Playback changes.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.CurrentLoopIteration">
+            <summary>
+Gets or sets the number of times the Playback has looped between the InPoint and OutPoint.
+</summary>
+            <value>The number of times the Playback has looped between the InPoint and OutPoint.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.LoopCount">
+            <summary>
+Gets or sets the number of times to loop the Playback between the InPoint and OutPoint.
+</summary>
+            <value>The number of times to loop the Playback between the InPoint and OutPoint.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.CurrentRelativeTime">
+            <summary>
+Gets the current timestamp of the Playback. 
+</summary>
+            <remarks>This value is updated on a frequency as described by the PropertyUpdateTime of KStudio.</remarks>
+            <value>The current timestamp of the Playback.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.SeekByRelativeTime(System.TimeSpan)">
+            <summary>
+Jumps the paused Playback to the specified timestamp.
+</summary>
+            <param name="relativeTime">The timestamp to which to jump.</param>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.Duration">
+            <summary>
+Gets the duration of the Playback.
+</summary>
+            <value>The duration of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.StartRelativeTime">
+            <summary>
+Gets the first timestamp of the Playback.
+</summary>
+            <value>The first timestamp of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.OutPointByRelativeTime">
+            <summary>
+Gets or sets the time at which to end the playback and do the EndBehavior.
+</summary>
+            <value>The time at which to end the playback and do the EndBehavior.</value>
+            <remark>This defaults to the Duration.</remark>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.InPointByRelativeTime">
+            <summary>
+Gets or sets the time at which to start the playback.
+</summary>
+            <value>The time at which to start the playback.</value>
+            <remark>This defaults to the StartTick.</remark>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.RemovePausePointByRelativeTime(System.TimeSpan)">
+            <summary>
+Removes a pause point from the Playback;
+</summary>
+            <param name="value">The timestamp at which to no longer pause the playback.</param>
+            <returns>true, if the pause point was removed (existed); otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.SetPausePointsByRelativeTime(System.Collections.Generic.IEnumerable`1{System.TimeSpan})">
+            <summary>
+Replaces the current set of pause points and with the specified set of pause points to the Playback.
+</summary>
+            <param name="values">The timestamps at which to pause the playback.</param>
+            <returns>true, if at least one pause point was added; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.AddPausePointByRelativeTime(System.TimeSpan)">
+            <summary>
+Adds a pause point to the Playback.
+</summary>
+            <param name="value">The timestamp at which to pause the playback.</param>
+            <returns>true, if the pause point was added (not redundant); otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.StepOnce(Microsoft.Kinect.Tools.KStudioEventStream)">
+            <summary>
+Steps the paused Playback of the Event Streams until an Event for the specified Event Stream is reached.
+</summary>
+            <param name="stream">The Event Stream for which to step the Playback.</param>
+            <returns>true, if there any events to play; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.StepOnce(System.Guid,System.Guid)">
+            <summary>
+Steps the paused Playback of the Event Streams until an Event for the specified Event Stream is reached.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream for which to step the Playback.</param>
+            <param name="semanticId">The SemanticId of the Event Stream for which to step the Playback.</param>
+            <returns>true, if there any events to play; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.StepOnce(System.Guid)">
+            <summary>
+Steps the paused Playback of the Event Streams until an Event for the specified Event Stream is reached.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream for which to step the Playback.</param>
+            <returns>true, if there any events to play; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.StepOnce">
+            <summary>
+Steps the paused Playback of the Event Streams by only one Event.
+</summary>
+            <returns>true, if there any events to play; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.Resume">
+            <summary>
+Resumes the paused Playback.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.Pause">
+            <summary>
+Pauses the playing Playback.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.Stop">
+            <summary>
+Stops the playing back of the Event Streams from the File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.StartPaused">
+            <summary>
+Starts to play back the Event Streams from the File but puts the Playback in pause immediately.
+</summary>
+            <remark>If an InPoint has been specified, Playback starts at that time.</remark>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.Start">
+            <summary>
+Starts to play back the Event Streams from the File.
+</summary>
+            <remark>If an InPoint has been specified, Playback starts at that time.</remark>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.EndBehavior">
+            <summary>
+Gets or sets the behavior of the Playback at the end of the File.
+</summary>
+            <value>The behavior of the Playback at the end of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.Mode">
+            <summary>
+Gets or sets the timing mode of the Playback.
+</summary>
+            <value>The timing mode of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.PausePointsByRelativeTime">
+            <summary>
+Gets the Pause Points for the Playback.
+</summary>
+            <value>The Pause Points for the Playback.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.GetMarkersForStream(System.Guid,System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Playback.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File of the Playback.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.GetMarkersForStream(System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Playback if the 
+specification results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File of the Playback.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.Markers">
+            <summary>
+Gets the Marker collection for the File of the Playback.
+</summary>
+            <returns>The Marker collection for the File of the Playback.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Playback if the 
+specification results in a found unique stream.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Playback.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Playback.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Playback.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.GetMetadata(Microsoft.Kinect.Tools.KStudioMetadataType)">
+            <summary>
+Gets the specified Metadata collection for the File of the Playback.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection for the File of the Playback.</returns>
+            <remarks>When the Playback is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.Source">
+            <summary>
+Gets the Source (File) of the Playback.
+</summary>
+            <value>The Source (File) of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.FilePath">
+            <summary>
+Gets the file path of the Playback.
+</summary>
+            <value>The file path of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.State">
+            <summary>
+Gets the current state of the Playback.
+</summary>
+            <value>The current state of the Playback.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioPlayback.Flags">
+            <summary>
+Gets the flags used to create the Playback.
+</summary>
+            <value>The flags used to create the Playback.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioPlayback.Dispose">
+            <summary>
+Enables a Playback to close the file and perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the Playback. The Dispose method leaves the Playback 
+and its Metadata collections in an unusable state. After calling this method, you must release all 
+references to the Playback and its Metadata collections so the memory it was occupying can be reclaimed 
+by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioPlayback">
+            <summary>
+Represents a Playback of selected Event Streams in a File to selected live consumer Event Streams.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioRecording.StateChanged">
+            <summary>
+Occurs when the state of the Recording changes.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.Stop">
+            <summary>
+Stops the recording of the Event Streams to the File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.StartTimed(System.TimeSpan)">
+            <summary>
+Starts to record the Event Streams to the File up to the specified maximum amount of time.
+</summary>
+            <param name="maxDuration">The maximum amount of time to record.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.Start">
+            <summary>
+Starts to record the Event Streams to the File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.GetMarkersForStream(System.Guid,System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Recording.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <param name="destinationSemanticId">The SemanticId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker for the Event Stream of the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.GetMarkersForStream(System.Guid)">
+            <summary>
+Gets the Marker collection for the specified Event Stream of the File of the Recording if the 
+specification results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker for the Event Stream of the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Recording if the 
+specification results in a found unique stream.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <param name="destinationSemanticId">The SemanticId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File of the Recording.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.Markers">
+            <summary>
+Gets the Marker collection for the File of the Recording.
+</summary>
+            <returns>The Marker collection for the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.GetMetadata(Microsoft.Kinect.Tools.KStudioMetadataType)">
+            <summary>
+Gets the specified Metadata collection for the File of the Recording.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection for the File of the Recording.</returns>
+            <remarks>When the Recording is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.FilePath">
+            <summary>
+Gets the file path of the Recording.
+</summary>
+            <value>The file path of the Recording.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.State">
+            <summary>
+Gets the current state of the Recording.
+</summary>
+            <value>The current state of the Recording.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.FileSizeBytes">
+            <summary>
+Gets the file size of the Recording;
+</summary>
+            <remarks>This value is updated on a frequency as described by the PropertyUpdateTime of KStudio.</remarks>
+            <value>The current size of the Recording file.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.BufferInUseSizeMegabytes">
+            <summary>
+Gets the current usage of the Recording buffer;
+</summary>
+            <remarks>This value is updated on a frequency as described by the PropertyUpdateTime of KStudio.</remarks>
+            <value>The current usage of the Recording buffer.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.BufferSizeMegabytes">
+            <summary>
+Gets the size of the Recording buffer.
+</summary>
+            <value>The size of the recording buffer.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.Duration">
+            <summary>
+Gets the current duration of the Recording. 
+</summary>
+            <remarks>This value is updated on a frequency as described by the PropertyUpdateTime of KStudio.</remarks>
+            <value>The current duration of the Recording.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioRecording.Flags">
+            <summary>
+Gets the flags used to create the Recording.
+</summary>
+            <value>The flags used to create the Recording.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioRecording.Dispose">
+            <summary>
+Enables a Recording to close the file and perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the Recording. The Dispose method leaves the Recording 
+and its Metadata collections in an unusable state. After calling this method, you must release all 
+references to the Recording and its Metadata collections so the memory it was occupying can be reclaimed 
+by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioRecording">
+            <summary>
+Represents a Recording of selected live producer Event Streams to a File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioWritableEventFile.CreateEventStream(System.Guid,System.Guid,System.String,System.String,System.UInt32)">
+            <summary>
+Creates an Event Stream in the File.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to create.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to create.</param>
+            <param name="dataTypeName">The name of the data type of the Event Stream to create.</param>
+            <param name="name">The name of the Event Stream.</param>
+            <param name="tagSize">The size of the tag data on each Event.</param>
+            <returns>A new writable Event Stream in the File.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioWritableEventFile.CreateEventStream(System.Guid,System.Guid,System.String,System.String,System.UInt32,Microsoft.Kinect.Tools.KStudioEventStreamFlags)">
+            <summary>
+Creates an Event Stream in the File.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to create.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to create.</param>
+            <param name="dataTypeName">The name of the data type of the Event Stream to create.</param>
+            <param name="name">The name of the Event Stream.</param>
+            <param name="tagSize">The size of the tag data on each Event.</param>
+            <param name="eventStreamFlags">The flags of the Event Stream to create.</param>
+            <returns>A new writable Event Stream in the File.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioWritableEventFile.Duration">
+            <summary>
+Gets the duration of the File.
+</summary>
+            <value>The duration of the File.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioWritableEventFile">
+            <summary>
+Provides the ability to create an Event Stream in a File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioWritableEventStream.WriteEvent(System.TimeSpan,System.UInt32,System.IntPtr,System.UInt32,System.IntPtr)">
+            <summary>
+Writes an Event to the Event Stream.
+</summary>
+            <param name="relativeTime">The timestamp of the Event.</param>
+            <param name="tagBufferSize">The size of the tag data to write. The size of the tag should match the tag size supplied when 
+the Event Stream was created.</param>
+            <param name="tagBuffer">The address of the tag data to write.</param>
+            <param name="dataBufferSize">The size of the data of the Event to write.</param>
+            <param name="dataBuffer">The address of the data of the Event to write.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioWritableEventStream.WriteEvent(System.TimeSpan,System.Byte[],System.Byte[])">
+            <summary>
+Writes an Event to the Event Stream.
+</summary>
+            <param name="relativeTime">The timestamp of the Event.</param>
+            <param name="tag">The tag data of the Event to write. The size of the tag should match the tag size supplied when the 
+Event Stream was created.</param>
+            <param name="data">The data of the Event to write.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioWritableEventStream">
+            <summary>
+Provides the ability to write events to an Event Stream.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioSeekableWritableEventStream.WriteEvent(System.TimeSpan,System.UInt32,System.IntPtr,System.UInt32,System.IntPtr)">
+            <summary>
+Writes an Event to the Event Stream.
+</summary>
+            <param name="relativeTime">The timestamp of the Event.</param>
+            <param name="tagBufferSize">The size of the tag data to write. The size of the tag should match the tag size supplied when 
+the Event Stream was created.</param>
+            <param name="tagBuffer">The address of the tag data to write.</param>
+            <param name="dataBufferSize">The size of the data of the Event to write.</param>
+            <param name="dataBuffer">The address of the data of the Event to write.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioSeekableWritableEventStream.WriteEvent(System.TimeSpan,System.Byte[],System.Byte[])">
+            <summary>
+Writes an Event to the Event Stream.
+</summary>
+            <param name="relativeTime">The timestamp of the Event.</param>
+            <param name="tag">The tag data of the Event to write. The size of the tag should match the tag size supplied when the 
+Event Stream was created.</param>
+            <param name="data">The data of the Event to write.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioSeekableWritableEventStream">
+            <summary>
+Provides the ability to seek and write events to an Event Stream.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioSeekableEventStream.Markers">
+            <summary>
+Gets the Marker collection for the File.
+</summary>
+            <returns>The Marker collection for the File.</returns>
+            <remarks>When the Stream is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioSeekableEventStream.ReadEvent(System.UInt32,System.UInt32)">
+            <summary>
+Reads and returns the Event at the specified index in the Event Stream.
+</summary>
+            <param name="eventIndex">The index for which to read and return an Event.</param>
+            <param name="maxDataSize">The maximum amount of event data to retrieve.</param>
+            <returns>The Event found at the specified index.</returns>
+            <remarks>Reading less than the full event data is useful if the caller only needs some "header" type data that is in
+event especially for events that have very large data.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioSeekableEventStream.ReadEvent(System.UInt32)">
+            <summary>
+Reads and returns the Event at the specified index in the Event Stream.
+</summary>
+            <param name="eventIndex">The index for which to read and return an Event.</param>
+            <returns>The Event found at the specified index.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioSeekableEventStream.EventHeaders">
+            <summary>
+Returns the list of header data (index, timestamp, and tag) for all of the Events in the Event Stream.
+</summary>
+            <value>The list of header data (index, timestamp, and tag) for all of the Events in the Event Stream</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioSeekableEventStream.FindEvent(System.TimeSpan,System.UInt32@,System.TimeSpan@)">
+            <summary>
+Returns the event index and the timestamp of the Event closest (less than or equal to) to the given timestamp
+in the Event Stream.
+</summary>
+            <param name="relativeTime">The timestamp to find.</param>
+            <param name="foundEventIndex">When this method returns, the index of the found event.</param>
+            <param name="foundRelativeTime">When this method returns, the timestamp of the found event.</param>
+            <returns>true, if an event was found; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioSeekableEventStream.EndRelativeTime">
+            <summary>
+Gets the timestamp of the last Event in the Event Stream.
+</summary>
+            <value>The timestamp of the last Event in the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioSeekableEventStream.StartRelativeTime">
+            <summary>
+Gets the timestamp of the first Event in the Event Stream.
+</summary>
+            <value>The timestamp of the first Event in the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioSeekableEventStream.EventCount">
+            <summary>
+Gets the number of Events in the Event Stream.
+</summary>
+            <value>The number of Events in the Event Stream.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioSeekableEventStream">
+            <summary>
+Provides the ability to get event data from an Event Stream.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetMarkersForStream(System.Guid,System.Guid)">
+            <summary>
+Gets the specified Marker collection for the specified Event Stream of the File.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetMarkersForStream(System.Guid)">
+            <summary>
+Gets the specified Marker collection for the specified Event Stream of the File if the specification 
+results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Marker collection to return.</param>
+            <returns>The specified Marker collection for the Event Stream of the File.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventFile.Markers">
+            <summary>
+Gets the Marker collection for the File.
+</summary>
+            <returns>The Marker collection for the File.</returns>
+            <remarks>When the File is disposed, the Marker collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetMetadataForStream(Microsoft.Kinect.Tools.KStudioMetadataType,System.Guid)">
+            <summary>
+Gets the specified Metadata collection for the specified Event Stream of the File if the specification 
+results in a found unique stream.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <param name="dataTypeId">The DataTypeId of the Event Stream whose Metadata collection to return.</param>
+            <returns>The specified Metadata collection for the Event Stream of the File.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetMetadata(Microsoft.Kinect.Tools.KStudioMetadataType)">
+            <summary>
+Gets the specified Metadata collection for the File.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection for the File.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventFile.FilePath">
+            <summary>
+Gets the path of the File.
+</summary>
+            <value>The path of the File.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetEventStream(System.Guid,System.Guid)">
+            <summary>
+Returns a specific Event Stream in the File.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to return.</param>
+            <returns>The Event Stream in the File with the given DataTypeId and SemanticId.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.GetEventStream(System.Guid)">
+            <summary>
+Returns a specific Event Stream in the File if the specification results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to return.</param>
+            <returns>The Event Stream in the File with the given DataTypeId and SemanticId.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventFile.EventStreams">
+            <summary>
+Gets the Event Streams in the File.
+</summary>
+            <value>The Event Streams in the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventFile.Duration">
+            <summary>
+Gets the duration of the File.
+</summary>
+            <value>The duration of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventFile.Id">
+            <summary>
+Gets the unique identifier of the File.
+</summary>
+            <value>The unique identifier of the File.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventFile.Dispose">
+            <summary>
+Enables the File to close and to perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the File. The Dispose method leaves the File 
+and its Metadata collections in an unusable state. After calling this method, you must release all 
+references to the File and its Metadata collections so the memory it was occupying can be reclaimed 
+by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventFile">
+            <summary>
+Provides the ability to get data of a File.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventFileFlags">
+            <summary>
+Specifies options when creating an EventFile.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventFileFlags.OnService">
+            <summary>
+Create/open the file through the Service.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventFileFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioEventStream.StateChanged">
+            <summary>
+Occurs when the state of the Event Stream changes.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStream.HasSelectionRequirements(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags,System.Collections.Generic.IDictionary`2{Microsoft.Kinect.Tools.KStudioEventStream,System.Nullable`1{System.Boolean}})">
+            <summary>
+Checks whether this stream has all of the required streams and none of the prohibited streams for the operaton.
+</summary>
+            <param name="processType">The type of process for which to determine the requirements: recording, playing back, or monitoring.</param>
+            <param name="streams">The set of all streams that are selectable for processing with the current state (i.e., before being
+changed by a user) of each of them. A null value means the stream is currently disabled for selection; true means the stream
+is currently selected for process; false means the stream is not currently selected for process. When this method returns, the
+Values in this collection will be updated to reflect what the selection state of all the supplied streams should be if the
+selection state change of this stream is valid.</param>
+            <returns>true, if the all the requirements are satisifed; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStream.DetermineSelectionRequirements(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags,System.Collections.Generic.IDictionary`2{Microsoft.Kinect.Tools.KStudioEventStream,System.Nullable`1{System.Boolean}},System.Boolean,System.Boolean@)">
+            <summary>
+Determines what other streams are prohibited from being selected or should be selected by default when the selection status
+of this Event Stream (for recording, playing back, or monitoring) is changed, and returns whether or not the change to the
+selection status of this stream is valid and whether all requirements for all selected Event Streams will be satisfied for 
+the process.
+</summary>
+            <param name="processType">The type of process for which to determine the requirements: recording, playing back, or monitoring.</param>
+            <param name="streams">The set of all streams that are selectable for processing with the current state (i.e., before being
+changed by a user) of each of them. A null value means the stream is currently disabled for selection; true means the stream
+is currently selected for process; false means the stream is not currently selected for process. When this method returns, the
+Values in this collection will be updated to reflect what the selection state of all the supplied streams should be if the
+selection state change of this stream is valid.</param>
+            <param name="isSelected">true, if this stream is to be selected; otherwise, false.</param>
+            <param name="canProcess">When this methods returns, true, if all of the selection requirements for the all of the streams are 
+satisfied; otherwise, false.</param>
+            <returns>true, if the system was able to reconcile the selection change; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStream.GetMetadata(Microsoft.Kinect.Tools.KStudioMetadataType)">
+            <summary>
+Gets the specified Metadata collection of the Event Stream.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection of the EventStream.</returns>
+            <remarks>When the Event Stream is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.State">
+            <summary>
+Gets the current state of the Event Stream.
+</summary>
+            <value>The current state of the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.TagSize">
+            <summary>
+Gets the size of tag data for all Events in the Event Stream.
+</summary>
+            <value>The size of tag data for all Events in the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.EventStreamSelectorRequirements">
+            <summary>
+Gets the collection of requirements of other streams (either to be also selected or that are not allowed to be 
+selected) when this Event Stream is to be recorded, played back, or monitored.
+</summary>
+            <value>The collection of requirements.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.IsMonitor">
+            <summary>
+Gets a value indicating whether the producer Event Stream should be used for monitoring.
+</summary>
+            <value>true if the Event Stream is for monitoring; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.IsFromService">
+            <summary>
+Gets a value indicating whether or not the Event Stream is from the service (i.e., possibly on another device).
+</summary>
+            <value>true if the Event Stream is from the remote service; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.IsRecordable">
+            <summary>
+Gets a value indicating whether the Event Stream is recordable (i.e., can produce and is not monitor).
+</summary>
+            <value>true if the Event Stream is recordable; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.IsPlaybackable">
+            <summary>
+Gets a value indicating whether the Event Stream can receive played back events (i.e., is able to be consume events).
+</summary>
+            <value>true if the Event Stream can receive played back events; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.IsCompressed">
+            <summary>
+Gets a value indicating whether the Event Stream is compressed.
+</summary>
+            <value>true if the Event Stream is compressed; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.CanProduce">
+            <summary>
+Gets a value indicating whether the Event Stream can produce events (i.e., is able to be recorded).
+</summary>
+            <value>true if the Event Stream can produce events; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.CanConsume">
+            <summary>
+Gets a value indicating whether the Event Stream can consume events (i.e., is able to be played back).
+</summary>
+            <value>true if the Event Stream can consume events; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.Flags">
+            <summary>
+Gets the flags that characterize the Event Stream.
+</summary>
+            <value>The flags that characterize the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.Name">
+            <summary>
+Gets the name of the Event Stream.
+</summary>
+            <value>The name of the Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.DataTypeName">
+            <summary>
+Gets the name of the type of data the Event Stream contains.
+</summary>
+            <value>The name of the type of data the Event Stream contains.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.SemanticId">
+            <summary>
+Gets the index of the Event in its Event Stream.
+</summary>
+            <value>The index of the Event in its Event Stream.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStream.DataTypeId">
+            <summary>
+Gets the ID of the type of data the Event Stream contains.
+</summary>
+            <value>The ID of the type of data the Event Stream contains.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStream">
+            <summary>
+Provides the ability to get data of an Event Stream.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.AccessUnderlyingEventDataBuffer(System.UInt32@,System.IntPtr@)">
+            <summary>
+Returns the internal buffer of the event data of the Event.
+</summary>
+            <param name="bufferSize">When this method returns, the size of the event data buffer.</param>
+            <param name="bufferPtr">When this method returns, the address of the event data buffer.</param>
+            <remarks>When this object is disposed, the underlying event data buffer is no longer valid.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.CopyEventDataToBuffer(System.UInt32,System.IntPtr)">
+            <summary>
+Copies the event data of the Event to a buffer at the given address.
+</summary>
+            <param name="bufferSize">The buffer size available into which the event data can be copied. If the buffer is not large enough for the 
+entire event data, as much as can fit will be copied over.</param>
+            <param name="bufferPtr">The address of the buffer into which the event data is to be copied.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.CopyEventDataToArray(System.Byte[],System.Int32)">
+            <summary>
+Copies the data of the Event to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the event data. The Array must have zero-based indexing. 
+If the array is not large enough for the entire event data, as much as can fit will be copied over.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.EventDataSize">
+            <summary>
+Gets the size of the Event data blob.
+</summary>
+            <value>The size of the Event data blob.</value>
+            <remarks>This Event may not contain the full data for the Event if only partial data was requested.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.AccessUnderlyingTagDataBuffer(System.UInt32@,System.IntPtr@)">
+            <summary>
+Returns the internal buffer of the tag data of the Event.
+</summary>
+            <param name="bufferSize">When this method returns, the size of the tag data buffer.</param>
+            <param name="bufferPtr">When this method returns, the address of the tag data buffer.</param>
+            <remarks>When this object is disposed, the underlying tag data buffer is no longer valid.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.CopyTagDataToBuffer(System.UInt32,System.IntPtr)">
+            <summary>
+Copies the tag data of the Event to a buffer at the given address.
+</summary>
+            <param name="bufferSize">The buffer size available into which the tag data can be copied. If the buffer is not large enough for the 
+entire tag data, as much as can fit will be copied over.</param>
+            <param name="bufferPtr">The address of the buffer into which the tag data is to be copied.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.CopyTagDataToArray(System.Byte[],System.Int32)">
+            <summary>
+Copies the tag data of the Event to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the tag data. The Array must have zero-based indexing. 
+If the array is not large enough for the entire tag data, as much as can fit will be copied over.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.TagDataSize">
+            <summary>
+Gets the size of the Event tag data blob.
+</summary>
+            <value>The size of the Event tag data blob.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.RelativeTime">
+            <summary>
+Gets the timestamp of the Event.
+</summary>
+            <value>The timestamp of the Event.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.EventIndex">
+            <summary>
+Gets the timestamp of the Event.
+</summary>
+            <value>The timestamp of the Event.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.EventStreamSemanticId">
+            <summary>
+Gets the SemanticId of the Event Stream from which this Event occurred.
+</summary>
+            <value>The SemanticId of the Event Stream from which this Event occurred.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEvent.EventStreamDataTypeId">
+            <summary>
+Gets the DataTypeId of the Event Stream from which this Event occurred.
+</summary>
+            <value>The DataTypeId of the Event Stream from which this Event occurred.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEvent.Dispose">
+            <summary>
+Enables an Event to perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the Event. The Dispose method leaves the Event 
+in an unusable state. After calling this method, you must release all references to the Event so the 
+memory it was occupying can be reclaimed by garbage collection. If too many Events are kept
+undisposed, the system may back up.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEvent">
+            <summary>
+Represents the index, timestamp, tag data, and event data of an Event.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Add(System.Guid,System.Guid,System.Guid)">
+            <summary>
+Adds an Event Stream Selector item to the Collection with the specified DataTypeId and SemanticIds.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream Selector to add.</param>
+            <param name="sourceSemanticId">The source SemnticId of the Event Stream Selector to add.</param>
+            <param name="destinationSemanticId">The destination SemnticId of the Event Stream Selector to add.</param>
+            <remarks>This is a short cut for creating a KStudioEventStreamSelectorItem, setting its properties, and
+adding it to the Collection.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Add(System.Guid,System.Guid)">
+            <summary>
+Adds an Event Stream Selector item to the Collection with the specified DataTypeId and source SemanticId an an Empty Guid
+for the desintation SemanticId.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream Selector to add.</param>
+            <param name="sourceSemanticId">The source SemnticId of the Event Stream Selector to add.</param>
+            <remarks>This is a short cut for creating a KStudioEventStreamSelectorItem, setting its properties, and
+adding it to the Collection.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Add(System.Guid)">
+            <summary>
+Adds an Event Stream Selector item to the Collection with the specified DataTypeId and Empty Guids for the SemanticIds.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream Selector to add.</param>
+            <remarks>This is a short cut for creating a KStudioEventStreamSelectorItem, setting its properties, and
+adding it to the Collection.</remarks>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.CollectionChanged">
+            <summary>
+Occurs when an Event Stream Selector item is added, removed, changed, or the entire Collection is refreshed.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Remove(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem)">
+            <summary>
+Removes a specific Event Stream Selector item from the Collection.
+</summary>
+            <param name="item">The Event Stream Selector item to remove from the Collection.</param>
+            <returns>true if Event Stream Selector item was successfully removed from the Collection; otherwise, false. This method also returns false if item is not found in the original collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.CopyTo(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem[],System.Int32)">
+            <summary>
+Copies the items of the Collection to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the items copied from Collection. The Array must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Contains(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem)">
+            <summary>
+Determines whether the Collection contains a specific Event Stream Selector item.
+</summary>
+            <param name="item">The Event Stream Selector item to locate in the Collection.</param>
+            <returns>true if item is found in the Collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Clear">
+            <summary>
+Removes all Event Stream Selector items from the Collection.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Add(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem)">
+            <summary>
+Adds an Event Stream Selector to the Collection.
+</summary>
+            <param name="item">The Event Stream Selector item to add to the Collection.</param>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.IsReadOnly">
+            <summary>
+Gets a value indicating whether the Event Stream Selector Collection is read-only.
+</summary>
+            <value>true if the Event Stream Selector Collection is read-only; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.Count">
+            <summary>
+Gets the number of Event Stream Selectors.
+</summary>
+            <value>The number of Event Stream Selectors.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.GetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Event Stream Selectors.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Event Stream Selectors.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection.BasicGetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Event Stream Selectors.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Event Stream Selectors.</returns>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamSelectorCollection">
+            <summary>
+Represents a Collection of Event Stream Selectors.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClipSource.GetEventStream(System.Guid,System.Guid)">
+            <summary>
+Returns a specific Event Stream in the Clip Source.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to return.</param>
+            <param name="semanticId">The SemanticId of the Event Stream to return.</param>
+            <returns>The Event Stream in the Clip Source with the given DataTypeId and SemanticId.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioClipSource.GetEventStream(System.Guid)">
+            <summary>
+Returns a specific Event Stream in the Clip Source if the specification results in a found unique stream.
+</summary>
+            <param name="dataTypeId">The DataTypeId of the Event Stream to return.</param>
+            <returns>The Event Stream in the Clip Source with the given DataTypeId and SemanticId.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClipSource.EventStreams">
+            <summary>
+Gets the Event Streams in the Clip Source.
+</summary>
+            <value>The Event Streams in the Clip Source.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClipSource.Duration">
+            <summary>
+Gets the duration of the Clip Source.
+</summary>
+            <value>The duration of the Clip Source.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioClipSource.Id">
+            <summary>
+Gets the unique identifier of the Clip Source.
+</summary>
+            <value>The unique identifier of the Clip Source.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioClipSource">
+            <summary>
+Provides the ability to get data of a Clip Source.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.Add(System.String,System.TimeSpan)">
+            <summary>
+Adds a Marker item to the Marker collection.
+</summary>
+            <param name="name">The name of the marker to add.</param>
+            <param name="relativeTime">The timestamp of the marker to add.</param>
+            <returns>The newly created marked.</returns>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioMarkerCollection.CollectionChanged">
+            <summary>
+Occurs when a Marker is added, removed, changed, or the entire Marker collection is refreshed.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.Remove(Microsoft.Kinect.Tools.KStudioMarker)">
+            <summary>
+Removes a specific Marker from the Marker collection.
+</summary>
+            <param name="item">The Marker to remove from the Marker collection.</param>
+            <returns>true if Marker was successfully removed from the Marker collection; otherwise, false. This method also returns false if item is not found in the original collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.CopyTo(Microsoft.Kinect.Tools.KStudioMarker[],System.Int32)">
+            <summary>
+Copies the items of the Marker collection to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the items copied from Marker collection. The Array must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.Contains(Microsoft.Kinect.Tools.KStudioMarker)">
+            <summary>
+Determines whether the Marker collection contains a specific Marker.
+</summary>
+            <param name="item">The Marker to locate in the Marker collection.</param>
+            <returns>true if item is found in the Marker collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.Clear">
+            <summary>
+Removes all Markers items from the Marker collection.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.Add(Microsoft.Kinect.Tools.KStudioMarker)">
+            <summary>
+Markers should be added to the collection using the alternate Add method. This method is unsupported.
+</summary>
+            <param name="value">Ignored.</param>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMarkerCollection.IsReadOnly">
+            <summary>
+Gets a value indicating whether the Marker collection is read-only.
+</summary>
+            <value>true if the Marker collection is read-only; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMarkerCollection.Count">
+            <summary>
+Gets the number of Markers.
+</summary>
+            <value>The number of Markers.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.GetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Marker collection.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Marker collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMarkerCollection.BasicGetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Marker collection.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Marker collection.</returns>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMarkerCollection">
+            <summary>
+Represents a Collection of Markers.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMarker.Metadata">
+            <summary>
+Gets the specified Metadata collection for the File.
+</summary>
+            <param name="type">The type of Metadata collection to retrieve.</param>
+            <returns>The specified Metadata collection for the File.</returns>
+            <remarks>When the File is disposed, the Metadata collection is also automatically disposed.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMarker.Name">
+            <summary>
+Gets or sets the name of the Marker.
+</summary>
+            <value>The name of the Marker.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMarker.RelativeTime">
+            <summary>
+Gets or sets the timestamp of the Marker.
+</summary>
+            <value>The timestamp of the Marker.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMarker">
+            <summary>
+Represents a Marker..
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventDataEventArgs.IsFromService">
+            <summary>
+Gets whether the event originated in the service or not.
+</summary>
+            <value>true, if the event originated in the service; otherwise, false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventDataEventArgs.EventData">
+            <summary>
+Gets the Event that has been delivered to the Client (for monitoring or when playing back a file to the Client).
+</summary>
+            <value>The Event that has been delivered to the Client.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventDataEventArgs">
+            <summary>
+Contains arguments relevant to the EventDataAvailable event of KStudioClient.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioUserState.RaisePropertyChanged(System.String)">
+            <summary>
+Raises the PropertyChanged with PropertyChangedEventArgs created using the given property name.
+</summary>
+            <param name="propertyName">The name of the property for which to raise the PropertyChanged event.</param>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioUserState.PropertyChanged">
+            <summary>
+Occurs when a property value changes.
+</summary>
+            <remarks>The PropertyChanged event can indicate all properties on the object have changed by using either null or Empty as the property name in the PropertyChangedEventArgs.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioUserState">
+            <summary>
+Represents an observable object that can be attached to a KStudio object to enhance or extend the object 
+(e.g., attaching UI state to the object).
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventHeader.AccessUnderlyingTagDataBuffer(System.UInt32@,System.IntPtr@)">
+            <summary>
+Returns the internal buffer of the tag data of the Event.
+</summary>
+            <param name="bufferSize">When this method returns, the size of the tag data buffer.</param>
+            <param name="bufferPtr">When this method returns, the address of the tag data buffer.</param>
+            <remarks>When this object is disposed, the underlying tag data buffer is no longer valid.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventHeader.CopyTagDataToBuffer(System.UInt32,System.IntPtr)">
+            <summary>
+Copies the tag data of the Event to a buffer at the given address.
+</summary>
+            <param name="bufferSize">The buffer size available into which the tag data can be copied.</param>
+            <param name="bufferPtr">The address of the buffer into which the tag data is to be copied.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventHeader.CopyTagDataToArray(System.Byte[],System.Int32)">
+            <summary>
+Copies the tag data of the Event to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the tag data. The Array must have zero-based indexing. 
+If the array is not large enough for the entire tag data, as much as can fit will be copied over.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventHeader.TagDataSize">
+            <summary>
+Gets the size of the Event tag data blob.
+</summary>
+            <value>The size of the Event tag data blob.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventHeader.EventDataSize">
+            <summary>
+Gets the size of the Event data blob.
+</summary>
+            <value>The size of the Event data blob.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventHeader.RelativeTime">
+            <summary>
+Gets the timestamp of the Event.
+</summary>
+            <value>The timestamp of the Event.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventHeader.EventIndex">
+            <summary>
+Gets the index of the Event in its Event Stream.
+</summary>
+            <value>The index of the Event in its Event Stream.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventHeader.Dispose">
+            <summary>
+Enables an Event Header to perform final clean up before it is released from memory.
+</summary>
+            <remarks>Call Dispose when you are finished using the Event Header. The Dispose method leaves the 
+Event Header in an unusable state. After calling this method, you must release all references to the 
+Event Header so the memory it was occupying can be reclaimed by garbage collection.</remarks>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventHeader">
+            <summary>
+Represents the index, timestamp, and tag data of an Event.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioFileInfo.Size">
+            <summary>
+Gets the size of the File.
+</summary>
+            <value>The size of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioFileInfo.LastAccessUtcFileTime">
+            <summary>
+Gets the last access time of the File.
+</summary>
+            <value>The last access time of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioFileInfo.LastWriteUtcFileTime">
+            <summary>
+Gets the last write time of the File.
+</summary>
+            <value>The last write time of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioFileInfo.CreationUtcFileTime">
+            <summary>
+Gets the creation time of the File.
+</summary>
+            <value>The creation time of the File.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioFileInfo.FilePath">
+            <summary>
+Gets the path of the File.
+</summary>
+            <value>The path of the File.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioFileInfo">
+            <summary>
+Represents information about a File.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.op_Inequality(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem,Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamSelectorItem are not equal.
+</summary>
+            <param name="item1">The first object to compare. </param>
+            <param name="item2">The second object to compare. </param>
+            <returns>true if item1 and item1 do not represent the same selector; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.op_Equality(Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem,Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamSelectorItem are equal.
+</summary>
+            <param name="item1">The first object to compare. </param>
+            <param name="item2">The second object to compare. </param>
+            <returns>true if item1 and item1 represent the same selector; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.GetHashCode">
+            <summary>
+Returns a hash code for the current object.
+</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.Equals(System.Object)">
+            <summary>
+Determines whether the specified object is equal to the current object.
+</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.DestinationSemanticId">
+            <summary>
+Gets the semantic ID for the destination of the mapping.
+</summary>
+            <remarks>
+For a Recording, this is the SemanticId, together with the DataTypeId, that will be saved in the file for the 
+Event Stream; if not specified (Empty), the DestinationSemanticId will be the SemanticId of the source Event Stream.
+For a Playback, this is the SemanticId, together with the DataTypeId, that will be used to find a live consumer 
+Event Stream. If the destination Event Stream is not unique by DataTypeId alone, the DestinationSemanticId must be 
+supplied; otherwise, it can be Empty..
+For a Monitor, this is ignored.
+</remarks>
+            <value>The semantic ID to use for the destination of the mapping.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.SourceSemanticId">
+            <summary>
+Gets the semantic ID for the source of the mapping.
+</summary>
+            <value>The semantic ID for the source of the mapping.</value>
+            <remarks>
+For a Recording or a Monitor, this is the SemanticId, together with the DataTypeId, that will be used to find a 
+unique live producer Event Stream.
+For a Playback, this is the SemanticId, together with the DataTypeId, that will be used to find a unique Event 
+Stream in the file.
+If the source Event Stream is not unique by DataTypeId alone, the SourceSemanticId must be supplied; otherwise, it 
+can be Empty.
+</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.DataTypeId">
+            <summary>
+Gets the data type ID for the source of the mapping.
+</summary>
+            <value>The data type ID for the source of the mapping.</value>
+            <remarks>
+For a Recording or a Monitor, this is the DataTypeId that will be used to find the unique live producer Event Stream.
+For a Playback, this is the SemanticId that will be used to find the unique Event Stream in the file.
+If the source Event Stream is not unique by DataTypeId alone, the SourceSemanticId must also be supplied.
+For Playbacks, if the destination Event Stream is not unique by DataTypeId alone, the DestinationSemanticId must also be
+supplied.
+</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.#ctor(System.Guid,System.Guid,System.Guid)">
+            <summary>
+Constructs a KStudioEventStreamSelectorItem with the given DataTypeId and SemanticIds (use specific source 
+specific destination with given DataTypeId).
+</summary>
+            <param name="dataTypeId">The Data Type ID of the stream to identify.</param>
+            <param name="sourceSemanticId">The Semantic ID of the source stream to identify.</param>
+            <param name="destinationSemanticId">The Semantic ID of the destination stream to identify.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.#ctor(System.Guid,System.Guid)">
+            <summary>
+Constructs a KStudioEventStreamSelectorItem with the given DataTypeId, given SourceSemanticIds, and
+empty DestinationSemanticId (use specific source and uniquely found destination stream with given DataTypeId).
+</summary>
+            <param name="dataTypeId">The Data Type ID of the stream to identify.</param>
+            <param name="sourceSemanticId">The Semantic ID of the source stream to identify.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem.#ctor(System.Guid)">
+            <summary>
+Constructs a KStudioEventStreamSelectorItem with the given DataTypeId and empty SemanticIds 
+(use uniquely found source and destination streams with given DataTypeId).
+</summary>
+            <param name="dataTypeId">The Data Type ID of the stream to identify.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamSelectorItem">
+            <summary>
+Represents a mapping of a source Event Stream and its destination when it is selected for recording, 
+playing back, or monitoring.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.op_Inequality(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement,Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamSelectorRequirement are not equal.
+</summary>
+            <param name="item1">The first object to compare.</param>
+            <param name="item2">The second object to compare.</param>
+            <returns>true if item1 and item1 do not represent the same requirement; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.op_Equality(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement,Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamSelectorRequirement are equal.
+</summary>
+            <param name="item1">The first object to compare.</param>
+            <param name="item2">The second object to compare.</param>
+            <returns>true if item1 and item1 represent the same requirement; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.GetHashCode">
+            <summary>
+Returns a hash code for the current object.
+</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.Equals(System.Object)">
+            <summary>
+Determines whether the specified object is equal to the current object.
+</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.Identifier1">
+            <summary>
+Gets the second operand for the operation of this requirement.
+</summary>
+            <value>The first operand for the operation of this requirement.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.Identifier0">
+            <summary>
+Gets the first operand for the operation of this requirement.
+</summary>
+            <value>The first operand for the operation of this requirement.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.Flags">
+            <summary>
+Gets the process for which this requirement is defined (recording, playing back, or monitoring) and the 
+operation (type of requirement: none, all, or, xor, all if available) of the dependent streams.
+</summary>
+            <value>The process and operation for which this requirement is defined.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.#ctor(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags,Microsoft.Kinect.Tools.KStudioEventStreamIdentifier,Microsoft.Kinect.Tools.KStudioEventStreamIdentifier)">
+            <summary>
+Constructs a KStudioEventStreamSelectorRequirement with the given flags and stream identifiers.
+</summary>
+            <param name="flags">The flags representing the process and operation.</param>
+            <param name="identifier0">The first operand for the requriement operation.</param>
+            <param name="identifier1">The second operand for the requriement operation.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement.#ctor(Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags,Microsoft.Kinect.Tools.KStudioEventStreamIdentifier)">
+            <summary>
+Constructs a KStudioEventStreamSelectorRequirement with the given flags and stream identifier.
+</summary>
+            <param name="flags">The flags representing the process and operation.</param>
+            <param name="identifier0">The only operand for the requriement operation.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirement">
+            <summary>
+Represents one requirement of an Event Stream when selected for recording, playing back, or monitoring.
+It describes one or two other streams (by data type id and optionally by semantic id) that must
+be also selected, may be also selected, or cannot be selected.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.op_Inequality(Microsoft.Kinect.Tools.KStudioEventStreamIdentifier,Microsoft.Kinect.Tools.KStudioEventStreamIdentifier)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamIdentifier are not equal.
+</summary>
+            <param name="item1">The first object to compare. </param>
+            <param name="item2">The second object to compare. </param>
+            <returns>true if item1 and item1 do not represent the same identifier; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.op_Equality(Microsoft.Kinect.Tools.KStudioEventStreamIdentifier,Microsoft.Kinect.Tools.KStudioEventStreamIdentifier)">
+            <summary>
+Determines whether two specified instances of KStudioEventStreamIdentifier are equal.
+</summary>
+            <param name="item1">The first object to compare. </param>
+            <param name="item2">The second object to compare. </param>
+            <returns>true if item1 and item1 represent the same identifier; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.GetHashCode">
+            <summary>
+Returns a hash code for the current object.
+</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.Equals(System.Object)">
+            <summary>
+Determines whether the specified object is equal to the current object.
+</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.SemanticId">
+            <summary>
+Gets the Semantic ID to identify a specific Event Stream requirement.
+</summary>
+            <value>The data type to identify an Event Stream requirement.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.DataTypeId">
+            <summary>
+Gets the data type to identify an Event Stream requirement.
+</summary>
+            <value>The Data Type ID to identify an Event Stream requirement.</value>
+            <remarks>If this value is Empty, the requirement is ignored.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.#ctor(System.Guid,System.Guid)">
+            <summary>
+Constructs a KStudioEventStreamIdentifier with the given DataTypeId and SemanticId.
+</summary>
+            <param name="dataTypeId">The Data Type ID of the stream to identify.</param>
+            <param name="semanticId">The Semantic ID of the stream to identify.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier.#ctor(System.Guid)">
+            <summary>
+Constructs a KStudioEventStreamIdentifier with the given DataTypeId and empty SemanticId.
+</summary>
+            <param name="dataTypeId">The Data Type ID of the stream to identify.</param>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamIdentifier">
+            <summary>
+Represents an identifier of an Event Stream for a requirement that another Event Stream has when 
+it is selected for recording, playing back, or monitoring.
+This can identify a stream (or streams) by just its DataTypeId (set the SemanticId to Empty) or a
+unique Event Stream by both its DataTypeId and SemanticId.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.IKStudioEventHeader.AccessUnderlyingTagDataBuffer(System.UInt32@,System.IntPtr@)">
+            <summary>
+Returns the internal buffer of the tag data of the Event.
+</summary>
+            <param name="bufferSize">When this method returns, the size of the tag data buffer.</param>
+            <param name="bufferPtr">When this method returns, the address of the tag data buffer.</param>
+            <remarks>When this object is disposed, the underlying tag data buffer is no longer valid.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.IKStudioEventHeader.CopyTagDataToBuffer(System.UInt32,System.IntPtr)">
+            <summary>
+Copies the tag data of the Event to a buffer at the given address.
+</summary>
+            <param name="bufferSize">The buffer size available into which the tag data can be copied. If the buffer is not large enough for the 
+entire tag data, as much as can fit will be copied over.</param>
+            <param name="bufferPtr">The address of the buffer into which the tag data is to be copied.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.IKStudioEventHeader.CopyTagDataToArray(System.Byte[],System.Int32)">
+            <summary>
+Copies the tag data of the Event to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the tag data. The Array must have zero-based indexing. 
+If the array is not large enough for the entire tag data, as much as can fit will be copied over.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.IKStudioEventHeader.TagDataSize">
+            <summary>
+Gets the size of the Event tag data blob.
+</summary>
+            <value>The size of the Event tag data blob.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.IKStudioEventHeader.EventDataSize">
+            <summary>
+Gets the size of the Event data blob.
+</summary>
+            <value>The size of the Event data blob.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.IKStudioEventHeader.RelativeTime">
+            <summary>
+Gets the timestamp of the Event.
+</summary>
+            <value>The timestamp of the Event.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.IKStudioEventHeader.EventIndex">
+            <summary>
+Gets the index of the Event in its Event Stream.
+</summary>
+            <value>The index of the Event in its Event Stream.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.IKStudioEventHeader">
+            <summary>
+Provides the ability to get event header data of an Event.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.CollectionType">
+            <summary>
+Gets the type of Metadata collection.
+</summary>
+            <value>The type of Metadata collection.</value>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioMetadata.CollectionChanged">
+            <summary>
+Occurs when a Metadata item is added, removed, changed, or the entire Metadata collection is refreshed.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.TryGetValue(System.String,System.Object@)">
+            <summary>
+Gets the Metadata value associated with the specified key.
+</summary>
+            <param name="key">The key of the Metadata item whose value to get.</param>
+            <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, null. This parameter is passed uninitialized.</param>
+            <returns>true if the Metadata collection contains a Metadata item with the specified key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Remove(System.String)">
+            <summary>
+Removes the Metadata item with the specified key from the Metadata collection.
+</summary>
+            <param name="key">The key of the Metadata item to remove.</param>
+            <returns>true if Metadata item was successfully removed from the Metadata collection; otherwise, false. This method also returns false if item is not found in the original collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Add(System.String,System.Object)">
+            <summary>
+Adds a Metadata item to the Metadata collection.
+</summary>
+            <param name="key">The key of the Metadata item to add to the Metadata collection.</param>
+            <param name="value">The value of the Metadata item to add to the Metadata collection.</param>
+            <remarks>See KStudioMetadata remarks for data value restrictions.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.ContainsKey(System.String)">
+            <summary>
+Determines whether the Metadata collection contains an item with the specified key.
+</summary>
+            <param name="key">The key to locate in the Metadata collection.</param>
+            <returns>true if the Metadata collection contains an item with the key; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.Values">
+            <summary>
+Gets a Collection containing the values of the Metadata collection.
+</summary>
+            <value>A Collection containing the values of the Metadata collection.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.Keys">
+            <summary>
+Gets a Collection containing the keys of the Metadata collection.
+</summary>
+            <value>A Collection containing the keys of the Metadata collection.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.default(System.String)">
+            <summary>
+Gets or sets the Metadata item with the specified key.
+</summary>
+            <value>The Metadata item with the specified key.</value>
+            <param name="key">The key of the Metadata item to get or set.</param>
+            <remarks>See KStudioMetadata remarks for data value restrictions.</remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Remove(System.Collections.Generic.KeyValuePair`2{System.String,System.Object})">
+            <summary>
+Removes a specific Metadata item from the Metadata collection.
+</summary>
+            <param name="item">The Metadata item to remove from the Metadata collection.</param>
+            <returns>true if Metadata item was successfully removed from the Metadata collection; otherwise, false. This method also returns false if item is not found in the original collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.CopyTo(System.Collections.Generic.KeyValuePair`2{System.String,System.Object}[],System.Int32)">
+            <summary>
+Copies the items of the Metadata collection to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the items copied from Metadata collection. The Array must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Contains(System.Collections.Generic.KeyValuePair`2{System.String,System.Object})">
+            <summary>
+Determines whether the Metadata collection contains a specific Metadata item.
+</summary>
+            <param name="item">The Metadata item to locate in the Metadata collection.</param>
+            <returns>true if item is found in the Metadata collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Clear">
+            <summary>
+Removes all Metadata items from the Metadata collection.
+</summary>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.Add(System.Collections.Generic.KeyValuePair`2{System.String,System.Object})">
+            <summary>
+Adds a Metadata item to the Metadata collection.
+</summary>
+            <param name="item">The Metadata item to add to the Metadata collection.</param>
+            <remarks>See KStudioMetadata remarks for data value restrictions.</remarks>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.IsReadOnly">
+            <summary>
+Gets a value indicating whether the Metadata collection is read-only.
+</summary>
+            <value>true if the Metadata collection is read-only; otherwise false.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadata.Count">
+            <summary>
+Gets the number of Metadata items.
+</summary>
+            <value>The number of Metadata items.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.GetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Metadata collection.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Metadata collection.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadata.BasicGetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the Metadata collection.
+</summary>
+            <returns>An enumerator that can be used to iterate through the Metadata collection.</returns>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMetadata">
+            <summary>
+Represents a Collection of Metadata items.
+</summary>
+            <remarks>Values can only be a certain set of object types. Values that are set as arrays (or using an enumerable collection)
+are retrieved as ReadOnlyCollections. Arrays cannot be of zero size.
+<list type="bullet"><item><term>byte</term><description>System.Byte</description></item><item><term>short</term><description>System.Int16</description></item><item><term>unsigned short</term><description>System.UInt16</description></item><item><term>int</term><description>System.Int32</description></item><item><term>unsigned int</term><description>System.UInt32</description></item><item><term>long</term><description>System.Int64</description></item><item><term>unsigned long</term><description>System.Unt64</description></item><item><term>float</term><description>System.Single</description></item><item><term>double</term><description>System.Double</description></item><item><term>char</term><description>System.Char</description></item><item><term>bool</term><description>System.Boolean</description></item><item><term>string</term><description>System.String</description></item><item><term>DateTime</term><description>System.DateTime</description></item><item><term>TimeSpan</term><description>System.TimeSpan</description></item><item><term>Guid</term><description>System.Guid</description></item><item><term>Point</term><description>System.Windows.Point</description></item><item><term>Size</term><description>System.Windows.Size</description></item><item><term>Rect</term><description>System.Windows.Rect</description></item><item><term>KStudioMetadataValueBuffer</term>Microsoft.Kinect.Tools.KStudioMetadataValueBuffer<description /></item><item><term>byte[]</term><description>System.Array&lt;System.Byte&gt;</description></item><item><term>short[]</term><description>System.Array&lt;System.Int16&gt;</description></item><item><term>unsigned short[]</term><description>System.Array&lt;System.UInt16&gt;</description></item><item><term>long[]</term><description>System.Array&lt;System.Int32&gt;</description></item><item><term>unsigned long[]</term><description>System.Array&lt;System.UInt32&gt;</description></item><item><term>long long[]</term><description>System.Array&lt;System.Int64&gt;</description></item><item><term>unsigned long lon[]g</term><description>System.Array&lt;System.UInt64&gt;</description></item><item><term>float[]</term><description>System.Array&lt;System.Single&gt;</description></item><item><term>double[]</term><description>System.Array&lt;System.Double&gt;</description></item><item><term>char[]</term><description>System.Array&lt;System.Char&gt;</description></item><item><term>bool[]</term><description>System.Array&lt;System.Bool&gt;</description></item><item><term>string[]</term><description>System.Array&lt;System.String&gt; (null items will be treated as empty strings)</description></item><item><term>DateTime[]</term><description>System.Array&lt;System.DateTime&gt;</description></item><item><term>TimeSpan[]</term><description>System.Array&lt;System.TimeSpan&gt;</description></item><item><term>Guid[]</term><description>System.Array&lt;System.Guid&gt;</description></item><item><term>Point[]</term><description>System.Array&lt;System.Windows.Point&gt;</description></item><item><term>Size[]</term><description>System.Array&lt;System.Windows.Size&gt;</description></item><item><term>Rect[]</term><description>System.Array&lt;System.Windows.Rect&gt;</description></item></list></remarks>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.#ctor(System.UInt32,System.IntPtr)">
+            <summary>
+Creates a metadata value buffer initialized to a copy of the given data.
+</summary>
+            <param name="bufferSize">The size of the buffer to allocate/copy.</param>
+            <param name="pBuffer">The data which to copy into the buffer.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.#ctor(System.UInt32)">
+            <summary>
+Creates a metadata value buffer of the given size.
+</summary>
+            <param name="allocSize">The size of the buffer to allocate.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.#ctor(System.Byte[])">
+            <summary>
+Creates a metadata value buffer initialized to a copy of the given data.
+</summary>
+            <param name="data">The data which to copy into the buffer.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.AccessUnderlyingDataBuffer(System.UInt32@,System.Runtime.InteropServices.GCHandle@)">
+            <summary>
+Returns a pinned pointer to the data of the metadata. Directly modifying the buffer will not persist the metadata value changes.
+</summary>
+            <remarks>The caller must Free the handle when done.</remarks>
+            <param name="bufferSize">When this method returns, the size of the data buffer.</param>
+            <param name="bufferHandle">When this method returns, the handle to the data buffer.</param>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.CopyDataToBuffer(System.UInt32,System.IntPtr)">
+            <summary>
+Copies the data of the value to a buffer at the given address.
+</summary>
+            <param name="bufferSize">The buffer size available into which the data can be copied. If the buffer is not large enough for the 
+entire data, as much as can fit will be copied over.</param>
+            <param name="bufferPtr">The address of the buffer into which the data is to be copied.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.CopyDataToArray(System.Byte[],System.Int32)">
+            <summary>
+Copies the data of the value to an Array, starting at a particular Array index.
+</summary>
+            <param name="array">The one-dimensional Array that is the destination of the data. The Array must have zero-based indexing. 
+If the array is not large enough for the entire data, as much as can fit will be copied over.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <returns>The number of bytes actually copied.</returns>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.DataSize">
+            <summary>
+Gets the size of the data blob.
+</summary>
+            <value>The size of the data blob.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.GetHashCode">
+            <summary>
+Returns a hash code for the current object.
+</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer.Equals(System.Object)">
+            <summary>
+Determines whether the specified object is equal to the current object.
+</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMetadataValueBuffer">
+            <summary>
+Represents a metadata value that is a binary blob.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue.PropertyType">
+            <summary>
+Gets the property type as stored in the metadata value.
+</summary>
+            <value>The property type as stored in the metadata value.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue.Data">
+            <summary>
+Gets the binary data from the metadata value (if available).
+</summary>
+            <value>The binary data from the metadata value (if available).</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue.ExpectedType">
+            <summary>
+Gets the type of data expected to be in the metadata value (if determinable).
+</summary>
+            <value>The type of data expected to be in the metadata value (if determinable).</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue.GetHashCode">
+            <summary>
+Returns a hash code for the current object.
+</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue.Equals(System.Object)">
+            <summary>
+Determines whether the specified object is equal to the current object.
+</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioInvalidMetadataValue">
+            <summary>
+Represents a metadata value that cannot be properly parsed. A metadata value may have been set/saved incorrectly and cannot 
+now be parsed. An instance of this class allows a look into that invalid data to help track down where the invalid value may
+have originated.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioObject.PointerLockObject">
+            <summary>
+Internal KStudio property.
+</summary>
+            <value>Internal KStudio property.</value>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioObject.LockObject">
+            <summary>
+Internal KStudio property.
+</summary>
+            <value>Internal KStudio property.</value>
+        </member>
+        <member name="M:Microsoft.Kinect.Tools.KStudioObject.RaisePropertyChanged(System.String)">
+            <summary>
+Raises the PropertyChanged with PropertyChangedEventArgs created using the given property name.
+</summary>
+            <param name="propertyName">The name of the property for which to raise the PropertyChanged event.</param>
+        </member>
+        <member name="E:Microsoft.Kinect.Tools.KStudioObject.PropertyChanged">
+            <summary>
+Occurs when a property of the object changes.
+</summary>
+        </member>
+        <member name="P:Microsoft.Kinect.Tools.KStudioObject.UserState">
+            <summary>
+Gets or sets an arbitrary object value that can be used to store custom information about this object (e.g., UI state).
+</summary>
+            <value>The intended value. This property defaults to null.</value>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioObject">
+            <summary>
+KStudioObject is a base class for KStudio core level implementations. 
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioFileListFlags">
+            <summary>
+Specifies options when enumerating Files.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioFileListFlags.Directories">
+            <summary>
+Returns directories instead of files in the list.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioFileListFlags.Recursive">
+            <summary>
+Return files recursively (prepends the relative directory to the returned file names).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioFileListFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioPlaybackEndBehavior">
+            <summary>
+Indicates the behavior when the end of a Playback has been reached.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackEndBehavior.Stop">
+            <summary>
+Stops at the end of the Playback.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackEndBehavior.Pause">
+            <summary>
+Pauses at the end of the Playback.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioPlaybackMode">
+            <summary>
+Indicates the mode of the Playback.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackMode.TimingDisabled">
+            <summary>
+Timing disabled (events delivered as fast as possible).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackMode.TimingEnabled">
+            <summary>
+Timing enabled (events delivered according to timestamps).
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioPlaybackState">
+            <summary>
+Indicates the state of a Playback.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Stopped">
+            <summary>
+Stopped.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Paused">
+            <summary>
+Paused.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Playing">
+            <summary>
+Playing back.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Busy">
+            <summary>
+Busy.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Error">
+            <summary>
+Error.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackState.Idle">
+            <summary>
+Idle (not playing back).
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioPlaybackFlags">
+            <summary>
+Specifies options when creating a Playback.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackFlags.IgnoreOptionalStreams">
+            <summary>
+Do not automatically playback optional streams.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackFlags.OpenFileForEdit">
+            <summary>
+When specifying a file path for an Event Reader (instead of supplying a file object), open the file for read/write.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackFlags.ToClient">
+            <summary>
+File is played back to the Client object (via EventAvailable events) rather than to the Kinect Service.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioPlaybackFlags.None">
+            <summary>
+No options. 
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMonitorState">
+            <summary>
+Indicates the state of a Monitor.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMonitorState.Monitoring">
+            <summary>
+Monitoring.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMonitorState.Error">
+            <summary>
+Error.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMonitorState.Idle">
+            <summary>
+Idle (not monitoring).
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMonitorFlags">
+            <summary>
+Specifies options when creating a Monitor.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMonitorFlags.IgnoreOptionalStreams">
+            <summary>
+Do not automatically monitor optional streams.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMonitorFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioRecordingState">
+            <summary>
+Indicates the state of a Recording.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingState.Done">
+            <summary>
+Finished recording.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingState.Recording">
+            <summary>
+Recording.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingState.Error">
+            <summary>
+Error.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingState.Idle">
+            <summary>
+Idle (not recording).
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioRecordingFlags">
+            <summary>
+Specifies options when creating a Recording.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingFlags.IgnoreOptionalStreams">
+            <summary>
+Do not automatically record optional streams.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingFlags.XrfFileName">
+            <summary>
+Use .xrf instead of .xef for generated file name (should be used together with GenerateFileName).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingFlags.GenerateFileName">
+            <summary>
+Auto generate a unique file name (.xef by default).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioRecordingFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventReaderFlags">
+            <summary>
+Specifies options when creating an Event Reader.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventReaderFlags.OpenFileForEdit">
+            <summary>
+When specifying a file path for an Event Reader (instead of supplying a file object), open the file for read/write.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventReaderFlags.None">
+            <summary>
+No options. 
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioClientFlags">
+            <summary>
+Specifies options when creating a Client.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioClientFlags.ProcessNotifications">
+            <summary>
+Process notifications (KStudio.ProcessNotifications will be called).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioClientFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamState">
+            <summary>
+Indicates the state of an Event Stream.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamState.Consuming">
+            <summary>
+Consuming (providing data for playback).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamState.Producing">
+            <summary>
+Producing (providing data for recording or monitoring).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamState.Idle">
+            <summary>
+Idle.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamFlags">
+            <summary>
+Specifies options when creating an Event Stream.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamFlags.Compressed">
+            <summary>
+Stream is / should be compressed with Zlib level 1
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamFlags.CanConsume">
+            <summary>
+Stream can consume events (i.e., it can be played back to).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamFlags.CanProduce">
+            <summary>
+Stream can produce events (i.e., it can be recorded).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamFlags.InitData">
+            <summary>
+Stream contains initialization data so should always play back latest frame even if skipping past that point.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamFlags.None">
+            <summary>
+No options.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioMetadataType">
+            <summary>
+Indicates the type of Metadata collection.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMetadataType.PersonallyIdentifiableInformation">
+            <summary>
+Metadata is considered personally identifiable information (such as name, address, age, etc.).
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioMetadataType.Public">
+            <summary>
+Metadata is considered to be publicly viewable.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags">
+            <summary>
+Specifies options when creating Requirements for Recording/Playing/Monitoring a new Stream.
+A single Process (Recording/Playing/Monitoring) must be ored with a single Operator (none, or, xor, all, all if available) 
+when specifying one set of requirements.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.ProcessMonitor">
+            <summary>
+Requirements specified are for when the stream is being monitored.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.ProcessPlayback">
+            <summary>
+Requirements specified are for when the stream is being played back.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.ProcessRecord">
+            <summary>
+Requirements specified are for when the stream is being recorded.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.ProcessMask">
+            <summary>
+Mask to isolate the Process part of the flag.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationAllIfAvail">
+            <summary>
+For the specified Process, all of the streams listed in the Stream Selector Requirement must be selected when this stream is selected if they are present.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationAll">
+            <summary>
+For the specified Process, all of the streams listed in the Stream Selector Requirement must be selected when this stream is selected.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationXor">
+            <summary>
+For the specified Process, one and only one of the streams listed in the Stream Selector Requirement must be selected when this stream is selected.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationOr">
+            <summary>
+For the specified Process, at least one of the streams listed in the Stream Selector Requirement must be selected when this stream is selected.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationNone">
+            <summary>
+For the specified Process, none of the streams listed in the Stream Selector Requirement can be selected when this stream is selected.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.OperationMask">
+            <summary>
+Mask to isolate the operation part of the flags.
+</summary>
+        </member>
+        <member name="F:Microsoft.Kinect.Tools.KStudioEventStreamSelectorRequirementFlags.None">
+            <summary>
+No requirement.
+</summary>
+        </member>
+        <member name="F:ATL.CRegKey.m_pTM">
+            <summary>
+Pointer to CAtlTransactionManager object</summary>
+        </member>
+        <member name="M:ATL.CRegKey.#ctor(ATL.CAtlTransactionManager*)">
+            <summary>
+CRegKey constructor</summary>
+            <param name="pTM">Pointer to CAtlTransactionManager object</param>
+        </member>
+    </members>
+</doc>
