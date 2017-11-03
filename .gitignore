@@ -67,6 +67,7 @@ Makefile.inc.cmake
 3rdParty/cef_binary_3.3071.1643.ga83b8e9_windows64/
 3rdParty/cef_binary_3.3113.1650.g6da2bbf_windows64/
 3rdParty/cef_ffmpeg/
+3rdParty/cef_binary_**
 
 # NodeJs
 3rdParty/nodejs/**/source/config.mk
