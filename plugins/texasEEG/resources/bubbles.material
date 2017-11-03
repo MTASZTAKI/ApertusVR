@@ -1,0 +1,15 @@
+material Material2
+{
+   technique
+   {
+      pass
+      {
+         scene_blend alpha_blend
+         depth_check on
+         depth_write off
+         diffuse 0.396078431372549 1.0 1.0 0.24
+         ambient 0.396078431372549 1.0 1.0 0.24
+      }
+   }
+}
+

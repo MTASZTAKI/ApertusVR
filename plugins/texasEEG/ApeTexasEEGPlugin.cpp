@@ -70,6 +70,16 @@ void ApeTexasEEGPlugin::Init()
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
 	}
+	if (auto bubblesNode = mpScene->createNode("bubblesNode").lock())
+	{
+		bubblesNode->setPosition(Ape::Vector3(0, 0, 0));
+		bubblesNode->setScale(Ape::Vector3(0.1, 0.1, 0.1));
+		if (auto bubblesMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("bubbles.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			bubblesMeshFile->setFileName("bubbles.mesh");
+			bubblesMeshFile->setParentNode(bubblesNode);
+		}
+	}
 }
 
 void ApeTexasEEGPlugin::moveUserNodeByKeyBoard()

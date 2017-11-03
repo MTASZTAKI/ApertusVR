@@ -11,8 +11,8 @@
       "name": "Normal",
       "monitorIndex": 0,
       "resolution": {
-        "width": 1280,
-        "height": 720,
+        "width": 1920,
+        "height": 1200,
         "fullScreen": false
       },
       "miscParams": {
@@ -27,8 +27,8 @@
           "zOrder": 0,
           "left": 0,
           "top": 0,
-          "width": 1280,
-          "height": 720,
+          "width": 1920,
+          "height": 1200,
           "camera": {
             "nearClip": 1.0,
             "farClip": 10000.0,
