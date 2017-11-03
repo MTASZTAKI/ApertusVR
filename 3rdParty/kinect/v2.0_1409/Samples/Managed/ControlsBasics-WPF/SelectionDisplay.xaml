@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Microsoft.Samples.Kinect.ControlsBasics.SelectionDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Background="Transparent"
+             FontFamily="Segoe UI"
+             FontSize="30"
+             Focusable="True">
+    <UserControl.Resources>
+        <Storyboard x:Key="OnLoadedStoryboard" Completed="OnLoadedStoryboardCompleted">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.4" Value="0.1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.4" Value="0.1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="grid">
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.4" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard x:Name="OnLoadedStoryboard_BeginStoryboard" Storyboard="{StaticResource OnLoadedStoryboard}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid x:Name="layoutRoot">
+        <Grid x:Name="grid" Background="{StaticResource BlueBrush}" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <TextBlock x:Name="messageTextBlock" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">You selected item #14</TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

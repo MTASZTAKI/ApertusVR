@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{DEB27987-B434-4541-A170-61D21D7A9379}") = "InfraredBasics-WPF", "InfraredBasics-WPF.csproj", "{269A7B21-FBFE-4E7A-8BBE-C8DE2EC0D833}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{269A7B21-FBFE-4E7A-8BBE-C8DE2EC0D833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{269A7B21-FBFE-4E7A-8BBE-C8DE2EC0D833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{269A7B21-FBFE-4E7A-8BBE-C8DE2EC0D833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{269A7B21-FBFE-4E7A-8BBE-C8DE2EC0D833}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
