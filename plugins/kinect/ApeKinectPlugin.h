@@ -26,8 +26,6 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread> 
-//#include "Leap.h"
-//#include "LeapMath.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
@@ -46,7 +44,7 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class KinectPlugin : public Ape::IPlugin/*, public Leap::Listener*/
+	class KinectPlugin : public Ape::IPlugin
 	{
 		static const int        cDepthWidth = 512;
 		static const int        cDepthHeight = 424;
@@ -84,26 +82,6 @@ namespace Ape
 		/// </summary>
 		void ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 
-		//void onInit(const Leap::Controller& controller) override;
-
-		//void onConnect(const Leap::Controller& controller) override;
-
-		//void onDisconnect(const Leap::Controller& controller) override;
-
-		//void onExit(const Leap::Controller& controller) override;
-
-		//void onFrame(const Leap::Controller& controller) override;
-
-		//void onFocusGained(const Leap::Controller& controller) override;
-
-		//void onFocusLost(const Leap::Controller& controller) override;
-
-		//void onDeviceChange(const Leap::Controller& controller) override;
-
-		//void onServiceConnect(const Leap::Controller& controller) override;
-
-		//void onServiceDisconnect(const Leap::Controller& controller) override;
-
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
 		//Ape::NodeWeakPtr HeadNode;
@@ -136,22 +114,6 @@ namespace Ape
 		Ape::NodeWeakPtr mUserNode;
 
 		void eventCallBack(const Ape::Event& event);
-
-		//Leap::Controller mLeapController;
-
-		/*std::vector<std::string> mFingerNames;
-		
-		std::vector<std::string> mBoneNames;
-		
-		std::vector<std::string> mStateNames;*/
-
-		//float mPreviousFramePitch;
-
-		//float mPreviousFrameYaw;
-
-		//float mPreviousFrameRoll;
-
-		//bool mHandOrientationFlag;
 
 		Ape::NodeWeakPtr mLeftHandNode;
 
