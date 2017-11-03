@@ -57,7 +57,7 @@ void ApeTesterPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
 		planeNode->setPosition(Ape::Vector3(0, -10, 0));
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
@@ -76,7 +76,7 @@ void ApeTesterPlugin::Init()
 				}
 			}
 		}
-	}
+	}*/
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
