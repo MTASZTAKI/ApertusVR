@@ -56,7 +56,19 @@ namespace Ape
 
 		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
 
-		void showOnOverlay(bool enable) override;
+		void setDepthWriteEnabled(bool enable) override;
+
+		void setDepthCheckEnabled(bool enable) override;
+
+		void setLightingEnabled(bool enable) override;
+
+		void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) override;
+
+		void setDepthBias(float constantBias, float slopeScaleBias) override;
+
+		void showOnOverlay(bool enable, int zOrder) override;
+
+		int getZOrder() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -72,6 +84,8 @@ namespace Ape
 		Ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
+
+		int mZOrder;
 	};
 }
 

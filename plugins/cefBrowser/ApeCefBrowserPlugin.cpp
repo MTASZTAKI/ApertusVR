@@ -34,7 +34,10 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mCefIsInintialzed = false;
 	mBrowserSettings = CefBrowserSettings();
 	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
+	mBrowserIDNames = std::map<std::string, int>();
+	mRayOverlayNode = Ape::NodeWeakPtr();
 }
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
@@ -55,19 +58,42 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 			case Ape::Event::Type::BROWSER_CREATE:
 				break;
 			case Ape::Event::Type::BROWSER_GEOMETRY:
-			{
-				createBrowser(browser);
-			}
+				{
+					createBrowser(browser);
+				}
+				break;
 			case Ape::Event::Type::BROWSER_OVERLAY:
-			{
-				createBrowser(browser);
-			}
-			break;
+				{
+					createBrowser(browser);
+				}
+				break;
+			case Ape::Event::Type::BROWSER_ZOOM:
+				{
+					if (mBrowserIDNames[browser->getName()])
+						mpApeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
+				}
+				break;
+			case Ape::Event::Type::BROWSER_URL:
+				{
+					if (mBrowserIDNames[browser->getName()])
+						mpApeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
+				}
+				break;
 			case Ape::Event::Type::BROWSER_DELETE:
 				;
 				break;
 			}
 		}
+	}
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_PARENTNODE)
+	{
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
+			mRayOverlayNode = rayGeometry->getParentNode();
+	}
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
+	{
+		if (auto rayOverlayNode = mRayOverlayNode.lock())
+			rayOverlayNode->getPosition();//send it to cef
 	}
 }
 
@@ -99,10 +125,11 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 			browserMaterial->setPassTexture(browserTexture);
-			browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE);
+			browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
 			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+			mBrowserIDNames[browserName] = mBrowserCounter;
 			CefWindowInfo cefWindowInfo;
 			cefWindowInfo.SetAsWindowless(0);
 			CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
@@ -110,7 +137,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 		if (auto browserGeometry = browser->getGeometry().lock())
 			std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
 		else
-			browserMaterial->showOnOverlay(true);
+			browserMaterial->showOnOverlay(true, browser->getZOrder());
 	}
 }
 
@@ -118,6 +145,7 @@ void Ape::CefBrowserPlugin::Init()
 {
 	std::cout << "ApeCefBrowserPlugin::Init" << std::endl;
 	CefSettings settings;
+	settings.ignore_certificate_errors = true;
 	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
 #if defined(OS_WIN)
 	CefMainArgs main_args(::GetModuleHandle(0));

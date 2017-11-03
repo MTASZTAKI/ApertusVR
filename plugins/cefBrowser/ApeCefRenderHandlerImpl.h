@@ -38,6 +38,8 @@ namespace Ape
 	private:
 		std::map<int, Ape::ManualTextureWeakPtr> mBrowserIDTextures;
 
+		std::map<int, CefRefPtr<CefBrowser>> mBrowsers;
+
 	public:
 		CefRenderHandlerImpl();
 
@@ -48,6 +50,10 @@ namespace Ape
 		void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height) override;
 
 		void addTexture(int browserID, Ape::ManualTextureWeakPtr texture);
+
+		void setZoomLevel(int browserID, int zoomLevel);
+
+		void setURL(int browserID, std::string url);
 
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
 	};

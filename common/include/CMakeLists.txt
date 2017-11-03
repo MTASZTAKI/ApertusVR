@@ -72,6 +72,11 @@ set (HEADERS
 	ApeIMainWindow.h
 	ApeInterpolator.h
 	ApeIBrowser.h
+	ApeIUnitTexture.h
+	ApeIRayGeometry.h
+	ApeISky.h
+	ApeIWater.h
+	ApeIPointCloud.h
 	)
 
 add_custom_target(

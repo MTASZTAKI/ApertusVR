@@ -43,6 +43,11 @@ set (HEADERS
 	ApeManualPassImpl.h
 	ApeManualMaterialImpl.h
 	ApeManualTextureImpl.h
+	ApeUnitTextureImpl.h
+	ApeRayGeometryImpl.h
+	ApeWaterImpl.h
+	ApeSkyImpl.h
+	ApePointCloudImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -73,6 +78,11 @@ set (SOURCES
 	ApeManualPassImpl.cpp
 	ApeManualMaterialImpl.cpp
 	ApeManualTextureImpl.cpp
+	ApeUnitTextureImpl.cpp
+	ApeRayGeometryImpl.cpp
+	ApeWaterImpl.cpp
+	ApeSkyImpl.cpp
+	ApePointCloudImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp

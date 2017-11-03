@@ -49,7 +49,13 @@ namespace Ape
 
 		virtual Ape::GeometryWeakPtr getGeometry() = 0;
 
-		virtual void showOnOverlay(bool enable) = 0;
+		virtual void showOnOverlay(bool enable, int zOrder) = 0;
+
+		virtual void setZoomLevel(int level) = 0;
+
+		virtual int getZoomLevel() = 0;
+
+		virtual int getZOrder() = 0;
 	};
 }
 

@@ -3,12 +3,15 @@
 
 ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
+	mpKeyboard = NULL;
+	mpMouse = NULL;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mOldXMLFormatTranslateVector = Ape::Vector3(26.809, 637.943, -22.163);
 	mOldXMLFormatTranslateVectorCamera = Ape::Vector3(0, 637.943, 0);
 	mOldXMLFormatRotationQuaternion = Ape::Quaternion();
@@ -22,10 +25,25 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	orientation2.FromAngleAxis(angle, axis);
 	mOldXMLFormatRotationQuaternion = orientation * orientation2;
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mTranslateSpeedFactor = 3;
-	mRotateSpeedFactor = 1;
+	mTranslateSpeedFactor = 0.5;
+	mRotateSpeedFactor = 0.5;
 	mCurrentStoryElementIndex = 0;
 	mStoryElements = std::vector<StoryElement>();
+	mBrowsers = std::map<std::string, Ape::BrowserWeakPtr>();
+	mIsFirstSpacePressed = false;
+	mActiveMouseTexture = Ape::UnitTextureWeakPtr();
+	mRayGeometry = Ape::RayGeometryWeakPtr();
+	mRayOverlayNode = Ape::NodeWeakPtr();
+	mGeometriesMouseTextures = std::map<std::string, Ape::UnitTextureWeakPtr>();
+	mBrowserMouseTextures = std::map<std::string, Ape::BrowserWeakPtr>();
+	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
+	mOverlayMouseMaterial = Ape::ManualMaterialWeakPtr();
+	mLastLeftClickTime = 0;
+	mActiveBrowser = Ape::BrowserWeakPtr();
+	mOverlayBrowser = Ape::BrowserWeakPtr();
+	mCamera = Ape::CameraWeakPtr();
+	mUserNodePositionBeforeFullScreen = Ape::Vector3();
+	mUserNodeOrientationBeforeFullScreen = Ape::Quaternion();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -37,6 +55,29 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
 		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock());
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
+	{
+		if (auto rayGeometry = mRayGeometry.lock())
+		{
+			auto intersections = rayGeometry->getIntersections();
+			for (auto intersection : intersections)
+			{
+				if (auto geometry = intersection.lock())
+				{
+					if (auto mouseTexture = mGeometriesMouseTextures[geometry->getName()].lock())
+					{
+						mActiveMouseTexture = mouseTexture;
+						if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
+							overlayMouseMaterial->showOnOverlay(false, 1);
+						if (auto browser = mBrowserMouseTextures[mouseTexture->getName()].lock())
+							mActiveBrowser = browser;
+					}
+				}
+			}
+		}
+	}
 }
 
 void ApePresentationScenePlugin::Init()
@@ -68,6 +109,53 @@ void ApePresentationScenePlugin::Init()
 		mpKeyboard = keyboard;
 		mpKeyboard->setEventCallback(this);
 	}
+	if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
+	{
+		OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+		mpMouse = mouse;
+		mpMouse->setEventCallback(this);
+		const OIS::MouseState &ms = mouse->getMouseState();
+		ms.width = mpMainWindow->getWidth();
+		ms.height = mpMainWindow->getHeight();
+	}
+	/*rayGeomtery for rayquery*/
+	if (auto rayNode = mpScene->createNode("rayNode").lock())
+	{
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery", Ape::Entity::GEOMETRY_RAY).lock()))
+		{
+			rayGeometry->setIntersectingEnabled(true);
+			rayGeometry->setParentNode(rayNode);
+			mRayGeometry = rayGeometry;
+		}
+		rayNode->setParentNode(mUserNode);
+		mRayOverlayNode = rayNode;
+	}
+	/*overlay begin*/
+	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	{
+		browser->setResoultion(2048, 1024);
+		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
+		browser->showOnOverlay(true, 0);
+		mOverlayBrowser = browser;
+		mActiveBrowser = browser;
+		/*mouse begin*/
+		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			mouseMaterial->setLightingEnabled(false);
+			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+			{
+				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+				mActiveMouseTexture = mouseTexture;
+				mOverlayMouseTexture = mouseTexture;
+				mOverlayMouseMaterial = mouseMaterial;
+			}
+			mouseMaterial->showOnOverlay(true, 1);
+		}
+	}
 	/*static elements begin*/
 	std::string name = "metalroom";
 	Ape::Vector3 position = Ape::Vector3();
@@ -81,183 +169,202 @@ void ApePresentationScenePlugin::Init()
 	position = Ape::Vector3(-186, 633, 56) - mOldXMLFormatTranslateVector;
 	orientation = Ape::Quaternion(-0.995, -0, -0.098, -0);
 	createMesh(name, position, orientation);
-	name = "periodicTable";
-	std::string url = "http://sciencenotes.org/wp-content/uploads/2015/01/PeriodicTableMuted.png";
-	position = Ape::Vector3(442.29, 364.444, -543.149) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.924, -0, 0.383, -0) *  mOldXMLFormatRotationQuaternion;
-	int width = 278;
-	int height = 157;
-	int resolutionVertical = 1024;
-	int resolutionHorizontal = 768;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "feyman";
-	url = "https://upload.wikimedia.org/wikipedia/en/4/42/Richard_Feynman_Nobel.jpg";
-	position = Ape::Vector3(-551.88, 364.444, 432.824) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.383, -0, -0.924, -0) *  mOldXMLFormatRotationQuaternion;
-	width = 278;
-	height = 157;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "universe";
-	url = "http://scienceblogs.com/startswithabang/files/2012/08/seqb_0631.jpeg";
-	position = Ape::Vector3(-697.103, 364.444, 71.468) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.707, -0, -0.707, -0) *  mOldXMLFormatRotationQuaternion;
-	width = 278;
-	height = 157;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "moseley";
-	url = "http://www.mhs.ox.ac.uk/moseley/wp-content/uploads/sites/5/2015/05/Moseley_in_his_prime_c1914.jpg";
-	position = Ape::Vector3(695.979, 364.444, 71.505) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.707, -0, 0.707, -0) *  mOldXMLFormatRotationQuaternion;
-	width = 278;
-	height = 157;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "indigo_first";
-	url = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
-	position = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 267;
-	height = 150;
-	resolutionVertical = 2048;
-	resolutionHorizontal = 1024;
-	createBrowser(name, url, position, orientation, width, height, resolutionVertical, resolutionHorizontal);
-	name = "linkageDesigner";
-	url = "http://www.linkagedesigner.com/";
-	position = Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion;
-	width = 143;
-	height = 85;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "t-system";
-	url = "https://www.t-systems.com/";
-	position = Ape::Vector3(199.758, 677.017, -702.303) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.957, -0, 0.29, -0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo2";
-	url = "http://srv.mvv.sztaki.hu/temp/endo2";
-	position = Ape::Vector3(-74, 727, 736) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "karsai";
-	url = "http://www.karsai.hu";
-	position = Ape::Vector3(-706, 727, 51) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "motohotwear";
-	url = "http://www.motohotwear.com/";
-	position = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo5";
-	url = "http://srv.mvv.sztaki.hu/temp/endo5";
-	position = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo";
-	url = "https://www.endo-kapszula.hu/";
-	position = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 143;
-	height = 85;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo1";
-	url = "http://srv.mvv.sztaki.hu/temp/endo1";
-	position = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 143;
-	height = 85;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo3";
-	url = "http://srv.mvv.sztaki.hu/temp/endo3";
-	position = Ape::Vector3(-74, 677, 736) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "arUserManual";
-	url = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd1080&autoplay=1&loop=1&playlist=eVV5tUmky6c";
-	position = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 143;
-	height = 85;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "endo4";
-	url = "http://srv.mvv.sztaki.hu/temp/endo4";
-	position = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "ios-android";
-	url = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
-	position = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 77;
-	height = 46;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "bimGeometry";
-	url = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
-	position = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 143;
-	height = 85;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "smartProfile";
-	url = "https://www.ogpnet.com/north-america/software/smartprofile/index";
-	position = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 278;
-	height = 157;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "qvii";
-	url = "https://www.qvii.com/";
-	position = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 139;
-	height = 78;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "kotem";
-	url = "http://kotem.com/";
-	position = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 139;
-	height = 78;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "pridgeonandclay";
-	url = "http://www.pridgeonandclay.com/";
-	position = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 278;
-	height = 157;
-	createBrowser(name, url, position, orientation, width, height);
-	name = "arShopFloor";
-	url = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
-	position = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
-	orientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	width = 139;
-	height = 78;
-	createBrowser(name, url, position, orientation, width, height);
+	StoryElement storyElement;
+	storyElement.browserName = "periodicTable";
+	storyElement.browserURL = "http://sciencenotes.org/wp-content/uploads/2015/01/PeriodicTableMuted.png";
+	storyElement.browserPosition = Ape::Vector3(442.29, 364.444, -543.149) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.924, -0, 0.383, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	storyElement.browserZoom = 0;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 768;
+	manageBrowser(storyElement);
+	storyElement.browserName = "feyman";
+	storyElement.browserURL = "https://upload.wikimedia.org/wikipedia/en/4/42/Richard_Feynman_Nobel.jpg";
+	storyElement.browserPosition = Ape::Vector3(-551.88, 364.444, 432.824) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, -0, -0.924, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "universe";
+	storyElement.browserURL = "http://scienceblogs.com/startswithabang/files/2012/08/seqb_0631.jpeg";
+	storyElement.browserPosition = Ape::Vector3(-697.103, 364.444, 71.468) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, -0.707, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "moseley";
+	storyElement.browserURL = "http://www.mhs.ox.ac.uk/moseley/wp-content/uploads/sites/5/2015/05/Moseley_in_his_prime_c1914.jpg";
+	storyElement.browserPosition = Ape::Vector3(695.979, 364.444, 71.505) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, 0.707, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "indigo_first";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
+	storyElement.browserPosition = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 267;
+	storyElement.browserHeight = 150;
+	storyElement.browserResolutionVertical = 2048;
+	storyElement.browserResolutionHorizontal = 1024;
+	manageBrowser(storyElement);
+	storyElement.browserName = "linkageDesigner";
+	storyElement.browserURL = "http://www.linkagedesigner.com/";
+	storyElement.browserPosition = Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 768;
+	manageBrowser(storyElement);
+	storyElement.browserName = "t-system";
+	storyElement.browserURL = "https://www.t-systems.com/";
+	storyElement.browserPosition = Ape::Vector3(199.758, 677.017, -702.303) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.957, -0, 0.29, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo2";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo2";
+	storyElement.browserPosition = Ape::Vector3(-74, 727, 726) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "karsai";
+	storyElement.browserURL = "http://www.karsai.hu";
+	storyElement.browserPosition = Ape::Vector3(-706, 727, 51) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "motohotwear";
+	storyElement.browserURL = "http://www.motohotwear.com/";
+	storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo5";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
+	storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo";
+	storyElement.browserURL = "https://www.endo-kapszula.hu/";
+	storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo1";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
+	storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo3";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
+	storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arUserManual";
+	storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
+	storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo4";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
+	storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "ios-android";
+	storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
+	storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "bimGeometry";
+	storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
+	storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "smartProfile";
+	storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
+	storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "qvii";
+	storyElement.browserURL = "https://www.qvii.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "kotem";
+	storyElement.browserURL = "http://kotem.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "pridgeonandclay";
+	storyElement.browserURL = "http://www.pridgeonandclay.com/";
+	storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arShopFloor";
+	storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
+	storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
 	/*story begin*/
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0))); //indigo
-	mStoryElements.push_back(StoryElement(Ape::Vector3(13, 359, -52) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 409.5), Ape::Quaternion(1, 0, 0, 0))); //indigo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5, -273.943, -114), Ape::Quaternion(1, 0, 0, 0),
 		"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-234, 770, 258) - mOldXMLFormatTranslateVectorCamera, Ape::Euler(Ape::Degree(131).toRadian(), 0, 0).toQuaternion())); //smartProfile
-	mStoryElements.push_back(StoryElement(Ape::Vector3(67, 705, 295) - mOldXMLFormatTranslateVectorCamera, Ape::Euler(Ape::Degree(169).toRadian(), 0, 0).toQuaternion())); //endo
-	mStoryElements.push_back(StoryElement(Ape::Vector3(36, 717, -451) - mOldXMLFormatTranslateVectorCamera, Ape::Euler(Ape::Degree(-22).toRadian(), 0, 0).toQuaternion())); //t-system
-	mStoryElements.push_back(StoryElement(Ape::Vector3(190, 761, 180) - mOldXMLFormatTranslateVectorCamera, Ape::Euler(Ape::Degree(-138).toRadian(), 0, 0).toQuaternion())); //pridgeonandclay
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12, 387, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5, -247.443, -161), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5, -278.943, -121), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127, 79.2832, 317.68), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724, 78.6628, 287.429), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123, 67.057, 422.253), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(253.464, 88.8106, 280.662), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(268.471, 112.444, 489.413), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024, 82.1165, 121.716), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853, 78.5688, 116.881), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718, 94.0923, 162.253), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
+	mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394, 84.057, -492.757), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12, 387, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
+		"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
 	mStoryElements.push_back(StoryElement(Ape::Vector3(13, 359, -52) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
-		"symbio-tic", "http://www.symbio-tic.eu", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
+		"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053, -304.943, -172.531), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"indigo_first", "http://srv.mvv.sztaki.hu/temp/indigo/indigo_last.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
 }
 
 void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
@@ -269,14 +376,14 @@ void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userN
 		moveInterpolator->addSection(
 			userNode->getPosition(),
 			storyElement.cameraPosition,
-			6.0,
+			4.0,
 			[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
 		);
 		auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
 		rotateInterpolator->addSection(
 			userNode->getOrientation(),
 			storyElement.cameraOrientation,
-			6.0,
+			4.0,
 			[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
 		);
 		while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
@@ -288,15 +395,7 @@ void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userN
 		}
 	}
 	if (storyElement.browserName.size())
-	{
-		std::string name = storyElement.browserName;
-		std::string url = storyElement.browserURL;
-		Ape::Vector3 position = storyElement.browserPosition;
-		Ape::Quaternion orientation = storyElement.browserOrientation;
-		int width = storyElement.browserWidth;
-		int height = storyElement.browserHeight;
-		createBrowser(name, url, position, orientation, width, height);
-	}
+		manageBrowser(storyElement);
 }
 
 void ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr userNode)
@@ -305,36 +404,61 @@ void ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr userNode)
 	userNode->setPosition(storyElement.cameraPosition);
 	userNode->setOrientation(storyElement.cameraOrientation);
 	if (storyElement.browserName.size())
-	{
-		std::string name = storyElement.browserName;
-		std::string url = storyElement.browserURL;
-		Ape::Vector3 position = storyElement.browserPosition;
-		Ape::Quaternion orientation = storyElement.browserOrientation;
-		int width = storyElement.browserWidth;
-		int height = storyElement.browserHeight;
-		createBrowser(name, url, position, orientation, width, height);
-	}
+		manageBrowser(storyElement);
 }
 
-void ApePresentationScenePlugin::createBrowser(std::string name, std::string url, Ape::Vector3 position, Ape::Quaternion orientation, int width, int height, int resolutionVertical, int resolutionHorizontal)
+void ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 {
-	if (!mpScene->getNode(name).lock())
+	if (!mpScene->getNode(storyElement.browserName).lock())
 	{
-		if (auto browserNode = mpScene->createNode(name).lock())
+		if (auto browserNode = mpScene->createNode(storyElement.browserName).lock())
 		{
-			browserNode->setPosition(position);
-			browserNode->setOrientation(orientation);
-			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(name + "geometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+			browserNode->setPosition(storyElement.browserPosition);
+			browserNode->setOrientation(storyElement.browserOrientation);
+			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(storyElement.browserName + "geometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(width, height), Ape::Vector2(1, 1));
+				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(storyElement.browserWidth, storyElement.browserHeight), Ape::Vector2(1, 1));
 				browserGeometry->setParentNode(browserNode);
-				if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity(name + "browser", Ape::Entity::BROWSER).lock()))
+				if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity(storyElement.browserName + "browser", Ape::Entity::BROWSER).lock()))
 				{
-					browser->setResoultion(resolutionVertical, resolutionHorizontal);
-					browser->setURL(url);
+					browser->setResoultion(storyElement.browserResolutionVertical, storyElement.browserResolutionHorizontal);
+					browser->setURL(storyElement.browserURL);
 					browser->setGeometry(browserGeometry);
+					mBrowsers[storyElement.browserName] = browser;
+					if (auto browserMouseNode = mpScene->createNode(storyElement.browserName + "mouse").lock())
+					{
+						browserMouseNode->setParentNode(browserNode);
+						browserMouseNode->setPosition(Ape::Vector3(0, -1, 0));
+						if (auto mouseGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(storyElement.browserName + "mouseGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+						{
+							mouseGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(storyElement.browserWidth, storyElement.browserHeight), Ape::Vector2(1, 1));
+							mouseGeometry->setParentNode(browserMouseNode);
+							if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+							{
+								mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+								mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+								mouseMaterial->setLightingEnabled(false);
+								if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+								{
+									mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+									mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+									mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+									mGeometriesMouseTextures[mouseGeometry->getName()] = mouseTexture;
+									mBrowserMouseTextures[mouseTexture->getName()] = browser;
+								}
+								std::static_pointer_cast<Ape::IPlaneGeometry>(mouseGeometry)->setMaterial(mouseMaterial);
+							}
+						}
+					}
 				}
 			}
+		}
+	}
+	else
+	{
+		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(storyElement.browserName + "browser").lock()))
+		{
+			browser->setURL(storyElement.browserURL);
 		}
 	}
 }
@@ -385,6 +509,15 @@ void ApePresentationScenePlugin::moveUserNode()
 	}
 }
 
+void ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+{
+	std::ofstream userNodePoseFile;
+	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+	userNodePoseFile.close();
+}
+
 bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
@@ -397,6 +530,19 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 			{
 				mCurrentStoryElementIndex++;
 				animateToStoryElements(userNode);
+			}
+			if (!mIsFirstSpacePressed)
+			{
+				/*setting up zoom levels*/
+				if (auto browserEndo = mBrowsers["endo"].lock())
+					browserEndo->setZoomLevel(4);
+				if (auto browserEndo = mBrowsers["smartProfile"].lock())
+					browserEndo->setZoomLevel(4);
+				if (auto browserEndo = mBrowsers["kotem"].lock())
+					browserEndo->setZoomLevel(2);
+				if (auto browserEndo = mBrowsers["qvii"].lock())
+					browserEndo->setZoomLevel(2);
+				mIsFirstSpacePressed = true;
 			}
 		}
 		if (mKeyCodeMap[OIS::KeyCode::KC_M])
@@ -420,15 +566,28 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 			mCurrentStoryElementIndex = 0;
 			jumpToStoryElement(userNode);
 		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_O])
+		if (mKeyCodeMap[OIS::KeyCode::KC_MINUS])
 		{
-			/*overlay begin*/
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
-			{
-				browser->setResoultion(2048, 1024);
-				browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
-				browser->showOnOverlay(true);
-			}
+			mTranslateSpeedFactor -= 0.5;
+			mRotateSpeedFactor -= 0.5;
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_ADD])
+		{
+			mTranslateSpeedFactor += 0.5;
+			mRotateSpeedFactor += 0.5;
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_C])
+		{
+			saveUserNodePose(userNode);
+		}
+		if (mKeyCodeMap[OIS::KeyCode::KC_ESCAPE])
+		{
+			mActiveMouseTexture = mOverlayMouseTexture;
+			mActiveBrowser = mOverlayBrowser;
+			if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
+				overlayMouseMaterial->showOnOverlay(true, 1);
+			userNode->setPosition(mUserNodePositionBeforeFullScreen);
+			userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
 		}
 	}
 	return true;
@@ -440,12 +599,82 @@ bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 	return true;
 }
 
+bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
+{
+	if (auto activeMouseTexture = mActiveMouseTexture.lock())
+		activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
+	return true;
+}
+
+bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+{
+	if (id == OIS::MouseButtonID::MB_Left)
+	{
+		if (auto rayOverlayNode = mRayOverlayNode.lock())
+		{
+			rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
+			if (auto rayGeomtery = mRayGeometry.lock())
+				rayGeomtery->fireIntersectionQuery();
+		}
+		clock_t currentLeftClickTime;
+		currentLeftClickTime = clock();
+		double elapsedTimInMSecs = (currentLeftClickTime - mLastLeftClickTime) / (CLOCKS_PER_SEC / 1000);
+		if (elapsedTimInMSecs < 250)
+		{
+			float planeWidth, planeHeight, windowHeight, windowWidth, planeRatio, windowRatio, cameraDistance = 0.0f;
+			if (auto activeBrowser = mActiveBrowser.lock())
+			{
+				if (auto geometry = std::static_pointer_cast<Ape::IPlaneGeometry>(activeBrowser->getGeometry().lock()))
+				{
+					planeHeight = geometry->getParameters().size.x;
+					planeWidth = geometry->getParameters().size.y;
+					windowWidth = mpMainWindow->getWidth();
+					windowHeight = mpMainWindow->getHeight();
+					planeRatio = planeWidth / planeHeight;
+					windowRatio = windowWidth / windowHeight;
+					if (auto camera = mCamera.lock())
+					{
+						if (windowRatio < planeRatio)
+						{
+							float fieldOfViewX = 2 * atan(tan(camera->getFOVy().getRadian() * 0.5) * windowRatio);
+							cameraDistance = (planeWidth / 2) / (tan(fieldOfViewX / 2));
+						}
+						else
+							cameraDistance = (planeHeight / 2) / (tan(camera->getFOVy().getRadian() / 2));
+					}
+					if (auto userNode = mUserNode.lock())
+					{
+						if (auto geometryNode = geometry->getParentNode().lock())
+						{
+							Ape::Vector3 position = geometryNode->getDerivedOrientation() * Ape::Vector3(0, -cameraDistance, 0) + geometryNode->getDerivedPosition();
+							Ape::Quaternion orientation = geometryNode->getDerivedOrientation();
+							mUserNodePositionBeforeFullScreen = userNode->getPosition();
+							mUserNodeOrientationBeforeFullScreen = userNode->getOrientation();
+							userNode->setPosition(position);
+							userNode->setOrientation(orientation * mOldXMLFormatRotationQuaternion.Inverse());
+						}
+					}
+				}
+			}
+		}
+		mLastLeftClickTime = currentLeftClickTime;
+	}
+	return true;
+}
+
+bool ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+{
+	return true;
+}
+
 void ApePresentationScenePlugin::Run()
 {
 	while (true)
 	{
 		if (mpKeyboard)
 			mpKeyboard->capture();
+		if (mpMouse)
+			mpMouse->capture();
 		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}

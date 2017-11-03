@@ -30,6 +30,8 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mURL = std::string();
 	mResoultion = Ape::Vector2();
 	mGeometryName = std::string();
+	mZoomLevel = 0;
+	mZOrder = 0;
 }
 
 Ape::BrowserImpl::~BrowserImpl()
@@ -74,10 +76,29 @@ Ape::GeometryWeakPtr Ape::BrowserImpl::getGeometry()
 	return mGeometry;
 }
 
-void Ape::BrowserImpl::showOnOverlay(bool enable)
+void Ape::BrowserImpl::showOnOverlay(bool enable, int zOrder)
 {
 	if (enable)
+	{
+		mZOrder = zOrder;
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_OVERLAY));
+	}
+}
+
+void Ape::BrowserImpl::setZoomLevel(int level)
+{
+	mZoomLevel = level;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
+}
+
+int Ape::BrowserImpl::getZoomLevel()
+{
+	return mZoomLevel;
+}
+
+int Ape::BrowserImpl::getZOrder()
+{
+	return mZOrder;
 }
 
 
@@ -94,6 +115,7 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mURL);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mResoultion);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mZoomLevel);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -111,6 +133,8 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mResoultion))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mZoomLevel))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
 	RakNet::RakString geometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
 	{

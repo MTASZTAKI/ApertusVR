@@ -24,7 +24,7 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
-			"ApeCefBrowserPlugin",
+            "ApeCefBrowserPlugin",
             "Ape360VideoSamplePlugin",
             "ApeOculusDK2Plugin"
         ]
