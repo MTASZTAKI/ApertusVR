@@ -32,6 +32,7 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
+#include "ApeILight.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"

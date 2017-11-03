@@ -1,0 +1,26 @@
+
+material ChromAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.476768 0.476768 0.476768 1
+			specular 0.915395 0.915395 0.915395 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.476768 0.476768 0.476768 1
+			specular 0.915395 0.915395 0.915395 1 0
+		}
+
+	}
+
+}

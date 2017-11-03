@@ -35,6 +35,8 @@ SOFTWARE.*/
 
 #include <algorithm>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
@@ -42,6 +44,7 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 #include "ApeISystemConfig.h"
+#include "ApeIScene.h"
 
 namespace Ape
 { 
@@ -57,6 +60,22 @@ namespace Ape
 		void CreatePlugin(std::string pluginname);
 
 		Ape::ISystemConfig* mpSystemConfig;
+
+		std::mutex mConstructedPluginMutex;
+
+		std::condition_variable mConstructedPluginCondition;
+
+		unsigned int mConstructedPluginCount;
+
+		unsigned int mPluginCount;
+
+		Ape::IScene* mpScene;
+
+		std::string mUniqueUserNodeName;
+
+		void createUserBodyNodes();
+
+		bool isCreateUserBodyNodesFunctionCalled;
 
 	public:
 		PluginManagerImpl();

@@ -1,0 +1,1204 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Controller &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Finger" href="Leap.Finger.html" />
+    <link rel="prev" title="Bone" href="Leap.Bone.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/api/Leap.Controller.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Controller.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/api/Leap.Controller.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Bone.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Finger.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Controller.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Controller.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Controller.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Controller.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Controller.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Controller.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Controller
+</span> -->
+        
+  <div class="section" id="id33">
+<h1>Controller<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h1>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Controller.frameEventName" title="Controller.frameEventName"><tt class="xref js js-attr docutils literal"><span class="pre">frameEventName</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Functions:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Controller.connect" title="Controller.connect"><tt class="xref js js-func docutils literal"><span class="pre">connect()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.connected" title="Controller.connected"><tt class="xref js js-func docutils literal"><span class="pre">connected()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.disconnect" title="Controller.disconnect"><tt class="xref js js-func docutils literal"><span class="pre">disconnect()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.frame" title="Controller.frame"><tt class="xref js js-func docutils literal"><span class="pre">frame()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.on" title="Controller.on"><tt class="xref js js-func docutils literal"><span class="pre">on()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.setBackground" title="Controller.setBackground"><tt class="xref js js-func docutils literal"><span class="pre">setBackground()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.setOptimizeHMD" title="Controller.setOptimizeHMD"><tt class="xref js js-func docutils literal"><span class="pre">setOptimizeHMD()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.streaming" title="Controller.streaming"><tt class="xref js js-func docutils literal"><span class="pre">streaming()</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Events:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Controller.Event.blur" title="Controller.Event.blur"><tt class="xref js js-attr docutils literal"><span class="pre">blur</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.connect" title="Controller.Event.connect"><tt class="xref js js-attr docutils literal"><span class="pre">connect</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceAttached" title="Controller.Event.deviceAttached"><tt class="xref js js-attr docutils literal"><span class="pre">deviceAttached</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceConnected" title="Controller.Event.deviceConnected"><tt class="xref js js-attr docutils literal"><span class="pre">deviceConnected</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceDisconnected" title="Controller.Event.deviceDisconnected"><tt class="xref js js-attr docutils literal"><span class="pre">deviceDisconnected</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceRemoved" title="Controller.Event.deviceRemoved"><tt class="xref js js-attr docutils literal"><span class="pre">deviceRemoved</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceStopped" title="Controller.Event.deviceStopped"><tt class="xref js js-attr docutils literal"><span class="pre">deviceStopped</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.deviceStreaming" title="Controller.Event.deviceStreaming"><tt class="xref js js-attr docutils literal"><span class="pre">deviceStreaming</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.disconnect" title="Controller.Event.disconnect"><tt class="xref js js-attr docutils literal"><span class="pre">disconnect</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.focus" title="Controller.Event.focus"><tt class="xref js js-attr docutils literal"><span class="pre">focus</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.frame" title="Controller.Event.frame"><tt class="xref js js-attr docutils literal"><span class="pre">frame</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.gesture" title="Controller.Event.gesture"><tt class="xref js js-attr docutils literal"><span class="pre">gesture</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.frameEnd" title="Controller.Event.frameEnd"><tt class="xref js js-attr docutils literal"><span class="pre">frameEnd</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.protocol" title="Controller.Event.protocol"><tt class="xref js js-attr docutils literal"><span class="pre">protocol</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.streamingStarted" title="Controller.Event.streamingStarted"><tt class="xref js js-attr docutils literal"><span class="pre">streamingStarted</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.Event.streamingStopped" title="Controller.Event.streamingStopped"><tt class="xref js js-attr docutils literal"><span class="pre">streamingStopped</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Plugins:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Controller.plugin" title="Controller.plugin"><tt class="xref js js-func docutils literal"><span class="pre">plugin()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.use" title="Controller.use"><tt class="xref js js-func docutils literal"><span class="pre">use()</span></tt></a></li>
+<li><a class="reference internal" href="#Controller.stopUsing" title="Controller.stopUsing"><tt class="xref js js-func docutils literal"><span class="pre">stopUsing()</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Controller">
+<em class="property">class </em><tt class="descname">Controller</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Controller class is your main interface to the Leap Motion
+Controller.</p>
+<p>Create an instance of this Controller class to access frames of tracking
+data and configuration information. Frame data can be polled at any time
+using the <a class="reference internal" href="#Controller.frame" title="Controller.frame"><tt class="xref js js-func docutils literal"><span class="pre">frame()</span></tt></a>
+function. Call frame() or frame(0) to get the most recent frame. Set the
+history parameter to a positive integer to access previous frames. A
+controller stores up to 60 frames in its frame history.</p>
+<p>When creating a Controller object, you may optionally pass in an options object
+to set various controller properties.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span>
+  <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+  <span class="nx">port</span><span class="o">:</span> <span class="mi">6437</span><span class="p">,</span>
+  <span class="nx">frameEventName</span><span class="o">:</span> <span class="s1">&#39;animationFrame&#39;</span><span class="p">,</span>
+  <span class="nx">useAllPlugins</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>The Leap Motion Controller class extends the Node.js <cite>EventEmitter &lt;http://nodejs.org/api/events.html&gt;</cite> class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>options</strong> (<em>Object</em>) &#8211; <p>An object containing the option values for this Controller:</p>
+<ul>
+<li><tt class="docutils literal"><span class="pre">host</span></tt> — The host name or IP address of the WebSocket server providing
+Leap Motion tracking data. Usually, this is the local host address: <tt class="docutils literal"><span class="pre">127.0.0.1</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">port</span></tt> — The port on which the WebSocket server is listening. By default, this is
+port <tt class="docutils literal"><span class="pre">6437</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">enableGestures</span></tt> — Set to <tt class="docutils literal"><span class="pre">true</span></tt> to enable gesture recognition. Omit or
+set to <tt class="docutils literal"><span class="pre">false</span></tt> if your application does not use gestures.</li>
+<li><tt class="docutils literal"><span class="pre">background</span></tt> — Set to <tt class="docutils literal"><span class="pre">true</span></tt> to enable this application to receive frames when not the foreground application.</li>
+<li><tt class="docutils literal"><span class="pre">optimizeHMD</span></tt> — Set to <tt class="docutils literal"><span class="pre">true</span></tt> to when mounting the Leap Motion hardware to a head-mounted display.</li>
+<li><tt class="docutils literal"><span class="pre">frameEventName</span></tt> — The type of update loop to use for processing frame data.<blockquote>
+<div><ul>
+<li><tt class="docutils literal"><span class="pre">animationFrame</span></tt> uses the browser animation loop (generally 60 fps).</li>
+<li><tt class="docutils literal"><span class="pre">deviceFrame</span></tt> runs at the Leap Motion controller frame rate (20 to 200 fps depending on the user&#8217;s settings and available computing power).</li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">useAllPlugins</span></tt> - False by default.</dt>
+<dd>Tells the controller to use all plugins included on the page. For more
+information, see <a class="reference external" href="https://github.com/leapmotion/leapjs/wiki/plugins">https://github.com/leapmotion/leapjs/wiki/plugins</a>.</dd>
+</dl>
+</li>
+<li><tt class="docutils literal"><span class="pre">loopWhileDisconnected</span></tt> — Defaults to <tt class="docutils literal"><span class="pre">true</span></tt>, which means the animation frame loop runs at all times. If you set this to <tt class="docutils literal"><span class="pre">false</span></tt>, the animation loop does only runs when the <a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a> object is connected to the Leap Motion service and only when a new frame of data is available. Setting <tt class="docutils literal"><span class="pre">loopWhileDisconnected</span></tt> to <tt class="docutils literal"><span class="pre">false</span></tt> can minimize your app&#8217;s use of computing resources, but may irregularly slow down or stop any animations driven by the frame loop. Added in LeapJS version 0.4.3.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Controller.frameEventName">
+<tt class="descclassname">Controller.</tt><tt class="descname">frameEventName</tt><a class="headerlink" href="#Controller.frameEventName" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string &#8211; either <tt class="docutils literal"><span class="pre">&quot;animationFrame&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;deviceFrame&quot;</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Reports the type of update loop requested when this Controller was created.
+Changing this value for an existing Controller object has undefined behavior.
+Set the type of frame loop to use in the Controller object constructor function.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">loopType</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frameEventName</span><span class="p">;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<dl class="function">
+<dt id="Controller.connect">
+<tt class="descclassname">Controller.</tt><tt class="descname">connect</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects this Controller object to the Leap Motion WebSocket server. If the
+connection succeeds, the controller can begin supplying tracking data. Use
+the <a class="reference internal" href="#Controller.frame" title="Controller.frame"><tt class="xref js js-func docutils literal"><span class="pre">frame()</span></tt></a> or <a class="reference internal" href="#Controller.on" title="Controller.on"><tt class="xref js js-func docutils literal"><span class="pre">on()</span></tt></a> functions to access tracking data.</p>
+<p>You can register callbacks with the <a class="reference internal" href="#Controller.on" title="Controller.on"><tt class="xref js js-func docutils literal"><span class="pre">on()</span></tt></a> function to receive notification
+when the connection succeeds.</p>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;div id=&quot;frameID&quot;&gt;&lt;/div&gt;
+
+var controller = new Leap.Controller();
+var frameDisplay = document.getElementById(&#39;frameID&#39;);
+
+this.controller.on(&#39;connect&#39;, function(){
+   setInterval(function(){
+      var frame = controller.frame();
+      frameDisplay.innerHTML = &#39;&lt;p&gt;Frame: &#39; + frame.id + &#39; is &#39; + (frame.valid ? &#39;valid.&lt;/p&gt;&#39; : &#39;invalid.&lt;/p&gt;&#39;);
+   }, 500);
+});
+
+controller.connect();
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.connected">
+<tt class="descclassname">Controller.</tt><tt class="descname">connected</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller.connected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports whether this Controller is currently connected to the Leap Motion service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">true or false</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.disconnect">
+<tt class="descclassname">Controller.</tt><tt class="descname">disconnect</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects from the WebSocket server. Call <a class="reference internal" href="#Controller.connect" title="Controller.connect"><tt class="xref js js-func docutils literal"><span class="pre">connect()</span></tt></a> to reconnect this
+controller object.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">controller</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.frame">
+<tt class="descclassname">Controller.</tt><tt class="descname">frame</tt><big>(</big><span class="optional">[</span><em>history</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Controller.frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a frame of tracking data from the Leap.</p>
+<p>Use the optional history parameter to specify which frame to retrieve.
+Call frame() or frame(0) to access the most recent frame; call frame(1)
+to access the previous frame, and so on. If you use a history value
+greater than the number of stored frames, then the controller returns an
+invalid frame. When using the <tt class="docutils literal"><span class="pre">animationFrame</span></tt> loop, only one Frame object
+is stored per loop iteration. Any device frames occuring between iterations
+are discarded.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">loop</span><span class="p">({</span><span class="nx">enableGestures</span><span class="o">:</span><span class="kc">true</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">currentFrame</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">previousFrame</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">tenFramesBack</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>history</strong> (<em>int</em>) &#8211; The age of the frame to return, counting backwards from the most recent
+frame (0) into the past and up to the maximum age. The number of frames stored in the
+history buffer is an implementation detail that may change in the future. Do not rely on
+the current value (200).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="Leap.Frame.html#Frame" title="Frame"><tt class="xref js js-class docutils literal"><span class="pre">Frame()</span></tt></a> – The specified frame; or, if no history
+parameter is specified, the newest frame. If a frame is not available at the
+specified history position, an invalid Frame is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.inBrowser">
+<tt class="descclassname">Controller.</tt><tt class="descname">inBrowser</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller.inBrowser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports whether the the code is executing an a browser context.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">controller</span><span class="p">.</span><span class="nx">inBrowser</span><span class="p">();</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True, if running in a browser; false, if running in the Node platform.</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0.8 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.on">
+<tt class="descclassname">Controller.</tt><tt class="descname">on</tt><big>(</big><em>eventName</em>, <em>callback</em><big>)</big><a class="headerlink" href="#Controller.on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a callback function for one of the events dispatched by this Controller object. Defined in the Node.js EventEmitter. See <cite>emitter.on &lt;http://nodejs.org/api/events.html#events_emitter_on_event_listener&gt;</cite> for additional information. You can use the other EventEmitter classes, as well, but they are not described here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>eventName</strong> (<em>string</em>) &#8211; <p>One of the following:</p>
+<ul>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">blur</span></tt></li>
+<li><a class="reference internal" href="#Controller.connect" title="Controller.connect"><tt class="xref js js-attr docutils literal"><span class="pre">connect</span></tt></a></li>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">deviceConnected</span></tt></li>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">deviceDisconnected</span></tt></li>
+<li><a class="reference internal" href="#Controller.disconnect" title="Controller.disconnect"><tt class="xref js js-attr docutils literal"><span class="pre">disconnect</span></tt></a></li>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">focus</span></tt></li>
+<li><a class="reference internal" href="#Controller.frame" title="Controller.frame"><tt class="xref js js-attr docutils literal"><span class="pre">frame</span></tt></a></li>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">gesture</span></tt></li>
+<li><tt class="xref js js-attr docutils literal"><span class="pre">protocol</span></tt></li>
+</ul>
+</li>
+<li><strong>callback</strong> (<em>function</em>) &#8211; <p>A function to be called whenever the named event occurs.
+Callbacks for the protocol, frame, and gesture events take arguments, the others do not.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="nx">onFrame</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onFrame</span><span class="p">(</span><span class="nx">frame</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Frame event for frame &quot;</span> <span class="o">+</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.setBackground">
+<tt class="descclassname">Controller.</tt><tt class="descname">setBackground</tt><big>(</big><em>state</em><big>)</big><a class="headerlink" href="#Controller.setBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the Leap Motion WebSocket server that your application always wants to receive frames of tracking data when it is in the background and not being actively used. Note that setting this option to true could lead to unintended input to your application while the user interacts with other applications. Most applications should not receive frames in the background.</p>
+<p>Note that your application does not receive frames if another
+Leap-enabled application is in the foreground, even when the background
+frames policy is in effect. The policy only matters when a non-Leap-enabled app
+has the operating system input focus.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">controller</span><span class="p">.</span><span class="nx">setBackground</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//enable</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">setBackground</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span> <span class="c1">//disable</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>state</strong> (<em>boolean</em>) &#8211; True to receive frames at all times; otherwise, false (the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.setOptimizeHMD">
+<tt class="descclassname">Controller.</tt><tt class="descname">setOptimizeHMD</tt><big>(</big><em>state</em><big>)</big><a class="headerlink" href="#Controller.setOptimizeHMD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the Leap Motion WebSocket server that your application expects the controller to be attached to a head-mounted display.</p>
+<p>In the <em>optimize for HMD</em> mode, the Leap Motion software expects to view hands from the top rather than the bottom. When ambiguity exists whether the palm of a hand is facing toward or away from the Leap Motion sensors, setting this mode makes it more likely that the software will initialize the hand model so that it is facing away from the sensors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>state</strong> (<em>boolean</em>) &#8211; True to enable the <em>optimize for HMD mode</em>; otherwise, false (the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 2.1.5 and LeapJS 0.6.2</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.streaming">
+<tt class="descclassname">Controller.</tt><tt class="descname">streaming</tt><big>(</big><big>)</big><a class="headerlink" href="#Controller.streaming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports whether this Controller is currently recieving tracking data from the Leap Motion service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">true or false</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+</div>
+<div class="events container">
+<dl class="attribute">
+<dt id="Controller.Event.blur">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">blur</tt><a class="headerlink" href="#Controller.Event.blur" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the browser page loses focus. Typically, this occurs when the user
+changes tabs in a single browser window, but not, for example, when the user switches
+to a different browser window or another application.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span> <span class="nx">onBlur</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onBlur</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Blur event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.connect">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">connect</tt><a class="headerlink" href="#Controller.Event.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when this controller establishes a connection to the Leap Motion WebSocket server.
+This event does not mean that tracking data is available as Leap Motion tracking may be
+paused by the user, or the device itself unplugged.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="nx">onConnect</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onConnect</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Connect event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceAttached">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceAttached</tt><a class="headerlink" href="#Controller.Event.deviceAttached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device is plugged in or turned on.</p>
+<p>All <tt class="docutils literal"><span class="pre">device</span></tt> events include a device info object with the following information:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">type</th>
+<th class="head">values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>attached</td>
+<td>boolean</td>
+<td>true or false</td>
+</tr>
+<tr class="row-odd"><td>streaming</td>
+<td>boolean</td>
+<td>true or false</td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>string</td>
+<td>the device hardware ID</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string</td>
+<td><p class="first">One of:</p>
+<ul class="last simple">
+<li>peripheral</li>
+<li>keyboard</li>
+<li>laptop</li>
+<li>unknown</li>
+<li>unrecognized</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceAttached&#39;</span><span class="p">,</span> <span class="nx">onAttached</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onAttached</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device attached event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceConnected">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceConnected</tt><a class="headerlink" href="#Controller.Event.deviceConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device is plugged in and when tracking is unpaused by the user.</p>
+<p>Note that this event is not dispatched if the controller is already plugged in when your
+application starts.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceConnected&#39;</span><span class="p">,</span> <span class="nx">onDeviceConnected</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onDeviceConnected</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device Connect event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceDisconnected">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceDisconnected</tt><a class="headerlink" href="#Controller.Event.deviceDisconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device is unplugged and when tracking is paused by the user.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceDisconnected&#39;</span><span class="p">,</span> <span class="nx">onDeviceDisconnect</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onDeviceDisconnect</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device disconnect event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceRemoved">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceRemoved</tt><a class="headerlink" href="#Controller.Event.deviceRemoved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device is unplugged or turned off.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceRemoved&#39;</span><span class="p">,</span> <span class="nx">onRemoved</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onRemoved</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device removed event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceStopped">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceStopped</tt><a class="headerlink" href="#Controller.Event.deviceStopped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device stops providing data.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceStopped&#39;</span><span class="p">,</span> <span class="nx">onStopped</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onStopped</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device stopped streaming event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.deviceStreaming">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">deviceStreaming</tt><a class="headerlink" href="#Controller.Event.deviceStreaming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion device starts providing data.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;deviceStreaming&#39;</span><span class="p">,</span> <span class="nx">onStreaming</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onStreaming</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Device started streaming event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.disconnect">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">disconnect</tt><a class="headerlink" href="#Controller.Event.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when this Controller object disconnects from the Leap Motion WebSocket server.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;disconnect&#39;</span><span class="p">,</span> <span class="nx">onDisconnect</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onDisconnect</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Disconnect event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.focus">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">focus</tt><a class="headerlink" href="#Controller.Event.focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the browser tab gains focus.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;focus&#39;</span><span class="p">,</span> <span class="nx">onFocus</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onFocus</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Focus event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.frame">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">frame</tt><a class="headerlink" href="#Controller.Event.frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched once per update cycle.</p>
+<p>If the <a class="reference internal" href="#Controller.frameEventName" title="Controller.frameEventName"><tt class="xref js js-attr docutils literal"><span class="pre">frameEventName</span></tt></a> is <tt class="docutils literal"><span class="pre">animationFrame</span></tt>, then
+the browser animation loop is in use and this event is dispatched typically 60 times
+per second. Since the animation loop timing does not match that of the Leap Motion device,
+you may get the same Leap.Frame object more than once or skip frames.</p>
+<p>If the <a class="reference internal" href="#Controller.frameEventName" title="Controller.frameEventName"><tt class="xref js js-attr docutils literal"><span class="pre">frameEventName</span></tt></a> is <tt class="docutils literal"><span class="pre">deviceFrame</span></tt>, then this event is dispatched as
+each frame of Leap Motion data is received. The device frame rate can vary quite a bit
+depending on the user&#8217;s settings and the available computing power.</p>
+<p>Set the type of frame loop to use in the Controller object constructor function.</p>
+<p>The current <a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a> object is passed to your callback function.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="nx">onFrame</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onFrame</span><span class="p">(</span><span class="nx">frame</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Frame event for frame &quot;</span> <span class="o">+</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.gesture">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">gesture</tt><a class="headerlink" href="#Controller.Event.gesture" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Notice</strong> Gestures are deprecated in version 3.0 and may not behave the same
+as they did in earlier versions.</p>
+<p>Dispatched for each gesture update in a frame.</p>
+<p>The associated <a class="reference internal" href="Leap.Gesture.html#Leap.Gesture" title="Leap.Gesture"><tt class="xref py py-class docutils literal"><span class="pre">Gesture</span></tt></a> and the current <a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a> objects are passed to your
+callback function.</p>
+<p>When the Controller is using the <tt class="docutils literal"><span class="pre">animationFrame</span></tt> loop, which is the default``, any gestures generated in device frames produced between iterations of the <tt class="docutils literal"><span class="pre">animationFrame</span></tt> loop are collected and dispatched at the next iteration. This means that the Frame object passed to your gesture listener function will not always be the frame in which the gesture was recorded.  The position and other physical attributes of the hands and fingers making the gesture may have changed slightly between frames. In some cases, a Hand or Pointable object with the same IDs as those referenced by the Gesture object may not be present at all in the current frame.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span><span class="nx">enableGestures</span><span class="o">:</span><span class="kc">true</span><span class="p">});</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;gesture&#39;</span><span class="p">,</span> <span class="nx">onGesture</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onGesture</span><span class="p">(</span><span class="nx">gesture</span><span class="p">,</span><span class="nx">frame</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">gesture</span><span class="p">.</span><span class="nx">type</span> <span class="o">+</span> <span class="s2">&quot; with ID &quot;</span> <span class="o">+</span> <span class="nx">gesture</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot; in frame &quot;</span> <span class="o">+</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.frameEnd">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">frameEnd</tt><a class="headerlink" href="#Controller.Event.frameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the frame of data has been fully constructed.</p>
+<p>Use this callback for code that should run after the frame is available.</p>
+<p class="version">LeapJS 0.6.4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.protocol">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">protocol</tt><a class="headerlink" href="#Controller.Event.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the WebSocket server and client have negotiated a protocol.</p>
+<p>A Protocol object is passed to your callback function. Use the <tt class="docutils literal"><span class="pre">version</span></tt> or
+<tt class="docutils literal"><span class="pre">versionLong</span></tt> attributes of this object to determine which protocol is in use,
+which may be lower than the requested protocol if the user is running an older
+version of the Leap Motion software.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;protocol&#39;</span><span class="p">,</span> <span class="nx">onProtocol</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onProtocol</span><span class="p">(</span><span class="nx">protocol</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Protocol event: &quot;</span> <span class="o">+</span> <span class="nx">protocol</span><span class="p">.</span><span class="nx">version</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.0.9 and LeapJS 0.3.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.streamingStarted">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">streamingStarted</tt><a class="headerlink" href="#Controller.Event.streamingStarted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion service/daemon starts providing data.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;streamingStarted&#39;</span><span class="p">,</span> <span class="nx">onServiceStreaming</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onServiceStreaming</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Service started streaming event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Controller.Event.streamingStopped">
+<tt class="descclassname">Controller.Event.</tt><tt class="descname">streamingStopped</tt><a class="headerlink" href="#Controller.Event.streamingStopped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatched when the Leap Motion service/daemon stops providing data.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;streamingStopped&#39;</span><span class="p">,</span> <span class="nx">onServiceStopped</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onServiceStopped</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Service stopped streaming event&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="version">Leap Motion 1.2 and LeapJS 0.5.0</p>
+</dd></dl>
+
+</div>
+<div class="plugins container">
+<dl class="function">
+<dt id="Controller.plugin">
+<tt class="descclassname">Controller.</tt><tt class="descname">plugin</tt><big>(</big><em>pluginName</em>, <em>factory</em><big>)</big><a class="headerlink" href="#Controller.plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a plugin, making is accessible to <tt class="docutils literal"><span class="pre">controller.use()</span></tt> later on.</p>
+<p>Valid keys for the object returned by the factory include <tt class="docutils literal"><span class="pre">frame</span></tt>, <tt class="docutils literal"><span class="pre">hand</span></tt>, <tt class="docutils literal"><span class="pre">finger</span></tt>, and <tt class="docutils literal"><span class="pre">pointable</span></tt>.
+The value of each key can be either a function or an object.  If given a function, that function
+will be called once for every instance of the object, with that instance injected as an
+argument.  This allows decoration of objects with additional data:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="s1">&#39;testPlugin&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+ <span class="k">return</span> <span class="p">{</span>
+   <span class="nx">frame</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+     <span class="nx">frame</span><span class="p">.</span><span class="nx">foo</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span><span class="p">;</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>When <tt class="docutils literal"><span class="pre">hand</span></tt> is used, the callback is called for every hand object in <tt class="docutils literal"><span class="pre">frame.hands</span></tt>.  Note that
+hand objects are recreated with every new frame; any data saved on a hand does not
+persist across frames.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="s1">&#39;testPlugin&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+ <span class="k">return</span> <span class="p">{</span>
+   <span class="nx">hand</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">hand</span><span class="p">){</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;testPlugin running on hand &#39;</span> <span class="o">+</span> <span class="nx">hand</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>A factory can return an object to add custom functionality to Frames, Hands, or Pointables.
+The methods defined by this returned object are added directly to the prototype of the specified class.
+The Finger and Tool classes cannot be used here, Pointable must be used instead.
+Use this technique for calculations that may not be necessary on every frame.
+<a class="reference external" href="http://en.wikipedia.org/wiki/Memoization">Memoization</a> is also encouraged, for cases where the method may be called many times per frame by the application.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="c1">// This plug-in allows hand.usefulData() to be called later.</span>
+<span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="s1">&#39;testPlugin&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+ <span class="k">return</span> <span class="p">{</span>
+   <span class="nx">hand</span><span class="o">:</span> <span class="p">{</span>
+     <span class="nx">usefulData</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;usefulData on hand&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+       <span class="c1">// memoize the results onto the hand, preventing repeat work:</span>
+       <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">someExpensiveCalculation</span><span class="p">());</span>
+       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Note that the factory pattern gives encapsulation for every plugin instance.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">plugin</span><span class="p">(</span><span class="s1">&#39;testPlugin&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+ <span class="nx">options</span> <span class="o">||</span> <span class="p">(</span><span class="nx">options</span> <span class="o">=</span> <span class="p">{});</span>
+ <span class="nx">options</span><span class="p">.</span><span class="nx">center</span> <span class="o">||</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]);</span>
+
+ <span class="nx">privatePrintingMethod</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;privatePrintingMethod - options&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+ <span class="p">}</span>
+
+ <span class="k">return</span> <span class="p">{</span>
+   <span class="nx">pointable</span><span class="o">:</span> <span class="p">{</span>
+     <span class="nx">publicPrintingMethod</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+       <span class="nx">privatePrintingMethod</span><span class="p">();</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pluginName</strong> (<em>string</em>) &#8211; The name string identifying a plugin.</li>
+<li><strong>factory</strong> (<em>function</em>) &#8211; A factory method which will return an instance of a plugin.
+The factory itself receives an optional hash of options, passed in via <tt class="docutils literal"><span class="pre">controller.use()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0 and LeapJS 0.4.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.use">
+<tt class="descclassname">Controller.</tt><tt class="descname">use</tt><big>(</big><em>pluginNameOrFactory</em><span class="optional">[</span>, <em>options</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Controller.use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin using a registered plugin.  The plugin&#8217;s functionality will be added to all frames
+returned by the Controller object and any other specified objects within the frame.</p>
+<ul class="simple">
+<li>The order of plugin execution inside the loop matches the order in which <tt class="docutils literal"><span class="pre">use</span></tt> is called by the application.</li>
+<li>The plugin is run for <tt class="docutils literal"><span class="pre">animationFrames</span></tt> only.</li>
+</ul>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;script src=&quot;http://js.leapmotion.com/leap-plugins-0.1.4.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+var controller = new Leap.Controller();
+controller.use(&#39;handEntry&#39;);
+controller.connect();
+&lt;/script&gt;
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>pluginNameOrFactory</strong> (<em>string</em>) &#8211; The registered name string of the plugin.  A plugin factory is also accepted
+directly, for use in node environments.</li>
+<li><strong>options</strong> (<em>hash</em>) &#8211; Options to be passed to the plugin&#8217;s factory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0 and LeapJS 0.4.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Controller.stopUsing">
+<tt class="descclassname">Controller.</tt><tt class="descname">stopUsing</tt><big>(</big><em>pluginName</em><big>)</big><a class="headerlink" href="#Controller.stopUsing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop using a used plugin.  Removes any of the plugin&#8217;s pipeline methods (those called on every frame)
+and removes any methods added to extend class prototypes.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">controller</span><span class="p">.</span><span class="nx">stopUsing</span><span class="p">(</span><span class="s1">&#39;handEntry&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>pluginName</strong> (<em>string</em>) &#8211; The registered name string of the plugin.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#Controller" title="Controller"><tt class="xref js js-class docutils literal"><span class="pre">Controller()</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="version">Leap Motion 1.0 and LeapJS 0.4.0</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Classes.html#leap-namespace">Leap namespace</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Bone.html#id28">Bone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id33">Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Finger.html#id21">Finger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Frame.html#id30">Frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Hand.html#id54">Hand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Pointable.html#id25">Pointable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

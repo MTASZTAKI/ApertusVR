@@ -24,6 +24,7 @@
 set (HEADERS
 	ApeTextGeometryImpl.h
 	ApeLightImpl.h
+	ApeBrowserImpl.h
 	ApeNodeImpl.h
 	ApeCameraImpl.h
 	ApeSceneImpl.h
@@ -53,6 +54,7 @@ set (HEADERS
 set (SOURCES 
 	ApeTextGeometryImpl.cpp
 	ApeLightImpl.cpp
+	ApeBrowserImpl.cpp
 	ApeNodeImpl.cpp
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp

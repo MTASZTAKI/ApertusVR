@@ -1,0 +1,26 @@
+
+material BetonAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.494118 0.497647 0.444706 1
+			specular 0.027451 0.0276471 0.0247059 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.494118 0.497647 0.444706 1
+			specular 0.027451 0.0276471 0.0247059 1 0
+		}
+
+	}
+
+}

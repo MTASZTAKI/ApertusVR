@@ -1,0 +1,26 @@
+
+material AnstrichAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.81 0.81 0.81 1
+			specular 0.09 0.09 0.09 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.81 0.81 0.81 1
+			specular 0.09 0.09 0.09 1 0
+		}
+
+	}
+
+}

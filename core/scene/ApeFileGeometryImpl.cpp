@@ -28,6 +28,7 @@ Ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : 
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();
 	mpScene = Ape::IScene::getSingletonPtr();
+	mIsSubMeshesMerged = false;
 }
 
 Ape::FileGeometryImpl::~FileGeometryImpl()
@@ -75,6 +76,17 @@ Ape::MaterialWeakPtr Ape::FileGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+void Ape::FileGeometryImpl::exportMesh()
+{
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_EXPORT));
+}
+
+void Ape::FileGeometryImpl::mergeSubMeshes()
+{
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
+	mIsSubMeshesMerged = true;
+}
+
 void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -89,6 +101,7 @@ RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -120,6 +133,8 @@ void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MATERIAL));
 		}
 	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSubMeshesMerged))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

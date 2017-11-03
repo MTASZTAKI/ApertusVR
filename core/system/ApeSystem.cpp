@@ -37,6 +37,7 @@ Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
 
+
 void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 {
 	gpSystemConfigImpl = new SystemConfigImpl(configFolderPath);
@@ -45,15 +46,13 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
 
-	std::stringstream generatedUniqueUserName;
-	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
-	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
+	std::stringstream uniqueUserNodeName;
+	uniqueUserNodeName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
+	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
 	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
-
-	gpSceneImpl->createNode(generatedUniqueUserName.str());
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
-		; //TODO open a paltform specific window
+		; //TODO open a platform specific window if needed
 
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();

@@ -1,0 +1,554 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tracking Model &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Frames" href="Leap_Frames.html" />
+    <link rel="prev" title="Connecting to the Controller" href="Leap_Controllers.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/devguide/Leap_Tracking.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Tracking.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Tracking.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/devguide/Leap_Tracking.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Controllers.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Frames.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_Tracking.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Tracking.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Tracking.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Tracking.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Tracking Model
+</span> -->
+        
+  <div class="section" id="tracking-model">
+<h1>Tracking Model<a class="headerlink" href="#tracking-model" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion API defines a class representing each of the primary tracked objects.</p>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="534.62px" height="539.613px" viewBox="193.866 0 534.62 539.613" enable-background="new 193.866 0 534.62 539.613"
+	 xml:space="preserve">
+<a xlink:href="../api/Leap.Frame.html"  xlink:title="Frame">
+	<rect x="507.958" y="0.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.756"/>
+	<text transform="matrix(1 0 0 1 558.2305 20.0938)" font-family="'CourierNewPSMT'" font-size="12">Frame</text>
+	<rect x="361.5" y="87.635" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.458" height="31.756"/>
+</a>
+<a xlink:href="../api/Leap.HandList.html"  xlink:title="HandList">
+	<text transform="matrix(1 0 0 1 407.0405 107.2295)" font-family="'CourierNewPSMT'" font-size="12">HandList</text>
+	<rect x="361.5" y="158.581" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.458" height="31.756"/>
+</a>
+<a xlink:href="../api/Leap.Hand.html"  xlink:title="Hand">
+	<text transform="matrix(1 0 0 1 411.7705 178.1758)" font-family="'CourierNewPSMT'" font-size="12">Hand</text>
+	<rect x="411.77" y="268.107" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.757"/>
+</a>
+<a xlink:href="../api/Leap.FingerList.html"  xlink:title="FingerList">
+	<text transform="matrix(1 0 0 1 448.2837 287.7021)" font-family="'CourierNewPSMT'" font-size="12">FingerList</text>
+	<rect x="590.121" y="268.107" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.757"/>
+</a>
+<text transform="matrix(1 0 0 1 607.8984 287.7021)" font-family="'CourierNewPSMT'" font-size="12">PointableList</text>
+<rect x="415.175" y="434.961" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.755"/>
+<a xlink:href="../api/Leap.Finger.html"  xlink:title="Finger">
+	<text transform="matrix(1 0 0 1 461.4458 454.5547)" font-family="'CourierNewPSMT'" font-size="12">Finger</text>
+	<rect x="593.526" y="350.798" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.46" height="31.756"/>
+</a>
+<text transform="matrix(1 0 0 1 635.041 370.3926)" font-family="'CourierNewPSMT'" font-size="12">Pointable</text>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M542.917,43.755c-19.278,31.969-114.874-0.708-114.188,43.88"/>
+	<g>
+		<line fill="none" stroke="#000000" x1="542.278" y1="44.373" x2="542.278" y2="44.373"/>
+		<polygon points="539.474,37.573 545.985,32.182 548.542,39.795 542.276,45.259 		"/>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M560.041,37.882c6.096,137.803-81.886,183.25-72.856,230.226"/>
+	<g>
+		<polygon points="555.376,39.494 559.742,32.256 564.669,38.599 560.558,45.825 		"/>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M575.046,37.883c-0.81,80.855,105.189,195.148,85.709,226.178"/>
+	<g>
+		<polygon points="570.41,39.164 575.283,32.256 579.744,38.935 575.126,45.849 		"/>
+	</g>
+</g>
+<g>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="663.146" y1="305.497" x2="663.146" y2="350.798"/>
+	<g>
+		<polygon points="658.484,306.916 663.146,299.864 667.806,306.403 663.401,313.455 		"/>
+	</g>
+</g>
+<g>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="487.183" y1="305.497" x2="487.183" y2="434.961"/>
+	<g>
+		<polygon points="482.521,306.916 487.183,299.864 491.843,306.403 487.439,313.455 		"/>
+	</g>
+</g>
+<g>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="428.137" y1="158.581" x2="428.137" y2="125.024"/>
+	<g>
+		<polygon points="432.798,126.443 428.137,119.391 423.476,125.931 427.881,132.982 		"/>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M487.183,268.107c-8.526-35.066-71.57-12.275-75.245-72.14"/>
+	<g>
+		<polygon points="416.653,197.237 411.77,190.337 407.319,197.022 411.947,203.929 		"/>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M663.146,268.107c-22.086-48.11-212.83-18.371-233.378-65.914"/>
+	<g>
+		<line fill="none" stroke="#000000" x1="430.347" y1="202.889" x2="430.347" y2="202.889"/>
+		<polygon points="434.079,196.55 428.39,190.298 424.789,197.476 430.224,203.767 		"/>
+	</g>
+</g>
+<g>
+	<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M487.183,434.961c25.888-64.776,142.117,4.289,162.66-43.565"/>
+	<g>
+		<polygon fill="none" stroke="#000000" points="654.303,393.204 651.998,383.504 644.748,390.353 		"/>
+	</g>
+</g>
+<a xlink:href="../api/Leap.Bone.html"  xlink:title="Bone">
+	<rect x="415.292" y="507.352" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.762"/>
+	<text transform="matrix(1 0 0 1 470.6582 527.2305)" font-family="'CourierNewPSMT'" font-size="12">Bone</text>
+	<g>
+		<g>
+			<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="486.5" y1="507.352" x2="486.5" y2="478.961"/>
+			<g>
+				<g>
+					<g>
+						<g>
+							<line fill="none" stroke="#000000" x1="486.755" y1="479.742" x2="486.755" y2="479.742"/>
+							<polygon points="491.417,474.052 486.755,467 482.095,473.54 486.5,480.591 							"/>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</a>
+<a xlink:href="../api/Leap.ImageList.html"  xlink:title="ImageList">
+	<rect x="194.366" y="88.074" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.754"/>
+	<text transform="matrix(1 0 0 1 232.0703 105.9521)" font-family="'CourierNewPSMT'" font-size="12">ImageList</text>
+</a>
+<a xlink:href="../api/Leap.Image.html"  xlink:title="Image">
+	<rect x="194.366" y="158.303" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.754"/>
+	<text transform="matrix(1 0 0 1 245.0703 176.1807)" font-family="'CourierNewPSMT'" font-size="12">Image</text>
+</a>
+<g>
+	<g>
+		<g>
+			<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M261.595,87.635c5.996-63.254,220.312-26.129,260.64-45.199"/>
+			<g>
+				<g>
+					<g>
+						<g>
+							<line fill="none" stroke="#000000" x1="521.662" y1="42.992" x2="521.662" y2="42.992"/>
+							<polygon points="528.675,40.775 528.626,32.322 521.149,35.251 520.984,43.563 							"/>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="263.689" y1="158.581" x2="263.688" y2="124.421"/>
+	<g>
+		<polygon points="268.35,125.839 263.688,118.786 259.028,125.326 263.432,132.378 		"/>
+	</g>
+</g>
+<a xlink:href="../api/Leap.Arm.html"  xlink:title="Arm">
+	<rect x="244.366" y="267.061" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="134.459" height="31.754"/>
+	<text transform="matrix(1 0 0 1 301.0703 284.9385)" font-family="'CourierNewPSMT'" font-size="12">Arm</text>
+</a>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M311.595,267.061c7.263-40.878,77.668-19.384,82.835-66.037"/>
+		<g>
+			<g>
+				<g>
+					<g>
+						<line fill="none" stroke="#000000" x1="394.552" y1="201.798" x2="394.552" y2="201.798"/>
+						<polygon points="399.265,196.15 394.668,189.056 389.948,195.553 394.288,202.644 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a></td>
+<td><p class="first">The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object is essentially the root of the data model and provides access to all the tracked entities. A new <tt class="docutils literal"><span class="pre">Frame</span></tt> is created at each update interval.</p>
+<p>The frame contains lists of the hands and fingers tracked in that frame. (You can also get the fingers for a specific hand from the relevant <tt class="docutils literal"><span class="pre">Hand</span></tt> object.)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Leap</span><span class="o">::</span><span class="n">Controller</span> <span class="n">controller</span><span class="p">;</span>
+<span class="c1">// wait until Controller.isConnected() evaluates to true</span>
+<span class="c1">//...</span>
+
+<span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">HandList</span> <span class="n">hands</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">hands</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">PointableList</span> <span class="n">pointables</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">pointables</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">FingerList</span> <span class="n">fingers</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">fingers</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">ToolList</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">tools</span><span class="p">();</span>
+</pre></div>
+</div>
+<p class="last">See <a class="reference internal" href="Leap_Frames.html"><em>Frames</em></a></p>
+</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="../api/Leap.Hand.html"><tt class="docutils literal"><span class="pre">Hand</span></tt></a></td>
+<td><p class="first">The <tt class="docutils literal"><span class="pre">Hand</span></tt> object describes the position and orientation of a hand, tracks its motion between frames and contains lists of the fingers associated with that hand.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// hand is a Leap::Hand object</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">PointableList</span> <span class="n">pointables</span> <span class="o">=</span> <span class="n">hand</span><span class="p">.</span><span class="n">pointables</span><span class="p">();</span> <span class="c1">// Both fingers and tools</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">FingerList</span> <span class="n">fingers</span> <span class="o">=</span> <span class="n">hand</span><span class="p">.</span><span class="n">fingers</span><span class="p">();</span>
+</pre></div>
+</div>
+<p class="last">See <a class="reference internal" href="Leap_Hand.html"><em>Hands</em></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="../api/Leap.Arm.html"><tt class="docutils literal"><span class="pre">Arm</span></tt></a></td>
+<td><tt class="docutils literal"><span class="pre">Arm</span></tt> objects describe the position, direction, and orientation of the arm to which a hand is attached. Arms can only be accessed through the <tt class="docutils literal"><span class="pre">Hand</span></tt> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="../api/Leap.Pointable.html"><tt class="docutils literal"><span class="pre">Pointable</span></tt></a>, <a class="reference external" href="../api/Leap.Finger.html"><tt class="docutils literal"><span class="pre">Finger</span></tt></a></td>
+<td><p class="first"><tt class="docutils literal"><span class="pre">Pointable</span></tt> objects define the basic characteristics common to fingers. The <tt class="docutils literal"><span class="pre">Finger</span></tt> class extends <tt class="docutils literal"><span class="pre">Pointable</span></tt> with additional information specific to those entities.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">pointable</span><span class="p">.</span><span class="n">isTool</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">Leap</span><span class="o">::</span><span class="n">Tool</span> <span class="n">tool</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Tool</span><span class="p">(</span><span class="n">pointable</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">Leap</span><span class="o">::</span><span class="n">Finger</span> <span class="n">finger</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Finger</span><span class="p">(</span><span class="n">pointable</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="last">See <a class="reference internal" href="Leap_Pointables.html"><em>Fingers</em></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="../api/Leap.Bone.html"><tt class="docutils literal"><span class="pre">Bone</span></tt></a></td>
+<td><tt class="docutils literal"><span class="pre">Bone</span></tt> object represent the position and orientation of a bone. The tracked bones include the metarcarpals and phalanges of the fingers (and thumb).</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="../api/Leap.Image.html"><tt class="docutils literal"><span class="pre">Image</span></tt></a></td>
+<td><tt class="docutils literal"><span class="pre">Image</span></tt> objects provide the raw sensor data and calibration grid for the Leap Motion cameras. (Not available through the WebSocket server.)</td>
+</tr>
+<tr class="row-odd"><td><strong>Utility Classes</strong></td>
+<td><p class="first">The <a class="reference external" href="../api/Leap.Vector.html"><tt class="docutils literal"><span class="pre">Vector</span></tt></a> class describes points and directions. The <tt class="docutils literal"><span class="pre">Vector</span></tt> class also provides several useful math functions for working with vectors.</p>
+<p>Likewise, the <a class="reference external" href="../api/Leap.Matrix.html"><tt class="docutils literal"><span class="pre">Matrix</span></tt></a> class represents things like rotations and other transforms returned by some functions in the API.</p>
+<p class="last">The <a class="reference external" href="../api/Leap.InteractionBox.html"><tt class="docutils literal"><span class="pre">InteractionBox</span></tt></a> class provides functions to help map a rectilinear portion of the Leap Motion controller&#8217;s field of view to either 2D screen space or 3D space. See <tt class="xref doc docutils literal"><span class="pre">Leap_Touch_Emulation</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Controllers.html">Connecting to the Controller</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Frames.html">Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

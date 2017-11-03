@@ -52,6 +52,8 @@ namespace Ape
 
 		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
 
+		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;

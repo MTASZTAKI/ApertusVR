@@ -158,6 +158,78 @@ namespace Ape
 			return Ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
+	inline Ogre::SceneBlendType ConversionToOgre(const Ape::Pass::SceneBlendingType type)
+	{
+		if (type == Ape::Pass::SceneBlendingType::ADD)
+			return Ogre::SceneBlendType::SBT_ADD;
+		else if (type == Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
+		else if (type == Ape::Pass::SceneBlendingType::REPLACE)
+			return Ogre::SceneBlendType::SBT_REPLACE;
+	}
+
+	inline Ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
+	{
+		if (type == Ogre::SceneBlendType::SBT_ADD)
+			return Ape::Pass::SceneBlendingType::ADD;
+		else if (type == Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA)
+			return Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA;
+		else if (type == Ogre::SceneBlendType::SBT_REPLACE)
+			return Ape::Pass::SceneBlendingType::REPLACE;
+	}
+
+	inline Ogre::CullingMode ConversionToOgre(const Ape::Material::CullingMode type)
+	{
+		if (type == Ape::Material::CullingMode::NONE)
+			return Ogre::CullingMode::CULL_NONE;
+		else if (type == Ape::Material::CullingMode::CLOCKWISE)
+			return Ogre::CullingMode::CULL_CLOCKWISE;
+		else if (type == Ape::Material::CullingMode::ANTICLOCKWISE)
+			return Ogre::CullingMode::CULL_ANTICLOCKWISE;
+	}
+
+	inline Ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)
+	{
+		if (type == Ogre::CullingMode::CULL_NONE)
+			return Ape::Material::CullingMode::NONE;
+		else if (type == Ogre::CullingMode::CULL_CLOCKWISE)
+			return Ape::Material::CullingMode::CLOCKWISE;
+		else if (type == Ogre::CullingMode::CULL_ANTICLOCKWISE)
+			return Ape::Material::CullingMode::ANTICLOCKWISE;
+	}
+
+	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)
+	{
+		if (type == Ape::Texture::PixelFormat::A8R8G8B8)
+			return Ogre::PixelFormat::PF_A8R8G8B8;
+		else if (type == Ape::Texture::PixelFormat::R8G8B8)
+			return Ogre::PixelFormat::PF_R8G8B8;
+	}
+
+	inline Ape::Texture::PixelFormat ConversionFromOgre(const Ogre::PixelFormat type)
+	{
+		if (type == Ogre::PixelFormat::PF_A8R8G8B8)
+			return Ape::Texture::PixelFormat::A8R8G8B8;
+		else if (type == Ogre::PixelFormat::PF_R8G8B8)
+			return Ape::Texture::PixelFormat::R8G8B8;
+	}
+
+	inline Ogre::TextureUsage ConversionToOgre(const Ape::Texture::Usage type)
+	{
+		if (type == Ape::Texture::Usage::RENDERTARGET)
+			return Ogre::TextureUsage::TU_RENDERTARGET;
+		else if (type == Ape::Texture::Usage::DYNAMIC_WRITE_ONLY)
+			return Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY;
+	}
+
+	inline Ape::Texture::Usage ConversionFromOgre(const Ogre::TextureUsage type)
+	{
+		if (type == Ogre::TextureUsage::TU_RENDERTARGET)
+			return Ape::Texture::Usage::RENDERTARGET;
+		else if (type == Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY)
+			return Ape::Texture::Usage::DYNAMIC_WRITE_ONLY;
+	}
+
 	inline Ogre::Radian ConversionToOgre(const Ape::Radian& mwRad)
 	{
 		return Ogre::Radian(mwRad.radian);

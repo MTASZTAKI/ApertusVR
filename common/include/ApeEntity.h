@@ -53,6 +53,7 @@ namespace Ape
 			PASS_PBS,
 			PASS_MANUAL,
 			TEXTURE_MANUAL,
+			BROWSER,
 			INVALID
 		};
 		

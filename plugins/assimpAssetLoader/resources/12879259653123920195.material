@@ -1,0 +1,26 @@
+
+material KieferglänzendAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.578293 0.452122 0.271476 1
+			specular 0.722866 0.565152 0.339345 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.578293 0.452122 0.271476 1
+			specular 0.722866 0.565152 0.339345 1 0
+		}
+
+	}
+
+}

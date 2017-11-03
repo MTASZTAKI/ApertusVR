@@ -30,9 +30,23 @@ SOFTWARE.*/
 #include "ApePass.h"
 
 namespace Ape
-{		
+{
 	class Texture : public Entity
 	{
+	public:
+		enum PixelFormat
+		{
+			R8G8B8,
+			A8R8G8B8,
+			PF_INVALID
+		};
+		enum Usage
+		{
+			RENDERTARGET,
+			DYNAMIC_WRITE_ONLY,
+			U_INVALID
+		};
+
 	protected:
 		Texture(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 

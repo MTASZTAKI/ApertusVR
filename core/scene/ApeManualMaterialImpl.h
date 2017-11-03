@@ -42,7 +42,21 @@ namespace Ape
 
 		void setSpecularColor(Ape::Color specular) override;
 
+		void setPassTexture(Ape::TextureWeakPtr texture) override;
+
+		void setAmbientColor(Color ambient) override;
+
+		void setEmissiveColor(Color emissive) override;
+
+		Ape::TextureWeakPtr getPassTexture() override;
+
 		void setPass(Ape::PassWeakPtr pass) override;
+
+		void setCullingMode(Ape::Material::CullingMode cullingMode) override;
+
+		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
+
+		void showOnOverlay(bool enable) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,6 +68,10 @@ namespace Ape
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		Ape::IScene* mpScene;
+
+		Ape::TextureWeakPtr mTexture;
+
+		std::string mTextureName;
 	};
 }
 

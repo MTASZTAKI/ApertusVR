@@ -1,0 +1,504 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting Up a Project &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+    <link rel="next" title="Core Asset Prefabs" href="../unity/Unity_Prefabs.html" />
+    <link rel="prev" title="Hand Tracking in Virtual Reality" href="../unity/Unity_VR.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/devguide/Project_Setup.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Project_Setup.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/devguide/Project_Setup.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("../unity/Unity_VR.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("../unity/Unity_Prefabs.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Project_Setup.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Project_Setup.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Project_Setup.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Project_Setup.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Project_Setup.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Setting Up a Project
+</span> -->
+        
+  <div class="section" id="setting-up-a-unity3d-project">
+<h1>Setting up a Unity3D project<a class="headerlink" href="#setting-up-a-unity3d-project" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion asset package includes plugin files for using the Leap Motion device on Windows computers. This package includes Hand prefabs, scripts, and demo scenes to help you develop Leap Motion apps quickly.</p>
+<p>Get the Leap Motion asset package from: <a class="reference external" href="https://developer.leapmotion.com/downloads/unity">https://developer.leapmotion.com/downloads/unity</a>.</p>
+<p>Note that version 4.0+ of the Unity assets are currently available for Windows only and require the Orion Beta service. Earlier versions of the assets are available for both Mac and Windows, but require the earlier 2.3 version of the Leap Motion service. You cannot mix elements from Orion with earlier versions of the assets. They are not compatible.</p>
+<div class="section" id="create-a-project">
+<h2>Create a project<a class="headerlink" href="#create-a-project" title="Permalink to this headline">¶</a></h2>
+<p>First, create a new Unity project in the usual way, i.e.:</p>
+<ol class="arabic simple">
+<li>Open the Unity editor.</li>
+<li>Select <em>File &gt; New Project...</em></li>
+<li>Choose a name and save location.</li>
+<li>Click <em>Create Project</em>.</li>
+</ol>
+<p>Then, import the Leap Motion asset package into the project:</p>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="https://developer.leapmotion.com/downloads/unity">Download the assets.</a></p>
+</li>
+<li><p class="first">Select the Unity <strong>Assets &gt; Import Package &gt; Custom Package</strong> menu command.</p>
+</li>
+<li><p class="first">Locate the downloaded asset package and click <strong>Open</strong>.</p>
+<p>The assets are imported into your project.</p>
+</li>
+</ol>
+<p>If you are importing the assets into a project that already contains Leap Motion assets, it is recommended that you delete the old assets first (make a backup of your project). The Unity import process only adds new files and overwrites changed files. It does not remove obsolete files (and sometimes creates duplicates of existing files instead of overwriting them).</p>
+</div>
+<div class="section" id="import-modules">
+<h2>Import Modules<a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h2>
+<p>For Orion, we have divided our Unity assets into a core package supported by optional modules. The core package is required to use hand tracking, but you only need those modules containing features you want to use. None of the modules depend on each other. The currently available modules include:</p>
+<ul class="simple">
+<li>Attachments &#8211; provides a utility hand model that makes it easy to attach game objects to various points on the hand.</li>
+<li>Hands &#8211; provides additional graphics hand models and tools for using rigged 3D hand models.</li>
+<li>Interaction Engine &#8211; provides natural interaction physics between hands and virtual 3D objects in a scene and extensible mechanisms for fine tuning interactions for particular shapes and circumstances.</li>
+<li>UI Input &#8211; Enables using hands to control standard Unity UI elements.</li>
+<li>Detection Examples &#8211; Provides examples for using the Detection utilities feature, which is part of the core assets package. This module does not add any new features (though some of the example scripts may be useful).</li>
+</ul>
+<p>Import a module the same way you imported the Leap Motion asset package:</p>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="https://developer.leapmotion.com/unity#modules">Download the module.</a></p>
+</li>
+<li><p class="first">Select the Unity <strong>Assets &gt; Import Package &gt; Custom Package</strong> menu command.</p>
+</li>
+<li><p class="first">Locate the downloaded module asset package and click <strong>Open</strong>.</p>
+<p>The module is imported into your project.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="adding-hands-to-a-vr-scene">
+<h2>Adding Hands to a VR Scene<a class="headerlink" href="#adding-hands-to-a-vr-scene" title="Permalink to this headline">¶</a></h2>
+<p>The LMHeadMountedRig must replace any existing camera rigs in your scene.</p>
+<p>Place the LMHeadMountedRig prefab at the position of the users&#8217;s initial viewpoint in the scene. The hands in the scene are positioned at the same position as your real hands relative to the real Leap Motion device.</p>
+<p>To add hands to a scene:</p>
+<ol class="arabic">
+<li><p class="first">Remove any existing camera or camera rigs.</p>
+</li>
+<li><p class="first">Drag the prefab into the scene hierarchy.</p>
+</li>
+<li><p class="first">Position the prefab in the scene. Like any VR camera, the position and orientation of the rig will be the initial view of the scene (as modified by the HMD tracking system).</p>
+</li>
+<li><p class="first">Add your hand models to the Hand Pool in the LeapHandController component:</p>
+<ol class="loweralpha simple">
+<li>Select the LeapHandController in the hierarchy.</li>
+<li>Set the Hand Pool&#8217;s Model Pool size to 2. This will create two elements in the pool.</li>
+<li>Set the name of one element to &#8220;gfx_hands&#8221; (or any suitable name).</li>
+<li>Drag the desired hand prefabs to the left and right model properties.</li>
+<li>Set <strong>Is Enabled</strong> and <strong>Can Duplicate</strong> to true.</li>
+<li>Repeat for the second element, using physics hand prefabs.</li>
+</ol>
+<p>You can use prefabs directly in the hand pool or place the hand models in the scene hierarchy first. If you place the hand models in the scene, note that we no longer recommend placing the models as children of the LeapHandController. The models should go outside the camera hierarchy. Otherwise stuttering can occur during head movement.</p>
+</li>
+<li><p class="first">Play the scene.</p>
+<p>You should see hands appear in the Game view when you put your hands in front of the Leap Motion device. If you don&#8217;t see hands, open the Visualizer from the Leap Motion control panel to make sure your Leap Motion device is connected and sending out tracking data. If the Unity hands are just out of view, you can pause the game and use the Scene view to locate them.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="adding-hands-to-a-desktop-scene">
+<h2>Adding Hands to a &#8220;Desktop&#8221; Scene<a class="headerlink" href="#adding-hands-to-a-desktop-scene" title="Permalink to this headline">¶</a></h2>
+<p>Place the LeapHandController prefab below the point at which you want the hands to appear. The hands in the scene are positioned at the same position as your real hands relative to the real Leap Motion device.  You can change the Hand Movement Scale setting to allow the hands to move a within a larger volume.</p>
+<p>To add hands to a scene:</p>
+<ol class="arabic">
+<li><p class="first">In the Project panel, locate the LeapHandController prefab in <tt class="docutils literal"><span class="pre">Assets/LeapMotion/Prefabs</span></tt></p>
+</li>
+<li><p class="first">Drag the LeapHandController prefab into the Scene view.</p>
+</li>
+<li><p class="first">Set the transform position to the desired location.</p>
+<p>To see hands, the LeapHandController must be within the field of view of the camera.</p>
+</li>
+<li><p class="first">Create an empty GameObject and name it &#8220;HandModels&#8221;. This game object should be a sibling of the LeapHandController object, never a child.</p>
+</li>
+<li><p class="first">Drag the desired hand prefabs to the HandModels game object. You will need a separate prefab for right and left hands and will typically have at least two sets: one for visual dispaly and one for Unity physics interaction. You can have any number of sets.</p>
+</li>
+<li><p class="first">Select the LeapHandController in the hierarchy.</p>
+</li>
+<li><p class="first">Drag the HandModels GameObject to the ModelsParent propety of the HandPool component of the LeapHandController.</p>
+</li>
+<li><p class="first">Set the Hand Pool&#8217;s Model Pool size to 2. This will create two elements in the pool.</p>
+</li>
+<li><p class="first">Set the name of one element to &#8220;gfx_hands&#8221; (or any suitable name).</p>
+</li>
+<li><p class="first">Drag the graphics hand models from your HandModels game object to the left and right model properties.</p>
+</li>
+<li><p class="first">Set <strong>Is Enabled</strong> and <strong>Can Duplicate</strong> to true.</p>
+</li>
+<li><p class="first">Repeat for the second element, using physics hand prefabs.</p>
+<p>You can use prefabs directly in the hand pool.</p>
+<p><strong>Note:</strong> The CapsuleHand prefabs are designed for 1:1 scale only.</p>
+</li>
+<li><p class="first">Play the scene.</p>
+<p>You should see hands appear in the Game view when you put your hands over the Leap Motion device. If you don&#8217;t see hands, open the Visualizer from the Leap Motion control panel to make sure your Leap Motion device is connected and sending out tracking data. If the Unity hands are just out of view, you can pause the game and use the Scene view to locate them.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="accessing-the-leap-motion-api-directly">
+<h2>Accessing the Leap Motion API directly<a class="headerlink" href="#accessing-the-leap-motion-api-directly" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the prefabs and scripts included in the asset package, you can write your own scripts to access tracking data from the Leap Motion API. The Leap Motion classes are defined in the <tt class="docutils literal"><span class="pre">Leap</span></tt> namespace. A basic MonoBehavior class that accesses the Leap Motion API will look something like the following (this script moves the object to which it is attached to just underneath the palm of the left hand):</p>
+<div class="code csharp highlight-python"><div class="highlight"><pre>using UnityEngine;
+using System.Collections.Generic;
+using Leap;
+
+public class LeapBehavior : MonoBehaviour {
+    LeapProvider provider;
+
+    void Start ()
+    {
+        provider = FindObjectOfType&lt;LeapProvider&gt;() as LeapProvider;
+    }
+
+    void Update ()
+    {
+        Frame frame = provider.CurrentFrame;
+        foreach (Hand hand in frame.Hands)
+        {
+          if (hand.IsLeft)
+          {
+              transform.position = hand.PalmPosition.ToVector3() +
+                                   hand.PalmNormal.ToVector3() *
+                                  (transform.localScale.y * .5f + .02f);
+              transform.rotation = hand.Basis.Rotation();
+          }
+       }
+    }
+}
+</pre></div>
+</div>
+<p>The script, <tt class="docutils literal"><span class="pre">LeapUnityExtensions.cs</span></tt> in Assets/LeapMotion/Scripts/Utils, provides helpful extension functions for converting vectors and matrices from the Leap Motion API classes to the Unity API classes. The functions ToVector3() and Rotation() used above are defined in this script.</p>
+<p><strong>Note:</strong> In almost every case, you should get Frame objects from the scene&#8217;s LeapProvider object. The LeapProvider transforms the frame data into the proper frame of reference. If you get a frame from the Leap.Controller object, the data will still be in the Leap Motion frame of reference and will not match the hands displayed in the scene.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#setting-up-a-unity3d-project">Setting up a Unity3D project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-project">Create a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-modules">Import Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-hands-to-a-vr-scene">Adding Hands to a VR Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-hands-to-a-desktop-scene">Adding Hands to a &#8220;Desktop&#8221; Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-the-leap-motion-api-directly">Accessing the Leap Motion API directly</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

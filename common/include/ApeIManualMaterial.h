@@ -37,6 +37,10 @@ namespace Ape
 		Ape::Color mDiffuseColor;
 
 		Ape::Color mSpecularColor;
+
+		Ape::Color mAmbientColor;
+
+		Ape::Color mEmissiveColor;
 		
 	public:
 		virtual void setDiffuseColor(Color diffuse) = 0;
@@ -47,7 +51,25 @@ namespace Ape
 
 		Ape::Color getSpecularColor() { return mSpecularColor; };
 
+		virtual void setAmbientColor(Color ambient) = 0;
+
+		virtual void setEmissiveColor(Color emissive) = 0;
+
+		Ape::Color getAmbientColor() { return mAmbientColor; };
+
+		Ape::Color getEmissiveColor() { return mEmissiveColor; };
+
+		virtual void setPassTexture(Ape::TextureWeakPtr texture) = 0;
+
+		virtual Ape::TextureWeakPtr getPassTexture() = 0;
+
 		virtual void setPass(Ape::PassWeakPtr pass) = 0;
+
+		virtual void setCullingMode(Ape::Material::CullingMode cullingMode) = 0;
+
+		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
+
+		virtual void showOnOverlay(bool enable) = 0;
 	};
 }
 

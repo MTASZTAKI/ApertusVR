@@ -1,0 +1,451 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using the Leap Motion Control Panel &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Appendices" href="Leap_Supplements.html" />
+    <link rel="next" title="Using the Diagnostic Visualizer" href="Leap_Visualizer.html" />
+    <link rel="prev" title="Appendices" href="Leap_Supplements.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unreal = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/supplements/Leap_Application.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/supplements/Leap_Application.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/supplements/Leap_Application.html";
+            } else {
+                    redirectedLocation ="Leap_Supplements.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/supplements/Leap_Application.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Supplements.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Visualizer.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/supplements/Leap_Application.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/supplements/Leap_Application.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/supplements/Leap_Application.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/supplements/Leap_Application.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/supplements/Leap_Application.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/supplements/Leap_Application.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/supplements/Leap_Application.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Supplements.html" accesskey="U">Appendices</a>&raquo;
+  Using the Leap Motion Control Panel
+</span> -->
+        
+  <div class="section" id="using-the-leap-motion-control-panel">
+<h1>Using the Leap Motion Control Panel<a class="headerlink" href="#using-the-leap-motion-control-panel" title="Permalink to this headline">¶</a></h1>
+<p>This article describes the Leap Motion Control Panel, which you use to set the available options for your Leap Motion Controller.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>When the the Leap Motion control panel application is running, it displays an icon in the notification area of the Windows Taskbar or Mac Finder bar. When the Leap Motion controller is plugged in and working properly, the icon turns green. Other colors indicate errors and abnormal operating conditions:</p>
+<ul class="simple">
+<li><img alt="Unplugged-Icon" src="supplements/../../../images/Leap_App_Icon_Unplugged.png" /> — the Leap Motion controller is unplugged (or the Leap Motion software hasn&#8217;t detected it yet).</li>
+<li><img alt="Normal-Icon" src="supplements/../../../images/Leap_App_Icon_Normal.png" /> — the Leap Motion controller and software are operating normally.</li>
+<li><img alt="Smudge-Icon" src="supplements/../../../images/Leap_App_Icon_Smudge.png" /> — indicates that a smudge or other contamination might be clouding the Leap Motion Controller sensor window.</li>
+<li><img alt="ForcePause-Icon" src="supplements/../../../images/Leap_App_Icon_Error.png" /> — indicates that tracking has been suspended because the Leap Motion frame rate is below the acceptable threshold. USB bandwidth contention is the primary correctable cause of poor performance and can often be resolved by plugging the Leap Motion controller into a different USB port, plugging the controller directly into the computer rather than using USB hubs or extender cables, or removing other USB devices.</li>
+<li><img alt="FPSLow-Icon" src="supplements/../../../images/Leap_App_Icon_Robust.png" /> — indicates that the Leap Motion frame rate is below the acceptable threshold and you have turned off the <em>Avoid Poor Performance</em> option in the Leap Motion Control Panel. Tracking continues with greatly reduced reliability.</li>
+<li><img alt="Updates-Icon" src="supplements/../../../images/Leap_App_Icon_Updates.png" /> — indicates that an update is available for the Leap Motion software. Open the Leap Motion Control Panel to install the update.</li>
+</ul>
+<p>The Leap Motion control panel application icon menu provides the following commands:</p>
+<ul class="simple">
+<li>Settings... — Opens the Leap Motion Control Panel.</li>
+<li>Visualizer... — launches the (consumer-oriented) Visualizer application.</li>
+<li>Pause/Resume Tracking — Stops/Resumes the production of Leap Motion tracking data.</li>
+</ul>
+</div>
+<div class="section" id="leap-motion-settings">
+<h2>Leap Motion Settings<a class="headerlink" href="#leap-motion-settings" title="Permalink to this headline">¶</a></h2>
+<p>You can adjust the behavior of the Leap Motion system and perform diagnostic checks using the Leap Motion Control Panel. Open the control panel using the <em>Settings...</em> command of the icon menu.</p>
+<div class="section" id="general-settings">
+<h3>General settings<a class="headerlink" href="#general-settings" title="Permalink to this headline">¶</a></h3>
+<p>The General page of the Leap Motion Control Panel provides the following settings:</p>
+<p>Check the <em>Allow Web Apps</em> checkbox to turn on the WebSocket server that provides tracking data to web applications. (It is possible for other applications to connect to the WebSocket server, so turning this setting off could affect a few desktop applications as well.)</p>
+<p>Check <em>Allow Background Apps</em> to permit applications to receive tracking data when they are not the foreground, focused application.</p>
+<p>Check <em>Allow Images</em> to permit applications to receive infrared camera images from the Leap Motion hardware. If unchecked, applications continue to receive tracking data (hand, finger, tool positions, etc), but not the camera images.</p>
+<p>Check <em>Automatic Power Saving</em> to allow the Leap Motion software to reduce power usage by adjusting the tracking frame rate based on the amount of movement in the field of view. Power saving is always used when a computer is running on battery power.</p>
+<p>Check <em>Send Usage Data</em> to send anonymous usage statistics to Leap Motion.</p>
+<p>Check <em>Launch on Startup</em> to launch the control panel application when your computer starts up.</p>
+<p>Check <em>Automatic Interaction Height</em> to allow the Leap Motion software to adjust the height of the interaction box automatically. This setting affects the InteractionBox class provided by the Leap Motion API. Adjust the <em>Interaction Height</em> slider to manually set the interaction box height.</p>
+<p>Check <em>Automatically Install Updates</em> to allow the Leap Motion software to automatically download and install software updates. An update is installed when you restart your computer. Click <em>Install Update</em> to install an available update immediately.</p>
+</div>
+<div class="section" id="tracking-settings">
+<h3>Tracking settings<a class="headerlink" href="#tracking-settings" title="Permalink to this headline">¶</a></h3>
+<p>Check <em>Robust Mode</em> to enable the software to enter the &#8220;Robust Tracking mode,&#8221; which allows tracking to perform better in bright IR lighting conditions.</p>
+<p>Check <em>Auto-orient Tracking</em> to allow the device to flip the z axis when it detects a hand entering the field of view from the opposite side. Click the <em>Reverse Orientation</em> button to flip the axis manually.</p>
+<div class="section" id="robust-tracking-mode">
+<h4>Robust tracking mode<a class="headerlink" href="#robust-tracking-mode" title="Permalink to this headline">¶</a></h4>
+<p>The <em>Robust Mode</em> improves the reliability of the tracking data in bright lighting conditions. Robust mode allows the Leap Motion Controller to operate in a wider range of environmental conditions; however, other performance characteristics may be reduced. The main effects on performance are that there will be increased processing latency and very fast motions by the user will cause a loss of tracking data.</p>
+<p>The Leap Motion Controller automatically drops into robust mode when lighting conditions become poorand will remain in robust mode for at least 30 seconds.</p>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
+<p>Click <em>Show Software Log</em> to view events related to the Leap Motion system. If you are having problems, we may ask you to save the log and send it to <a class="reference external" href="https://developer.leapmotion.com">Leap Motion</a> to help us assess the problem. You can save the log by copying the contents of the log window to an email or text document.</p>
+<p>Click <em>Diagnostic Visualizer</em> to open the Visualizer application.</p>
+<p>Click <em>Report Software Issue</em> to open the bug report form. See <a class="reference internal" href="#reporting-bugs">Reporting bugs</a> for information.</p>
+<p>Click <em>Restore Default Settings</em> to revert all of the Leap Motion settings to their original values.</p>
+<p>Check the <em>Low Resource Mode</em> checkbox to reduce the CPU and USB bandwidth used by the Leap Motion Controller and software. This setting may reduce maximum tracking range, speed, and accuracy, but may be necessary on computers with congested USB busses (from multiple USB and Bluetooth devices) or lower-rated CPU chips.</p>
+<p>Uncheck <em>Avoid Poor Performance</em> to disable the low device frame rate check. The frame rate check pauses tracking when low device frame rates are detected so that you can take corrective action. When you disable this option, tracking is not paused. USB bandwidth problems are the most common cause of low device frame rate, but overall CPU load can contribute as well, especially on computers near or below our minimum recommended <a class="reference external" href="https://support.leapmotion.com/entries/39315178-What-are-the-system-requirements-">system requirements</a>.</p>
+<p>Click <em>Recalibrate Device</em> to start the device calibration utility. See <a class="reference internal" href="#recalibration">Recalibration</a> for  information.</p>
+</div>
+</div>
+<div class="section" id="recalibration">
+<h2>Recalibration<a class="headerlink" href="#recalibration" title="Permalink to this headline">¶</a></h2>
+<p>&lt;iframe width=&#8221;560&#8221; height=&#8221;315&#8221; src=&#8221;<a class="reference external" href="https://www.youtube.com/embed/AXHH-QXqzlI">https://www.youtube.com/embed/AXHH-QXqzlI</a>&#8221; frameborder=&#8221;0&#8221; allowfullscreen&gt;&lt;/iframe&gt;</p>
+<p>If the sensors on the Leap Motion controller are knocked out of their initial alignment, the device must be recalibrated. Symptoms that may indicate the need to recalibrate include:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Persistent jumpiness</li>
+<li>Frequent discontinuities in the tracking data</li>
+<li>Aberrations in tracking data that occur only in certain areas of the field of view</li>
+<li>Poor tracking range</li>
+</ul>
+</div></blockquote>
+<p>You can look for these symptoms using the the <a class="reference external" href="Leap_Visualizer.html">Leap Motion Visualizer</a>.</p>
+<p>We also recommend recalibration, using a mirror, if you mount your Leap Motion controller under a piece of glass or other IR-transparent material.</p>
+<p>To recalibrate your Leap Motion controller:</p>
+<ol class="arabic simple">
+<li>Open the Leap Motion Settins application using the icon menu on the Windows Taskbar or Mac Finder bar.</li>
+<li>Select the Troubleshooting page.</li>
+<li>Click the <em>Recalibrate Device</em> button.</li>
+<li>Follow the on-screen instructions to perform the calibration procedure.</li>
+</ol>
+<div class="figure">
+<img alt="supplements/../../../images/Leap_Recalibrate.png" src="supplements/../../../images/Leap_Recalibrate.png" />
+<p class="caption">You will need a flat, reflective surface. A mirror is ideal, but many other reflective surfaces like a flat screen monitor will work accetably as well. During the procedure, hold the Leap Motion Controller so that the LEDs shine on the reflective surface and are reflected back into the top of the device. The calibration window displays a disk that moves as you change the angle between the surface and the device. Move side-to-side and up-and-down while rotating the controller to move this disc so that it &#8220;paints&#8221; the window. A score of 80 is acceptable, but a score of 90 or more is ideal.</p>
+</div>
+</div>
+<div class="section" id="reporting-bugs">
+<h2>Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permalink to this headline">¶</a></h2>
+<p>If you are having problems with the Leap Motion software or hardware, please contact us so we can help you resolve the issue. You can submit reports on the <a class="reference external" href="https://developer.leapmotion.com">Leap Motion</a> Developer Portal or by using the Bug Report form of the Leap Motion application.</p>
+<p>We may ask you to reproduce the issue on your device and record some diagnostic information which you can send to <a class="reference external" href="https://developer.leapmotion.com">Leap Motion</a> to help us assess the problem. You can start and stop the recording of diagnostic information from the Leap Motion Bug Report form. The data is compressed and encrypted and is not useful for your local application debugging. The data recorded can grow large over time, so we do not recommend recording diagnostics for an extended period.</p>
+<p>To report a bug,</p>
+<ol class="arabic simple">
+<li>Open the Leap Motion Settings dialog using the icon menu on the Windows Taskbar or Mac Finder bar.</li>
+<li>Select the Troubleshooting page.</li>
+<li>Click the <strong>Report Software Issue</strong> button.</li>
+<li>On the Bug Report form, select the reason that best fits your bug from the Reason drop-down list.</li>
+<li>Add any important details, such as how to reproduce your bug in the Details section.</li>
+<li>For some types of bugs, you will be asked to record diagnostic information.</li>
+<li>When finished, click the Send Issue Report button. Your bug information and recorded diagnostics will be sent to Leap Motion.</li>
+</ol>
+<p>If you are asked to record diagnostic information,</p>
+<ol class="arabic simple">
+<li>Press the <em>Record</em> button.</li>
+<li>Reproduce the problem (it may help to have the <a class="reference external" href="Leap_Visualizer.html">Leap Motion Visualizer</a> running).</li>
+<li>Press the <em>Stop</em> button after a short period of time.</li>
+<li>Click <em>Send</em> to upload the diagnostic file to <a class="reference external" href="https://developer.leapmotion.com">Leap Motion</a> for analysis.</li>
+</ol>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Supplements.html">Appendices</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Using the Leap Motion Control Panel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#leap-motion-settings">Leap Motion Settings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general-settings">General settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tracking-settings">Tracking settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#recalibration">Recalibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reporting-bugs">Reporting bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Visualizer.html">Using the Diagnostic Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_JSON.html">WebSocket Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SDK_Release_Notes.html">Leap Motion Release Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Acknowledgements.html">Acknowledgements</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

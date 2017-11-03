@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <fstream>
 #include "OgreSceneManager.h"
 #include "OgreRoot.h"
 #include "OgreConfigFile.h"
@@ -149,13 +150,7 @@ namespace Ape
 
 		Ogre::Overlay* mpOverlay;
 
-		Ogre::OverlayContainer* mpOverlayContainer;
-
-		Ogre::TextAreaOverlayElement* mpOverlayTextArea;
-
-		Ogre::FontManager* mpOverlayFontManager;
-
-		Ogre::Font* mpOverlayFont;
+		Ogre::PanelOverlayElement* mpOverlayPanelElement;
 
 		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
 		
@@ -172,6 +167,10 @@ namespace Ape
 		Ogre::HlmsManager* mpHlmsPbsManager;
 
 		Ogre::MeshLodGenerator* mpMeshLodGenerator;
+
+		Ogre::MeshSerializer mMeshSerializer;
+
+		Ogre::MaterialSerializer mMaterialSerializer;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 

@@ -33,11 +33,33 @@ void ApeTesterPlugin::Init()
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
-		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, -1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, 1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(-1, -1, 0));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
+	{
+		planeNode->setPosition(Ape::Vector3(0, -10, 0));
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
 			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
@@ -54,15 +76,7 @@ void ApeTesterPlugin::Init()
 				}
 			}
 		}
-	}
-	if (auto node = mpScene->createNode("sphereNode").lock())
-	{
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			meshFile->setFileName("sphere.mesh");
-			meshFile->setParentNode(node);
-		}
-	}
+	}*/
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{

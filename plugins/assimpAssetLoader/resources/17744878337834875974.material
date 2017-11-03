@@ -1,0 +1,26 @@
+
+material KieferAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.713227 0.557617 0.334821 1
+			specular 0.0963821 0.0753536 0.0452461 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.713227 0.557617 0.334821 1
+			specular 0.0963821 0.0753536 0.0452461 1 0
+		}
+
+	}
+
+}

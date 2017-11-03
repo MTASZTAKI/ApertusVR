@@ -37,17 +37,23 @@ namespace Ape
 	{
 		float height;
 		float width;
+		Ape::Texture::PixelFormat pixelFormat;
+		Ape::Texture::Usage usage;
 
 		ManualTextureParameters()
 		{
 			this->height = 0.0f;
 			this->width = 0.0f;
+			pixelFormat = Ape::Texture::PixelFormat::PF_INVALID;
+			usage = Ape::Texture::Usage::U_INVALID;
 		}
 
-		ManualTextureParameters(float height, float width)
+		ManualTextureParameters(float height, float width, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 		{
 			this->height = height;
 			this->width = width;
+			this->pixelFormat = pixelFormat;
+			this->usage = usage;
 		}
 	};
 
@@ -59,13 +65,17 @@ namespace Ape
 		virtual ~IManualTexture() {};
 
 	public:
-		virtual void setParameters(float width, float height) = 0;
+		virtual void setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) = 0;
 
 		virtual Ape::ManualTextureParameters getParameters() = 0;
 
 		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
 
 		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
+		
+		virtual void setBuffer(const void* buffer) = 0;
+
+		virtual const void* getBuffer() = 0;
 	};
 }
 

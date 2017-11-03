@@ -1,0 +1,1339 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LeapHand &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="HandList" href="Leap.HandList.html" />
+    <link rel="prev" title="LeapFrame" href="Leap.Frame.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Hand.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Hand.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Hand.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Hand.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Frame.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.HandList.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Hand.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Hand.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Hand.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Hand.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Hand.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Hand.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  LeapHand
+</span> -->
+        
+  <div class="section" id="id53">
+<h1>Hand<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h1>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Hand.arm" title="Leap.Hand.arm"><tt class="xref py py-attr docutils literal"><span class="pre">arm</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.basis" title="Leap.Hand.basis"><tt class="xref py py-attr docutils literal"><span class="pre">basis</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.confidence" title="Leap.Hand.confidence"><tt class="xref py py-attr docutils literal"><span class="pre">confidence</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.direction" title="Leap.Hand.direction"><tt class="xref py py-attr docutils literal"><span class="pre">direction</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.fingers" title="Leap.Hand.fingers"><tt class="xref py py-attr docutils literal"><span class="pre">fingers</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.frame" title="Leap.Hand.frame"><tt class="xref py py-attr docutils literal"><span class="pre">frame</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.grab_strength" title="Leap.Hand.grab_strength"><tt class="xref py py-attr docutils literal"><span class="pre">grab_strength</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.id" title="Leap.Hand.id"><tt class="xref py py-attr docutils literal"><span class="pre">id</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.is_left" title="Leap.Hand.is_left"><tt class="xref py py-attr docutils literal"><span class="pre">is_left</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.is_right" title="Leap.Hand.is_right"><tt class="xref py py-attr docutils literal"><span class="pre">is_right</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.is_valid" title="Leap.Hand.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.palm_normal" title="Leap.Hand.palm_normal"><tt class="xref py py-attr docutils literal"><span class="pre">palm_normal</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.palm_position" title="Leap.Hand.palm_position"><tt class="xref py py-attr docutils literal"><span class="pre">palm_position</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.palm_velocity" title="Leap.Hand.palm_velocity"><tt class="xref py py-attr docutils literal"><span class="pre">palm_velocity</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.palm_width" title="Leap.Hand.palm_width"><tt class="xref py py-attr docutils literal"><span class="pre">palm_width</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.pinch_strength" title="Leap.Hand.pinch_strength"><tt class="xref py py-attr docutils literal"><span class="pre">pinch_strength</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.pointables" title="Leap.Hand.pointables"><tt class="xref py py-attr docutils literal"><span class="pre">pointables</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.sphere_center" title="Leap.Hand.sphere_center"><tt class="xref py py-attr docutils literal"><span class="pre">sphere_center</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.sphere_radius" title="Leap.Hand.sphere_radius"><tt class="xref py py-attr docutils literal"><span class="pre">sphere_radius</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.stabilized_palm_position" title="Leap.Hand.stabilized_palm_position"><tt class="xref py py-attr docutils literal"><span class="pre">stabilized_palm_position</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.time_visible" title="Leap.Hand.time_visible"><tt class="xref py py-attr docutils literal"><span class="pre">time_visible</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.tools" title="Leap.Hand.tools"><tt class="xref py py-attr docutils literal"><span class="pre">tools</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.wrist_position" title="Leap.Hand.wrist_position"><tt class="xref py py-attr docutils literal"><span class="pre">wrist_position</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Hand.finger" title="Leap.Hand.finger"><tt class="xref py py-meth docutils literal"><span class="pre">finger()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.pointable" title="Leap.Hand.pointable"><tt class="xref py py-meth docutils literal"><span class="pre">pointable()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.rotation_angle" title="Leap.Hand.rotation_angle"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_angle()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.rotation_axis" title="Leap.Hand.rotation_axis"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_axis()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.rotation_matrix" title="Leap.Hand.rotation_matrix"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_matrix()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.rotation_probability" title="Leap.Hand.rotation_probability"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_probability()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.scale_factor" title="Leap.Hand.scale_factor"><tt class="xref py py-meth docutils literal"><span class="pre">scale_factor()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.scale_probability" title="Leap.Hand.scale_probability"><tt class="xref py py-meth docutils literal"><span class="pre">scale_probability()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.tool" title="Leap.Hand.tool"><tt class="xref py py-meth docutils literal"><span class="pre">tool()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.translation" title="Leap.Hand.translation"><tt class="xref py py-meth docutils literal"><span class="pre">translation()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Hand.translation_probability" title="Leap.Hand.translation_probability"><tt class="xref py py-meth docutils literal"><span class="pre">translation_probability()</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Hand">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Hand</tt><a class="headerlink" href="#Leap.Hand" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Hand class reports the physical characteristics of a detected hand.</p>
+<p>Hand tracking data includes a palm position and velocity; vectors for
+the palm normal and direction to the fingers; properties of a sphere fit
+to the hand; and lists of the attached fingers.</p>
+<p>The following example gets the rightmost hand from a <a class="reference internal" href="Leap.HandList.html#Leap.HandList" title="Leap.HandList"><tt class="xref py py-class docutils literal"><span class="pre">HandList</span></tt></a> object
+and accesses some basic hand attributes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hands</span><span class="o">.</span><span class="n">rightmost</span>
+<span class="n">position</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_position</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_velocity</span>
+<span class="n">direction</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">direction</span>
+</pre></div>
+</div>
+<p>Note that Hand objects can be invalid, which means that they do not contain
+valid tracking data and do not correspond to a physical entity. Invalid Hand
+objects can be the result of asking for a Hand object using an ID from an
+earlier frame when no Hand objects with that ID exist in the current frame.
+A Hand object created from the Hand constructor is also invalid.
+Test for validity with the <a class="reference internal" href="#Leap.Hand.is_valid" title="Leap.Hand.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">Hand.is_valid</span></tt></a> property.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Hand.Hand">
+<em class="property">classmethod </em><tt class="descname">Hand</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Hand.Hand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Hand object.</p>
+<p>An uninitialized hand is considered invalid.
+Get valid Hand objects from a Frame object.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Hand.arm">
+<tt class="descname">arm</tt><a class="headerlink" href="#Leap.Hand.arm" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><a class="reference internal" href="Leap.Arm.html#Leap.Arm" title="Leap.Arm"><tt class="xref py py-class docutils literal"><span class="pre">Arm</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The arm to which this hand is attached.</p>
+<p>If the arm is not completely in view, Arm attributes are estimated based on the attributes of entities that are in view combined with typical human anatomy.</p>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.basis">
+<tt class="descname">basis</tt><a class="headerlink" href="#Leap.Hand.basis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Matrix.html#Leap.Matrix" title="Leap.Matrix"><tt class="xref py py-class docutils literal"><span class="pre">Matrix</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The basis vectors of the hand, stored in a matrix.</p>
+<p>The basis specifies the orientation of the hand and is defined as follows:</p>
+<ul class="simple">
+<li>x_axis: Perpendicular to both the palm normal and hand direction vectors; positive in the direction of the pinky</li>
+<li>y_axis: Aligned with the palm normal; positive above the hand</li>
+<li>z_axis: Aligned with the hand direction vector; positive in the direction of the wrist</li>
+</ul>
+<p><strong>Note:</strong>  Since the left hand is a mirror of the right hand, the basis matrix is left-handed for left hands. Thus, the positive direction of the x-basis is to the right for the right hand and to the left for the left hand. You can change from right-hand to left-hand rule by multiplying the basis vectors by -1.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">basis</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">basis</span>
+<span class="n">x_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">x_basis</span>
+<span class="n">y_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">y_basis</span>
+<span class="n">z_basis</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">z_basis</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.confidence">
+<tt class="descname">confidence</tt><a class="headerlink" href="#Leap.Hand.confidence" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>How well the internal hand model fits the observed data.</p>
+<p>A low value indicates that there are significant discrepancies; finger positions, even hand identification could be incorrect. The significance of the confidence value to your application can vary with context.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">confidence</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">confidence</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.direction">
+<tt class="descname">direction</tt><a class="headerlink" href="#Leap.Hand.direction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The direction from the palm position toward the fingers.</p>
+<p>The direction is expressed as a unit vector pointing in the same
+direction as the directed line from the palm position to the fingers.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="n">hand_direction</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">direction</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.fingers">
+<tt class="descname">fingers</tt><a class="headerlink" href="#Leap.Hand.fingers" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.FingerList.html#Leap.FingerList" title="Leap.FingerList"><tt class="xref py py-class docutils literal"><span class="pre">FingerList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of Finger objects detected in this frame that are attached to
+this hand, given in arbitrary order.
+The list can be empty if no fingers attached to this hand are detected.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># hand is a Leap.Hand object</span>
+<span class="n">pointables</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">pointables</span>
+<span class="n">fingers</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">fingers</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.frame">
+<tt class="descname">frame</tt><a class="headerlink" href="#Leap.Hand.frame" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The associated Frame object, if available; otherwise,
+an invalid Frame object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frame_for_hand</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">frame</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.grab_strength">
+<tt class="descname">grab_strength</tt><a class="headerlink" href="#Leap.Hand.grab_strength" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The strength of a grab hand pose as a value in the range [0..1].</p>
+<p>An open hand has a grab strength of zero. As a hand closes into a fist,
+its grab strength increases to one.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">strength</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">grab_strength</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.id">
+<tt class="descname">id</tt><a class="headerlink" href="#Leap.Hand.id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+<p>A unique ID assigned to this Hand object, whose value remains the same
+across consecutive frames while the tracked hand remains visible. If
+tracking is lost (for example, when a hand is occluded by another hand
+or when it is withdrawn from or reaches the edge of the Leap Motion Controller field of view),
+the Leap Motion software may assign a new ID when it detects the hand in a future frame.</p>
+<p>Use the ID value with the <a class="reference internal" href="Leap.Frame.html#Leap.Frame.hand" title="Leap.Frame.hand"><tt class="xref py py-func docutils literal"><span class="pre">Frame.hand()</span></tt></a> function to find this Hand object
+in future frames.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_identifier</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.is_left">
+<tt class="descname">is_left</tt><a class="headerlink" href="#Leap.Hand.is_left" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Identifies whether this Hand is a left hand.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_name</span> <span class="o">=</span> <span class="s">&quot;Left hand&quot;</span> <span class="k">if</span> <span class="n">hand</span><span class="o">.</span><span class="n">is_left</span> <span class="k">else</span> <span class="s">&quot;Right hand&quot;</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.is_right">
+<tt class="descname">is_right</tt><a class="headerlink" href="#Leap.Hand.is_right" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Identifies whether this Hand is a right hand.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">hand</span><span class="o">.</span><span class="n">is_right</span><span class="p">:</span>
+    <span class="c"># .. Do right handed stuff</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Hand.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Reports whether this is a valid Hand object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">hand</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+    <span class="c">#Process hand data...</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.palm_normal">
+<tt class="descname">palm_normal</tt><a class="headerlink" href="#Leap.Hand.palm_normal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The normal vector to the palm. If your hand is flat, this vector will
+point downward, or &#8220;out&#8221; of the front surface of your palm.</p>
+<img alt="api/../../../images/Leap_Palm_Vectors.png" src="api/../../../images/Leap_Palm_Vectors.png" />
+<p>The direction is expressed as a unit vector pointing in the same
+direction as the palm normal (that is, a vector orthogonal to the palm).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">normal</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_normal</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.palm_position">
+<tt class="descname">palm_position</tt><a class="headerlink" href="#Leap.Hand.palm_position" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The center position of the palm in millimeters from the Leap Motion Controller origin.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_center</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_position</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.palm_velocity">
+<tt class="descname">palm_velocity</tt><a class="headerlink" href="#Leap.Hand.palm_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The rate of change of the palm position in millimeters/second.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_speed</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_velocity</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.palm_width">
+<tt class="descname">palm_width</tt><a class="headerlink" href="#Leap.Hand.palm_width" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The average width of the hand (not including fingers or thumb).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_width</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">palm_width</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.pinch_strength">
+<tt class="descname">pinch_strength</tt><a class="headerlink" href="#Leap.Hand.pinch_strength" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The strength of a pinch pose between the thumb and the closest finger tip
+as a value in the range [0..1].</p>
+<p>An open, flat hand has a grab strength of zero. As the tip of the thumb approaches the tip
+of a finger, the pinch strength increases to one.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pinch</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">pinch_strength</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.pointables">
+<tt class="descname">pointables</tt><a class="headerlink" href="#Leap.Hand.pointables" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.PointableList.html#Leap.PointableList" title="Leap.PointableList"><tt class="xref py py-class docutils literal"><span class="pre">PointableList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of Pointable objects (fingers) detected in this frame
+that are associated with this hand, given in arbitrary order. The list
+always has five fingers, even if the user is missing digits.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pointables_for_hand</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">pointables</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.sphere_center">
+<tt class="descname">sphere_center</tt><a class="headerlink" href="#Leap.Hand.sphere_center" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The center of a sphere fit to the curvature of this hand.</p>
+<p>This sphere is placed roughly as if the hand were holding a ball.</p>
+<img alt="api/../../../images/Leap_Hand_Ball.png" src="api/../../../images/Leap_Hand_Ball.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sphere_center</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">sphere_center</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.sphere_radius">
+<tt class="descname">sphere_radius</tt><a class="headerlink" href="#Leap.Hand.sphere_radius" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The radius of a sphere fit to the curvature of this hand.</p>
+<p>This sphere is placed roughly as if the hand were holding a ball. Thus the
+size of the sphere decreases as the fingers are curled into a fist.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sphere_diameter</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">hand</span><span class="o">.</span><span class="n">sphere_radius</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.stabilized_palm_position">
+<tt class="descname">stabilized_palm_position</tt><a class="headerlink" href="#Leap.Hand.stabilized_palm_position" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The stabilized palm position of this Hand.</p>
+<p>Smoothing and stabilization is performed in order to make
+this value more suitable for interaction with 2D content. The stabilized
+position lags behind the palm position by a variable amount, depending
+primarily on the speed of movement.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">filtered_hand_position</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">stabilized_palm_position</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.time_visible">
+<tt class="descname">time_visible</tt><a class="headerlink" href="#Leap.Hand.time_visible" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The duration of time this Hand has been visible to the Leap Motion Controller.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lifetime_of_this_hand_object</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">time_visible</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.tools">
+<tt class="descname">tools</tt><a class="headerlink" href="#Leap.Hand.tools" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.ToolList.html#Leap.ToolList" title="Leap.ToolList"><tt class="xref py py-class docutils literal"><span class="pre">ToolList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice</strong> Tools are deprecated in version 3.0.</p>
+<p>In version 2+, tools are not associated with hands. This list is always empty.</p>
+<p>The list of Tool objects detected in this frame that are held by this
+hand, given in arbitrary order.
+The list can be empty if no tools held by this hand are detected.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Hand.wrist_position">
+<tt class="descname">wrist_position</tt><a class="headerlink" href="#Leap.Hand.wrist_position" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The position of the wrist of this hand.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.0.3.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<dl class="method">
+<dt id="Leap.Hand.finger">
+<tt class="descname">finger</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Hand.finger" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="Leap.Finger.html#Leap.Finger" title="Leap.Finger"><tt class="xref py py-class docutils literal"><span class="pre">Finger</span></tt></a> object with the specified ID attached to this hand.</p>
+<p>Use this function to retrieve a Finger object attached to
+this hand using an ID value obtained from a previous frame.
+This function always returns a Finger object, but if no finger
+with the specified ID is present, an invalid Finger object is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">finger_on_hand_by_ID</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">finger_ID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a finger is lost and subsequently
+regained, the new Finger object representing that finger may have a
+different ID than that representing the finger in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Finger object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Finger.html#Leap.Finger" title="Leap.Finger"><tt class="xref py py-class docutils literal"><span class="pre">Finger</span></tt></a> &#8211; The finger with the matching ID if one exists for this
+hand in this frame; otherwise, an invalid Finger object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.pointable">
+<tt class="descname">pointable</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Hand.pointable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Pointable object with the specified ID associated with this hand.</p>
+<p>Use this function to retrieve a Pointable object
+associated with this hand using an ID value obtained from a previous frame.
+This function always returns a Pointable object, but if no finger
+with the specified ID is present, an invalid Pointable object is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pointable_of_interest</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">pointable</span><span class="p">(</span><span class="n">pointable_ID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that finger ID values are based on the hand ID. Hand ID values persist
+across frames, but only until tracking of that hand is lost. If tracking
+of a hand is lost and subsequently regained, the new Hand object will have a
+different ID than that representing the hand in an earlier frame. Thus,
+finger IDs will also change.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Pointable object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Pointable.html#Leap.Pointable" title="Leap.Pointable"><tt class="xref py py-class docutils literal"><span class="pre">Pointable</span></tt></a> &#8211; The Pointable object with the matching ID if one exists for this
+hand in this frame; otherwise, an invalid Pointable object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.rotation_angle">
+<tt class="descname">rotation_angle</tt><big>(</big><em>sinceFrame</em><span class="optional">[</span>, <em>axis</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Leap.Hand.rotation_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>The angle of rotation derived from the change in orientation of this hand, and
+associated fingers, between the current frame and the specified frame.</p>
+<p>If no <tt class="docutils literal"><span class="pre">axis</span></tt> parameter is specified, then the returned angle is expressed in radians
+measured clockwise around the computed <a class="reference internal" href="#Leap.Hand.rotation_axis" title="Leap.Hand.rotation_axis"><tt class="xref py py-func docutils literal"><span class="pre">rotation_axis()</span></tt></a> vector (using the right-hand rule)
+between the start and end frames. The value is always between 0 and pi radians (0 and 180 degrees).</p>
+<p>If an <tt class="docutils literal"><span class="pre">axis</span></tt> parameter is specified, then the returned angle is expressed in radians measured
+clockwise around the supplied rotation axis (using the right-hand rule). In this case, the value
+is always between -pi and pi radians (-180 and 180 degrees).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rotation_around_y_axis</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">rotation_angle</span><span class="p">(</span><span class="n">start_frame</span><span class="p">,</span> <span class="n">Vector</span><span class="o">.</span><span class="n">y_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then the angle of
+rotation is zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative rotation.</li>
+<li><strong>axis</strong> (<a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>) &#8211; The axis to measure rotation around.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A positive value containing the heuristically determined
+rotational change between the current frame and that specified in the
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter, in radians.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.rotation_axis">
+<tt class="descname">rotation_axis</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.rotation_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>The axis of rotation derived from the change in orientation of this
+hand, and any associated fingers, between the current frame
+and the specified frame.</p>
+<p>The returned direction vector is normalized.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">axis_of_hand_rotation</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">rotation_axis</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns a zero vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> &#8211; A normalized direction Vector representing the heuristically
+determined axis of rotational change of the hand between the current
+frame and that specified in the <tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.rotation_matrix">
+<tt class="descname">rotation_matrix</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.rotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The transform matrix expressing the rotation derived from the change
+in orientation of this hand, and associated fingers,
+between the current frame and the specified frame.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_rotation_transform</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns an identity matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="Leap.Matrix.html#Leap.Matrix" title="Leap.Matrix"><tt class="xref py py-class docutils literal"><span class="pre">Matrix</span></tt></a> &#8211; A transformation Matrix representing the heuristically determined
+rotational change of the hand between the current frame and that specified
+in the sinceFrame parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.rotation_probability">
+<tt class="descname">rotation_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.rotation_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the hand motion between the current
+frame and the specified frame is intended to be a rotating motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rotation_intent_factor</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">rotation_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in <tt class="docutils literal"><span class="pre">sinceFrame</span></tt>, or if either
+this frame or <tt class="docutils literal"><span class="pre">sinceFrame</span></tt> are invalid Frame objects, then this method
+returns zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A value between 0 and 1 representing the estimated probability
+that the hand motion between the current frame and the specified frame
+is intended to be a rotating motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.scale_factor">
+<tt class="descname">scale_factor</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.scale_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The scale factor derived from this hand&#8217;s motion between the current frame
+and the specified frame.</p>
+<p>The scale factor is always positive. A value of 1.0 indicates no
+scaling took place. Values between 0.0 and 1.0 indicate contraction
+and values greater than 1.0 indicate expansion.</p>
+<p>The Leap Motion software derives scaling from the relative inward or outward motion of
+a hand and its associated fingers (independent of translation
+and rotation).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand_scale_motion</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns 1.0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative scaling.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A positive value representing the heuristically determined
+scaling change ratio of the hand between the current frame and that
+specified in the <tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.scale_probability">
+<tt class="descname">scale_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.scale_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the hand motion between the current
+frame and the specified frame is intended to be a scaling motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">scale_intent_factor</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">scale_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns zero.</p>
+<p><strong>Arguments</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the relative scaling.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A value between 0 and 1 representing the estimated probability
+that the hand motion between the current frame and the specified frame
+is intended to be a scaling motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.tool">
+<tt class="descname">tool</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Hand.tool" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Notice</strong> Tools are deprecated in version 3.0.</p>
+<p>The <a class="reference internal" href="Leap.Tool.html#Leap.Tool" title="Leap.Tool"><tt class="xref py py-class docutils literal"><span class="pre">Tool</span></tt></a> object with the specified ID held by this hand.</p>
+<p>As of version 2+, tools are not associated with hands. This attribute
+always returns an invalid Tool object.</p>
+<p>Use this function to retrieve a Tool object held by
+this hand using an ID value obtained from a previous frame.
+This function always returns a Tool object, but if no tool
+with the specified ID is present, an invalid Tool object is returned.</p>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a tool is lost and subsequently
+regained, the new Tool object representing that tool may have a
+different ID than that representing the tool in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Tool object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Tool.html#Leap.Tool" title="Leap.Tool"><tt class="xref py py-class docutils literal"><span class="pre">Tool</span></tt></a> &#8211; The tool with the matching ID if one exists for this
+hand in this frame; otherwise, an invalid Tool object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.translation">
+<tt class="descname">translation</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The change of position of this hand between the current frame and
+the specified frame.</p>
+<p>The returned translation vector provides the magnitude and direction of
+the movement in millimeters.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">linear_hand_movement</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">translation</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns a zero vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the translation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> &#8211; A Vector representing the heuristically determined change in
+hand position between the current frame and that specified in the
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.translation_probability">
+<tt class="descname">translation_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Hand.translation_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the hand motion between the current
+frame and the specified frame is intended to be a translating motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">translation_intent_factor</span> <span class="o">=</span> <span class="n">hand</span><span class="o">.</span><span class="n">translation_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a corresponding Hand object is not found in sinceFrame, or if either
+this frame or sinceFrame are invalid Frame objects, then this method
+returns zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<a class="reference internal" href="Leap.Frame.html#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a>) &#8211; The starting frame for computing the translation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A value between 0 and 1 representing the estimated probability
+that the hand motion between the current frame and the specified frame
+is intended to be a translating motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="data container">
+<dl class="data">
+<dt id="Leap.Hand.invalid">
+<tt class="descname">invalid</tt><a class="headerlink" href="#Leap.Hand.invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Hand" title="Leap.Hand"><tt class="xref py py-class docutils literal"><span class="pre">Hand</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>An invalid Hand object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">hand</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Hand</span><span class="o">.</span><span class="n">invalid</span><span class="p">:</span>
+    <span class="c">#Process hand data...</span>
+</pre></div>
+</div>
+<p>You can use the instance returned by this function in comparisons testing
+whether a given Hand instance is valid or invalid. (You can also use the
+<a class="reference internal" href="#Leap.Hand.is_valid" title="Leap.Hand.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">Hand.is_valid</span></tt></a> property.)</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="operators container">
+<dl class="method">
+<dt id="Leap.Hand.eq">
+<tt class="descname">eq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Hand.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Hand object equality.
+Two Hand objects are equal if and only if both Hand objects represent the
+exact same physical hand in the same frame and both Hand objects are valid.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Hand.ne">
+<tt class="descname">ne</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Hand.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Hand object inequality.
+Two Hand objects are equal if and only if both Hand objects represent the
+exact same physical hand in the same frame and both Hand objects are valid.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id23">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id27">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id16">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id32">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id8">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id5">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id20">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id29">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id53">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id24">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

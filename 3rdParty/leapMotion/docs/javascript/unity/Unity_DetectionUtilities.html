@@ -1,0 +1,542 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Detection Utilities &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/unity/Unity_DetectionUtilities.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity_DetectionUtilities.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity_DetectionUtilities.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/unity/Unity_DetectionUtilities.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity_DetectionUtilities.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Detection Utilities
+</span> -->
+        
+  <div class="section" id="detection-utilities">
+<h1>Detection Utilities<a class="headerlink" href="#detection-utilities" title="Permalink to this headline">¶</a></h1>
+<p>The detection utilities are a set of scripts in the core asset package that provide a convenient way to detect what a user’s hand is doing. For example, you can detect when the fingers of a hand are curled or extended, whether a finger or palm are pointing in a particular direction, or whether the hand or fingertip are close to one of a set of target objects. Detectors can be combined together using a Logic Gate. The Detector Logic Gate is itself a detector that logically combines two or more other detectors to determine its own state. Need a thumb’s up gesture? Combine a thumb extended detector with a thumb pointing upward detector using a logic gate.</p>
+<p>Detectors dispatch standard Unity events when they activate or deactivate. This makes it easy to hook up objects and scripts to a detector straight from the Unity editor — without writing a line of code.</p>
+<p>Each detector can draw gizmos that make it easy to see its configured conditions and whether it is currently active or inactive.</p>
+<img alt="unity/../../../images/unity/handgizmos_360.png" src="unity/../../../images/unity/handgizmos_360.png" />
+<p>Detectors are designed to be small building blocks that you can put together into something interesting. This also has the benefit that it is easy to write your own detector scripts.</p>
+<p>The Detector scripts, including the PinchDetector, are now part of the Core Assets package. The former Pinch Utility module has been retired and the example scenes moved to the Detection Examples package, which also contains an additional scene that illustrates how to use detectors.</p>
+<div class="section" id="using-a-detector">
+<h2>Using a Detector<a class="headerlink" href="#using-a-detector" title="Permalink to this headline">¶</a></h2>
+<p>To use a detector, add it to a scene as a component of a game object. In general, it makes the most sense to put the script on an object related to its function, for example, to put a detector you are going to use to detect the state of a thumb on the thumb object itself. You can use the HandAttachments prefab from the Attachments module to separate the concerns of visual representation and physics interaction from game logic. The HandAttachments prefab exposes the most important transforms for the parts of the hand.</p>
+<p>Once the detector is added to the scene, you can set its properties in the Unity Inspector. The properties vary by detector, but most include the following:</p>
+<ul class="simple">
+<li>Period &#8211; the Period detemines how often the detector checks the hand state.</li>
+<li>Hand Model &#8211; which hand the detector watches. If you put the detector on a hand model, then the detector will find the parent hand automatically. Otherwise, you can set the hand manually.</li>
+<li>On and Off values &#8211; the on value sets the point at which a detector turns on; the off value sets where it turns off again. Generally there should be a small difference between the on and off values to prevent the detector from bouncing between the on and off states when the tracking value is right at the threshold.</li>
+<li>Show Gizmos &#8211; sets whether the detector draws graphic debugging aids. Gizmos are still only shown when also enabled in the Unity Editor. Turning off individual detector gizmos can be helpful when you have multiple detectors on the same hand.</li>
+</ul>
+<div class="section" id="standard-unity-events">
+<h3>Standard Unity Events<a class="headerlink" href="#standard-unity-events" title="Permalink to this headline">¶</a></h3>
+<p>When a detector turns on (activates) or turns off (deactivates), it dispatches standard Unity events. You can hook up these events in the Unity Inspector panel to pretty much anu Unity game object or its components, or to scripts that you write yourself. The primary Detector events are OnActivate and OnDeactivate. Some detectors dispatch additional events.</p>
+</div>
+<div class="section" id="combining-detectors">
+<h3>Combining Detectors<a class="headerlink" href="#combining-detectors" title="Permalink to this headline">¶</a></h3>
+<p>You can combine multiple detectors to create more complex behavior using the DetectorLogicGate script. A logic gate takes any number of other detectors as input and outputs a single boolean. It is a type of Detector object, so it also dispatches OnActivate and OnDeactivate events. You can set logic gates to be AND gates (all inputs must be true for the output to be true) or OR gates (the output is true if any input is true). You can also negate the output to configure the gate as a NAND or NOR gate.</p>
+<p>Since a logic gate is, itself, a Detector, you can hook up multiple logic gates to create arbitrarily complex logic. However, if you have more than a couple of gates, you should consider whether it is more maintainable to just write a script that encompasses that logic. If you do connect multiple gates, uncheck the &#8220;Add All Sibling Detectors&#8221; option and drag the proper Detectors to the gate&#8217;s Detector list manually.</p>
+</div>
+</div>
+<div class="section" id="using-detectors-with-attachments">
+<h2>Using Detectors with Attachments<a class="headerlink" href="#using-detectors-with-attachments" title="Permalink to this headline">¶</a></h2>
+<p>The HandAttachments prefab has a AttachmentController script that exposes two methods, Activate() and Deactivate() that you can hook directly to the event dispatchers of a detector. The AttachmentController script enables child game objects of the attachment controller when Activate() is called and disables them when Deactivate() is called. Thus, you can use detectors to turn objects attached to the hand on or off.</p>
+<img alt="unity/../../../images/unity/Detector_Attachment.png" src="unity/../../../images/unity/Detector_Attachment.png" />
+</div>
+<div class="section" id="detector-cookbook">
+<h2>Detector Cookbook<a class="headerlink" href="#detector-cookbook" title="Permalink to this headline">¶</a></h2>
+<p>The following collection of ideas illustrate how to use detectors to implement behaviors and interaction in your application.</p>
+<div class="section" id="thumb-s-up">
+<h3>Thumb&#8217;s Up<a class="headerlink" href="#thumb-s-up" title="Permalink to this headline">¶</a></h3>
+<p>To detect a &#8220;Thumb&#8217;s Up&#8221; use an ExtendedFingerDetector to check that the thumb is the only extended finger and a FingerDirectionDetector to check detect when the thumb is pointing up. Combine these detectors with an AND-type logic gate:</p>
+<ul class="simple">
+<li>ExtendedFingerDetector &#8211; configure the component so that the Thumb must be extended and the other fingers must not be extended.</li>
+<li>FingerDirectionDetector &#8211; configure the component so that:<ul>
+<li>Finger Name = TYPE_THUMB</li>
+<li>Pointing Direction = (0, 1, 0)</li>
+<li>Pointing Type = Relative To World</li>
+<li>On and Off angles: set as desired</li>
+</ul>
+</li>
+<li>DetectorLogicGate &#8211; Set the Gate Type to And Gate and hook up the event dispatchers to the object or component that should react to the thumb&#8217;s up.</li>
+</ul>
+<p>You can place these components together on the Thumb transform of a HandAttachment (or anywhere convenient on a HandModel really).</p>
+</div>
+<div class="section" id="camera-facing-open-hand">
+<h3>Camera-Facing Open Hand<a class="headerlink" href="#camera-facing-open-hand" title="Permalink to this headline">¶</a></h3>
+<p>To detect when a palm is facing the camera use an ExtendedFingerDetector to check that all the fingers are extended and a PalmDirectionDetector to check detect when the palm is facing the camera. Combine these detectors with an AND-type logic gate:</p>
+<ul class="simple">
+<li>ExtendedFingerDetector &#8211; configure the component so that all fingers must be extended.</li>
+<li>PalmDirectionDetector &#8211; configure the component so that:<ul>
+<li>Pointing Direction = (0, 0, 1)</li>
+<li>Pointing Type = Relative To Horizon</li>
+<li>On and Off angles: set as desired</li>
+</ul>
+</li>
+<li>DetectorLogicGate &#8211; Set the Gate Type to And Gate and hook up the event dispatchers to the object or component that should react to the thumb&#8217;s up.</li>
+</ul>
+<p>You can place these components together on the Palm transform of a HandAttachment (or anywhere convenient on a HandModel really).</p>
+</div>
+<div class="section" id="pinch-to-pickup">
+<h3>Pinch-To-Pickup<a class="headerlink" href="#pinch-to-pickup" title="Permalink to this headline">¶</a></h3>
+<p>Picking up objects in Unity can be fairly complex and have many edge-cases that need to be taken into account. Things get especially complex when you want to pick up objects that also have rigidbodies that you want to otherwise collide with the hands. This challenge is the reason Leap Motion created the <a class="reference internal" href="Unity_Interaction_Engine.html"><em>Interaction Engine</em></a>. For the simplest cases, however, you can use detectors to determine when the hand should pickup or release an object and write Unity scripts to do the actual object movement or re-parenting.</p>
+<p>The following example uses a ProximityDetector to select the object to pick up; a PinchDetector to trigger pick-up and release, and a simple custom script to attach and detach objects to the hand&#8217;s pick up point.</p>
+<p>Add the following components to the PinchPoint game object of a HandAttachment:</p>
+<ul>
+<li><p class="first">ProximityDetector &#8211; add any objects eligible to be picked up to the Target Objects list. (You can also use tags or layers to identify potential targets.)</p>
+</li>
+<li><p class="first">PinchDetector &#8211; The default settings work, but you can adjust the Activate and Deactivate Pinch Distance properties to adjust how far or close the thumb and index finger must be apart to pick up or release an object.</p>
+</li>
+<li><p class="first">Add a new script component named &#8220;Pickup&#8221; using the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre>using UnityEngine;
+using Leap.Unity;
+
+public class Pickup : MonoBehaviour {
+
+ GameObject _target;
+
+ public void setTarget(GameObject target) {
+   if (_target == null) {
+     _target = target;
+   }
+ }
+
+public void pickupTarget() {
+   if (_target) {
+     StartCoroutine(changeParent());
+     Rigidbody rb = _target.gameObject.GetComponent&lt;Rigidbody&gt;();
+     if(rb != null) {
+       rb.isKinematic = true;
+     }
+   }
+ }
+
+ //Avoids object jumping when passing from hand to hand.
+ IEnumerator changeParent() {
+   yield return null;
+   if(_target != null)
+       _target.transform.parent = transform;
+ }
+
+ public void releaseTarget() {
+   if (_target &amp;&amp; _target.activeInHierarchy) {
+     if (_target.transform.parent == transform) { //Only reset if we are still the parent
+       Rigidbody rb = _target.gameObject.GetComponent&lt;Rigidbody&gt;();
+       if (rb != null) {
+         rb.isKinematic = false;
+       }
+       _target.transform.parent = null;
+     }
+     _target = null;
+   }
+ }
+
+ public void clearTarget(){
+   _target = null;
+ }
+}
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Finally, set the detector event dispatchers to call the Pickup script methods:</p>
+<ul class="simple">
+<li>PinchDetector.OnActivate() -&gt; Pickup.pickupTarget()</li>
+<li>PinchDetector.OnDeactivate() -&gt; Pickup.releaseTarget()</li>
+<li>ProximityDetector.OnDeactivate() -&gt; Pickup.clearTarget()</li>
+<li>ProximityDetector.OnProximity(GameObject) -&gt; Pickup.setTarget(GameObject)</li>
+</ul>
+<p>This script is sufficient to pick up game objects with and without rigidbodies and pass them from hand-to-hand. To avoid collision problems, the script turns rigid bodies to kinematic when they are picked up and turns them to non-kinematic when they are released.</p>
+</div>
+</div>
+<div class="section" id="making-your-own-detector">
+<h2>Making Your Own Detector<a class="headerlink" href="#making-your-own-detector" title="Permalink to this headline">¶</a></h2>
+<p>To create your own Detector classes, you must extend the Detector base class and implement logic that calls Activate() when your detector turns on and Deactivate() when it turns off. Most of the provided detector scripts use a coroutine that checks the watched state. You can do the computation in one of Unity&#8217;s Update() callbacks, but it may be less efficient to do so if you don&#8217;t need to check every Unity frame.</p>
+<p>It is also a good idea to implement a gizmo drawing script when possible so that you can see how the detector is working while looking at your hands.</p>
+<p>The following code is a bare-bones template for a Detector implementation. To complete this template, you would, at a minimum, add the logic to access the tracking data you are interested in and check whether it satisfies some criteria. You can use the existing Detector implementations for further examples.</p>
+<div class="code highlight-python"><div class="highlight"><pre>using UnityEngine;
+using UnityEngine.Events;
+using Leap;
+using Leap.Unity;
+
+  public class CustomDetector : Detector {
+    public float Period = .1f; //seconds
+    public float OnValue  = 1.0f;
+    public float OffValue = 1.5f;
+
+    private float gizmoSize = .1f;
+    private IEnumerator watcherCoroutine;
+
+    void Awake(){
+      watcherCoroutine = watcher();
+    }
+
+    void OnEnable () {
+        StopCoroutine(watcherCoroutine);
+        StartCoroutine(watcherCoroutine);
+    }
+
+    void OnDisable () {
+      StopCoroutine(watcherCoroutine);
+    }
+
+    IEnumerator watcher(){
+      float watchedValue = 20;
+      while(true){
+          //Your logic to compute or check the current watchedValue goes here
+
+        if(watchedValue &gt; OffValue){
+          Activate();
+        }
+        if(watchedValue &lt; OnValue){
+          Deactivate();
+        }
+        yield return new WaitForSeconds(Period);
+      }
+    }
+
+    #if UNITY_EDITOR
+    void OnDrawGizmos(){
+      if(IsActive){
+        Gizmos.color = OnColor;
+      } else {
+        Gizmos.color = OffColor;
+      }
+      Gizmos.DrawWireSphere(transform.position, gizmoSize, OnValue);
+      Gizmos.color = LimitColor;
+      Gizmos.DrawWireSphere(transform.position, gizmoSize, OffValue);
+    }
+    #endif
+  }
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

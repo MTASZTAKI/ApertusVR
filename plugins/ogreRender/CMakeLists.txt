@@ -182,6 +182,7 @@ set (HEADERS
 	ApeOgreMovableText.h
 	ApeOgreShaderGeneratorResolver.h
 	ApeOgreConversions.h
+	ApeOgreUtilities.h
 	)
 set (SOURCES
 	ApeOgreRenderPlugin.cpp

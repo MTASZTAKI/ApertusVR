@@ -1,0 +1,577 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "Microsoft.Kinect.VisualGestureBuilder"
+    </assembly>
+    <members>
+        <member name="E:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.PropertyChanged">
+            <summary>
+Occurs when a property of the object changes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Kinect.PropertyChangedAdapter._handler">
+            <summary>
+The wrapped handler.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.PropertyChangedAdapter.OnPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+Called to trigger the property changed event handler.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.PropertyChangedAdapter.#ctor(System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+Initializes a new instance of the PropertyChangedAdapter class with the given handler.
+            </summary>
+            <param name="handler">PropertyChangedEventHandler to wrap.</param>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.VisualGestureBuilderFrameSource">
+            <summary>
+Gets the frame source of the Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.ContinuousGestureResults">
+            <summary>
+Gets a collection of continuous gesture results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.DiscreteGestureResults">
+            <summary>
+Gets a collection of discrete gesture results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.IsTrackingIdValid">
+            <summary>
+Gets a value indicating whether the tracking ID for the Visual Gesture Builder frame is valid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.TrackingId">
+            <summary>
+Gets the tracking ID of the Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.RelativeTime">
+            <summary>
+Gets the relative time of the Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase.AvailableGesturesCount">
+            <summary>
+Gets the number of available gestures in the database
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase.AvailableGestures">
+            <summary>
+Gets a list of the available gestures in the database.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.ContinuousGestureResult.Progress">
+            <summary>
+Gets a value indicating the progress of a continuous gesture result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.DiscreteGestureResult.Confidence">
+            <summary>
+Gets a value indicating the confidence level of the gesture detection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.DiscreteGestureResult.FirstFrameDetected">
+            <summary>
+Gets a value indicating whether the first frame of a gesture has been detected.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.DiscreteGestureResult.Detected">
+            <summary>
+Gets a value indicating whether a gesture has been detected.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReference.AcquireFrame">
+            <summary>
+Gets the Visual Gesture Builder frame associated with the frame reference.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReference.RelativeTime">
+            <summary>
+Gets the relative time of the associated Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.Gesture.Name">
+            <summary>
+Gets the name of the gesture.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.Gesture.GestureType">
+            <summary>
+Gets the type of the gesture.
+            </summary>
+        </member>
+        <member name="M:ThreadSafeList`1.GetEnumeratorOld">
+            <summary>
+Returns an enumerator that iterates through the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <remarks>This enumerator is a SNAPSHOT of the list.  Keep this in mind when using this enumerator.</remarks>
+            <returns>A ThreadSafeList&lt;T&gt;.Enumerator for the ThreadSafeList&lt;T&gt;.</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.GetEnumerator">
+            <summary>
+Returns an enumerator that iterates through the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <remarks>This enumerator is a SNAPSHOT of the list.  Keep this in mind when using this enumerator.</remarks>
+            <returns>A ThreadSafeList&lt;T&gt;.Enumerator for the ThreadSafeList&lt;T&gt;.</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.NewEnumerator">
+            <summary>
+Returns an enumerator that iterates through the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <remarks>This support function exists to satisfy code quality warning CA2000.  Otherwise, it would be in-line.</remarks>
+            <returns>A ThreadSafeList&lt;T&gt;.Enumerator for the ThreadSafeList&lt;T&gt;.</returns>
+        </member>
+        <member name="F:ThreadSafeList`1._list">
+            <summary>
+Wrapped list object.
+            </summary>
+        </member>
+        <member name="F:ThreadSafeList`1._lock">
+            <summary>
+Lock object to use for all operations.
+            </summary>
+        </member>
+        <member name="M:ThreadSafeList`1.Remove(`0)">
+            <summary>
+Removes the first occurrence of a specific object from the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="item">
+The object to remove from the ThreadSafeList&lt;T&gt;. The value
+can be null for reference types.
+</param>
+            <returns>
+true if item is successfully removed; otherwise, false. This method also
+returns false if item was not found in the ThreadSafeList&lt;T&gt;.
+</returns>
+        </member>
+        <member name="P:ThreadSafeList`1.IsReadOnly">
+            <summary>
+Gets a value indicating whether the list is read only.  Returns true.
+            </summary>
+        </member>
+        <member name="P:ThreadSafeList`1.Count">
+            <summary>
+Gets the number of elements actually contained in the ThreadSafeList&lt;T&gt;.
+            </summary>
+        </member>
+        <member name="M:ThreadSafeList`1.CopyTo(`0[])">
+            <summary>
+Copies the entire ThreadSafeList&lt;T&gt; to a compatible one-dimensional
+array, starting at the beginning of the target array.
+            </summary>
+            <param name="arr">
+The one-dimensional System.Array that is the destination of the elements
+copied from System.Collections.Generic.List&lt;T&gt;. The System.Array must have
+zero-based indexing.
+</param>
+            <exception cref="T:System.ArgumentNullException">Array is null.</exception>
+            <exception cref="T:System.ArgumentException">
+The number of elements in the source ThreadSafeList&lt;T&gt; is
+greater than the number of elements that the destination array can contain.
+</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.CopyTo(`0[],System.Int32)">
+            <summary>
+Copies the entire ThreadSafeList&lt;T&gt; to a compatible one-dimensional
+array, starting at the beginning of the target array.
+            </summary>
+            <param name="arr">
+The one-dimensional System.Array that is the destination of the elements
+copied from ThreadSafeList&lt;T&gt;. The System.Array must have
+zero-based indexing.
+</param>
+            <param name="arrayIndex">
+The zero-based index in array at which copying begins.
+</param>
+            <exception cref="T:System.ArgumentNullException">Array is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">ArrayIndex is less than 0.</exception>
+            <exception cref="T:System.ArgumentException">
+The number of elements in the source ThreadSafeList&lt;T&gt; is
+greater than the available space from arrayIndex to the end of the destination
+array.
+</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.Contains(`0)">
+            <summary>
+Determines whether an element is in the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="item">
+The object to locate in the ThreadSafeList&lt;T&gt;. The value
+can be null for reference types.
+</param>
+            <returns>
+true if item is found in the ThreadSafeList&lt;T&gt;; otherwise,
+false.
+</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.Clear">
+            <summary>
+Removes all elements from the ThreadSafeList&lt;T&gt;.
+            </summary>
+        </member>
+        <member name="M:ThreadSafeList`1.Add(`0)">
+            <summary>
+Adds an object to the end of the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="item">
+The object to be added to the end of the ThreadSafeList&lt;T&gt;.
+The value can be null for reference types.
+</param>
+        </member>
+        <member name="P:ThreadSafeList`1.default(System.Int32)">
+            <summary>
+Gets or sets the element at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the element to get or set.</param>
+            <returns>The element at the specified index.</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.RemoveAt(System.Int32)">
+            <summary>
+Removes the element at the specified index of the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="index">The zero-based index of the element to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Index is less than 0.-or-index is equal to or greater than ThreadSafeList&lt;T&gt;.Count.</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.Insert(System.Int32,`0)">
+            <summary>
+Inserts an element into the ThreadSafeList&lt;T&gt; at the specified
+index.
+            </summary>
+            <param name="index">
+The zero-based index at which item should be inserted.
+</param>
+            <param name="item">
+The object to insert. The value can be null for reference types.
+</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Index is less than 0.-or-index is greater than ThreadSafeList&lt;T&gt;.Count.</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.IndexOf(`0)">
+            <summary>
+Searches for the specified object and returns the zero-based index of the
+first occurrence within the entire ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="item">
+The object to locate in the ThreadSafeList&lt;T&gt;. The value
+can be null for reference types.
+</param>
+            <returns>
+The zero-based index of the first occurrence of item within the entire ThreadSafeList&lt;T&gt;,
+if found; otherwise, –1.
+</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.AddRange(System.Collections.Generic.IEnumerable`1{`0})">
+            <summary>
+Adds the elements of the specified collection to the end of the ThreadSafeList&lt;T&gt;.
+            </summary>
+            <param name="collection">
+The collection whose elements should be added to the end of the ThreadSafeList&lt;T&gt;.
+The collection itself cannot be null, but it can contain elements that are
+null, if type T is a reference type.
+</param>
+            <exception cref="T:System.ArgumentNullException">Collection is null.</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.#ctor(System.Object)">
+            <summary>
+Initializes a new instance of the ThreadSafeList class with an existing new lock.
+            </summary>
+            <param name="critSec">Existing lock to use for this list.</param>
+        </member>
+        <member name="M:ThreadSafeList`1.#ctor">
+            <summary>
+Initializes a new instance of the ThreadSafeList class with a new lock.
+            </summary>
+        </member>
+        <member name="P:ThreadSafeList`1.ThreadSafeEnumerator.Current2">
+            <summary>
+Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <returns>The element in the collection at the current position of the enumerator.</returns>
+        </member>
+        <member name="P:ThreadSafeList`1.ThreadSafeEnumerator.Current">
+            <summary>
+Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <returns>The element in the collection at the current position of the enumerator.</returns>
+        </member>
+        <member name="M:ThreadSafeList`1.ThreadSafeEnumerator.Reset">
+            <summary>
+Sets the enumerator to its initial position, which is before the first element
+in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.ThreadSafeEnumerator.MoveNext">
+            <summary>
+Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns>
+true if the enumerator was successfully advanced to the next element; false
+if the enumerator has passed the end of the collection.
+</returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:ThreadSafeList`1.ThreadSafeEnumerator.Dispose">
+            <summary>
+Disposes the underlying enumerator.  Does not set _list or _enum to null so calls will still
+proxy to the disposed instance (and throw the proper exception).
+            </summary>
+        </member>
+        <member name="M:ThreadSafeList`1.ThreadSafeEnumerator.#ctor(ThreadSafeList`1{`0})">
+            <summary>
+Initializes a new instance of the ThreadSafeEnumerator class, creating a snapshot of the given list.
+            </summary>
+            <param name="list">List to snapshot.</param>
+        </member>
+        <member name="F:ThreadSafeList`1.ThreadSafeEnumerator._enum">
+            <summary>
+Internal enumerator of the snapshot.
+            </summary>
+        </member>
+        <member name="F:ThreadSafeList`1.ThreadSafeEnumerator._list">
+            <summary>
+Snapshot to enumerate.
+            </summary>
+        </member>
+        <member name="T:ThreadSafeList`1.ThreadSafeEnumerator">
+            <summary>
+Provides a SNAPSHOT enumerator of the list.  Keep this in mind when using this enumerator.
+            </summary>
+        </member>
+        <member name="T:ThreadSafeList`1">
+            <summary>
+IList implementation with locking on all operations.
+            </summary>
+            <typeparam name="T">Type of generic IList to implement.</typeparam>
+        </member>
+        <member name="T:NativeReaderWriterLock">
+            <summary>
+A managed wrapper for the native slim reader writer lock which requires no cleanup, and
+therefore need not be disposable.
+            </summary>
+        </member>
+        <member name="T:Lock">
+            <copyright file="ThreadSafeList.h" company="Microsoft Corporation">
+   Copyright (c) Microsoft Corporation. All rights reserved.
+</copyright>
+            <summary>
+A list with locking semantics so it can be used cross-thread.
+            </summary>
+            <copyright file="Lock.h" company="Microsoft Corporation">
+    Copyright (c) Microsoft Corporation. All rights reserved.
+</copyright>
+            <summary>
+   Classes to imitate the lock keyword available in C#.
+</summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.ContinuousGestureResult">
+            <summary>
+Provides information about the progress of a continuous gesture result.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.DiscreteGestureResult">
+            <summary>
+Provides methods for determining the status of a discrete gesture detection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.Gesture">
+            <summary>
+Represents a gesture.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.TrackingIdLostEventArgs">
+            <summary>
+Provides data for the TrackingIdLost event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.TrackingIdLostEventArgs.TrackingId">
+            <summary>
+Gets the tracking ID associated with the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase">
+            <summary>
+Represents a gesture data store.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase.#ctor(System.String)">
+            <summary>
+Initializes a new instance of the VisualGestureBuilderDatabase class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase.#ctor(Windows.Storage.Streams.IBuffer,System.UInt32)">
+            <summary>
+Initializes a new instance of the VisualGestureBuilderDatabase class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderDatabase.Close">
+            <summary>
+Disposes of the object and cleans up associated resources.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame">
+            <summary>
+Represents a Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrame.Close">
+            <summary>
+Disposes of the object and cleans up associated resources.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameArrivedEventArgs">
+            <summary>
+Provides data for the FrameArrived event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameArrivedEventArgs.FrameReference">
+            <summary>
+Gets the Visual Gesture Builder frame reference associated with the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader">
+            <summary>
+Represents a Visual Gesture Builder frame reader.
+            </summary>
+        </member>
+        <member name="E:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.FrameArrived">
+            <summary>
+Occurs when a new frame is ready.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.Close">
+            <summary>
+Disposes of the object and cleans up associated resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.CalculateAndAcquireLatestFrame">
+            <summary>
+Calculates and retrieves the latest Visual Gesture Builder frame.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.VisualGestureBuilderFrameSource">
+            <summary>
+Gets the frame source associated with the reader.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReader.IsPaused">
+            <summary>
+Gets a value that indicates whether the reader is paused.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameReference">
+            <summary>
+Represents a reference to a VisualGestureBuilderFrame.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource">
+            <summary>
+Represents a visual gesture builder frame source.
+            </summary>
+        </member>
+        <member name="E:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.PropertyChanged">
+            <summary>
+Occurs when a property of the VisualGestureBuilderFrameSource changes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.#ctor(WindowsPreview.Kinect.KinectSensor,System.UInt64)">
+            <summary>
+Initializes a new instance of the VisualGestureBuilderFrameSource class.
+            </summary>
+        </member>
+        <member name="E:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.TrackingIdLost">
+            <summary>
+Occurs when the tracking ID of the Visual Gesture Builder frame source is lost.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.AddGestures(Windows.Foundation.Collections.IIterable{Microsoft.Kinect.VisualGestureBuilder.Gesture})">
+            <summary>
+Adds the specified list of gestures to the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.Close">
+            <summary>
+Disposes of the object and cleans up associated resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.AddGesture(Microsoft.Kinect.VisualGestureBuilder.Gesture)">
+            <summary>
+Adds the specified gesture to the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.GetIsEnabled(Microsoft.Kinect.VisualGestureBuilder.Gesture,System.Boolean@)">
+            <summary>
+Gets a value indicating if the specified gesture is enabled for the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.OpenReader">
+            <summary>
+Opens a new frame reader. This reader must be disposed
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.RemoveGesture(Microsoft.Kinect.VisualGestureBuilder.Gesture)">
+            <summary>
+Removes the specified gesture from the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.SetIsEnabled(Microsoft.Kinect.VisualGestureBuilder.Gesture,System.Boolean)">
+            <summary>
+Sets whether the specified gesture is enabled for the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.Gestures">
+            <summary>
+Gets a collection of gestures associated with the Visual Gesture Builder frame source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.HorizontalMirror">
+            <summary>
+Gets or sets a value indicating whether horizontal mirroring should be used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.IsActive">
+            <summary>
+Gets a value indicating if the Visual Gesture Builder frame source is active.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.IsTrackingIdValid">
+            <summary>
+Gets a value indicating if the tracking ID associated with the frame sourcec is valid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.KinectSensor">
+            <summary>
+Gets the Kinect sensor associated with the frame source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Kinect.VisualGestureBuilder.VisualGestureBuilderFrameSource.TrackingId">
+            <summary>
+Gets the tracking ID.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Kinect.VisualGestureBuilder.GestureType">
+            <summary>
+Specifies the type of a gesture.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Kinect.VisualGestureBuilder.GestureType.Continuous">
+            <summary>
+The gesture is continuous.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Kinect.VisualGestureBuilder.GestureType.Discrete">
+            <summary>
+The gesture is discrete.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Kinect.VisualGestureBuilder.GestureType.None">
+            <summary>
+None.
+            </summary>
+        </member>
+    </members>
+</doc>

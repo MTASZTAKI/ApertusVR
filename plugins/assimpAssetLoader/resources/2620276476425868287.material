@@ -1,0 +1,26 @@
+
+material HolzNußbaumAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.429412 0.26051 0.160314 1
+			specular 0.411765 0.249804 0.153725 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.429412 0.26051 0.160314 1
+			specular 0.411765 0.249804 0.153725 1 0
+		}
+
+	}
+
+}

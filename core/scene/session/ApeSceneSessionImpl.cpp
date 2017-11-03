@@ -120,17 +120,10 @@ void Ape::SceneSessionImpl::init()
 	printf("Our guid is %s\n", mGuid.ToString());
 	printf("Started on %s\n", mAddress.ToString(true));
 	RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(mNATServerIP.c_str(), atoi(mNATServerPort.c_str()), 0, 0);
-	if (car!=RakNet::CONNECTION_ATTEMPT_STARTED)
+	if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		printf("Failed connect call to %s. Code=%i\n", mNATServerIP.c_str(), car);
 	else
-	{
 		std::cout << "Try to connect to NAT punchthrough server: " << mNATServerIP << "|" << mNATServerPort << std::endl;
-		while (!mIsConnectedToNATServer)
-		{
-			listen();
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		}
-	}
 	std::thread runThread((std::bind(&SceneSessionImpl::run, this)));
 	runThread.detach();
 }

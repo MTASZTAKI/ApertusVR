@@ -12,9 +12,6 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
-	mUserNode.lock()->setFixedYaw(true);
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
@@ -35,7 +32,11 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 
 void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+	{
+		mUserNode = mpScene->getNode(event.subjectName);
+		mUserNode.lock()->setFixedYaw(true);
+	}
 }
 
 void ApeOculusDK2Plugin::Init()
@@ -78,7 +79,7 @@ void ApeOculusDK2Plugin::Init()
 		fileMaterialLeftEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("RiftRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h);
+			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureLeftEye = manualTexture;
 		}
@@ -88,7 +89,7 @@ void ApeOculusDK2Plugin::Init()
 		fileMaterialRightEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("RiftRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h);
+			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureRightEye = manualTexture;
 		}

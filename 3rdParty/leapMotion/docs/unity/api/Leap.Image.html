@@ -1,0 +1,823 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/api/Leap.Image.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Image.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/api/Leap.Image.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Image.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Image.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Image.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Image.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Image.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Image
+</span> -->
+        
+  <div class="section" id="image">
+<h1>Image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h1>
+</div>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Properties:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1ac03e9645c1f500c1040a8d525bb00611">BytesPerPixel</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a499ef9f0f52fe3cee348b490ddb815ca">Data</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1ad97445b1c3e8783c9b6ac1b87f57f1db">Distortion</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a8cf61186cd21e4f74be05729d5becb66">DistortionHeight</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1afa96b3c56a4b896e80cd1ced1b6e546e">DistortionWidth</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a0bb6d584653bd395d678fb83e49cef9f">Format</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1aaadefba794062a2ca7e58ceb10b955a1">Height</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a1fe22aa568cfb8bc9064e92aa5683a1d">Invalid</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a62885a2911b2c21274564c3d9e407c2c">IsValid</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1ab223223f45643d8dd048b383a50ecb3b">RayOffsetX</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a66d19e06df150912801ac59fc4dc5dcf">RayOffsetY</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1ab4d4669fed8c0e7a10e151ab7b082a9c">RayScaleX</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a7affe047d269bb41f9cf6a3896363079">RayScaleY</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a06f603cdb0107c3279a4f79252430da0">SequenceId</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1aba2d1a5b4584a540b0e4bb6faa636cc4">Timestamp</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1abbe7749c3b402f7dfe64f936774cfcd4">Width</a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1aa392eb44fd7cfb8178ca562ce52cd4f2">Equals(Image other)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb">Image()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a3244cf73c1b9fe45ddf60c79ef4db803">PixelToRectilinear(PerspectiveType camera, Vector pixel)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1a47111d3d944fb3a3a080048981a2416f">RectilinearToPixel(PerspectiveType camera, Vector ray)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_image_1aa73e7c4dd1df5fd5fbf81c7764ee1533">ToString()</a></li>
+</ul>
+</div>
+<div class="line-block" id="csharpclass_leap_1_1_image">
+<div class="line"><em>class</em> <strong>Leap::Image</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> class represents a single image from one of the Leap Motion cameras. </p>
+<p><p>In addition to image data, the <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> object provides a distortion map for correcting lens distortion.</p>
+<p><pre class="literal-block">
+Leap.<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> image = new Leap.<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> ();
+Bitmap bitmap = new Bitmap (image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+//set palette
+ColorPalette grayscale = bitmap.Palette;
+for (int i = 0; i &lt; 256; i++) {
+    grayscale.Entries [i] = Color.FromArgb ((int)255, i, i, i);
+}
+bitmap.Palette = grayscale;
+Rectangle lockArea = new Rectangle (0, 0, bitmap.Width, bitmap.Height);
+BitmapData bitmapData = bitmap.LockBits (lockArea, ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+byte[] rawImageData = image.Data;
+System.Runtime.InteropServices.Marshal.Copy (rawImageData, 0, bitmapData.Scan0, image.Width * image.Height);
+bitmap.UnlockBits (bitmapData);
+</pre>
+</p>
+<p>Note that <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> objects can be invalid, which means that they do not contain valid image data. Get valid <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> objects from Frame::frames(). Test for validity with the Image::isValid() function. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_image_1a8dcd21376da83902acea50d9deeb5990"></span><strong>FormatType enum</strong></p>
+<blockquote>
+<div><p>Enumerates the possible image formats. </p>
+<p>The Image::format() function returns an item from the FormatType enumeration. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">INFRARED</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - </li>
+<li><tt class="first docutils literal"><span class="pre">IBRG</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - </li>
+</ul>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a3a125f0393e271f0fa812203556065fa"></span><strong>PerspectiveType enum</strong></p>
+<blockquote>
+<div><p>Enumerates the image perspectives. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">INVALID</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>Invalid or unknown image perspective. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STEREO_LEFT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>Left side of a stereo pair. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STEREO_RIGHT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - <p>Right side of a stereo pair. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">MONO</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">3</span></tt> - <p>Reserved for future use. </p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_image_1aa392eb44fd7cfb8178ca562ce52cd4f2"></span><div class="line-block">
+<div class="line">bool <strong>Equals</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> object equality. </p>
+<p>Two <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> objects are equal if and only if both <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> objects represent the exact same <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> and both Images are valid. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb"></span><div class="line-block">
+<div class="line"> <strong>Image</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> object. </p>
+<p><p>An uninitialized image is considered invalid. Get valid <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> objects from a ImageList object obtained from the Frame::images() method.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a3244cf73c1b9fe45ddf60c79ef4db803"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>PixelToRectilinear</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_image_1a3a125f0393e271f0fa812203556065fa"><em>PerspectiveType</em></a> camera, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> pixel)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Provides the corrected camera ray intercepting the specified point on the image. </p>
+<p><p>Given a point on the image, <tt class="docutils literal"><a class="reference internal" href="#csharpclass_leap_1_1_image_1a3244cf73c1b9fe45ddf60c79ef4db803"><em><span class="pre">PixelToRectilinear()</span></em></a></tt> corrects for camera distortion and returns the true direction from the camera to the source of that image point within the Leap Motion field of view.</p>
+<p>This direction vector has an x and y component [x, y, 1], with the third element always one. Note that this vector uses the 2D camera coordinate system where the x-axis parallels the longer (typically horizontal) dimension and the y-axis parallels the shorter (vertical) dimension. The camera coordinate system does not correlate to the 3D Leap Motion coordinate system.</p>
+<p><pre class="literal-block">
+Vector feature = new Vector (127, 68, 0);
+Vector slopes = image.PixelToRectilinear (Leap.<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a>.<a class="reference internal" href="#csharpclass_leap_1_1_image_1a3a125f0393e271f0fa812203556065fa"><em>PerspectiveType</em></a>.STEREO_LEFT, 
+                                          feature);
+</pre>
+</p>
+<p><strong>Note:</strong> This function should be called immediately after an image is obtained. Incorrect results will be returned if the image orientation has changed or a different device is plugged in between the time the image was received and the time this function is called.</p>
+<p>Note, this function was formerly named Rectify().</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the ray direction (the z-component of the vector is always one). </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">camera</span></tt> - <p>whether the pixel parameter is a pixel in the left or the right stereo image. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">pixel</span></tt> - <p>A <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the position of a pixel in the image. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a47111d3d944fb3a3a080048981a2416f"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>RectilinearToPixel</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_image_1a3a125f0393e271f0fa812203556065fa"><em>PerspectiveType</em></a> camera, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> ray)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Provides the point in the image corresponding to a ray projecting from the camera. </p>
+<p><p>Given a ray projected from the camera in the specified direction, <tt class="docutils literal"><a class="reference internal" href="#csharpclass_leap_1_1_image_1a47111d3d944fb3a3a080048981a2416f"><em><span class="pre">RectilinearToPixel()</span></em></a></tt> corrects for camera distortion and returns the corresponding pixel coordinates in the image.</p>
+<p>The ray direction is specified in relationship to the camera. The first vector element corresponds to the &#8220;horizontal&#8221; view angle; the second corresponds to the &#8220;vertical&#8221; view angle.</p>
+<p><pre class="literal-block">
+float horizontal_slope = (float)Math.Tan (65 * 180 / Math.PI);
+float vertical_slope = (float)Math.Tan (15 * 180 / Math.PI);
+Vector pixel = image.RectilinearToPixel (Leap.<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a>.<a class="reference internal" href="#csharpclass_leap_1_1_image_1a3a125f0393e271f0fa812203556065fa"><em>PerspectiveType</em></a>.STEREO_LEFT, 
+                                         new Vector (horizontal_slope, vertical_slope, 0));
+if(pixel.x &gt;= 0 &amp;&amp; pixel.y &gt;= 0 &amp;&amp; pixel.x &lt;= image.Width &amp;&amp; pixel.y &lt;= image.Height){
+    int data_index = (int)(Math.Floor (pixel.y) * image.Width + Math.Floor (pixel.x));
+    Console.WriteLine (data_index);
+    byte brightness = image.Data [data_index];
+}
+</pre>
+</p>
+<p>The <tt class="docutils literal"><a class="reference internal" href="#csharpclass_leap_1_1_image_1a47111d3d944fb3a3a080048981a2416f"><em><span class="pre">RectilinearToPixel()</span></em></a></tt> function returns pixel coordinates outside of the image bounds if you project a ray toward a point for which there is no recorded data.</p>
+<p><tt class="docutils literal"><a class="reference internal" href="#csharpclass_leap_1_1_image_1a47111d3d944fb3a3a080048981a2416f"><em><span class="pre">RectilinearToPixel()</span></em></a></tt> is typically not fast enough for realtime distortion correction. For better performance, use a shader program exectued on a GPU.</p>
+<p><strong>Note:</strong> This function should be called immediately after an image is obtained. Incorrect results will be returned if the image orientation has changed or a different device is plugged in between the time the image was received and the time this function is called.</p>
+<p>Note, this function was formerly named Warp().</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the pixel coordinates [x, y, 1] (with z always one). </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">camera</span></tt> - <p>whether the ray parameter intercepts the left or the right stereo image. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">ray</span></tt> - <p>A <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the ray direction. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1aa73e7c4dd1df5fd5fbf81c7764ee1533"></span><div class="line-block">
+<div class="line">override string <strong>ToString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human readable description of the <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A description of the <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> as a string. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Property</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_image_1ac03e9645c1f500c1040a8d525bb00611"></span>int <strong>BytesPerPixel</strong></p>
+<blockquote>
+<div><p>The number of bytes per pixel. </p>
+<p><p>Use this value along with <tt class="docutils literal"><span class="pre">Image::width()</span></tt> and <tt class="docutils literal"><a class="reference internal" href="#csharpclass_leap_1_1_image"><em><span class="pre">Image</span></em></a><span class="pre">:::height()</span></tt> to calculate the size of the data buffer.</p>
+<p><pre class="literal-block">
+int bufferSize = image.BytesPerPixel * image.Width * image.Height;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a499ef9f0f52fe3cee348b490ddb815ca"></span>byte[] <strong>Data</strong></p>
+<blockquote>
+<div><p>The image data. </p>
+<p><p>The image data is a set of 8-bit intensity values. The buffer is <tt class="docutils literal"><span class="pre">image.Width</span> <span class="pre">*</span> <span class="pre">image.Height</span> <span class="pre">*</span> <span class="pre">image.BytesPerPixel</span></tt> bytes long.</p>
+<p><pre class="literal-block">
+byte[] image_buffer = image.Data;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1ad97445b1c3e8783c9b6ac1b87f57f1db"></span>float[] <strong>Distortion</strong></p>
+<blockquote>
+<div><p>The distortion calibration map for this image. </p>
+<p><p>The calibration map is a 64x64 grid of points. Each point is defined by a pair of 32-bit floating point values. Each point in the map represents a ray projected into the camera. The value of a grid point defines the pixel in the image data containing the brightness value produced by the light entering along the corresponding ray. By interpolating between grid data points, you can find the brightness value for any projected ray. Grid values that fall outside the range [0..1] do not correspond to a value in the image data and those points should be ignored.</p>
+<p><pre class="literal-block">
+float[] distortion_buffer = image.Distortion;
+</pre>
+</p>
+<p>The calibration map can be used to render an undistorted image as well as to find the true angle from the camera to a feature in the raw image. The distortion map itself is designed to be used with GLSL shader programs. In other contexts, it may be more convenient to use the <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> Rectify() and Warp() functions.</p>
+<p>Distortion is caused by the lens geometry as well as imperfections in the lens and sensor window. The calibration map is created by the calibration process run for each device at the factory (and which can be rerun by the user).</p>
+<p>Note, in a future release, there will be two distortion maps per image; one containing the horizontal values and the other containing the vertical values.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a8cf61186cd21e4f74be05729d5becb66"></span>int <strong>DistortionHeight</strong></p>
+<blockquote>
+<div><p>The distortion map height. </p>
+<p><p>Currently fixed at 64.</p>
+<p><pre class="literal-block">
+int correctionGridHeight = image.DistortionHeight;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1afa96b3c56a4b896e80cd1ced1b6e546e"></span>int <strong>DistortionWidth</strong></p>
+<blockquote>
+<div><p>The stride of the distortion map. </p>
+<p><p>Since each point on the 64x64 element distortion map has two values in the buffer, the stride is 2 times the size of the grid. (Stride is currently fixed at 2 * 64 = 128).</p>
+<p><pre class="literal-block">
+int correctionGridWidth = image.DistortionWidth;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a0bb6d584653bd395d678fb83e49cef9f"></span><a class="reference internal" href="#csharpclass_leap_1_1_image_1a8dcd21376da83902acea50d9deeb5990"><em>Image.FormatType</em></a> <strong>Format</strong></p>
+<blockquote>
+<div><p>The image format. </p>
+<p><p><pre class="literal-block">
+if (image.Format == Leap.<a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a>.<a class="reference internal" href="#csharpclass_leap_1_1_image_1a8dcd21376da83902acea50d9deeb5990"><em>FormatType</em></a>.INFRARED) {
+    Bitmap bitmap = new Bitmap (image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+    //set palette
+    ColorPalette grayscale = bitmap.Palette;
+    for (int i = 0; i &lt; 256; i++) {
+        grayscale.Entries [i] = Color.FromArgb ((int)255, i, i, i);
+    }
+    bitmap.Palette = grayscale;
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1aaadefba794062a2ca7e58ceb10b955a1"></span>int <strong>Height</strong></p>
+<blockquote>
+<div><p>The image height. </p>
+<p><p><pre class="literal-block">
+int height = image.Height;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a1fe22aa568cfb8bc9064e92aa5683a1d"></span><a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> <strong>Invalid</strong></p>
+<blockquote>
+<div><p>Returns an invalid <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> object. </p>
+<p><p>You can use the instance returned by this function in comparisons testing whether a given <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> instance is valid or invalid. (You can also use the Image::isValid() function.)</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The invalid <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> instance. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a62885a2911b2c21274564c3d9e407c2c"></span>bool <strong>IsValid</strong></p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#csharpclass_leap_1_1_image"><em>Image</em></a> instance contains valid data. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true, if and only if the image is valid. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1ab223223f45643d8dd048b383a50ecb3b"></span>float <strong>RayOffsetX</strong></p>
+<blockquote>
+<div><p>The horizontal ray offset. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector raySlopes = new Vector (-3.25f, 1.75f, 0.0f);
+Vector normRay =
+    new Vector (raySlopes.x * image.RayScaleX + image.RayOffsetX,
+        raySlopes.y * image.RayScaleY + image.RayOffsetY, 0);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a66d19e06df150912801ac59fc4dc5dcf"></span>float <strong>RayOffsetY</strong></p>
+<blockquote>
+<div><p>The vertical ray offset. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector normSlopes = new Vector (.25f, .98f, 0.0f); //An arbitrary slope vector
+Vector slope = new Vector ((normSlopes.x - image.RayOffsetX) / image.RayScaleX,
+               (normSlopes.y - image.RayOffsetY) / image.RayScaleY, 0);
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1ab4d4669fed8c0e7a10e151ab7b082a9c"></span>float <strong>RayScaleX</strong></p>
+<blockquote>
+<div><p>The horizontal ray scale factor. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector raySlopes = new Vector (-3.25f, 1.75f, 0.0f);
+Vector normRay =
+    new Vector (raySlopes.x * image.RayScaleX + image.RayOffsetX,
+        raySlopes.y * image.RayScaleY + image.RayOffsetY, 0);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a7affe047d269bb41f9cf6a3896363079"></span>float <strong>RayScaleY</strong></p>
+<blockquote>
+<div><p>The vertical ray scale factor. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector normSlopes = new Vector (.25f, .98f, 0.0f); //An arbitrary slope vector
+Vector slope = new Vector ((normSlopes.x - image.RayOffsetX) / image.RayScaleX,
+               (normSlopes.y - image.RayOffsetY) / image.RayScaleY, 0);
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1a06f603cdb0107c3279a4f79252430da0"></span>long <strong>SequenceId</strong></p>
+<blockquote>
+<div><p>The image sequence ID. </p>
+<p><p><pre class="literal-block">
+int lastImage = 0;
+while (!done) {
+    <a class="reference internal" href="#csharpclass_leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb"><em>Image</em></a> left_image = controller.Images[0];
+    if (left_image.SequenceId != lastImage) {
+        image right_image = controller.Images [1];
+        lastImage = left_image.SequenceId;
+        // Use images...
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.1 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1aba2d1a5b4584a540b0e4bb6faa636cc4"></span>long <strong>Timestamp</strong></p>
+<blockquote>
+<div><p>Returns a timestamp indicating when this frame began being captured on the device. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.7 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_image_1abbe7749c3b402f7dfe64f936774cfcd4"></span>int <strong>Width</strong></p>
+<blockquote>
+<div><p>The image width. </p>
+<p><p><pre class="literal-block">
+int width = image.Width;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

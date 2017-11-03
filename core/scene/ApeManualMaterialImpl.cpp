@@ -26,6 +26,9 @@ Ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
+	mTexture = Ape::TextureWeakPtr();
+	mTextureName = std::string();
+	mCullingMode = Ape::Material::CullingMode::CLOCKWISE;
 }
 
 Ape::ManualMaterialImpl::~ManualMaterialImpl()
@@ -45,6 +48,35 @@ void Ape::ManualMaterialImpl::setSpecularColor(Ape::Color specular)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
 }
 
+void Ape::ManualMaterialImpl::setAmbientColor(Ape::Color ambient)
+{
+	mAmbientColor = ambient;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_AMBIENT));
+}
+
+void Ape::ManualMaterialImpl::setEmissiveColor(Ape::Color emissive)
+{
+	mEmissiveColor = emissive;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
+}
+
+void Ape::ManualMaterialImpl::setPassTexture(Ape::TextureWeakPtr texture)
+{
+	if (auto textureSP = texture.lock())
+	{
+		mTexture = texture;
+		mTextureName = textureSP->getName();
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_TEXTURE));
+	}
+	else
+		mTexture = Ape::TextureWeakPtr();
+}
+
+Ape::TextureWeakPtr Ape::ManualMaterialImpl::getPassTexture()
+{
+	return mTexture;
+}
+
 void Ape::ManualMaterialImpl::setPass(Ape::PassWeakPtr pass)
 {
 	if (auto passSP = pass.lock())
@@ -55,6 +87,24 @@ void Ape::ManualMaterialImpl::setPass(Ape::PassWeakPtr pass)
 	}
 	else
 		mPass = Ape::PassWeakPtr();
+}
+
+void Ape::ManualMaterialImpl::setCullingMode(Ape::Material::CullingMode cullingMode)
+{
+	mCullingMode = cullingMode;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
+}
+
+void Ape::ManualMaterialImpl::setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType)
+{
+	mSceneBlendingType = sceneBlendingType;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
+}
+
+void Ape::ManualMaterialImpl::showOnOverlay(bool enable)
+{
+	if (enable)
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_OVERLAY));
 }
 
 void Ape::ManualMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
@@ -70,7 +120,12 @@ RakNet::RM3SerializationResult Ape::ManualMaterialImpl::Serialize(RakNet::Serial
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDiffuseColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSpecularColor);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAmbientColor);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mEmissiveColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mPassName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCullingMode);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSceneBlendingType);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -83,6 +138,10 @@ void Ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_AMBIENT));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
 	RakNet::RakString passName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, passName))
 	{
@@ -90,6 +149,17 @@ void Ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		mPass = std::static_pointer_cast<Ape::Pass>(mpScene->getEntity(mPassName).lock());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_PASS));
 	}
+	RakNet::RakString textureName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
+	{
+		mTextureName = textureName.C_String();
+		mTexture = std::static_pointer_cast<Ape::Texture>(mpScene->getEntity(mTextureName).lock());
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_TEXTURE));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCullingMode))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

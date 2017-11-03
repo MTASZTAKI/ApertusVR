@@ -38,13 +38,17 @@ namespace Ape
 
 		~ManualTextureImpl();
 
-		void setParameters(float width, float height) override;
+		void setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
 
 		Ape::ManualTextureParameters getParameters() override;
 
 		void setSourceCamera(Ape::CameraWeakPtr camera) override;
 
 		Ape::CameraWeakPtr getSourceCamera() override;
+
+		void setBuffer(const void* buffer) override;
+
+		const void* getBuffer() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -62,6 +66,8 @@ namespace Ape
 		std::string mCameraName;
 
 		Ape::CameraWeakPtr mCamera;
+
+		const void* mpBuffer;
 	};
 }
 
