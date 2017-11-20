@@ -7,10 +7,10 @@
         "participantType": "Local",
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": [
-            "/plugins/tester/resources",
-            "/plugins/avatar/resources"
-        ],
+      "sessionResourceLocation": [
+        "/plugins/tester/resources",
+        "/plugins/avatar/resources"
+      ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
