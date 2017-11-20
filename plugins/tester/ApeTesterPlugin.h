@@ -55,6 +55,7 @@ SOFTWARE.*/
 #include "ApeIManualTexture.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIBrowser.h"
+#include "ApeIPointCloud.h"
 
 
 #define THIS_PLUGINNAME "ApeTesterPlugin"

@@ -8,8 +8,7 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/tester/resources",
-            "/plugins/assimpAssetLoader/resources"
+            "/plugins/tester/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -24,11 +23,7 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
-            "ApeTesterPlugin",
-            "ApeNodeJsPlugin",
-            "ApeLeapMotionPlugin",
-            "ApeAvatarPlugin",
-            "ApeAssimpAssetLoaderPlugin"
+            "ApeTesterPlugin"
         ]
     }
 }

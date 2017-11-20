@@ -316,6 +316,43 @@ void ApeTesterPlugin::Init()
 			}
 		}
 	}
+	if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+	{
+		pointCloudNode->setPosition(Ape::Vector3(0, 100, 50));
+		if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			pointCloudNodeText->setCaption("Point");
+			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			pointCloudNodeText->setParentNode(pointCloudNode);
+		}
+		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+		{
+			Ape::PointCloudPoints points = {
+				-5, 0, 0,
+				-4, 0, 0,
+				-3, 0, 0,
+				-2, 0, 0,
+				-1, 0, 0,
+				 0, 0, 0,
+				 1, 0, 0,
+				 2, 0, 0,
+				 3, 0, 0
+			};
+			Ape::PointCloudColors colors = {
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1
+			};
+			pointCloud->setParameters(points, colors);
+			pointCloud->setParentNode(pointCloudNode);
+		}
+	}
 	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);

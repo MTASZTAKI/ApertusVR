@@ -40,7 +40,8 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 		Ogre::RGBA *colours = new Ogre::RGBA[numpoints];
 		for (int i = 0, k = 0; i < numpoints * 3, k < numpoints; i += 3, k++)
 		{
-			rs->convertColourValue(Ogre::ColourValue(carray[i], carray[i + 1], carray[i + 2]), &colours[k]);
+			Ogre::ColourValue color(carray[i], carray[i + 1], carray[i + 2]);
+			rs->convertColourValue(color, &colours[k]);
 		}
 		mCbuf->writeData(0, mCbuf->getSizeInBytes(), colours, true);
 		delete[] colours;

@@ -1784,10 +1784,33 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				break;
 				case Ape::Event::Type::POINT_CLOUD_PARAMETERS:
 				{
-					int size = pointCloudParameters.points.size();
+					int size = pointCloudParameters.points.size() / 3;
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
-					auto ogrePointCloud = new Ape::OgrePointCloud(pointCloud->getName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors);
+					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName + "Mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors))
+					{
+						if (auto ogreEntity = mpSceneMgr->createEntity(pointCloudName, pointCloudName + "Mesh"))
+							ogreEntity->setMaterialName("Pointcloud");
+					}
+				}
+				break;
+				case Ape::Event::Type::POINT_CLOUD_PARENTNODE:
+				{
+					if (mpSceneMgr->hasEntity(pointCloudName))
+					{
+						if (auto ogreEntity = mpSceneMgr->getEntity(pointCloudName))
+						{
+							if (auto parentNode = pointCloud->getParentNode().lock())
+							{
+								std::string parentNodeName = parentNode->getName();
+								if (mpSceneMgr->hasSceneNode(parentNodeName))
+								{
+									if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+										ogreParentNode->attachObject(ogreEntity);
+								}
+							}
+						}
+					}
 				}
 				break;
 				case Ape::Event::Type::POINT_CLOUD_DELETE:
