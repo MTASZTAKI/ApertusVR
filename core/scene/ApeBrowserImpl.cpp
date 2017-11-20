@@ -32,6 +32,8 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mGeometryName = std::string();
 	mZoomLevel = 0;
 	mZOrder = 0;
+	mMouseLastClick = Ape::Browser::MouseClick::UNKNOWN;
+	mMouseLastPosition = Ape::Vector2();
 }
 
 Ape::BrowserImpl::~BrowserImpl()
@@ -101,6 +103,23 @@ int Ape::BrowserImpl::getZOrder()
 	return mZOrder;
 }
 
+void Ape::BrowserImpl::mouseClick(Ape::Browser::MouseClick click)
+{
+	mMouseLastClick = click;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
+}
+
+void Ape::BrowserImpl::mouseMoved(Ape::Vector2 position)
+{
+	mMouseLastPosition = position;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_MOVED));
+}
+
+Ape::Browser::MouseState Ape::BrowserImpl::getMouseState()
+{
+	return Ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick);
+}
+
 
 void Ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
@@ -116,6 +135,8 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mURL);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mResoultion);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mZoomLevel);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastPosition);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClick);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -135,6 +156,10 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mZoomLevel))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastPosition))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_MOVED));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClick))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
 	RakNet::RakString geometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
 	{

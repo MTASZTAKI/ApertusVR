@@ -29,6 +29,34 @@ SOFTWARE.*/
 
 namespace Ape
 {
+	namespace Browser 
+	{
+		enum MouseClick
+		{
+			UNKNOWN,
+			LEFT,
+			RIGHT,
+			MIDDLE,
+			INVALID
+		};
+		struct MouseState
+		{
+			Ape::Vector2 position;
+			MouseClick click;
+
+			MouseState()
+			{
+				this->position = Ape::Vector2();
+				this->click = MouseClick::UNKNOWN;
+			}
+
+			MouseState(Ape::Vector2 position, MouseClick click)
+			{
+				this->position = position;
+				this->click = click;
+			}
+		};
+	}
 	class IBrowser : public Entity
 	{
 	protected:
@@ -56,6 +84,12 @@ namespace Ape
 		virtual int getZoomLevel() = 0;
 
 		virtual int getZOrder() = 0;
+
+		virtual void mouseClick(Ape::Browser::MouseClick click) = 0;
+
+		virtual void mouseMoved(Ape::Vector2 position) = 0;
+
+		virtual Ape::Browser::MouseState getMouseState() = 0;
 	};
 }
 

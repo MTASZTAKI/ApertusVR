@@ -58,6 +58,12 @@ namespace Ape
 
 		int getZOrder() override;
 
+		void mouseClick(Ape::Browser::MouseClick click) override;
+
+		void mouseMoved(Ape::Vector2 position) override;
+
+		Ape::Browser::MouseState getMouseState() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -80,6 +86,10 @@ namespace Ape
 		int mZoomLevel;
 
 		int mZOrder;
+
+		Ape::Browser::MouseClick mMouseLastClick;
+
+		Ape::Vector2 mMouseLastPosition;
 	};
 }
 

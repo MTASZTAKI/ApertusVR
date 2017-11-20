@@ -8,6 +8,7 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
+            "/plugins/texasEEG/resources",
             "/plugins/oculusDK2/resources"
         ],
         "natPunchThroughServer": {

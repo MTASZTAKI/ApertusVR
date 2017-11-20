@@ -79,6 +79,29 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 						mpApeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
 				}
 				break;
+			case Ape::Event::Type::BROWSER_MOUSE_MOVED:
+				{
+					if (mBrowserIDNames[browser->getName()])
+					{
+						Ape::Browser::MouseState mouseState = browser->getMouseState();
+						mpApeCefRenderHandlerImpl->mouseMoved(mBrowserIDNames[browser->getName()], mouseState.position.x, mouseState.position.y);
+					}
+				}
+				break;
+			case Ape::Event::Type::BROWSER_MOUSE_CLICK:
+				{
+					if (mBrowserIDNames[browser->getName()])
+					{
+						Ape::Browser::MouseState mouseState = browser->getMouseState();
+						if (mouseState.click == Ape::Browser::MouseClick::LEFT)
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_LEFT);
+						else if (mouseState.click == Ape::Browser::MouseClick::RIGHT)
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_RIGHT);
+						else if (mouseState.click == Ape::Browser::MouseClick::MIDDLE)
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_MIDDLE);
+					}
+				}
+				break;
 			case Ape::Event::Type::BROWSER_DELETE:
 				;
 				break;
@@ -90,11 +113,11 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
 			mRayOverlayNode = rayGeometry->getParentNode();
 	}
-	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
+	/*else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
 	{
 		if (auto rayOverlayNode = mRayOverlayNode.lock())
-			rayOverlayNode->getPosition();//send it to cef
-	}
+			rayOverlayNode->getPosition();
+	}*/
 }
 
 void Ape::CefBrowserPlugin::processEventDoubleQueue()

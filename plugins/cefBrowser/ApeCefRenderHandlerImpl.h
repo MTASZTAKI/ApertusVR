@@ -40,6 +40,8 @@ namespace Ape
 
 		std::map<int, CefRefPtr<CefBrowser>> mBrowsers;
 
+		Ape::Vector2 mMouseCurrentPosition;
+
 	public:
 		CefRenderHandlerImpl();
 
@@ -54,6 +56,10 @@ namespace Ape
 		void setZoomLevel(int browserID, int zoomLevel);
 
 		void setURL(int browserID, std::string url);
+
+		void mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType);
+
+		void mouseMoved(int browserID, int x, int y);
 
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
 	};

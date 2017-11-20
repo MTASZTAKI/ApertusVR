@@ -602,7 +602,13 @@ bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 {
 	if (auto activeMouseTexture = mActiveMouseTexture.lock())
-		activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
+	{
+		if (auto activeBrowser = mActiveBrowser.lock())
+		{
+			activeBrowser->mouseMoved(Ape::Vector2(e.state.X.abs, e.state.Y.abs));
+			activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
+		}
+	}
 	return true;
 }
 
@@ -610,6 +616,8 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 {
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
+		if (auto activeBrowser = mActiveBrowser.lock())
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::LEFT);
 		if (auto rayOverlayNode = mRayOverlayNode.lock())
 		{
 			rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
@@ -658,6 +666,16 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 			}
 		}
 		mLastLeftClickTime = currentLeftClickTime;
+	}
+	else if (id == OIS::MouseButtonID::MB_Right)
+	{
+		if (auto activeBrowser = mActiveBrowser.lock())
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::RIGHT);
+	}
+	else if (id == OIS::MouseButtonID::MB_Middle)
+	{
+		if (auto activeBrowser = mActiveBrowser.lock())
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::MIDDLE);
 	}
 	return true;
 }

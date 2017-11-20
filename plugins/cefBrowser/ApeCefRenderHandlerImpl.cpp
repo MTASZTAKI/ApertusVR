@@ -26,6 +26,7 @@ Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
 {
 	mBrowserIDTextures = std::map<int, Ape::ManualTextureWeakPtr>();
 	mBrowsers = std::map<int, CefRefPtr<CefBrowser>>();
+	mMouseCurrentPosition = Ape::Vector2();
 }
 
 Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
@@ -64,4 +65,28 @@ void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
+}
+
+void Ape::CefRenderHandlerImpl::mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType)
+{
+	if (mBrowsers.size() && mBrowsers[browserID])
+	{
+		CefMouseEvent cefMouseEvent;
+		cefMouseEvent.x = mMouseCurrentPosition.x;
+		cefMouseEvent.y = mMouseCurrentPosition.y;
+		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, false, 0);
+	}
+}
+
+void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
+{
+	if (mBrowsers.size() && mBrowsers[browserID])
+	{
+		mMouseCurrentPosition.x = x;
+		mMouseCurrentPosition.y = y;
+		CefMouseEvent cefMouseEvent;
+		cefMouseEvent.x = mMouseCurrentPosition.x;
+		cefMouseEvent.y = mMouseCurrentPosition.y;
+		mBrowsers[browserID]->GetHost()->SendMouseMoveEvent(cefMouseEvent, false);
+	}
 }
