@@ -38,9 +38,17 @@ namespace Ape
 
 		~PointCloudImpl();
 
-		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors) override;
+		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius) override;
 
 		Ape::PointCloudSetParameters getParameters() override;
+
+		void updatePoints(Ape::PointCloudPoints points) override;
+
+		void updateColors(Ape::PointCloudColors colors) override;
+
+		Ape::PointCloudPoints getCurrentPoints() override;
+
+		Ape::PointCloudColors getCurrentColors() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
@@ -62,6 +70,10 @@ namespace Ape
 		std::string mParentNodeName;
 
 		Ape::PointCloudSetParameters mParameters;
+
+		Ape::PointCloudPoints mCurrentPoints;
+
+		Ape::PointCloudColors mCurrentColors;
 	};
 }
 

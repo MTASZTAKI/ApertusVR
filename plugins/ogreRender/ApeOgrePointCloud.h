@@ -29,7 +29,7 @@ namespace Ape {
 	class OgrePointCloud
 	{
 	public:
-		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray);
+		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius);
 
 		void updateVertexPositions(int size, float *points);
 
@@ -43,6 +43,8 @@ namespace Ape {
 		Ogre::HardwareVertexBufferSharedPtr mVbuf;
 
 		Ogre::HardwareVertexBufferSharedPtr mCbuf;
+
+		Ogre::RenderSystem* mRenderSystemForVertex;
 	};
 }
 #endif

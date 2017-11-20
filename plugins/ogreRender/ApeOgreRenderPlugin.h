@@ -204,6 +204,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;
+
 		void processEventDoubleQueue();
 
 		void eventCallBack(const Ape::Event& event);

@@ -80,6 +80,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxSunlight = nullptr;
 	mpSkyxSkylight = nullptr;
 	mpSkyxBasicController = nullptr;
+	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1787,11 +1788,30 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					int size = pointCloudParameters.points.size() / 3;
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
-					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName + "Mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors))
+					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName + "Mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors, pointCloudParameters.boundigSphereRadius))
 					{
 						if (auto ogreEntity = mpSceneMgr->createEntity(pointCloudName, pointCloudName + "Mesh"))
+						{
 							ogreEntity->setMaterialName("Pointcloud");
+							mOgrePointCloudMeshes[pointCloudName + "Mesh"] = ogrePointCloudMesh;
+						}
 					}
+				}
+				break;
+				case Ape::Event::Type::POINT_CLOUD_POINTS:
+				{
+					Ape::PointCloudPoints points = pointCloud->getCurrentPoints();
+					int size = points.size() / 3;
+					float* pPoints = &points[0];
+					mOgrePointCloudMeshes[pointCloudName + "Mesh"]->updateVertexPositions(size, pPoints);
+				}
+				break;
+				case Ape::Event::Type::POINT_CLOUD_COLORS:
+				{
+					Ape::PointCloudColors colors = pointCloud->getCurrentColors();
+					int size = colors.size() / 3;
+					float* pColors = &colors[0];
+					mOgrePointCloudMeshes[pointCloudName + "Mesh"]->updateVertexColours(size, pColors);
 				}
 				break;
 				case Ape::Event::Type::POINT_CLOUD_PARENTNODE:

@@ -39,18 +39,21 @@ namespace Ape
 	{
 		Ape::PointCloudPoints points;
 		Ape::PointCloudColors colors;
+		float boundigSphereRadius;
 
 		struct PointCloudSetParameters
 		()
 		{
 			this->points = Ape::PointCloudPoints();
 			this->colors = Ape::PointCloudColors();
+			this->boundigSphereRadius = 0.0f;
 		}
 
-		struct PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors)
+		struct PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
 		{
 			this->points = points;
 			this->colors = colors;
+			this->boundigSphereRadius = boundigSphereRadius;
 		}
 
 		Ape::PointCloudPoints getPoints()
@@ -61,6 +64,11 @@ namespace Ape
 		Ape::PointCloudColors getColors()
 		{
 			return colors;
+		}
+
+		float getBoundigSphereRadius()
+		{
+			return boundigSphereRadius;
 		}
 
 		std::string toString() const
@@ -75,6 +83,8 @@ namespace Ape
 			for (auto const &item : colors) buff << item << ", ";
 			buff << ")" << std::endl;
 
+			buff << "BoundigSphereRadius(" << boundigSphereRadius << ")" << std::endl;
+
 			return buff.str();
 		}
 	};
@@ -87,9 +97,17 @@ namespace Ape
 		virtual ~IPointCloud() {};
 
 	public:
-		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors) = 0;
+		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius) = 0;
 
 		virtual Ape::PointCloudSetParameters getParameters() = 0;
+
+		virtual void updatePoints(Ape::PointCloudPoints points) = 0;
+
+		virtual void updateColors(Ape::PointCloudColors colors) = 0;
+
+		virtual Ape::PointCloudPoints getCurrentPoints() = 0;
+
+		virtual Ape::PointCloudColors getCurrentColors() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 

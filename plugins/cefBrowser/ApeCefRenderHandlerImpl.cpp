@@ -75,6 +75,7 @@ void Ape::CefRenderHandlerImpl::mouseClick(int browserID, CefBrowserHost::MouseB
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, false, 0);
+		std::cout << "Ape:::CefRenderHandlerImpl::mouseClick " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << " type:" << mouseButtonType << std::endl;
 	}
 }
 
@@ -88,5 +89,6 @@ void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseMoveEvent(cefMouseEvent, false);
+		std::cout << "Ape:::CefRenderHandlerImpl::mouseMoved " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << std::endl;
 	}
 }

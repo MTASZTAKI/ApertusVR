@@ -32,6 +32,7 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <list>
+#include <random>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -75,7 +76,8 @@ private:
 	
 	Ape::NodeWeakPtr mDemoObjectNode;
 
-	
+	Ape::PointCloudWeakPtr mPointCloud;
+
 public:
 	ApeTesterPlugin();
 

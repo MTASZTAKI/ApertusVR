@@ -22,8 +22,9 @@ SOFTWARE.*/
 
 #include "ApeOgrePointCloud.h"
 
-Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray)
+Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius)
 {
+	mRenderSystemForVertex = Ogre::Root::getSingleton().getRenderSystem();
 	Ogre::MeshPtr msh = Ogre::MeshManager::getSingleton().createManual(name, resourcegroup);
 	Ogre::SubMesh* sub = msh->createSubMesh();
 	msh->sharedVertexData = new Ogre::VertexData();
@@ -54,6 +55,7 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 	}
 	sub->useSharedVertices = true;
 	sub->operationType = Ogre::RenderOperation::OT_POINT_LIST;
+	msh->_setBoundingSphereRadius(boundigSphereRadius);
 	msh->load();
 }
 
@@ -76,12 +78,12 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 
 void Ape::OgrePointCloud::updateVertexColours(int size, float *colours)
 {
-	float *pCArray = static_cast<float*>(mCbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+	Ogre::RGBA *colorArrayBuffer = static_cast<Ogre::RGBA*>(mCbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+	int j = 0;
 	for (int i = 0; i < size * 3; i += 3)
 	{
-		pCArray[i] = colours[i];
-		pCArray[i + 1] = colours[i + 1];
-		pCArray[i + 2] = colours[i + 2];
+		Ogre::ColourValue color = Ogre::ColourValue(colours[i], colours[i + 1], colours[i + 2]);
+		mRenderSystemForVertex->convertColourValue(color, &colorArrayBuffer[j++]);
 	}
 	mCbuf->unlock();
 }

@@ -7,7 +7,7 @@ material Pointcloud
 			diffuse vertexcolour
 			specular vertexcolour
 			ambient vertexcolour
-			point_size 0.1
+			point_size 0.01
 			point_sprites on
 			point_size_attenuation on
 		}
