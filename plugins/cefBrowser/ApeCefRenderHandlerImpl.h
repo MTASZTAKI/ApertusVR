@@ -59,6 +59,8 @@ namespace Ape
 
 		void mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType);
 
+		void mouseScroll(int browserID);
+
 		void mouseMoved(int browserID, int x, int y);
 
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
