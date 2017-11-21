@@ -28,13 +28,18 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 
+const int width = 512;
+const int height = 424;
+
+CameraSpacePoint depth2xyz[width*height];
 
 Ape::KinectPlugin::KinectPlugin()
 {
 	m_fFreq = 0;
 	m_pKinectSensor = NULL;
 	m_pCoordinateMapper = NULL;
-	m_pBodyFrameReader=NULL;
+	//m_pBodyFrameReader=NULL;
+	reader = NULL;
 
 
 	mpScene = Ape::IScene::getSingletonPtr();
@@ -47,7 +52,7 @@ Ape::KinectPlugin::KinectPlugin()
 Ape::KinectPlugin::~KinectPlugin()
 {
 	// done with body frame reader
-	SafeRelease(m_pBodyFrameReader);
+	SafeRelease(reader);
 
 	// done with coordinate mapper
 	SafeRelease(m_pCoordinateMapper);
@@ -262,6 +267,56 @@ void Ape::KinectPlugin::Init()
 			leftHandGeometry->setMaterial(_5bodyMaterial);
 		}
 	}
+	//if (auto myNode = mpScene->createNode("PCNode").lock())
+	//{
+	//	PCN = myNode;
+	//}
+	//if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("PCGeometry", Ape::Entity::POINT_CLOUD).lock()))
+	//{
+	//	std::vector<float> po;
+	//	po = { 0,120,10 };
+	//	std::vector<float> co;
+	//	co = { 1,1,1 };
+	//	pointCloud->setParameters(po, co);
+	//	pointCloud->setParentNode(PCN);
+	//}
+	if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+	{
+		pointCloudNode->setPosition(Ape::Vector3(0, 100, 50));
+		if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			pointCloudNodeText->setCaption("Points");
+			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			pointCloudNodeText->setParentNode(pointCloudNode);
+		}
+		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+		{
+			Ape::PointCloudPoints points = {
+				-5, 0, 0,
+				-4, 0, 0,
+				-3, 0, 0,
+				-2, 0, 0,
+				-1, 0, 0,
+				0, 0, 0,
+				1, 0, 0,
+				2, 0, 0,
+				3, 0, 0
+			};
+			Ape::PointCloudColors colors = {
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1,
+				1, 1, 1
+			};
+			pointCloud->setParameters(points, colors);
+			pointCloud->setParentNode(pointCloudNode);
+		}
+	}
 }
 
 void Ape::KinectPlugin::Run()
@@ -270,6 +325,52 @@ void Ape::KinectPlugin::Run()
 	{
 		Update();
 
+		//point cloud
+		/*if (!pointcGenerated && depth2xyz[1010].X!=0.0 && depth2xyz[1010].X != -1*std::numeric_limits<float>::infinity())
+		{
+			int size = 651264;
+			std::vector<float> point(size);
+			for (int i = 0; i < size/3; i++)
+			{
+				point.push_back(depth2xyz[i].X);
+				point.push_back(depth2xyz[i].Y);
+				point.push_back(depth2xyz[i].Z);
+			}
+			std::vector<float> color(size);
+			for (int i = 0; i < size / 3; i++)
+			{
+				color.push_back(0);
+				color.push_back(255);
+				color.push_back(255);
+			}
+			
+			if (auto myNode = mpScene->createNode("PCNode").lock())
+			{
+				PCN = myNode;
+			}
+			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("PCGeometry", Ape::Entity::POINT_CLOUD).lock()))
+			{				
+				pointCloud->setParameters(point, color);
+			}
+			pointcGenerated = true;
+		}*/
+
+		std::ostringstream sx;
+		sx << depth2xyz[1010].X*100;
+		std::string x(sx.str());
+
+		std::ostringstream sy;
+		sy << depth2xyz[1010].Y*100;
+		std::string y(sy.str());
+
+		std::ostringstream sz;
+		sz << depth2xyz[1010].Z*100;
+		std::string z(sz.str());
+		/*if (pointcGenerated)
+		{
+			std::cout << "true; ";
+		}*/
+		std::cout << "x: " + x + " x: " + y + " y: " + z << std::endl;
 		for (int i = 0; i < 25; i++)
 		{
 			if (auto bodynode = _0Body[i].lock())
@@ -428,16 +529,24 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 	if (m_pKinectSensor)
 	{
 		// Initialize the Kinect and get coordinate mapper and the body reader
-		IBodyFrameSource* pBodyFrameSource = NULL;
+		//IBodyFrameSource* pBodyFrameSource = NULL;
+		/*IMultiSourceFrame* pMultiFramesource = NULL;*/
 
-		hr = m_pKinectSensor->Open();
+		hr = m_pKinectSensor->get_CoordinateMapper(&m_pCoordinateMapper);
 
 		if (SUCCEEDED(hr))
 		{
-			hr = m_pKinectSensor->get_CoordinateMapper(&m_pCoordinateMapper);
+			hr = m_pKinectSensor->Open();
 		}
 
 		if (SUCCEEDED(hr))
+		{
+			hr= m_pKinectSensor->OpenMultiSourceFrameReader(
+				FrameSourceTypes::FrameSourceTypes_Depth | FrameSourceTypes::FrameSourceTypes_Color | FrameSourceTypes::FrameSourceTypes_Body,
+				&reader);
+		}
+
+		/*if (SUCCEEDED(hr))
 		{
 			hr = m_pKinectSensor->get_BodyFrameSource(&pBodyFrameSource);
 		}
@@ -445,9 +554,9 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 		if (SUCCEEDED(hr))
 		{
 			hr = pBodyFrameSource->OpenReader(&m_pBodyFrameReader);
-		}
+		}*/
 
-		SafeRelease(pBodyFrameSource);
+		//SafeRelease(pBodyFrameSource);
 		std::cout << "Kinect init compleate" << std::endl;
 	}
 
@@ -465,14 +574,40 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 /// </summary>
 void Ape::KinectPlugin::Update()
 {
-	if (!m_pBodyFrameReader)
+	if (!reader)
 	{
 		return;
 	}
 
-	IBodyFrame* pBodyFrame = NULL;
+	pFrame = NULL;
+	//m_pDepthFrame = NULL;
 
-	HRESULT hr = m_pBodyFrameReader->AcquireLatestFrame(&pBodyFrame);
+	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
+
+	if (SUCCEEDED(hr))
+	{
+		GetBodyData(pFrame);
+		GetDepthData(pFrame);
+
+		pFrame->Release();
+	}
+}
+
+///<summary>
+///Gets body frame from multiframe reader
+///</summary>
+void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
+{
+	IBodyFrame* pBodyFrame;
+	IBodyFrameReference* pBodyFrameRef = NULL;
+
+	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);	
+
+	if (SUCCEEDED(hr))
+	{
+		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
+		if (pBodyFrameRef) pBodyFrameRef->Release();
+	}
 
 	if (SUCCEEDED(hr))
 	{
@@ -497,8 +632,37 @@ void Ape::KinectPlugin::Update()
 			SafeRelease(ppBodies[i]);
 		}
 	}
+	if (pBodyFrame) pBodyFrame->Release();
+	//SafeRelease(pBodyFrame);
+}
 
-	SafeRelease(pBodyFrame);
+void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
+{
+	IDepthFrame* pDepthframe;
+	IDepthFrameReference* pDepthFrameRef = NULL;
+
+	HRESULT hr = pframe->get_DepthFrameReference(&pDepthFrameRef);
+
+	if (SUCCEEDED(hr))
+	{
+		hr = pDepthFrameRef->AcquireFrame(&pDepthframe);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		if (pDepthFrameRef) pDepthFrameRef->Release();
+
+		// Get data from frame
+		unsigned int size;
+		unsigned short* buf;
+		hr = pDepthframe->AccessUnderlyingBuffer(&size, &buf);
+
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pCoordinateMapper->MapDepthFrameToCameraSpace(width*height, buf, width*height, depth2xyz);
+		}
+	}
+	if (pDepthframe) pDepthframe->Release();
 }
 
 /// <summary>

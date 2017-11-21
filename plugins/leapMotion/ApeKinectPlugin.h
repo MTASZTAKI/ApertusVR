@@ -26,6 +26,8 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread> 
+//#include "Leap.h"
+//#include "LeapMath.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
@@ -35,21 +37,14 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIManualPass.h"
-#include <ApeITubeGeometry.h>
-#include <ApeIPointCloud.h>
+#include "resource.h"
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
 
 namespace Ape
 {
-	class KinectPlugin : public Ape::IPlugin
+	class KinectPlugin : public Ape::IPlugin, public Leap::Listener 
 	{
-		static const int        cDepthWidth = 512;
-		static const int        cDepthHeight = 424;
-
 	public:
 		KinectPlugin();
 
@@ -67,55 +62,27 @@ namespace Ape
 
 		void Restart() override;
 
-		void Update();
+		void onInit(const Leap::Controller& controller) override;
 
-		void GetBodyData(IMultiSourceFrame* pframe);
-		void GetDepthData(IMultiSourceFrame* pframe);
+		void onConnect(const Leap::Controller& controller) override;
 
-		/// <summary>
-		/// Initializes the default Kinect sensor
-		/// </summary>
-		/// <returns>indicates success or failure</returns>
-		HRESULT Ape::KinectPlugin::InitializeDefaultSensor();
+		void onDisconnect(const Leap::Controller& controller) override;
 
-		/// <summary>
-		/// Handle new body data
-		/// <param name="nTime">timestamp of frame</param>
-		/// <param name="nBodyCount">body data count</param>
-		/// <param name="ppBodies">body data in frame</param>
-		/// </summary>
-		void Ape::KinectPlugin::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+		void onExit(const Leap::Controller& controller) override;
+
+		void onFrame(const Leap::Controller& controller) override;
+
+		void onFocusGained(const Leap::Controller& controller) override;
+
+		void onFocusLost(const Leap::Controller& controller) override;
+
+		void onDeviceChange(const Leap::Controller& controller) override;
+
+		void onServiceConnect(const Leap::Controller& controller) override;
+
+		void onServiceDisconnect(const Leap::Controller& controller) override;
 
 	private:
-		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
-		//Ape::NodeWeakPtr HeadNode;
-		//std::vector<Ape::NodeWeakPtr> mBNodes;
-		std::vector<Ape::NodeWeakPtr> _0Body;
-		std::vector<Ape::NodeWeakPtr> _1Body;
-		std::vector<Ape::NodeWeakPtr> _2Body;
-		std::vector<Ape::NodeWeakPtr> _3Body;
-		std::vector<Ape::NodeWeakPtr> _4Body;
-		std::vector<Ape::NodeWeakPtr> _5Body;
-		Ape::NodeWeakPtr PCN;
-
-		double                  m_fFreq;
-		float					body[BODY_COUNT][JointType_Count][3];
-
-		// Current Kinect
-		IKinectSensor*          m_pKinectSensor;
-		ICoordinateMapper*      m_pCoordinateMapper;
-
-		IMultiSourceFrame* pFrame;
-		//IMultiSourceFrame* m_pDepthFrame;
-		IMultiSourceFrameReader* reader;   // Kinect data source
-
-		const int colorwidth = 1920;
-		const int colorheight = 1080;
-
-		bool pointcGenerated = false;
-
-		// Body reader
-		//IBodyFrameReader*       m_pBodyFrameReader;
 
 		Ape::IScene* mpScene;
 
@@ -128,6 +95,22 @@ namespace Ape
 		Ape::NodeWeakPtr mUserNode;
 
 		void eventCallBack(const Ape::Event& event);
+
+		Leap::Controller mLeapController;
+
+		std::vector<std::string> mFingerNames;
+		
+		std::vector<std::string> mBoneNames;
+		
+		std::vector<std::string> mStateNames;
+
+		float mPreviousFramePitch;
+
+		float mPreviousFrameYaw;
+
+		float mPreviousFrameRoll;
+
+		bool mHandOrientationFlag;
 
 		Ape::NodeWeakPtr mLeftHandNode;
 
