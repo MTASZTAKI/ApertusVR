@@ -131,31 +131,31 @@ void ApePresentationScenePlugin::Init()
 		mRayOverlayNode = rayNode;
 	}
 	/*overlay begin*/
-	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
-	{
-		browser->setResoultion(2048, 1024);
-		browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
-		browser->showOnOverlay(true, 0);
-		mOverlayBrowser = browser;
-		mActiveBrowser = browser;
-		/*mouse begin*/
-		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-		{
-			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-			mouseMaterial->setLightingEnabled(false);
-			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
-			{
-				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
-				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
-				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
-				mActiveMouseTexture = mouseTexture;
-				mOverlayMouseTexture = mouseTexture;
-				mOverlayMouseMaterial = mouseMaterial;
-			}
-			mouseMaterial->showOnOverlay(true, 1);
-		}
-	}
+	//if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	//{
+	//	browser->setResoultion(2048, 1024);
+	//	browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
+	//	browser->showOnOverlay(true, 0);
+	//	mOverlayBrowser = browser;
+	//	mActiveBrowser = browser;
+	//	/*mouse begin*/
+	//	if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	//	{
+	//		mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+	//		mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+	//		mouseMaterial->setLightingEnabled(false);
+	//		if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+	//		{
+	//			mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+	//			mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+	//			mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+	//			mActiveMouseTexture = mouseTexture;
+	//			mOverlayMouseTexture = mouseTexture;
+	//			mOverlayMouseMaterial = mouseMaterial;
+	//		}
+	//		mouseMaterial->showOnOverlay(true, 1);
+	//	}
+	//}
 	/*static elements begin*/
 	std::string name = "metalroom";
 	Ape::Vector3 position = Ape::Vector3();
@@ -201,8 +201,8 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserWidth = 278;
 	storyElement.browserHeight = 157;
 	manageBrowser(storyElement);
-	storyElement.browserName = "indigo_first";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/indigo/indigo_first.png";
+	storyElement.browserName = "first";
+	storyElement.browserURL = "http://apertusvr.org";
 	storyElement.browserPosition = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
 	storyElement.browserOrientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
 	storyElement.browserWidth = 267;
@@ -350,6 +350,8 @@ void ApePresentationScenePlugin::Init()
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127, 79.2832, 317.68), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724, 78.6628, 287.429), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
 	mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123, 67.057, 422.253), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586, 100.834, 573.667), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
+		"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
 	mStoryElements.push_back(StoryElement(Ape::Vector3(253.464, 88.8106, 280.662), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
 	mStoryElements.push_back(StoryElement(Ape::Vector3(268.471, 112.444, 489.413), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024, 82.1165, 121.716), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
@@ -364,7 +366,12 @@ void ApePresentationScenePlugin::Init()
 		"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053, -304.943, -172.531), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
-		"indigo_first", "http://srv.mvv.sztaki.hu/temp/indigo/indigo_last.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+		"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+
 }
 
 void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
