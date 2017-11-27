@@ -70,6 +70,7 @@ namespace Ape
 		void Update();
 
 		void GetBodyData(IMultiSourceFrame* pframe);
+		void GetRGBData(IMultiSourceFrame* pframe);
 		void GetDepthData(IMultiSourceFrame* pframe);
 
 		/// <summary>
@@ -85,6 +86,11 @@ namespace Ape
 		/// <param name="ppBodies">body data in frame</param>
 		/// </summary>
 		void Ape::KinectPlugin::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+
+		//bool Ape::KinectPlugin::Contains(int number, std::vector<int> vect, int length);
+		std::vector<int> Ape::KinectPlugin::getrRndIndexes(double ratio);
+		Ape::PointCloudPoints Ape::KinectPlugin::GetPointCloudPTS(CameraSpacePoint depthPts[], double ratio/*, std::vector<int> indexes*/);
+		Ape::PointCloudColors Ape::KinectPlugin::GetPointCloudCOL(unsigned char cimage[], double ratio);
 
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
