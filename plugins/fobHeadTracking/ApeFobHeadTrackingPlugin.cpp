@@ -14,8 +14,8 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpFobTracker = nullptr;
+	mCameraCount = 0;
 	mCameraDoubleQueue = Ape::DoubleQueue<Ape::CameraWeakPtr>();
-	mCameras = std::vector<Ape::CameraWeakPtr>();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
@@ -28,6 +28,27 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
 {
 	std::cout << "ApeFobHeadTrackingPlugin dtor" << std::endl;
+}
+
+void ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr)
+{
+	std::cout << "setCameraConfigByName() cameraName: " << cameraName << std::endl;
+	for (int i = 0; i < mDisplayConfigList.size(); i++)
+	{
+		if (mDisplayConfigList[i].cameraLeftName == cameraName)
+		{
+			mDisplayConfigList[i].cameraLeft = cameraWkPtr;
+			std::cout << "setCameraConfigByName() mDisplayConfigList[" << i << "].cameraLeftName: " << cameraName << " - found" << std::endl;
+			return;
+		}
+		else if (mDisplayConfigList[i].cameraRightName == cameraName)
+		{
+			mDisplayConfigList[i].cameraRight = cameraWkPtr;
+			std::cout << "setCameraConfigByName() mDisplayConfigList[" << i << "].cameraRightName: " << cameraName << " - found" << std::endl;
+			return;
+		}
+	}
+	std::cout << "setCameraConfigByName() end - fckn nicht gut!!!!" << std::endl;
 }
 
 void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
@@ -127,7 +148,29 @@ void ApeFobHeadTrackingPlugin::Init()
 				for (rapidjson::Value::MemberIterator displayMemberIterator = 
 					display.MemberBegin(); displayMemberIterator != display.MemberEnd(); ++displayMemberIterator)
 				{
-					if (displayMemberIterator->name == "size")
+					if (displayMemberIterator->name == "name")
+					{
+						fobHeadTrackingDisplayConfig.name = displayMemberIterator->value.GetString();
+					}
+					else if (displayMemberIterator->name == "cameras")
+					{
+						for (rapidjson::Value::MemberIterator camerasMemberIterator =
+							display[displayMemberIterator->name].MemberBegin();
+							camerasMemberIterator != display[displayMemberIterator->name].MemberEnd(); ++camerasMemberIterator)
+						{
+							if (camerasMemberIterator->name == "left")
+							{
+								fobHeadTrackingDisplayConfig.cameraLeftName = camerasMemberIterator->value.GetString();
+								mCameraCount++;
+							}
+							else if (camerasMemberIterator->name == "right")
+							{
+								fobHeadTrackingDisplayConfig.cameraRightName = camerasMemberIterator->value.GetString();
+								mCameraCount++;
+							}
+						}
+					}
+					else if (displayMemberIterator->name == "size")
 					{
 						for (rapidjson::Value::MemberIterator sizeMemberIterator = 
 							display[displayMemberIterator->name].MemberBegin();
@@ -226,11 +269,13 @@ void ApeFobHeadTrackingPlugin::Init()
 						}
 					}
 				}
+				std::cout << "Init() mDisplayConfigList.push_back(" << fobHeadTrackingDisplayConfig.name << ")" << std::endl;
 				mDisplayConfigList.push_back(fobHeadTrackingDisplayConfig);
 			}
 		}
 		fclose(apeFobHeadTrackingPluginConfigFile);
-	}	
+	}
+	std::cout << "Init() mCameraCount: " << mCameraCount << std::endl;
 }
 
 Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, float cameraNearClip, float cameraFarClip)
@@ -296,16 +341,15 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 
 void ApeFobHeadTrackingPlugin::Run()
 {
-    int excpectedCameraCount = mDisplayConfigList.size() * 2;
 	int cameraCount = 0;
-    while (cameraCount < excpectedCameraCount)
+    while (cameraCount < mCameraCount)
 	{
 		mCameraDoubleQueue.swap();
 		while (!mCameraDoubleQueue.emptyPop())
 		{
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
-				mCameras.push_back(camera);
+				setCameraConfigByName(camera->getName(), camera);
 				mCamerasNode.lock()->setParentNode(mUserNode);
 				camera->setParentNode(mCamerasNode);
 				cameraCount++;
@@ -362,19 +406,19 @@ void ApeFobHeadTrackingPlugin::Run()
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];
-			if (auto cameraLeft = mCameras[i * 2].lock())
+			if (auto cameraLeft = displayConfig.cameraLeft.lock())
 			{
-				if (auto cameraRight = mCameras[i * 2 + 1].lock())
-				{
-					Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition +
-						(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-					Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition +
-						(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
-					cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
-						trackedViewerLeftEyePosition, cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance()));
-					cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
-						trackedViewerRightEyePosition, cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance()));
-				}
+				Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition +
+					(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
+				cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+					trackedViewerLeftEyePosition, cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance()));
+			}
+			if (auto cameraRight = displayConfig.cameraRight.lock())
+			{
+				Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition +
+					(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
+				cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+					trackedViewerRightEyePosition, cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance()));
 			}
 		}
 	}
