@@ -23,7 +23,7 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeFobHeadTrackingPlugin",
-			"ApePresentationScenePlugin"
+            "ApePresentationScenePlugin"
         ]
     }
 }

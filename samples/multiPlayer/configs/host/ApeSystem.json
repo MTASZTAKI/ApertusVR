@@ -24,7 +24,6 @@
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeSampleScenePlugin"
-        ],
-        "jsplugins": []
+        ]
     }
 }

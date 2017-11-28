@@ -26,8 +26,8 @@
             "ApeOgreRenderPlugin",
             "ApeLeapMotionPlugin",
             "ApeAvatarPlugin",
-			"ApeOculusDK2Plugin",
-			"ApeSampleScenePlugin"
+            "ApeOculusDK2Plugin",
+            "ApeSampleScenePlugin"
         ]
     }
 }

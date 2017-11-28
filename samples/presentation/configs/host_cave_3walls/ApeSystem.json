@@ -22,8 +22,8 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-			"ApeFobHeadTrackingPlugin",
-			"ApePresentationScenePlugin"
+            "ApeFobHeadTrackingPlugin",
+            "ApePresentationScenePlugin"
         ]
     }
 }

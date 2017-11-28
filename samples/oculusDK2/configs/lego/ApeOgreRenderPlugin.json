@@ -1,43 +1,43 @@
 {
-    "renderSystem" : "DX9",
-    "lodLevels" : {
+    "renderSystem": "DX9",
+    "lodLevels": {
         "autoGenerateAndSave": false,
-        "bias" : 0.5
+        "bias": 0.5
     },
     "renderWindows": [
-      {
-        "enable": false,
-        "name": "OculusDK2",
-        "monitorIndex": 1,
-        "resolution": {
-          "width": 1920,
-          "height": 1080,
-          "fullScreen": true
+        {
+            "enable": false,
+            "name": "OculusDK2",
+            "monitorIndex": 1,
+            "resolution": {
+                "width": 1920,
+                "height": 1080,
+                "fullScreen": true
+            },
+            "miscParams": {
+                "vSync": true,
+                "vSyncInterval": 1,
+                "colorDepth": 32,
+                "FSAA": 8,
+                "FSAAHint": "Quality"
+            }
         },
-        "miscParams": {
-          "vSync": true,
-          "vSyncInterval": 1,
-          "colorDepth": 32,
-          "FSAA": 8,
-          "FSAAHint": "Quality"
+        {
+            "enable": true,
+            "name": "OculusDK2_Monitor",
+            "monitorIndex": 0,
+            "resolution": {
+                "width": 1280,
+                "height": 720,
+                "fullScreen": false
+            },
+            "miscParams": {
+                "vSync": true,
+                "vSyncInterval": 1,
+                "colorDepth": 32,
+                "FSAA": 8,
+                "FSAAHint": "Quality"
+            }
         }
-      },
-      {
-        "enable": true,
-        "name": "OculusDK2_Monitor",
-        "monitorIndex": 0,
-        "resolution": {
-          "width": 1280,
-          "height": 720,
-          "fullScreen": false
-        },
-        "miscParams": {
-          "vSync": true,
-          "vSyncInterval": 1,
-          "colorDepth": 32,
-          "FSAA": 8,
-          "FSAAHint": "Quality"
-        }
-      }
     ]
 }

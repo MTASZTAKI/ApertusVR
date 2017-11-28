@@ -22,7 +22,7 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-			"ApePresentationScenePlugin"
+            "ApePresentationScenePlugin"
         ]
     }
 }

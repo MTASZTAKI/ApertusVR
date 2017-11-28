@@ -26,7 +26,6 @@
             "ApeCefBrowserPlugin",
             "ApeInGameBrowserSamplePlugin",
             "ApeSampleScenePlugin"
-        ],
-        "jsplugins": []
+        ]
     }
 }
