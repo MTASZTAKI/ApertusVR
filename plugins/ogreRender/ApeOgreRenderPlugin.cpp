@@ -1542,8 +1542,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreTextureUnit = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
 							if (ogreTextureUnit)
-								ogreTextureUnit->setTextureScroll(-textureUnit->getTextureScroll().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
-									-textureUnit->getTextureScroll().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+								ogreTextureUnit->setTextureScroll(textureUnit->getTextureScroll().x, textureUnit->getTextureScroll().y);
 						}
 					}
 				break;

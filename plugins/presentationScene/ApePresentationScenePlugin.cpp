@@ -612,9 +612,17 @@ bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 	{
 		if (auto activeBrowser = mActiveBrowser.lock())
 		{
-			activeBrowser->mouseMoved(Ape::Vector2(e.state.X.abs, e.state.Y.abs));
+			Ape::Vector2 cursorTexturePosition;
+			cursorTexturePosition.x = (float)-e.state.X.abs / (float)mpMainWindow->getWidth();
+			cursorTexturePosition.y = (float)-e.state.Y.abs / (float)mpMainWindow->getHeight();
+			activeMouseTexture->setTextureScroll(cursorTexturePosition.x, cursorTexturePosition.y);
+			Ape::Vector2 cursorBrowserPosition;
+			cursorBrowserPosition.x = ((float)e.state.X.abs / (float)mpMainWindow->getWidth()) * activeBrowser->getResoultion().x;
+			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * activeBrowser->getResoultion().y;
+			activeBrowser->mouseMoved(cursorBrowserPosition);
 			activeBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
-			activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
+			/*std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y << std::endl;
+			std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y << std::endl;*/
 		}
 	}
 	return true;
