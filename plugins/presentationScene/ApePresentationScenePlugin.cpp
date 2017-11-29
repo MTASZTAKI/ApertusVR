@@ -613,6 +613,7 @@ bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 		if (auto activeBrowser = mActiveBrowser.lock())
 		{
 			activeBrowser->mouseMoved(Ape::Vector2(e.state.X.abs, e.state.Y.abs));
+			activeBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
 			activeMouseTexture->setTextureScroll(e.state.X.abs, e.state.Y.abs);
 		}
 	}

@@ -80,14 +80,15 @@ void Ape::CefRenderHandlerImpl::mouseClick(int browserID, CefBrowserHost::MouseB
 	}
 }
 
-void Ape::CefRenderHandlerImpl::mouseScroll(int browserID)
+void Ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int deltaY)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		CefMouseEvent cefMouseEvent;
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
-		mBrowsers[browserID]->GetHost()->SendMouseWheelEvent(cefMouseEvent, 0, 0);
+		mBrowsers[browserID]->GetHost()->SendMouseWheelEvent(cefMouseEvent, deltaX, deltaY);
+		std::cout << "Ape:::CefRenderHandlerImpl::mouseScroll " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << " deltaY:" << deltaY << std::endl;
 	}
 }
 

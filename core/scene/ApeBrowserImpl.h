@@ -62,6 +62,8 @@ namespace Ape
 
 		void mouseMoved(Ape::Vector2 position) override;
 
+		void mouseScroll(Ape::Vector2 delta) override;
+
 		Ape::Browser::MouseState getMouseState() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
@@ -90,6 +92,8 @@ namespace Ape
 		Ape::Browser::MouseClick mMouseLastClick;
 
 		Ape::Vector2 mMouseLastPosition;
+
+		Ape::Vector2 mMouseScrollDelta;
 	};
 }
 

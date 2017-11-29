@@ -43,17 +43,20 @@ namespace Ape
 		{
 			Ape::Vector2 position;
 			MouseClick click;
+			Ape::Vector2 scrollDelta;
 
 			MouseState()
 			{
 				this->position = Ape::Vector2();
 				this->click = MouseClick::UNKNOWN;
+				this->scrollDelta = Ape::Vector2();
 			}
 
-			MouseState(Ape::Vector2 position, MouseClick click)
+			MouseState(Ape::Vector2 position, MouseClick click, Ape::Vector2 scrollDelta)
 			{
 				this->position = position;
 				this->click = click;
+				this->scrollDelta = scrollDelta;
 			}
 		};
 	}
@@ -88,6 +91,8 @@ namespace Ape
 		virtual void mouseClick(Ape::Browser::MouseClick click) = 0;
 
 		virtual void mouseMoved(Ape::Vector2 position) = 0;
+
+		virtual void mouseScroll(Ape::Vector2 delta) = 0;
 
 		virtual Ape::Browser::MouseState getMouseState() = 0;
 	};

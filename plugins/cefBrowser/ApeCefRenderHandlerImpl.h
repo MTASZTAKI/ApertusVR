@@ -59,7 +59,7 @@ namespace Ape
 
 		void mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType);
 
-		void mouseScroll(int browserID);
+		void mouseScroll(int browserID, int deltaX, int deltaY);
 
 		void mouseMoved(int browserID, int x, int y);
 

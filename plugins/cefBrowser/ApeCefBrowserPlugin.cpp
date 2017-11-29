@@ -88,6 +88,15 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 					}
 				}
 				break;
+			case Ape::Event::Type::BROWSER_MOUSE_SCROLL:
+				{
+					if (mBrowserIDNames[browser->getName()])
+					{
+						Ape::Browser::MouseState mouseState = browser->getMouseState();
+						mpApeCefRenderHandlerImpl->mouseScroll(mBrowserIDNames[browser->getName()], mouseState.scrollDelta.x, mouseState.scrollDelta.y);
+					}
+				}
+				break;
 			case Ape::Event::Type::BROWSER_MOUSE_CLICK:
 				{
 					if (mBrowserIDNames[browser->getName()])
