@@ -169,7 +169,7 @@ namespace SkyX
 
 		if (mLastCameraFarClipDistance != c->getFarClipDistance())
 		{
-			mMeshManager->updateGeometry(c);
+			mMeshManager->updateGeometry();
 
 			mLastCameraFarClipDistance = mCamera->getFarClipDistance();
 		}

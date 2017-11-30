@@ -193,8 +193,13 @@ namespace Hydrax
 			{
 				return false;
 			}
-			if(!_createUnderwaterCompositor(Components, Options))
+			if(!_createUnderwaterCompositor(Components, Options, mHydrax->getViewportLeft()))
 			{
+				if (mHydrax->getViewportRight())
+				{
+					if (!_createUnderwaterCompositor(Components, Options, mHydrax->getViewportRight()))
+						return false;
+				}
 				return false;
 			}
 			if(!_createSimpleColorMaterial(Ogre::ColourValue::Red, MAT_SIMPLE_RED, _def_Simple_Red_Material_Name, false))
@@ -2730,7 +2735,7 @@ namespace Hydrax
 		return true;
 	}
 
-	bool MaterialManager::_createUnderwaterCompositor(const HydraxComponent &Components, const Options &Options)
+	bool MaterialManager::_createUnderwaterCompositor(const HydraxComponent &Components, const Options &Options, Ogre::Viewport* viewport)
 	{
 		const bool cCaustics   = _isComponent(Components, HYDRAX_COMPONENT_CAUSTICS);
 		const bool cDepth   = _isComponent(Components, HYDRAX_COMPONENT_DEPTH);
@@ -3107,12 +3112,12 @@ namespace Hydrax
 		COutputPass->setLastRenderQueue(0);
 
         Ogre::CompositorManager::getSingleton().
-			addCompositor(mHydrax->getViewportLeft(),_def_Underwater_Compositor_Name)->
+			addCompositor(viewport,_def_Underwater_Compositor_Name)->
 			    addListener(&mUnderwaterCompositorListener);
 
-		Ogre::CompositorManager::getSingleton().
+		/*Ogre::CompositorManager::getSingleton().
 			addCompositor(mHydrax->getViewportRight(), _def_Underwater_Compositor_Name)->
-			addListener(&mUnderwaterCompositorListener);
+			addListener(&mUnderwaterCompositorListener);*/
 
 		return true;
 	}
@@ -3498,8 +3503,11 @@ namespace Hydrax
 		Ogre::CompositorManager::getSingleton().
 					setCompositorEnabled(mHydrax->getViewportLeft(), Comp->getName(), Enable);
 
-		Ogre::CompositorManager::getSingleton().
-			setCompositorEnabled(mHydrax->getViewportRight(), Comp->getName(), Enable);
+		if (mHydrax->getViewportRight())
+		{
+			Ogre::CompositorManager::getSingleton().
+				setCompositorEnabled(mHydrax->getViewportRight(), Comp->getName(), Enable);
+		}
 
 		mCompositorsEnable[static_cast<int>(Compositor)] = Enable;
 	}

@@ -68,7 +68,7 @@ namespace SkyX
 		/** Update geometry
 		    @param cam Camera
 		 */
-		void updateGeometry(Ogre::Camera* cam);
+		void updateGeometry();
 
 		/** Get mesh
             @return Mesh
@@ -211,16 +211,16 @@ namespace SkyX
 			@remarks Radius multiplier in [0,1] range
 			         Radius = CameraFarClipDistance * RadiusMultiplier
 		 */
-		inline void setRadiusMultiplier(const Ogre::Real& RadiusMultiplier)
+		inline void setSkydomeRadius(const Ogre::Real& skydomeRadius)
 		{
-			mRadiusMultiplier = RadiusMultiplier;
+			mSkydomeRadius = skydomeRadius;
 		}
 
 		/** Get skydome radius
 		    @param c Camera
 		    @return Skydome radius relative to the given camera
 		 */
-		const float getSkydomeRadius(Ogre::Camera* c) const;
+		const float getSkydomeRadius() const;
 
 	private:
 		/** Create geometry
@@ -260,7 +260,7 @@ namespace SkyX
 		Ogre::Real mUnderHorizonFadingMultiplier;
 
 		/// Radius multiplier
-		Ogre::Real mRadiusMultiplier;
+		Ogre::Real mSkydomeRadius;
 
 		/// Ogre::SceneNode pointer
 		Ogre::SceneNode* mSceneNode;

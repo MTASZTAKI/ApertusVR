@@ -27,8 +27,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace SkyX
 {
-	CfgFileManager::CfgFileManager(SkyX* s, BasicController *c, Ogre::Camera *d)
-		: mSkyX(s), mController(c), mCamera(d)
+	CfgFileManager::CfgFileManager(SkyX* s, BasicController *c, float skyDomeRadius)
+		: mSkyX(s), mController(c), mSkyDomeRadius(skyDomeRadius)
 	{
 	}
 
@@ -109,7 +109,8 @@ namespace SkyX
 			if (!mSkyX->getVCloudsManager()->isCreated())
 			{
 				// SkyX::MeshManager::getSkydomeRadius(...) works for both finite and infinite(=0) camera far clip distances
-				mSkyX->getVCloudsManager()->create(mSkyX->getMeshManager()->getSkydomeRadius(mCamera));
+				mSkyX->getMeshManager()->setSkydomeRadius(Ogre::Real(mSkyDomeRadius));
+				mSkyX->getVCloudsManager()->create(mSkyX->getMeshManager()->getSkydomeRadius());
 			}
 
 			vclouds->getLightningManager()->setEnabled(_getBoolValue(CfgFile, "lightnings"));

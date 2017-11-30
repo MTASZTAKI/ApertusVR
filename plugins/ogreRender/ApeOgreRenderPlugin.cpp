@@ -1666,34 +1666,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::SKY_CREATE:
 					{
-						;
-					}
-					break;
-				case Ape::Event::Type::SKY_CAMERA:
-					{
-						if (auto camera = sky->getCamera().lock())
-						{
-							if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
-							{
-								mpSkyxBasicController = new SkyX::BasicController();
-								mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
-								mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
-								SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, ogreCamera);
-								skyxCFG->load("SkyXDefault.skx");
-								mpSkyx->create();
-								mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
-								mpRoot->addFrameListener(mpSkyx);
-								mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
-								mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
-								//std::cout << "skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera) << std::endl;
-								static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
-							}
-						}
+
 					}
 				break;
-				case Ape::Event::Type::SKY_SIZE_MULTIPLIER:
+				case Ape::Event::Type::SKY_SIZE:
 					{
-						mpSkyx->getMeshManager()->setRadiusMultiplier(sky->getSizeMultiplier());
+						mpSkyxBasicController = new SkyX::BasicController();
+						mpSkyx = new SkyX::SkyX(mpSceneMgr, mpSkyxBasicController);
+						mpSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
+						SkyX::CfgFileManager *skyxCFG = new SkyX::CfgFileManager(mpSkyx, mpSkyxBasicController, sky->getSize());
+						skyxCFG->load("SkyXDefault.skx");
+						mpSkyx->create();
+						mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
+						mpRoot->addFrameListener(mpSkyx);
+						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
+						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
+						//std::cout << "skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera) << std::endl;
+						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
 					}
 				break;
 				case Ape::Event::Type::SKY_TIME:
@@ -1729,32 +1718,39 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						;
 					}
 					break;
-				case Ape::Event::Type::WATER_CAMERA:
+				case Ape::Event::Type::WATER_CAMERAS:
 					{
-						if (auto camera = water->getCamera().lock())
+						std::vector<Ogre::Camera*> ogreCameras{nullptr, nullptr};
+						std::vector<Ogre::Viewport*> ogreViewports{nullptr, nullptr};
+						if (water->getCameras().size() < 3)
 						{
-							if (auto ogreCameraLeft = mpSceneMgr->getCamera(camera->getName()))
+							int i = 0;
+							for (auto cameraWP : water->getCameras())
 							{
-								auto ogreViewportLeft = ogreCameraLeft->getViewport();
-								if (ogreViewportLeft)
+								if (auto camera = cameraWP.lock())
 								{
-									if (auto ogreCameraRight = mpSceneMgr->getCamera("HmdLeftCamera"))
+									if (mpSceneMgr->hasCamera(camera->getName()))
 									{
-										auto ogreViewportRight = ogreCameraRight->getViewport();
-										if (ogreViewportRight)
+										auto ogreCamera = mpSceneMgr->getCamera(camera->getName());
+										if (auto ogreViewport = ogreCamera->getViewport())
 										{
-											mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCameraLeft, ogreCameraRight, ogreViewportLeft, ogreViewportRight);
-											Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
-												Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
-											mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
-											mpHydrax->loadCfg("HydraxDemo.hdx");
-											mpHydrax->create();
-											mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+											ogreCameras[i] = ogreCamera;
+											ogreViewports[i] = ogreViewport;
+											i++;
 										}
 									}
 								}
 							}
+							mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCameras[0], ogreCameras[1], ogreViewports[0], ogreViewports[1]);
+							Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
+								Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
+							mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
+							mpHydrax->loadCfg("HydraxDemo.hdx");
+							mpHydrax->create();
+							mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
 						}
+						else
+							std::cout << "ApeOgreRenderPlugin::Water maximum 2 viewports is supported" << std::endl;
 					}
 					break;
 				case Ape::Event::Type::WATER_SKY:

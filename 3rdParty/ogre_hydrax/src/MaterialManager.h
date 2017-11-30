@@ -343,7 +343,7 @@ namespace Hydrax
 		    @param Components Components of the shader
 			@param Options Material options
 		 */
-		bool _createUnderwaterCompositor(const HydraxComponent &Components, const Options &Options);
+		bool _createUnderwaterCompositor(const HydraxComponent &Components, const Options &Options, Ogre::Viewport* viewport);
 
 		/** Create a simple color material
 		    @param Colour Material color

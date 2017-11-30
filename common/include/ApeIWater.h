@@ -46,9 +46,9 @@ namespace Ape
 
 		virtual Ape::SkyWeakPtr getSky() = 0;
 
-		virtual void setCamera(Ape::CameraWeakPtr camera) = 0;
+		virtual void setCameras(std::vector<Ape::CameraWeakPtr> cameras) = 0;
 
-		virtual Ape::CameraWeakPtr getCamera() = 0;
+		virtual std::vector<Ape::CameraWeakPtr> getCameras() = 0;
 	};
 }
 

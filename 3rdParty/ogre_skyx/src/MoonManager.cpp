@@ -271,7 +271,7 @@ namespace SkyX
 			return;
 		}
 
-		float radius = mSkyX->getMeshManager()->getSkydomeRadius(c)*0.95f,
+		float radius = mSkyX->getMeshManager()->getSkydomeRadius()*0.95f,
               size = radius*mMoonSize;
 
 		mMoonBillboard->setCommonDirection((mSkyX->getController()->getMoonDirection()).normalisedCopy().perpendicular());
@@ -301,7 +301,7 @@ namespace SkyX
 
 	void MoonManager::_updateMoonBounds(Ogre::Camera* c)
 	{
-		float radius = mSkyX->getMeshManager()->getSkydomeRadius(c)*0.95f,
+		float radius = mSkyX->getMeshManager()->getSkydomeRadius()*0.95f,
               size = radius*mMoonSize;
 
 		mMoonBillboard->setDefaultDimensions(size, size);

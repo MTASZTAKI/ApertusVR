@@ -43,7 +43,7 @@ namespace SkyX
 		, mUnderHorizonFading(true)
 		, mUnderHorizonFadingExponent(0.75)
 		, mUnderHorizonFadingMultiplier(2)
-		, mRadiusMultiplier(0.95f)
+		, mSkydomeRadius(0.0f)
         , mMaterialName("_NULL_")
 	{
 	}
@@ -114,14 +114,14 @@ namespace SkyX
 		mCreated = true;
 	}
 
-	void MeshManager::updateGeometry(Ogre::Camera* cam)
+	void MeshManager::updateGeometry()
 	{
 		if (!mCreated)
 		{
 			return;
 		}
 
-		float Radius = getSkydomeRadius(cam);
+		float Radius = getSkydomeRadius();
 
 		mVertices[0].x = 0; mVertices[0].z = 0;	mVertices[0].y = Radius;
 		mVertices[0].nx = 0; mVertices[0].nz = 0; mVertices[0].ny = 1; 
@@ -357,15 +357,16 @@ namespace SkyX
 		}
 	}
 
-	const float MeshManager::getSkydomeRadius(Ogre::Camera* c) const
+	const float MeshManager::getSkydomeRadius() const
 	{
-		float cameraFarClipDistance = c->getFarClipDistance();
+		/*float cameraFarClipDistance = c->getFarClipDistance();
 
 		if (!cameraFarClipDistance)
 		{
 			cameraFarClipDistance = mSkyX->getInfiniteCameraFarClipDistance();
 		}
 
-		return cameraFarClipDistance*mRadiusMultiplier;
+		return cameraFarClipDistance*mRadiusMultiplier;*/
+		return mSkydomeRadius;
 	}
 }

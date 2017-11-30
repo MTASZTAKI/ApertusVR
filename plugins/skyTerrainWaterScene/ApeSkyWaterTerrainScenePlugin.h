@@ -62,7 +62,9 @@ private:
 
 	Ape::LightWeakPtr mSunLight;
 
-	Ape::CameraWeakPtr mCamera;
+	std::vector<Ape::CameraWeakPtr> mCameras;
+
+	int mExpectedCameraCount;
 	
 	void eventCallBack(const Ape::Event& event);
 

@@ -43,7 +43,7 @@ namespace SkyX
 		/** Constructor
 		    @param h Hydrax parent pointer
 		 */
-		CfgFileManager(SkyX *s, BasicController *c, Ogre::Camera* d);
+		CfgFileManager(SkyX *s, BasicController *c, float skyDomeRadius);
 
 		/** Destructor
 		 */
@@ -181,7 +181,7 @@ namespace SkyX
 		/// Hydrax parent pointer
 		SkyX* mSkyX;
 		BasicController* mController;
-		Ogre::Camera *mCamera;
+		float mSkyDomeRadius;
 	};
 };
 

@@ -42,9 +42,9 @@ namespace Ape
 
 		Ape::SkyWeakPtr getSky() override;
 
-		void setCamera(Ape::CameraWeakPtr camera) override;
+		void setCameras(std::vector<Ape::CameraWeakPtr> cameras) override;
 
-		Ape::CameraWeakPtr getCamera() override;
+		std::vector<Ape::CameraWeakPtr> getCameras() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -61,9 +61,9 @@ namespace Ape
 
 		std::string mSkyName;
 
-		Ape::CameraWeakPtr mCamera;
+		std::vector<Ape::CameraWeakPtr> mCameras;
 
-		std::string mCameraName;
+		std::vector<std::string> mCamerasName;
 	};
 }
 
