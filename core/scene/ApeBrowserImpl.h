@@ -66,6 +66,10 @@ namespace Ape
 
 		Ape::Browser::MouseState getMouseState() override;
 
+		void keyASCIIValue(int keyASCIIValue) override;
+
+		int getLastKeyASCIIValue() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -96,6 +100,8 @@ namespace Ape
 		Ape::Vector2 mMouseLastPosition;
 
 		Ape::Vector2 mMouseScrollDelta;
+
+		int mLastKeyValue;
 	};
 }
 

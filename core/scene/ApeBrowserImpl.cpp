@@ -36,6 +36,7 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mMouseScrollDelta = Ape::Vector2();
 	mMouseLastPosition = Ape::Vector2();
 	mID = 0;
+	mLastKeyValue = 0;
 }
 
 Ape::BrowserImpl::~BrowserImpl()
@@ -128,6 +129,16 @@ Ape::Browser::MouseState Ape::BrowserImpl::getMouseState()
 	return Ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick, mMouseScrollDelta);
 }
 
+void Ape::BrowserImpl::keyASCIIValue(int keyASCIIValue)
+{
+	mLastKeyValue = keyASCIIValue;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_KEY_VALUE));
+}
+
+int Ape::BrowserImpl::getLastKeyASCIIValue()
+{
+	return mLastKeyValue;
+}
 
 void Ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
@@ -146,6 +157,7 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClick);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseScrollDelta);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLastKeyValue);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -171,6 +183,8 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseScrollDelta))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_SCROLL));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLastKeyValue))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_KEY_VALUE));
 	RakNet::RakString geometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
 	{

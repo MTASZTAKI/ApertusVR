@@ -202,7 +202,7 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserHeight = 157;
 	manageBrowser(storyElement);
 	storyElement.browserName = "first";
-	storyElement.browserURL = "http://apertusvr.org";
+	storyElement.browserURL = "http://google.com";
 	storyElement.browserPosition = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
 	storyElement.browserOrientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
 	storyElement.browserWidth = 267;
@@ -527,6 +527,22 @@ void ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 
 bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 {
+	if (auto activeBrowser = mActiveBrowser.lock())
+	{
+		std::string keyAsString = mpKeyboard->getAsString(e.key);
+		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
+		std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
+		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
+		if (e.key == OIS::KeyCode::KC_BACK)
+			keyAsWString = 8;
+		else if (e.key == OIS::KeyCode::KC_TAB)
+			keyAsWString = 9;
+		else if (e.key == OIS::KeyCode::KC_RETURN)
+			keyAsWString = 13;
+		else if (e.key == OIS::KeyCode::KC_LSHIFT)
+			keyAsWString = 14;
+		activeBrowser->keyASCIIValue(keyAsWString[0]);
+	}
 	mKeyCodeMap[e.key] = true;
 	auto userNode = mUserNode.lock();
 	if (userNode)

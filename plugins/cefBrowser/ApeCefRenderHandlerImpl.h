@@ -63,6 +63,8 @@ namespace Ape
 
 		void mouseMoved(int browserID, int x, int y);
 
+		void keyValue(int browserID,int keyASCIIValue);
+
 		IMPLEMENT_REFCOUNTING(CefRenderHandlerImpl);
 	};
 }

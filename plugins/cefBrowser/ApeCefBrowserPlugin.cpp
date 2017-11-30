@@ -113,6 +113,12 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 					}
 				}
 				break;
+			case Ape::Event::Type::BROWSER_KEY_VALUE:
+				{
+					if (mBrowserIDNames[browser->getName()])
+						mpApeCefRenderHandlerImpl->keyValue(mBrowserIDNames[browser->getName()], browser->getLastKeyASCIIValue());
+				}
+				break;
 			case Ape::Event::Type::BROWSER_DELETE:
 				;
 				break;

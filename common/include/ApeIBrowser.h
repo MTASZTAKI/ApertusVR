@@ -95,6 +95,10 @@ namespace Ape
 		virtual void mouseScroll(Ape::Vector2 delta) = 0;
 
 		virtual Ape::Browser::MouseState getMouseState() = 0;
+
+		virtual void keyASCIIValue(int keyASCIIValue) = 0;
+
+		virtual int getLastKeyASCIIValue() = 0;
 	};
 }
 
