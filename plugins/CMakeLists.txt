@@ -45,6 +45,7 @@ option(APE_PLUGIN_Avatar "Use AvatarPlugin?" ON )
 option(APE_PLUGIN_AssimpAssetLoader "Use AssimpAssetLoaderPlugin?" ON )
 option(APE_PLUGIN_SkyTerrainWaterScene "Use SkyTerrainWaterScenePlugin?" ON )
 option(APE_PLUGIN_TexasEEGPlugin "Use TexasEEGPlugin?" ON )
+option(APE_PLUGIN_GallerySamplePlugin "Use GallerySamplePlugin?" ON )
 
 if (${APE_PLUGIN_OgreRender})
 	add_subdirectory (ogreRender)
@@ -114,6 +115,9 @@ if (${APE_PLUGIN_SkyTerrainWaterScene})
 endif ()
 if (${APE_PLUGIN_TexasEEGPlugin})
 	add_subdirectory (texasEEG)
+endif ()
+if (${APE_PLUGIN_GallerySamplePlugin})
+	add_subdirectory (gallerySample)
 endif ()
 
 

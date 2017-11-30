@@ -1,0 +1,25 @@
+material _1_-_Default2
+{
+   technique
+   {
+      pass
+      {
+         scene_blend alpha_blend
+         depth_check on
+         depth_write off
+	 //ambient 0 0 0 1.0
+         //diffuse 0 0 0 1.0
+	 //specular 1 1 1 1.0
+	 emissive 0.1 0.1 0.1 1.0
+         texture_unit
+         {
+            	texture earth.jpg
+         }
+         rtshader_system
+ 	 {	 				
+ 		lighting_stage per_pixel				
+ 	 }
+      }
+   }
+}
+

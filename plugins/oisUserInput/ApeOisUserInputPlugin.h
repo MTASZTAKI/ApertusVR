@@ -37,6 +37,7 @@ SOFTWARE.*/
 #include "ApeIEventManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
+#include "ApeInterpolator.h"
 
 namespace Ape
 {

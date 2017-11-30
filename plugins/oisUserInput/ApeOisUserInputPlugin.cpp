@@ -39,7 +39,31 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mRotateSpeedFactor = 1;
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
+
+	/*gallery*/
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(495.233, 533.024, 1133.94), Ape::Quaternion(0.921982, -0.182579, 0.334983, 0.0663366)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+
+	
+	/*mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
 
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-50.2942, -267, -39.543), Ape::Quaternion(0.108578, 0.000922807, -0.994053, 0.00844969)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(109.65, -254.404, 683.883), Ape::Quaternion(-0.994235, -0.00845123, -0.106884, 0.000908416)));
@@ -53,7 +77,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(332.168, -562, -343.67), Ape::Quaternion(-0.919263, 0, 0.393645, 0)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(419.488, -510.18, -28.347), Ape::Quaternion(-0.728918, 0.0309977, 0.683282, 0.029057)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-269.323, -469.674, 275.482), Ape::Quaternion(0.506584, -0.0475041, 0.857121, 0.0803752)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));*/
 
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
@@ -153,6 +177,37 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			saveUserNodePose(userNode);
 		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 			toggleUserNodePoses(userNode);
+		if (mKeyCodeMap[OIS::KeyCode::KC_P])
+		{
+			for (int i = 0; i < mUserNodePoses.size(); i++)
+			{
+				if (auto userNode = mUserNode.lock())
+				{
+					auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
+					moveInterpolator->addSection(
+						userNode->getPosition(),
+						mUserNodePoses[i].position,
+						10.0,
+						[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+					);
+					auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
+					rotateInterpolator->addSection(
+						userNode->getOrientation(),
+						mUserNodePoses[i].orientation,
+						10.0,
+						[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+					);
+					while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
+					{
+						if (!moveInterpolator->isQueueEmpty())
+							moveInterpolator->iterateTopSection();
+						if (!rotateInterpolator->isQueueEmpty())
+							rotateInterpolator->iterateTopSection();
+					}
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+			}
+		}
 	}
 	return true;
 }
