@@ -156,8 +156,8 @@ namespace Hydrax
 
 	void DecalsManager::update()
 	{
-		if (mHydrax->getCamera()->getDerivedPosition()    == mLastPosition &&
-			mHydrax->getCamera()->getDerivedOrientation() == mLastOrientation && 
+		if (mHydrax->getCameraLeft()->getDerivedPosition()    == mLastPosition &&
+			mHydrax->getCameraLeft()->getDerivedOrientation() == mLastOrientation && 
 			!mForceToUpdate)
 		{
 			return;
@@ -216,7 +216,7 @@ namespace Hydrax
 			DecalBox = Ogre::AxisAlignedBox(DPos.x - DSize.x,  HHeight - mWaterStrength, DPos.y - DSize.y,
 				                            DPos.x + DSize.x,  HHeight + mWaterStrength, DPos.y + DSize.y);
 
-			if (mHydrax->getCamera()->isVisible(DecalBox))
+			if (mHydrax->getCameraLeft()->isVisible(DecalBox))
 			{
 				if (!(*DecalIt)->getRegisteredPass())
 				{
@@ -240,8 +240,8 @@ namespace Hydrax
 			}
 		}
 		
-		mLastPosition    = mHydrax->getCamera()->getDerivedPosition();
-		mLastOrientation = mHydrax->getCamera()->getDerivedOrientation();
+		mLastPosition    = mHydrax->getCameraLeft()->getDerivedPosition();
+		mLastOrientation = mHydrax->getCameraLeft()->getDerivedOrientation();
 		mLastUnderwater  = mHydrax->_isCurrentFrameUnderwater();
 	}
 

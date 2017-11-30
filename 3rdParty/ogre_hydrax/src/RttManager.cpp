@@ -196,8 +196,8 @@ namespace Hydrax
 
 		if (TSize.Width == 0 && TSize.Width == 0)
 		{
-			TSize.Width = mHydrax->getViewport()->getActualWidth();
-			TSize.Height = mHydrax->getViewport()->getActualHeight();
+			TSize.Width = mHydrax->getViewportLeft()->getActualWidth();
+			TSize.Height = mHydrax->getViewportLeft()->getActualHeight();
 		}
 
 		mTextures[Rtt] = Ogre::TextureManager::getSingleton()
@@ -212,7 +212,7 @@ namespace Hydrax
 
         Ogre::RenderTarget* RT_Texture = mTextures[Rtt]->getBuffer()->getRenderTarget();
 
-        Ogre::Viewport *RT_Texture_Viewport = RT_Texture->addViewport(mHydrax->getCamera());
+        Ogre::Viewport *RT_Texture_Viewport = RT_Texture->addViewport(mHydrax->getCameraLeft());
         RT_Texture_Viewport->setClearEveryFrame(true);
         RT_Texture_Viewport->setBackgroundColour(BackgroundColour);
         RT_Texture_Viewport->setOverlaysEnabled(false);
@@ -223,7 +223,7 @@ namespace Hydrax
 		}
         RT_Texture_Viewport->setSkiesEnabled(RenderSky);
 
-        RT_Texture->addListener(RTListener);
+		RT_Texture->addListener(RTListener);
 	}
 
 	void RttManager::setTextureSize(const RttType& Rtt, const Size& S)
@@ -480,16 +480,16 @@ namespace Hydrax
 
 		// Underwater
 		if ( mHydrax->_isCurrentFrameUnderwater() &&
-			(mHydrax->getCamera()->getDerivedPosition().y > mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y))
+			(mHydrax->getCameraLeft()->getDerivedPosition().y > mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y))
 		{
 			mCameraPlaneDiff = 0;
 			IsInUnderwaterError = true;
 		}
 		// Overwater
 		else if ((!mHydrax->_isCurrentFrameUnderwater()) &&
-			     (mHydrax->getCamera()->getDerivedPosition().y < mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y))
+			     (mHydrax->getCameraLeft()->getDerivedPosition().y < mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y))
 		{
-			mCameraPlaneDiff = mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y-mHydrax->getCamera()->getDerivedPosition().y+mRttManager->mReflectionDisplacementError;
+			mCameraPlaneDiff = mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->getPosition().y-mHydrax->getCameraLeft()->getDerivedPosition().y+mRttManager->mReflectionDisplacementError;
 			mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->translate(0,-mCameraPlaneDiff,0);
 		}
 		else
@@ -505,7 +505,7 @@ namespace Hydrax
 			}
 		}
 
-        mHydrax->getCamera()->enableReflection(mRttManager->mPlanes[RTT_REFLECTION]);
+        mHydrax->getCameraLeft()->enableReflection(mRttManager->mPlanes[RTT_REFLECTION]);
 
         if (IsInUnderwaterError)
 		{
@@ -513,7 +513,7 @@ namespace Hydrax
 		}
 		else
 		{
-			mHydrax->getCamera()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFLECTION]);
+			mHydrax->getCameraLeft()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFLECTION]);
 		}
 
 		mRttManager->_invokeRttListeners(RTT_REFLECTION, true);
@@ -539,8 +539,8 @@ namespace Hydrax
 			mRttManager->mPlanes[RTT_REFLECTION]->getParentNode()->translate(0,-mHydrax->getPlanesError(),0);
 		}
 
-        mHydrax->getCamera()->disableReflection();
-        mHydrax->getCamera()->disableCustomNearClipPlane();
+        mHydrax->getCameraLeft()->disableReflection();
+        mHydrax->getCameraLeft()->disableCustomNearClipPlane();
 
 		if (mHydrax->isComponent(HYDRAX_COMPONENT_UNDERWATER))
 		{
@@ -559,8 +559,8 @@ namespace Hydrax
 	{
 		if (mRttManager->_isRenderQueueInList(mRttManager->mDisableReflectionCustomNearClipPlaneRenderQueues, static_cast<Ogre::RenderQueueGroupID>(queueGroupId)) && mActive)
 		{
-			mRttManager->mHydrax->getCamera()->disableCustomNearClipPlane();
-			Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(mRttManager->mHydrax->getCamera()->getProjectionMatrixRS());
+			mRttManager->mHydrax->getCameraLeft()->disableCustomNearClipPlane();
+			Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(mRttManager->mHydrax->getCameraLeft()->getProjectionMatrixRS());
 		}
 	}
 
@@ -568,8 +568,8 @@ namespace Hydrax
 	{
 		if (mRttManager->_isRenderQueueInList(mRttManager->mDisableReflectionCustomNearClipPlaneRenderQueues, static_cast<Ogre::RenderQueueGroupID>(queueGroupId)) && mActive)
 		{
-			mRttManager->mHydrax->getCamera()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFLECTION]);
-			Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(mRttManager->mHydrax->getCamera()->getProjectionMatrixRS());
+			mRttManager->mHydrax->getCameraLeft()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFLECTION]);
+			Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(mRttManager->mHydrax->getCameraLeft()->getProjectionMatrixRS());
 		}
 	}
 
@@ -579,7 +579,7 @@ namespace Hydrax
 
         mHydrax->getMesh()->getEntity()->setVisible(false);
 
-		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCamera()->getDerivedPosition().y) > mHydrax->getPlanesError())
+		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCameraLeft()->getDerivedPosition().y) > mHydrax->getPlanesError())
 		{
 			if (mHydrax->_isCurrentFrameUnderwater())
 		    {
@@ -591,7 +591,7 @@ namespace Hydrax
 			    mRttManager->mPlanes[RTT_REFRACTION]->getParentNode()->translate(0,mHydrax->getPlanesError(),0);
 		    }
 
-            mHydrax->getCamera()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFRACTION]);
+            mHydrax->getCameraLeft()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_REFRACTION]);
 		}
 
 		mRttManager->_invokeRttListeners(RTT_REFRACTION, true);
@@ -603,7 +603,7 @@ namespace Hydrax
 
         mHydrax->getMesh()->getEntity()->setVisible(true);
 
-		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCamera()->getDerivedPosition().y) > mHydrax->getPlanesError())
+		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCameraLeft()->getDerivedPosition().y) > mHydrax->getPlanesError())
 		{
 			if (mHydrax->_isCurrentFrameUnderwater())
 		    {
@@ -615,7 +615,7 @@ namespace Hydrax
 			    mRttManager->mPlanes[RTT_REFRACTION]->getParentNode()->translate(0,-mHydrax->getPlanesError(),0);
 		    }
 
-            mHydrax->getCamera()->disableCustomNearClipPlane();
+            mHydrax->getCameraLeft()->disableCustomNearClipPlane();
 		}
 
 		mRttManager->_invokeRttListeners(RTT_REFRACTION, false);
@@ -673,7 +673,7 @@ namespace Hydrax
             EntityIterator.moveNext();
         }
 
-		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCamera()->getDerivedPosition().y) > mHydrax->getPlanesError())
+		if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCameraLeft()->getDerivedPosition().y) > mHydrax->getPlanesError())
 		{
 			if (mHydrax->_isCurrentFrameUnderwater())
 		    {
@@ -683,7 +683,7 @@ namespace Hydrax
 		    else
 		    {
 			    mRttManager->mPlanes[RTT_DEPTH]->getParentNode()->translate(0,mHydrax->getPlanesError(),0);
-				mHydrax->getCamera()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_DEPTH]);
+				mHydrax->getCameraLeft()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_DEPTH]);
 		    }
 		}
 
@@ -741,7 +741,7 @@ namespace Hydrax
 		mHydrax->getGodRaysManager()->setVisible(false);
 		mHydrax->getMesh()->getEntity()->setRenderQueueGroup(Ogre::RENDER_QUEUE_1);
 
-        if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCamera()->getDerivedPosition().y) > mHydrax->getPlanesError())
+        if (Ogre::Math::Abs(mHydrax->getPosition().y - mHydrax->getCameraLeft()->getDerivedPosition().y) > mHydrax->getPlanesError())
 		{
 			if (mHydrax->_isCurrentFrameUnderwater())
 		    {
@@ -753,7 +753,7 @@ namespace Hydrax
 			    mRttManager->mPlanes[RTT_DEPTH]->getParentNode()->translate(0,-mHydrax->getPlanesError(),0);
 		    }
 
-            mHydrax->getCamera()->disableCustomNearClipPlane();
+            mHydrax->getCameraLeft()->disableCustomNearClipPlane();
 		}
 
 		mRttManager->_invokeRttListeners(RTT_DEPTH, false);
@@ -817,7 +817,7 @@ namespace Hydrax
 
         bool IsInUnderwaterError = false;
 
-		if (mHydrax->getCamera()->getDerivedPosition().y > mRttManager->mPlanes[RTT_DEPTH_REFLECTION]->getParentNode()->getPosition().y)
+		if (mHydrax->getCameraLeft()->getDerivedPosition().y > mRttManager->mPlanes[RTT_DEPTH_REFLECTION]->getParentNode()->getPosition().y)
 		{
 			mCameraPlaneDiff = 0;
 			IsInUnderwaterError = true;
@@ -827,11 +827,11 @@ namespace Hydrax
 			mCameraPlaneDiff = 0;
 		}
 
-        mHydrax->getCamera()->enableReflection(mRttManager->mPlanes[RTT_DEPTH_REFLECTION]);
+        mHydrax->getCameraLeft()->enableReflection(mRttManager->mPlanes[RTT_DEPTH_REFLECTION]);
 
 		if (!IsInUnderwaterError)
 		{
-            mHydrax->getCamera()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_DEPTH_REFLECTION]);
+            mHydrax->getCameraLeft()->enableCustomNearClipPlane(mRttManager->mPlanes[RTT_DEPTH_REFLECTION]);
 		}
 
 		mRttManager->_invokeRttListeners(RTT_DEPTH_REFLECTION, true);
@@ -879,8 +879,8 @@ namespace Hydrax
 
         mRttManager->mPlanes[RTT_DEPTH_REFLECTION]->getParentNode()->translate(0,mHydrax->getPlanesError(),0);
 
-        mHydrax->getCamera()->disableReflection();
-        mHydrax->getCamera()->disableCustomNearClipPlane();
+        mHydrax->getCameraLeft()->disableReflection();
+        mHydrax->getCameraLeft()->disableCustomNearClipPlane();
 
 		mRttManager->_invokeRttListeners(RTT_DEPTH_REFLECTION, false);
     }

@@ -34,10 +34,12 @@ Contributors:
 namespace Hydrax
 {
 
-	Hydrax::Hydrax(Ogre::SceneManager *sm, Ogre::Camera *c, Ogre::Viewport *v)
+	Hydrax::Hydrax(Ogre::SceneManager *sm, Ogre::Camera *cameraLeft, Ogre::Camera *cameraRight, Ogre::Viewport *viewportLeft, Ogre::Viewport *viewportRight)
             : mSceneManager(sm)
-            , mCamera(c)
-			, mViewport(v)
+            , mCameraLeft(cameraLeft)
+			, mViewportLeft(viewportLeft)
+			, mCameraRight(cameraRight)
+			, mViewportRight(viewportRight)
             , mCreated(false)
 			, mVisible(true)
 			, mPolygonMode(Ogre::PM_SOLID)
@@ -639,7 +641,7 @@ namespace Hydrax
 		}
 
 		// If the camera is under the current water x/z position
-		if (getHeigth(mCamera->getDerivedPosition()) > mCamera->getDerivedPosition().y-mUnderwaterCameraSwitchDelta)
+		if (getHeigth(mCameraLeft->getDerivedPosition()) > mCameraLeft->getDerivedPosition().y-mUnderwaterCameraSwitchDelta)
 		{
 			mCurrentFrameUnderwater = true;
 

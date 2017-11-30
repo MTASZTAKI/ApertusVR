@@ -66,7 +66,7 @@ namespace Hydrax{namespace Module
 		, mPos(Ogre::Vector3(0,0,0))
 		, mProjectingCamera(0)
 		, mTmpRndrngCamera(0)
-		, mRenderingCamera(h->getCamera())
+		, mRenderingCamera(h->getCameraLeft())
 	{
 	}
 
@@ -81,7 +81,7 @@ namespace Hydrax{namespace Module
 		, mPos(Ogre::Vector3(0,0,0))
 		, mProjectingCamera(0)
 		, mTmpRndrngCamera(0)
-		, mRenderingCamera(h->getCamera())
+		, mRenderingCamera(h->getCameraLeft())
 	{
 		setOptions(Options);
 	}

@@ -1733,18 +1733,25 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto camera = water->getCamera().lock())
 						{
-							if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+							if (auto ogreCameraLeft = mpSceneMgr->getCamera(camera->getName()))
 							{
-								auto ogreViewport = ogreCamera->getViewport();
-								if (ogreViewport)
+								auto ogreViewportLeft = ogreCameraLeft->getViewport();
+								if (ogreViewportLeft)
 								{
-									mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCamera, ogreViewport);
-									Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
-										Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
-									mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
-									mpHydrax->loadCfg("HydraxDemo.hdx");
-									mpHydrax->create();
-									mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+									if (auto ogreCameraRight = mpSceneMgr->getCamera("HmdLeftCamera"))
+									{
+										auto ogreViewportRight = ogreCameraRight->getViewport();
+										if (ogreViewportRight)
+										{
+											mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCameraLeft, ogreCameraRight, ogreViewportLeft, ogreViewportRight);
+											Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
+												Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
+											mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
+											mpHydrax->loadCfg("HydraxDemo.hdx");
+											mpHydrax->create();
+											mpHydrax->getMaterialManager()->addDepthTechnique(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->createTechnique());
+										}
+									}
 								}
 							}
 						}

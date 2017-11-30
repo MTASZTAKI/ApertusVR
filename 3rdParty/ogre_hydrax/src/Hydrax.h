@@ -54,7 +54,7 @@ namespace Hydrax
             @param c Ogre Camera pointer
 			@param v Ogre Main window viewport pointer
          */
-		Hydrax(Ogre::SceneManager *sm, Ogre::Camera *c, Ogre::Viewport *v);
+		Hydrax(Ogre::SceneManager *sm, Ogre::Camera *cameraLeft, Ogre::Camera *cameraRight,  Ogre::Viewport *viewportLeft, Ogre::Viewport *viewportRight);
 
         /** Destructor
          */
@@ -290,17 +290,27 @@ namespace Hydrax
 		/** Get rendering camera
 		    @return Ogre::Camera pointer
 		 */
-		inline Ogre::Camera* getCamera()
+		inline Ogre::Camera* getCameraLeft()
 		{
-			return mCamera;
+			return mCameraLeft;
+		}
+
+		inline Ogre::Camera* getCameraRight()
+		{
+			return mCameraRight;
 		}
 
 		/** Get main window viewport
 		    @return Ogre::Viewport pointer
 		 */
-		inline Ogre::Viewport* getViewport()
+		inline Ogre::Viewport* getViewportLeft()
 		{
-			return mViewport;
+			return mViewportLeft;
+		}
+
+		inline Ogre::Viewport* getViewportRight()
+		{
+			return mViewportRight;
 		}
 
 		/** Get scene manager
@@ -749,9 +759,11 @@ namespace Hydrax
         /// Pointer to Ogre::SceneManager
         Ogre::SceneManager *mSceneManager;
         /// Pointer to Ogre::Camera
-        Ogre::Camera *mCamera;
+        Ogre::Camera *mCameraLeft;
+		Ogre::Camera *mCameraRight;
 		/// Pointer to main window viewport
-		Ogre::Viewport *mViewport;
+		Ogre::Viewport *mViewportLeft;
+		Ogre::Viewport *mViewportRight;
     };
 }
 

@@ -404,7 +404,7 @@ namespace Hydrax
 	void GodRaysManager::_updateProjector()
 	{
 		const Ogre::Vector3& SunPosition = mHydrax->getSunPosition();
-		const Ogre::Vector3& CameraPosition = mHydrax->getCamera()->getDerivedPosition();
+		const Ogre::Vector3& CameraPosition = mHydrax->getCameraLeft()->getDerivedPosition();
 
 		Ogre::Plane WaterPlane = Ogre::Plane(Ogre::Vector3(0,1,0), mHydrax->getPosition());
 		Ogre::Ray SunToCameraRay = Ogre::Ray(SunPosition, CameraPosition-SunPosition);
