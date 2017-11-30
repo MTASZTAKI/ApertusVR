@@ -54,6 +54,10 @@ namespace Ape
 
 		Ape::CameraWeakPtr getCamera() override;
 
+		void setSizeMultiplier(float sizeMultiplier) override;
+
+		float getSizeMultiplier() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -74,6 +78,8 @@ namespace Ape
 		Ape::CameraWeakPtr mCamera;
 
 		std::string mCameraName;
+
+		float mSizeMultiplier;
 	};
 }
 

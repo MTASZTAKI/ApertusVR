@@ -31,6 +31,7 @@ Ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : Ape::ISky(name), A
 	mTime = Ape::ISky::Time();
 	mCamera = Ape::CameraWeakPtr();
 	mCameraName = std::string();
+	mSizeMultiplier = 0.0f;
 }
 
 Ape::SkyImpl::~SkyImpl()
@@ -90,6 +91,17 @@ Ape::CameraWeakPtr Ape::SkyImpl::getCamera()
 	return mCamera;
 }
 
+void Ape::SkyImpl::setSizeMultiplier(float sizeMultiplier)
+{
+	mSizeMultiplier = sizeMultiplier;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SIZE_MULTIPLIER));
+}
+
+float Ape::SkyImpl::getSizeMultiplier()
+{
+	return mSizeMultiplier;
+}
+
 void Ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -104,6 +116,7 @@ RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParamete
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSunLight);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSkyLight);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTime);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSizeMultiplier);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
@@ -119,6 +132,8 @@ void Ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParamet
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTime))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSizeMultiplier))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SIZE_MULTIPLIER));
 	RakNet::RakString cameraName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, cameraName))
 	{

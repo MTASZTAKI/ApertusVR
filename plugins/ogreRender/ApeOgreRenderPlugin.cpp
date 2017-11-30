@@ -1685,9 +1685,15 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								mpRoot->addFrameListener(mpSkyx);
 								mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
 								mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
+								//std::cout << "skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera) << std::endl;
 								static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
 							}
 						}
+					}
+				break;
+				case Ape::Event::Type::SKY_SIZE_MULTIPLIER:
+					{
+						mpSkyx->getMeshManager()->setRadiusMultiplier(sky->getSizeMultiplier());
 					}
 				break;
 				case Ape::Event::Type::SKY_TIME:

@@ -79,6 +79,10 @@ namespace Ape
 		virtual void setCamera(Ape::CameraWeakPtr camera) = 0;
 
 		virtual Ape::CameraWeakPtr getCamera() = 0;
+
+		virtual void setSizeMultiplier(float sizeMultiplier) = 0;
+
+		virtual float getSizeMultiplier() = 0;
 	};
 }
 

@@ -207,15 +207,11 @@ void ApeOculusDK2Plugin::Init()
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
 	{
 		camera->setParentNode(mHeadNode);
-		if (auto texture = manualTextureLeftEye.lock())
-			texture->setSourceCamera(camera);
 		mCameraLeft = camera;
 	}
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdRightCamera", Ape::Entity::Type::CAMERA).lock()))
 	{
 		camera->setParentNode(mHeadNode);
-		if (auto texture = manualTextureRightEye.lock())
-			texture->setSourceCamera(camera);
 		mCameraRight = camera;
 	}
 	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
@@ -231,12 +227,18 @@ void ApeOculusDK2Plugin::Init()
 			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
 			cameraLeft->setAspectRatio(aspectRatio);
 			cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+
+			if (auto texture = manualTextureLeftEye.lock())
+				texture->setSourceCamera(cameraLeft);
 		}
 		if (auto cameraRight = mCameraRight.lock())
 		{
 			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
 			cameraRight->setAspectRatio(aspectRatio);
 			cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+
+			if (auto texture = manualTextureRightEye.lock())
+				texture->setSourceCamera(cameraRight);
 		}
 	}
 }

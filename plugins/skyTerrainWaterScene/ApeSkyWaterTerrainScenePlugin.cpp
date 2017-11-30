@@ -56,6 +56,11 @@ void ApeSkyWaterTerrainScenePlugin::createSky()
 			sky->setSunLight(sunLight);
 			mSunLight = sunLight;
 		}
+		if (auto camera = mCamera.lock())
+		{
+			if (camera->getName() == "HmdRightCamera")
+				sky->setSizeMultiplier(100);
+		}
 		mSky = sky;
 	}
 }
