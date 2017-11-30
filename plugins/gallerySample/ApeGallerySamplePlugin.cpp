@@ -18,13 +18,34 @@ void ApeGallerySamplePlugin::Init()
 		universeSkyBoxMaterial->setFileName("universe.material");
 		universeSkyBoxMaterial->setAsSkyBox();
 	}*/
+	if (auto meshNode = mpScene->createNode("meshNode").lock())
+	{
+		meshNode->setPosition(Ape::Vector3(-1050, -450, -150));
+		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("websummit_logo.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			browserGeometry->setFileName("websummit_logo.mesh");
+			browserGeometry->setParentNode(meshNode);
+		}
+	}
 	if (auto browserNode = mpScene->createNode("websummitNode").lock())
 	{
-		browserNode->setPosition(Ape::Vector3(-600, 300, 0));
-		browserNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+		browserNode->setPosition(Ape::Vector3(-900, 0, -300));
+		Ape::Radian angle(1.57f);
+		Ape::Vector3 axis(1, 0, 0);
+		Ape::Quaternion orientation;
+		orientation.FromAngleAxis(angle, axis);
+		Ape::Radian angle2(1.57f);
+		Ape::Vector3 axis2(0, 1, 0);
+		Ape::Quaternion orientation2;
+		orientation2.FromAngleAxis(angle2, axis2);
+		Ape::Radian angle3(3.14f);
+		Ape::Vector3 axis3(1, 0, 0);
+		Ape::Quaternion orientation3;
+		orientation3.FromAngleAxis(angle3, axis3);
+		browserNode->setOrientation(orientation * orientation2 * orientation3);
 		if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("websummitGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
-			browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(240, 120), Ape::Vector2(1, 1));
+			browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(425, 213), Ape::Vector2(1, 1));
 			browserGeometry->setParentNode(browserNode);
 			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("websummitBrowser", Ape::Entity::BROWSER).lock()))
 			{

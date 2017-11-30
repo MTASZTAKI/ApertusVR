@@ -41,7 +41,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mUserNodePoses = std::vector<UserNodePose>();
 
 	/*gallery*/
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(495.233, 533.024, 1133.94), Ape::Quaternion(0.921982, -0.182579, 0.334983, 0.0663366)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-895.301, -22.3373, -44.3792), Ape::Quaternion(0.9987, -0.0509765, -4.37447e-07, 3.08579e-07)));
 
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 1, 0)));

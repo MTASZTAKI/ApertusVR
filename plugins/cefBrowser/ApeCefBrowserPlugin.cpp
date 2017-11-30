@@ -165,7 +165,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 			browserMaterial->setPassTexture(browserTexture);
-			browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
+			browserMaterial->setCullingMode(Ape::Material::CullingMode::CLOCKWISE);
 			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpApeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
@@ -174,11 +174,21 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 			CefWindowInfo cefWindowInfo;
 			cefWindowInfo.SetAsWindowless(0);
 			CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
+			if (auto browserGeometry = browser->getGeometry().lock())
+			{
+				if (auto planeGeometry = std::dynamic_pointer_cast<Ape::IPlaneGeometry>(browserGeometry))
+				{
+					planeGeometry->setMaterial(browserMaterial);
+					browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
+				}
+				else if (auto fileGeometry = std::dynamic_pointer_cast<Ape::IFileGeometry>(browserGeometry))
+				{
+					fileGeometry->setMaterial(browserMaterial);
+				}
+			}
+			else
+				browserMaterial->showOnOverlay(true, browser->getZOrder());
 		}
-		if (auto browserGeometry = browser->getGeometry().lock())
-			std::static_pointer_cast<Ape::IPlaneGeometry>(browserGeometry)->setMaterial(browserMaterial);
-		else
-			browserMaterial->showOnOverlay(true, browser->getZOrder());
 	}
 }
 

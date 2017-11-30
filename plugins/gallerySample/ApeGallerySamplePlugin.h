@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "ApeIPlaneGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeIManualMaterial.h"
 #include "ApeIBrowser.h"
 
 #define THIS_PLUGINNAME "ApeGallerySamplePlugin"

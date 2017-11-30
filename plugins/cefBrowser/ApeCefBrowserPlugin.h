@@ -41,6 +41,7 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 #include "ApeIPlaneGeometry.h"
 #include "ApeITextGeometry.h"
+#include "ApeIFileGeometry.h"
 #include "ApeIPlaneGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIManualTexture.h"
