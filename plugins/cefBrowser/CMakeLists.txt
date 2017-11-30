@@ -155,11 +155,13 @@ set (HEADERS
 	ApeCefBrowserPlugin.h
 	ApeCefClientImpl.h
 	ApeCefRenderHandlerImpl.h
+	ApeCefLifeSpanHandlerImpl.h
 	)
 set (SOURCES
 	ApeCefBrowserPlugin.cpp
 	ApeCefClientImpl.cpp
 	ApeCefRenderHandlerImpl.cpp
+	ApeCefLifeSpanHandlerImpl.cpp
 	)
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include 

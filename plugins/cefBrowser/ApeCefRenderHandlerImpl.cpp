@@ -64,7 +64,10 @@ void Ape::CefRenderHandlerImpl::setZoomLevel(int browserID, int zoomLevel)
 void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
+	{
 		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
+		//std::cout << "Ape:::CefRenderHandlerImpl::setURL " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url << std::endl;
+	}
 }
 
 void Ape::CefRenderHandlerImpl::mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType)

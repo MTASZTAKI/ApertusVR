@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApeCefClientImpl.h"
 
-Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl) : mCefRenderHandlerImpl(cefRenderHandlerImpl)
+Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl) : mCefRenderHandlerImpl(cefRenderHandlerImpl), mCefLifeSpanHandlerImpl(cefLifeSpanHandlerImpl)
 {
 
 }
@@ -35,6 +35,11 @@ Ape::CefClientImpl::~CefClientImpl()
 CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
 {
 	return mCefRenderHandlerImpl;
+}
+
+CefRefPtr<CefLifeSpanHandler> Ape::CefClientImpl::GetLifeSpanHandler()
+{
+	return mCefLifeSpanHandlerImpl;
 }
 
 bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)

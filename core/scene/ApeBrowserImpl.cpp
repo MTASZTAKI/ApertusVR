@@ -35,6 +35,7 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mMouseLastClick = Ape::Browser::MouseClick::UNKNOWN;
 	mMouseScrollDelta = Ape::Vector2();
 	mMouseLastPosition = Ape::Vector2();
+	mID = 0;
 }
 
 Ape::BrowserImpl::~BrowserImpl()

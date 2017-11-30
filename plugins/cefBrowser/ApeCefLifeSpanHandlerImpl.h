@@ -20,40 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_CEFCLIENTIMPL_H
-#define APE_CEFCLIENTIMPL_H
+#ifndef APE_CEFLIFESPANHANDLERIMPL_H
+#define APE_CEFLIFESPANHANDLERIMPL_H
 
 #include <iostream>
 #include <string>
 #include <thread> 
 #include "cef_app.h"
 #include "cef_client.h"
-#include "cef_render_handler.h"
 #include "cef_life_span_handler.h"
-#include "ApeCefRenderHandlerImpl.h"
-#include "ApeCefLifeSpanHandlerImpl.h"
+#include "Ape.h"
+#include "ApeIManualTexture.h"
+#include "ApeIBrowser.h"
 
 namespace Ape
 {
-	class CefClientImpl : public CefClient
+	class CefLifeSpanHandlerImpl : public CefLifeSpanHandler
 	{
 	private:
-		CefRefPtr<CefRenderHandler> mCefRenderHandlerImpl;
-
-		CefRefPtr<CefLifeSpanHandler> mCefLifeSpanHandlerImpl;
+		std::map<int, Ape::BrowserWeakPtr> mBrowserIDs;
 
 	public:
-		CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl);
+		CefLifeSpanHandlerImpl();
 
-		~CefClientImpl();
+		~CefLifeSpanHandlerImpl();
 
-		virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
+		void registerBrowser(int ID, Ape::BrowserWeakPtr browser);
 
-		virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler();
+		void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 
-		virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
+		bool OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name,
+			WindowOpenDisposition target_disposition, bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, 
+			CefBrowserSettings& settings, bool* no_javascript_access) override;
 
-		IMPLEMENT_REFCOUNTING(CefClientImpl);
+		IMPLEMENT_REFCOUNTING(CefLifeSpanHandlerImpl);
 	};
 }
 

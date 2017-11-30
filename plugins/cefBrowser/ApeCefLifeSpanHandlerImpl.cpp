@@ -20,41 +20,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_CEFCLIENTIMPL_H
-#define APE_CEFCLIENTIMPL_H
-
-#include <iostream>
-#include <string>
-#include <thread> 
-#include "cef_app.h"
-#include "cef_client.h"
-#include "cef_render_handler.h"
-#include "cef_life_span_handler.h"
-#include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefLifeSpanHandlerImpl.h"
 
-namespace Ape
+Ape::CefLifeSpanHandlerImpl::CefLifeSpanHandlerImpl()
 {
-	class CefClientImpl : public CefClient
-	{
-	private:
-		CefRefPtr<CefRenderHandler> mCefRenderHandlerImpl;
-
-		CefRefPtr<CefLifeSpanHandler> mCefLifeSpanHandlerImpl;
-
-	public:
-		CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl);
-
-		~CefClientImpl();
-
-		virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
-
-		virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler();
-
-		virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
-
-		IMPLEMENT_REFCOUNTING(CefClientImpl);
-	};
+	mBrowserIDs = std::map<int, Ape::BrowserWeakPtr>();
 }
 
-#endif
+Ape::CefLifeSpanHandlerImpl::~CefLifeSpanHandlerImpl()
+{
+
+}
+
+void Ape::CefLifeSpanHandlerImpl::registerBrowser(int ID, Ape::BrowserWeakPtr browser)
+{
+	mBrowserIDs[ID] = browser;
+}
+
+void Ape::CefLifeSpanHandlerImpl::OnAfterCreated(CefRefPtr<CefBrowser> browser)
+{
+
+}
+
+bool Ape::CefLifeSpanHandlerImpl::OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString & target_url,
+	const CefString & target_frame_name, WindowOpenDisposition target_disposition, bool user_gesture, const CefPopupFeatures & popupFeatures,
+	CefWindowInfo & windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings & settings, bool * no_javascript_access)
+{
+	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
+		apeBrowser->setURL(target_url);
+	//std::cout << "Ape:::CefLifeSpanHandlerImpl::OnBeforePopup " << turl << " id:" << browser->GetIdentifier() << std::endl;
+	return true;
+}

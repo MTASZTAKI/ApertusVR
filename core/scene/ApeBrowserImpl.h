@@ -89,6 +89,8 @@ namespace Ape
 
 		int mZOrder;
 
+		unsigned int mID;
+
 		Ape::Browser::MouseClick mMouseLastClick;
 
 		Ape::Vector2 mMouseLastPosition;
