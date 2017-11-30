@@ -26,7 +26,7 @@ Contributors:
     Jose Luis Cercós Pita <jlcercos@alumnos.upm.es>
 --------------------------------------------------------------------------------
 */
-
+#include <iostream>
 #include <OgreString.h>
 
 #include <MaterialManager.h>
@@ -189,18 +189,29 @@ namespace Hydrax
 		if (_isComponent(Components, HYDRAX_COMPONENT_UNDERWATER))
 		{
 			HydraxLOG("Creating underwater material...");
-			if(!_createUnderwaterMaterial(Components, Options))
+			if(!_createUnderwaterMaterial(Components, Options, mHydrax->getViewportLeft()))
 			{
 				return false;
 			}
 			if(!_createUnderwaterCompositor(Components, Options, mHydrax->getViewportLeft()))
 			{
-				if (mHydrax->getViewportRight())
-				{
-					if (!_createUnderwaterCompositor(Components, Options, mHydrax->getViewportRight()))
-						return false;
-				}
 				return false;
+			}
+			if (mHydrax->getViewportRight())
+			{
+				HydraxLOG("right eye viewport is found for the underwater material and Compositor");
+				if (!_createUnderwaterMaterial(Components, Options, mHydrax->getViewportRight()))
+				{
+					HydraxLOG("right eye underwater material failed...");
+					return false;
+				}
+				HydraxLOG("right eye underwater material created...");
+				if (!_createUnderwaterCompositor(Components, Options, mHydrax->getViewportRight()))
+				{
+					HydraxLOG("right eye underwater Compositor failed...");
+					return false;
+				}
+				HydraxLOG("right eye underwater Compositor created...");
 			}
 			if(!_createSimpleColorMaterial(Ogre::ColourValue::Red, MAT_SIMPLE_RED, _def_Simple_Red_Material_Name, false))
 			{
@@ -1781,7 +1792,7 @@ namespace Hydrax
 		return true;
 	}
 
-	bool MaterialManager::_createUnderwaterMaterial(const HydraxComponent &Components, const Options &Options)
+	bool MaterialManager::_createUnderwaterMaterial(const HydraxComponent &Components, const Options &Options, Ogre::Viewport* viewport)
 	{
 		const bool cDepth    = _isComponent(Components, HYDRAX_COMPONENT_DEPTH   );
 		// const bool cSmooth   = _isComponent(Components, HYDRAX_COMPONENT_SMOOTH  );      // cSmooth uneeded underwater
@@ -2604,7 +2615,7 @@ namespace Hydrax
 		// Second: build our material
 		Ogre::MaterialPtr &UnderwaterMaterial = getMaterial(MAT_UNDERWATER);
 		UnderwaterMaterial = Ogre::MaterialManager::getSingleton().
-			create(_def_Underwater_Material_Name,
+			create(_def_Underwater_Material_Name + viewport->getCamera()->getName(),
 			       HYDRAX_RESOURCE_GROUP);
 
 		Ogre::Pass *UM_Technique0_Pass0 = UnderwaterMaterial->getTechnique(0)->getPass(0);
@@ -2613,7 +2624,7 @@ namespace Hydrax
         UM_Technique0_Pass0->setCullingMode(Ogre::CULL_NONE);
 
 		Ogre::String GpuProgramsData[2] = {VertexProgramData, FragmentProgramData};
-		Ogre::String GpuProgramNames[2] = {_def_Underwater_Shader_VP_Name, _def_Underwater_Shader_FP_Name};
+		Ogre::String GpuProgramNames[2] = {_def_Underwater_Shader_VP_Name + viewport->getCamera()->getName(), _def_Underwater_Shader_FP_Name + viewport->getCamera()->getName() };
         Ogre::String EntryPoints[2];
         if(Options.SM == SM_GLSL)
         {
@@ -2992,7 +3003,7 @@ namespace Hydrax
 		// Build our material
 		Ogre::MaterialPtr &UnderwaterCompositorMaterial = getMaterial(MAT_UNDERWATER_COMPOSITOR);
 		UnderwaterCompositorMaterial = Ogre::MaterialManager::getSingleton().
-			create(_def_Underwater_Compositor_Material_Name,
+			create(_def_Underwater_Compositor_Material_Name + viewport->getCamera()->getName(),
 			       HYDRAX_RESOURCE_GROUP);
 
 		Ogre::Pass *DM_Technique0_Pass0 = UnderwaterCompositorMaterial->getTechnique(0)->getPass(0);
@@ -3001,7 +3012,7 @@ namespace Hydrax
 		DM_Technique0_Pass0->setDepthFunction(Ogre::CMPF_ALWAYS_PASS);
 
 		Ogre::String GpuProgramsData[2] = {VertexProgramData, FragmentProgramData};
-		Ogre::String GpuProgramNames[2] = {_def_Underwater_Compositor_Shader_VP_Name, _def_Underwater_Compositor_Shader_FP_Name};
+		Ogre::String GpuProgramNames[2] = {_def_Underwater_Compositor_Shader_VP_Name + viewport->getCamera()->getName(), _def_Underwater_Compositor_Shader_FP_Name + viewport->getCamera()->getName() };
         Ogre::String EntryPoints[2];
         if(Options.SM == SM_GLSL)
         {
@@ -3036,7 +3047,7 @@ namespace Hydrax
 		{
 			FP_Parameters->setNamedConstant("uSunColor", mHydrax->getSunColor());
 			FP_Parameters->setNamedConstant("uLightDirection",
-				(mHydrax->getMesh()->getObjectSpacePosition(mHydrax->getCameraLeft()->getPosition()) -
+				(mHydrax->getMesh()->getObjectSpacePosition(viewport->getCamera()->getPosition()) -
 				 mHydrax->getMesh()->getObjectSpacePosition(mHydrax->getSunPosition()))
 			     .normalisedCopy());
 		    FP_Parameters->setNamedConstant("uIntensity", mHydrax->getGodRaysIntensity());
@@ -3066,7 +3077,7 @@ namespace Hydrax
                 GLSLTextUnit++;
             }
 		    DM_Technique0_Pass0->createTextureUnitState("HydraxDepthMap")->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            Ogre::Viewport *Viewport = mHydrax->getCameraLeft()->getViewport();
+            //Ogre::Viewport *Viewport = mHydrax->getCameraLeft()->getViewport();
 		}
 
 		UnderwaterCompositorMaterial->setReceiveShadows(false);
