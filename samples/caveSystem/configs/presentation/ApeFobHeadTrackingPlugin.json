@@ -63,8 +63,8 @@
         {
             "name": "rightDisplay",
             "cameras": {
-                "left": "camera2",
-                "right": "camera3"
+                "left": "camera3",
+                "right": "camera2"
             },
             "size": {
                 "width": 300,
