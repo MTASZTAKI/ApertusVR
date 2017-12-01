@@ -355,6 +355,10 @@ void ApeTesterPlugin::Init()
 			mPointCloud = pointCloud;
 		}
 	}
+}
+
+void ApeTesterPlugin::Run()
+{
 	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
@@ -387,14 +391,11 @@ void ApeTesterPlugin::Init()
 		);
 		mInterpolators.push_back(std::move(rotateInterpolator));
 	}
-}
 
-void ApeTesterPlugin::Run()
-{
 	double duration = 0;
 	while (true)
 	{
-		/*auto start = std::chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		if (!mInterpolators.empty())
 		{
 			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
@@ -407,7 +408,7 @@ void ApeTesterPlugin::Run()
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-		if (duration > 5000)
+		/*if (duration > 5000)
 		{
 			if (auto demoObjectNode = mDemoObjectNode.lock())
 			{
@@ -422,8 +423,8 @@ void ApeTesterPlugin::Run()
 
 		if (auto pointCloud = mPointCloud.lock())
 		{
-			std::random_device rd; 
-			std::mt19937 gen(rd()); 
+			std::random_device rd;
+			std::mt19937 gen(rd());
 			std::uniform_int_distribution<> distInt(-5, 3);
 			std::vector<double> randomPoints;
 			for (int i = 0; i < 9; i++)
@@ -457,7 +458,6 @@ void ApeTesterPlugin::Run()
 			pointCloud->updatePoints(points);
 			pointCloud->updateColors(colors);
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }
