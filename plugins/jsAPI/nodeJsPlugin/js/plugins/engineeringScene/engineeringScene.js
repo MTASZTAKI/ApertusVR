@@ -22,9 +22,10 @@ SOFTWARE.*/
 
 var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
+var logger = require("../../modules/logger/logger.js");
 
 exports.init = function() {
-	// if mDemoObjectNode found, attach a textGeometry and set caption
+	logger.debug('engineeringScene::init()');
 	ape.nbind.JsBindManager().getNode('mDemoObjectNode', function(error, obj) {
 		if (error) {
 			console.log('error: ' + error);
