@@ -21,6 +21,7 @@
     },
     "pluginManager": {
         "plugins": [
+            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeTesterPlugin"
