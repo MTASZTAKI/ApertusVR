@@ -24,8 +24,8 @@ var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
 
 exports.init = function() {
-	// if demoObjectNode found, attach a textGeometry and set caption
-	ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
+	// if mDemoObjectNode found, attach a textGeometry and set caption
+	ape.nbind.JsBindManager().getNode('mDemoObjectNode', function(error, obj) {
 		if (error) {
 			console.log('error: ' + error);
 			return;
