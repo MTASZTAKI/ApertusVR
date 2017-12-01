@@ -38,6 +38,10 @@ exports.loadPlugins = function() {
 
 	var q = async.queue(function(task, callback) {
 		logger.debug(task.name + ' init function called');
+		var pluginFilePath = moduleManager.sourcePath + task.name;
+		var plugin = require(pluginFilePath);
+		plugin.init();
+
 		callback();
 	}, config.jsPlugins.length);
 
@@ -46,12 +50,6 @@ exports.loadPlugins = function() {
 	};
 
 	for (var i = 0; i < config.jsPlugins.length; i++) {
-		var pluginFilePath = config.jsPlugins[i];
-		var plugin = require(moduleManager.sourcePath + pluginFilePath);
-		q.push({
-			name: pluginFilePath
-		}, function(err) {
-			plugin.init();
-		});
+		q.push({name: config.jsPlugins[i]});
 	}
 }
