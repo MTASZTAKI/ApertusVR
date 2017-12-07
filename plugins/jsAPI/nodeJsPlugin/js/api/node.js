@@ -26,15 +26,18 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 exports.moduleTag = 'ApeHTTPApiNode';
 
 app.get('/nodes/usernode/name', function(req, res) {
-	console.log('ape.httpApi.nodes.usernode.name()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the name of the user node.');
+
 	ape.nbind.JsBindManager().getUserNode(function(error, obj) {
-		console.log('ape.nbind.JsBindManager().getUserNode() callback');
+		logger.debug('ape.nbind.JsBindManager().getUserNode() callback');
 		if (error) {
 			respObj.addErrorItem({
 				name: 'invalidCast',
@@ -48,14 +51,14 @@ app.get('/nodes/usernode/name', function(req, res) {
 		respObj.addDataItem({
 			name: obj.getName()
 		});
-		console.log('ape.nbind.JsBindManager().getUserNode() callback respObj:', respObj);
+		logger.debug('ape.nbind.JsBindManager().getUserNode() callback respObj:', respObj);
 		res.send(respObj.toJSonString());
 	});
 });
 
 app.post('/nodes', function(req, res) {
-	console.log('ape.httpApi.nodes.create()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Creates a new node with the specified name.');
 
 	// handle http param validation errors
 	req.checkBody('name', 'BodyParam is not presented').notEmpty()
@@ -77,8 +80,8 @@ app.post('/nodes', function(req, res) {
 });
 
 app.get('/nodes/:name/position', function(req, res) {
-	console.log('ape.httpApi.nodes.getPosition()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the position of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -110,8 +113,8 @@ app.get('/nodes/:name/position', function(req, res) {
 });
 
 app.post('/nodes/:name/position', function(req, res) {
-	console.log('ape.httpApi.nodes.setPosition()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the position of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -155,8 +158,8 @@ app.post('/nodes/:name/position', function(req, res) {
 });
 
 app.get('/nodes/:name/orientation', function(req, res) {
-	console.log('ape.httpApi.nodes.getOrientation()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the orientation of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -188,8 +191,8 @@ app.get('/nodes/:name/orientation', function(req, res) {
 });
 
 app.post('/nodes/:name/orientation', function(req, res) {
-	console.log('ape.httpApi.nodes.setOrientation()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the orientation of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()

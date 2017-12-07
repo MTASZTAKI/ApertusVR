@@ -1,10 +1,10 @@
 {
 	"source": {
-		"apePath": "C:/github/ApertusVR/",
+		"apePath": "C:/dev/repos/ApertusVR/",
 		"jsApiPath": "plugins/jsAPI/nodeJsPlugin/js/"
 	},
 	"build": {
-		"binPath": "C:/github/ApertusVR/build/bin/",
+		"binPath": "C:/dev/repos/ApertusVR-build/bin/",
 		"nodeModulesPath": "node_modules/",
 		"apertusModulePath": "apertusvr/"
 	}

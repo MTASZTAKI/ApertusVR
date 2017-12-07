@@ -23,10 +23,10 @@ SOFTWARE.*/
 var moduleManager = require('./modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var utils = require('./modules/utils/utils.js');
-var logger = require("./modules/logger/logger.js");
+var logger = require("./modules/log_manager/log_manager.js");
+var pluginManager = require('./modules/plugin_manager/plugin_manager.js');
 
 exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
-exports.pluginLoader = require('./modules/pluginLoader/pluginLoader.js');
 
 exports.initApi = function(app) {
 	var router = express.Router();
@@ -34,7 +34,6 @@ exports.initApi = function(app) {
 	router.use(require(moduleManager.sourcePath + 'api/node.js'));
 	router.use(require(moduleManager.sourcePath + 'api/light.js'));
 	router.use(require(moduleManager.sourcePath + 'api/text.js'));
-
 	router.use(require(moduleManager.sourcePath + 'api/fallback.js'));
 	app.use('/api/v1', router);
 }
@@ -46,6 +45,6 @@ exports.start = function(app) {
 	logger.debug(utils.inspect(this));
 	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
 
-	// start special plugins
-	this.pluginLoader.loadPlugins();
+	// start plugins
+	pluginManager.loadPlugins();
 };

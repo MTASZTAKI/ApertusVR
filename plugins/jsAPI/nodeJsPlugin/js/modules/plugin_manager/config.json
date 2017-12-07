@@ -1,0 +1,7 @@
+{
+	"pluginManager": {
+		"plugins": [
+			"testPlugin"
+		]
+	}
+}

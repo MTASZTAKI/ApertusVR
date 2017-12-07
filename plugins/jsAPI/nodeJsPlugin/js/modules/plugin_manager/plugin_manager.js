@@ -23,18 +23,23 @@ SOFTWARE.*/
 var ape = require('../../ape.js');
 var moduleManager = require('../../modules/module_manager/module_manager.js');
 var async = moduleManager.requireNodeModule('async');
-var logger = require("../../modules/logger/logger.js");
-exports.moduleTag = 'ApeJsPluginLoader';
+var logger = require("../../modules/log_manager/log_manager.js");
+var config = require('./config.json');
+
+exports.moduleTag = 'PluginManager';
 
 // extend ape module
 exports.loadPlugins = function() {
-	logger.debug("PluginLoader.loadPlugins()");
+	logger.debug("PluginManager::loadPlugins()");
 
 	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
-	logger.debug('js configFolderPath: ' + configFolderPath);
+	logger.debug('PluginManager::loadPlugins() configFolderPath: ' + configFolderPath);
 
 	var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
-	logger.debug('js plugins to start: ', config.jsPlugins);
+	logger.debug('PluginManager::loadPlugins() plugins to start:');
+	for (var i = 0; i < config.pluginManager.plugins.length; i++) {
+		logger.debug(' - ', config.pluginManager.plugins[i]);
+	}
 
 	var q = async.queue(function(task, callback) {
 		logger.debug(task.name + ' init function called');
@@ -43,13 +48,13 @@ exports.loadPlugins = function() {
 		plugin.init();
 
 		callback();
-	}, config.jsPlugins.length);
+	}, config.pluginManager.plugins.length);
 
 	q.drain = function() {
-		logger.debug('all js plugins have been started');
+		logger.debug('PluginManager::loadPlugins() all plugins have been started');
 	};
 
-	for (var i = 0; i < config.jsPlugins.length; i++) {
-		q.push({name: config.jsPlugins[i]});
+	for (var i = 0; i < config.pluginManager.plugins.length; i++) {
+		q.push({name: config.pluginManager.plugins[i]});
 	}
 }

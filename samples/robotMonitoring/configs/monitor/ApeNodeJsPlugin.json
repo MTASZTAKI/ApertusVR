@@ -1,5 +1,7 @@
 {
-    "jsPlugins": [
-        "plugins/x3dLoader/x3dLoader.js"
-    ]
+    "pluginManager": {
+        "plugins": [
+            "plugins/x3dLoader/x3dLoader.js"
+        ]
+    }
 }

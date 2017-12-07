@@ -20,30 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var config_manager = {};
+var moduleManager = require('../../modules/module_manager/module_manager.js');
+var winston = moduleManager.requireNodeModule('winston');
+var config = require('./config.json');
 
-try {
-	var paths_config = require('../../configs/dev/paths.json');
-	var db_config = require('../../configs/dev/db.json');
-	var logger_config = require('../../configs/dev/logger.json');
-	var validators_config = require('../../configs/dev/validators.json');
+winston.emitErrs = true;
 
-	config_manager = {
-		paths: paths_config,
-		db: db_config,
-		logger: logger_config,
-		validators: validators_config
+const env = process.env.NODE_ENV || 'development';
+
+// const tsFormat = () => (new Date()).toLocaleTimeString();
+var logger = new winston.Logger({
+	transports: [
+		new winston.transports.Console(config.console),
+		new(moduleManager.requireNodeModule('winston-daily-rotate-file'))(config.file)
+	],
+	exitOnError: config.exitOnError
+});
+
+module.exports = logger;
+module.exports.stream = {
+	write: function(message, encoding) {
+		logger.info(message);
 	}
-}
-catch (e) {
-	console.log('Could not load configuration files! Exiting...');
-	console.log(e);
-	process.exit(1);
-}
-
-exports.setConfigType = function(configStr) {
-	config_manager.paths.build.configurationPath = configStr + '/';
-	module.exports = config_manager;
-}
-
-module.exports = config_manager;
+};
+module.exports.config = config;

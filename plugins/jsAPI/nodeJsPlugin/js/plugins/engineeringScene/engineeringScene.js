@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
-var logger = require("../../modules/logger/logger.js");
+var logger = require("../../modules/log_manager/log_manager.js");
 
 exports.init = function() {
 	logger.debug('engineeringScene::init()');

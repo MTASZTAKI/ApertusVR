@@ -25,18 +25,19 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 app.get('/', function(req, res, next) {
-	logger.debug('ape.httpApi.index');
-	var resObj = new utils.responseObj();
-	resObj.addDataItem('ApertusVR API Home');
-	res.send(resObj.toJSonString());
+	var respObj = new resp(req);
+	respObj.setDescription('ApertusVR API Home');
+	res.send(respObj.toJSonString());
 });
 
 app.post('/setproperties', function(req, res, next) {
-	logger.debug('ape.httpApi.index.setProperties()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets properties on several objects at the same time.');
 
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
@@ -44,20 +45,20 @@ app.post('/setproperties', function(req, res, next) {
 	}
 
 	if (!req.body.data) {
-		logger.debug('no data in http req body');
-		var errObj = utils.errorObj;
-		errObj.setMessage(utils.errorObj.items.dataNotPresented.name, 'Data object is not presented in Http Request body.');
+		logger.error('no data in http req body');
+		var errObj = errorMap.items.dataNotPresented;
+		errObj.message = 'Data object is not presented in Http Request body.';
 		respObj.addErrorItem(errObj);
-		res.status(400).send(respObj.toJSonString());
+		res.send(respObj.toJSonString());
 		return;
 	}
 
 	if (!req.body.data.items) {
-		logger.debug('no items array in http req body.data');
-		var errObj = utils.errorObj;
-		errObj.setMessage(utils.errorObj.items.dataNotPresented.name, 'Items array is not presented in Http Request body.data.');
+		logger.error('no items array in http req body.data');
+		var errObj = errorMap.items.dataNotPresented;
+		errObj.message = 'Items array is not presented in Http Request body.data.';
 		respObj.addErrorItem(errObj);
-		res.status(400).send(respObj.toJSonString());
+		res.send(respObj.toJSonString());
 		return;
 	}
 
@@ -66,7 +67,7 @@ app.post('/setproperties', function(req, res, next) {
 
 		if (!item.type || !item.name) {
 			logger.error('item has no type || name property');
-			return;
+			continue;
 		}
 
 		if (item.type == "node") {
