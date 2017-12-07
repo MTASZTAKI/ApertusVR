@@ -5,11 +5,11 @@
   "main": "server.js",
   "dependencies": {
     "assert": "^1.4.1",
-    "async": "*",
+    "async": "^2.6.0",
     "body-parser": "^1.15.2",
     "cheerio": "*",
     "express": "^4.14.0",
-    "express-validator": "^2.20.10",
+    "express-validator": "^4.3.0",
     "htmlparser2": "*",
     "morgan": "^1.7.0",
     "nbind": "^0.3.9",
