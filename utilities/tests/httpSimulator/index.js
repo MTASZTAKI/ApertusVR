@@ -24,12 +24,14 @@ lr.on('line', function (line) {
 			}
 			console.log();
 			console.log('request: body: ', body);
-
-			lr.resume();
+			setTimeout(function(){
+				lr.resume();
+			}, 20);
 		}
 	);
 });
 
 lr.on('end', function () {
 	console.log('line-reader: all lines are read.');
+	lr = new LineByLineReader(process.argv[2] || 'apertusvr.log');
 });
