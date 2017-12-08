@@ -28,7 +28,6 @@ var config = require('./config.json');
 
 exports.moduleTag = 'PluginManager';
 
-// extend ape module
 exports.loadPlugins = function() {
 	logger.debug("PluginManager::loadPlugins()");
 
@@ -36,16 +35,17 @@ exports.loadPlugins = function() {
 	logger.debug('PluginManager::loadPlugins() configFolderPath: ' + configFolderPath);
 
 	var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');
+	logger.debug(JSON.stringify(config.pluginManager.plugins));
 	logger.debug('PluginManager::loadPlugins() plugins to start:');
 	for (var i = 0; i < config.pluginManager.plugins.length; i++) {
-		logger.debug(' - ', config.pluginManager.plugins[i]);
+		logger.debug(' - ', config.pluginManager.plugins[i].file);
 	}
 
-	var q = async.queue(function(task, callback) {
-		logger.debug(task.name + ' init function called');
-		var pluginFilePath = moduleManager.sourcePath + task.name;
-		var plugin = require(pluginFilePath);
-		plugin.init();
+	var q = async.queue(function(plugin, callback) {
+		logger.debug(plugin.file + ' init function called');
+		var pluginFilePath = moduleManager.pluginPath + plugin.file;
+		var pluginInstance = require(pluginFilePath);
+		pluginInstance.init(plugin.args);
 
 		callback();
 	}, config.pluginManager.plugins.length);
@@ -55,6 +55,6 @@ exports.loadPlugins = function() {
 	};
 
 	for (var i = 0; i < config.pluginManager.plugins.length; i++) {
-		q.push({name: config.pluginManager.plugins[i]});
+		q.push(config.pluginManager.plugins[i]);
 	}
 }

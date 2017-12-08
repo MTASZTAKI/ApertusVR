@@ -25,6 +25,7 @@ var config = require('./config.json');
 exports.configType = '';
 
 exports.sourcePath = config.source.apePath + config.source.jsApiPath;
+exports.pluginPath = this.sourcePath + 'plugins/';
 exports.nodeModulesPath = config.build.binPath + this.configType + config.build.nodeModulesPath;
 exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
 

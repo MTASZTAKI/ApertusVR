@@ -1,8 +1,12 @@
 {
     "pluginManager": {
         "plugins": [
-            "plugins/countryNames/countryNames.js",
-            "plugins/engineeringScene/engineeringScene.js"
+            {
+                "file": "countryNames/countryNames.js"
+            },
+            {
+                "file": "engineeringScene/engineeringScene.js"
+            }
         ]
     }
 }
