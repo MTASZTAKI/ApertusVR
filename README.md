@@ -1,6 +1,8 @@
 # ApertusVR
 Free virtual and augmented reality engine
-[apertusvr.org](http://www.apertusvr.org)
+
+[website](http://www.apertusvr.org)
+
 [forum](http://forum.apertusvr.org/)
 
 ![Overview](http://www.apertusvr.org/wp-content/uploads/2017/04/overview-998x1024.png)
@@ -44,11 +46,10 @@ and Windows Visual Studio Community 2017
 ## Community
 * [Source](https://github.com/MTASZTAKI/ApertusVR)
 * [Website](http://www.apertusvr.org)
-* [Forum](http://www.apertusvr.org/forum) Coming soon...
-* [Issue Tracking](https://github.com/MTASZTAKI/ApertusVR/issues)
-* [Documentation](http://apertusvr.org/?page_id=493)
-* [Downloads](http://apertusvr.org/?page_id=41)
-* [Roadmap](http://apertusvr.org/?page_id=493/#roadmap)
+* [Forum](http://forum.apertusvr.org/)
+* [IssueTracking](https://github.com/MTASZTAKI/ApertusVR/issues)
+* [UseCases](http://apertusvr.org/#usecase)
+* [SDKs](http://apertusvr.org/sdk/)
 
 
 ## Versions
