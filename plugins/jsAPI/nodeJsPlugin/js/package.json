@@ -11,6 +11,7 @@
     "express": "^4.14.0",
     "express-validator": "^4.3.0",
     "htmlparser2": "*",
+    "line-by-line": "^0.1.5",
     "morgan": "^1.7.0",
     "nbind": "^0.3.9",
     "node-gyp": "^3.5.0",
