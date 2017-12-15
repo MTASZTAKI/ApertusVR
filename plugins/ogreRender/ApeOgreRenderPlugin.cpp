@@ -1741,7 +1741,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									}
 								}
 							}
-							mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCameras[0], ogreCameras[1], ogreViewports[0], ogreViewports[1]);
+							//mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCameras[0], ogreCameras[1], ogreViewports[0], ogreViewports[1]);
+							mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreViewports[0]);
+							mpHydrax->registerViewport(ogreViewports[1]);
 							Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
 								Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
 							mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));

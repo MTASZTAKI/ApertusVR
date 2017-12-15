@@ -200,15 +200,15 @@ if (NOT HYDRAX_READY)
 		execute_process ( 
 				COMMAND ${CMAKE_COMMAND} 
 				-G ${CMAKE_GENERATOR} 
-				${HYDRAX_HOME}/src
-				WORKING_DIRECTORY ${HYDRAX_HOME}/src
+				${HYDRAX_HOME}
+				WORKING_DIRECTORY ${HYDRAX_HOME}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ogre_hydrax for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build ${HYDRAX_HOME}/src --config ${CONF} --target Hydrax
-			WORKING_DIRECTORY ${HYDRAX_HOME}/src
+			COMMAND ${CMAKE_COMMAND} --build ${HYDRAX_HOME} --config ${CONF} --target Hydrax
+			WORKING_DIRECTORY ${HYDRAX_HOME}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -283,9 +283,9 @@ include_directories(
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
 	${OGRE_CgProgramManager_INCLUDE_DIRS}
 	${OgreProcedural_INCLUDE_DIRS}
-	${HYDRAX_HOME}/src
-	${HYDRAX_HOME}/src/Modules
-	${HYDRAX_HOME}/src/Noise
+	${HYDRAX_HOME}/include
+	${HYDRAX_HOME}/include/Modules
+	${HYDRAX_HOME}/include/Noise
 	${SKYX_HOME}/src
 	${SKYX_HOME}/src/VClouds
 	${RAPIDJSON_INCLUDE_DIR}
