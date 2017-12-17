@@ -81,9 +81,9 @@ namespace Hydrax
     mTimeMultiplier = 1.0f;
     mTimeSinceLastFrame = 0.0f;
     rttVisibilityMask = 0xFFFFFFFF;
-    mCamera = mSceneManager->createCamera(Ogre::String("Hydrax/Camera"));
+	mCamera = v->getCamera(); //mSceneManager->createCamera(Ogre::String("Hydrax/Camera"));
 
-    Ogre::Camera* cam = v->getCamera();
+   /* Ogre::Camera* cam = v->getCamera();
     if (cam)
     {
       mCamera->setPosition(cam->getDerivedPosition());
@@ -95,7 +95,7 @@ namespace Hydrax
       mCamera->setUseRenderingDistance(cam->getUseRenderingDistance());
       mCamera->setFOVy(cam->getFOVy());
       mCamera->setFocalLength(cam->getFocalLength());
-    }
+    }*/
 
     mDeviceLost = false;
 	//mRttManager->setAutoUpdate(false);
@@ -194,7 +194,7 @@ namespace Hydrax
     ViewportList::iterator iViewportSearched = mViewportList.begin();
     while (iViewportSearched != mViewportList.end())
     {
-	  //mMaterialManager->addCompositor((*iViewportSearched));
+	  mMaterialManager->addCompositor((*iViewportSearched));
       (*iViewportSearched)->getTarget()->insertListener(this, 0);
       iViewportSearched++;
     }
@@ -297,7 +297,7 @@ namespace Hydrax
 
       if (mCreated)
       {
-        Ogre::Camera* cam = viewport->getCamera();
+       /* Ogre::Camera* cam = viewport->getCamera();
         if (cam)
         {
           mCamera->setPosition(cam->getDerivedPosition());
@@ -308,13 +308,13 @@ namespace Hydrax
           mCamera->setFarClipDistance(cam->getFarClipDistance());
           mCamera->setUseRenderingDistance(cam->getUseRenderingDistance());
           mCamera->setFOVy(cam->getFOVy());
-          mCamera->setFocalLength(cam->getFocalLength());
+          mCamera->setFocalLength(cam->getFocalLength());*/
 
           mMaterialManager->addCompositor(viewport);
           viewport->getTarget()->insertListener(this, 0);
 
-          _checkUnderwater(cam, 0);
-        }
+        /*  _checkUnderwater(cam, 0);
+        }*/
       }
     }
   }
@@ -949,8 +949,8 @@ namespace Hydrax
         return;
 
       //mCamera->synchroniseBaseSettingsWith(cam);
-      mCamera->setPosition(cam->getDerivedPosition());
-      mCamera->setOrientation(cam->getDerivedOrientation());
+      //mCamera->setPosition(cam->getDerivedPosition());
+      //mCamera->setOrientation(cam->getDerivedOrientation());
 
       // Update Hydrax
       mModule->update(mTimeSinceLastFrame * mTimeMultiplier, cam);

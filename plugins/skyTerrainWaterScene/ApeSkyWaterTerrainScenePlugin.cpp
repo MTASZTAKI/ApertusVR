@@ -25,7 +25,7 @@ ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
 
 void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA)
+	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
 	{
 		if (auto texture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
 		{
@@ -33,13 +33,13 @@ void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 				mCameras.push_back(camera);
 		}
 		if (event.subjectName == "RiftRenderTextureRight")
-			mExpectedCameraCount = 2; //OculusCase
+			mExpectedCameraCount = 2; 
 	}
-	else if (event.type == Ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera")
+	else if (event.type == Ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera")  //Monitor
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			mCameras.push_back(camera);
-		mExpectedCameraCount = 1; //NormalCase
+		mExpectedCameraCount = 1;
 	}
 }
 

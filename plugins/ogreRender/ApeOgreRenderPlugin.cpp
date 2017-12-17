@@ -1501,9 +1501,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
 										{
 											ogreViewport->setClearEveryFrame(true);
-											ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
-											ogreViewport->setOverlaysEnabled(false);
-											ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+											//ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
+											//ogreViewport->setOverlaysEnabled(false);
+											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+												ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 										}
 									}
 								}

@@ -6,22 +6,22 @@
     },
     "shading": "perVertex",
     "renderWindows": [
-        {
-            "enable": true,
-            "name": "OculusDK2",
-            "monitorIndex": 0,
-            "resolution": {
-                "width": 1920,
-                "height": 1080,
-                "fullScreen": false
-            },
-            "miscParams": {
-                "vSync": true,
-                "vSyncInterval": 1,
-                "colorDepth": 32,
-                "FSAA": 8,
-                "FSAAHint": "Quality"
-            }
+      {
+        "enable": true,
+        "name": "OculusDK2",
+        "monitorIndex": 0,
+        "resolution": {
+          "width": 1920,
+          "height": 1080,
+          "fullScreen": false
+        },
+        "miscParams": {
+          "vSync": true,
+          "vSyncInterval": 1,
+          "colorDepth": 32,
+          "FSAA": 8,
+          "FSAAHint": "Quality"
         }
+      }
     ]
 }

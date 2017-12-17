@@ -188,17 +188,6 @@ void ApeOculusDK2Plugin::Init()
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
 
-	Ape::CameraWeakPtr cameraExternal;
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
-	{
-		camera->setWindow(Ape::IMainWindow::getSingletonPtr()->getName());
-		camera->setFarClipDistance(50);
-		camera->setNearClipDistance(0.001);
-		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
-		camera->setOrthoWindowSize(2, 2);
-		cameraExternal = camera;
-	}
-
 	if (auto node = mpScene->createNode("HeadNode").lock())
 	{
 		node->setParentNode(mUserNode);
@@ -216,30 +205,38 @@ void ApeOculusDK2Plugin::Init()
 	}
 	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-	if (auto camera = cameraExternal.lock())
+	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
+	float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
+	float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
+	float ipd = ovrHmd_GetFloat(mpHMD, OVR_KEY_IPD, 0.064f) * 100;
+	if (auto cameraLeft = mCameraLeft.lock())
 	{
-		float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
-		float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
-		float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
-		float ipd = ovrHmd_GetFloat(mpHMD, OVR_KEY_IPD, 0.064f) * 100;
-		if (auto cameraLeft = mCameraLeft.lock())
-		{
-			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
-			cameraLeft->setAspectRatio(aspectRatio);
-			cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+		cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
+		cameraLeft->setAspectRatio(aspectRatio);
+		cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
 
-			if (auto texture = manualTextureLeftEye.lock())
-				texture->setSourceCamera(cameraLeft);
-		}
-		if (auto cameraRight = mCameraRight.lock())
-		{
-			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
-			cameraRight->setAspectRatio(aspectRatio);
-			cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+		if (auto texture = manualTextureLeftEye.lock())
+			texture->setSourceCamera(cameraLeft);
+	}
+	if (auto cameraRight = mCameraRight.lock())
+	{
+		cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));
+		cameraRight->setAspectRatio(aspectRatio);
+		cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
 
-			if (auto texture = manualTextureRightEye.lock())
-				texture->setSourceCamera(cameraRight);
-		}
+		if (auto texture = manualTextureRightEye.lock())
+			texture->setSourceCamera(cameraRight);
+	}
+
+	Ape::CameraWeakPtr cameraExternal;
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
+	{
+		camera->setWindow(Ape::IMainWindow::getSingletonPtr()->getName());
+		camera->setFarClipDistance(50);
+		camera->setNearClipDistance(0.001);
+		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
+		camera->setOrthoWindowSize(2, 2);
+		cameraExternal = camera;
 	}
 }
 
