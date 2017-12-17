@@ -27,6 +27,7 @@ Contributors:
 --------------------------------------------------------------------------------
 */
 
+#include <iostream>
 #include <OgreString.h>
 
 #include <HydraxMaterialManager.h>
@@ -1720,7 +1721,7 @@ namespace Hydrax
 		UnderwaterCompositorMaterial->load();
 
 		Ogre::CompositorPtr &UnderwaterCompositor = getCompositor(COMP_UNDERWATER);
-    assert(!UnderwaterCompositor.isNull());
+    //assert(!UnderwaterCompositor.isNull());
 		UnderwaterCompositor = Ogre::CompositorManager::getSingleton().create(_def_Underwater_Compositor_Name, HYDRAX_RESOURCE_GROUP);
 		Ogre::CompositionTechnique* UnderWaterComp_Technique = UnderwaterCompositor->createTechnique();
 
@@ -1767,7 +1768,7 @@ namespace Hydrax
   void MaterialManager::addCompositor(Ogre::Viewport* viewport)
   {
     Ogre::CompositorPtr &Comp = mCompositors[0];
-		if (!Comp.isNull())
+		if (Comp.isNull())
 			return;
 
     Ogre::CompositorChain* chain = Ogre::CompositorManager::getSingleton().getCompositorChain(viewport);
@@ -1775,14 +1776,14 @@ namespace Hydrax
     {
       Ogre::CompositorInstance* compositorInstance = Ogre::CompositorManager::getSingleton().addCompositor(viewport, Comp->getName());
       compositorInstance->addListener(&mUnderwaterCompositorListener);
-      Ogre::CompositorManager::getSingleton().setCompositorEnabled(viewport, Comp->getName(), mCompositorsEnable[0]);    
+      Ogre::CompositorManager::getSingleton().setCompositorEnabled(viewport, Comp->getName(), mCompositorsEnable[0]); 
     }
   }
 
   void MaterialManager::removeCompositor(Ogre::Viewport* viewport)
   {
     Ogre::CompositorPtr &Comp = mCompositors[0];
-		if (!Comp.isNull())
+		if (Comp.isNull())
 			return;
 
     Ogre::CompositorChain* chain = Ogre::CompositorManager::getSingleton().getCompositorChain(viewport);
@@ -2122,8 +2123,12 @@ namespace Hydrax
 	void MaterialManager::setCompositorEnable(const CompositorType &Compositor, const bool &Enable)
 	{
 		Ogre::CompositorPtr &Comp = mCompositors[static_cast<int>(Compositor)];
-		if (!Comp.isNull())
+		std::cout << "HydraxMaterialManager::setCompositorEnable begin " << Comp->getName() << std::endl;
+		if (Comp.isNull())
+		{
+			std::cout << "HydraxMaterialManager::setCompositorEnable returned " << Comp->getName() << std::endl;
 			return;
+		}
 
     Hydrax::ViewportList lviewports = mHydrax->getViewports();
     Hydrax::ViewportList::iterator iViewportSearched = lviewports.begin();
@@ -2136,10 +2141,12 @@ namespace Hydrax
     	if (compositorInstance->getEnabled() && !Enable)
       {
         compositorInstance->setEnabled(false);
+		std::cout << "HydraxMaterialManager::setCompositorEnable  compositorInstance->setEnabled(false);" << std::endl;
       }
       else if (!compositorInstance->getEnabled() && Enable)
       {
         compositorInstance->setEnabled(true);
+		std::cout << "HydraxMaterialManager::setCompositorEnable  compositorInstance->setEnabled(true);" << std::endl;
       }
       iViewportSearched++;
     }

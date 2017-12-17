@@ -29,6 +29,7 @@ Contributors:
 
 #pragma warning(disable:4355)
 
+#include <iostream>
 #include <Hydrax.h>
 
 namespace Hydrax
@@ -97,6 +98,7 @@ namespace Hydrax
     }
 
     mDeviceLost = false;
+	//mRttManager->setAutoUpdate(false);
     HydraxLOG("Hydrax created.");
   }
 
@@ -192,6 +194,7 @@ namespace Hydrax
     ViewportList::iterator iViewportSearched = mViewportList.begin();
     while (iViewportSearched != mViewportList.end())
     {
+	  //mMaterialManager->addCompositor((*iViewportSearched));
       (*iViewportSearched)->getTarget()->insertListener(this, 0);
       iViewportSearched++;
     }
