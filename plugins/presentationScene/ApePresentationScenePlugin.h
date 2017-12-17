@@ -65,6 +65,13 @@ SOFTWARE.*/
 class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
+	enum Context
+	{
+		UNKOWN,
+		SPACE,
+		BROWSER,
+		INVALID
+	};
 	struct StoryElement
 	{
 		Ape::Vector3 cameraPosition;
@@ -181,6 +188,8 @@ private:
 	Ape::Vector3 mUserNodePositionBeforeFullScreen;
 
 	Ape::Quaternion mUserNodeOrientationBeforeFullScreen;
+
+	Context mContext;
 
 	bool mIsFirstSpacePressed;
 

@@ -33,6 +33,7 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mZoomLevel = 0;
 	mZOrder = 0;
 	mMouseLastClick = Ape::Browser::MouseClick::UNKNOWN;
+	mMouseLastClickIsDown = false;
 	mMouseScrollDelta = Ape::Vector2();
 	mMouseLastPosition = Ape::Vector2();
 	mID = 0;
@@ -106,9 +107,10 @@ int Ape::BrowserImpl::getZOrder()
 	return mZOrder;
 }
 
-void Ape::BrowserImpl::mouseClick(Ape::Browser::MouseClick click)
+void Ape::BrowserImpl::mouseClick(Ape::Browser::MouseClick click, bool isClickDown)
 {
 	mMouseLastClick = click;
+	mMouseLastClickIsDown = isClickDown;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
 }
 
@@ -126,7 +128,7 @@ void Ape::BrowserImpl::mouseScroll(Ape::Vector2 delta)
 
 Ape::Browser::MouseState Ape::BrowserImpl::getMouseState()
 {
-	return Ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick, mMouseScrollDelta);
+	return Ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick, mMouseLastClickIsDown, mMouseScrollDelta);
 }
 
 void Ape::BrowserImpl::keyASCIIValue(int keyASCIIValue)
@@ -155,6 +157,7 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mResoultion);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mZoomLevel);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastPosition);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClickIsDown);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClick);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseScrollDelta);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLastKeyValue);
@@ -179,6 +182,7 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastPosition))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_MOVED));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClickIsDown);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClick))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseScrollDelta))

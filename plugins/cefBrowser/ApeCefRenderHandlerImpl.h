@@ -57,7 +57,7 @@ namespace Ape
 
 		void setURL(int browserID, std::string url);
 
-		void mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType);
+		void mouseClick(int browserID, bool isClickDown, CefBrowserHost::MouseButtonType mouseButtonType);
 
 		void mouseScroll(int browserID, int deltaX, int deltaY);
 

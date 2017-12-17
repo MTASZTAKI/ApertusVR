@@ -43,19 +43,22 @@ namespace Ape
 		{
 			Ape::Vector2 position;
 			MouseClick click;
+			bool isClickDown;
 			Ape::Vector2 scrollDelta;
 
 			MouseState()
 			{
 				this->position = Ape::Vector2();
 				this->click = MouseClick::UNKNOWN;
+				this->isClickDown = false;
 				this->scrollDelta = Ape::Vector2();
 			}
 
-			MouseState(Ape::Vector2 position, MouseClick click, Ape::Vector2 scrollDelta)
+			MouseState(Ape::Vector2 position, MouseClick click, bool isClickDown, Ape::Vector2 scrollDelta)
 			{
 				this->position = position;
 				this->click = click;
+				this->isClickDown = isClickDown;
 				this->scrollDelta = scrollDelta;
 			}
 		};
@@ -88,7 +91,7 @@ namespace Ape
 
 		virtual int getZOrder() = 0;
 
-		virtual void mouseClick(Ape::Browser::MouseClick click) = 0;
+		virtual void mouseClick(Ape::Browser::MouseClick click, bool isClickDown) = 0;
 
 		virtual void mouseMoved(Ape::Vector2 position) = 0;
 

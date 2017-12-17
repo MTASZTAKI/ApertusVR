@@ -44,6 +44,7 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mCamera = Ape::CameraWeakPtr();
 	mUserNodePositionBeforeFullScreen = Ape::Vector3();
 	mUserNodeOrientationBeforeFullScreen = Ape::Quaternion();
+	mContext = Context::UNKOWN;
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
@@ -375,97 +376,208 @@ void ApePresentationScenePlugin::Init()
 	/*ApertusVR end*/
 
 	/*2017Farewell begin*/
-	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
+	///*if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
+	//{
+	//	universeSkyBoxMaterial->setFileName("universe.material");
+	//	universeSkyBoxMaterial->setAsSkyBox();
+	//}*/
+	//std::string name = "websummit_logo";
+	//Ape::Vector3 position = Ape::Vector3(-1050, -450, -150);
+	//Ape::Quaternion orientation = Ape::Quaternion(1, 0, 0, 0);
+	//createMesh(name, position, orientation);
+	//name = "sphere_img";
+	//position = Ape::Vector3(-1200, 0, 0);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	//name = "sphere_img_2";
+	//position = Ape::Vector3(-600, -600, 0);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	///*if (auto browserNode = mpScene->createNode("video2Node").lock())
+	//{
+	//	browserNode->setPosition(Ape::Vector3(-600, -600, 0));
+	//	if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere_2.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+	//	{
+	//		browserGeometry->setFileName("sphere_2.mesh");
+	//		browserGeometry->setParentNode(browserNode);
+	//		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("video2Browser", Ape::Entity::BROWSER).lock()))
+	//		{
+	//			browser->setResoultion(2048, 1024);
+	//			browser->setURL("https://www.youtube.com/embed/JWI2VwOVBFk?vq=hd1080&autoplay=1&loop=1&playlist=JWI2VwOVBFk");
+	//			browser->setGeometry(browserGeometry);
+	//		}
+	//	}
+	//}*/
+	//name = "sphere_img_3";
+	//position = Ape::Vector3(-1200, -600, 0);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	//name = "sphere_img_4";
+	//position = Ape::Vector3(-600, 0, -600);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	//name = "sphere_img_5";
+	//position = Ape::Vector3(-1200, 0, -600);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	//name = "sphere_img_6";
+	//position = Ape::Vector3(-600, 0, 0);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+	///*if (auto browserNode = mpScene->createNode("video6Node").lock())
+	//{
+	//	browserNode->setPosition(Ape::Vector3(-600, 0, 0));
+	//	if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+	//	{
+	//		browserGeometry->setFileName("sphere.mesh");
+	//		browserGeometry->setParentNode(browserNode);
+	//		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("video6Browser", Ape::Entity::BROWSER).lock()))
+	//		{
+	//			browser->setResoultion(2048, 1024);
+	//			browser->setURL("https://www.youtube.com/embed/oPoRy13M0Q4?vq=hd1080&autoplay=1&loop=1&playlist=oPoRy13M0Q4");
+	//			browser->setGeometry(browserGeometry);
+	//		}
+	//	}
+	//}*/
+	///*name = "sphere_img_7";
+	//position = Ape::Vector3(-600, -600, -600);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);*/
+	//if (auto browserNode = mpScene->createNode("videoNode").lock())
+	//{
+	//	browserNode->setPosition(Ape::Vector3(-600, -600, -600));
+	//	if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+	//	{
+	//		browserGeometry->setFileName("sphere.mesh");
+	//		browserGeometry->setParentNode(browserNode);
+	//		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("videoBrowser", Ape::Entity::BROWSER).lock()))
+	//		{
+	//			browser->setResoultion(2048, 1024);
+	//			browser->setURL("https://www.youtube.com/embed/2FPma4PLyAI?vq=hd1080&autoplay=1&loop=1&playlist=2FPma4PLyAI");
+	//			browser->setGeometry(browserGeometry);
+	//		}
+	//	}
+	//}
+	//name = "sphere_img_8";
+	//position = Ape::Vector3(-1200, -600, -600);
+	//orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
+	//createMesh(name, position, orientation);
+
+	//name = "sphere_img_10";
+	//position = Ape::Vector3(-1200, -600, -6000);
+	//orientation = Ape::Quaternion();
+	//createMesh(name, position, orientation);
+
+	//Ape::Radian angle0(1.57f);
+	//Ape::Vector3 axis0(1, 0, 0);
+	//Ape::Quaternion orientation0;
+	//orientation0.FromAngleAxis(angle0, axis0);
+	//Ape::Radian angle2(1.57f);
+	//Ape::Vector3 axis2(0, 1, 0);
+	//Ape::Quaternion orientation2;
+	//orientation2.FromAngleAxis(angle2, axis2);
+	//Ape::Radian angle3(3.14f);
+	//Ape::Vector3 axis3(1, 0, 0);
+	//Ape::Quaternion orientation3;
+	//orientation3.FromAngleAxis(angle3, axis3);
+	//Ape::Quaternion defaultOrientation;
+	//defaultOrientation = orientation0 * orientation2 * orientation3;
+	//if (auto planeNode = mpScene->createNode("planeNode").lock())
+	//{
+	//	planeNode->setPosition(Ape::Vector3(-900, 0, -310));
+	//	planeNode->setOrientation(orientation0 * orientation2);
+	//	if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
+	//	{
+	//		plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(425, 213), Ape::Vector2(1, 1));
+	//		plane->setParentNode(planeNode);
+	//		if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	//		{
+	//			if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+	//			{
+	//				planeMaterialManualPass->setShininess(0.0f);
+	//				planeMaterialManualPass->setDiffuseColor(Ape::Color());
+	//				planeMaterialManualPass->setSpecularColor(Ape::Color());
+	//				planeMaterial->setPass(planeMaterialManualPass);
+	//				plane->setMaterial(planeMaterial);
+	//			}
+	//		}
+	//	}
+	//}
+	//StoryElement storyElement;
+	//storyElement.browserName = "websummit";
+	//storyElement.browserURL = "https://websummit.com/";
+	//storyElement.browserPosition = Ape::Vector3(-900, 0, -300);
+	//storyElement.browserOrientation = defaultOrientation;
+	//storyElement.browserWidth = 425;
+	//storyElement.browserHeight = 213;
+	//storyElement.browserZoom = 0;
+	//storyElement.browserResolutionVertical = 2048;
+	//storyElement.browserResolutionHorizontal = 1024;
+	//manageBrowser(storyElement);
+
+	//storyElement.browserName = "venue";
+	//storyElement.browserURL = "https://www.google.hu/maps/place/Lisszabon,+Portug%C3%A1lia/@38.7646941,-9.0969397,684a,35y,39.25t/data=!3m1!1e3!4m5!3m4!1s0xd19331a61e4f33b:0x400ebbde49036d0!8m2!3d38.7222524!4d-9.1393366";
+	//storyElement.browserPosition = Ape::Vector3(-870, 0, -600);
+	//storyElement.browserWidth = 400;
+	//storyElement.browserHeight = 200;
+	//manageBrowser(storyElement);
+
+	//storyElement.browserName = "expo";
+	//storyElement.browserURL = "https://en.wikipedia.org/wiki/Expo_%2798";
+	//storyElement.browserPosition = Ape::Vector3(-1050, 0, -595);
+	//storyElement.browserWidth = 107;
+	//storyElement.browserHeight = 213;
+	//storyElement.browserResolutionVertical = 512;
+	//storyElement.browserResolutionHorizontal = 1024;
+	//manageBrowser(storyElement);
+
+	//storyElement.browserName = "kids1";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/kids/kids1.jpg";
+	//storyElement.browserPosition = Ape::Vector3(-1200, -600, -5000);
+	//manageBrowser(storyElement);
+
+	//storyElement.browserName = "kids2";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/kids/kids2.jpg";
+	//storyElement.browserPosition = Ape::Vector3(-1200, -600, -4000);
+	//manageBrowser(storyElement);
+
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //begin
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-895.301, -22.3373, -30.3792), Ape::Quaternion(0.9987, -0.0509765, -4.37447e-07, 3.08579e-07))); //websummit
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-999.878, 22.7379, -416.659), Ape::Quaternion(0.991637, -0.050616, -0.118565, -0.00605159))); //venue
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0))); //2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 0.9, 0))); //2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, -0.1, 0))); //2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, 0), Ape::Quaternion(0.0476064, -0.0128429, 0.867642, 0.234066))); //3
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1208.25, -580.244, -25.0931), Ape::Quaternion(-0.0594213, 0.0160302, 0.866916, 0.23387))); //3
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(0.99293, 0, 0, 0.11872))); //4
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(0.729693, -0.122863, 0.617354, 0.267213))); //4
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(-0.234952, -0.140821, 0.919934, 0.280819))); //4
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, 0, -600), Ape::Quaternion(0.99293, 0, 0, 0.11872))); //5
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, 0, -600), Ape::Quaternion(0.751267, -0.0224898, 0.641798, 0.152713))); //5
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //6
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(0, 0, 0.9, 0))); //6
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(1, 0, -0.1, 0))); //6
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-586.049, -600, -647.3), Ape::Quaternion(0.0110464, 0, 0.999975, 0))); //7
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-553.92, -600, -562.842), Ape::Quaternion(0.960975, 0, 0.276853, 0))); //7
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(0.994804, 0, 0, 0.101823))); //8
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(0.883192, -0.0933883, 0.451264, 0.0876624))); //8
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(-0.177935, -0.0642293, 0.978505, 0.0828286))); //8
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1208.23, -19.4598, -27.9061), Ape::Quaternion(0.0517954, 0.165746, -0.968518, 0.178756))); //1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //endsection
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(1, 0, 0, 0))); //10
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(0, 0, 0.9, 0))); //10
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(1, 0, -0.1, 0))); //10
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -4900), Ape::Quaternion(1, 0, 0, 0))); //kids1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -3900), Ape::Quaternion(1, 0, 0, 0))); //kids2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //end
+	/*2017Farewell end*/
+
+	/*endo meeting 2017.12.19 begin*/
+	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
 		universeSkyBoxMaterial->setAsSkyBox();
-	}*/
-	std::string name = "websummit_logo";
-	Ape::Vector3 position = Ape::Vector3(-1050, -450, -150);
-	Ape::Quaternion orientation = Ape::Quaternion(1, 0, 0, 0);
-	createMesh(name, position, orientation);
-	name = "sphere_img";
-	position = Ape::Vector3(-1200, 0, 0);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	name = "sphere_img_2";
-	position = Ape::Vector3(-600, -600, 0);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	/*if (auto browserNode = mpScene->createNode("video2Node").lock())
-	{
-		browserNode->setPosition(Ape::Vector3(-600, -600, 0));
-		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere_2.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			browserGeometry->setFileName("sphere_2.mesh");
-			browserGeometry->setParentNode(browserNode);
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("video2Browser", Ape::Entity::BROWSER).lock()))
-			{
-				browser->setResoultion(2048, 1024);
-				browser->setURL("https://www.youtube.com/embed/JWI2VwOVBFk?vq=hd1080&autoplay=1&loop=1&playlist=JWI2VwOVBFk");
-				browser->setGeometry(browserGeometry);
-			}
-		}
-	}*/
-	name = "sphere_img_3";
-	position = Ape::Vector3(-1200, -600, 0);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	name = "sphere_img_4";
-	position = Ape::Vector3(-600, 0, -600);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	name = "sphere_img_5";
-	position = Ape::Vector3(-1200, 0, -600);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	name = "sphere_img_6";
-	position = Ape::Vector3(-600, 0, 0);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-	/*if (auto browserNode = mpScene->createNode("video6Node").lock())
-	{
-		browserNode->setPosition(Ape::Vector3(-600, 0, 0));
-		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			browserGeometry->setFileName("sphere.mesh");
-			browserGeometry->setParentNode(browserNode);
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("video6Browser", Ape::Entity::BROWSER).lock()))
-			{
-				browser->setResoultion(2048, 1024);
-				browser->setURL("https://www.youtube.com/embed/oPoRy13M0Q4?vq=hd1080&autoplay=1&loop=1&playlist=oPoRy13M0Q4");
-				browser->setGeometry(browserGeometry);
-			}
-		}
-	}*/
-	/*name = "sphere_img_7";
-	position = Ape::Vector3(-600, -600, -600);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);*/
-	if (auto browserNode = mpScene->createNode("videoNode").lock())
-	{
-		browserNode->setPosition(Ape::Vector3(-600, -600, -600));
-		if (auto browserGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			browserGeometry->setFileName("sphere.mesh");
-			browserGeometry->setParentNode(browserNode);
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("videoBrowser", Ape::Entity::BROWSER).lock()))
-			{
-				browser->setResoultion(2048, 1024);
-				browser->setURL("https://www.youtube.com/embed/2FPma4PLyAI?vq=hd1080&autoplay=1&loop=1&playlist=2FPma4PLyAI");
-				browser->setGeometry(browserGeometry);
-			}
-		}
 	}
-	name = "sphere_img_8";
-	position = Ape::Vector3(-1200, -600, -600);
-	orientation = Ape::Quaternion(0.7071, 0, 0, 0.7071);
-	createMesh(name, position, orientation);
-
-	name = "sphere_img_10";
-	position = Ape::Vector3(-1200, -600, -6000);
-	orientation = Ape::Quaternion();
-	createMesh(name, position, orientation);
-
 	Ape::Radian angle0(1.57f);
 	Ape::Vector3 axis0(1, 0, 0);
 	Ape::Quaternion orientation0;
@@ -480,31 +592,10 @@ void ApePresentationScenePlugin::Init()
 	orientation3.FromAngleAxis(angle3, axis3);
 	Ape::Quaternion defaultOrientation;
 	defaultOrientation = orientation0 * orientation2 * orientation3;
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
-	{
-		planeNode->setPosition(Ape::Vector3(-900, 0, -310));
-		planeNode->setOrientation(orientation0 * orientation2);
-		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
-		{
-			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(425, 213), Ape::Vector2(1, 1));
-			plane->setParentNode(planeNode);
-			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-			{
-				if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-				{
-					planeMaterialManualPass->setShininess(0.0f);
-					planeMaterialManualPass->setDiffuseColor(Ape::Color());
-					planeMaterialManualPass->setSpecularColor(Ape::Color());
-					planeMaterial->setPass(planeMaterialManualPass);
-					plane->setMaterial(planeMaterial);
-				}
-			}
-		}
-	}
 	StoryElement storyElement;
-	storyElement.browserName = "websummit";
-	storyElement.browserURL = "https://websummit.com/";
-	storyElement.browserPosition = Ape::Vector3(-900, 0, -300);
+	storyElement.browserName = "endoDB";
+	storyElement.browserURL = "http://185.80.48.189/polypdb/";
+	storyElement.browserPosition = Ape::Vector3(0, 0, 0);
 	storyElement.browserOrientation = defaultOrientation;
 	storyElement.browserWidth = 425;
 	storyElement.browserHeight = 213;
@@ -512,64 +603,17 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserResolutionVertical = 2048;
 	storyElement.browserResolutionHorizontal = 1024;
 	manageBrowser(storyElement);
-
-	storyElement.browserName = "venue";
-	storyElement.browserURL = "https://www.google.hu/maps/place/Lisszabon,+Portug%C3%A1lia/@38.7646941,-9.0969397,684a,35y,39.25t/data=!3m1!1e3!4m5!3m4!1s0xd19331a61e4f33b:0x400ebbde49036d0!8m2!3d38.7222524!4d-9.1393366";
-	storyElement.browserPosition = Ape::Vector3(-870, 0, -600);
-	storyElement.browserWidth = 400;
-	storyElement.browserHeight = 200;
+	storyElement.browserName = "CNN";
+	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
+	storyElement.browserPosition = Ape::Vector3(-500, 0, 0);
 	manageBrowser(storyElement);
-
-	storyElement.browserName = "expo";
-	storyElement.browserURL = "https://en.wikipedia.org/wiki/Expo_%2798";
-	storyElement.browserPosition = Ape::Vector3(-1050, 0, -595);
-	storyElement.browserWidth = 107;
-	storyElement.browserHeight = 213;
-	storyElement.browserResolutionVertical = 512;
-	storyElement.browserResolutionHorizontal = 1024;
-	manageBrowser(storyElement);
-
-	storyElement.browserName = "kids1";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/kids/kids1.jpg";
-	storyElement.browserPosition = Ape::Vector3(-1200, -600, -5000);
-	manageBrowser(storyElement);
-
-	storyElement.browserName = "kids2";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/kids/kids2.jpg";
-	storyElement.browserPosition = Ape::Vector3(-1200, -600, -4000);
-	manageBrowser(storyElement);
-
+	
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //begin
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-895.301, -22.3373, -30.3792), Ape::Quaternion(0.9987, -0.0509765, -4.37447e-07, 3.08579e-07))); //websummit
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-999.878, 22.7379, -416.659), Ape::Quaternion(0.991637, -0.050616, -0.118565, -0.00605159))); //venue
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0))); //2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 0.9, 0))); //2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, -0.1, 0))); //2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, 0), Ape::Quaternion(0.0476064, -0.0128429, 0.867642, 0.234066))); //3
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1208.25, -580.244, -25.0931), Ape::Quaternion(-0.0594213, 0.0160302, 0.866916, 0.23387))); //3
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(0.99293, 0, 0, 0.11872))); //4
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(0.729693, -0.122863, 0.617354, 0.267213))); //4
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, -600), Ape::Quaternion(-0.234952, -0.140821, 0.919934, 0.280819))); //4
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, 0, -600), Ape::Quaternion(0.99293, 0, 0, 0.11872))); //5
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, 0, -600), Ape::Quaternion(0.751267, -0.0224898, 0.641798, 0.152713))); //5
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //6
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(0, 0, 0.9, 0))); //6
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 0, 0), Ape::Quaternion(1, 0, -0.1, 0))); //6
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-586.049, -600, -647.3), Ape::Quaternion(0.0110464, 0, 0.999975, 0))); //7
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-553.92, -600, -562.842), Ape::Quaternion(0.960975, 0, 0.276853, 0))); //7
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(0.994804, 0, 0, 0.101823))); //8
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(0.883192, -0.0933883, 0.451264, 0.0876624))); //8
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -600), Ape::Quaternion(-0.177935, -0.0642293, 0.978505, 0.0828286))); //8
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1208.23, -19.4598, -27.9061), Ape::Quaternion(0.0517954, 0.165746, -0.968518, 0.178756))); //1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //endsection
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(1, 0, 0, 0))); //10
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(0, 0, 0.9, 0))); //10
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -6000), Ape::Quaternion(1, 0, -0.1, 0))); //10
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -4900), Ape::Quaternion(1, 0, 0, 0))); //kids1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-1200, -600, -3900), Ape::Quaternion(1, 0, 0, 0))); //kids2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //end
-	/*2017Farewell end*/
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-222.883, 0, 394.29), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-0.180422, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-500.18, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-222.883, 0, 394.29), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
+	/*endo meeting 2017.12.19 end*/
 }
 
 void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
@@ -684,33 +728,36 @@ void ApePresentationScenePlugin::createMesh(std::string name, Ape::Vector3 posit
 
 void ApePresentationScenePlugin::moveUserNode()
 {
-	auto userNode = mUserNode.lock();
-	if (userNode)
+	if (mContext == SPACE)
 	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+		auto userNode = mUserNode.lock();
+		if (userNode)
+		{
+			if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
+				userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
+				userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_D])
+				userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_A])
+				userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_W])
+				userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_S])
+				userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
+				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
+				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			if (mKeyCodeMap[OIS::KeyCode::KC_UP])
+				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
+				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
+				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+			if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
+				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+		}
 	}
 }
 
@@ -727,6 +774,7 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	if (auto activeBrowser = mActiveBrowser.lock())
 	{
+		mContext = Context::BROWSER;
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
 		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
 		std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
@@ -740,76 +788,91 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		else if (e.key == OIS::KeyCode::KC_LSHIFT)
 			keyAsWString = 14;
 		activeBrowser->keyASCIIValue(keyAsWString[0]);
+		auto userNode = mUserNode.lock();
+		if (userNode)
+		{
+			if (e.key == OIS::KeyCode::KC_ESCAPE)
+			{
+				mActiveMouseTexture = mOverlayMouseTexture;
+				mActiveBrowser = mOverlayBrowser;
+				if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
+					overlayMouseMaterial->showOnOverlay(true, 1);
+				userNode->setPosition(mUserNodePositionBeforeFullScreen);
+				userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
+				mContext = Context::SPACE;
+			}
+		}
 	}
-	mKeyCodeMap[e.key] = true;
-	auto userNode = mUserNode.lock();
-	if (userNode)
+	else
 	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
+		mKeyCodeMap[e.key] = true;
+		auto userNode = mUserNode.lock();
+		if (userNode)
 		{
-			if (mCurrentStoryElementIndex < mStoryElements.size())
+			if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 			{
-				mCurrentStoryElementIndex++;
-				animateToStoryElements(userNode);
+				if (mCurrentStoryElementIndex < mStoryElements.size())
+				{
+					mCurrentStoryElementIndex++;
+					if (mCurrentStoryElementIndex == mStoryElements.size())
+						mCurrentStoryElementIndex = 0;
+					animateToStoryElements(userNode);
+				}
+				if (!mIsFirstSpacePressed)
+				{
+					/*setting up zoom levels*/
+					if (auto browserEndo = mBrowsers["endo"].lock())
+						browserEndo->setZoomLevel(4);
+					if (auto browserEndo = mBrowsers["smartProfile"].lock())
+						browserEndo->setZoomLevel(4);
+					if (auto browserEndo = mBrowsers["kotem"].lock())
+						browserEndo->setZoomLevel(2);
+					if (auto browserEndo = mBrowsers["qvii"].lock())
+						browserEndo->setZoomLevel(2);
+					mIsFirstSpacePressed = true;
+				}
 			}
-			if (!mIsFirstSpacePressed)
+			if (mKeyCodeMap[OIS::KeyCode::KC_M])
 			{
-				/*setting up zoom levels*/
-				if (auto browserEndo = mBrowsers["endo"].lock())
-					browserEndo->setZoomLevel(4);
-				if (auto browserEndo = mBrowsers["smartProfile"].lock())
-					browserEndo->setZoomLevel(4);
-				if (auto browserEndo = mBrowsers["kotem"].lock())
-					browserEndo->setZoomLevel(2);
-				if (auto browserEndo = mBrowsers["qvii"].lock())
-					browserEndo->setZoomLevel(2);
-				mIsFirstSpacePressed = true;
+				if (mCurrentStoryElementIndex < mStoryElements.size())
+				{
+					mCurrentStoryElementIndex++;
+					if (mCurrentStoryElementIndex == mStoryElements.size())
+						mCurrentStoryElementIndex = 0;
+					jumpToStoryElement(userNode);
+				}
 			}
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_M])
-		{
-			if (mCurrentStoryElementIndex < mStoryElements.size())
+			if (mKeyCodeMap[OIS::KeyCode::KC_N])
 			{
-				mCurrentStoryElementIndex++;
+				if (mCurrentStoryElementIndex > 0)
+				{
+					mCurrentStoryElementIndex--;
+					if (mCurrentStoryElementIndex < 0)
+						mCurrentStoryElementIndex = 0;
+					jumpToStoryElement(userNode);
+				}
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_R])
+			{
+				mCurrentStoryElementIndex = 0;
 				jumpToStoryElement(userNode);
 			}
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_N])
-		{
-			if (mCurrentStoryElementIndex > 0)
+			if (mKeyCodeMap[OIS::KeyCode::KC_MINUS])
 			{
-				mCurrentStoryElementIndex--;
-				jumpToStoryElement(userNode);
+				mTranslateSpeedFactor -= 0.5;
+				mRotateSpeedFactor -= 0.5;
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_ADD])
+			{
+				mTranslateSpeedFactor += 0.5;
+				mRotateSpeedFactor += 0.5;
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_C])
+			{
+				saveUserNodePose(userNode);
 			}
 		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_R])
-		{
-			mCurrentStoryElementIndex = 0;
-			jumpToStoryElement(userNode);
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_MINUS])
-		{
-			mTranslateSpeedFactor -= 0.5;
-			mRotateSpeedFactor -= 0.5;
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_ADD])
-		{
-			mTranslateSpeedFactor += 0.5;
-			mRotateSpeedFactor += 0.5;
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_C])
-		{
-			saveUserNodePose(userNode);
-		}
-		if (mKeyCodeMap[OIS::KeyCode::KC_ESCAPE])
-		{
-			mActiveMouseTexture = mOverlayMouseTexture;
-			mActiveBrowser = mOverlayBrowser;
-			if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
-				overlayMouseMaterial->showOnOverlay(true, 1);
-			userNode->setPosition(mUserNodePositionBeforeFullScreen);
-			userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
-		}
+		mContext = Context::SPACE;
 	}
 	return true;
 }
@@ -847,7 +910,7 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
 		if (auto activeBrowser = mActiveBrowser.lock())
-			activeBrowser->mouseClick(Ape::Browser::MouseClick::LEFT);
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, true);
 		if (auto rayOverlayNode = mRayOverlayNode.lock())
 		{
 			rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
@@ -900,18 +963,23 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 	else if (id == OIS::MouseButtonID::MB_Right)
 	{
 		if (auto activeBrowser = mActiveBrowser.lock())
-			activeBrowser->mouseClick(Ape::Browser::MouseClick::RIGHT);
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::RIGHT, e.state.buttonDown(id));
 	}
 	else if (id == OIS::MouseButtonID::MB_Middle)
 	{
 		if (auto activeBrowser = mActiveBrowser.lock())
-			activeBrowser->mouseClick(Ape::Browser::MouseClick::MIDDLE);
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::MIDDLE, e.state.buttonDown(id));
 	}
 	return true;
 }
 
 bool ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
+	if (id == OIS::MouseButtonID::MB_Left)
+	{
+		if (auto activeBrowser = mActiveBrowser.lock())
+			activeBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, false);
+	}
 	return true;
 }
 

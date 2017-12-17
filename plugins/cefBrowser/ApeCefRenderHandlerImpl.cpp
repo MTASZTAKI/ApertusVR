@@ -70,16 +70,15 @@ void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 	}
 }
 
-void Ape::CefRenderHandlerImpl::mouseClick(int browserID, CefBrowserHost::MouseButtonType mouseButtonType)
+void Ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefBrowserHost::MouseButtonType mouseButtonType)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		CefMouseEvent cefMouseEvent;
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
-		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, false, 1);
-		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, true, 1);
-		//std::cout << "Ape::CefRenderHandlerImpl::mouseClick " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << " type:" << mouseButtonType << std::endl;
+		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, isClickDown, 1);
+		std::cout << "Ape::CefRenderHandlerImpl::mouseClick " << " type:" << mouseButtonType << "isDown:" << isClickDown << std::endl;
 	}
 }
 
@@ -120,6 +119,6 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 		else
 			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_CHAR;
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
-		std::cout << "Ape::CefRenderHandlerImpl::keyValue " << "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue << std::endl;
+		//std::cout << "Ape::CefRenderHandlerImpl::keyValue " << "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue << std::endl;
 	}
 }

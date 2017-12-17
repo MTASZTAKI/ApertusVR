@@ -105,11 +105,11 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 					{
 						Ape::Browser::MouseState mouseState = browser->getMouseState();
 						if (mouseState.click == Ape::Browser::MouseClick::LEFT)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_LEFT);
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_LEFT);
 						else if (mouseState.click == Ape::Browser::MouseClick::RIGHT)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_RIGHT);
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_RIGHT);
 						else if (mouseState.click == Ape::Browser::MouseClick::MIDDLE)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], CefBrowserHost::MouseButtonType::MBT_MIDDLE);
+							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_MIDDLE);
 					}
 				}
 				break;

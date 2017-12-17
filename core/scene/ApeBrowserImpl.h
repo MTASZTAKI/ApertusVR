@@ -58,7 +58,7 @@ namespace Ape
 
 		int getZOrder() override;
 
-		void mouseClick(Ape::Browser::MouseClick click) override;
+		void mouseClick(Ape::Browser::MouseClick click, bool isClickDown) override;
 
 		void mouseMoved(Ape::Vector2 position) override;
 
@@ -96,6 +96,8 @@ namespace Ape
 		unsigned int mID;
 
 		Ape::Browser::MouseClick mMouseLastClick;
+
+		bool mMouseLastClickIsDown;
 
 		Ape::Vector2 mMouseLastPosition;
 
