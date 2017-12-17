@@ -1746,6 +1746,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								}
 							}
 						}
+						mpHydrax->setPosition(Ogre::Vector3(0, 100, 0));//just a hotfix in order to avoid displaying the "waves" in the oculus background
 						mpHydrax->setModule(new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)), Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options()), true);
 						mpHydrax->setComponents(static_cast<Hydrax::HydraxComponent> (Hydrax::HYDRAX_COMPONENT_SUN | Hydrax::HYDRAX_COMPONENT_FOAM | Hydrax::HYDRAX_COMPONENT_DEPTH | Hydrax::HYDRAX_COMPONENT_SMOOTH | Hydrax::HYDRAX_COMPONENT_CAUSTICS | Hydrax::HYDRAX_COMPONENT_UNDERWATER | Hydrax::HYDRAX_COMPONENT_UNDERWATER_REFLECTIONS | Hydrax::HYDRAX_COMPONENT_UNDERWATER_GODRAYS));
 						mpHydrax->create();
