@@ -607,11 +607,29 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
 	storyElement.browserPosition = Ape::Vector3(-500, 0, 0);
 	manageBrowser(storyElement);
+	storyElement.browserName = "endo_content";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content.png";
+	storyElement.browserPosition = Ape::Vector3(0, 213, 0);
+	storyElement.browserWidth = 213;
+	storyElement.browserHeight = 213;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 1024;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo_contract";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_contract.png";
+	storyElement.browserPosition = Ape::Vector3(300, 0, 0);
+	storyElement.browserWidth = 213;
+	storyElement.browserHeight = 213;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 1024;
+	manageBrowser(storyElement);
 	
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-222.883, 0, 394.29), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-0.180422, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-0.180422, 213.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-500.18, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-0.180422, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
+	mStoryElements.push_back(StoryElement(Ape::Vector3(300.180422, 0.144652, 181.529), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-222.883, 0, 394.29), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
 	/*endo meeting 2017.12.19 end*/
 }
@@ -777,7 +795,7 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		mContext = Context::BROWSER;
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
 		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-		std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
+		//std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -797,8 +815,8 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 				mActiveBrowser = mOverlayBrowser;
 				if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
 					overlayMouseMaterial->showOnOverlay(true, 1);
-				userNode->setPosition(mUserNodePositionBeforeFullScreen);
-				userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
+				//userNode->setPosition(mUserNodePositionBeforeFullScreen);
+				//userNode->setOrientation(mUserNodeOrientationBeforeFullScreen);
 				mContext = Context::SPACE;
 			}
 		}
