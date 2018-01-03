@@ -73,10 +73,13 @@ SOFTWARE.*/
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "Hydrax.h"
-//#include "Noise/Perlin/Perlin.h"
-//#include "Modules/ProjectedGrid/ProjectedGrid.h"
-#include "Noise/Perlin/HydraxPerlin.h"
-#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#ifdef HYDRAX_NEW
+	#include "Noise/Perlin/HydraxPerlin.h"
+	#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#else
+	#include "Noise/Perlin/Perlin.h"
+	#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#endif
 #include "SkyX.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"

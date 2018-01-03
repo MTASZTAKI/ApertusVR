@@ -184,7 +184,12 @@ if (NOT OGRE_PROCEDURAL_READY)
 	endforeach ()
 endif ()
 #find ogre_hydrax
-set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax)
+option(APE_PLUGIN_OgreRender_HydraxNew "Use OgreRenderPluginHydraxNew?" ON )
+if (${APE_PLUGIN_OgreRender_HydraxNew})
+	set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax_new)
+else ()
+	set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax)
+endif ()
 set (HYDRAX_READY FALSE)
 if(EXISTS ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.dll AND EXISTS ${HYDRAX_HOME}/srcdemo/Release/Hydrax.dll)
 	set(HYDRAX_READY TRUE)
@@ -286,6 +291,7 @@ include_directories(
 	${HYDRAX_HOME}/include
 	${HYDRAX_HOME}/include/Modules
 	${HYDRAX_HOME}/include/Noise
+	${HYDRAX_HOME}/src
 	${SKYX_HOME}/src
 	${SKYX_HOME}/src/VClouds
 	${RAPIDJSON_INCLUDE_DIR}
@@ -293,7 +299,12 @@ include_directories(
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
 ${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} MY_HYDRAX MY_SKYX )
-set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+if (${APE_PLUGIN_OgreRender_HydraxNew})
+	set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}" HYDRAX_NEW)
+else ()
+	set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+endif()
+
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
 	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?

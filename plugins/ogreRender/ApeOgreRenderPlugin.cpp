@@ -1728,28 +1728,44 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								if (auto ogreCamera = mpSceneMgr->getCamera(cameraMain->getName()))
 								{
 									if (auto ogreViewport = ogreCamera->getViewport())
-										mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreViewport);
-								}
-							}
-						}
-						for (int i = 1; i < water->getCameras().size(); i++)
-						{
-							if (auto camera = water->getCameras()[i].lock())
-							{
-								if (mpSceneMgr->hasCamera(camera->getName()))
-								{
-									if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
 									{
-										if (auto ogreViewport = ogreCamera->getViewport())
-											mpHydrax->registerViewport(ogreViewport);
+										#ifdef HYDRAX_NEW
+											mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreViewport);
+										#else
+											mpHydrax = new Hydrax::Hydrax(mpSceneMgr, ogreCamera, nullptr, ogreViewport, nullptr);
+										#endif
 									}
 								}
 							}
 						}
-						mpHydrax->setPosition(Ogre::Vector3(0, 100, 0));//just a hotfix in order to avoid displaying the "waves" in the oculus background
-						mpHydrax->setModule(new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)), Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options()), true);
-						mpHydrax->setComponents(static_cast<Hydrax::HydraxComponent> (Hydrax::HYDRAX_COMPONENT_SUN | Hydrax::HYDRAX_COMPONENT_FOAM | Hydrax::HYDRAX_COMPONENT_DEPTH | Hydrax::HYDRAX_COMPONENT_SMOOTH | Hydrax::HYDRAX_COMPONENT_CAUSTICS | Hydrax::HYDRAX_COMPONENT_UNDERWATER | Hydrax::HYDRAX_COMPONENT_UNDERWATER_REFLECTIONS | Hydrax::HYDRAX_COMPONENT_UNDERWATER_GODRAYS));
-						mpHydrax->create();
+						#ifdef HYDRAX_NEW
+							for (int i = 1; i < water->getCameras().size(); i++)
+							{
+								if (auto camera = water->getCameras()[i].lock())
+								{
+									if (mpSceneMgr->hasCamera(camera->getName()))
+									{
+										if (auto ogreCamera = mpSceneMgr->getCamera(camera->getName()))
+										{
+											if (auto ogreViewport = ogreCamera->getViewport())
+												mpHydrax->registerViewport(ogreViewport);
+										}
+									}
+								}
+							}
+						#endif
+						#ifdef HYDRAX_NEW
+							mpHydrax->setPosition(Ogre::Vector3(0, 100, 0));//just a hotfix in order to avoid displaying the "waves" in the oculus background
+							mpHydrax->setModule(new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)), Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options()), true);
+							mpHydrax->setComponents(static_cast<Hydrax::HydraxComponent> (Hydrax::HYDRAX_COMPONENT_SUN | Hydrax::HYDRAX_COMPONENT_FOAM | Hydrax::HYDRAX_COMPONENT_DEPTH | Hydrax::HYDRAX_COMPONENT_SMOOTH | Hydrax::HYDRAX_COMPONENT_CAUSTICS | Hydrax::HYDRAX_COMPONENT_UNDERWATER | Hydrax::HYDRAX_COMPONENT_UNDERWATER_REFLECTIONS | Hydrax::HYDRAX_COMPONENT_UNDERWATER_GODRAYS));
+							mpHydrax->create();
+						#else
+							Hydrax::Module::ProjectedGrid *module = new Hydrax::Module::ProjectedGrid(mpHydrax, new Hydrax::Noise::Perlin(), Ogre::Plane(Ogre::Vector3(0, 1, 0), Ogre::Vector3(0, 0, 0)),
+								Hydrax::MaterialManager::NM_VERTEX, Hydrax::Module::ProjectedGrid::Options());
+							mpHydrax->setModule(static_cast<Hydrax::Module::Module*>(module));
+							mpHydrax->loadCfg("HydraxDemo.hdx");
+							mpHydrax->create();
+						#endif
 					}
 					break;
 				case Ape::Event::Type::WATER_SKY:
