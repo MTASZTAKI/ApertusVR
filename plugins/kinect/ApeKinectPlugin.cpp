@@ -85,14 +85,14 @@ void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::KinectPlugin::Init()
 {
-	std::cout << "KinectPlugin::Init" << std::endl;
 	std::cout << "KinectPlugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	std::cout << "KinectPlugin main window was found" << std::endl;
 	InitializeDefaultSensor();
-	std::cout << "Kinect init finished" << std::endl;
+	std::cout << "Sensor init finished" << std::endl;
 
+#pragma region initBodies
 	std::shared_ptr<Ape::IManualMaterial> _0bodyMaterial;
 	if (_0bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("0BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -119,11 +119,11 @@ void Ape::KinectPlugin::Init()
 		/*if (auto headnode = mpScene->createNode("MyHeadNode").lock())
 			HeadNode = headnode;*/
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _0BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_0Body[i]);
-			leftHandGeometry->setMaterial(_0bodyMaterial);
+			_0BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_0BodyGeometry->setParentNode(_0Body[i]);
+			_0BodyGeometry->setMaterial(_0bodyMaterial);
 		}
 	}
 
@@ -148,11 +148,11 @@ void Ape::KinectPlugin::Init()
 			_1Body.push_back(myNode);
 		}
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("1BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _1BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("1BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_1Body[i]);
-			leftHandGeometry->setMaterial(_1bodyMaterial);
+			_1BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_1BodyGeometry->setParentNode(_1Body[i]);
+			_1BodyGeometry->setMaterial(_1bodyMaterial);
 		}
 	}
 
@@ -177,11 +177,11 @@ void Ape::KinectPlugin::Init()
 			_2Body.push_back(myNode);
 		}
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("2BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _2BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("2BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_2Body[i]);
-			leftHandGeometry->setMaterial(_2bodyMaterial);
+			_2BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_2BodyGeometry->setParentNode(_2Body[i]);
+			_2BodyGeometry->setMaterial(_2bodyMaterial);
 		}
 	}
 
@@ -206,11 +206,11 @@ void Ape::KinectPlugin::Init()
 			_3Body.push_back(myNode);
 		}
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("3BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _3BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("3BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_3Body[i]);
-			leftHandGeometry->setMaterial(_3bodyMaterial);
+			_3BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_3BodyGeometry->setParentNode(_3Body[i]);
+			_3BodyGeometry->setMaterial(_3bodyMaterial);
 		}
 	}
 
@@ -235,11 +235,11 @@ void Ape::KinectPlugin::Init()
 			_4Body.push_back(myNode);
 		}
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("4BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _4BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("4BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_4Body[i]);
-			leftHandGeometry->setMaterial(_4bodyMaterial);
+			_4BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_4BodyGeometry->setParentNode(_4Body[i]);
+			_4BodyGeometry->setMaterial(_4bodyMaterial);
 		}
 	}
 
@@ -264,13 +264,37 @@ void Ape::KinectPlugin::Init()
 			_5Body.push_back(myNode);
 		}
 
-		if (auto leftHandGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("5BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+		if (auto _5BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("5BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			leftHandGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			leftHandGeometry->setParentNode(_5Body[i]);
-			leftHandGeometry->setMaterial(_5bodyMaterial);
+			_5BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+			_5BodyGeometry->setParentNode(_5Body[i]);
+			_5BodyGeometry->setMaterial(_5bodyMaterial);
 		}
 	}
+#pragma endregion
+
+	if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+	{
+		pointCloudNode->setPosition(Ape::Vector3(0, 0, 0));
+		if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			pointCloudNodeText->setCaption("Points");
+			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+			pointCloudNodeText->setParentNode(pointCloudNode);
+		}
+		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+		{
+			Ape::PointCloudPoints points = {200, 0, 0};
+			Ape::PointCloudColors colors = {1, 0, 0};
+
+			pointCloud->setParameters(points, colors, 100000);
+			pointCloud->setParentNode(pointCloudNode);
+			//mPointCloud = pointCloud;
+		}
+		//pointCloudNode->setChildrenVisibility(true);
+	}
+
+	std::cout << "KinectPlugin Initialized" << std::endl;
 }
 
 void Ape::KinectPlugin::Run()
@@ -279,30 +303,75 @@ void Ape::KinectPlugin::Run()
 	{
 		Update();
 		
-		if (!pointcGenerated && depth2xyz[1010].X != 0.0 && depth2xyz[1010].X != -1 * std::numeric_limits<float>::infinity())
+		if (!pointsGenerated && depth2xyz[1010].X != 0.0 && depth2xyz[1010].X != -1 * std::numeric_limits<float>::infinity())
 		{
-			if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+			//if (auto pointCloud = mPointCloud.lock())
+			//{
+			//		double pointratio = 1/6; //point count = 217088 * pointratio
+			//		
+			//		Ape::PointCloudPoints points;
+			//		points.resize(651264 * pointratio);
+			//		points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
+			//		Ape::PointCloudColors colors;
+			//		colors.resize(651264 * pointratio);
+			//		colors = GetPointCloudCOL(rgbimage, pointratio);
+
+			//		/*Ape::PointCloudPoints points = { 200, 0, 0 };
+			//		Ape::PointCloudColors colors = { 0, 1, 0 };*/
+
+			//		pointCloud->updatePoints(points);
+			//		pointCloud->updateColors(colors);	
+			//}
+			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_debug").lock())
 			{
 				pointCloudNode->setPosition(Ape::Vector3(0, 0, 0));
-				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_debug", Ape::Entity::GEOMETRY_TEXT).lock()))
 				{
-					pointCloudNodeText->setCaption("Points");
+					pointCloudNodeText->setCaption("Points_debug");
 					pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 					pointCloudNodeText->setParentNode(pointCloudNode);
 				}
-				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_debug", Ape::Entity::POINT_CLOUD).lock()))
 				{
 					double pointratio = 1; //point count = 217088 * pointratio
-					
+
 					Ape::PointCloudPoints points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
 					Ape::PointCloudColors colors = GetPointCloudCOL(rgbimage, pointratio);
-					
-					pointCloud->setParameters(points, colors);
-					pointCloud->setParentNode(pointCloudNode);
 
+					int num0 = 0;
+					for (int i = 0; i<651264 * pointratio; i++)
+					{
+						if (points[i] == (float)0) num0++;
+					}
+					std::cout << std::to_string(num0) << std::endl;
+
+					pointCloud->setParameters(points, colors, 100000);
+					pointCloud->setParentNode(pointCloudNode);
+					mPointCloud = pointCloud;
+
+							std::ostringstream sx;
+							sx << points.at(6000);
+							std::string x(sx.str());
+							std::ostringstream sy;
+							sy << points.at(6001);
+							std::string y(sy.str());
+							std::ostringstream sz;
+							sz << points.at(6002);
+							std::string z(sz.str());
+							std::cout << x+"; "+y+"; "+z << std::endl;
+							
 				}
 			}
-			pointcGenerated = true;
+			pointsGenerated = true;
+		}
+		if (auto pointCloud = mPointCloud.lock())
+		{
+			double pointratio = 1;
+			Ape::PointCloudPoints points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
+			Ape::PointCloudColors colors = GetPointCloudCOL(rgbimage, pointratio);
+			
+			pointCloud->updatePoints(points);
+			pointCloud->updateColors(colors);
 		}
 
 		//std::ostringstream sx;
@@ -334,6 +403,9 @@ void Ape::KinectPlugin::Run()
 		//	std::cout << "true; ";
 		//}
 		//std::cout << "r: " + x + " g: " + y + " b: " + z << std::endl;
+
+		//Draw body joints
+#pragma region DrawBody
 		for (int i = 0; i < 25; i++)
 		{
 			if (auto bodynode = _0Body[i].lock())
@@ -448,9 +520,11 @@ void Ape::KinectPlugin::Run()
 				}
 			}
 		}
+#pragma endregion
 
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
+
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
@@ -509,7 +583,7 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 				&reader);
 		}
 
-		std::cout << "Kinect init compleate" << std::endl;
+		std::cout << "Kinect ready" << std::endl;
 	}
 
 	if (!m_pKinectSensor || FAILED(hr))
@@ -544,48 +618,6 @@ void Ape::KinectPlugin::Update()
 
 		pFrame->Release();
 	}
-}
-
-///<summary>
-///Gets body frame from multiframe reader
-///</summary>
-void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
-{
-	IBodyFrame* pBodyFrame;
-	IBodyFrameReference* pBodyFrameRef = NULL;
-
-	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);	
-
-	if (SUCCEEDED(hr))
-	{
-		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
-		if (pBodyFrameRef) pBodyFrameRef->Release();
-	}
-
-	if (SUCCEEDED(hr))
-	{
-		INT64 nTime = 0;
-
-		hr = pBodyFrame->get_RelativeTime(&nTime);
-
-		IBody* ppBodies[BODY_COUNT] = { 0 };
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			ProcessBody(nTime, BODY_COUNT, ppBodies);
-		}
-
-		for (int i = 0; i < _countof(ppBodies); ++i)
-		{
-			SafeRelease(ppBodies[i]);
-		}
-	}
-	if (pBodyFrame) pBodyFrame->Release();
 }
 
 void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
@@ -701,7 +733,7 @@ std::vector<int> Ape::KinectPlugin::getrRndIndexes(double ratio)
 
 Ape::PointCloudPoints Ape::KinectPlugin::GetPointCloudPTS(CameraSpacePoint depthPts[], double ratio/*, std::vector<int> indexes*/)
 {
-	int size = 217088*3;
+	int size = 651264;
 	int modSize = (int)(size*ratio);
 	if (modSize%3!=0)
 	{
@@ -724,6 +756,48 @@ Ape::PointCloudPoints Ape::KinectPlugin::GetPointCloudPTS(CameraSpacePoint depth
 		//}
 	}
 	return point;
+}
+
+///<summary>
+///Gets body frame from multiframe reader
+///</summary>
+void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
+{
+	IBodyFrame* pBodyFrame;
+	IBodyFrameReference* pBodyFrameRef = NULL;
+
+	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);
+
+	if (SUCCEEDED(hr))
+	{
+		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
+		if (pBodyFrameRef) pBodyFrameRef->Release();
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		INT64 nTime = 0;
+
+		hr = pBodyFrame->get_RelativeTime(&nTime);
+
+		IBody* ppBodies[BODY_COUNT] = { 0 };
+
+		if (SUCCEEDED(hr))
+		{
+			hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ProcessBody(nTime, BODY_COUNT, ppBodies);
+		}
+
+		for (int i = 0; i < _countof(ppBodies); ++i)
+		{
+			SafeRelease(ppBodies[i]);
+		}
+	}
+	if (pBodyFrame) pBodyFrame->Release();
 }
 
 /// <summary>

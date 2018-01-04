@@ -118,7 +118,7 @@ namespace Ape
 		const int colorwidth = 1920;
 		const int colorheight = 1080;
 
-		bool pointcGenerated = false;
+		bool pointsGenerated = false;
 
 		// Body reader
 		//IBodyFrameReader*       m_pBodyFrameReader;
@@ -138,6 +138,8 @@ namespace Ape
 		Ape::NodeWeakPtr mLeftHandNode;
 
 		Ape::NodeWeakPtr mRightHandNode;
+
+		Ape::PointCloudWeakPtr mPointCloud;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()
