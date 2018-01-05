@@ -132,10 +132,6 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		Ape::NodeWeakPtr mLeftHandNode;
-
-		Ape::NodeWeakPtr mRightHandNode;
-
 		Ape::PointCloudWeakPtr mPointCloud;
 	};
 	

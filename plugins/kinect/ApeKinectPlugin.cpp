@@ -73,12 +73,7 @@ Ape::KinectPlugin::~KinectPlugin()
 
 void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
-		mRightHandNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
-		mLeftHandNode = mpScene->getNode(event.subjectName);
+
 }
 
 void Ape::KinectPlugin::Init()
