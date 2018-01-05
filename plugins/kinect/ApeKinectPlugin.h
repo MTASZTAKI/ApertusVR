@@ -67,6 +67,9 @@ namespace Ape
 
 		void Restart() override;
 
+		/// <summary>
+		/// Gets the different frames from the sensor
+		/// </summary>
 		void Update();
 
 		void GetBodyData(IMultiSourceFrame* pframe);
@@ -85,43 +88,37 @@ namespace Ape
 		/// <param name="nBodyCount">body data count</param>
 		/// <param name="ppBodies">body data in frame</param>
 		/// </summary>
-		void Ape::KinectPlugin::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
-
-		//bool Ape::KinectPlugin::Contains(int number, std::vector<int> vect, int length);
-		std::vector<int> Ape::KinectPlugin::getrRndIndexes(double ratio);
-		Ape::PointCloudPoints Ape::KinectPlugin::GetPointCloudPTS(CameraSpacePoint depthPts[], double ratio/*, std::vector<int> indexes*/);
-		Ape::PointCloudColors Ape::KinectPlugin::GetPointCloudCOL(unsigned char cimage[], double ratio);
+		void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies);
 
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
-		//Ape::NodeWeakPtr HeadNode;
-		//std::vector<Ape::NodeWeakPtr> mBNodes;
+
 		std::vector<Ape::NodeWeakPtr> _0Body;
 		std::vector<Ape::NodeWeakPtr> _1Body;
 		std::vector<Ape::NodeWeakPtr> _2Body;
 		std::vector<Ape::NodeWeakPtr> _3Body;
 		std::vector<Ape::NodeWeakPtr> _4Body;
 		std::vector<Ape::NodeWeakPtr> _5Body;
-		Ape::NodeWeakPtr PCN;
 
-		double                  m_fFreq;
-		float					body[BODY_COUNT][JointType_Count][3];
+		float body[BODY_COUNT][JointType_Count][3];//stores the detected joint coordinates
 
 		// Current Kinect
 		IKinectSensor*          m_pKinectSensor;
 		ICoordinateMapper*      m_pCoordinateMapper;
 
 		IMultiSourceFrame* pFrame;
-		//IMultiSourceFrame* m_pDepthFrame;
 		IMultiSourceFrameReader* reader;   // Kinect data source
 
 		const int colorwidth = 1920;
 		const int colorheight = 1080;
 
+		int size = 651264; //number of coordinates in point cloud
+		int CloudSize;
 		bool pointsGenerated = false;
+		double pointratio = 1;
 
-		// Body reader
-		//IBodyFrameReader*       m_pBodyFrameReader;
+		Ape::PointCloudPoints KPts;//stores the actual point coordinates
+		Ape::PointCloudColors KCol;//stores the actual point colors
 
 		Ape::IScene* mpScene;
 

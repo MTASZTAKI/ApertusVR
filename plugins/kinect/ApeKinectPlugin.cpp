@@ -40,10 +40,8 @@ ColorSpacePoint depth2rgb[width*height];
 
 Ape::KinectPlugin::KinectPlugin()
 {
-	m_fFreq = 0;
 	m_pKinectSensor = NULL;
 	m_pCoordinateMapper = NULL;
-	//m_pBodyFrameReader=NULL;
 	reader = NULL;
 
 
@@ -70,7 +68,7 @@ Ape::KinectPlugin::~KinectPlugin()
 
 	SafeRelease(m_pKinectSensor);
 
-	std::cout << "KinectPlugin dtor" << std::endl;
+	std::cout << "KinectPlugin destroyed" << std::endl;
 }
 
 void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
@@ -114,10 +112,6 @@ void Ape::KinectPlugin::Init()
 		{
 			_0Body.push_back(myNode);
 		}
-		//HeadNode = mNodes[0];
-
-		/*if (auto headnode = mpScene->createNode("MyHeadNode").lock())
-			HeadNode = headnode;*/
 
 		if (auto _0BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
@@ -273,26 +267,13 @@ void Ape::KinectPlugin::Init()
 	}
 #pragma endregion
 
-	if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+	CloudSize = (int)(size*pointratio);
+	if (CloudSize % 3 != 0)
 	{
-		pointCloudNode->setPosition(Ape::Vector3(0, 0, 0));
-		if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
-		{
-			pointCloudNodeText->setCaption("Points");
-			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-			pointCloudNodeText->setParentNode(pointCloudNode);
-		}
-		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
-		{
-			Ape::PointCloudPoints points = {200, 0, 0};
-			Ape::PointCloudColors colors = {1, 0, 0};
-
-			pointCloud->setParameters(points, colors, 100000);
-			pointCloud->setParentNode(pointCloudNode);
-			//mPointCloud = pointCloud;
-		}
-		//pointCloudNode->setChildrenVisibility(true);
+		CloudSize -= CloudSize % 3;
 	}
+	KPts.resize(CloudSize);
+	KCol.resize(CloudSize);
 
 	std::cout << "KinectPlugin Initialized" << std::endl;
 }
@@ -303,106 +284,36 @@ void Ape::KinectPlugin::Run()
 	{
 		Update();
 		
-		if (!pointsGenerated && depth2xyz[1010].X != 0.0 && depth2xyz[1010].X != -1 * std::numeric_limits<float>::infinity())
+		//Generate the Point Cloud
+		if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
 		{
-			//if (auto pointCloud = mPointCloud.lock())
-			//{
-			//		double pointratio = 1/6; //point count = 217088 * pointratio
-			//		
-			//		Ape::PointCloudPoints points;
-			//		points.resize(651264 * pointratio);
-			//		points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
-			//		Ape::PointCloudColors colors;
-			//		colors.resize(651264 * pointratio);
-			//		colors = GetPointCloudCOL(rgbimage, pointratio);
-
-			//		/*Ape::PointCloudPoints points = { 200, 0, 0 };
-			//		Ape::PointCloudColors colors = { 0, 1, 0 };*/
-
-			//		pointCloud->updatePoints(points);
-			//		pointCloud->updateColors(colors);	
-			//}
-			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_debug").lock())
+			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
 			{
 				pointCloudNode->setPosition(Ape::Vector3(0, 0, 0));
-				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_debug", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
 				{
-					pointCloudNodeText->setCaption("Points_debug");
+					pointCloudNodeText->setCaption("Points_Kinect");
 					pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 					pointCloudNodeText->setParentNode(pointCloudNode);
 				}
-				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_debug", Ape::Entity::POINT_CLOUD).lock()))
+				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
 				{
-					double pointratio = 1; //point count = 217088 * pointratio
-
-					Ape::PointCloudPoints points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
-					Ape::PointCloudColors colors = GetPointCloudCOL(rgbimage, pointratio);
-
-					int num0 = 0;
-					for (int i = 0; i<651264 * pointratio; i++)
-					{
-						if (points[i] == (float)0) num0++;
-					}
-					std::cout << std::to_string(num0) << std::endl;
-
-					pointCloud->setParameters(points, colors, 100000);
+					pointCloud->setParameters(KPts, KCol, 100000);
 					pointCloud->setParentNode(pointCloudNode);
-					mPointCloud = pointCloud;
-
-							std::ostringstream sx;
-							sx << points.at(6000);
-							std::string x(sx.str());
-							std::ostringstream sy;
-							sy << points.at(6001);
-							std::string y(sy.str());
-							std::ostringstream sz;
-							sz << points.at(6002);
-							std::string z(sz.str());
-							std::cout << x+"; "+y+"; "+z << std::endl;
-							
+					mPointCloud = pointCloud;							
 				}
 			}
+
 			pointsGenerated = true;
 		}
+
+		//Refresh the Point Cloud
 		if (auto pointCloud = mPointCloud.lock())
 		{
-			double pointratio = 1;
-			Ape::PointCloudPoints points = GetPointCloudPTS(depth2xyz, pointratio/*, getrRndIndexes(pointratio)*/);
-			Ape::PointCloudColors colors = GetPointCloudCOL(rgbimage, pointratio);
 			
-			pointCloud->updatePoints(points);
-			pointCloud->updateColors(colors);
+			pointCloud->updatePoints(KPts);
+			pointCloud->updateColors(KCol);
 		}
-
-		//std::ostringstream sx;
-		//sx << depth2xyz[1010].X*100;
-		//std::string x(sx.str());
-
-		//std::ostringstream sy;
-		//sy << depth2xyz[1010].Y*100;
-		//std::string y(sy.str());
-
-		//std::ostringstream sz;
-		//sz << depth2xyz[1010].Z*100;
-		//std::string z(sz.str());
-
-		//std::ostringstream sx;
-		//sx << (float)rgbimage[1000];
-		//std::string x(sx.str());
-
-		//std::ostringstream sy;
-		//sy << (float)rgbimage[1001];
-		//std::string y(sy.str());
-
-		//std::ostringstream sz;
-		//sz << (float)rgbimage[1002];
-		//std::string z(sz.str());
-
-		//if (pointcGenerated)
-		//{
-		//	std::cout << "true; ";
-		//}
-		//std::cout << "r: " + x + " g: " + y + " b: " + z << std::endl;
 
 		//Draw body joints
 #pragma region DrawBody
@@ -565,10 +476,6 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 
 	if (m_pKinectSensor)
 	{
-		// Initialize the Kinect and get coordinate mapper and the body reader
-		//IBodyFrameSource* pBodyFrameSource = NULL;
-		/*IMultiSourceFrame* pMultiFramesource = NULL;*/
-
 		hr = m_pKinectSensor->get_CoordinateMapper(&m_pCoordinateMapper);
 
 		if (SUCCEEDED(hr))
@@ -606,7 +513,6 @@ void Ape::KinectPlugin::Update()
 	}
 
 	pFrame = NULL;
-	//m_pDepthFrame = NULL;
 
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
 
@@ -638,37 +544,31 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 		
 		// Get data from frame
 		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);	
+
+		Ape::PointCloudColors colorpoints;
+
+		for (int i = 0; i < CloudSize / 3; i++) 
+		{
+			ColorSpacePoint p = depth2rgb[i];
+
+			/* Check if color pixel coordinates are in bounds*/
+			if (p.X < 0 || p.Y < 0 || p.X > colorwidth || p.Y > colorheight) {
+				colorpoints.push_back(0.);
+				colorpoints.push_back(0.);
+				colorpoints.push_back(0.);
+			}
+			else {
+				int idx = (int)p.X + colorwidth * (int)p.Y;
+				colorpoints.push_back((float)rgbimage[4 * idx + 0] / 255.);
+				colorpoints.push_back((float)rgbimage[4 * idx + 1] / 255.);
+				colorpoints.push_back((float)rgbimage[4 * idx + 2] / 255.);
+			}
+		}
+
+		KCol = colorpoints;
 	}
 
 	if (pColorFrame) pColorFrame->Release();
-}
-
-Ape::PointCloudColors Ape::KinectPlugin::GetPointCloudCOL(unsigned char cimage[], double ratio)
-{
-	int size = 651264;
-	int modSize = (int)(size*ratio);
-	if (modSize % 3 != 0)
-	{
-		modSize -= modSize % 3;
-	}
-	Ape::PointCloudColors colorpoints(modSize);
-
-	for (int i = 0; i < modSize/3; i++) {
-		ColorSpacePoint p = depth2rgb[i];
-		/* Check if color pixel coordinates are in bounds*/
-		if (p.X < 0 || p.Y < 0 || p.X > colorwidth || p.Y > colorheight) {
-			colorpoints.push_back(0.);
-			colorpoints.push_back(0.);
-			colorpoints.push_back(0.);
-		}
-		else {
-			int idx = (int)p.X + colorwidth*(int)p.Y;
-			colorpoints.push_back((float)cimage[4 * idx + 0] / 255.);
-			colorpoints.push_back((float)cimage[4 * idx + 1] / 255.);
-			colorpoints.push_back((float)cimage[4 * idx + 2] / 255.);
-		}
-	}
-	return colorpoints;
 }
 
 void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
@@ -695,67 +595,21 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 		if (SUCCEEDED(hr))
 		{
 			hr = m_pCoordinateMapper->MapDepthFrameToCameraSpace(width*height, buf, width*height, depth2xyz);
+			Ape::PointCloudPoints Points;
+			for (int i = 0; i < CloudSize / 3; i++)
+			{
+				Points.push_back(depth2xyz[i].X * 100);
+				Points.push_back(depth2xyz[i].Y * 100);
+				Points.push_back(depth2xyz[i].Z * 100);
+			}
+
+			KPts = Points;
 		}
+
 	m_pCoordinateMapper->MapDepthFrameToColorSpace(width*height, buf, width*height, depth2rgb);
 	}
+
 	if (pDepthframe) pDepthframe->Release();
-}
-
-std::vector<int> Ape::KinectPlugin::getrRndIndexes(double ratio)
-{
-	int size = 217088;
-	int maxR = (int)(size*ratio);
-	if (maxR % 3 != 0)
-	{
-		maxR -= maxR % 3;
-	}
-	std::vector<int> indexes(maxR);
-	for (int i = 0; i < maxR; i++)
-	{
-		int temp = rand()%static_cast<int>(maxR);
-
-		bool cont = false;
-		for (int i = 0; i <maxR; i++)
-		{
-			if (indexes[i] == temp)
-			{
-				cont = true;
-			}
-		}
-
-		if (!cont)
-		{
-			indexes.push_back(temp);
-		}
-	}
-	return indexes;
-}
-
-Ape::PointCloudPoints Ape::KinectPlugin::GetPointCloudPTS(CameraSpacePoint depthPts[], double ratio/*, std::vector<int> indexes*/)
-{
-	int size = 651264;
-	int modSize = (int)(size*ratio);
-	if (modSize%3!=0)
-	{
-		modSize -= modSize % 3;
-	}
-	Ape::PointCloudPoints point(modSize);
-	for (int i = 0; i < modSize/3; i++)
-	{
-		//if (ratio>0 && ratio<1)
-		//{
-		//	point.push_back(depthPts[indexes[i]].X * 100);
-		//	point.push_back(depthPts[indexes[i]].Y * 100);
-		//	point.push_back(depthPts[indexes[i]].Z * 100);
-		//}
-		//if (ratio >= 1)
-		//{
-			point.push_back(depthPts[i].X * 100);
-			point.push_back(depthPts[i].Y * 100);
-			point.push_back(depthPts[i].Z * 100);
-		//}
-	}
-	return point;
 }
 
 ///<summary>
@@ -776,20 +630,13 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 
 	if (SUCCEEDED(hr))
 	{
-		INT64 nTime = 0;
-
-		hr = pBodyFrame->get_RelativeTime(&nTime);
-
 		IBody* ppBodies[BODY_COUNT] = { 0 };
 
-		if (SUCCEEDED(hr))
-		{
-			hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
-		}
+		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
 
 		if (SUCCEEDED(hr))
 		{
-			ProcessBody(nTime, BODY_COUNT, ppBodies);
+			ProcessBody(BODY_COUNT, ppBodies);
 		}
 
 		for (int i = 0; i < _countof(ppBodies); ++i)
@@ -806,13 +653,12 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 /// <param name="nBodyCount">body data count</param>
 /// <param name="ppBodies">body data in frame</param>
 /// </summary>
-void Ape::KinectPlugin::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
+void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 {
 	HRESULT hr;
+
 	if (m_pCoordinateMapper)
-	{
-		//DOUBLE dist = 0.0;
-		
+	{		
 		for (int i = 0; i < nBodyCount; ++i)
 		{
 			Operatorfound[i] = false;
@@ -835,9 +681,8 @@ void Ape::KinectPlugin::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodie
 
 					hr = pBody->GetJoints(_countof(joints), joints);
 
-					if (SUCCEEDED(hr)/* && (joints[0].Position.Z<dist || dist==0.0)*/)
+					if (SUCCEEDED(hr))
 					{
-						//dist = joints[0].Position.Z;
 						
 						for (int j = 0; j < _countof(joints); ++j)
 						{
