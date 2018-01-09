@@ -23,6 +23,9 @@
 set (KINECT_HOME ${CMAKE_SOURCE_DIR}/3rdParty/kinect)
 set (KINECT_READY FALSE)
 
+include_directories(
+	${RAPIDJSON_INCLUDE_DIR}
+	)
 
 #error function
 function (reportError what and when)

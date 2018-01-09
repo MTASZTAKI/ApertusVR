@@ -27,6 +27,12 @@ SOFTWARE.*/
 #include "ApeKinectPlugin.h"
 #include <sstream>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/writer.h"
 
 const int width = 512;
 const int height = 424;
@@ -50,6 +56,7 @@ Ape::KinectPlugin::KinectPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
+	RootNode = mpScene->createNode("KinectRootNode").lock();
 }
 
 Ape::KinectPlugin::~KinectPlugin()
@@ -85,6 +92,45 @@ void Ape::KinectPlugin::Init()
 	InitializeDefaultSensor();
 	std::cout << "Sensor init finished" << std::endl;
 
+	CloudSize = (int)(size*pointratio);
+	if (CloudSize % 3 != 0)
+	{
+		CloudSize -= CloudSize % 3;
+	}
+	KPts.resize(CloudSize);
+	KCol.resize(CloudSize);
+
+	std::stringstream kinectPluginConfigFilePath;
+	kinectPluginConfigFilePath << APE_SOURCE_DIR << "\\plugins\\kinect\\configs\\KinectConf.json";
+	FILE* KinectPluginConfigFile = std::fopen(kinectPluginConfigFilePath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (KinectPluginConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(KinectPluginConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& KPosition = jsonDocument["sensorPosition"];
+			for (int i = 0; i < 3; i++)
+			{
+				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
+			}
+			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
+			for (int i = 0; i < 4; i++)
+			{
+				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
+			}
+		}
+		fclose(KinectPluginConfigFile);
+	}
+
+	if (auto rootNode = RootNode.lock())
+	{
+		rootNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+		rootNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+	}
+
 #pragma region initBodies
 	std::shared_ptr<Ape::IManualMaterial> _0bodyMaterial;
 	if (_0bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("0BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
@@ -102,10 +148,14 @@ void Ape::KinectPlugin::Init()
 	{
 		std::string index = std::to_string(i);
 
-
 		if (auto myNode = mpScene->createNode("0BodyNode" + index).lock())
 		{
 			_0Body.push_back(myNode);
+		}
+
+		if (auto childNode = _0Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
 		}
 
 		if (auto _0BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
@@ -137,6 +187,11 @@ void Ape::KinectPlugin::Init()
 			_1Body.push_back(myNode);
 		}
 
+		if (auto childNode = _1Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
+		}
+
 		if (auto _1BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("1BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
 			_1BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
@@ -164,6 +219,11 @@ void Ape::KinectPlugin::Init()
 		if (auto myNode = mpScene->createNode("2BodyNode" + index).lock())
 		{
 			_2Body.push_back(myNode);
+		}
+
+		if (auto childNode = _2Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
 		}
 
 		if (auto _2BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("2BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
@@ -195,6 +255,11 @@ void Ape::KinectPlugin::Init()
 			_3Body.push_back(myNode);
 		}
 
+		if (auto childNode = _3Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
+		}
+
 		if (auto _3BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("3BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
 			_3BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
@@ -222,6 +287,11 @@ void Ape::KinectPlugin::Init()
 		if (auto myNode = mpScene->createNode("4BodyNode" + index).lock())
 		{
 			_4Body.push_back(myNode);
+		}
+
+		if (auto childNode = _4Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
 		}
 
 		if (auto _4BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("4BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
@@ -253,6 +323,11 @@ void Ape::KinectPlugin::Init()
 			_5Body.push_back(myNode);
 		}
 
+		if (auto childNode = _5Body[i].lock())
+		{
+			childNode->setParentNode(RootNode);
+		}
+
 		if (auto _5BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("5BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
 			_5BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
@@ -261,14 +336,6 @@ void Ape::KinectPlugin::Init()
 		}
 	}
 #pragma endregion
-
-	CloudSize = (int)(size*pointratio);
-	if (CloudSize % 3 != 0)
-	{
-		CloudSize -= CloudSize % 3;
-	}
-	KPts.resize(CloudSize);
-	KCol.resize(CloudSize);
 
 	std::cout << "KinectPlugin Initialized" << std::endl;
 }
@@ -284,7 +351,8 @@ void Ape::KinectPlugin::Run()
 		{
 			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
 			{
-				pointCloudNode->setPosition(Ape::Vector3(0, 0, 0));
+				pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+				pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
 				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					pointCloudNodeText->setCaption("Points_Kinect");

@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include <ApeIPointCloud.h>
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
+#define APE_SOURCE_DIR "C:\\Apertus\\ApertusVR" //nem valtozik telepitessel!
 
 namespace Ape
 {
@@ -92,7 +93,7 @@ namespace Ape
 
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
-
+		Ape::NodeWeakPtr RootNode;
 		std::vector<Ape::NodeWeakPtr> _0Body;
 		std::vector<Ape::NodeWeakPtr> _1Body;
 		std::vector<Ape::NodeWeakPtr> _2Body;
@@ -119,6 +120,9 @@ namespace Ape
 
 		Ape::PointCloudPoints KPts;//stores the actual point coordinates
 		Ape::PointCloudColors KCol;//stores the actual point colors
+
+		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
+		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
 
 		Ape::IScene* mpScene;
 
