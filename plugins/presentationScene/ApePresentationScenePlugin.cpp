@@ -623,11 +623,19 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_autoSW.png";
 	storyElement.browserPosition = Ape::Vector3(0, -200, 0);
 	manageBrowser(storyElement);
+	storyElement.browserName = "CNN_content";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/bg/index.html";
+	storyElement.browserPosition = Ape::Vector3(-400, 225, -10);
+	storyElement.browserWidth = 425;
+	storyElement.browserHeight = 213;
+	storyElement.browserResolutionVertical = 2048;
+	storyElement.browserResolutionHorizontal = 1024;
+	manageBrowser(storyElement);
 	
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-142, 0, 468), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 213, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-400, 0, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-400, 30, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
 	mStoryElements.push_back(StoryElement(Ape::Vector3(300, 0, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
 	mStoryElements.push_back(StoryElement(Ape::Vector3(74, 0, 242), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
