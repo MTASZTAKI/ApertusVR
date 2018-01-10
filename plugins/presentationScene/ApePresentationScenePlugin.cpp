@@ -25,7 +25,7 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	orientation2.FromAngleAxis(angle, axis);
 	mOldXMLFormatRotationQuaternion = orientation * orientation2;
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mTranslateSpeedFactor = 0.5;
+	mTranslateSpeedFactor = 2;
 	mRotateSpeedFactor = 0.5;
 	mCurrentStoryElementIndex = 0;
 	mStoryElements = std::vector<StoryElement>();
@@ -597,50 +597,47 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserURL = "http://185.80.48.189/polypdb/";
 	storyElement.browserPosition = Ape::Vector3(0, 0, 0);
 	storyElement.browserOrientation = defaultOrientation;
-	storyElement.browserWidth = 425;
-	storyElement.browserHeight = 213;
+	storyElement.browserWidth = 300;
+	storyElement.browserHeight = 225;
 	storyElement.browserZoom = 0;
-	storyElement.browserResolutionVertical = 2048;
-	storyElement.browserResolutionHorizontal = 1024;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 768;
 	manageBrowser(storyElement);
 	storyElement.browserName = "CNN";
 	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
-	storyElement.browserPosition = Ape::Vector3(-400, 0, 0);
+	storyElement.browserPosition = Ape::Vector3(-300, 0, 0);
 	manageBrowser(storyElement);
 	storyElement.browserName = "endo_content";
 	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content.png";
-	storyElement.browserPosition = Ape::Vector3(0, 213, 0);
-	storyElement.browserWidth = 213;
-	storyElement.browserHeight = 213;
-	storyElement.browserResolutionVertical = 1024;
-	storyElement.browserResolutionHorizontal = 1024;
+	storyElement.browserPosition = Ape::Vector3(0, 225, 0);
 	manageBrowser(storyElement);
 	storyElement.browserName = "endo_contract";
 	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_contract.png";
-	storyElement.browserPosition = Ape::Vector3(300, 0, 0);
+	storyElement.browserPosition = Ape::Vector3(260, 0, -10);
 	manageBrowser(storyElement);
 	storyElement.browserName = "endo_autoSW";
 	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_autoSW.png";
-	storyElement.browserPosition = Ape::Vector3(0, -200, 0);
+	storyElement.browserPosition = Ape::Vector3(0, -225, 0);
 	manageBrowser(storyElement);
 	storyElement.browserName = "CNN_content";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/bg/index.html";
-	storyElement.browserPosition = Ape::Vector3(-400, 225, -10);
-	storyElement.browserWidth = 425;
-	storyElement.browserHeight = 213;
-	storyElement.browserResolutionVertical = 2048;
-	storyElement.browserResolutionHorizontal = 1024;
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_cnn_content.png";
+	storyElement.browserPosition = Ape::Vector3(-300, 200, -10);
+	manageBrowser(storyElement);
+	storyElement.browserName = "CNN_regression";
+	storyElement.browserURL = "https://image.slidesharecdn.com/8-1209490505240696-9/95/multiple-linear-regression-16-638.jpg?cb=1489720634";
+	storyElement.browserPosition = Ape::Vector3(-300, 250, 0);
 	manageBrowser(storyElement);
 	
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-142, 0, 468), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 213, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-400, 30, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
-	mStoryElements.push_back(StoryElement(Ape::Vector3(300, 0, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
-	mStoryElements.push_back(StoryElement(Ape::Vector3(74, 0, 242), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, -200, 181), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_autoSW
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-142, 0, 468), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
+	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 30, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN + content
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 250, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_regression
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
+	mStoryElements.push_back(StoryElement(Ape::Vector3(300, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
+	mStoryElements.push_back(StoryElement(Ape::Vector3(74, 0, 342), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, -225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_autoSW
+	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	/*endo meeting 2017.12.19 end*/
 }
@@ -939,55 +936,60 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
 		if (auto activeBrowser = mActiveBrowser.lock())
+		{
 			activeBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, true);
-		if (auto rayOverlayNode = mRayOverlayNode.lock())
-		{
-			rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
-			if (auto rayGeomtery = mRayGeometry.lock())
-				rayGeomtery->fireIntersectionQuery();
 		}
-		clock_t currentLeftClickTime;
-		currentLeftClickTime = clock();
-		double elapsedTimInMSecs = (currentLeftClickTime - mLastLeftClickTime) / (CLOCKS_PER_SEC / 1000);
-		if (elapsedTimInMSecs < 250)
+		else
 		{
-			float planeWidth, planeHeight, windowHeight, windowWidth, planeRatio, windowRatio, cameraDistance = 0.0f;
-			if (auto activeBrowser = mActiveBrowser.lock())
+			if (auto rayOverlayNode = mRayOverlayNode.lock())
 			{
-				if (auto geometry = std::static_pointer_cast<Ape::IPlaneGeometry>(activeBrowser->getGeometry().lock()))
+				rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
+				if (auto rayGeomtery = mRayGeometry.lock())
+					rayGeomtery->fireIntersectionQuery();
+			}
+			clock_t currentLeftClickTime;
+			currentLeftClickTime = clock();
+			double elapsedTimInMSecs = (currentLeftClickTime - mLastLeftClickTime) / (CLOCKS_PER_SEC / 1000);
+			if (elapsedTimInMSecs < 250)
+			{
+				float planeWidth, planeHeight, windowHeight, windowWidth, planeRatio, windowRatio, cameraDistance = 0.0f;
+				if (auto activeBrowser = mActiveBrowser.lock())
 				{
-					planeHeight = geometry->getParameters().size.x;
-					planeWidth = geometry->getParameters().size.y;
-					windowWidth = mpMainWindow->getWidth();
-					windowHeight = mpMainWindow->getHeight();
-					planeRatio = planeWidth / planeHeight;
-					windowRatio = windowWidth / windowHeight;
-					if (auto camera = mCamera.lock())
+					if (auto geometry = std::static_pointer_cast<Ape::IPlaneGeometry>(activeBrowser->getGeometry().lock()))
 					{
-						if (windowRatio < planeRatio)
+						planeHeight = geometry->getParameters().size.x;
+						planeWidth = geometry->getParameters().size.y;
+						windowWidth = mpMainWindow->getWidth();
+						windowHeight = mpMainWindow->getHeight();
+						planeRatio = planeWidth / planeHeight;
+						windowRatio = windowWidth / windowHeight;
+						if (auto camera = mCamera.lock())
 						{
-							float fieldOfViewX = 2 * atan(tan(camera->getFOVy().getRadian() * 0.5) * windowRatio);
-							cameraDistance = (planeWidth / 2) / (tan(fieldOfViewX / 2));
+							if (windowRatio < planeRatio)
+							{
+								float fieldOfViewX = 2 * atan(tan(camera->getFOVy().getRadian() * 0.5) * windowRatio);
+								cameraDistance = (planeWidth / 2) / (tan(fieldOfViewX / 2));
+							}
+							else
+								cameraDistance = (planeHeight / 2) / (tan(camera->getFOVy().getRadian() / 2));
 						}
-						else
-							cameraDistance = (planeHeight / 2) / (tan(camera->getFOVy().getRadian() / 2));
-					}
-					if (auto userNode = mUserNode.lock())
-					{
-						if (auto geometryNode = geometry->getParentNode().lock())
+						if (auto userNode = mUserNode.lock())
 						{
-							Ape::Vector3 position = geometryNode->getDerivedOrientation() * Ape::Vector3(0, -cameraDistance, 0) + geometryNode->getDerivedPosition();
-							Ape::Quaternion orientation = geometryNode->getDerivedOrientation();
-							mUserNodePositionBeforeFullScreen = userNode->getPosition();
-							mUserNodeOrientationBeforeFullScreen = userNode->getOrientation();
-							userNode->setPosition(position);
-							userNode->setOrientation(orientation * mOldXMLFormatRotationQuaternion.Inverse());
+							if (auto geometryNode = geometry->getParentNode().lock())
+							{
+								Ape::Vector3 position = geometryNode->getDerivedOrientation() * Ape::Vector3(0, -cameraDistance, 0) + geometryNode->getDerivedPosition();
+								Ape::Quaternion orientation = geometryNode->getDerivedOrientation();
+								mUserNodePositionBeforeFullScreen = userNode->getPosition();
+								mUserNodeOrientationBeforeFullScreen = userNode->getOrientation();
+								userNode->setPosition(position);
+								userNode->setOrientation(orientation * mOldXMLFormatRotationQuaternion.Inverse());
+							}
 						}
 					}
 				}
 			}
+			mLastLeftClickTime = currentLeftClickTime;
 		}
-		mLastLeftClickTime = currentLeftClickTime;
 	}
 	else if (id == OIS::MouseButtonID::MB_Right)
 	{
