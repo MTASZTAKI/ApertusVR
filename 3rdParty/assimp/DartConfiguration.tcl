@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: C:/github/ApertusVR/3rdParty/assimp
-BuildDirectory: C:/github/ApertusVR/3rdParty/assimp
+SourceDirectory: C:/Apertus/ApertusVR/3rdParty/assimp
+BuildDirectory: C:/Apertus/ApertusVR/3rdParty/assimp
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: DESKTOP-OL9U25O
+Site: DESKTOP-0U0NBHK
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Win32-MSBuild
@@ -33,7 +33,7 @@ ScpCommand: SCPCOMMAND-NOTFOUND
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "C:/github/ApertusVR/3rdParty/assimp"
+ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "C:/Apertus/ApertusVR/3rdParty/assimp"
 MakeCommand: "C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -46,7 +46,7 @@ CVSCommand: CVSCOMMAND-NOTFOUND
 CVSUpdateOptions: -d -A -P
 
 # Subversion options
-SVNCommand: SVNCOMMAND-NOTFOUND
+SVNCommand: C:/Program Files/TortoiseSVN/bin/svn.exe
 SVNOptions: 
 SVNUpdateOptions: 
 
@@ -69,8 +69,8 @@ UpdateOptions:
 UpdateType: 
 
 # Compiler info
-Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.10.25017/bin/HostX86/x64/cl.exe
-CompilerVersion: 19.10.25019.0
+Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Tools/MSVC/14.11.25503/bin/HostX86/x64/cl.exe
+CompilerVersion: 19.11.25508.2
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

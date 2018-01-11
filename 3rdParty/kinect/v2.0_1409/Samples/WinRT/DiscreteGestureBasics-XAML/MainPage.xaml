@@ -1,0 +1,73 @@
+﻿<Page
+    x:Class="Microsoft.Samples.Kinect.DiscreteGestureBasics.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Microsoft.Samples.Kinect.DiscreteGestureBasics"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Unloaded="MainPage_Unloaded"
+    >
+    <Page.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+
+        <DataTemplate x:Name="GestureResultDataTemplate">
+            <Grid Width="Auto" Margin="5" Background="{Binding BodyColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Body Index" FontSize="14" FontFamily="Segoe UI" FontWeight="SemiBold" Margin="5 0 0 0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding BodyIndex}" FontSize="14" FontFamily="Segoe UI" FontWeight="SemiBold" Width="150" Margin="5 0 5 0"/>
+                <Image Grid.ColumnSpan="2" Grid.Row="1" Source="{Binding ImageSource}" Stretch="Uniform" Margin="5"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Seated" FontSize="18" FontFamily="Segoe UI" FontWeight="SemiBold" Margin="5 0 0 0"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Detected}" FontSize="18" FontFamily="Segoe UI" FontWeight="SemiBold" Width="150" Margin="5 0 5 0"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Confidence" FontSize="18" FontFamily="Segoe UI" FontWeight="SemiBold" Margin="5 0 0 0"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Confidence}" FontSize="18" FontFamily="Segoe UI" FontWeight="SemiBold" Width="150" Margin="5 0 5 0"/>
+            </Grid>
+        </DataTemplate>
+
+    </Page.Resources>
+
+    <Grid Background="White" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Source="Images/Logo.png" HorizontalAlignment="Left" Stretch="Fill" Height="32" Width="81" Margin="20 10 0 10"/>
+        <Image Grid.Row="0" Source="Images/Status.png" Stretch="None" HorizontalAlignment="Center" />
+        <TextBlock Grid.Row="0" Text="Discrete Gesture Basics" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18" Margin="0 10 20 10"/>
+
+        <Grid x:Name="contentGrid" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical" Margin="10" Grid.Column="2" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Viewbox x:Name="kinectBodyViewbox">
+                    <Grid x:Name="bodyDisplayGrid" Background="Black" Height="500" Width="500"/>
+                </Viewbox>
+                <TextBlock Text="This program can track up to 6 people simultaneously. Stand in front of the sensor to get tracked. Sit down to trigger the 'Seated' gesture." TextWrapping="Wrap" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="16"/>
+            </StackPanel>
+        </Grid>
+
+        <TextBlock Grid.Row="2" Text="{Binding StatusText}" Margin="20 0 20 20" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="14" />
+    </Grid>
+</Page>

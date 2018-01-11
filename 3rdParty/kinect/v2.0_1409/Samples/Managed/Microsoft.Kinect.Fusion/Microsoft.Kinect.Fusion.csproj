@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{58851747-F078-44E1-94B0-99EF065B3319}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Kinect.Fusion</RootNamespace>
+    <AssemblyName>Microsoft.Kinect.Fusion</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Kinect">
+      <HintPath>$(KINECTSDK20_DIR)\Assemblies\Microsoft.Kinect.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CameraParameters.cs" />
+    <Compile Include="CameraPoseFinder.cs" />
+    <Compile Include="CameraPoseFinderParameters.cs" />
+    <Compile Include="ColorMesh.cs" />
+    <Compile Include="ColorReconstruction.cs" />
+    <Compile Include="MatchCandidates.cs" />
+    <Compile Include="Matrix4.cs" />
+    <Compile Include="NativeArray.cs" />
+    <Compile Include="FusionColorImageFrame.cs" />
+    <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="FusionFloatImageFrame.cs" />
+    <Compile Include="FusionDepthProcessor.cs" />
+    <Compile Include="FusionImageFrame.cs" />
+    <Compile Include="FusionPointCloudImageFrame.cs" />
+    <Compile Include="Mesh.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Reconstruction.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vector3.cs" />
+    <Compile Include="ReconstructionParameters.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup Label="UserMacros">
+    <KinectToolkitDllVersion>20</KinectToolkitDllVersion>
+    <KinectFusionLib>Kinect$(KinectToolkitDllVersion).Fusion</KinectFusionLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+    <Copy Condition="'$(Platform)' == 'x86'" SourceFiles="$(KINECTSDK20_DIR)Redist\Fusion\x86\$(KinectFusionLib).dll" DestinationFolder="$(OutputPath)">
+    </Copy>
+    <Copy Condition="'$(Platform)' == 'x64'" SourceFiles="$(KINECTSDK20_DIR)Redist\Fusion\x64\$(KinectFusionLib).dll" DestinationFolder="$(OutputPath)">
+    </Copy>
+    <Copy Condition="'$(Platform)' == 'AnyCPU'" SourceFiles="$(KINECTSDK20_DIR)Redist\Fusion\x64\$(KinectFusionLib).dll" DestinationFolder="$(OutputPath)\x64">
+    </Copy>
+    <Copy Condition="'$(Platform)' == 'AnyCPU'" SourceFiles="$(KINECTSDK20_DIR)Redist\Fusion\x86\$(KinectFusionLib).dll" DestinationFolder="$(OutputPath)\x86">
+    </Copy>
+  </Target>
+</Project>
