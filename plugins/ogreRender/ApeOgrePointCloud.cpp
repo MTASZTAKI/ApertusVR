@@ -55,7 +55,8 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 	}
 	sub->useSharedVertices = true;
 	sub->operationType = Ogre::RenderOperation::OT_POINT_LIST;
-	msh->_setBoundingSphereRadius(boundigSphereRadius);
+	msh->_setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-boundigSphereRadius, -boundigSphereRadius, -boundigSphereRadius), Ogre::Vector3(boundigSphereRadius, boundigSphereRadius, boundigSphereRadius)), true);
+	//msh->_setBoundingSphereRadius(boundigSphereRadius);
 	msh->load();
 }
 

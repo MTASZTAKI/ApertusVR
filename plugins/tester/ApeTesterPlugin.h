@@ -78,6 +78,8 @@ private:
 
 	Ape::PointCloudWeakPtr mPointCloud;
 
+	int mPointCloudSize;
+
 public:
 	ApeTesterPlugin();
 

@@ -1850,7 +1850,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								if (mpSceneMgr->hasSceneNode(parentNodeName))
 								{
 									if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+									{
+										if (ogreEntity->getParentSceneNode())
+											ogreEntity->detachFromParent();
 										ogreParentNode->attachObject(ogreEntity);
+									}
 								}
 							}
 						}
