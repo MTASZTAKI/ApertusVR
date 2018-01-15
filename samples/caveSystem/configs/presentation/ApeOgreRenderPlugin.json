@@ -18,8 +18,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 16,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {
@@ -39,7 +39,7 @@
         },
         {
             "enable": true,
-            "monitorIndex": 3,
+            "monitorIndex": 1,
             "name": "window1",
             "resolution": {
                 "width": 1400,
@@ -50,8 +50,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 16,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {
@@ -62,6 +62,38 @@
                     "height": 1050,
                     "camera": {
                         "name": "camera1",
+                        "nearClip": 1,
+                        "farClip": 10000,
+                        "fovY": 45
+                    }
+                }
+            ]
+        },
+        {
+            "enable": true,
+            "monitorIndex": 3,
+            "name": "window3",
+            "resolution": {
+                "width": 1400,
+                "height": 1050,
+                "fullScreen": true
+            },
+            "miscParams": {
+                "vSync": true,
+                "vSyncInterval": 1,
+                "colorDepth": 32,
+                "FSAA": 16,
+                "FSAAHint": "Quality"
+            },
+            "viewports": [
+                {
+                    "zOrder": 0,
+                    "left": 0,
+                    "top": 0,
+                    "width": 1400,
+                    "height": 1050,
+                    "camera": {
+                        "name": "camera3",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -82,8 +114,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 16,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {
@@ -103,38 +135,6 @@
         },
         {
             "enable": true,
-            "monitorIndex": 1,
-            "name": "window3",
-            "resolution": {
-                "width": 1400,
-                "height": 1050,
-                "fullScreen": true
-            },
-            "miscParams": {
-                "vSync": true,
-                "vSyncInterval": 1,
-                "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
-            },
-            "viewports": [
-                {
-                    "zOrder": 0,
-                    "left": 0,
-                    "top": 0,
-                    "width": 1400,
-                    "height": 1050,
-                    "camera": {
-                        "name": "camera3",
-                        "nearClip": 1,
-                        "farClip": 10000,
-                        "fovY": 45
-                    }
-                }
-            ]
-        },
-		{
-            "enable": true,
             "monitorIndex": 4,
             "name": "window4",
             "resolution": {
@@ -146,8 +146,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 16,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {
@@ -165,7 +165,7 @@
                 }
             ]
         },
-		{
+        {
             "enable": true,
             "monitorIndex": 5,
             "name": "window5",
@@ -178,8 +178,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 16,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {
