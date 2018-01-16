@@ -37,7 +37,7 @@ set (APE_OUTPUT_DIR_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 set (APE_OUTPUT_DIR_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
 #set-up rapidjson
-set(RAPIDJSON_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/3rdParty/rapidjson/include")	
+set(RAPIDJSON_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/3rdParty/rapidjson/include")
 
 # raknet patch log begin
 # VariableListDeltaTracker.h was changed
@@ -69,24 +69,24 @@ if (NOT RAKNET_READY)
 #build raknet
 	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 		message (STATUS "Configuring raknet for ${CONF}, please wait.....")
-		execute_process ( 
+		execute_process (
 				COMMAND ${CMAKE_COMMAND} -Wno-dev
 				-DCMAKE_CONFIGURATION_TYPES:STRING=${CONF}
-				-DCMAKE_BUILD_TYPE:STRING=${CONF}		
+				-DCMAKE_BUILD_TYPE:STRING=${CONF}
 				-DCMAKE_COMPILE_OPTIONS:STRING=${EXTRA_COMPILE_OPTIONS}
 				-DCMAKE_INSTALL_PREFIX:PATH=${RAKNET_INSTALL_DIR}
 				-DRAKNET_ENABLE_DLL=OFF
-				-DRAKNET_ENABLE_SAMPLES=OFF	
+				-DRAKNET_ENABLE_SAMPLES=OFF
 				-DRAKNET_GENERATE_INCLUDE_ONLY_DIR=ON
 				-DCMAKE_OSX_ARCHITECTURES=${DS_OSX_ARCHITECTURE}
-				-G ${CMAKE_GENERATOR} 
+				-G ${CMAKE_GENERATOR}
 				${RAKNET_SRC_DIR}
 				WORKING_DIRECTORY ${RAKNET_SRC_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
-				)		
+				)
 		reportError (output if error)
 		message (STATUS "Building raknet for ${CONF}, please wait.....")
-		execute_process ( 
+		execute_process (
 			COMMAND ${CMAKE_COMMAND} --build ${RAKNET_SRC_DIR} --config ${CONF} --target RakNetLibStatic
 			WORKING_DIRECTORY ${RAKNET_SRC_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
@@ -101,8 +101,17 @@ if (WIN32)
 	set(RAKNET_INCLUDE_DIR ${RAKNET_HOME}/Source)
 endif ()
 
+if (APPLE)
+	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_DEBUG ${RAKNET_HOME}/Lib/LibStatic/Debug/libRakNetLibStatic.a)
+	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_RELEASE ${RAKNET_HOME}/Lib/LibStatic/Release/libRakNetLibStatic.a)
+	set(RAKNET_INCLUDE_DIR ${RAKNET_HOME}/Source)
+endif()
+
+
 
 # cUrl
+if (WIN32)
+
 set (CURL_READY FALSE)
 
 set(CURL_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/curl)
@@ -191,6 +200,12 @@ else ()
 	message(STATUS "curl: ${CURL_LIB_OUTPUT_PATH_RELEASE} already exists. Skipping copy.")
 endif ()
 
+endif ()
+
+
+
+
+
 
 #Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -213,6 +228,8 @@ endif()
 
 add_subdirectory (common)
 add_subdirectory (core)
-add_subdirectory (plugins)
-add_subdirectory (samples)
-add_subdirectory (servers)
+if (WIN32)
+	add_subdirectory (plugins)
+	add_subdirectory (samples)
+	add_subdirectory (servers)
+endif()
