@@ -44,6 +44,8 @@ SOFTWARE.*/
 #define THIS_PLUGINNAME "ApeKinectPlugin"
 #define APE_SOURCE_DIR "C:\\Apertus\\ApertusVR" //nem valtozik telepitessel!
 
+//#define operatortest
+
 namespace Ape
 {
 	class KinectPlugin : public Ape::IPlugin
@@ -74,14 +76,20 @@ namespace Ape
 		void Update();
 
 		void GetBodyData(IMultiSourceFrame* pframe);
-		void GetRGBData(IMultiSourceFrame* pframe);
+		void GetBodyIndexes(IMultiSourceFrame* pframe);
 		void GetDepthData(IMultiSourceFrame* pframe);
+		void GetRGBData(IMultiSourceFrame* pframe);
 
 		/// <summary>
 		/// Initializes the default Kinect sensor
 		/// </summary>
 		/// <returns>indicates success or failure</returns>
 		HRESULT Ape::KinectPlugin::InitializeDefaultSensor();
+
+		void  Ape::KinectPlugin::GetOperator();
+		void Ape::KinectPlugin::GetOperatorPts(); 
+		void Ape::KinectPlugin::GetOperatorColrs();
+		float  Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point);
 
 		/// <summary>
 		/// Handle new body data
@@ -107,19 +115,21 @@ namespace Ape
 		IKinectSensor*          m_pKinectSensor;
 		ICoordinateMapper*      m_pCoordinateMapper;
 
-		IMultiSourceFrame* pFrame;
 		IMultiSourceFrameReader* reader;   // Kinect data source
 
 		const int colorwidth = 1920;
 		const int colorheight = 1080;
 
-		int size = 651264; //number of coordinates in point cloud
+		const int size = 651264; //number of coordinates in point cloud
 		int CloudSize;
 		bool pointsGenerated = false;
 		double pointratio = 1;
 
 		Ape::PointCloudPoints KPts;//stores the actual point coordinates
 		Ape::PointCloudColors KCol;//stores the actual point colors
+
+		Ape::PointCloudPoints OperatorPoints;
+		Ape::PointCloudColors OperatorColors;
 
 		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
 		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
@@ -137,6 +147,13 @@ namespace Ape
 		void eventCallBack(const Ape::Event& event);
 
 		Ape::PointCloudWeakPtr mPointCloud;
+		Ape::PointCloudWeakPtr mOperatorPointCloud;
+
+		bool _1Detected = false;
+		bool operatorPointsGenerated = false;
+		std::vector<int> indexes;
+
+	
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()

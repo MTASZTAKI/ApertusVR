@@ -42,7 +42,7 @@ const int colorheight = 1080;
 unsigned char rgbimage[colorwidth*colorheight * 4];
 CameraSpacePoint depth2xyz[width*height];
 ColorSpacePoint depth2rgb[width*height];
-
+BYTE bodyIdx[width*height];
 
 Ape::KinectPlugin::KinectPlugin()
 {
@@ -99,6 +99,8 @@ void Ape::KinectPlugin::Init()
 	}
 	KPts.resize(CloudSize);
 	KCol.resize(CloudSize);
+	OperatorPoints.resize(CloudSize);
+	OperatorColors.resize(CloudSize);
 
 	std::stringstream kinectPluginConfigFilePath;
 	kinectPluginConfigFilePath << APE_SOURCE_DIR << "\\plugins\\kinect\\configs\\KinectConf.json";
@@ -345,7 +347,8 @@ void Ape::KinectPlugin::Run()
 	while (true)
 	{
 		Update();
-		
+
+#ifdef operatortest
 		//Generate the Point Cloud
 		if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
 		{
@@ -372,11 +375,11 @@ void Ape::KinectPlugin::Run()
 
 		//Refresh the Point Cloud
 		if (auto pointCloud = mPointCloud.lock())
-		{
-			
+		{			
 			pointCloud->updatePoints(KPts);
 			pointCloud->updateColors(KCol);
 		}
+#endif // operatortest
 
 		//Draw body joints
 #pragma region DrawBody
@@ -496,7 +499,36 @@ void Ape::KinectPlugin::Run()
 		}
 #pragma endregion
 
-		std::this_thread::sleep_for (std::chrono::milliseconds(20));
+		if (_1Detected && !operatorPointsGenerated)
+		{
+			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectOperator").lock())
+			{
+				pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+				pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+				{
+					pointCloudNodeText->setCaption("Points_KinectOperator");
+					pointCloudNodeText->setOffset(Ape::Vector3(0.0f, -1.0f, 0.0f));
+					pointCloudNodeText->setParentNode(pointCloudNode);
+				}
+				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
+				{
+					pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
+					pointCloud->setParentNode(pointCloudNode);
+					mOperatorPointCloud = pointCloud;
+				}
+			}
+
+			operatorPointsGenerated = true;
+		}
+
+		if (auto pointCloud = mOperatorPointCloud.lock())
+		{
+			pointCloud->updatePoints(OperatorPoints);
+			pointCloud->updateColors(OperatorColors);
+		}
+
+		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
@@ -504,22 +536,22 @@ void Ape::KinectPlugin::Run()
 
 void Ape::KinectPlugin::Step()
 {
-	
+
 }
 
 void Ape::KinectPlugin::Stop()
 {
-	
+
 }
 
 void Ape::KinectPlugin::Suspend()
 {
-	
+
 }
 
 void Ape::KinectPlugin::Restart()
 {
-	
+
 }
 
 /// <summary>
@@ -548,8 +580,8 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 
 		if (SUCCEEDED(hr))
 		{
-			hr= m_pKinectSensor->OpenMultiSourceFrameReader(
-				FrameSourceTypes::FrameSourceTypes_Depth | FrameSourceTypes::FrameSourceTypes_Color | FrameSourceTypes::FrameSourceTypes_Body,
+			hr = m_pKinectSensor->OpenMultiSourceFrameReader(
+				FrameSourceTypes::FrameSourceTypes_Depth | FrameSourceTypes::FrameSourceTypes_Color | FrameSourceTypes::FrameSourceTypes_BodyIndex | FrameSourceTypes::FrameSourceTypes_Body ,
 				&reader);
 		}
 
@@ -558,7 +590,7 @@ HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 
 	if (!m_pKinectSensor || FAILED(hr))
 	{
-		std::cout<<"No ready Kinect found!"<<std::endl;
+		std::cout << "No ready Kinect found!" << std::endl;
 		return E_FAIL;
 	}
 
@@ -575,23 +607,95 @@ void Ape::KinectPlugin::Update()
 		return;
 	}
 
-	pFrame = NULL;
+	IMultiSourceFrame* pFrame = NULL;
 
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
+		//std::cout << "update" << std::endl;
 
 	if (SUCCEEDED(hr))
 	{
-		GetBodyData(pFrame);
+/*		indexes.clear();*/
 		GetDepthData(pFrame);
+		GetBodyData(pFrame);
 		GetRGBData(pFrame);
+		GetBodyIndexes(pFrame);
 
-		pFrame->Release();
+
+		//GetOperatorPts();
+		//GetOperatorColrs();
 	}
+
+	SafeRelease(pFrame);
+}
+
+void Ape::KinectPlugin::GetOperatorColrs()
+{
+	OperatorColors.clear();
+
+	if (indexes.size() > (UINT64)1)
+	{
+		std::cout << "color start" << std::endl;
+		for (UINT64 i = 0; i < indexes.size(); i++)
+		{
+			OperatorColors.push_back(KCol[3 * indexes[i]]);
+			OperatorColors.push_back(KCol[3 * indexes[i] + 1]);
+			OperatorColors.push_back(KCol[3 * indexes[i] + 2]);
+		}
+	}
+	else
+	{
+		OperatorColors = {0.0, 0.0, 0.0};
+	}
+	std::cout << "color finished" << std::endl;
+}
+
+void Ape::KinectPlugin::GetOperatorPts()
+{
+	OperatorPoints.clear();
+	_1Detected = false;
+
+	for (int n = 0; n < BODY_COUNT; n++)
+	{
+		if (body[n][0][0] != 0 && body[n][0][1] != 0 && body[n][0][2] != 0 && !_1Detected)
+		{
+			_1Detected = true;
+			std::cout << "detected" << std::endl;
+			for (int i = 0; i < CloudSize / 3; i++)
+			{
+				for (int j = 0; j < 25; j++)
+				{
+					std::vector<float> Point = { KPts[3 * i], KPts[3 * i + 1], KPts[3 * i + 2] };
+					std::vector<float> Joint = {100 * body[n][j][0], 100 * body[n][j][1], 100 * body[n][j][2] };
+					float distance = GetDistance(Joint, Point);
+
+					if (j == 0 && distance < 80.0 && distance > 0.0)
+					{
+						indexes.push_back(i);
+						OperatorPoints.push_back(Point[0]);
+						OperatorPoints.push_back(Point[1]);
+						OperatorPoints.push_back(Point[2]);
+					}
+				}
+			}
+			std::cout << "finished" << std::endl;
+		}
+	}
+
+	if (!_1Detected)
+		OperatorPoints = {0.0, 0.0, 0.0};
+}
+
+float  Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point)
+{
+	float dist = sqrt(pow((point[0]-joint[0]),2.0)+ pow((point[1] - joint[1]), 2.0) + pow((point[2] - joint[2]), 2.0));
+
+	return dist;
 }
 
 void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 {
-	IColorFrame* pColorFrame;
+	//std::cout << "rgb" << std::endl;
+	IColorFrame* pColorFrame = NULL;
 	IColorFrameReference* pColorFrameRef = NULL;
 
 	HRESULT hr = pframe->get_ColorFrameReference(&pColorFrameRef);
@@ -601,12 +705,13 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 		hr = pColorFrameRef->AcquireFrame(&pColorFrame);
 	}
 
+		SafeRelease(pColorFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		if (pColorFrameRef) pColorFrameRef->Release();
+		//std::cout << "rgb got" << std::endl;
 		
 		// Get data from frame
-		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);	
+		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);
 
 		Ape::PointCloudColors colorpoints;
 
@@ -630,13 +735,82 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 
 		KCol = colorpoints;
 	}
+	SafeRelease(pColorFrame);
+}
 
-	if (pColorFrame) pColorFrame->Release();
+void Ape::KinectPlugin::GetBodyIndexes(IMultiSourceFrame* pframe)
+{
+	//std::cout << "idx" << std::endl;
+	IBodyIndexFrame* pIndexFrame = NULL;
+	IBodyIndexFrameReference* pIndexFrameRef = NULL;
+
+	HRESULT hr = pframe->get_BodyIndexFrameReference(&pIndexFrameRef);
+
+	if (SUCCEEDED(hr))
+	{
+		//std::cout << "ref found" << std::endl;
+		hr = pIndexFrameRef->AcquireFrame(&pIndexFrame);
+	}
+	//std::cout << "ref found gd" << std::endl;
+		SafeRelease(pIndexFrameRef);
+	if (SUCCEEDED(hr))
+	{
+		//std::cout << "idx got" << std::endl;
+		
+		hr = pIndexFrame->CopyFrameDataToArray(width*height, bodyIdx);
+		
+		if (SUCCEEDED(hr))
+		{
+			//std::cout << "success" << std::endl;
+			GetOperator();
+		}
+	}
+	SafeRelease(pIndexFrame);
+}
+
+void  Ape::KinectPlugin::GetOperator()
+{
+	Ape::PointCloudPoints OPoint;
+	Ape::PointCloudColors OColor;
+	int j = 0;
+
+	std::cout << std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]) << std::endl;
+	for (int i = 0; i < CloudSize/3; i++)
+	{
+		if (bodyIdx[i] != 0xff)
+		{
+			_1Detected = true;
+
+			OPoint.push_back(KPts[3 * i]);
+			OPoint.push_back(KPts[3 * i + 1]);
+			OPoint.push_back(KPts[3 * i + 2]);
+
+			OColor.push_back(KCol[3 * i]);
+			OColor.push_back(KCol[3 * i + 1]);
+			OColor.push_back(KCol[3 * i + 2]);
+			j++;
+		}
+		else
+		{
+			OPoint.push_back(0.0);
+			OPoint.push_back(0.0);
+			OPoint.push_back(0.0);
+
+			OColor.push_back(0.0);
+			OColor.push_back(0.0);
+			OColor.push_back(0.0);
+		}
+	}
+
+		OperatorPoints = OPoint;
+		OperatorColors = OColor;
+
 }
 
 void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 {
-	IDepthFrame* pDepthframe;
+	//std::cout << "depth" << std::endl;
+	IDepthFrame* pDepthframe = NULL;
 	IDepthFrameReference* pDepthFrameRef = NULL;
 
 	HRESULT hr = pframe->get_DepthFrameReference(&pDepthFrameRef);
@@ -646,14 +820,15 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 		hr = pDepthFrameRef->AcquireFrame(&pDepthframe);
 	}
 
+		SafeRelease(pDepthFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		if (pDepthFrameRef) pDepthFrameRef->Release();
+		//std::cout << "depth got" << std::endl;
 
 		// Get data from frame
-		unsigned int size;
+		unsigned int bsize;
 		unsigned short* buf;
-		hr = pDepthframe->AccessUnderlyingBuffer(&size, &buf);
+		hr = pDepthframe->AccessUnderlyingBuffer(&bsize, &buf);
 
 		if (SUCCEEDED(hr))
 		{
@@ -671,8 +846,7 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 
 	m_pCoordinateMapper->MapDepthFrameToColorSpace(width*height, buf, width*height, depth2rgb);
 	}
-
-	if (pDepthframe) pDepthframe->Release();
+	SafeRelease(pDepthframe);
 }
 
 ///<summary>
@@ -680,7 +854,8 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 ///</summary>
 void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 {
-	IBodyFrame* pBodyFrame;
+	//std::cout << "body" << std::endl;
+	IBodyFrame* pBodyFrame = NULL;
 	IBodyFrameReference* pBodyFrameRef = NULL;
 
 	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);
@@ -688,11 +863,12 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 	if (SUCCEEDED(hr))
 	{
 		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
-		if (pBodyFrameRef) pBodyFrameRef->Release();
 	}
+		SafeRelease(pBodyFrameRef);
 
 	if (SUCCEEDED(hr))
 	{
+		//std::cout << "body got" << std::endl;
 		IBody* ppBodies[BODY_COUNT] = { 0 };
 
 		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
@@ -707,7 +883,7 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 			SafeRelease(ppBodies[i]);
 		}
 	}
-	if (pBodyFrame) pBodyFrame->Release();
+	SafeRelease(pBodyFrame);
 }
 
 /// <summary>
