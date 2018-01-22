@@ -615,17 +615,23 @@ void Ape::KinectPlugin::Update()
 	if (SUCCEEDED(hr))
 	{
 /*		indexes.clear();*/
+		if (framecount%2==0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
+		{
 		GetDepthData(pFrame);
 		GetBodyData(pFrame);
 		GetRGBData(pFrame);
+		}
+		else
+		{
 		GetBodyIndexes(pFrame);
-
+		}
 
 		//GetOperatorPts();
 		//GetOperatorColrs();
 	}
 
 	SafeRelease(pFrame);
+	framecount++;
 }
 
 void Ape::KinectPlugin::GetOperatorColrs()
@@ -774,7 +780,7 @@ void  Ape::KinectPlugin::GetOperator()
 	Ape::PointCloudColors OColor;
 	int j = 0;
 
-	std::cout << std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]) << std::endl;
+	//std::cout << std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]) << std::endl;
 	for (int i = 0; i < CloudSize/3; i++)
 	{
 		if (bodyIdx[i] != 0xff)

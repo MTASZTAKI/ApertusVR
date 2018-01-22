@@ -153,7 +153,7 @@ namespace Ape
 		bool operatorPointsGenerated = false;
 		std::vector<int> indexes;
 
-	
+		int framecount = 0;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()
