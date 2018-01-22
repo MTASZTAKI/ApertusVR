@@ -41,15 +41,14 @@ namespace Ape
 		Ape::PointCloudColors colors;
 		float boundigSphereRadius;
 
-		struct PointCloudSetParameters
-		()
+		PointCloudSetParameters()
 		{
 			this->points = Ape::PointCloudPoints();
 			this->colors = Ape::PointCloudColors();
 			this->boundigSphereRadius = 0.0f;
 		}
 
-		struct PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
+		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
 		{
 			this->points = points;
 			this->colors = colors;

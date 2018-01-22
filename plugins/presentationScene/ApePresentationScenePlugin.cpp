@@ -625,17 +625,26 @@ void ApePresentationScenePlugin::Init()
 	manageBrowser(storyElement);
 	storyElement.browserName = "CNN_regression";
 	storyElement.browserURL = "https://image.slidesharecdn.com/8-1209490505240696-9/95/multiple-linear-regression-16-638.jpg?cb=1489720634";
+	storyElement.browserPosition = Ape::Vector3(-300, 450, 0);
+	manageBrowser(storyElement);
+	storyElement.browserName = "CNN_loss_optimizer";
+	storyElement.browserURL = "http://yangz3.github.io/Machine%20Learning/7.png";
 	storyElement.browserPosition = Ape::Vector3(-300, 250, 0);
+	manageBrowser(storyElement);
+	storyElement.browserName = "CNN_tensorflow";
+	storyElement.browserURL = "https://www.tensorflow.org/images/getting_started_final.png";
+	storyElement.browserPosition = Ape::Vector3(-600, 250, 0);
 	manageBrowser(storyElement);
 	
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
 	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 30, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN + content
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 250, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_regression
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 358, 384), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_regression + loss_optimizer
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 250, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_tensorflow
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
 	mStoryElements.push_back(StoryElement(Ape::Vector3(300, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
-	mStoryElements.push_back(StoryElement(Ape::Vector3(74, 0, 342), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
+	mStoryElements.push_back(StoryElement(Ape::Vector3(36, 0, 341), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, -225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_autoSW
 	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
