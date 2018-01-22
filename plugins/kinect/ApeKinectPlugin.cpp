@@ -103,7 +103,7 @@ void Ape::KinectPlugin::Init()
 	OperatorColors.resize(CloudSize);
 
 	std::stringstream kinectPluginConfigFilePath;
-	kinectPluginConfigFilePath << APE_SOURCE_DIR << "\\plugins\\kinect\\configs\\KinectConf.json";
+	kinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeKinectPlugin.json";
 	FILE* KinectPluginConfigFile = std::fopen(kinectPluginConfigFilePath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (KinectPluginConfigFile)

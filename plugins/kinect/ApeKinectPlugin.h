@@ -42,7 +42,6 @@ SOFTWARE.*/
 #include <ApeIPointCloud.h>
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
-#define APE_SOURCE_DIR "C:\\Apertus\\ApertusVR" //nem valtozik telepitessel!
 
 //#define operatortest
 

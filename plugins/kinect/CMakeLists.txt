@@ -89,6 +89,7 @@ add_library (ApeKinectPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (ApeKinectPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow MY_KINECT)
 	
 # Place target xxx into the specified folder in IDEs supporting it
+set_property (TARGET ApeKinectPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeKinectPlugin PROPERTY FOLDER "Plugins")
 
 
