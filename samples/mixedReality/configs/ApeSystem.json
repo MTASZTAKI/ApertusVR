@@ -23,7 +23,8 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-            "ApeIndustry40Plugin"
+            "ApeIndustry40Plugin",
+            "ApeKinectPlugin"
         ]
     }
 }
