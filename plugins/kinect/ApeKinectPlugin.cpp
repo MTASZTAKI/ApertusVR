@@ -118,14 +118,12 @@ void Ape::KinectPlugin::Init()
 			for (int i = 0; i < 3; i++)
 			{
 				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
-				std::cout << std::to_string(KPos[i]) << std::endl;
 			}
 
 			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
 			for (int i = 0; i < 4; i++)
 			{
 				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
-				std::cout << std::to_string(KRot[i]) << std::endl;
 			}
 
 			rapidjson::Value& KSSkeleton = jsonDocument["showSkeleton"];
