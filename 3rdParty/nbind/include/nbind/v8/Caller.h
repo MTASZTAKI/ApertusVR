@@ -65,7 +65,7 @@ struct Checker<TypeList<Args...>> {
 		bool validFlag = true;
 		(void)args; // Silence possible compiler warning about unused parameter.
 
-		pass(booleanAndTo(Args::checkType(args), validFlag)...);
+		//pass(booleanAndTo(Args::checkType(args), validFlag)...);
 
 		return(validFlag);
 	}

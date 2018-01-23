@@ -83,7 +83,7 @@ file(MAKE_DIRECTORY ${TARGET_MODULE_PATH_RELEASE}/logs)
 
 set(APEJS_FILE_PATH_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/js/)
 
-set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/configs/dev/paths.json)
+set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/modules/module_manager/config.json)
 file(WRITE ${CONFIG_FILE_PATH_SOURCE} "{\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"source\": {\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apePath\": \"${APE_SOURCE_DIR}/\",\n")
