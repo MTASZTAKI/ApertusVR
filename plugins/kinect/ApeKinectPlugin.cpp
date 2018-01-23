@@ -104,6 +104,7 @@ void Ape::KinectPlugin::Init()
 
 	std::stringstream kinectPluginConfigFilePath;
 	kinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeKinectPlugin.json";
+	std::cout << kinectPluginConfigFilePath.str() << std::endl;
 	FILE* KinectPluginConfigFile = std::fopen(kinectPluginConfigFilePath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (KinectPluginConfigFile)
@@ -117,11 +118,13 @@ void Ape::KinectPlugin::Init()
 			for (int i = 0; i < 3; i++)
 			{
 				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
+				std::cout << "sensorPosition" << std::endl;
 			}
 			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
 			for (int i = 0; i < 4; i++)
 			{
 				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
+				std::cout << "sensorOrientation" << std::endl;
 			}
 		}
 		fclose(KinectPluginConfigFile);

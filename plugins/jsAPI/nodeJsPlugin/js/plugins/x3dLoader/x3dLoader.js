@@ -466,7 +466,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			}
 			if (currentlyLoadingFileName == 'TwoUR5') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-				nodeObj.setPosition(new ape.nbind.Vector3(151, -78, -185));
+				nodeObj.setPosition(new ape.nbind.Vector3(151, -98, -185));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
 			}
 			if (currentlyLoadingFileName == 'SuperChargerLinkage') {
