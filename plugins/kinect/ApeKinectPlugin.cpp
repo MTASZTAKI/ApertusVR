@@ -608,6 +608,7 @@ void Ape::KinectPlugin::Update()
 	}
 
 	IMultiSourceFrame* pFrame = NULL;
+	IMultiSourceFrame* pFrame2 = NULL;
 
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
 		//std::cout << "update" << std::endl;
@@ -615,23 +616,30 @@ void Ape::KinectPlugin::Update()
 	if (SUCCEEDED(hr))
 	{
 /*		indexes.clear();*/
-		if (framecount%2==0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
-		{
+		//if (framecount%2==0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
+		//{
 		GetDepthData(pFrame);
 		GetBodyData(pFrame);
 		GetRGBData(pFrame);
-		}
-		else
-		{
-		GetBodyIndexes(pFrame);
-		}
+		//}
+		//else
+		//{
+		//GetBodyIndexes(pFrame);
+		//}
 
 		//GetOperatorPts();
 		//GetOperatorColrs();
 	}
 
 	SafeRelease(pFrame);
-	framecount++;
+/*	framecount++*/;
+
+	HRESULT hr2 = reader->AcquireLatestFrame(&pFrame2);
+	if (SUCCEEDED(hr2))
+	{
+		GetBodyIndexes(pFrame2);
+	}
+	SafeRelease(pFrame2);
 }
 
 void Ape::KinectPlugin::GetOperatorColrs()
