@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>RobotCalibration UI</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div class="nodeBox">
+            <p>NodeName:<input type="text" name="nodeName" id="nodeName"></p>
+
+            <div class="propertyBox">
+                <h3>Position</h3>
+                <p><span class="propertyName">X: </span><input type="text" name="posX" id="posX"></p>
+                <p><span class="propertyName">Y: </span><input type="text" name="posY" id="posY"></p>
+                <p><span class="propertyName">Z: </span><input type="text" name="posZ" id="posZ"></p>
+                <button id="posSubmit">Set</button>
+            </div>
+
+            <div class="propertyBox">
+                <h3>Quaternion</h3>
+                <p><span class="propertyName">W: </span><input type="text" name="quatX" id="quatW"></p>
+                <p><span class="propertyName">X: </span><input type="text" name="quatY" id="quatX"></p>
+                <p><span class="propertyName">Y: </span><input type="text" name="quatZ" id="quatY"></p>
+                <p><span class="propertyName">Z: </span><input type="text" name="quatZ" id="quatZ"></p>
+                <button id="quatSubmit">Set</button>
+            </div>
+
+        </div>
+    </body>
+</html>
