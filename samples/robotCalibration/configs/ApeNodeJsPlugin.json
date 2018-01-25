@@ -1,6 +1,10 @@
 {
     "pluginManager": {
         "plugins": [
+            {
+                "file":  "robotCalibration/robotCalibration.js",
+                "public": "robotCalibration/public"
+            }
         ]
     }
 }

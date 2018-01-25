@@ -20,31 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var moduleManager = require('./modules/module_manager/module_manager.js');
-var express = moduleManager.requireNodeModule('express');
-var utils = require('./modules/utils/utils.js');
-var logger = require("./modules/log_manager/log_manager.js");
-var pluginManager = require('./modules/plugin_manager/plugin_manager.js');
+var utils = require('../../modules/utils/utils.js');
+var ape = require('../../ape.js');
+var logger = require("../../modules/log_manager/log_manager.js");
+var assert = require('assert');
 
-exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
-
-exports.initApi = function(app) {
-	var router = express.Router();
-	router.use(require(moduleManager.sourcePath + 'api/index.js'));
-	router.use(require(moduleManager.sourcePath + 'api/node.js'));
-	router.use(require(moduleManager.sourcePath + 'api/light.js'));
-	router.use(require(moduleManager.sourcePath + 'api/text.js'));
-	router.use(require(moduleManager.sourcePath + 'api/fallback.js'));
-	app.use('/api/v1', router);
-}
-
-exports.start = function(app) {
-	this.initApi(app);
-
-	// debugs
-	logger.debug(utils.inspect(this));
-	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
-
-	// start plugins
-	pluginManager.loadPlugins(app, express);
+exports.init = function() {
+	logger.debug('robotCalibration::init()');
 };
