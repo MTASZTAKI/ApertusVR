@@ -46,5 +46,5 @@ exports.start = function(app) {
 	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
 
 	// start plugins
-	pluginManager.loadPlugins();
+	pluginManager.loadPlugins(app, express);
 };
