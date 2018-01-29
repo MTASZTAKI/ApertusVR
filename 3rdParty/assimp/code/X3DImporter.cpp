@@ -96,7 +96,7 @@ struct WordIterator: public std::iterator<std::input_iterator_tag, const char*> 
         return *this;
     }
     bool operator==(WordIterator &other) const { return start_ == other.start_; }
-    bool operator!=(WordIterator &other) const { return start_ != other.start_; }
+    /*bool operator!=(WordIterator &other) const { return !(start_ == other.start_); }*/
     WordIterator &operator++() {
         start_ += strcspn(start_, whitespace);
         start_ += strspn(start_, whitespace);
@@ -518,7 +518,7 @@ void X3DImporter::XML_ReadNode_GetAttrVal_AsArrB(const int pAttrIdx, std::vector
 
         WordIterator wordItBegin(val, val + strlen(val));
         WordIterator wordItEnd;
-        std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return (::tolower(match[0]) == 't') || (match[0] == '1'); });
+        //std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return (::tolower(match[0]) == 't') || (match[0] == '1'); });
     }
 }
 
@@ -538,7 +538,7 @@ void X3DImporter::XML_ReadNode_GetAttrVal_AsArrI32(const int pAttrIdx, std::vect
 
         WordIterator wordItBegin(val, val + strlen(val));
         WordIterator wordItEnd;
-        std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atoi(match); });
+        //std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atoi(match); });
     }
 }
 
@@ -558,7 +558,7 @@ void X3DImporter::XML_ReadNode_GetAttrVal_AsArrF(const int pAttrIdx, std::vector
 
         WordIterator wordItBegin(val, val + strlen(val));
         WordIterator wordItEnd;
-        std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atof(match); });
+        //std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atof(match); });
     }
 }
 
@@ -578,7 +578,7 @@ void X3DImporter::XML_ReadNode_GetAttrVal_AsArrD(const int pAttrIdx, std::vector
 
         WordIterator wordItBegin(val, val + strlen(val));
         WordIterator wordItEnd;
-        std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atof(match); });
+        //std::transform(wordItBegin, wordItEnd, std::back_inserter(pValue), [](const char *match) { return atof(match); });
     }
 }
 

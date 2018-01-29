@@ -20,6 +20,10 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+# assimp patch log begin
+# In /3rdParty/assimp/code/X3DImporter.cpp std::transforms are commented out because of operator != problem
+# assimp patch log begin
+
 set (ASSIMP_HOME ${CMAKE_SOURCE_DIR}/3rdParty/assimp)
 set (ASSIMP_READY FALSE)
 
