@@ -1,31 +1,91 @@
 <html>
     <head>
         <title>RobotCalibration UI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <link rel="stylesheet" href="styles.css">
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="script.js"></script>
     </head>
     <body>
-        <div class="nodeBox">
-            <p>NodeName:<input type="text" name="nodeName" id="nodeName"></p>
 
-            <div class="propertyBox">
-                <h3>Position</h3>
-                <p><span class="propertyName">X: </span><input type="text" name="posX" id="posX"></p>
-                <p><span class="propertyName">Y: </span><input type="text" name="posY" id="posY"></p>
-                <p><span class="propertyName">Z: </span><input type="text" name="posZ" id="posZ"></p>
-                <button id="posSubmit">Set</button>
+        <div class="header">
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">NodeName</span>
+                </div>
+                <input type="text" class="form-control" id="nodeName" name="nodeName" aria-describedby="basic-addon3">
+                <a  href="javascript:location.reload(true)" >
+                    <span class="oi" data-glyph="reload" title="icon name" aria-hidden="true"></span>
+                    <button type="button" class="btn">
+                            <li class="ion-loop" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 2rem;"></li>
+                    </button>                    
+                </a>
             </div>
+        </div>
 
-            <div class="propertyBox">
-                <h3>Quaternion</h3>
-                <p><span class="propertyName">W: </span><input type="text" name="quatX" id="quatW"></p>
-                <p><span class="propertyName">X: </span><input type="text" name="quatY" id="quatX"></p>
-                <p><span class="propertyName">Y: </span><input type="text" name="quatZ" id="quatY"></p>
-                <p><span class="propertyName">Z: </span><input type="text" name="quatZ" id="quatZ"></p>
-                <button id="quatSubmit">Set</button>
+        <div class="panel">
+            <div class="card m-2">
+                <div class="card-header">
+                        Position
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">X</span>
+                        </div>
+                        <input type="text" class="form-control" id="posX" name="posX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">Y</span>
+                        </div>
+                        <input type="text" class="form-control" id="posY" name="posY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">Y</span>
+                        </div>
+                        <input type="text" class="form-control" id="posZ" name="posZ">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="posSubmit">Set</button>
+                </div>
             </div>
-
+            <div class="card m-2">
+                <div class="card-header">
+                    Quaternion
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">W</span>
+                        </div>
+                        <input type="text" class="form-control" id="quatW" name="quatW">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">X</span>
+                        </div>
+                        <input type="text" class="form-control" id="quatX" name="quatX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Y</span>
+                        </div>
+                        <input type="text" class="form-control" id="quatY" name="quatY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Y</span>
+                        </div>
+                        <input type="text" class="form-control" id="quatZ" name="quatZ">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="quatSubmit">Set</button>
+                </div>
+            </div>
         </div>
     </body>
 </html>

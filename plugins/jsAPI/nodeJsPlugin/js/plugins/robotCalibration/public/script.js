@@ -11,9 +11,9 @@ function getNodePosition(nodeName) {
     doGetRequest(apiEndPointNode + nodeName + '/position', function(res){
         var pos = res.data.items[0].position;
         console.log(pos);
-        $('#posX').val(pos.x);
-        $('#posY').val(pos.y);
-        $('#posZ').val(pos.z);
+        $('#posX').val(pos.x.trim());
+        $('#posY').val(pos.y.trim());
+        $('#posZ').val(pos.z.trim());
     });
 }
 
@@ -34,10 +34,10 @@ function getNodeOrientation(nodeName) {
     doGetRequest(apiEndPointNode + nodeName + '/orientation', function(res){
         var ori = res.data.items[0].orientation;
         console.log(ori);
-        $('#quatW').val(ori.w);
-        $('#quatX').val(ori.x);
-        $('#quatY').val(ori.y);
-        $('#quatZ').val(ori.z);
+        $('#quatW').val(ori.w.trim());
+        $('#quatX').val(ori.x.trim());
+        $('#quatY').val(ori.y.trim());
+        $('#quatZ').val(ori.z.trim());
     });
 }
 
@@ -64,7 +64,7 @@ function doGetRequest(apiEndPointUrl, callback) {
 }
 
 function doPostRequest(apiEndPointUrl, data, callback) {
-    $.post(apiEndPointUrl, data, function( res ) {
+    $.post(apiEndPointUrl, data, function(res) {
         console.log(res);
         callback(res);
     }, "json");

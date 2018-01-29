@@ -1,34 +1,11 @@
-.nodeBox {
-    width: 185px;
+body {
+    background: none;
 }
 
-.propertyBox {
-    border: solid 1px;
-    width: 180px;
-    margin-top: 20px;
-    padding: 10px;
+.header {
+    margin-right: 1rem;
 }
 
-.propertyName {
-    float: left;
-    width: 20px;
-}
-
-button {
-    width: 100%;
-}
-
-input {
-    display: block;
-    width: 150px;
-}
-
-#nodeName {
-    display: block;
-    width: 250px;
-}
-
-h3 {
-    margin: 0px;
-    padding: 0px;
+.panel {
+    width: 260px;
 }
