@@ -20,39 +20,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefClientImpl.h"
+#include "ApeCefKeyboardHandlerImpl.h"
 
-Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl) 
-	: mCefRenderHandlerImpl(cefRenderHandlerImpl)
-	, mCefLifeSpanHandlerImpl(cefLifeSpanHandlerImpl)
-	, mCefKeyboardHandlerImpl(cefKeyboardHandlerImpl)
+Ape::CefKeyboardHandlerImpl::CefKeyboardHandlerImpl()
+{
+	mBrowserIDs = std::map<int, Ape::BrowserWeakPtr>();
+}
+
+Ape::CefKeyboardHandlerImpl::~CefKeyboardHandlerImpl()
 {
 
 }
 
-Ape::CefClientImpl::~CefClientImpl()
+void Ape::CefKeyboardHandlerImpl::registerBrowser(int ID, Ape::BrowserWeakPtr browser)
 {
-
+	mBrowserIDs[ID] = browser;
 }
 
-CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
+bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event, bool * is_keyboard_shortcut)
 {
-	return mCefRenderHandlerImpl;
+	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
+	{
+		std::cout << "Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(): apeBrowser->setFocusOnEditableField " << event.focus_on_editable_field << std::endl;
+		apeBrowser->setFocusOnEditableField(event.focus_on_editable_field);
+	}
+	return false;
 }
 
-CefRefPtr<CefLifeSpanHandler> Ape::CefClientImpl::GetLifeSpanHandler()
+bool Ape::CefKeyboardHandlerImpl::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event)
 {
-	return mCefLifeSpanHandlerImpl;
-}
-
-CefRefPtr<CefKeyboardHandler> Ape::CefClientImpl::GetKeyboardHandler()
-{
-	return mCefKeyboardHandlerImpl;
-}
-
-bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
-{
-	const std::string& message_name = message->GetName();
-	std::cout << "Ape::CefClientImpl::OnProcessMessageReceived: " << message_name << std::endl;
-	return true;
+	std::cout << "Ape::CefKeyboardHandlerImpl::OnKeyEvent()  event.focus_on_editable_field: " << event.focus_on_editable_field << std::endl;
+	return false;
 }

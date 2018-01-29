@@ -30,6 +30,7 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpApeCefRenderHandlerImpl = nullptr;
 	mpApeCefLifeSpanHandlerImpl = nullptr;
+	mpApeCefKeyboardHandlerImpl = nullptr;
 	mApeCefClientImpl = nullptr;
 	mBrowserCounter = 0;
 	mCefIsInintialzed = false;
@@ -169,6 +170,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpApeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
+			mpApeCefKeyboardHandlerImpl->registerBrowser(mBrowserCounter, browser);
 			mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
 			mBrowserIDNames[browserName] = mBrowserCounter;
 			CefWindowInfo cefWindowInfo;
@@ -205,7 +207,8 @@ void Ape::CefBrowserPlugin::Init()
 	{
 		mpApeCefRenderHandlerImpl = new Ape::CefRenderHandlerImpl();
 		mpApeCefLifeSpanHandlerImpl = new Ape::CefLifeSpanHandlerImpl();
-		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl, mpApeCefLifeSpanHandlerImpl);
+		mpApeCefKeyboardHandlerImpl = new Ape::CefKeyboardHandlerImpl();
+		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl, mpApeCefLifeSpanHandlerImpl, mpApeCefKeyboardHandlerImpl);
 		mCefIsInintialzed = true;
 	}
 }

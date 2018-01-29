@@ -20,39 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefClientImpl.h"
+#ifndef APE_CEFFOCUSHANDLERIMPL_H
+#define APE_CEFFOCUSHANDLERIMPL_H
 
-Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl) 
-	: mCefRenderHandlerImpl(cefRenderHandlerImpl)
-	, mCefLifeSpanHandlerImpl(cefLifeSpanHandlerImpl)
-	, mCefKeyboardHandlerImpl(cefKeyboardHandlerImpl)
+#include <iostream>
+#include <string>
+#include <thread> 
+#include "cef_app.h"
+#include "cef_client.h"
+#include "cef_keyboard_handler.h"
+#include "Ape.h"
+#include "ApeIManualTexture.h"
+#include "ApeIBrowser.h"
+
+namespace Ape
 {
+	class CefKeyboardHandlerImpl : public CefKeyboardHandler
+	{
+	private:
+		std::map<int, Ape::BrowserWeakPtr> mBrowserIDs;
 
+	public:
+		CefKeyboardHandlerImpl();
+
+		~CefKeyboardHandlerImpl();
+
+		void registerBrowser(int ID, Ape::BrowserWeakPtr browser);
+
+		bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event, bool* is_keyboard_shortcut) override;
+
+		bool OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event) override;
+
+		IMPLEMENT_REFCOUNTING(CefKeyboardHandlerImpl);
+	};
 }
 
-Ape::CefClientImpl::~CefClientImpl()
-{
-
-}
-
-CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
-{
-	return mCefRenderHandlerImpl;
-}
-
-CefRefPtr<CefLifeSpanHandler> Ape::CefClientImpl::GetLifeSpanHandler()
-{
-	return mCefLifeSpanHandlerImpl;
-}
-
-CefRefPtr<CefKeyboardHandler> Ape::CefClientImpl::GetKeyboardHandler()
-{
-	return mCefKeyboardHandlerImpl;
-}
-
-bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
-{
-	const std::string& message_name = message->GetName();
-	std::cout << "Ape::CefClientImpl::OnProcessMessageReceived: " << message_name << std::endl;
-	return true;
-}
+#endif

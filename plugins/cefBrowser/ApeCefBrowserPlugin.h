@@ -48,6 +48,7 @@ SOFTWARE.*/
 #include "ApeIManualPass.h"
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefLifeSpanHandlerImpl.h"
+#include "ApeCefKeyboardHandlerImpl.h"
 #include "ApeCefClientImpl.h"
 #include "ApeDoubleQueue.h"
 #include "ApeIRayGeometry.h"
@@ -87,6 +88,8 @@ namespace Ape
 		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
 
 		Ape::CefLifeSpanHandlerImpl* mpApeCefLifeSpanHandlerImpl;
+
+		Ape::CefKeyboardHandlerImpl* mpApeCefKeyboardHandlerImpl;
 		
 		int mBrowserCounter;
 
