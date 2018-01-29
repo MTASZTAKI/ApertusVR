@@ -38,6 +38,8 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
 #include "ApeInterpolator.h"
+#include "ApeIBrowser.h"
+#include "ApeIUnitTexture.h"
 
 namespace Ape
 {
@@ -101,6 +103,14 @@ namespace Ape
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		std::vector<UserNodePose> mUserNodePoses;
+
+		Ape::BrowserWeakPtr mOverlayBrowser;
+
+		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+		bool mEnableOverlayBrowserKeyEvents;
+
+		bool mIsNewKeyEvent;
 
 		int mUserNodePosesToggleIndex;
 
