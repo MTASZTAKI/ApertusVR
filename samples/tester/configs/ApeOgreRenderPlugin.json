@@ -4,7 +4,7 @@
         "autoGenerateAndSave": false,
         "bias": 0.5
     },
-    "shading": "perVertex",
+    "shading": "perPixel",
     "renderWindows": [
         {
             "enable": false,
@@ -19,19 +19,19 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 8,
-                "FSAAHint": "Quality"
+                "FSAA": 0,
+                "FSAAHint": ""
             }
         },
         {
             "enable": true,
             "name": "Normal",
             "monitorIndex": 0,
-            "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
-            },
+          "resolution": {
+            "width": 1920,
+            "height": 1080,
+            "fullScreen": false
+          },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
@@ -40,18 +40,18 @@
                 "FSAAHint": "Quality"
             },
             "viewports": [
-                {
-                    "zOrder": 0,
-                    "left": 0,
-                    "top": 0,
-                    "width": 1280,
-                    "height": 720,
-                    "camera": {
-                        "nearClip": 1.0,
-                        "farClip": 10000.0,
-                        "fovY": 45.0
-                    }
+              {
+                "zOrder": 0,
+                "left": 0,
+                "top": 0,
+                "width": 1920,
+                "height": 1080,
+                "camera": {
+                  "nearClip": 1.0,
+                  "farClip": 10000.0,
+                  "fovY": 45.0
                 }
+              }
             ]
         }
     ]

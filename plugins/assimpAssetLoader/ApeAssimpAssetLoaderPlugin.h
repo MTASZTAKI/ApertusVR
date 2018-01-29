@@ -88,7 +88,9 @@ namespace Ape
 
 		bool mMergeAndExportMeshes;
 
-		int mSceneUnitScale;
+		float mSceneUnitScale;
+
+		bool mRegenerateNormals;
 
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 	};
