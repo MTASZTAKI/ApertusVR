@@ -205,8 +205,11 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
-		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-		//std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
+
+		if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
+			std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
+
+		std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -214,8 +217,24 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			keyAsWString = 9;
 		else if (e.key == OIS::KeyCode::KC_RETURN)
 			keyAsWString = 13;
-		else if (e.key == OIS::KeyCode::KC_LSHIFT)
+		else if (e.key == OIS::KeyCode::KC_LSHIFT || e.key == OIS::KeyCode::KC_RSHIFT)
 			keyAsWString = 14;
+		else if (e.key == OIS::KeyCode::KC_SPACE)
+			keyAsWString = 32;
+		else if (e.key == OIS::KeyCode::KC_END)
+			keyAsWString = 35;
+		else if (e.key == OIS::KeyCode::KC_HOME)
+			keyAsWString = 36;
+		else if (e.key == OIS::KeyCode::KC_LEFT)
+			keyAsWString = 37;
+		else if (e.key == OIS::KeyCode::KC_UP)
+			keyAsWString = 38;
+		else if (e.key == OIS::KeyCode::KC_RIGHT)
+			keyAsWString = 39;
+		else if (e.key == OIS::KeyCode::KC_DOWN)
+			keyAsWString = 40;
+		else if (e.key == OIS::KeyCode::KC_DELETE)
+			keyAsWString = 46;
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 	}
