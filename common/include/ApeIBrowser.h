@@ -102,6 +102,10 @@ namespace Ape
 		virtual void keyASCIIValue(int keyASCIIValue) = 0;
 
 		virtual int getLastKeyASCIIValue() = 0;
+
+		virtual bool isFocusOnEditableField() = 0;
+
+		virtual void setFocusOnEditableField(bool enable) = 0;
 	};
 }
 
