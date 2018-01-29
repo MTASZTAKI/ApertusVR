@@ -898,7 +898,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 						{
 							std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
-							if (parameters.normals.size() == 0 && parameters.generateNormals == true)
+							if (parameters.generateNormals)
 							{
 								/*for (int i = 0; i < parameters.coordinates.size(); i = i + 9)
 								{
@@ -1013,23 +1013,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
 							{
 								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
-								if (parameters.normals.size() == 0 && normals.size() > 0)
+								if (parameters.generateNormals)
 								{
 									normals[i / 3].normalise();
 									ogreManual->normal(normals[i / 3]);
 								}
-								else if (parameters.normals.size() > 0)
+								else if (parameters.normals.size() > i && parameters.normals.size() > 0)
 								{
 									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
 								}
-								if (parameters.textureCoordinates.size() != 0)
+								if (parameters.textureCoordinates.size() > 0)
 								{
 									int textCoordIndex = (i / 3) * 6;
 									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
 									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
 									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
 								}
-								if (parameters.colors.size() != 0)
+								if (parameters.colors.size() > 0)
 								{
 									int colorIndex = (i / 3) * 4;
 									Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);

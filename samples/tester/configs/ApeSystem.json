@@ -7,10 +7,9 @@
         "participantType": "Local",
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-      "sessionResourceLocation": [
-        "/plugins/tester/resources",
-        "/plugins/avatar/resources"
-      ],
+        "sessionResourceLocation": [
+            "/plugins/tester/resources"
+        ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -22,12 +21,10 @@
     },
     "pluginManager": {
         "plugins": [
-            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeTesterPlugin",
-            "ApeKinectPlugin",
-            "ApeAvatarPlugin"
+            "ApeAssimpAssetLoaderPlugin"
         ]
     }
 }

@@ -317,58 +317,58 @@ void ApeTesterPlugin::Init()
 			}
 		}
 	}
-	if (auto pointCloudNode = mpScene->createNode("pointCloudNode2").lock())
-	{
-		//pointCloudNode->setPosition(Ape::Vector3(0, 500, 0));
-		/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
-		{
-			pointCloudNodeText->setCaption("Point");
-			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-			pointCloudNodeText->setParentNode(pointCloudNode);
-		}*/
-		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
-		{
-			mPointCloudSize = 307200;
-			Ape::PointCloudPoints points;
-			points.resize(mPointCloudSize);
-			Ape::PointCloudColors colors;
-			colors.resize(mPointCloudSize);
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			std::uniform_int_distribution<> distInt(0, 1000);
-			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-			for (int i = 0; i < mPointCloudSize; i++)
-			{
-				points[i] = distInt(gen);
-				colors[i] = distDouble(gen);
-			}
-			/*Ape::PointCloudPoints points = {
-				-5, 0, 0,
-				-4, 0, 0,
-				-3, 0, 0,
-				-2, 0, 0,
-				-1, 0, 0,
-				 0, 0, 0,
-				 1, 0, 0,
-				 2, 0, 0,
-				 3, 0, 0
-			};
-			Ape::PointCloudColors colors = {
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0,
-				(float)0.9, 0, 0
-			};*/
-			pointCloud->setParameters(points, colors, 100000.0f);
-			pointCloud->setParentNode(pointCloudNode);
-			mPointCloud = pointCloud;
-		}
-	}
+	//if (auto pointCloudNode = mpScene->createNode("pointCloudNode2").lock())
+	//{
+	//	//pointCloudNode->setPosition(Ape::Vector3(0, 500, 0));
+	//	/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+	//	{
+	//		pointCloudNodeText->setCaption("Point");
+	//		pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+	//		pointCloudNodeText->setParentNode(pointCloudNode);
+	//	}*/
+	//	if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+	//	{
+	//		mPointCloudSize = 20073600;
+	//		Ape::PointCloudPoints points;
+	//		points.resize(mPointCloudSize);
+	//		Ape::PointCloudColors colors;
+	//		colors.resize(mPointCloudSize);
+	//		std::random_device rd;
+	//		std::mt19937 gen(rd());
+	//		std::uniform_int_distribution<> distInt(0, 1000);
+	//		std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+	//		for (int i = 0; i < mPointCloudSize; i++)
+	//		{
+	//			points[i] = distInt(gen);
+	//			colors[i] = distDouble(gen);
+	//		}
+	//		/*Ape::PointCloudPoints points = {
+	//			-5, 0, 0,
+	//			-4, 0, 0,
+	//			-3, 0, 0,
+	//			-2, 0, 0,
+	//			-1, 0, 0,
+	//			 0, 0, 0,
+	//			 1, 0, 0,
+	//			 2, 0, 0,
+	//			 3, 0, 0
+	//		};
+	//		Ape::PointCloudColors colors = {
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0
+	//		};*/
+	//		pointCloud->setParameters(points, colors, 100000.0f);
+	//		pointCloud->setParentNode(pointCloudNode);
+	//		mPointCloud = pointCloud;
+	//	}
+	//}
 	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
@@ -408,7 +408,7 @@ void ApeTesterPlugin::Run()
 	double duration = 0;
 	while (true)
 	{
-		/*auto start = std::chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		if (!mInterpolators.empty())
 		{
 			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
@@ -432,7 +432,7 @@ void ApeTesterPlugin::Run()
 			}
 			duration = 0;
 		}
-		duration = duration + std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();*/
+		duration = duration + std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();
 
 		if (auto pointCloud = mPointCloud.lock())
 		{
@@ -468,7 +468,7 @@ void ApeTesterPlugin::Run()
 				(float)randomRedColors[7], 0, 0,
 				(float)randomRedColors[8], 0, 0
 			};*/
-			Ape::PointCloudPoints points;
+			/*Ape::PointCloudPoints points;
 			points.resize(mPointCloudSize);
 			Ape::PointCloudColors colors;
 			colors.resize(mPointCloudSize);
@@ -482,9 +482,9 @@ void ApeTesterPlugin::Run()
 				colors[i] = distDouble(gen);
 			}
 			pointCloud->updatePoints(points);
-			pointCloud->updateColors(colors);
+			pointCloud->updateColors(colors);*/
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }

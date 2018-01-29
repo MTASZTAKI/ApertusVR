@@ -37,7 +37,8 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	std::srand(std::time(0));
 	mMergeAndExportMeshes = false;
 	mObjectCount = 0;
-	mSceneUnitScale = 100;
+	mSceneUnitScale = 1;
+	mRegenerateNormals = false;
 }
 
 Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
@@ -101,6 +102,11 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 			}
 			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
 			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
+			rapidjson::Value& scale = jsonDocument["scale"];
+			mSceneUnitScale = scale.GetFloat();
+			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
+			mRegenerateNormals = regenerateNormals.GetBool();
+			std::cout << "AssimpAssetLoaderPlugin::run regenerateNormals? " << mRegenerateNormals << std::endl;
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
 	}
@@ -127,6 +133,7 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 				else
 				{
 					//TODO somehow detect the unit of the scene
+					std::cout << "AssimpAssetLoaderPlugin::run setScale to " << mSceneUnitScale << std::endl;
 					rootNode->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
 				}
 			}
@@ -296,7 +303,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					}
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
-				if (assimpMesh->HasNormals())
+				if (assimpMesh->HasNormals() && !mRegenerateNormals)
 				{
 					for (int i = 0; i < assimpMesh->mNumFaces; i++)
 					{
@@ -326,7 +333,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				std::string groupName = std::string();
 				if (mMergeAndExportMeshes)
 					groupName = mAssimpAssetFileNames[assimpSceneID];
-				mesh->setParameters(groupName, coordinates, indices, normals, true, colors, Ape::GeometryTextureCoordinates(), material);
+				mesh->setParameters(groupName, coordinates, indices, normals, mRegenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
 				if (!mMergeAndExportMeshes)
 					mesh->setParentNode(node);
 				std::cout << "AssimpAssetLoaderPlugin::createIndexedFaceSetGeometry " << mesh->getName() << std::endl;
