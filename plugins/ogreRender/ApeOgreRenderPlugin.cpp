@@ -1317,9 +1317,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (!overlay)
 							{
 								auto overlayPanelElement = static_cast<Ogre::PanelOverlayElement*>(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", materialName));
-								overlayPanelElement->setMetricsMode(Ogre::GMM_PIXELS);
+								overlayPanelElement->setMetricsMode(Ogre::GMM_RELATIVE);
 								overlayPanelElement->setMaterialName(materialName);
-								overlayPanelElement->setDimensions(mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+								overlayPanelElement->setDimensions(1, 1);
+								overlayPanelElement->setPosition(0, 0);
 								overlay = Ogre::OverlayManager::getSingleton().create(materialName);
 								overlay->add2D(overlayPanelElement);
 								overlay->setZOrder(materialManual->getZOrder());
