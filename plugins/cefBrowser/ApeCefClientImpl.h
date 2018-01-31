@@ -30,8 +30,10 @@ SOFTWARE.*/
 #include "cef_client.h"
 #include "cef_render_handler.h"
 #include "cef_life_span_handler.h"
+#include "cef_keyboard_handler.h"
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefLifeSpanHandlerImpl.h"
+#include "ApeCefKeyboardHandlerImpl.h"
 
 namespace Ape
 {
@@ -42,14 +44,18 @@ namespace Ape
 
 		CefRefPtr<CefLifeSpanHandler> mCefLifeSpanHandlerImpl;
 
+		CefRefPtr<CefKeyboardHandler> mCefKeyboardHandlerImpl;
+
 	public:
-		CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl);
+		CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl);
 
 		~CefClientImpl();
 
 		virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
 
 		virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler();
+
+		virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler();
 
 		virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
 

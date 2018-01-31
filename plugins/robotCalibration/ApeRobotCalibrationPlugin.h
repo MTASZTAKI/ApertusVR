@@ -57,6 +57,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIBrowser.h"
 #include "ApeIPointCloud.h"
+#include "ApeIUnitTexture.h"
 
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"

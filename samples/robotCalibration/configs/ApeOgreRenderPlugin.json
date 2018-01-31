@@ -4,7 +4,7 @@
         "autoGenerateAndSave": false,
         "bias": 0.5
     },
-    "shading": "perVertex",
+    "shading": "perPixel",
     "renderWindows": [
         {
             "enable": false,

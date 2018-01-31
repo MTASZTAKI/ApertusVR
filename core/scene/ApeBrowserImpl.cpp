@@ -38,6 +38,7 @@ Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrow
 	mMouseLastPosition = Ape::Vector2();
 	mID = 0;
 	mLastKeyValue = 0;
+	mIsFocusOnEditableField = false;
 }
 
 Ape::BrowserImpl::~BrowserImpl()
@@ -140,6 +141,17 @@ void Ape::BrowserImpl::keyASCIIValue(int keyASCIIValue)
 int Ape::BrowserImpl::getLastKeyASCIIValue()
 {
 	return mLastKeyValue;
+}
+
+bool Ape::BrowserImpl::isFocusOnEditableField()
+{
+	return mIsFocusOnEditableField;
+}
+
+void Ape::BrowserImpl::setFocusOnEditableField(bool enable)
+{
+	mIsFocusOnEditableField = enable;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD));
 }
 
 void Ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

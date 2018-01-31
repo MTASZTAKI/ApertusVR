@@ -1,31 +1,162 @@
 <html>
     <head>
         <title>RobotCalibration UI</title>
-        <link rel="stylesheet" href="styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/snackbar.css">
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="script.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="js/script.js"></script>
     </head>
     <body>
-        <div class="nodeBox">
-            <p>NodeName:<input type="text" name="nodeName" id="nodeName"></p>
-
-            <div class="propertyBox">
-                <h3>Position</h3>
-                <p><span class="propertyName">X: </span><input type="text" name="posX" id="posX"></p>
-                <p><span class="propertyName">Y: </span><input type="text" name="posY" id="posY"></p>
-                <p><span class="propertyName">Z: </span><input type="text" name="posZ" id="posZ"></p>
-                <button id="posSubmit">Set</button>
+        <div class="header">
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">NodeName</span>
+                </div>
+                <input type="text" class="form-control" id="nodeName" name="nodeName" aria-describedby="basic-addon3">
+                <a href="javascript:location.reload(true)">
+                    <span class="oi" data-glyph="reload" title="icon name" aria-hidden="true"></span>
+                    <button type="button" class="btn" data-toggle="tooltip" title="Click to refresh data">
+                        <li class="ion-loop" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 2rem;"></li>
+                    </button>                    
+                </a>
             </div>
-
-            <div class="propertyBox">
-                <h3>Quaternion</h3>
-                <p><span class="propertyName">W: </span><input type="text" name="quatX" id="quatW"></p>
-                <p><span class="propertyName">X: </span><input type="text" name="quatY" id="quatX"></p>
-                <p><span class="propertyName">Y: </span><input type="text" name="quatZ" id="quatY"></p>
-                <p><span class="propertyName">Z: </span><input type="text" name="quatZ" id="quatZ"></p>
-                <button id="quatSubmit">Set</button>
-            </div>
-
         </div>
+
+        <div class="panel">
+            <div class="card m-2">
+                <div class="card-header">
+                    Position
+                    <button type="button" class="btn btn-sm float-right" onClick="resetPos();" data-toggle="tooltip" title="Click here to clear position data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>  
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posX" name="posX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posY" name="posY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posZ" name="posZ">
+                    </div>
+                </div>
+            </div>
+            <div class="card m-2">
+                <div class="card-header">
+                    Quaternion
+                    <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear quaternion data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>  
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    W
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatW')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatW')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-var form-control" id="quatW" name="quatW" data-input-range="quatWRange"></input>
+                    </div>
+                    <div id="quatWRange" class="input-range slider secondary" data-input-handler="quatW"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-var form-control" id="quatX" name="quatX" data-input-range="quatXRange">
+                    </div>
+                    <div id="quatXRange" class="input-range slider danger" data-input-handler="quatX"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-var form-control" id="quatY" name="quatY" data-input-range="quatYRange">
+                    </div>
+                    <div id="quatYRange" class="input-range slider success" data-input-handler="quatY"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-var form-control" id="quatZ" name="quatZ"  data-input-range="quatZRange">
+                    </div>
+                    <div id="quatZRange" class="input-range slider info" data-input-handler="quatZ"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="snackbar"></div>
     </body>
 </html>

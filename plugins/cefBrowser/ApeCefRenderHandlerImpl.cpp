@@ -113,12 +113,34 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		CefKeyEvent cefKeyEvent;
-		cefKeyEvent.windows_key_code = keyASCIIValue;
-		if (keyASCIIValue == 8 || keyASCIIValue == 9 || keyASCIIValue == 13 || keyASCIIValue == 14)
-			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_RAWKEYDOWN;
+
+		if (
+			   keyASCIIValue == 8 // backspace
+			|| keyASCIIValue == 9 // tab
+			|| keyASCIIValue == 13 // return
+			|| keyASCIIValue == 14 // left shift
+			|| keyASCIIValue == 35 // end
+			|| keyASCIIValue == 36 // home
+			|| keyASCIIValue == 37 // arrow left
+			|| keyASCIIValue == 38 // arrow up
+			|| keyASCIIValue == 39 // arrow right
+			|| keyASCIIValue == 40 // arrow up
+			|| keyASCIIValue == 46 // del
+			)
+			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYDOWN;
 		else
 			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_CHAR;
+
+		cefKeyEvent.windows_key_code = keyASCIIValue;
+		// exceptions
+		if (keyASCIIValue == 1046)
+			cefKeyEvent.windows_key_code = 46;
+
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
-		//std::cout << "Ape::CefRenderHandlerImpl::keyValue " << "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue << std::endl;
+
+		cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYUP;
+		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
+
+		std::cout << "Ape::CefRenderHandlerImpl::keyValue " << "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue << std::endl;
 	}
 }
