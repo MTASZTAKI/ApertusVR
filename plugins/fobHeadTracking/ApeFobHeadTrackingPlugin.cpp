@@ -59,6 +59,7 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
+			std::cout << "eventCallBack() camera: " << camera->getName() << std::endl;
 			mCameraDoubleQueue.push(camera);
 		}
 	}
@@ -349,6 +350,7 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
+				std::cout << "ApeFobHeadTrackingPlugin::Run() camera: " << camera->getName() << std::endl;
 				setCameraConfigByName(camera->getName(), camera);
 				mCamerasNode.lock()->setParentNode(mUserNode);
 				camera->setParentNode(mCamerasNode);

@@ -22,9 +22,9 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
             "ApePresentationScenePlugin",
-            "ApeFobHeadTrackingPlugin"
+            "ApeFobHeadTrackingPlugin",
+            "ApeCefBrowserPlugin"
         ]
     }
 }

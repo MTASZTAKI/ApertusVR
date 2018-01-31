@@ -1885,16 +1885,23 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreCamera = mpSceneMgr->getCamera(event.subjectName))
 						{
+							int zorder = (mOgreCameras.size()-1);
 
-							int left = 0;
+							float left = 0;
 							if (mOgreCameras.size() > 2)
 							{
-								left = 1400;
+								left = 0.33f;
+							}
+							if (mOgreCameras.size() > 4)
+							{
+								left = 0.66f;
 							}
 
-							if (auto viewPort = mRenderWindows["window0"]->addViewport(ogreCamera, 0, left))
+							std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " zorder: " << zorder << std::endl;
+							if (auto viewPort = mRenderWindows["window0"]->addViewport(ogreCamera, zorder, left, 0, 0.33f))
 							{
 								//TODO why it is working instead of in the init phase?
+								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << std::endl;
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 										{
@@ -2394,7 +2401,7 @@ void Ape::OgreRenderPlugin::Init()
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 					for (int j=0; j<mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 					{
-						auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[0].camera.name, Ape::Entity::Type::CAMERA).lock());
+						auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name, Ape::Entity::Type::CAMERA).lock());
 						if (camera)
 						{
 							//TODO why it is not ok
