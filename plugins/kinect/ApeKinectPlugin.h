@@ -153,6 +153,10 @@ namespace Ape
 		std::vector<int> indexes;
 
 		int framecount = 0;
+
+		bool showSkeleton=false;
+		bool backgroundRemoval = false;
+		bool maxFPS = false;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()

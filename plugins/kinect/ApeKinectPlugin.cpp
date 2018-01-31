@@ -118,14 +118,27 @@ void Ape::KinectPlugin::Init()
 			for (int i = 0; i < 3; i++)
 			{
 				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
-				std::cout << "sensorPosition" << std::endl;
+				std::cout << std::to_string(KPos[i]) << std::endl;
 			}
+
 			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
 			for (int i = 0; i < 4; i++)
 			{
 				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
-				std::cout << "sensorOrientation" << std::endl;
+				std::cout << std::to_string(KRot[i]) << std::endl;
 			}
+
+			rapidjson::Value& KSSkeleton = jsonDocument["showSkeleton"];
+			showSkeleton = jsonDocument["showSkeleton"].GetBool();
+			std::cout << std::to_string(showSkeleton) << std::endl;
+
+			rapidjson::Value& KBRemoval = jsonDocument["backgroundRemoval"];
+			backgroundRemoval = jsonDocument["backgroundRemoval"].GetBool();
+			std::cout << std::to_string(backgroundRemoval) << std::endl;
+
+			rapidjson::Value& KMFPS = jsonDocument["maxFPS"];
+			maxFPS = jsonDocument["maxFPS"].GetBool();
+			std::cout << std::to_string(maxFPS) << std::endl;
 		}
 		fclose(KinectPluginConfigFile);
 	}
@@ -136,211 +149,214 @@ void Ape::KinectPlugin::Init()
 		rootNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
 	}
 
-#pragma region initBodies
-	std::shared_ptr<Ape::IManualMaterial> _0bodyMaterial;
-	if (_0bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("0BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	//init bodies
+	if (showSkeleton)
 	{
-		if (auto _0bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("0BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+		std::shared_ptr<Ape::IManualMaterial> _0bodyMaterial;
+		if (_0bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("0BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			_0bodyMaterialManualPass->setShininess(15.0f);
-			_0bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			_0bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			_0bodyMaterial->setPass(_0bodyMaterialManualPass);
+			if (auto _0bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("0BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_0bodyMaterialManualPass->setShininess(15.0f);
+				_0bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
+				_0bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
+				_0bodyMaterial->setPass(_0bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("0BodyNode" + index).lock())
+			{
+				_0Body.push_back(myNode);
+			}
+
+			if (auto childNode = _0Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _0BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_0BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_0BodyGeometry->setParentNode(_0Body[i]);
+				_0BodyGeometry->setMaterial(_0bodyMaterial);
+			}
+		}
+
+		std::shared_ptr<Ape::IManualMaterial> _1bodyMaterial;
+		if (_1bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("1BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto _1bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("1BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_1bodyMaterialManualPass->setShininess(15.0f);
+				_1bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+				_1bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
+				_1bodyMaterial->setPass(_1bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("1BodyNode" + index).lock())
+			{
+				_1Body.push_back(myNode);
+			}
+
+			if (auto childNode = _1Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _1BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("1BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_1BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_1BodyGeometry->setParentNode(_1Body[i]);
+				_1BodyGeometry->setMaterial(_1bodyMaterial);
+			}
+		}
+
+		std::shared_ptr<Ape::IManualMaterial> _2bodyMaterial;
+		if (_2bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("2BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto _2bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("2BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_2bodyMaterialManualPass->setShininess(15.0f);
+				_2bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
+				_2bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
+				_2bodyMaterial->setPass(_2bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("2BodyNode" + index).lock())
+			{
+				_2Body.push_back(myNode);
+			}
+
+			if (auto childNode = _2Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _2BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("2BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_2BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_2BodyGeometry->setParentNode(_2Body[i]);
+				_2BodyGeometry->setMaterial(_2bodyMaterial);
+			}
+		}
+
+		std::shared_ptr<Ape::IManualMaterial> _3bodyMaterial;
+		if (_3bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("3BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto _3bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("3BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_3bodyMaterialManualPass->setShininess(15.0f);
+				_3bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 1.0f, 0.0f));
+				_3bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 1.0f, 0.0f));
+				_3bodyMaterial->setPass(_3bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("3BodyNode" + index).lock())
+			{
+				_3Body.push_back(myNode);
+			}
+
+			if (auto childNode = _3Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _3BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("3BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_3BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_3BodyGeometry->setParentNode(_3Body[i]);
+				_3BodyGeometry->setMaterial(_3bodyMaterial);
+			}
+		}
+
+		std::shared_ptr<Ape::IManualMaterial> _4bodyMaterial;
+		if (_4bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("4BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto _4bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("4BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_4bodyMaterialManualPass->setShininess(15.0f);
+				_4bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 1.0f));
+				_4bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 1.0f));
+				_4bodyMaterial->setPass(_4bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("4BodyNode" + index).lock())
+			{
+				_4Body.push_back(myNode);
+			}
+
+			if (auto childNode = _4Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _4BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("4BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_4BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_4BodyGeometry->setParentNode(_4Body[i]);
+				_4BodyGeometry->setMaterial(_4bodyMaterial);
+			}
+		}
+
+		std::shared_ptr<Ape::IManualMaterial> _5bodyMaterial;
+		if (_5bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("5BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			if (auto _5bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("5BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
+			{
+				_5bodyMaterialManualPass->setShininess(15.0f);
+				_5bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 1.0f));
+				_5bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 1.0f));
+				_5bodyMaterial->setPass(_5bodyMaterialManualPass);
+			}
+		}
+
+		for (int i = 0; i < 25; i++)
+		{
+			std::string index = std::to_string(i);
+
+			if (auto myNode = mpScene->createNode("5BodyNode" + index).lock())
+			{
+				_5Body.push_back(myNode);
+			}
+
+			if (auto childNode = _5Body[i].lock())
+			{
+				childNode->setParentNode(RootNode);
+			}
+
+			if (auto _5BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("5BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				_5BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
+				_5BodyGeometry->setParentNode(_5Body[i]);
+				_5BodyGeometry->setMaterial(_5bodyMaterial);
+			}
 		}
 	}
 
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("0BodyNode" + index).lock())
-		{
-			_0Body.push_back(myNode);
-		}
-
-		if (auto childNode = _0Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _0BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("0BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_0BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_0BodyGeometry->setParentNode(_0Body[i]);
-			_0BodyGeometry->setMaterial(_0bodyMaterial);
-		}
-	}
-
-	std::shared_ptr<Ape::IManualMaterial> _1bodyMaterial;
-	if (_1bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("1BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		if (auto _1bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("1BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			_1bodyMaterialManualPass->setShininess(15.0f);
-			_1bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			_1bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			_1bodyMaterial->setPass(_1bodyMaterialManualPass);
-		}
-	}
-
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("1BodyNode" + index).lock())
-		{
-			_1Body.push_back(myNode);
-		}
-
-		if (auto childNode = _1Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _1BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("1BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_1BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_1BodyGeometry->setParentNode(_1Body[i]);
-			_1BodyGeometry->setMaterial(_1bodyMaterial);
-		}
-	}
-
-	std::shared_ptr<Ape::IManualMaterial> _2bodyMaterial;
-	if (_2bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("2BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		if (auto _2bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("2BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			_2bodyMaterialManualPass->setShininess(15.0f);
-			_2bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			_2bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			_2bodyMaterial->setPass(_2bodyMaterialManualPass);
-		}
-	}
-
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("2BodyNode" + index).lock())
-		{
-			_2Body.push_back(myNode);
-		}
-
-		if (auto childNode = _2Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _2BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("2BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_2BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_2BodyGeometry->setParentNode(_2Body[i]);
-			_2BodyGeometry->setMaterial(_2bodyMaterial);
-		}
-	}
-
-	std::shared_ptr<Ape::IManualMaterial> _3bodyMaterial;
-	if (_3bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("3BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		if (auto _3bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("3BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			_3bodyMaterialManualPass->setShininess(15.0f);
-			_3bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 1.0f, 0.0f));
-			_3bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 1.0f, 0.0f));
-			_3bodyMaterial->setPass(_3bodyMaterialManualPass);
-		}
-	}
-
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("3BodyNode" + index).lock())
-		{
-			_3Body.push_back(myNode);
-		}
-
-		if (auto childNode = _3Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _3BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("3BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_3BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_3BodyGeometry->setParentNode(_3Body[i]);
-			_3BodyGeometry->setMaterial(_3bodyMaterial);
-		}
-	}
-
-	std::shared_ptr<Ape::IManualMaterial> _4bodyMaterial;
-	if (_4bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("4BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		if (auto _4bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("4BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			_4bodyMaterialManualPass->setShininess(15.0f);
-			_4bodyMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 1.0f));
-			_4bodyMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 1.0f));
-			_4bodyMaterial->setPass(_4bodyMaterialManualPass);
-		}
-	}
-
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("4BodyNode" + index).lock())
-		{
-			_4Body.push_back(myNode);
-		}
-
-		if (auto childNode = _4Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _4BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("4BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_4BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_4BodyGeometry->setParentNode(_4Body[i]);
-			_4BodyGeometry->setMaterial(_4bodyMaterial);
-		}
-	}
-
-	std::shared_ptr<Ape::IManualMaterial> _5bodyMaterial;
-	if (_5bodyMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("5BodyNodeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		if (auto _5bodyMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("5BodyMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			_5bodyMaterialManualPass->setShininess(15.0f);
-			_5bodyMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 1.0f));
-			_5bodyMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 1.0f));
-			_5bodyMaterial->setPass(_5bodyMaterialManualPass);
-		}
-	}
-
-	for (int i = 0; i < 25; i++)
-	{
-		std::string index = std::to_string(i);
-
-		if (auto myNode = mpScene->createNode("5BodyNode" + index).lock())
-		{
-			_5Body.push_back(myNode);
-		}
-
-		if (auto childNode = _5Body[i].lock())
-		{
-			childNode->setParentNode(RootNode);
-		}
-
-		if (auto _5BodyGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mpScene->createEntity("5BodyGeometry" + index, Ape::Entity::GEOMETRY_SPHERE).lock()))
-		{
-			_5BodyGeometry->setParameters(2.0f, Ape::Vector2(1, 1));
-			_5BodyGeometry->setParentNode(_5Body[i]);
-			_5BodyGeometry->setMaterial(_5bodyMaterial);
-		}
-	}
-#pragma endregion
 
 	std::cout << "KinectPlugin Initialized" << std::endl;
 }
@@ -351,184 +367,188 @@ void Ape::KinectPlugin::Run()
 	{
 		Update();
 
-#ifdef operatortest
-		//Generate the Point Cloud
-		if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
+		if (!backgroundRemoval)
 		{
-			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
+			//Generate the Point Cloud
+			if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
 			{
-				pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
-				pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
 				{
-					pointCloudNodeText->setCaption("Points_Kinect");
-					pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-					pointCloudNodeText->setParentNode(pointCloudNode);
+					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+					if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
+					{
+						pointCloudNodeText->setCaption("Points_Kinect");
+						pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+						pointCloudNodeText->setParentNode(pointCloudNode);
+					}
+					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
+					{
+						pointCloud->setParameters(KPts, KCol, 100000);
+						pointCloud->setParentNode(pointCloudNode);
+						mPointCloud = pointCloud;
+					}
 				}
-				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
-				{
-					pointCloud->setParameters(KPts, KCol, 100000);
-					pointCloud->setParentNode(pointCloudNode);
-					mPointCloud = pointCloud;							
-				}
+
+				pointsGenerated = true;
 			}
 
-			pointsGenerated = true;
+			//Refresh the Point Cloud
+			if (auto pointCloud = mPointCloud.lock())
+			{
+				pointCloud->updatePoints(KPts);
+				pointCloud->updateColors(KCol);
+			}
 		}
+		else
+		{
+			if (_1Detected && !operatorPointsGenerated)
+			{
+				if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectOperator").lock())
+				{
+					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+					if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+					{
+						pointCloudNodeText->setCaption("Points_KinectOperator");
+						pointCloudNodeText->setOffset(Ape::Vector3(0.0f, -1.0f, 0.0f));
+						pointCloudNodeText->setParentNode(pointCloudNode);
+					}
+					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
+					{
+						pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
+						pointCloud->setParentNode(pointCloudNode);
+						mOperatorPointCloud = pointCloud;
+					}
+				}
 
-		//Refresh the Point Cloud
-		if (auto pointCloud = mPointCloud.lock())
-		{			
-			pointCloud->updatePoints(KPts);
-			pointCloud->updateColors(KCol);
+				operatorPointsGenerated = true;
+			}
+
+			if (auto pointCloud = mOperatorPointCloud.lock())
+			{
+				pointCloud->updatePoints(OperatorPoints);
+				pointCloud->updateColors(OperatorColors);
+			}
 		}
-#endif // operatortest
 
 		//Draw body joints
-#pragma region DrawBody
-		for (int i = 0; i < 25; i++)
+		if (showSkeleton)
 		{
-			if (auto bodynode = _0Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				if (body[0] != NULL)
+				if (auto bodynode = _0Body[i].lock())
 				{
-					if (body[0][i][0]==0 && body[0][i][1]==0 && body[0][i][2]==0)
+					if (body[0] != NULL)
 					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[0][i][0] * 100, body[0][i][1] * 100, body[0][i][2] * 100));
+						if (body[0][i][0] == 0 && body[0][i][1] == 0 && body[0][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[0][i][0] * 100, body[0][i][1] * 100, body[0][i][2] * 100));
+						}
 					}
 				}
 			}
-		}
 
-		for (int i = 0; i < 25; i++)
-		{
-			if (auto bodynode = _1Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				if (body[1] != NULL)
+				if (auto bodynode = _1Body[i].lock())
 				{
-					if (body[1][i][0] == 0 && body[1][i][1] == 0 && body[1][i][2] == 0)
+					if (body[1] != NULL)
 					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[1][i][0] * 100, body[1][i][1] * 100, body[1][i][2] * 100));
-					}
+						if (body[1][i][0] == 0 && body[1][i][1] == 0 && body[1][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[1][i][0] * 100, body[1][i][1] * 100, body[1][i][2] * 100));
+						}
 
-				}
-			}
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			if (auto bodynode = _2Body[i].lock())
-			{
-				if (body[2] != NULL)
-				{
-					if (body[2][i][0] == 0 && body[2][i][1] == 0 && body[2][i][2] == 0)
-					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[2][i][0] * 100, body[2][i][1] * 100, body[2][i][2] * 100));
 					}
 				}
 			}
-		}
 
-		for (int i = 0; i < 25; i++)
-		{
-			if (auto bodynode = _3Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				if (body[3] != NULL)
+				if (auto bodynode = _2Body[i].lock())
 				{
-					if (body[3][i][0] == 0 && body[3][i][1] == 0 && body[3][i][2] == 0)
+					if (body[2] != NULL)
 					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[3][i][0] * 100, body[3][i][1] * 100, body[3][i][2] * 100));
+						if (body[2][i][0] == 0 && body[2][i][1] == 0 && body[2][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[2][i][0] * 100, body[2][i][1] * 100, body[2][i][2] * 100));
+						}
 					}
 				}
 			}
-		}
 
-		for (int i = 0; i < 25; i++)
-		{
-			if (auto bodynode = _4Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				if (body[4] != NULL)
+				if (auto bodynode = _3Body[i].lock())
 				{
-					if (body[4][i][0] == 0 && body[4][i][1] == 0 && body[4][i][2] == 0)
+					if (body[3] != NULL)
 					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[4][i][0] * 100, body[4][i][1] * 100, body[4][i][2] * 100));
+						if (body[3][i][0] == 0 && body[3][i][1] == 0 && body[3][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[3][i][0] * 100, body[3][i][1] * 100, body[3][i][2] * 100));
+						}
 					}
 				}
 			}
-		}
 
-		for (int i = 0; i < 25; i++)
-		{
-			if (auto bodynode = _5Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				if (body[5] != NULL)
+				if (auto bodynode = _4Body[i].lock())
 				{
-					if (body[5][i][0] == 0 && body[5][i][1] == 0 && body[5][i][2] == 0)
+					if (body[4] != NULL)
 					{
-						bodynode->setChildrenVisibility(false);
-					}
-					else
-					{
-						bodynode->setChildrenVisibility(true);
-						bodynode->setPosition(Ape::Vector3(body[5][i][0] * 100, body[5][i][1] * 100, body[5][i][2] * 100));
+						if (body[4][i][0] == 0 && body[4][i][1] == 0 && body[4][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[4][i][0] * 100, body[4][i][1] * 100, body[4][i][2] * 100));
+						}
 					}
 				}
 			}
-		}
-#pragma endregion
 
-		if (_1Detected && !operatorPointsGenerated)
-		{
-			if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectOperator").lock())
+			for (int i = 0; i < 25; i++)
 			{
-				pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
-				pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-				if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto bodynode = _5Body[i].lock())
 				{
-					pointCloudNodeText->setCaption("Points_KinectOperator");
-					pointCloudNodeText->setOffset(Ape::Vector3(0.0f, -1.0f, 0.0f));
-					pointCloudNodeText->setParentNode(pointCloudNode);
-				}
-				if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
-				{
-					pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
-					pointCloud->setParentNode(pointCloudNode);
-					mOperatorPointCloud = pointCloud;
+					if (body[5] != NULL)
+					{
+						if (body[5][i][0] == 0 && body[5][i][1] == 0 && body[5][i][2] == 0)
+						{
+							bodynode->setChildrenVisibility(false);
+						}
+						else
+						{
+							bodynode->setChildrenVisibility(true);
+							bodynode->setPosition(Ape::Vector3(body[5][i][0] * 100, body[5][i][1] * 100, body[5][i][2] * 100));
+						}
+					}
 				}
 			}
-
-			operatorPointsGenerated = true;
-		}
-
-		if (auto pointCloud = mOperatorPointCloud.lock())
-		{
-			pointCloud->updatePoints(OperatorPoints);
-			pointCloud->updateColors(OperatorColors);
 		}
 
 		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
@@ -611,38 +631,81 @@ void Ape::KinectPlugin::Update()
 	}
 
 	IMultiSourceFrame* pFrame = NULL;
-	IMultiSourceFrame* pFrame2 = NULL;
 
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
 		//std::cout << "update" << std::endl;
 
-	if (SUCCEEDED(hr))
+	if (backgroundRemoval)
 	{
-/*		indexes.clear();*/
-		//if (framecount%2==0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
-		//{
-		GetDepthData(pFrame);
-		GetBodyData(pFrame);
-		GetRGBData(pFrame);
-		//}
-		//else
-		//{
-		//GetBodyIndexes(pFrame);
-		//}
+		if (maxFPS)
+		{
+			if (SUCCEEDED(hr))
+			{
+				//	indexes.clear(); //operator function specific
 
-		//GetOperatorPts();
-		//GetOperatorColrs();
+				GetDepthData(pFrame);
+				if (showSkeleton)
+				{
+					GetBodyData(pFrame);
+				}
+				GetRGBData(pFrame);
+
+				//GetOperatorPts();
+				//GetOperatorColrs();
+			}
+
+			SafeRelease(pFrame);
+
+			IMultiSourceFrame* pFrame2 = NULL;
+			HRESULT hr2 = reader->AcquireLatestFrame(&pFrame2);
+
+			if (SUCCEEDED(hr2))
+			{
+				GetBodyIndexes(pFrame2);
+			}
+
+			SafeRelease(pFrame2);
+		}
+		else
+		{
+			if (SUCCEEDED(hr))
+			{
+				if (framecount % 2 == 0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
+				{
+					GetDepthData(pFrame);
+
+					if (showSkeleton)
+					{
+						GetBodyData(pFrame);
+					}
+
+					GetRGBData(pFrame);
+				}
+				else
+				{
+					GetBodyIndexes(pFrame);
+				}
+			}
+
+			SafeRelease(pFrame);
+			framecount++;
+		}
 	}
-
-	SafeRelease(pFrame);
-/*	framecount++*/;
-
-	HRESULT hr2 = reader->AcquireLatestFrame(&pFrame2);
-	if (SUCCEEDED(hr2))
+	else
 	{
-		GetBodyIndexes(pFrame2);
+		if (SUCCEEDED(hr))
+		{
+			GetDepthData(pFrame);
+			GetRGBData(pFrame);
+
+			if (showSkeleton)
+			{
+				GetBodyData(pFrame);
+			}
+		}
+
+		SafeRelease(pFrame);
 	}
-	SafeRelease(pFrame2);
 }
 
 void Ape::KinectPlugin::GetOperatorColrs()
