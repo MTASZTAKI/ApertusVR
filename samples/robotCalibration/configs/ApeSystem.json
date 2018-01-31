@@ -25,7 +25,8 @@
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeCefBrowserPlugin",
-            "ApeRobotCalibrationPlugin"
+            "ApeRobotCalibrationPlugin",
+            "ApeAssimpAssetLoaderPlugin"
         ]
     }
 }
