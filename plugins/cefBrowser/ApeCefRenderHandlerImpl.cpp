@@ -113,7 +113,7 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		CefKeyEvent cefKeyEvent;
-		cefKeyEvent.windows_key_code = keyASCIIValue;
+
 		if (
 			   keyASCIIValue == 8 // backspace
 			|| keyASCIIValue == 9 // tab
@@ -130,6 +130,12 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYDOWN;
 		else
 			cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_CHAR;
+
+		cefKeyEvent.windows_key_code = keyASCIIValue;
+		// exceptions
+		if (keyASCIIValue == 1046)
+			cefKeyEvent.windows_key_code = 46;
+
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
 
 		cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYUP;

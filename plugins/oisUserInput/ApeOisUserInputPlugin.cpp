@@ -235,6 +235,8 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			keyAsWString = 40;
 		else if (e.key == OIS::KeyCode::KC_DELETE)
 			keyAsWString = 46;
+		else if (e.key == OIS::KeyCode::KC_PERIOD)
+			keyAsWString = 1046;
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 	}
