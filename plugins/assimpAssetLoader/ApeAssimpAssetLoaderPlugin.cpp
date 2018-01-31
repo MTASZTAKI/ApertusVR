@@ -39,6 +39,7 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mObjectCount = 0;
 	mSceneUnitScale = 1;
 	mRegenerateNormals = false;
+	mRootNode = Ape::NodeWeakPtr();
 }
 
 Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
@@ -107,6 +108,9 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
 			mRegenerateNormals = regenerateNormals.GetBool();
 			std::cout << "AssimpAssetLoaderPlugin::run regenerateNormals? " << mRegenerateNormals << std::endl;
+			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
+			mRootNode = mpScene->createNode(rootNodeName.GetString());
+			std::cout << "AssimpAssetLoaderPlugin::run mRootNode: " << rootNodeName.GetString() << std::endl;
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
 	}
@@ -132,9 +136,13 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 				}
 				else
 				{
-					//TODO somehow detect the unit of the scene
-					std::cout << "AssimpAssetLoaderPlugin::run setScale to " << mSceneUnitScale << std::endl;
-					rootNode->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
+					if (auto node = mRootNode.lock())
+					{
+						//TODO somehow detect the unit of the scene
+						std::cout << "AssimpAssetLoaderPlugin::run setScale to " << mSceneUnitScale << std::endl;
+						node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
+						rootNode->setParentNode(node);
+					}
 				}
 			}
 		}

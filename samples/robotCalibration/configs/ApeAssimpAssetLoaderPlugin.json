@@ -3,4 +3,5 @@
         "/plugins/assimpAssetLoader/resources/UVmap.obj"
     ],
     "mergeAndExportMeshes": true
+    "rootNodeName": "robotRootNode"
 }

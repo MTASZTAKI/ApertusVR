@@ -92,6 +92,8 @@ namespace Ape
 
 		bool mRegenerateNormals;
 
+		Ape::NodeWeakPtr mRootNode;
+
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 	};
 	
