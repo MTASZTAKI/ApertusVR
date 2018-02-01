@@ -1890,18 +1890,17 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							float left = 0;
 							if (mOgreCameras.size() > 2)
 							{
-								left = 0.33f;
+								left = 0.333334f;
 							}
 							if (mOgreCameras.size() > 4)
 							{
-								left = 0.66f;
+								left = 0.666668f;
 							}
-
 							std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " zorder: " << zorder << std::endl;
-							if (auto viewPort = mRenderWindows["window0"]->addViewport(ogreCamera, zorder, left, 0, 0.33f))
+							if (auto viewPort = mRenderWindows["window0"]->addViewport(ogreCamera, zorder, left, 0, 0.333334f))
 							{
 								//TODO why it is working instead of in the init phase?
-								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << std::endl;
+								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft() << std::endl;
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 										{
