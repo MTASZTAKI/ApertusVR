@@ -34,6 +34,7 @@ set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
 set (HEADERS
 	wrappers/ApeJsBindColor.h
 	wrappers/ApeJsBindDegree.h
+	wrappers/ApeJsBindEuler.h
 	wrappers/ApeJsBindIndexedFaceSetGeometryImpl.h
 	wrappers/ApeJsBindLightImpl.h
 	wrappers/ApeJsBindManager.h
