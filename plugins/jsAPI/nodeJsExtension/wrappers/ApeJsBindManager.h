@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "nbind/api.h"
 #include "ApeJsBindColor.h"
 #include "ApeJsBindDegree.h"
+#include "ApeJsBindEuler.h"
 #include "ApeJsBindQuaternion.h"
 #include "ApeJsBindRadian.h"
 #include "ApeJsBindVector3.h"

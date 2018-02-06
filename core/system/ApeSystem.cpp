@@ -47,7 +47,18 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	gpSceneImpl = new SceneImpl();
 
 	std::stringstream uniqueUserNodeName;
-	uniqueUserNodeName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
+	std::string delimiter = "-";
+	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
+	std::string sessionGUID = gpSceneSessionImpl->getGUID();
+
+	if (sessionGUID == "UNASSIGNED_RAKNET_GUID")
+		sessionGUID = "";
+	if (uniqueUserNamePrefix.empty())
+		uniqueUserNamePrefix = "defaultUserNode";
+	if (sessionGUID.empty())
+		delimiter = "";
+
+	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << sessionGUID;
 	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
 	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	

@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "ApeNodeImpl.h"
+#include "ApeEuler.h"
 
 #ifdef NBIND_CLASS
 
@@ -106,6 +107,17 @@ public:
 		mPtr.lock()->setOrientation(orientation);
 	}
 
+	const Ape::Euler getEuler()
+	{
+		Ape::Quaternion q = mPtr.lock()->getOrientation();
+		return Ape::Euler(q);
+	}
+
+	void setEuler(Ape::Euler euler)
+	{
+		mPtr.lock()->setOrientation(euler.toQuaternion());
+	}
+
 	const Ape::Quaternion getDerivedOrientation()
 	{
 		return mPtr.lock()->getDerivedOrientation();
@@ -165,6 +177,9 @@ NBIND_CLASS(NodeJsPtr)
 
 	method(getOrientation);
 	method(setOrientation);
+
+	method(getEuler);
+	method(setEuler);
 
 	method(getDerivedOrientation);
 
