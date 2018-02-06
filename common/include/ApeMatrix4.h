@@ -31,6 +31,8 @@ SOFTWARE.*/
 #include "ApeVector4.h"
 #include "ApeDegree.h"
 #include "ApeRadian.h"
+#include "ApeQuaternion.h"
+#include "ApeMatrix3.h"
 
 namespace Ape
 {
@@ -251,86 +253,45 @@ namespace Ape
 						   m[0][3], m[1][3], m[2][3], m[3][3]);
 		}
 
-		void setTranslate( const Ape::Vector3& v )
+		void makeTransform( const Ape::Vector3& scale, const Ape::Quaternion& rotation, const Ape::Vector3& translate )
 		{
-			m[0][3] = v.x;
-			m[1][3] = v.y;
-			m[2][3] = v.z;
+			Ape::Matrix3 rot3x3;
+			rotation.ToRotationMatrix(rot3x3);
+
+			m[0][0] = scale.x * rot3x3[0][0]; m[0][1] = scale.y * rot3x3[0][1]; m[0][2] = scale.z * rot3x3[0][2]; m[0][3] = translate.x;
+			m[1][0] = scale.x * rot3x3[1][0]; m[1][1] = scale.y * rot3x3[1][1]; m[1][2] = scale.z * rot3x3[1][2]; m[1][3] = translate.y;
+			m[2][0] = scale.x * rot3x3[2][0]; m[2][1] = scale.y * rot3x3[2][1]; m[2][2] = scale.z * rot3x3[2][2]; m[2][3] = translate.z;
+
+			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 		}
 
-		Ape::Vector3 getTranslate() const
+		inline void extract3x3Matrix(Ape::Matrix3& m3x3) const
 		{
-		  return Ape::Vector3(m[0][3], m[1][3], m[2][3]);
+			m3x3.m[0][0] = m[0][0];
+			m3x3.m[0][1] = m[0][1];
+			m3x3.m[0][2] = m[0][2];
+			m3x3.m[1][0] = m[1][0];
+			m3x3.m[1][1] = m[1][1];
+			m3x3.m[1][2] = m[1][2];
+			m3x3.m[2][0] = m[2][0];
+			m3x3.m[2][1] = m[2][1];
+			m3x3.m[2][2] = m[2][2];
+
 		}
 
-		void makeTranslate( const Ape::Vector3& v )
+		inline void decomposition( Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
 		{
-			m[0][0] = 1.0; m[0][1] = 0.0; m[0][2] = 0.0; m[0][3] = v.x;
-			m[1][0] = 0.0; m[1][1] = 1.0; m[1][2] = 0.0; m[1][3] = v.y;
-			m[2][0] = 0.0; m[2][1] = 0.0; m[2][2] = 1.0; m[2][3] = v.z;
-			m[3][0] = 0.0; m[3][1] = 0.0; m[3][2] = 0.0; m[3][3] = 1.0;
+			Ape::Matrix3 m3x3;
+			extract3x3Matrix(m3x3);
+
+			Ape::Matrix3 matQ;
+			Ape::Vector3 vecU;
+			m3x3.QDUDecomposition(matQ, scale, vecU);
+
+			rotation = Ape::Quaternion(matQ);
+			translate = Ape::Vector3(m[0][3], m[1][3], m[2][3]);
 		}
 
-		void makeTranslate( float tx, float ty, float tz )
-		{
-			m[0][0] = 1.0; m[0][1] = 0.0; m[0][2] = 0.0; m[0][3] = tx;
-			m[1][0] = 0.0; m[1][1] = 1.0; m[1][2] = 0.0; m[1][3] = ty;
-			m[2][0] = 0.0; m[2][1] = 0.0; m[2][2] = 1.0; m[2][3] = tz;
-			m[3][0] = 0.0; m[3][1] = 0.0; m[3][2] = 0.0; m[3][3] = 1.0;
-		}
-
-		static Matrix4 getTranslate( const Ape::Vector3& v )
-		{
-			Matrix4 r;
-
-			r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = v.x;
-			r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0; r.m[1][3] = v.y;
-			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = 1.0; r.m[2][3] = v.z;
-			r.m[3][0] = 0.0; r.m[3][1] = 0.0; r.m[3][2] = 0.0; r.m[3][3] = 1.0;
-
-			return r;
-		}
-
-		static Matrix4 getTrans( float t_x, float t_y, float t_z )
-		{
-			Matrix4 r;
-
-			r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = t_x;
-			r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0; r.m[1][3] = t_y;
-			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = 1.0; r.m[2][3] = t_z;
-			r.m[3][0] = 0.0; r.m[3][1] = 0.0; r.m[3][2] = 0.0; r.m[3][3] = 1.0;
-
-			return r;
-		}
-
-		void setScale( const Ape::Vector3& v )
-		{
-			m[0][0] = v.x;
-			m[1][1] = v.y;
-			m[2][2] = v.z;
-		}
-
-		static Matrix4 getScale( const Ape::Vector3& v )
-		{
-			Matrix4 r;
-			r.m[0][0] = v.x; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = 0.0;
-			r.m[1][0] = 0.0; r.m[1][1] = v.y; r.m[1][2] = 0.0; r.m[1][3] = 0.0;
-			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = v.z; r.m[2][3] = 0.0;
-			r.m[3][0] = 0.0; r.m[3][1] = 0.0; r.m[3][2] = 0.0; r.m[3][3] = 1.0;
-
-			return r;
-		}
-
-		static Matrix4 getScale( float s_x, float s_y, float s_z )
-		{
-			Matrix4 r;
-			r.m[0][0] = s_x; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = 0.0;
-			r.m[1][0] = 0.0; r.m[1][1] = s_y; r.m[1][2] = 0.0; r.m[1][3] = 0.0;
-			r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = s_z; r.m[2][3] = 0.0;
-			r.m[3][0] = 0.0; r.m[3][1] = 0.0; r.m[3][2] = 0.0; r.m[3][3] = 1.0;
-
-			return r;
-        }
     };
 	static const Matrix4 MATRIX4IDENTITY
 		(
