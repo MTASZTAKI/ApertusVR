@@ -11,8 +11,18 @@ body {
     margin-right: 1rem;
 }
 
-.panel {
+.panel-left {
     width: 260px;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+}
+
+.panel-right {
+    width: 260px;
+    position: absolute;
+    top: 45px;
+    right: 0px;
 }
 
 .slider {

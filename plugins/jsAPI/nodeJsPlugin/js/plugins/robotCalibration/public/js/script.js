@@ -45,7 +45,7 @@ function getNodeOrientation(nodeName) {
     });
 }
 
-function setNodeOrientation(nodeName, value) {
+function setNodeOrientation(nodeName) {
     console.log('setting Node orientation: ', nodeName);
     var ori = {
         w: $('#quatW').val(),
@@ -55,6 +55,37 @@ function setNodeOrientation(nodeName, value) {
     };
     doPostRequest(apiEndPointNode + nodeName + '/orientation', ori, function(res){
         console.log(res);
+        getNodeEuler(nodeName);
+    });
+}
+
+function getNodeEuler(nodeName) {
+    console.log('getting Node euler: ', nodeName);
+    doGetRequest(apiEndPointNode + nodeName + '/euler', function(res){
+        var euler = res.data.items[0].euler;
+        console.log(euler);
+
+        $('#eulerY').val(euler.y);
+        $("#eulerYRange").slider("value", euler.y);
+
+        $('#eulerP').val(euler.p);
+        $("#eulerPRange").slider("value", euler.p);
+
+        $('#eulerR').val(euler.r);
+        $("#eulerRRange").slider("value", euler.r);
+    });
+}
+
+function setNodeEuler(nodeName) {
+    console.log('setting Node euler: ', nodeName);
+    var euler = {
+        y: $('#eulerY').val(),
+        p: $('#eulerP').val(),
+        r: $('#eulerR').val()
+    };
+    doPostRequest(apiEndPointNode + nodeName + '/euler', euler, function(res){
+        console.log(res);
+        getNodeOrientation(nodeName);
     });
 }
 
@@ -122,14 +153,38 @@ function resetQuat() {
     setNodeOrientation(nodeName);
 }
 
+function resetEuler() {
+    console.log('resetEuler');
+
+    $('#eulerY').val(0);
+    $("#eulerYRange").slider("value", 0);
+
+    $('#eulerP').val(0);
+    $("#eulerPRange").slider("value", 0);
+
+    $('#eulerR').val(0);
+    $("#eulerRRange").slider("value", 0);
+
+    setNodeEuler(nodeName);
+}
+
 $(document).ready(function(){
+
+    $("#nodeName").change(function(){
+        nodeName = $(this).val();
+    });
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $( ".input-range" ).slider({
+    $(".input-pos").bind('keyup change', function(e){
+        console.log('pos bind: ', $(this).val());
+        setNodePosition(nodeName);
+    });
+
+    $( ".input-range-quat" ).slider({
         min: -1,
         max: 1,
-        value:0,
+        value: 0,
         step: 0.00000001,
         slide: function( event, ui ) {
             var focused = document.activeElement;
@@ -140,26 +195,41 @@ $(document).ready(function(){
         }
     });
 
-    $(".input-range-var").bind('keyup change', function(e){
+    $(".input-range-quat-var").bind('keyup change', function(e){
         console.log('quat bind: ', $(this).val());
         var focused = document.activeElement;
-        if (focused.classList.contains('input-range-var')) {
-            $("#" + $(this).data("input-range")).slider("value", $(this).val());
+        if (focused.classList.contains('input-range-quat-var')) {
+            $("#" + $(this).data("input-range-quat")).slider("value", $(this).val());
             setNodeOrientation(nodeName);
         }
     });
 
-
-    $(".input-pos").bind('keyup change', function(e){
-        console.log('pos bind: ', $(this).val());
-        setNodePosition(nodeName);
+    $( ".input-range-euler" ).slider({
+        min: -180,
+        max: 180,
+        value: 0,
+        step: 0.00000001,
+        slide: function( event, ui ) {
+            var focused = document.activeElement;
+            if (focused.classList.contains('ui-slider-handle')) {
+                $("#" + $(this).data("input-handler")).prop('value', ui.value);
+                setNodeEuler(nodeName);
+            }
+        }
     });
 
-    $("#nodeName").change(function(){
-        nodeName = $(this).val();
+    $(".input-range-euler-var").bind('keyup change', function(e){
+        console.log('euler bind: ', $(this).val());
+        var focused = document.activeElement;
+        if (focused.classList.contains('input-range-euler-var')) {
+            $("#" + $(this).data("input-range-euler")).slider("value", $(this).val());
+            setNodeEuler(nodeName);
+        }
     });
 
     $('#nodeName').val(nodeName);
     getNodePosition(nodeName);
     getNodeOrientation(nodeName);
+    getNodeEuler(nodeName);
+    // resetEuler();
 });

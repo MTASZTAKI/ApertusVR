@@ -29,13 +29,13 @@
             </div>
         </div>
 
-        <div class="panel">
+        <div class="panel-left">
             <div class="card m-2">
                 <div class="card-header">
                     Position
                     <button type="button" class="btn btn-sm float-right" onClick="resetPos();" data-toggle="tooltip" title="Click here to clear position data">
                         <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
-                    </button>  
+                    </button>
                 </div>
                 <div class="card-body p-2">
                     <div class="input-group mb-3">
@@ -102,9 +102,9 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" class="input-range-var form-control" id="quatW" name="quatW" data-input-range="quatWRange"></input>
+                        <input type="text" class="input-range-quat-var form-control" id="quatW" name="quatW" data-input-range="quatWRange"></input>
                     </div>
-                    <div id="quatWRange" class="input-range slider secondary" data-input-handler="quatW"></div>
+                    <div id="quatWRange" class="input-range-quat slider secondary" data-input-handler="quatW"></div>
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -118,9 +118,9 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" class="input-range-var form-control" id="quatX" name="quatX" data-input-range="quatXRange">
+                        <input type="text" class="input-range-quat-var form-control" id="quatX" name="quatX" data-input-range="quatXRange">
                     </div>
-                    <div id="quatXRange" class="input-range slider danger" data-input-handler="quatX"></div>
+                    <div id="quatXRange" class="input-range-quat slider danger" data-input-handler="quatX"></div>
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -134,9 +134,9 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" class="input-range-var form-control" id="quatY" name="quatY" data-input-range="quatYRange">
+                        <input type="text" class="input-range-quat-var form-control" id="quatY" name="quatY" data-input-range="quatYRange">
                     </div>
-                    <div id="quatYRange" class="input-range slider success" data-input-handler="quatY"></div>
+                    <div id="quatYRange" class="input-range-quat slider success" data-input-handler="quatY"></div>
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -150,9 +150,69 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" class="input-range-var form-control" id="quatZ" name="quatZ"  data-input-range="quatZRange">
+                        <input type="text" class="input-range-quat-var form-control" id="quatZ" name="quatZ"  data-input-range="quatZRange">
                     </div>
-                    <div id="quatZRange" class="input-range slider info" data-input-handler="quatZ"></div>
+                    <div id="quatZRange" class="input-range-quat slider info" data-input-handler="quatZ"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="card m-2">
+                <div class="card-header">
+                    Quaternion
+                    <button type="button" class="btn btn-sm float-right" onClick="resetEuler();" data-toggle="tooltip" title="Click here to clear quaternion data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>  
+                </div>
+                <div class="card-body p-2">        
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Yaw
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerY" name="eulerY" data-input-range="eulerYRange">
+                    </div>
+                    <div id="eulerYRange" class="input-range-euler slider danger" data-input-handler="eulerY"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Pitch
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerP')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerP')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerP" name="eulerP" data-input-range="eulerPRange">
+                    </div>
+                    <div id="eulerPRange" class="input-range-euler slider success" data-input-handler="eulerP"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Roll
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerR')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerR')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerR" name="eulerR"  data-input-range="eulerRRange">
+                    </div>
+                    <div id="eulerRRange" class="input-range-euler slider info" data-input-handler="eulerR"></div>
                 </div>
             </div>
         </div>
