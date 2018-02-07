@@ -40,6 +40,8 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mSceneUnitScale = 1;
 	mRegenerateNormals = false;
 	mRootNode = Ape::NodeWeakPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
+	mAssetCount = 0;
 }
 
 Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
@@ -54,99 +56,22 @@ void Ape::AssimpAssetLoaderPlugin::Init()
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	std::cout << "AssimpAssetLoaderPlugin main window was found" << std::endl;
+	mpAssimpImporter = new Assimp::Importer();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Run()
 {
-	mpAssimpImporter = new Assimp::Importer();
-	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
-	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	char readBuffer[65536];
-	if (apeAssimpAssetLoaderConfigFile)
+	loadConfig();
+	for (auto fullPath : mAssimpAssetFileNames)
 	{
-		rapidjson::FileReadStream jsonFileReaderStream(apeAssimpAssetLoaderConfigFile, readBuffer, sizeof(readBuffer));
-		rapidjson::Document jsonDocument;
-		jsonDocument.ParseStream(jsonFileReaderStream);
-		if (jsonDocument.IsObject())
-		{
-			rapidjson::Value& assimpAssetFileNames = jsonDocument["assets"];
-			for (auto& assimpAssetFileName : assimpAssetFileNames.GetArray())
-			{
-				std::stringstream assimpAssetFileNamePath;
-				assimpAssetFileNamePath << APE_SOURCE_DIR << assimpAssetFileName.GetString();
-				std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
-				std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
-				//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
-				if (fileExtension == ".mesh")
-				{
-					if (auto node = mpScene->createNode("node").lock())
-					{
-						if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
-						{
-							meshFile->setFileName(fileName);
-							meshFile->mergeSubMeshes();
-							//TODO how to use it when static geomtery is created?
-							//meshFile->setParentNode(node);
-							//TODO how to export the optimized mesh when static geomtery is created?
-							//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
-							//meshFile->exportMesh();
-						}
-					}
-				}
-				//TODO end
-				else
-				{
-					mAssimpAssetFileNames.push_back(assimpAssetFileNamePath.str());
-					mAssimpScenes.push_back(mpAssimpImporter->ReadFile(assimpAssetFileNamePath.str(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType));
-				}
-			}
-			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
-			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
-			rapidjson::Value& scale = jsonDocument["scale"];
-			mSceneUnitScale = scale.GetFloat();
-			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
-			mRegenerateNormals = regenerateNormals.GetBool();
-			std::cout << "AssimpAssetLoaderPlugin::run regenerateNormals? " << mRegenerateNormals << std::endl;
-			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
-			mRootNode = mpScene->createNode(rootNodeName.GetString());
-			std::cout << "AssimpAssetLoaderPlugin::run mRootNode: " << rootNodeName.GetString() << std::endl;
-		}
-		fclose(apeAssimpAssetLoaderConfigFile);
+		loadFile(fullPath, mAssetCount);
+		mAssetCount++;
 	}
-	for (int i = 0; i < mAssimpAssetFileNames.size(); i++)
+	while (true)
 	{
-		const aiScene* assimpScene = mAssimpScenes[i];
-		if (!assimpScene)
-			std::cout << "AssimpAssetLoaderPlugin::loading the asset " << mAssimpAssetFileNames[i] << " was failed due to: " << mpAssimpImporter->GetErrorString() << std::endl;
-		else if (assimpScene->mRootNode)
-		{
-			std::cout << "AssimpAssetLoaderPlugin::mNumMeshes: " << assimpScene->mNumMeshes << std::endl;
-			createNode(i, assimpScene->mRootNode);
-			if (auto rootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
-			{
-				if (mMergeAndExportMeshes)
-				{
-					if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetFileNames[i], Ape::Entity::GEOMETRY_FILE).lock()))
-					{
-						meshFile->exportMesh();
-						meshFile->setParentNode(rootNode);
-						rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-					}
-				}
-				else
-				{
-					if (auto node = mRootNode.lock())
-					{
-						//TODO somehow detect the unit of the scene
-						std::cout << "AssimpAssetLoaderPlugin::run setScale to " << mSceneUnitScale << std::endl;
-						node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
-						rootNode->setParentNode(node);
-					}
-				}
-			}
-		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
+	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::AssimpAssetLoaderPlugin::Step()
@@ -167,6 +92,18 @@ void Ape::AssimpAssetLoaderPlugin::Suspend()
 void Ape::AssimpAssetLoaderPlugin::Restart()
 {
 	
+}
+
+void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
+{
+	if (event.type == Ape::Event::Type::GEOMETRY_FILE_FILENAME)
+	{
+		if (auto fileGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			loadFile(fileGeometry->getFileName(), mAssetCount);
+			mAssetCount++;
+		}
+	}
 }
 
 void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpNode)
@@ -350,4 +287,97 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 	}
 	for (int i = 0; i < assimpNode->mNumChildren; i++)
 		createNode(assimpSceneID, assimpNode->mChildren[i]);
+}
+
+void Ape::AssimpAssetLoaderPlugin::loadConfig()
+{
+	std::stringstream fileFullPath;
+	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
+	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (apeAssimpAssetLoaderConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(apeAssimpAssetLoaderConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& assimpAssetFileNames = jsonDocument["assets"];
+			for (auto& assimpAssetFileName : assimpAssetFileNames.GetArray())
+			{
+				std::stringstream assimpAssetFileNamePath;
+				assimpAssetFileNamePath << APE_SOURCE_DIR << assimpAssetFileName.GetString();
+				std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
+				std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
+				//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
+				if (fileExtension == ".mesh")
+				{
+					if (auto node = mpScene->createNode("node").lock())
+					{
+						if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
+						{
+							meshFile->setFileName(fileName);
+							meshFile->mergeSubMeshes();
+							//TODO how to use it when static geomtery is created?
+							//meshFile->setParentNode(node);
+							//TODO how to export the optimized mesh when static geomtery is created?
+							//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
+							//meshFile->exportMesh();
+						}
+					}
+				}
+				//TODO end
+				else
+				{
+					mAssimpAssetFileNames.push_back(assimpAssetFileNamePath.str());
+					mAssimpScenes.push_back(mpAssimpImporter->ReadFile(assimpAssetFileNamePath.str(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType));
+				}
+			}
+			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
+			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
+			rapidjson::Value& scale = jsonDocument["scale"];
+			mSceneUnitScale = scale.GetFloat();
+			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
+			mRegenerateNormals = regenerateNormals.GetBool();
+			std::cout << "AssimpAssetLoaderPlugin::run regenerateNormals? " << mRegenerateNormals << std::endl;
+			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
+			mRootNode = mpScene->createNode(rootNodeName.GetString());
+			std::cout << "AssimpAssetLoaderPlugin::run mRootNode: " << rootNodeName.GetString() << std::endl;
+		}
+		fclose(apeAssimpAssetLoaderConfigFile);
+	}
+}
+
+void Ape::AssimpAssetLoaderPlugin::loadFile(std::string fullPath, int ID)
+{
+	const aiScene* assimpScene = mAssimpScenes[ID];
+	if (!assimpScene)
+		std::cout << "AssimpAssetLoaderPlugin::loading the asset " << mAssimpAssetFileNames[ID] << " was failed due to: " << mpAssimpImporter->GetErrorString() << std::endl;
+	else if (assimpScene->mRootNode)
+	{
+		std::cout << "AssimpAssetLoaderPlugin::mNumMeshes: " << assimpScene->mNumMeshes << std::endl;
+		createNode(ID, assimpScene->mRootNode);
+		if (auto rootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
+		{
+			if (mMergeAndExportMeshes)
+			{
+				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetFileNames[ID], Ape::Entity::GEOMETRY_FILE).lock()))
+				{
+					meshFile->exportMesh();
+					meshFile->setParentNode(rootNode);
+					rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+				}
+			}
+			else
+			{
+				if (auto node = mRootNode.lock())
+				{
+					//TODO somehow detect the unit of the scene
+					std::cout << "AssimpAssetLoaderPlugin::run setScale to " << mSceneUnitScale << std::endl;
+					node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
+					rootNode->setParentNode(node);
+				}
+			}
+		}
+	}
 }

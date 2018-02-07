@@ -94,7 +94,15 @@ namespace Ape
 
 		Ape::NodeWeakPtr mRootNode;
 
+		int mAssetCount;
+
+		void eventCallBack(const Ape::Event& event);
+
 		void createNode(int assimpSceneID, aiNode* assimpNode);
+
+		void loadConfig();
+
+		void loadFile(std::string fullPath, int ID);
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateAssimpAssetLoaderPlugin()

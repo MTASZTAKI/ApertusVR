@@ -40,7 +40,7 @@ namespace Ape
 		
 		void setFileName(std::string fileName) override;
 
-		std::string getfFileName() override;
+		std::string getFileName() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
