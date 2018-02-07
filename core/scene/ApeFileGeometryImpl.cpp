@@ -36,7 +36,7 @@ Ape::FileGeometryImpl::~FileGeometryImpl()
 	
 }
 
-std::string Ape::FileGeometryImpl::getfFileName()
+std::string Ape::FileGeometryImpl::getFileName()
 {
 	return mFileName;
 }

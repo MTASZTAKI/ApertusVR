@@ -186,7 +186,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 			if (auto geometryFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometryFile->getName();
-				std::string fileName = geometryFile->getfFileName();
+				std::string fileName = geometryFile->getFileName();
 				std::string parentNodeName = "";
 				if (auto parentNode = geometryFile->getParentNode().lock())
 					parentNodeName = parentNode->getName();
