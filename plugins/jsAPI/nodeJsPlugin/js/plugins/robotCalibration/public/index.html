@@ -14,25 +14,38 @@
         <script src="js/script.js"></script>
     </head>
     <body>
-        <div class="header">
-            <div class="input-group m-2">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3">NodeName</span>
-                </div>
-                <input type="text" class="form-control" id="nodeName" name="nodeName" aria-describedby="basic-addon3">
-                <a href="javascript:location.reload(true)">
-                    <span class="oi" data-glyph="reload" title="icon name" aria-hidden="true"></span>
-                    <button type="button" class="btn" data-toggle="tooltip" title="Click to refresh data">
-                        <li class="ion-loop" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 2rem;"></li>
-                    </button>                    
-                </a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            File
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#" id="openModelButton">Open 3D Model</a>
+                            <input id="filePath" name="filePath" type="file" accept="image/*" style="display: none;" />
+
+                            <!-- <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Exit</a> -->
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal">About</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="" id="nodeName" name="nodeName" aria-label="Search">
+                    <button class="btn btn-outline-secondary my-2 my-sm-0" onClick="javascript:location.reload(true);" type="submit">
+                        Refresh
+                    </button>
+                </form>
             </div>
-        </div>
+        </nav>
 
         <div class="panel-left">
             <div class="card m-2">
                 <div class="card-header">
-                    Position
+                    Translate
                     <button type="button" class="btn btn-sm float-right" onClick="resetPos();" data-toggle="tooltip" title="Click here to clear position data">
                         <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
                     </button>
@@ -84,7 +97,7 @@
             </div>
             <div class="card m-2">
                 <div class="card-header">
-                    Quaternion
+                    Rotation
                     <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear quaternion data">
                         <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
                     </button>  
@@ -160,10 +173,63 @@
         <div class="panel-right">
             <div class="card m-2">
                 <div class="card-header">
-                    Quaternion
-                    <button type="button" class="btn btn-sm float-right" onClick="resetEuler();" data-toggle="tooltip" title="Click here to clear quaternion data">
+                    Scale
+                    <button type="button" class="btn btn-sm float-right" onClick="resetScale();" data-toggle="tooltip" title="Click here to clear scale data">
                         <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
-                    </button>  
+                    </button>
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleX" name="scaleX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleY" name="scaleY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleZ" name="scaleZ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card m-2">
+                <div class="card-header">
+                    Rotation
+                    <button type="button" class="btn btn-sm float-right" onClick="resetEuler();" data-toggle="tooltip" title="Click here to clear way pitch roll data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
                 </div>
                 <div class="card-body p-2">        
                     <div class="input-group mb-3">
@@ -215,8 +281,43 @@
                     <div id="eulerRRange" class="input-range-euler slider info" data-input-handler="eulerR"></div>
                 </div>
             </div>
+
+            <div class="card m-2">
+                <div class="card-header">
+                    Transformation
+                    <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                    <button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('transMatrix');" data-toggle="tooltip" title="Click here to copy data">
+                        <li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+
+                <textarea class="form-control" rows="5" id="transMatrix" readonly></textarea>
+            </div>
         </div>
 
+        <!-- About Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">About</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        Disz iz dö RobotKelibrésön szempül of PetyusVíár
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Bar -->
         <div id="snackbar"></div>
     </body>
 </html>

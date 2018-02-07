@@ -22,6 +22,7 @@ function setNodePosition(nodeName) {
     };
     doPostRequest(apiEndPointNode + nodeName + '/position', pos, function(res){
         console.log(res);
+        getTransformationMatrix(nodeName);
     });
 }
 
@@ -56,6 +57,7 @@ function setNodeOrientation(nodeName) {
     doPostRequest(apiEndPointNode + nodeName + '/orientation', ori, function(res){
         console.log(res);
         getNodeEuler(nodeName);
+        getTransformationMatrix(nodeName);
     });
 }
 
@@ -86,7 +88,52 @@ function setNodeEuler(nodeName) {
     doPostRequest(apiEndPointNode + nodeName + '/euler', euler, function(res){
         console.log(res);
         getNodeOrientation(nodeName);
+        getTransformationMatrix(nodeName);
     });
+}
+
+function getTransformationMatrix(nodeName) {
+    console.log('getting Node transformation matrix: ', nodeName);
+    doGetRequest(apiEndPointNode + nodeName + '/transformationmatrix', function(res){
+        var matrix = res.data.items[0].transformationmatrix;
+        console.log(matrix);
+        $('#transMatrix').val(matrix);
+    });
+}
+
+function getNodeScale(nodeName) {
+    console.log('getting Node scale: ', nodeName);
+    doGetRequest(apiEndPointNode + nodeName + '/scale', function(res){
+        var scale = res.data.items[0].scale;
+        console.log(scale);
+        $('#scaleX').val(scale.x);
+        $('#scaleY').val(scale.y);
+        $('#scaleZ').val(scale.z);
+    });
+}
+
+function setNodeScale(nodeName) {
+    console.log('setting Node scale: ', nodeName);
+    var scale = {
+        x: $('#scaleX').val(),
+        y: $('#scaleY').val(),
+        z: $('#scaleZ').val()
+    };
+    doPostRequest(apiEndPointNode + nodeName + '/scale', scale, function(res){
+        console.log(res);
+        getTransformationMatrix(nodeName);
+    });
+}
+
+function updateProperties() {
+    $('#nodeName').val(nodeName);
+    getNodePosition(nodeName);
+    getNodeScale(nodeName);
+
+    getNodeOrientation(nodeName);
+    getNodeEuler(nodeName);
+
+    getTransformationMatrix(nodeName);
 }
 
 function doGetRequest(apiEndPointUrl, callback) {
@@ -168,6 +215,16 @@ function resetEuler() {
     setNodeEuler(nodeName);
 }
 
+function resetScale() {
+    console.log('resetScale');
+
+    $('#scaleX').val(0);
+    $('#scaleY').val(0);
+    $('#scaleZ').val(0);
+
+    setNodeScale(nodeName);
+}
+
 $(document).ready(function(){
 
     $("#nodeName").change(function(){
@@ -181,7 +238,12 @@ $(document).ready(function(){
         setNodePosition(nodeName);
     });
 
-    $( ".input-range-quat" ).slider({
+    $(".input-scale").bind('keyup change', function(e){
+        console.log('scale bind: ', $(this).val());
+        setNodeScale(nodeName);
+    });
+
+    $(".input-range-quat").slider({
         min: -1,
         max: 1,
         value: 0,
@@ -204,7 +266,7 @@ $(document).ready(function(){
         }
     });
 
-    $( ".input-range-euler" ).slider({
+    $(".input-range-euler").slider({
         min: -180,
         max: 180,
         value: 0,
@@ -227,9 +289,9 @@ $(document).ready(function(){
         }
     });
 
-    $('#nodeName').val(nodeName);
-    getNodePosition(nodeName);
-    getNodeOrientation(nodeName);
-    getNodeEuler(nodeName);
-    // resetEuler();
+    $('#openModelButton').click(function(){
+        $('#filePath').click();
+    });
+
+    updateProperties();
 });
