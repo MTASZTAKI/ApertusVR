@@ -41,6 +41,7 @@ set (HEADERS
 	wrappers/ApeJsBindNodeImpl.h
 	wrappers/ApeJsBindQuaternion.h
 	wrappers/ApeJsBindRadian.h
+	wrappers/ApeJsBindMatrix4.h
 	wrappers/ApeJsBindTextGeometryImpl.h
 	wrappers/ApeJsBindVector3.h
 	wrappers/ApeManualMaterialJsBind.h
