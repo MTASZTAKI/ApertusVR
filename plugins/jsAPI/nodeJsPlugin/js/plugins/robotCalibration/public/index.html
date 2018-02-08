@@ -23,7 +23,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#" id="openModelButton">Open 3D Model</a>
-                            <input id="filePath" name="filePath" type="file" accept="image/*" style="display: none;" />
+                            <input id="filePath" name="filePath" type="file" accept="*" onchange="onFilePathChange(this.files)" style="display: none;" />
 
                             <!-- <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">Exit</a> -->

@@ -1,5 +1,6 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var apiEndPointNode = apiEndPoint + 'nodes/';
+var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
 var nodeName = 'robotRootNode';
 
 function getNodePosition(nodeName) {
@@ -223,6 +224,36 @@ function resetScale() {
     $('#scaleZ').val(0);
 
     setNodeScale(nodeName);
+}
+
+function onFilePathChange(files) {
+    if (files.length > 0) {
+        var selectedFile = files[0];
+        console.log('selectedFile:', selectedFile);
+
+        // create a FormData object which will be sent as the data payload in the
+        // AJAX request
+        var formData = new FormData();
+
+        // loop through all the selected files and add them to the formData object
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+
+            // add the files to formData object for the data payload
+            formData.append('uploads[]', file, file.name);
+        }
+
+        $.ajax({
+            url: apiEndPointFileGeometries,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+                console.log('upload successful!\n' + data);
+            }
+        });
+    }
 }
 
 $(document).ready(function(){
