@@ -295,7 +295,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float displayDistanc
 	return m;
 }
 
-Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
+Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(std::string name, Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
 	Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
@@ -336,6 +336,14 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 		0, 0, 0, 1);
 
 	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * transform * trackedViewerTranslate;
+
+	/*if (name == "frontDisplay")
+	{
+		std::cout << name << " l:" << trackedViewerDistanceToDisplayBottomLeftCorner.toString()
+			<< " r:" << trackedViewerDistanceToDisplayBottomRightCorner.toString() <<
+			" t:" << trackedViewerDistanceToDisplayTopLeftCorner.toString() << std::endl;
+	}*/
+
 
 	return cameraProjection;
 }
@@ -412,14 +420,14 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition +
 					(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-				cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+				cameraLeft->setProjection(calculateCameraProjection(displayConfig.name, displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
 					trackedViewerLeftEyePosition, cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance()));
 			}
 			if (auto cameraRight = displayConfig.cameraRight.lock())
 			{
 				Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition +
 					(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
-				cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+				cameraRight->setProjection(calculateCameraProjection(displayConfig.name, displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
 					trackedViewerRightEyePosition, cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance()));
 			}
 		}
