@@ -102,7 +102,7 @@ namespace Ape
 
 		void loadConfig();
 
-		void loadFile(std::string fullPath, int ID);
+		void loadScene(const aiScene* assimpScene, int ID);
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateAssimpAssetLoaderPlugin()
