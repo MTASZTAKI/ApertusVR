@@ -1,5 +1,6 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var apiEndPointNode = apiEndPoint + 'nodes/';
+var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
 var nodeName = 'robotRootNode';
 
 function getNodePosition(nodeName) {
@@ -22,6 +23,7 @@ function setNodePosition(nodeName) {
     };
     doPostRequest(apiEndPointNode + nodeName + '/position', pos, function(res){
         console.log(res);
+        getTransformationMatrix(nodeName);
     });
 }
 
@@ -56,6 +58,7 @@ function setNodeOrientation(nodeName) {
     doPostRequest(apiEndPointNode + nodeName + '/orientation', ori, function(res){
         console.log(res);
         getNodeEuler(nodeName);
+        getTransformationMatrix(nodeName);
     });
 }
 
@@ -86,7 +89,52 @@ function setNodeEuler(nodeName) {
     doPostRequest(apiEndPointNode + nodeName + '/euler', euler, function(res){
         console.log(res);
         getNodeOrientation(nodeName);
+        getTransformationMatrix(nodeName);
     });
+}
+
+function getTransformationMatrix(nodeName) {
+    console.log('getting Node transformation matrix: ', nodeName);
+    doGetRequest(apiEndPointNode + nodeName + '/transformationmatrix', function(res){
+        var matrix = res.data.items[0].transformationmatrix;
+        console.log(matrix);
+        $('#transMatrix').val(matrix);
+    });
+}
+
+function getNodeScale(nodeName) {
+    console.log('getting Node scale: ', nodeName);
+    doGetRequest(apiEndPointNode + nodeName + '/scale', function(res){
+        var scale = res.data.items[0].scale;
+        console.log(scale);
+        $('#scaleX').val(scale.x);
+        $('#scaleY').val(scale.y);
+        $('#scaleZ').val(scale.z);
+    });
+}
+
+function setNodeScale(nodeName) {
+    console.log('setting Node scale: ', nodeName);
+    var scale = {
+        x: $('#scaleX').val(),
+        y: $('#scaleY').val(),
+        z: $('#scaleZ').val()
+    };
+    doPostRequest(apiEndPointNode + nodeName + '/scale', scale, function(res){
+        console.log(res);
+        getTransformationMatrix(nodeName);
+    });
+}
+
+function updateProperties() {
+    $('#nodeName').val(nodeName);
+    getNodePosition(nodeName);
+    getNodeScale(nodeName);
+
+    getNodeOrientation(nodeName);
+    getNodeEuler(nodeName);
+
+    getTransformationMatrix(nodeName);
 }
 
 function doGetRequest(apiEndPointUrl, callback) {
@@ -168,6 +216,46 @@ function resetEuler() {
     setNodeEuler(nodeName);
 }
 
+function resetScale() {
+    console.log('resetScale');
+
+    $('#scaleX').val(0);
+    $('#scaleY').val(0);
+    $('#scaleZ').val(0);
+
+    setNodeScale(nodeName);
+}
+
+function onFilePathChange(files) {
+    if (files.length > 0) {
+        var selectedFile = files[0];
+        console.log('selectedFile:', selectedFile);
+
+        // create a FormData object which will be sent as the data payload in the
+        // AJAX request
+        var formData = new FormData();
+
+        // loop through all the selected files and add them to the formData object
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+
+            // add the files to formData object for the data payload
+            formData.append('uploads[]', file, file.name);
+        }
+
+        $.ajax({
+            url: apiEndPointFileGeometries,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+                console.log('upload successful!\n' + data);
+            }
+        });
+    }
+}
+
 $(document).ready(function(){
 
     $("#nodeName").change(function(){
@@ -181,7 +269,12 @@ $(document).ready(function(){
         setNodePosition(nodeName);
     });
 
-    $( ".input-range-quat" ).slider({
+    $(".input-scale").bind('keyup change', function(e){
+        console.log('scale bind: ', $(this).val());
+        setNodeScale(nodeName);
+    });
+
+    $(".input-range-quat").slider({
         min: -1,
         max: 1,
         value: 0,
@@ -204,7 +297,7 @@ $(document).ready(function(){
         }
     });
 
-    $( ".input-range-euler" ).slider({
+    $(".input-range-euler").slider({
         min: -180,
         max: 180,
         value: 0,
@@ -227,9 +320,9 @@ $(document).ready(function(){
         }
     });
 
-    $('#nodeName').val(nodeName);
-    getNodePosition(nodeName);
-    getNodeOrientation(nodeName);
-    getNodeEuler(nodeName);
-    // resetEuler();
+    $('#openModelButton').click(function(){
+        $('#filePath').click();
+    });
+
+    updateProperties();
 });

@@ -32,6 +32,7 @@ exports.initApi = function(app) {
 	var router = express.Router();
 	router.use(require(moduleManager.sourcePath + 'api/index.js'));
 	router.use(require(moduleManager.sourcePath + 'api/node.js'));
+	router.use(require(moduleManager.sourcePath + 'api/fileGeometry.js'));
 	router.use(require(moduleManager.sourcePath + 'api/light.js'));
 	router.use(require(moduleManager.sourcePath + 'api/text.js'));
 	router.use(require(moduleManager.sourcePath + 'api/fallback.js'));

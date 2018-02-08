@@ -83,6 +83,111 @@ app.post('/nodes', function(req, res) {
 	res.send(respObj.toJSonString());
 });
 
+app.get('/nodes/:name/transformationmatrix', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the homogen transformation matrix of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		logger.debug(utils.convertToJsObj(obj));
+
+		respObj.addDataItem({
+			transformationmatrix: obj.getTransformationMatrix().toString()
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.get('/nodes/:name/scale', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the scale of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		var scaleObj = obj.getScale();
+		var scale = {
+			x: scaleObj.x,
+			y: scaleObj.y,
+			z: scaleObj.z
+		};
+		respObj.addDataItem({
+			scale: scale
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.post('/nodes/:name/scale', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the scale of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkBody('x', 'BodyParam is not presented').notEmpty();
+	req.checkBody('y', 'BodyParam is not presented').notEmpty();
+	req.checkBody('z', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		var newScale = new ape.nbind.Vector3(Number(req.body.x),
+										     Number(req.body.y),
+										     Number(req.body.z));
+		obj.setScale(newScale);
+		respObj.addDataItem({
+			position: utils.convertToJsObj(obj.getPosition())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
 app.get('/nodes/:name/position', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the position of the specified node.');

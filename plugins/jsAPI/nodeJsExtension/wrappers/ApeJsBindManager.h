@@ -33,6 +33,7 @@ SOFTWARE.*/
 #include "ApeJsBindQuaternion.h"
 #include "ApeJsBindRadian.h"
 #include "ApeJsBindVector3.h"
+#include "ApeJsBindMatrix4.h"
 #include "ApeIScene.h"
 #include "ApeISystemConfig.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"

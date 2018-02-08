@@ -276,7 +276,6 @@ namespace Ape
 			m3x3.m[2][0] = m[2][0];
 			m3x3.m[2][1] = m[2][1];
 			m3x3.m[2][2] = m[2][2];
-
 		}
 
 		inline void decomposition( Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
@@ -292,6 +291,15 @@ namespace Ape
 			translate = Ape::Vector3(m[0][3], m[1][3], m[2][3]);
 		}
 
+		inline std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << ", " << m[0][3] << std::endl
+				 << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << ", " << m[1][3] << std::endl
+				 << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << ", " << m[2][3] << std::endl
+				 << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << std::endl;
+			return buff.str();
+		}
     };
 	static const Matrix4 MATRIX4IDENTITY
 		(

@@ -62,11 +62,6 @@ void Ape::AssimpAssetLoaderPlugin::Init()
 void Ape::AssimpAssetLoaderPlugin::Run()
 {
 	loadConfig();
-	for (auto fullPath : mAssimpAssetFileNames)
-	{
-		loadFile(fullPath, mAssetCount);
-		mAssetCount++;
-	}
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -100,8 +95,19 @@ void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			loadFile(fileGeometry->getFileName(), mAssetCount);
-			mAssetCount++;
+			std::cout << "Ape::AssimpAssetLoaderPlugin::eventCallBack(): GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName << std::endl;
+			std::cout << "Ape::AssimpAssetLoaderPlugin::eventCallBack(): GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName() << std::endl;
+
+			const aiScene* assimpScene = mpAssimpImporter->ReadFile(fileGeometry->getFileName(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+			if (!assimpScene)
+				std::cout << "AssimpAssetLoaderPlugin::loading the asset " << fileGeometry->getFileName() << " was failed due to: " << mpAssimpImporter->GetErrorString() << std::endl;
+			else
+			{
+				mAssimpAssetFileNames.push_back(fileGeometry->getFileName());
+				mAssimpScenes.push_back(assimpScene);
+				loadScene(assimpScene, mAssetCount);
+				mAssetCount++;
+			}
 		}
 	}
 }
@@ -329,8 +335,16 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 				//TODO end
 				else
 				{
-					mAssimpAssetFileNames.push_back(assimpAssetFileNamePath.str());
-					mAssimpScenes.push_back(mpAssimpImporter->ReadFile(assimpAssetFileNamePath.str(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType));
+					const aiScene* assimpScene = mpAssimpImporter->ReadFile(assimpAssetFileNamePath.str(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+					if (!assimpScene)
+						std::cout << "AssimpAssetLoaderPlugin::loading the asset " << assimpAssetFileNamePath.str() << " was failed due to: " << mpAssimpImporter->GetErrorString() << std::endl;
+					else
+					{
+						mAssimpAssetFileNames.push_back(assimpAssetFileNamePath.str());
+						mAssimpScenes.push_back(assimpScene);
+						loadScene(assimpScene, mAssetCount);
+						mAssetCount++;
+					}
 				}
 			}
 			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
@@ -348,12 +362,9 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 	}
 }
 
-void Ape::AssimpAssetLoaderPlugin::loadFile(std::string fullPath, int ID)
+void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 {
-	const aiScene* assimpScene = mAssimpScenes[ID];
-	if (!assimpScene)
-		std::cout << "AssimpAssetLoaderPlugin::loading the asset " << mAssimpAssetFileNames[ID] << " was failed due to: " << mpAssimpImporter->GetErrorString() << std::endl;
-	else if (assimpScene->mRootNode)
+	if (assimpScene->mRootNode)
 	{
 		std::cout << "AssimpAssetLoaderPlugin::mNumMeshes: " << assimpScene->mNumMeshes << std::endl;
 		createNode(ID, assimpScene->mRootNode);
