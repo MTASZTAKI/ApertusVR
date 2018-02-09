@@ -25,9 +25,16 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var expressValidator = require('express-validator');
+var fs = require('fs');
 
 // load ApertusVR
 var config = require('./config.json');
+
+if (!fs.existsSync(config.sourcePathJs)) {
+	console.log('error: source path does not exists: ', config.sourcePathJs);
+	process.exit(1);
+}
+
 var moduleManager = require(config.sourcePathJs + '/modules/module_manager/module_manager.js');
 moduleManager.setConfigType(config.configuration);
 var ape = require(config.sourcePathJs + 'ape.js');
