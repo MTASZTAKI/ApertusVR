@@ -45,7 +45,7 @@ app.post('/filegeometries/', function(req, res){
     form.multiples = true;
   
     // store all uploads in the /uploads directory
-    form.uploadDir = path.join(moduleManager.apertusModulePath, 'uploads');
+    form.uploadDir = path.join(moduleManager.configurationPath, 'uploads');
     var fullFilePath;
 
     // every time a file has been uploaded successfully,

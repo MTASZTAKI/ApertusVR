@@ -21,18 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 var moduleManager = require('../../modules/module_manager/module_manager.js');
+var path = moduleManager.requireNodeModule('path');
 var winston = moduleManager.requireNodeModule('winston');
 var config = require('./config.json');
 
 winston.emitErrs = true;
 
 const env = process.env.NODE_ENV || 'development';
+config.file.filename = path.join(moduleManager.configurationPath, config.file.filename);
 
 // const tsFormat = () => (new Date()).toLocaleTimeString();
 var logger = new winston.Logger({
 	transports: [
 		new winston.transports.Console(config.console),
-		new(moduleManager.requireNodeModule('winston-daily-rotate-file'))(config.file)
+		new winston.transports.File(config.file)
 	],
 	exitOnError: config.exitOnError
 });
