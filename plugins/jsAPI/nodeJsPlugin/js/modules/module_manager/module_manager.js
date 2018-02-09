@@ -35,6 +35,7 @@ exports.requireNodeModule = function(moduleName) {
 
 exports.setConfigType = function(configStr) {
 	exports.configType = configStr + '/';
+	exports.configurationPath = config.build.binPath + this.configType;
 	exports.nodeModulesPath = config.build.binPath + this.configType + config.build.nodeModulesPath;
 	exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
 }
