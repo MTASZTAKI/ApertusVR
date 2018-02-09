@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 var config = require('./config.json');
+var fs = require('fs');
 
 exports.configType = '';
 
@@ -30,6 +31,14 @@ exports.nodeModulesPath = config.build.binPath + this.configType + config.build.
 exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
 
 exports.requireNodeModule = function(moduleName) {
+	if (!fs.existsSync(this.nodeModulesPath + moduleName)) {
+		console.log('error: requireing module does not exist: "' + this.nodeModulesPath + moduleName + '"');
+		console.log('config.source.apePath: "' + config.source.apePath + '"');
+		console.log('config.build.binPath: "' + config.build.binPath + '"');
+		console.log('configuration:');
+		console.log(config);
+		process.exit(1);
+	}
 	return require(this.nodeModulesPath + moduleName);
 }
 
