@@ -258,6 +258,16 @@ function onFilePathChange(files) {
 
 $(document).ready(function(){
 
+    var ws = new WebSocket('ws://127.0.0.1:3001', 'websocket');
+    ws.onmessage = function (data) {
+        console.log('ws.onmessage: ', data);
+        //updateStats(JSON.parse(event.data));
+    };
+
+    ws.onerror = function(err) {
+        console.log('ws.onerror: ', err);
+    };
+
     $("#nodeName").change(function(){
         nodeName = $(this).val();
     });
