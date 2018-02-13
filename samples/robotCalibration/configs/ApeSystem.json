@@ -22,6 +22,7 @@
     "pluginManager": {
         "plugins": [
             "ApeNodeJsPlugin",
+            "ApeSocketAPIPlugin",
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeCefBrowserPlugin",
