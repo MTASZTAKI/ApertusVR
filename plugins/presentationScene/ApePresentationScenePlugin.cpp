@@ -575,7 +575,7 @@ void ApePresentationScenePlugin::Init()
 	//mStoryElements.push_back(StoryElement(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07))); //end
 	/*2017Farewell end*/
 
-	/*endo meeting 2017.12.19 begin*/
+	/*endo meeting 2018.02.14 begin*/
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
@@ -596,8 +596,8 @@ void ApePresentationScenePlugin::Init()
 	Ape::Quaternion defaultOrientation;
 	defaultOrientation = orientation0 * orientation2 * orientation3;
 	StoryElement storyElement;
-	storyElement.browserName = "endoDB";
-	storyElement.browserURL = "http://185.80.48.189/polypdb/";
+	storyElement.browserName = "pub1";
+	storyElement.browserURL = "https://www.ncbi.nlm.nih.gov/pubmed/28828201";
 	storyElement.browserPosition = Ape::Vector3(0, 0, 0);
 	storyElement.browserOrientation = defaultOrientation;
 	storyElement.browserWidth = 300;
@@ -606,37 +606,41 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserResolutionVertical = 1024;
 	storyElement.browserResolutionHorizontal = 768;
 	manageBrowser(storyElement);
-	storyElement.browserName = "CNN";
-	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
-	storyElement.browserPosition = Ape::Vector3(-300, 0, 0);
+	storyElement.browserName = "pub2";
+	storyElement.browserURL = "http://gut.bmj.com/content/early/2017/11/09/gutjnl-2017-314547";
+	storyElement.browserPosition = Ape::Vector3(0, 0, 400);
+	manageBrowser(storyElement);
+	storyElement.browserName = "pub3";
+	storyElement.browserURL = "http://www.giejournal.org/article/S0016-5107(17)31032-5/pdf";
+	storyElement.browserPosition = Ape::Vector3(0, 0, -400);
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo_roadmap";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_roadMap.png";
+	storyElement.browserPosition = Ape::Vector3(-325, 0, 0);
 	manageBrowser(storyElement);
 	storyElement.browserName = "endo_content";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content.png";
-	storyElement.browserPosition = Ape::Vector3(0, 225, 0);
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content_2.png";
+	storyElement.browserPosition = Ape::Vector3(0, 325, 0);
 	manageBrowser(storyElement);
-	storyElement.browserName = "endo_contract";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_contract.png";
-	storyElement.browserPosition = Ape::Vector3(260, 0, -10);
+	storyElement.browserName = "endo_result";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result.png";
+	storyElement.browserPosition = Ape::Vector3(400, 0, 400);
 	manageBrowser(storyElement);
-	storyElement.browserName = "endo_autoSW";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_autoSW.png";
-	storyElement.browserPosition = Ape::Vector3(0, -225, 0);
+	storyElement.browserName = "endo_result_2";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result_2.png";
+	storyElement.browserPosition = Ape::Vector3(400, 0, 0);
 	manageBrowser(storyElement);
-	storyElement.browserName = "CNN_content";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_cnn_content.png";
-	storyElement.browserPosition = Ape::Vector3(-300, 200, -10);
+	storyElement.browserName = "endo_pub";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_pub.png";
+	storyElement.browserPosition = Ape::Vector3(0, -325, 0);
 	manageBrowser(storyElement);
-	storyElement.browserName = "CNN_regression";
-	storyElement.browserURL = "https://image.slidesharecdn.com/8-1209490505240696-9/95/multiple-linear-regression-16-638.jpg?cb=1489720634";
-	storyElement.browserPosition = Ape::Vector3(-300, 450, 0);
+	storyElement.browserName = "endo_pub_cnn";
+	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
+	storyElement.browserPosition = Ape::Vector3(0, -325, 400);
 	manageBrowser(storyElement);
-	storyElement.browserName = "CNN_loss_optimizer";
-	storyElement.browserURL = "http://yangz3.github.io/Machine%20Learning/7.png";
-	storyElement.browserPosition = Ape::Vector3(-300, 250, 0);
-	manageBrowser(storyElement);
-	storyElement.browserName = "CNN_tensorflow";
-	storyElement.browserURL = "https://www.tensorflow.org/images/getting_started_final.png";
-	storyElement.browserPosition = Ape::Vector3(-600, 250, 0);
+	storyElement.browserName = "endo_pub_cnn_2";
+	storyElement.browserURL = "http://colah.github.io/posts/2014-10-Visualizing-MNIST/";
+	storyElement.browserPosition = Ape::Vector3(0, -325, -400);
 	manageBrowser(storyElement);
 	storyElement.browserName = "motohotwear";
 	storyElement.browserURL = "http://www.motohotwear.com/";
@@ -771,18 +775,20 @@ void ApePresentationScenePlugin::Init()
 		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
 
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 30, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN + content
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-300, 358, 384), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_regression + loss_optimizer
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-600, 250, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //CNN_tensorflow
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endoDB
-	mStoryElements.push_back(StoryElement(Ape::Vector3(300, 0, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract
-	mStoryElements.push_back(StoryElement(Ape::Vector3(36, 0, 341), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_contract_db
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, -225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_autoSW
-	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //end
+	mStoryElements.push_back(StoryElement(Ape::Vector3(496.297, 242.352, 1207.09), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //begin
+	mStoryElements.push_back(StoryElement(Ape::Vector3(244.285, 362.639, 560.672), Ape::Quaternion(0.986104, -0.0755844, 0.147775, 0.0113269)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(5.85465, 10.0267, 707.353), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(5.85456, 3.26078, 309.411), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(13.8545, -3.70919, -100.53), Ape::Quaternion(-0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(397.854, -4.1349, 719.624), Ape::Quaternion(0.999991, -0.00850005, 1.54037e-07, 3.07597e-08)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(443.9, -10.9689, 318.012), Ape::Quaternion(0.997068, -0.00847519, 0.076425, 0.000649651)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(2.50844, -290.186, 310.75), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-8.69246, -321.79, 687.259), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(6.05867, -327.824, -106.902), Ape::Quaternion(1.00002, 9.40636e-08, -0.00424997, 2.96732e-08)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-495.589, 2.94523, 334.519), Ape::Quaternion(0.977535, 0.00830944, -0.210911, 0.00179282)));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-359.585, -2.15281, 320.593), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //end
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	/*endo meeting 2017.12.19 end*/
+	/*endo meeting 2018.02.14 end*/
 }
 
 void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
