@@ -73,6 +73,8 @@ private:
 
 	Ape::Vector3 mTrackedViewerPosition;
 
+	Ape::Vector3 mTrackedPrevViewerPosition;
+
 	Ape::Quaternion mTrackedViewerOrientation;
 
 	Ape::Euler mTrackedViewerOrientationYPR;

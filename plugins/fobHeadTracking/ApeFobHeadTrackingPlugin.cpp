@@ -372,47 +372,18 @@ void ApeFobHeadTrackingPlugin::Run()
 	{
 		float positionDataFromTracker[3];
 		float orientationDataFromTracker[3];
-		std::vector<Ape::Vector3> positions;
-		std::vector<Ape::Quaternion> orientations;
-		int cycleCount = 1000;
-		int minMaxCount = 200;
-		while (positions.size() < cycleCount && orientations.size() < cycleCount)
+		if (trackdGetPosition(mpFobTracker, 0, positionDataFromTracker))
+			mTrackedViewerPosition = (Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2])
+				* mTrackerConfig.scale) + mTrackerConfig.translate;
+		if (trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
 		{
-			if (positions.size() < cycleCount && trackdGetPosition(mpFobTracker, 0, positionDataFromTracker))
-				positions.push_back((Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2])
-					* mTrackerConfig.scale) + mTrackerConfig.translate);
-
-			if (orientations.size() < cycleCount && trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
-			{
-				mTrackedViewerOrientationYPR = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
-					Ape::Degree(orientationDataFromTracker[2]).toRadian() - 1.57f,
-					Ape::Degree(orientationDataFromTracker[0]).toRadian());
-				orientations.push_back(mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation);
-			}
+			mTrackedViewerOrientationYPR = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
+				Ape::Degree(orientationDataFromTracker[2]).toRadian() - 1.57f,
+				Ape::Degree(orientationDataFromTracker[0]).toRadian());
+			mTrackedViewerOrientation = mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation;
 		}
-		for (int i = 0; i < minMaxCount; i++)
-		{
-			positions.erase(std::min_element(std::begin(positions), std::end(positions)));
-			positions.erase(std::max_element(std::begin(positions), std::end(positions)));
-		}
-		Ape::Vector3 positionTemp;
-		for (auto const& position : positions)
-			positionTemp = positionTemp + position;
-		mTrackedViewerPosition = (positionTemp / positions.size());
-
-		for (int i = 0; i < minMaxCount; i++)
-		{
-			orientations.erase(std::min_element(std::begin(orientations), std::end(orientations)));
-			orientations.erase(std::max_element(std::begin(orientations), std::end(orientations)));
-		}
-		Ape::Quaternion orientationTemp;
-		for (auto const& orientation : orientations)
-			orientationTemp = orientationTemp + orientation;
-		mTrackedViewerOrientation = (orientationTemp / orientations.size());
-
 		if (auto camerasNode = mCamerasNode.lock())
 			camerasNode->setPosition(mTrackedViewerPosition);
-
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];
