@@ -157,6 +157,12 @@ private:
 
 	float mRotateSpeedFactor;
 
+	float mHumanHeight;
+
+	float mHumanXoffset;
+
+	float mHumanZoffset;
+
 	std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 	OIS::Keyboard* mpKeyboard;

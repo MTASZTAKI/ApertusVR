@@ -6,37 +6,34 @@ var lr = new LineByLineReader(fileName);
 var lineNumber = 0;
 
 lr.on('error', function (err) {
-	console.log('line-reader: error: ', err);
+    console.log('line-reader: error: ', err);
 });
 
 lr.on('line', function (line) {
-	lr.pause();
+    lr.pause();
 
-	var dataObj = JSON.parse(line);
-	lineNumber++;
-	// console.log('line-reader: ', lineNumber, '> ', JSON.stringify(dataObj));
-	console.log('line-reader: line> ', lineNumber);
+    var dataObj = JSON.parse(line);
+    lineNumber++;
+    console.log('line-reader: line> ', lineNumber);
 
-	var options = {
-		uri: 'http://localhost:3000/api/v1/setproperties',
-		method: 'POST',
-		json: dataObj
-	};
+    var options = {
+        uri: 'http://localhost:3000/api/v1/setproperties',
+        method: 'POST',
+        json: dataObj
+    };
 
-	request.post(options, function (error, response, body) {
-			if (error) {
-				console.log('Error: ', error);
-			}
-			// console.log();
-			// console.log('request: body: ', body);
-			setTimeout(function(){
-				lr.resume();
-			}, delay);
-		}
-	);
+    request.post(options, function (error, response, body) {
+            if (error) {
+                console.log('Error: ', error);
+            }
+            setTimeout(function(){
+                lr.resume();
+            }, delay);
+        }
+    );
 });
 
 lr.on('end', function () {
-	console.log('line-reader: all lines are read.');
-	process.exit(0);
+    console.log('line-reader: all lines are read.');
+    process.exit(0);
 });

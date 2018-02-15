@@ -59,6 +59,7 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
+			std::cout << "eventCallBack() camera: " << camera->getName() << std::endl;
 			mCameraDoubleQueue.push(camera);
 		}
 	}
@@ -294,7 +295,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float displayDistanc
 	return m;
 }
 
-Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
+Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(std::string name, Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
 	Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
@@ -336,6 +337,14 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::Vector3 di
 
 	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * transform * trackedViewerTranslate;
 
+	/*if (name == "frontDisplay")
+	{
+		std::cout << name << " l:" << trackedViewerDistanceToDisplayBottomLeftCorner.toString()
+			<< " r:" << trackedViewerDistanceToDisplayBottomRightCorner.toString() <<
+			" t:" << trackedViewerDistanceToDisplayTopLeftCorner.toString() << std::endl;
+	}*/
+
+
 	return cameraProjection;
 }
 
@@ -349,6 +358,7 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
+				std::cout << "ApeFobHeadTrackingPlugin::Run() camera: " << camera->getName() << std::endl;
 				setCameraConfigByName(camera->getName(), camera);
 				mCamerasNode.lock()->setParentNode(mUserNode);
 				camera->setParentNode(mCamerasNode);
@@ -362,47 +372,18 @@ void ApeFobHeadTrackingPlugin::Run()
 	{
 		float positionDataFromTracker[3];
 		float orientationDataFromTracker[3];
-		std::vector<Ape::Vector3> positions;
-		std::vector<Ape::Quaternion> orientations;
-		int cycleCount = 1000;
-		int minMaxCount = 200;
-		while (positions.size() < cycleCount && orientations.size() < cycleCount)
+		if (trackdGetPosition(mpFobTracker, 0, positionDataFromTracker))
+			mTrackedViewerPosition = (Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2])
+				* mTrackerConfig.scale) + mTrackerConfig.translate;
+		if (trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
 		{
-			if (positions.size() < cycleCount && trackdGetPosition(mpFobTracker, 0, positionDataFromTracker))
-				positions.push_back((Ape::Vector3(positionDataFromTracker[0], positionDataFromTracker[1], positionDataFromTracker[2])
-					* mTrackerConfig.scale) + mTrackerConfig.translate);
-
-			if (orientations.size() < cycleCount && trackdGetEulerAngles(mpFobTracker, 0, orientationDataFromTracker))
-			{
-				mTrackedViewerOrientationYPR = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
-					Ape::Degree(orientationDataFromTracker[2]).toRadian() - 1.57f,
-					Ape::Degree(orientationDataFromTracker[0]).toRadian());
-				orientations.push_back(mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation);
-			}
+			mTrackedViewerOrientationYPR = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(),
+				Ape::Degree(orientationDataFromTracker[2]).toRadian() - 1.57f,
+				Ape::Degree(orientationDataFromTracker[0]).toRadian());
+			mTrackedViewerOrientation = mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation;
 		}
-		for (int i = 0; i < minMaxCount; i++)
-		{
-			positions.erase(std::min_element(std::begin(positions), std::end(positions)));
-			positions.erase(std::max_element(std::begin(positions), std::end(positions)));
-		}
-		Ape::Vector3 positionTemp;
-		for (auto const& position : positions)
-			positionTemp = positionTemp + position;
-		mTrackedViewerPosition = (positionTemp / positions.size());
-
-		for (int i = 0; i < minMaxCount; i++)
-		{
-			orientations.erase(std::min_element(std::begin(orientations), std::end(orientations)));
-			orientations.erase(std::max_element(std::begin(orientations), std::end(orientations)));
-		}
-		Ape::Quaternion orientationTemp;
-		for (auto const& orientation : orientations)
-			orientationTemp = orientationTemp + orientation;
-		mTrackedViewerOrientation = (orientationTemp / orientations.size());
-
 		if (auto camerasNode = mCamerasNode.lock())
 			camerasNode->setPosition(mTrackedViewerPosition);
-
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];
@@ -410,14 +391,14 @@ void ApeFobHeadTrackingPlugin::Run()
 			{
 				Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition +
 					(mTrackedViewerOrientation * Ape::Vector3(-mTrackerConfig.eyeSeparationPerEye, 0, 0));
-				cameraLeft->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+				cameraLeft->setProjection(calculateCameraProjection(displayConfig.name, displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
 					trackedViewerLeftEyePosition, cameraLeft->getNearClipDistance(), cameraLeft->getFarClipDistance()));
 			}
 			if (auto cameraRight = displayConfig.cameraRight.lock())
 			{
 				Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition +
 					(mTrackedViewerOrientation * Ape::Vector3(mTrackerConfig.eyeSeparationPerEye, 0, 0));
-				cameraRight->setProjection(calculateCameraProjection(displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
+				cameraRight->setProjection(calculateCameraProjection(displayConfig.name, displayConfig.bottomLeftCorner, displayConfig.bottomRightCorner, displayConfig.topLeftCorner,
 					trackedViewerRightEyePosition, cameraRight->getNearClipDistance(), cameraRight->getFarClipDistance()));
 			}
 		}

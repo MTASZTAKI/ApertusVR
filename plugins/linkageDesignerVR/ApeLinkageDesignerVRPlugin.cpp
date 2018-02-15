@@ -17,8 +17,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -225, 100060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -285, 200060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(19.5237, -141.02, 200067), Ape::Quaternion(0.975645, -0.00829328, -0.219197, -0.00186324)));
 	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
 	/*mSwitchNodeVisibilityNames = std::vector<std::string>();

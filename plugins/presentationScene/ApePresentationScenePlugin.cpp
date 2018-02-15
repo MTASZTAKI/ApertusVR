@@ -26,7 +26,7 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mOldXMLFormatRotationQuaternion = orientation * orientation2;
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mTranslateSpeedFactor = 2;
-	mRotateSpeedFactor = 0.5;
+	mRotateSpeedFactor = 1;
 	mCurrentStoryElementIndex = 0;
 	mStoryElements = std::vector<StoryElement>();
 	mBrowsers = std::map<std::string, Ape::BrowserWeakPtr>();
@@ -44,6 +44,9 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mCamera = Ape::CameraWeakPtr();
 	mUserNodePositionBeforeFullScreen = Ape::Vector3();
 	mUserNodeOrientationBeforeFullScreen = Ape::Quaternion();
+	mHumanHeight = 250.0f;
+	mHumanXoffset = 0.0f;
+	mHumanZoffset = 160.0f;
 	mContext = Context::UNKOWN;
 }
 
@@ -635,7 +638,138 @@ void ApePresentationScenePlugin::Init()
 	storyElement.browserURL = "https://www.tensorflow.org/images/getting_started_final.png";
 	storyElement.browserPosition = Ape::Vector3(-600, 250, 0);
 	manageBrowser(storyElement);
-	
+	storyElement.browserName = "motohotwear";
+	storyElement.browserURL = "http://www.motohotwear.com/";
+	storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo5";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
+	storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo";
+	storyElement.browserURL = "https://www.endo-kapszula.hu/";
+	storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo1";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
+	storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo3";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
+	storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arUserManual";
+	storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
+	storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo4";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
+	storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "ios-android";
+	storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
+	storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "bimGeometry";
+	storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
+	storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "smartProfile";
+	storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
+	storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "qvii";
+	storyElement.browserURL = "https://www.qvii.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "kotem";
+	storyElement.browserURL = "http://kotem.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "pridgeonandclay";
+	storyElement.browserURL = "http://www.pridgeonandclay.com/";
+	storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arShopFloor";
+	storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
+	storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	/*story begin*/
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0 - mHumanXoffset, 0 - mHumanHeight, 0 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //zero
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 409.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //indigo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5 - mHumanXoffset, -273.943 - mHumanHeight, -114 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5 - mHumanXoffset, -247.443 - mHumanHeight, -161 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5 - mHumanXoffset, -278.943 - mHumanHeight, -121 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127 - mHumanXoffset, 79.2832 - mHumanHeight, 317.68 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724 - mHumanXoffset, 78.6628 - mHumanHeight, 287.429 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123 - mHumanXoffset, 67.057 - mHumanHeight, 422.253 - mHumanZoffset), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586 - mHumanXoffset, 100.834 - mHumanHeight, 573.667 - mHumanZoffset), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
+		"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(253.464 - mHumanXoffset, 88.8106 - mHumanHeight, 280.662 - mHumanZoffset), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(268.471 - mHumanXoffset, 112.444 - mHumanHeight, 489.413 - mHumanZoffset), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024 - mHumanXoffset, 82.1165 - mHumanHeight, 121.716 - mHumanZoffset), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853 - mHumanXoffset, 78.5688 - mHumanHeight, 116.881 - mHumanZoffset), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718 - mHumanXoffset, 94.0923 - mHumanHeight, 162.253 - mHumanZoffset), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
+	mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394 - mHumanXoffset, 84.057 - mHumanHeight, -492.757 - mHumanZoffset), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12 - mHumanXoffset, 387 - mHumanHeight, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
+		"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
+	mStoryElements.push_back(StoryElement(Ape::Vector3(13 - mHumanXoffset, 359 - mHumanHeight, -52 - mHumanZoffset) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
+		"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053 - mHumanXoffset, -304.943 - mHumanHeight, -172.531 - mHumanZoffset), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	mStoryElements.push_back(StoryElement(Ape::Vector3(26, 0, 768), Ape::Quaternion(0.99992, 0, 0.0127497, 0))); //begin
 	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 225, 281), Ape::Quaternion(-0.999999, 0.000399083, 0.00119437, -4.61936e-07))); //endo_content

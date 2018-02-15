@@ -1,4 +1,4 @@
-/*MIT License
+﻿/*MIT License
 
 Copyright (c) 2017 MTA SZTAKI
 
@@ -470,7 +470,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
 			}
 			if (currentlyLoadingFileName == 'SuperChargerLinkage') {
-				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+				nodeObj.setScale(new ape.nbind.Vector3(0.4, 0.4, 0.4));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 200000));
 			}
