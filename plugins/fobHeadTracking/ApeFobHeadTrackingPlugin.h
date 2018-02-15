@@ -73,6 +73,8 @@ private:
 
 	Ape::Vector3 mTrackedViewerPosition;
 
+	Ape::Vector3 mTrackedPrevViewerPosition;
+
 	Ape::Quaternion mTrackedViewerOrientation;
 
 	Ape::Euler mTrackedViewerOrientationYPR;
@@ -83,7 +85,7 @@ private:
 
 	void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
 
-	Ape::Matrix4 calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
+	Ape::Matrix4 calculateCameraProjection(std::string name, Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
 		Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip);
 
 	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, float cameraNearClip, float cameraFarClip);
