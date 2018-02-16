@@ -209,6 +209,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		int mCameraCountFromConfig;
+
 		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;
 
 		void processEventDoubleQueue();

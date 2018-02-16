@@ -81,6 +81,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxSkylight = nullptr;
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
+	mCameraCountFromConfig = 0;
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1886,17 +1887,17 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (auto ogreCamera = mpSceneMgr->getCamera(event.subjectName))
 						{
 							int zorder = (mOgreCameras.size()-1);
-							int cameraCountFromConfig = 6;
 							float width = 1;
+							float height = 1;
 							float left = 0;
 							float top = 0;
-							if (cameraCountFromConfig > 2) //cave case :), for sure waiting for ApeViewport class :)
+							if (mCameraCountFromConfig > 2) //cave case :), for sure, waiting for ApeViewport class :)
 							{
-								width = 1.0f / (float)cameraCountFromConfig;
+								width = 1.0f / (float)mCameraCountFromConfig;
 								left = zorder * width;
 								std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder << std::endl;
 							}
-							if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width))
+							if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width, height))
 							{
 								//TODO why it is working instead of in the init phase?
 								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft() << std::endl;
@@ -2272,8 +2273,8 @@ void Ape::OgreRenderPlugin::Init()
 											orientationOffset.FromAngleAxis(angle, axis);
 											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
 										}
-
 									}
+									mCameraCountFromConfig++;
 								}
 							}
 							ogreRenderWindowConfig.viewportList.push_back(ogreViewPortConfig);
