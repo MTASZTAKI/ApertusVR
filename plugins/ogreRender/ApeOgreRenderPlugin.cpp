@@ -81,6 +81,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxSkylight = nullptr;
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
+	mCameraCountFromConfig = 0;
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
@@ -1886,20 +1887,17 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (auto ogreCamera = mpSceneMgr->getCamera(event.subjectName))
 						{
 							int zorder = (mOgreCameras.size()-1);
-							float left = 0;
 							float width = 1;
-							if (mOgreCameras.size() > 2)
+							float height = 1;
+							float left = 0;
+							float top = 0;
+							if (mCameraCountFromConfig > 2) //cave case :), for sure, waiting for ApeViewport class :)
 							{
-								left = 0.333334f;
-								width = 0.333334f;
+								width = 1.0f / (float)mCameraCountFromConfig;
+								left = zorder * width;
+								std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder << std::endl;
 							}
-							if (mOgreCameras.size() > 4)
-							{
-								left = 0.666668f;
-								width = 0.333334f;
-							}
-							std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " zorder: " << zorder << std::endl;
-							if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, 0, width))
+							if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width, height))
 							{
 								//TODO why it is working instead of in the init phase?
 								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft() << std::endl;
@@ -2275,8 +2273,8 @@ void Ape::OgreRenderPlugin::Init()
 											orientationOffset.FromAngleAxis(angle, axis);
 											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
 										}
-
 									}
+									mCameraCountFromConfig++;
 								}
 							}
 							ogreRenderWindowConfig.viewportList.push_back(ogreViewPortConfig);

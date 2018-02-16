@@ -1,5 +1,5 @@
 {
-    "renderSystem": "DX9",
+    "renderSystem": "OGL",
     "lodLevels": {
         "autoGenerateAndSave": false,
         "bias": 0.5
@@ -10,7 +10,7 @@
             "monitorIndex": 0,
             "name": "window0",
             "resolution": {
-                "width": 4200,
+                "width": 8400,
                 "height": 1050,
                 "fullScreen": true
             },
