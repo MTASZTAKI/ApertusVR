@@ -1,23 +1,24 @@
 {
-    "tracker": {
-        "rotation": {
-            "angle": 0,
-            "x": 0,
-            "y": 1,
-            "z": 0
-        },
-        "translate": {
-            "x": 0,
-            "y": -15,
-            "z": 0
-        },
-        "scale": {
-            "x": 30.48,
-            "y": 30.48,
-            "z": 30.48
-        },
-        "eyeSeparation": 8.0
+  "tracker": {
+    "rotation": {
+      "angle": 0,
+      "x": 0,
+      "y": 1,
+      "z": 0
     },
+    "translate": {
+      "x": 0,
+      "y": -15,
+      "z": 0
+    },
+    "scale": {
+      "x": 30.48,
+      "y": 30.48,
+      "z": 30.48
+    },
+    "leftEyeOffset": 4.0,
+    "rightEyeOffset": 8.0
+  },
     "displays": [
         {
             "name": "frontDisplay",
