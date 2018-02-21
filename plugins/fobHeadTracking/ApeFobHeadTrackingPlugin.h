@@ -93,7 +93,7 @@ private:
 
 	void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
 
-	Ape::Matrix4 calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig);
+	Ape::Matrix4 calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition);
 
 	Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 

@@ -313,15 +313,15 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistan
 	return m;
 }
 
-Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig)
+Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 
 	float displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop, trackedViewerDistanceToDisplay;
 
-	trackedViewerDistanceToDisplayBottomLeftCorner = displayConfig.bottomLeftCorner - mTrackedViewerPosition;
-	trackedViewerDistanceToDisplayBottomRightCorner = displayConfig.bottomRightCorner - mTrackedViewerPosition;
-	trackedViewerDistanceToDisplayTopLeftCorner = displayConfig.topLeftCorner - mTrackedViewerPosition;
+	trackedViewerDistanceToDisplayBottomLeftCorner = displayConfig.bottomLeftCorner - trackedEyePosition;
+	trackedViewerDistanceToDisplayBottomRightCorner = displayConfig.bottomRightCorner - trackedEyePosition;
+	trackedViewerDistanceToDisplayTopLeftCorner = displayConfig.topLeftCorner - trackedEyePosition;
 
 	trackedViewerDistanceToDisplay = -(trackedViewerDistanceToDisplayBottomLeftCorner.dotProduct(displayConfig.normal));
 
@@ -333,9 +333,9 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTra
 	Ape::Matrix4 perspectiveOffCenterProjection = perspectiveOffCenter(displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop);
 
 	Ape::Matrix4 trackedViewerTranslate(
-		1, 0, 0, -mTrackedViewerPosition.x,
-		0, 1, 0, -mTrackedViewerPosition.y,
-		0, 0, 1, -mTrackedViewerPosition.z,
+		1, 0, 0, -trackedEyePosition.x,
+		0, 1, 0, -trackedEyePosition.y,
+		0, 0, 1, -trackedEyePosition.z,
 		0, 0, 0, 1);
 
 	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * displayConfig.transform * trackedViewerTranslate;
@@ -386,12 +386,12 @@ void ApeFobHeadTrackingPlugin::Run()
 			if (auto cameraLeft = displayConfig.cameraLeft.lock())
 			{
 				Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition + (mTrackedViewerOrientation * mTrackerConfig.leftEyeOffset);
-				cameraLeft->setProjection(calculateCameraProjection(displayConfig));
+				cameraLeft->setProjection(calculateCameraProjection(displayConfig, trackedViewerLeftEyePosition));
 			}
 			if (auto cameraRight = displayConfig.cameraRight.lock())
 			{
 				Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition + (mTrackedViewerOrientation * mTrackerConfig.rightEyeOffset);
-				cameraRight->setProjection(calculateCameraProjection(displayConfig));
+				cameraRight->setProjection(calculateCameraProjection(displayConfig, trackedViewerRightEyePosition));
 			}
 		}
 	}
