@@ -58,6 +58,17 @@ public:
 		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	}
 
+	void start(std::string configFolderPath)
+	{
+		std::stringstream configDir;
+		Ape::System::Start(configFolderPath, true);
+	}
+
+	void stop()
+	{
+		Ape::System::Stop();
+	}
+
 	NodeJsPtr createNode(std::string name)
 	{
 		return NodeJsPtr(mpScene->createNode(name));
@@ -347,6 +358,9 @@ private:
 NBIND_CLASS(JsBindManager)
 {
 	construct<>();
+
+	method(start);
+	method(stop);
 
 	method(createNode);
 	method(getNode);
