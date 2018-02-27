@@ -26,7 +26,11 @@ var utils = require('./modules/utils/utils.js');
 var logger = require("./modules/log_manager/log_manager.js");
 var pluginManager = require('./modules/plugin_manager/plugin_manager.js');
 
-exports.nbind = require(moduleManager.apertusModulePath + 'nbind.node');
+logger.debug('node version: ' + process.version);
+
+var addonpath = moduleManager.apertusModulePath + 'nbind.node';
+logger.debug('c++ addon path: ', addonpath);
+exports.nbind = require(addonpath);
 
 exports.initApi = function(app) {
 	var router = express.Router();
