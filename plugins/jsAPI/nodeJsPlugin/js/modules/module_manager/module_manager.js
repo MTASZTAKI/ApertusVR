@@ -32,7 +32,7 @@ exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePat
 
 exports.requireNodeModule = function(moduleName) {
 	if (!fs.existsSync(this.nodeModulesPath + moduleName)) {
-		console.log('error: requireing module does not exist: "' + this.nodeModulesPath + moduleName + '"');
+		console.log('error: required module does not exist: "' + this.nodeModulesPath + moduleName + '"');
 		console.log('config.source.apePath: "' + config.source.apePath + '"');
 		console.log('config.build.binPath: "' + config.build.binPath + '"');
 		console.log('configuration:');
