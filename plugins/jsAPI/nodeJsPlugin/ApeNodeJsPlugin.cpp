@@ -22,27 +22,18 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <string>
-#include "node.h"
-#include "v8.h"
-#include "uv.h"
 #include "ApeNodeJsPlugin.h"
-//#include "ApeJsEventManagerImpl.h"
+#include "node.h"
 
-using namespace node;
-using namespace v8;
 using namespace Ape;
 
 ApeNodeJsPlugin::ApeNodeJsPlugin()
 {
 	std::cout << "ApeNodeJsPlugin::ApeNodeJsPlugin" << std::endl;
 
-	//mpJsEventManager = new JsEventManagerImpl();
-	//std::cout << "ApeNodeJsPlugin::ApeNodeJsPlugin: JS mEventMap.size: " << IJsEventManager::getSingleton().size() << std::endl;
-
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
-	//mNodeWeakPtr = mpScene->createNode("helloWorldNode");
 }
 
 ApeNodeJsPlugin::~ApeNodeJsPlugin()
@@ -52,8 +43,8 @@ ApeNodeJsPlugin::~ApeNodeJsPlugin()
 
 void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	//std::cout << "ApeNodeJsPlugin::nodeEventCallBack: " << event.subjectName << std::endl;
-	//IJsEventManager::getSingleton().onEvent(event);
+	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.subjectName: " << event.subjectName << std::endl;
+	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.group: " << event.group << std::endl;
 }
 
 void ApeNodeJsPlugin::Init()
