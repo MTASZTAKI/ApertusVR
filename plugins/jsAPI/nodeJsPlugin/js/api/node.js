@@ -83,6 +83,54 @@ app.post('/nodes', function(req, res) {
 	res.send(respObj.toJSonString());
 });
 
+app.get('/nodes/:name', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets all properties of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		logger.debug(utils.convertToJsObj(obj));
+
+		var scaleObj = obj.getScale();
+		var eulerObj = obj.getEuler();
+
+		respObj.addDataItem({
+			name: name,
+			scale: {
+				x: scaleObj.x,
+				y: scaleObj.y,
+				z: scaleObj.z
+			},
+			position: utils.convertToJsObj(obj.getPosition()),
+			orientation: utils.convertToJsObj(obj.getOrientation()),
+			euler: {
+				y: Number(eulerObj.getYaw().toDegree()),
+				p: Number(eulerObj.getPitch().toDegree()),
+				r: Number(eulerObj.getRoll().toDegree()),
+			},
+			transformation: obj.getTransformationMatrix().toString()
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
 app.get('/nodes/:name/transformationmatrix', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the homogen transformation matrix of the specified node.');
