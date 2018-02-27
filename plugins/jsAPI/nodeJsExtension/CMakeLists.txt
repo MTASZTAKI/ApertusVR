@@ -95,7 +95,7 @@ endif ()
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
+	target_link_libraries( ${MY_TARGET_NAME} ApeSystem ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
 endif()
 
 # Set target library's name
