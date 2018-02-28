@@ -73,6 +73,15 @@ namespace Ape
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
 	private:
+		struct MouseState
+		{
+			OIS::MouseState posStart;
+			OIS::MouseState posEnd;
+			OIS::MouseState posPrevious;
+			OIS::MouseState posCurrent;
+			std::map<OIS::MouseButtonID, bool> buttonDownMap;
+		};
+
 		struct UserNodePose
 		{
 			Ape::Vector3 position;
@@ -86,6 +95,7 @@ namespace Ape
 				this->orientation = orientation;
 			}
 		};
+
 		OIS::Keyboard* mpKeyboard; 
 
 		OIS::Mouse* mpMouse;
@@ -100,7 +110,11 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mNodeToMove;
+
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+		MouseState mMouseState;
 
 		std::vector<UserNodePose> mUserNodePoses;
 
