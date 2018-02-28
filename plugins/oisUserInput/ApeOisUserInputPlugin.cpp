@@ -326,8 +326,7 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 
 void Ape::OISUserInputPlugin::moveUserNode()
 {
-	auto userNode = mUserNode.lock();
-	if (userNode)
+	if (auto userNode = mUserNode.lock())
 	{
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
