@@ -1,0 +1,468 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Building a Custom VR Rig &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+    <link rel="next" title="Detection Utilities" href="Unity_DetectionUtilities.html" />
+    <link rel="prev" title="LMHeadMountedRig" href="Unity.Prefab.LMHeadMountedRig.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/unity/Unity_Custom_Rig.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity_Custom_Rig.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity_Custom_Rig.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/unity/Unity_Custom_Rig.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Unity.Prefab.LMHeadMountedRig.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Unity_DetectionUtilities.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Building a Custom VR Rig
+</span> -->
+        
+  <div class="section" id="building-a-custom-vr-rig">
+<h1>Building a Custom VR Rig<a class="headerlink" href="#building-a-custom-vr-rig" title="Permalink to this headline">¶</a></h1>
+<p>This article discusses the basics of adding the Leap Motion components to a rig to add hand tracking. Unless you are adding Leap Motion hand tracking to scene that already has a fairly complex VR camera rig, we recommend starting with the LMHeadMountedRig prefab. Realize that there is no way we can anticipate or support every possible variation of camera rigs, so expect that you must make some variation to the setup described here.</p>
+<p>The scripts that need to be added to game objects in the camera rig include:</p>
+<ul class="simple">
+<li>LeapVRCameraControl</li>
+<li>EnableDepthBuffer</li>
+<li>LeapVRTemporalWarping</li>
+</ul>
+<p>As well as the following prefabs:</p>
+<ul class="simple">
+<li>LeapHandController</li>
+<li>Hand model prefabs</li>
+</ul>
+<div class="section" id="adding-hand-tracking-to-an-existing-rig">
+<h2>Adding Hand Tracking to an Existing Rig<a class="headerlink" href="#adding-hand-tracking-to-an-existing-rig" title="Permalink to this headline">¶</a></h2>
+<p>To illustrate the process of adding hand tracking to an existing camera rig, this discussion starts with the RigidBodyFPSController from the Unity Standard Assets.</p>
+<div class="figure">
+<img alt="unity/../../../images/unity/Unity1CameraRig.png" src="unity/../../../images/unity/Unity1CameraRig.png" />
+<p class="caption">Your single-camera rig setup should be similar to the above when finished.</p>
+</div>
+<p>Starting with a scene containing the RigidBodyFPSController:</p>
+<ol class="arabic">
+<li><p class="first">Add an empty game object to the top level game object in the rig hierarchy, RigidBodyFPSController. Name the new game object: <strong>TrackingAnchor</strong>.</p>
+</li>
+<li><p class="first">Drag the MainCamera onto the TrackingAnchor object you just created.</p>
+</li>
+<li><p class="first">If the MainCamera object has any non-zero position or rotation values, copy these values to the TrackingAnchor object and set all the MainCamera position and rotation coordinates to zero.</p>
+</li>
+<li><p class="first">Add the following script components to MainCamera:</p>
+<ul class="simple">
+<li>LeapVRCameraControl</li>
+<li>EnableDepthBuffer</li>
+</ul>
+<p>You may also want to adjust the <strong>Near Clipping Planes</strong> property to its smallest value. Hands tend to be closer than other objects in a scene.</p>
+</li>
+<li><p class="first">Create an empty game object as a child of MainCamera. Name it: <strong>LeapSpace</strong>.</p>
+</li>
+<li><p class="first">Add the <strong>LeapVRTemporalWarping</strong> script component to the LeapSpace component you just created. Double check that the Head Transform property has been set to your MainCamera and that TrackingAnchor has been set to the TrackingAnchor game object you created a few steps earlier. Apply the following settings to the script:</p>
+<ol class="loweralpha simple">
+<li>Set <strong>Tween Rotational Warping</strong> to 1.</li>
+<li>Set <strong>Sync Mode</strong> to LOW_LATENCY.</li>
+</ol>
+</li>
+<li><p class="first">Drag the LeapHandController prefab to the hierarchy as a child of your LeapSpace game object. Apply the following settings:</p>
+<ol class="loweralpha simple">
+<li>Set <strong>Rotation</strong> to [-90, 180, 0].</li>
+<li>Enable <strong>Is Head Mounted</strong>.</li>
+<li>Drag the LeapSpace game object to the <strong>Temporal Warping</strong> property.</li>
+</ol>
+</li>
+<li><p class="first">Add the desired hand models to the LeapHandController. When adding the hand models, you have two options. You can either use prefabs dragged directly to the model pool, or you can first create instances of the hand models in the scene first, and then add them to the model pool. The only difference is that it is often easier to add additional scripts and other components to the hands or make other instance-level settings when you start with game object instances.</p>
+<p>a. Create an empty game object as a child of your TrackingAnchor object. Name this game object: <strong>HandModels</strong>.
+a. If using instances, drag your desired hand model prefabs to this object.
+b. In the LeapHandController game object, locate the Hand Pool component.
+d. Drag HandModels to the Hand Pool <strong>Models Parent</strong> property.
+c. Open the Model Pool, if necessary, and set the <strong>Size</strong> property equal to the number of different hand models you are using. For example, set size = 1, if you are using just a single pair of graphics models; set size = 2 if you are using both graphics and physics models; set size = 3, if you are using graphics, physics, and attachment models; and so on.
+d. Drag the models that you are using to the slots in the model pool. Each element in the pool must have both a left and a right hand.
+e. Assign a <strong>Group Name</strong>, if desired. This name can be used in scripts to turn a pair of hand models on or off.
+f. Set <strong>Is Enabled</strong> to true.
+g. Set <strong>Can Duplicate</strong> as desired. If enabled, two instances of a hand can appear in a scene if two real hands of that type are in view, or if the Leap Motion software misidentifies a left hand as a right, or vice versa, when there are two hands in view.</p>
+</li>
+<li><p class="first">Apply Layer and Physics settings to prevent collisions between the character controller and the hands (only necessary if you are using a character controller that has its own Rigidbody components).</p>
+<ol class="loweralpha simple">
+<li>Create a Layer named &#8220;Body&#8221;.</li>
+<li>Assign any controller components that contain rigid bodies to the Body layer &#8211; but do not include the Leap Motion physics hands.</li>
+<li>Create a Layer named &#8220;Hands&#8221;.</li>
+<li>Assign the physics hand model prefabs or instances that you are using to the Hands layer.</li>
+<li>In the Unity Physics inspector (Edit&gt;Project Settings&gt;Physics), set the Layer Collision Matrix such that the Body and Hands layers do not collide.</li>
+</ol>
+<div class="figure">
+<img alt="unity/../../../images/unity/UnityHandBodyCollision.png" src="unity/../../../images/unity/UnityHandBodyCollision.png" />
+<p class="caption">Preventing the hands from colliding with the character controller.</p>
+</div>
+</li>
+</ol>
+<div class="section" id="two-camera-setups">
+<h3>Two Camera Setups<a class="headerlink" href="#two-camera-setups" title="Permalink to this headline">¶</a></h3>
+<p>If your starting rig uses a two-camera VR setup, i.e. a separate camera for each eye, make the following additions to the above procedure:</p>
+<ol class="arabic simple">
+<li>Follow the above procedure, using one of your eye-specific cameras in place of the MainCamera game object.</li>
+<li>On the LeapVRCameraControl component added to that camera object, change the <strong>Order Type</strong> property to LEFT or RIGHT to match the Camera <strong>Target Eye</strong> property.</li>
+<li>Move the other camera object in the rig to be a child of the TrackingAnchor object.</li>
+<li>Add the LeapVRCameraControl and EnableDepthBuffer script components to the second camera.</li>
+<li>Set the second LeapVRCameraControl <strong>Order Type</strong> property to match the setting of its Camera&#8217;s <strong>Target Eye</strong> property.</li>
+</ol>
+<div class="figure">
+<img alt="unity/../../../images/unity/Unity2CameraRig.png" src="unity/../../../images/unity/Unity2CameraRig.png" />
+<p class="caption">The two-camera rig setup.</p>
+</div>
+</div>
+<div class="section" id="building-a-rig-from-scratch">
+<h3>Building a rig from scratch<a class="headerlink" href="#building-a-rig-from-scratch" title="Permalink to this headline">¶</a></h3>
+<p>The above procedure works for building a rig from the ground up &#8211; the TrackingAnchor becomes the root object of the rig. Still, you can save yourself some trouble by starting with the LMHeadMountedRig prefab.</p>
+</div>
+</div>
+<div class="section" id="building-an-ar-camera-rig">
+<h2>Building an AR Camera Rig<a class="headerlink" href="#building-an-ar-camera-rig" title="Permalink to this headline">¶</a></h2>
+<p>The Augmented Reality (AR) features in our assets are provided for developer experimentation only. We don&#8217;t guarantee that these features will remain in future releases or be improved to a level of quality  suitable for commercial products.</p>
+<p>Follow the procedures above to create a two-camera rig. Then make the following additional changes:</p>
+<ol class="arabic simple">
+<li>Add a Quad primitive to the LeapSpace game object.<ol class="loweralpha">
+<li>Remove the Mesh Collider component.</li>
+<li>Set the position to [0, 0, .1].</li>
+<li>Assign the LeapMotion/Assets/Materials/Passthrough/Background material to the Mesh Renderer&#8217;s <strong>Materials</strong> array.</li>
+<li>Set other rendering properties to off or disabled.</li>
+</ol>
+</li>
+<li>Add the LeapImageRetriever script component to the rig.</li>
+<li>Drag the LeapHandController to the image retriever&#8217;s <strong>Provider</strong> property.</li>
+<li>Set the camera <strong>Clear Flags</strong> on both cameras to Solid Color.</li>
+<li>Enable the <strong>Override Eye Position</strong> property of both Leap VR Camera Control components.</li>
+<li>On the LeapSpace, Leap VR Temporal Warping component, set the <strong>Tween Image Warping</strong> property to 1.</li>
+</ol>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Building a Custom VR Rig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-hand-tracking-to-an-existing-rig">Adding Hand Tracking to an Existing Rig</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#two-camera-setups">Two Camera Setups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-a-rig-from-scratch">Building a rig from scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#building-an-ar-camera-rig">Building an AR Camera Rig</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

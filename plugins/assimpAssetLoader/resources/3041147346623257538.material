@@ -1,0 +1,24 @@
+
+material ZiegelAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.74655 0.33847 0.093048 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.74655 0.33847 0.093048 1
+		}
+
+	}
+
+}

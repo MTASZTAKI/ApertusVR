@@ -55,9 +55,17 @@ namespace Ape
 		Ape::NodeWeakPtr mParentNode;
 
 		std::string mParentNodeName;
+
+		bool mIntersectingEnabled;
+
+		std::vector<Ape::GeometryWeakPtr> mIntersections;
 		
 	public:
 		Ape::NodeWeakPtr getParentNode() { return mParentNode; };
+
+		bool isIntersectingEnabled() { return mIntersectingEnabled; };
+
+		std::vector<Ape::GeometryWeakPtr> getIntersections() { return mIntersections; };
 	};
 }
 

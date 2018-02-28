@@ -1,0 +1,331 @@
+<html>
+    <head>
+        <title>RobotCalibration UI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/snackbar.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="js/script.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            File
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#" id="openModelButton">Open 3D Model</a>
+                            <input id="filePath" name="filePath" type="file" accept="*" onchange="onFilePathChange(this.files)" style="display: none;" />
+
+                            <!-- <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Exit</a> -->
+                        </div>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit" id="saveConfigButton">
+                            Save
+                        </button>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="saveConfigButton">Sace Config</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal">About</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="" id="nodeName" name="nodeName" aria-label="Search">
+                    <button class="btn btn-outline-secondary my-2 my-sm-0" onClick="javascript:location.reload(true);" type="submit">
+                        Refresh
+                    </button>
+                </form>
+            </div>
+        </nav>
+
+        <div class="panel-left">
+            <div class="card m-2">
+                <div class="card-header">
+                    Translate
+                    <button type="button" class="btn btn-sm float-right" onClick="resetPos();" data-toggle="tooltip" title="Click here to clear position data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posX" name="posX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posY" name="posY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('posZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('posZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-pos" id="posZ" name="posZ">
+                    </div>
+                </div>
+            </div>
+            <div class="card m-2">
+                <div class="card-header">
+                    Rotation
+                    <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear quaternion data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>  
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    W
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatW')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatW')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-quat-var form-control" id="quatW" name="quatW" data-input-range="quatWRange"></input>
+                    </div>
+                    <div id="quatWRange" class="input-range-quat slider secondary" data-input-handler="quatW"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-quat-var form-control" id="quatX" name="quatX" data-input-range="quatXRange">
+                    </div>
+                    <div id="quatXRange" class="input-range-quat slider danger" data-input-handler="quatX"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-quat-var form-control" id="quatY" name="quatY" data-input-range="quatYRange">
+                    </div>
+                    <div id="quatYRange" class="input-range-quat slider success" data-input-handler="quatY"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('quatZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('quatZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-quat-var form-control" id="quatZ" name="quatZ"  data-input-range="quatZRange">
+                    </div>
+                    <div id="quatZRange" class="input-range-quat slider info" data-input-handler="quatZ"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="card m-2">
+                <div class="card-header">
+                    Scale
+                    <button type="button" class="btn btn-sm float-right" onClick="resetScale();" data-toggle="tooltip" title="Click here to clear scale data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+                <div class="card-body p-2">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    X
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleX')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleX')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleX" name="scaleX">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Y
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleY" name="scaleY">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Z
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('scaleZ')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('scaleZ')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control input-scale" id="scaleZ" name="scaleZ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card m-2">
+                <div class="card-header">
+                    Rotation
+                    <button type="button" class="btn btn-sm float-right" onClick="resetEuler();" data-toggle="tooltip" title="Click here to clear way pitch roll data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+                <div class="card-body p-2">        
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Yaw
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerY')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerY')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerY" name="eulerY" data-input-range="eulerYRange">
+                    </div>
+                    <div id="eulerYRange" class="input-range-euler slider danger" data-input-handler="eulerY"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Pitch
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerP')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerP')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerP" name="eulerP" data-input-range="eulerPRange">
+                    </div>
+                    <div id="eulerPRange" class="input-range-euler slider success" data-input-handler="eulerP"></div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+                                    Roll
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onClick="copyToClipboard('eulerR')">Copy</a>
+                                    <a class="dropdown-item" href="#" onClick="pasteFromClipboard('eulerR')">Paste</a>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" class="input-range-euler-var form-control" id="eulerR" name="eulerR"  data-input-range="eulerRRange">
+                    </div>
+                    <div id="eulerRRange" class="input-range-euler slider info" data-input-handler="eulerR"></div>
+                </div>
+            </div>
+
+            <div class="card m-2">
+                <div class="card-header">
+                    Transformation
+                    <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                    <button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('transMatrix');" data-toggle="tooltip" title="Click here to copy data">
+                        <li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+
+                <textarea class="form-control" rows="5" id="transMatrix" readonly></textarea>
+            </div>
+        </div>
+
+        <!-- About Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">About</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        Disz iz dö RobotKelibrésön szempül of PetyusVíár
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Bar -->
+        <div id="snackbar"></div>
+    </body>
+</html>

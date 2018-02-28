@@ -1,0 +1,63 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.SpeechBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Speech Basics" Height="600" Width="640"
+        Loaded="WindowLoaded" Closing="WindowClosing">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e"/>
+        <SolidColorBrush x:Key="LightGreyBrush" Color="#ffd2d2d2"/>
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f"/>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="10 0 10 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Margin="0 0 0 20">
+            <Image DockPanel.Dock="Left" Source="Images\Logo.png" Stretch="Fill" Height="32" Width="81" HorizontalAlignment="Left" Margin="0 10 0 5"/>
+            <TextBlock DockPanel.Dock="Right" Margin="0 0 -1 0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18">Speech Basics</TextBlock>
+            <Image Grid.Column="1" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5"/>
+        </DockPanel>
+        <Viewbox Grid.Row="1" Stretch="Uniform">
+            <Canvas Name="playArea"  Width="600" Height="400">
+                <Canvas Name="turtle" Width="99.057" Height="128.859">
+                    <Canvas.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform X="-49.5285" Y="-64.4295"/>
+                            <RotateTransform Angle="0" x:Name="turtleRotation"/>
+                            <TranslateTransform x:Name="turtleTranslation" X="300" Y="200"/>
+                        </TransformGroup>
+                    </Canvas.RenderTransform>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 45.151,113.209 C 51.105,121.359 44.672,128.859 44.672,128.859 C 52.939,125.963 54.227,115.555 54.418,113.072 C 52.744,113.324 51.039,113.466 49.305,113.466 C 47.900,113.466 46.516,113.375 45.151,113.209 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 61.715,29.865 C 64.850,26.697 66.789,22.343 66.789,17.534 C 66.789,7.850 58.939,0.000 49.256,0.000 C 39.572,0.000 31.722,7.850 31.722,17.534 C 31.722,22.357 33.671,26.723 36.822,29.893 C 40.737,28.375 44.935,27.538 49.305,27.538 C 53.648,27.538 57.820,28.365 61.715,29.865 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 10.551,39.545 C 4.724,39.545 0.000,44.269 0.000,50.096 C 0.000,55.923 4.724,60.646 10.551,60.646 C 11.063,60.646 11.562,60.597 12.054,60.527 C 13.354,54.418 15.818,48.816 19.172,44.026 C 17.262,41.318 14.116,39.545 10.551,39.545 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 16.551,92.758 C 11.078,93.147 6.756,97.698 6.756,103.269 C 6.756,109.097 11.479,113.820 17.307,113.820 C 22.251,113.820 26.389,110.414 27.532,105.823 C 23.108,102.381 19.354,97.930 16.551,92.758 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 99.057,50.096 C 99.057,44.269 94.332,39.545 88.506,39.545 C 84.800,39.545 81.547,41.459 79.664,44.347 C 82.891,49.047 85.268,54.512 86.543,60.457 C 87.180,60.577 87.834,60.646 88.506,60.646 C 94.332,60.646 99.057,55.923 99.057,50.096 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 71.447,105.528 C 72.482,110.269 76.699,113.820 81.750,113.820 C 87.578,113.820 92.301,109.097 92.301,103.269 C 92.301,97.551 87.749,92.908 82.071,92.737 C 79.345,97.772 75.717,102.124 71.447,105.528 Z"/>
+                    <Path Fill="{StaticResource KinectPurpleBrush}" Data="F1 M 49.279,30.538 C 29.813,30.538 13.975,48.466 13.975,70.502 C 13.975,92.539 29.813,110.466 49.279,110.466 C 68.748,110.466 84.586,92.539 84.586,70.502 C 84.586,48.466 68.748,30.538 49.279,30.538 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 50.676,52.776 C 50.068,53.384 49.082,53.384 48.475,52.776 L 41.311,45.612 C 40.703,45.004 40.703,44.019 41.311,43.412 L 48.475,36.248 C 49.082,35.640 50.067,35.639 50.676,36.248 L 57.840,43.412 C 58.447,44.019 58.447,45.004 57.840,45.612 L 50.676,52.776 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 50.676,78.766 C 50.068,79.375 49.082,79.375 48.475,78.766 L 41.311,71.603 C 40.703,70.995 40.703,70.009 41.311,69.402 L 48.475,62.238 C 49.082,61.630 50.067,61.630 50.676,62.238 L 57.840,69.402 C 58.447,70.009 58.447,70.995 57.840,71.603 L 50.676,78.766 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 67.915,67.358 C 67.308,67.966 66.321,67.966 65.714,67.358 L 58.550,60.195 C 57.942,59.586 57.942,58.601 58.550,57.994 L 65.714,50.830 C 66.321,50.222 67.307,50.221 67.915,50.830 L 75.079,57.994 C 75.687,58.601 75.687,59.586 75.079,60.195 L 67.915,67.358 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 67.915,90.669 C 67.308,91.277 66.321,91.277 65.714,90.669 L 58.550,83.505 C 57.942,82.898 57.942,81.912 58.550,81.304 L 65.714,74.140 C 66.321,73.533 67.307,73.532 67.915,74.140 L 75.079,81.304 C 75.687,81.912 75.687,82.898 75.079,83.505 L 67.915,90.669 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 32.848,67.358 C 32.240,67.966 31.254,67.966 30.646,67.358 L 23.482,60.195 C 22.875,59.586 22.875,58.601 23.482,57.994 L 30.646,50.830 C 31.254,50.222 32.240,50.221 32.848,50.830 L 40.012,57.994 C 40.619,58.601 40.619,59.586 40.012,60.195 L 32.848,67.358 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 32.848,90.669 C 32.240,91.277 31.254,91.277 30.646,90.669 L 23.482,83.505 C 22.875,82.898 22.875,81.912 23.482,81.304 L 30.646,74.140 C 31.254,73.533 32.240,73.532 32.848,74.140 L 40.012,81.304 C 40.619,81.912 40.619,82.898 40.012,83.505 L 32.848,90.669 Z"/>
+                    <Path Fill="{StaticResource LightGreyBrush}" Data="F1 M 50.676,104.757 C 50.068,105.365 49.082,105.365 48.475,104.757 L 41.311,97.593 C 40.703,96.986 40.703,96.000 41.311,95.392 L 48.475,88.228 C 49.082,87.621 50.067,87.621 50.676,88.228 L 57.840,95.392 C 58.447,96.000 58.447,96.986 57.840,97.593 L 50.676,104.757 Z"/>
+                </Canvas>
+            </Canvas>
+        </Viewbox>
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="16" Margin="0 10 0 10" Foreground="{StaticResource MediumGreyBrush}">
+            Say: "<Span Name="forwardSpan">Forward</Span>", "<Span Name="backSpan">Back</Span>", "<Span Name="leftSpan">Turn Left</Span>" or "<Span Name="rightSpan">Turn Right</Span>"
+        </TextBlock>
+        <StatusBar Grid.Row="3" Height="23" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+            <StatusBarItem Padding="0">
+                <TextBlock Name="statusBarText"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

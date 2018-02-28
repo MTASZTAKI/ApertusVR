@@ -1,0 +1,443 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.KinectFusionExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:Microsoft.Samples.Kinect.KinectFusionExplorer"
+        Title="Kinect Fusion Explorer" Width="844" Height="780" Loaded="WindowLoaded" Closing="WindowClosing" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e"/>
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2"/>
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f"/>
+        
+        <l:DepthToTextConverter x:Key="dtt"/>
+        
+        <Style TargetType="{x:Type Button}" x:Key="ResetButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid>
+                                <Image x:Name="ResetNormal" Source="Images\ResetNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                <Image x:Name="ResetHover" Source="Images\ResetHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            </Grid>
+                            <TextBlock x:Name="ResetText" Text="{TemplateBinding Content}" TextAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource KinectPurpleBrush}" FontSize="15" Margin="5 0 0 0"/>
+                        </StackPanel>
+                        
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ResetNormal"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="ResetHover"/>
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="ResetText"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="{x:Type Button}" x:Key="MeshButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid>
+                                <Image x:Name="MeshNormal" Source="Images\MeshNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                <Image x:Name="MeshHover" Source="Images\MeshHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            </Grid>
+                            <TextBlock x:Name="MeshText" Text="{TemplateBinding Content}" TextAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource KinectPurpleBrush}" FontSize="15" Margin="5 0 0 0"/>
+                        </StackPanel>
+                        
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="MeshNormal"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="MeshHover"/>
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="MeshText"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="{x:Type RadioButton}" x:Key="KinectRadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid x:Name="RadioButtonChecked">
+                                <Image x:Name="CheckedNormal" Source="Images\RadioCheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                <Image x:Name="CheckedHover" Source="Images\RadioCheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            </Grid>
+                            <Grid x:Name="RadioButtonUnchecked" Visibility="Collapsed">
+                                <Image x:Name="UncheckedNormal" Source="Images\RadioUncheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                <Image x:Name="UncheckedHover" Source="Images\RadioUncheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            </Grid>
+                            <TextBlock x:Name="RadioButtonText" Text="{TemplateBinding Content}" TextAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource KinectPurpleBrush}" FontSize="15" Margin="5 0 0 0"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="RadioButtonChecked"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="RadioButtonUnchecked"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckedNormal"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="UncheckedNormal"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="CheckedHover"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="UncheckedHover"/>
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="RadioButtonText"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="{x:Type CheckBox}" x:Key="KinectCheckBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" Background="Transparent">
+                                <Grid x:Name="CheckBoxChecked">
+                                    <Image x:Name="CheckedNormal" Source="Images\CheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                    <Image x:Name="CheckedHover" Source="Images\CheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                                </Grid>
+                                <Grid x:Name="CheckBoxUnchecked" Visibility="Collapsed">
+                                    <Image x:Name="UncheckedNormal" Source="Images\UncheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
+                                    <Image x:Name="UncheckedHover" Source="Images\UncheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                                </Grid>
+                                <TextBlock x:Name="CheckBoxText" Text="{TemplateBinding Content}" TextAlignment="Left"  VerticalAlignment="Center" Foreground="{StaticResource KinectPurpleBrush}" FontSize="15"  Margin="9,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckBoxChecked"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="CheckBoxUnchecked"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckedNormal"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="UncheckedNormal"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="CheckedHover"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="UncheckedHover"/>
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="CheckBoxText"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="HorizontalSliderThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Width" Value="11"/>
+            <Setter Property="Foreground" Value="{StaticResource KinectPurpleBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Canvas SnapsToDevicePixels="true">
+                            <Border x:Name="Body" Width="11" Height="22" Background="{TemplateBinding Foreground}"/>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="KinectSlider" TargetType="{x:Type Slider}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource KinectPurpleBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TickBar x:Name="Tick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0" Visibility="Visible"/>
+                                <Border x:Name="TrackBackground" Background="{TemplateBinding Foreground}" CornerRadius="1" Height="4.0" Margin="5,0" Grid.Row="1" VerticalAlignment="center">
+                                    <Canvas Margin="-6,-1">
+                                        <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Height="4.0" Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" StrokeThickness="1.0" Visibility="Hidden"/>
+                                    </Canvas>
+                                </Border>
+                                <Track x:Name="PART_Track" Grid.Row="1">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Style="{StaticResource HorizontalSliderThumbStyle}"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="Thumb"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="KinectTextFormat" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="10 0 10 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Source="Images\Logo.png" HorizontalAlignment="Left" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5" />
+        <TextBlock Grid.Row="0" Margin="0 0 -1 0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18">Kinect Fusion Explorer</TextBlock>
+        <Image Grid.Row="0" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5" />
+ 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+                
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="CompositeHost" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Left" ClipToBounds="False" >
+                    <Viewbox Grid.Column="0">
+                        <Image Name="shadedSurfaceImage"/>
+                    </Viewbox>
+                    <Viewport3D Name="GraphicsViewport" IsHitTestVisible="False" >
+                        <!-- 3D elements are added here programatically, for performance can add the following to line above: RenderOptions.EdgeMode="Aliased"  -->
+                    </Viewport3D>
+                </Grid>
+
+                <Viewbox Grid.Row="0" Grid.Column="1">
+                    <Image Name="depthFloatImage"/>
+                </Viewbox>
+            
+                <Viewbox Grid.Row="1" Grid.Column="1">
+                    <Image Name="deltaFromReferenceImage"/>
+                </Viewbox>
+            </Grid>
+        </Grid>
+        
+        <Grid Grid.Row="2" Height="245" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="{StaticResource KinectPurpleBrush}" BorderThickness="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Background="{StaticResource KinectPurpleBrush}" Margin="-1 -1 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Actions</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Orientation="Vertical">
+                        <Button Style="{StaticResource MeshButton}" Content="Create Mesh" Margin="10 10 5 0" Click="CreateMeshButtonClick" AutomationProperties.AutomationId="CreateMesh"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0 -3 0 0">
+                            <RadioButton Name="stlFormat" Style="{StaticResource KinectRadioButton}" Content="STL" Margin="30 5 0 0" IsChecked="True" AutomationProperties.AutomationId="STLFormat"/>
+                            <RadioButton Name="objFormat" Style="{StaticResource KinectRadioButton}" Content="OBJ" Margin="5 5 0 0" AutomationProperties.AutomationId="OBJFormat"/>
+                            <RadioButton Name="plyFormat" Style="{StaticResource KinectRadioButton}" Content="PLY" Margin="5 5 5 0" AutomationProperties.AutomationId="PLYFormat"/>
+                        </StackPanel>
+
+                        <Button Margin="10 20 5 0" Style="{StaticResource ResetButton}" Content="Reset Reconstruction" Click="ResetReconstructionButtonClick" AutomationProperties.AutomationId="ResetReconstruction"/>
+
+                        <CheckBox Margin="10 20 10 0" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Use Camera Pose Finder" IsChecked="{Binding UseCameraPoseFinder}" AutomationProperties.AutomationId="UseCameraPoseFinder"/>
+                        
+                        <Button Margin="10 15 10 5" Background="{StaticResource KinectPurpleBrush}" BorderBrush="White" BorderThickness="2" Content="Reset Virtual Camera" Height="35" Width="186" Foreground="White" Focusable="False" Click="ResetCameraButtonClick"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" BorderBrush="{StaticResource KinectPurpleBrush}" BorderThickness="2" Margin="-1 0 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Background="{StaticResource KinectPurpleBrush}" Margin="-1 -1 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Image Options</TextBlock>
+                    </StackPanel>
+
+                    <CheckBox Grid.Row="1" Grid.Column="0" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 10 0" Content="Capture Color" IsChecked="{Binding CaptureColor}" AutomationProperties.AutomationId="CaptureColor"/>
+                    <CheckBox Grid.Row="1" Grid.Column="1" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 10 0" Content="Mirror Depth" IsChecked="{Binding MirrorDepth}" AutomationProperties.AutomationId="MirrorDepth"/>
+                    <CheckBox Grid.Row="2" Grid.Column="0" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 10 0" Content="Pause Integration" IsChecked="{Binding PauseIntegration}" AutomationProperties.AutomationId="PauseIntegration"/>
+                    <CheckBox Grid.Row="2" Grid.Column="1" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 10 0" Content="Volume Graphics" IsChecked="{Binding VolumeGraphics}" AutomationProperties.AutomationId="VolumeGraphics"/>
+                    <CheckBox Grid.Row="3" Grid.Column="0" Style="{StaticResource KinectCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 10 0" Content="Kinect View" IsChecked="{Binding KinectView}" AutomationProperties.AutomationId="KinectView"/>
+
+                    <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Background="{StaticResource KinectPurpleBrush}" Margin="-1 0 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Depth Threshold</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="0 5 0 0">
+                        <Grid Margin="0 0 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="5 0 0 0">Min</TextBlock>
+                            <Slider Grid.Column="1" Style="{StaticResource KinectSlider}" SmallChange="0.02" LargeChange="1.5" Value="{Binding MinDepthClip}" Minimum="0.5" Maximum="8.0" Ticks="0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0" Margin="5" AutomationProperties.AutomationId="DepthThresholdMin"/>
+                            <TextBlock Grid.Column="2" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="0 0 5 0" Text="{Binding MinDepthClip, Converter={StaticResource dtt}}"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="5 0 0 0">Max</TextBlock>
+                            <Slider Grid.Column="1" Style="{StaticResource KinectSlider}" SmallChange="0.02" LargeChange="1.5" Value="{Binding MaxDepthClip}" Minimum="0.5" Maximum="8.0" Ticks="0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0" Margin="5" AutomationProperties.AutomationId="DepthThresholdMax"/>
+                            <TextBlock Grid.Column="2" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="0 0 5 0" Text="{Binding MaxDepthClip, Converter={StaticResource dtt}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" BorderBrush="{StaticResource KinectPurpleBrush}" BorderThickness="2" MinWidth="210" Margin="-1 0 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Background="{StaticResource KinectPurpleBrush}" Margin="-1 -1 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Volume Max Integration Weight</TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Slider Grid.Column="0" Style="{StaticResource KinectSlider}" SmallChange="10" LargeChange="50" Value="{Binding IntegrationWeight}" Minimum="1" Maximum="1000" Ticks="1 1000" Margin="5" AutomationProperties.AutomationId="VolumeIntegrationWeight"/>
+                        <TextBlock Grid.Column="1" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="0 0 5 0" Text="{Binding IntegrationWeight}"/>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Background="{StaticResource KinectPurpleBrush}" Margin="-1 0 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Volume Voxels Per Meter</TextBlock>
+                    </StackPanel>
+
+                  <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*"/>
+                      <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Slider Grid.Column="0" Style="{StaticResource KinectSlider}" Value="{Binding VoxelsPerMeter}" Minimum="128" Maximum="768" Ticks="128 256 384 512 640 768" IsSnapToTickEnabled="True" Margin="5" ValueChanged="VolumeSettingsChanged" AutomationProperties.AutomationId="VolumeVoxelsPerMeter"/>
+                    <TextBlock Grid.Column="1" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="0 0 5 0" Text="{Binding VoxelsPerMeter}"/>
+                  </Grid>
+
+                    <StackPanel Grid.Row="4" Background="{StaticResource KinectPurpleBrush}" Margin="-1 0 -1 0">
+                        <TextBlock Style="{StaticResource KinectTextFormat}" Foreground="White">Volume Voxels Resolution</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="5 0 0 0">X Axis</TextBlock>
+                            <Slider Name="VoxelsXSlider" Grid.Column="1" Style="{StaticResource KinectSlider}" Value="{Binding VoxelsX}" Minimum="128" Maximum="640" Ticks="128 256 384 512 640" IsSnapToTickEnabled="True" ValueChanged="VolumeSettingsChanged" Margin="5" AutomationProperties.AutomationId="VolumeResolutionX"/>
+                            <TextBlock Grid.Column="2" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Text="{Binding VoxelsX}" Margin="0 0 5 0"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="5 0 0 0">Y Axis</TextBlock>
+                            <Slider Name="VoxelsYSlider" Grid.Column="1" Style="{StaticResource KinectSlider}" Value="{Binding VoxelsY}" Minimum="128" Maximum="640" Ticks="128 256 384 512 640" IsSnapToTickEnabled="True" ValueChanged="VolumeSettingsChanged" Margin="5" AutomationProperties.AutomationId="VolumeResolutionY"/>
+                            <TextBlock Grid.Column="2" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Text="{Binding VoxelsY}" Margin="0 0 5 0"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Margin="5 0 0 0">Z Axis</TextBlock>
+                            <Slider Name="VoxelsZSlider" Grid.Column="1" Style="{StaticResource KinectSlider}" Value="{Binding VoxelsZ}" Minimum="128" Maximum="640" Ticks="128 256 384 512 640" IsSnapToTickEnabled="True" ValueChanged="VolumeSettingsChanged" Margin="5" AutomationProperties.AutomationId="VolumeResolutionZ"/>
+                            <TextBlock Grid.Column="2" Style="{StaticResource KinectTextFormat}" Foreground="{StaticResource KinectPurpleBrush}" Text="{Binding VoxelsZ}" Margin="0 0 5 0"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" Background="White">
+            <StatusBarItem Padding="0 0 10 10">
+                <TextBlock Name="fpsText">Fps: 0.00</TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Padding="0 0 0 10">
+                <TextBlock Name="statusBarText">Kinect Fusion Explorer</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

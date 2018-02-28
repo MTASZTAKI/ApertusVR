@@ -1,0 +1,18 @@
+{
+	"console": {
+		"level": "debug",
+		"handleExceptions": false,
+		"json": false,
+		"colorize": true,
+		"timestamp": true
+	},
+	"file": {
+		"level": "debug",
+		"handleExceptions": false,
+		"json": false,
+		"colorize": false,
+		"timestamp": true,
+		"filename": "ApeNodeJsExtensionPlugin.log"
+	},
+	"exitOnError": false
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+        <title>Leap Motion SDK Documentation</title>
+    
+        <link rel="stylesheet" href="cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+
+        <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:    './',
+            VERSION:     '2.1',
+            COLLAPSE_INDEX: false,
+            FILE_SUFFIX: '.html',
+            HAS_SOURCE:  false
+          };
+        </script>
+
+        <script type="text/javascript" src="cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+
+        <script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+        <link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+        <link rel="top" title="Leap Motion SDK Documentation" href="index.html" />
+        <meta charset='utf-8'/>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-31536531-1']);
+      _gaq.push(['_setDomainName', 'leapmotion.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script>
+    window.addEventListener('keyup', handleKeyInput);
+    function handleKeyInput(e)
+    {
+        var code;
+        if (!e) var e = window.event;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        var character = String.fromCharCode(code);
+        if( character == "J" & e.altKey){    }
+        else if( character == "K" & e.altKey){
+        }
+
+    }
+    </script>
+
+<style>
+    .langmenu {
+        overflow:hidden;
+    }
+    .lang {
+        float:left;
+    }
+    .lang:hover {
+        background: #ddd;
+        cursor: pointer;
+    }
+    .name {
+        display: table; 
+        margin: 0 auto
+    }
+</style>
+</head>
+<body>
+  <div class="developer-portal-styles">
+    <header class="navbar navbar-static-top developer-navbar header beta-header">
+      <nav class="container pr">
+        <a class="logo-link pull-left" href="/">
+          <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="cpp/_static/logo.png" />
+        </a>
+        <span class="inline-block hidden-phone developer-logo-text">
+          <div class="text">
+            <a href="/">
+              <span class="more-than-1199">Developer Portal</span>
+
+            </a>
+          </div>
+        </span>
+
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+        <div class="nav-collapse">
+          <ul class="nav header-navigation developer-links">
+            <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+            <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+            <li><a class="active" href="#" class="">Documentation</a></li>
+            <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+            <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+            <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+          </ul>
+        </div>
+
+      </nav>
+    </header>
+  </div>
+
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+        if(window.location.protocol == 'file:'){
+            var navNodes = document.querySelectorAll("div.navbar-collapse.collapse");
+            //navNodes[0].style.display = 'none';
+            navNodes[0].parentNode.removeChild(navNodes[0]);
+        }
+
+    </script>
+
+
+    <section id="wrap" class="main-wrap" data-spy="scroll" data-target="#sidebar">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Leap Motion SDK and Plugin Documentation</h1>
+              <p>Full documentation tailored to the supported programming languages and platforms is available at the following links:</p>
+              <div class="langmenu">
+                  <div class="lang"><a href="LeapC/index.html"><img height="130" width="130" alt="C" src="images/c-icon.png"/><div class="name">Leap C</div></a></div>
+                <div class="lang"><a href="cpp/index.html" onclick="localStorage['currentAPI'] = 'cpp'"><img height="130" width="130" alt="C++" src="images/cpp-icon.png"/><div class="name">C++</div></a></div>
+                <div class="lang"><a href="csharp/index.html" onclick="localStorage['currentAPI'] = 'csharp'"><img height="130" width="130" alt="C#" src="images/csharp-icon.png"/><div class="name">C#</div></a></div>
+                <div class="lang"><a href="unity/index.html" onclick="localStorage['currentAPI'] = 'unity'"><img height="130" width="130" alt="Unity" src="images/unity-icon.png"/><div class="name">Unity</div></a></div>
+                <div class="lang"><a href="objc/index.html" onclick="localStorage['currentAPI'] = 'objc'"><img height="130" width="130" alt="Objective-C" src="images/objc-icon.png"/><div class="name">Objective-C</div></a></div>
+                <div class="lang"><a href="java/index.html" onclick="localStorage['currentAPI'] = 'java'"><img height="130" width="130" alt="Java" src="images/java-icon.png"/><div class="name">Java</div></a></div>
+                <div class="lang"><a href="python/index.html" onclick="localStorage['currentAPI'] = 'python'"><img height="130" width="130" alt="Python" src="images/python-icon.png"/><div class="name">Python</div></a></div>
+                <div class="lang"><a href="javascript/index.html" onclick="localStorage['currentAPI'] = 'javascript'"><img height="130" width="130" alt="JavaScript" src="images/javascript-icon.png"/><div class="name">JavaScript</div></a></div>
+                <!-- <div class="lang"><a href="unreal/index.html" onclick="localStorage['currentAPI'] = 'unreal'"><img height="130" width="130" alt="Unreal Engine" src="images/unreal-icon.png"/><div class="name">Unreal Engine</div></a></div> -->
+            </div>
+            <br />            
+            </div>
+          </div>
+        
+        </div>
+      </section>
+</body>
+</html>

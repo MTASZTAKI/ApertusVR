@@ -29,9 +29,11 @@ SOFTWARE.*/
 #include "nbind/api.h"
 #include "ApeJsBindColor.h"
 #include "ApeJsBindDegree.h"
+#include "ApeJsBindEuler.h"
 #include "ApeJsBindQuaternion.h"
 #include "ApeJsBindRadian.h"
 #include "ApeJsBindVector3.h"
+#include "ApeJsBindMatrix4.h"
 #include "ApeIScene.h"
 #include "ApeISystemConfig.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"
@@ -56,6 +58,17 @@ public:
 		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	}
 
+	void start(std::string configFolderPath)
+	{
+		std::stringstream configDir;
+		Ape::System::Start(configFolderPath, true);
+	}
+
+	void stop()
+	{
+		Ape::System::Stop();
+	}
+
 	NodeJsPtr createNode(std::string name)
 	{
 		return NodeJsPtr(mpScene->createNode(name));
@@ -63,7 +76,7 @@ public:
 
 	bool getNode(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getNode()" << std::endl;
+		std::cout << "JsBindManager::getNode()" << std::endl;
 
 		auto entityWeakPtr = mpScene->getNode(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -84,9 +97,9 @@ public:
 
 	bool getUserNode(nbind::cbFunction &done)
 	{
-		std::cout << "getUserNode()" << std::endl;
+		std::cout << "JsBindManager::getUserNode()" << std::endl;
 
-		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName);
+		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName);
 		if (auto node = nodeWeakPtr.lock())
 		{
 			done(false, NodeJsPtr(nodeWeakPtr));
@@ -99,13 +112,13 @@ public:
 
 	LightJsPtr createLight(std::string name)
 	{
-		std::cout << "createLight()" << std::endl;
+		std::cout << "JsBindManager::createLight()" << std::endl;
 		return LightJsPtr(mpScene->createEntity(name, Ape::Entity::LIGHT));
 	}
 
 	bool getLight(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getText()" << std::endl;
+		std::cout << "JsBindManager::getText()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -125,13 +138,13 @@ public:
 
 	TextJsPtr createText(std::string name)
 	{
-		std::cout << "createText()" << std::endl;
+		std::cout << "JsBindManager::createText()" << std::endl;
 		return TextJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_TEXT));
 	}
 
 	bool getText(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getText()" << std::endl;
+		std::cout << "JsBindManager::getText()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -151,13 +164,13 @@ public:
 
 	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name)
 	{
-		std::cout << "createIndexedFaceSet()" << std::endl;
+		std::cout << "JsBindManager::createIndexedFaceSet()" << std::endl;
 		return IndexedFaceSetJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDFACESET));
 	}
 
 	bool getIndexedFaceSet(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getIndexedFaceSet()" << std::endl;
+		std::cout << "JsBindManager::getIndexedFaceSet()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -177,13 +190,13 @@ public:
 
 	IndexedLineSetJsPtr createIndexedLineSet(std::string name)
 	{
-		std::cout << "createIndexedLineSet()" << std::endl;
+		std::cout << "JsBindManager::createIndexedLineSet()" << std::endl;
 		return IndexedLineSetJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDLINESET));
 	}
 
 	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getIndexedLineSet()" << std::endl;
+		std::cout << "JsBindManager::getIndexedLineSet()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -203,13 +216,13 @@ public:
 
 	BoxJsPtr createBox(std::string name)
 	{
-		std::cout << "createBox()" << std::endl;
+		std::cout << "JsBindManager::createBox()" << std::endl;
 		return BoxJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_BOX));
 	}
 
 	bool getBox(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getBox()" << std::endl;
+		std::cout << "JsBindManager::getBox()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -229,13 +242,13 @@ public:
 
 	FileGeometryJsPtr createFileGeometry(std::string name)
 	{
-		std::cout << "createFileGeometry()" << std::endl;
+		std::cout << "JsBindManager::createFileGeometry()" << std::endl;
 		return FileGeometryJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_FILE));
 	}
 
 	bool getFileGeometry(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getFileGeometry()" << std::endl;
+		std::cout << "JsBindManager::getFileGeometry()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -255,13 +268,13 @@ public:
 
 	ManualMaterialJsPtr createManualMaterial(std::string name)
 	{
-		std::cout << "createManualMaterial()" << std::endl;
+		std::cout << "JsBindManager::createManualMaterial()" << std::endl;
 		return ManualMaterialJsPtr(mpScene->createEntity(name, Ape::Entity::MATERIAL_MANUAL));
 	}
 
 	bool getManualMaterial(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getManualMaterial()" << std::endl;
+		std::cout << "JsBindManager::getManualMaterial()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -281,13 +294,13 @@ public:
 
 	PbsPassJsPtr createPbsPass(std::string name)
 	{
-		std::cout << "createPbsPass()" << std::endl;
+		std::cout << "JsBindManager::createPbsPass()" << std::endl;
 		return PbsPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_PBS));
 	}
 
 	bool getPbsPass(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getPbsPass()" << std::endl;
+		std::cout << "JsBindManager::getPbsPass()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -307,13 +320,13 @@ public:
 
 	ManualPassJsPtr createManualPass(std::string name)
 	{
-		std::cout << "createManualPass()" << std::endl;
+		std::cout << "JsBindManager::createManualPass()" << std::endl;
 		return ManualPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_MANUAL));
 	}
 
 	bool getManualPass(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "getManualPass()" << std::endl;
+		std::cout << "JsBindManager::getManualPass()" << std::endl;
 
 		if (auto entity = mpScene->getEntity(name).lock())
 		{
@@ -333,7 +346,7 @@ public:
 
 	std::string getFolderPath()
 	{
-		std::cout << "getFolderPath()" << std::endl;
+		std::cout << "JsBindManager::getFolderPath()" << std::endl;
 		return mpSystemConfig->getFolderPath();
 	}
 
@@ -345,6 +358,9 @@ private:
 NBIND_CLASS(JsBindManager)
 {
 	construct<>();
+
+	method(start);
+	method(stop);
 
 	method(createNode);
 	method(getNode);

@@ -9,6 +9,7 @@ ApeTesterPlugin::ApeTesterPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mDemoObjectNode = Ape::NodeWeakPtr();
+	mPointCloud = Ape::PointCloudWeakPtr();
 }
 
 ApeTesterPlugin::~ApeTesterPlugin()
@@ -33,11 +34,33 @@ void ApeTesterPlugin::Init()
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f));
-		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, -1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, -1, 1));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(-1, -1, 0));
+		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+	}
+	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
+	{
+		planeNode->setPosition(Ape::Vector3(0, -10, 0));
 		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
 			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
@@ -54,15 +77,7 @@ void ApeTesterPlugin::Init()
 				}
 			}
 		}
-	}
-	if (auto node = mpScene->createNode("sphereNode").lock())
-	{
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			meshFile->setFileName("sphere.mesh");
-			meshFile->setParentNode(node);
-		}
-	}
+	}*/
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -302,6 +317,58 @@ void ApeTesterPlugin::Init()
 			}
 		}
 	}
+	//if (auto pointCloudNode = mpScene->createNode("pointCloudNode2").lock())
+	//{
+	//	//pointCloudNode->setPosition(Ape::Vector3(0, 500, 0));
+	//	/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
+	//	{
+	//		pointCloudNodeText->setCaption("Point");
+	//		pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
+	//		pointCloudNodeText->setParentNode(pointCloudNode);
+	//	}*/
+	//	if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+	//	{
+	//		mPointCloudSize = 20073600;
+	//		Ape::PointCloudPoints points;
+	//		points.resize(mPointCloudSize);
+	//		Ape::PointCloudColors colors;
+	//		colors.resize(mPointCloudSize);
+	//		std::random_device rd;
+	//		std::mt19937 gen(rd());
+	//		std::uniform_int_distribution<> distInt(0, 1000);
+	//		std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+	//		for (int i = 0; i < mPointCloudSize; i++)
+	//		{
+	//			points[i] = distInt(gen);
+	//			colors[i] = distDouble(gen);
+	//		}
+	//		/*Ape::PointCloudPoints points = {
+	//			-5, 0, 0,
+	//			-4, 0, 0,
+	//			-3, 0, 0,
+	//			-2, 0, 0,
+	//			-1, 0, 0,
+	//			 0, 0, 0,
+	//			 1, 0, 0,
+	//			 2, 0, 0,
+	//			 3, 0, 0
+	//		};
+	//		Ape::PointCloudColors colors = {
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0,
+	//			(float)0.9, 0, 0
+	//		};*/
+	//		pointCloud->setParameters(points, colors, 100000.0f);
+	//		pointCloud->setParentNode(pointCloudNode);
+	//		mPointCloud = pointCloud;
+	//	}
+	//}
 	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
@@ -366,6 +433,58 @@ void ApeTesterPlugin::Run()
 			duration = 0;
 		}
 		duration = duration + std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();
+
+		if (auto pointCloud = mPointCloud.lock())
+		{
+			/*std::random_device rd; 
+			std::mt19937 gen(rd()); 
+			std::uniform_int_distribution<> distInt(-5, 3);
+			std::vector<double> randomPoints;
+			for (int i = 0; i < 9; i++)
+				randomPoints.push_back(distInt(gen));
+			Ape::PointCloudPoints points = {
+				(float)randomPoints[0], 0, 0,
+				(float)randomPoints[1], 0, 0,
+				(float)randomPoints[2], 0, 0,
+				(float)randomPoints[3], 0, 0,
+				(float)randomPoints[4], 0, 0,
+				(float)randomPoints[5], 0, 0,
+				(float)randomPoints[6], 0, 0,
+				(float)randomPoints[7], 0, 0,
+				(float)randomPoints[8], 0, 0
+			};
+			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+			std::vector<double> randomRedColors;
+			for (int i = 0; i < 9; i++)
+				randomRedColors.push_back(distDouble(gen));
+			Ape::PointCloudColors colors = {
+				(float)randomRedColors[0], 0, 0,
+				(float)randomRedColors[1], 0, 0,
+				(float)randomRedColors[2], 0, 0,
+				(float)randomRedColors[3], 0, 0,
+				(float)randomRedColors[4], 0, 0,
+				(float)randomRedColors[5], 0, 0,
+				(float)randomRedColors[6], 0, 0,
+				(float)randomRedColors[7], 0, 0,
+				(float)randomRedColors[8], 0, 0
+			};*/
+			/*Ape::PointCloudPoints points;
+			points.resize(mPointCloudSize);
+			Ape::PointCloudColors colors;
+			colors.resize(mPointCloudSize);
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<> distInt(0, 1000);
+			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+			for (int i = 0; i < mPointCloudSize; i++)
+			{
+				points[i] = distInt(gen);
+				colors[i] = distDouble(gen);
+			}
+			pointCloud->updatePoints(points);
+			pointCloud->updateColors(colors);*/
+		}
+		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }

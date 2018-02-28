@@ -1,0 +1,26 @@
+
+material KupferAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.218749 0.0773669 0.0500825 1
+			specular 0.749997 0.265258 0.171712 1 0
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.218749 0.0773669 0.0500825 1
+			specular 0.749997 0.265258 0.171712 1 0
+		}
+
+	}
+
+}

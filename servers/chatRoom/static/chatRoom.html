@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ApertusVR - EasyRTC Demos - Chat Rooms</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/socket.io.slim.js"></script>
+    <script type="text/javascript" src="js/easyrtc.js"></script>
+    <script type="text/javascript" src="js/chatRoom.js"></script>
+</head>
+<body onload="initApp();">
+    <div id="container">
+        <div id="main">
+            <div class="preconnection">
+                Username: <input type="text" id="userNameField" /> Password: <input type="text" id="credentialField" />
+                <div>
+                    <button id="connectButton" onclick="connect();">Connect</button>
+                </div>
+                <hr>
+            </div>
+            <div class="postconnection">
+                <button onclick="disconnect();">Disconnect from server.</button>
+            </div>
+            <div>
+                Presence:
+                <input type="radio" name="presence" onclick="setPresence('away');" />away
+                <input type="radio" name="presence" checked onclick="setPresence('chat');" />chat
+                <input type="radio" name="presence" onclick="setPresence('dnd');" />dnd
+                <input type="radio" name="presence" onclick="setPresence('xa');" />xa
+                <input type="text" onkeyup="updatePresenceStatus(this.value);" />
+            </div>
+            <div style="display: none;">
+                Quick Join -
+                <div id="quickJoinBlock"></div> <button onclick="refreshRoomList();"> Refresh</button>
+                <button onclick="addRoom(null, null, true);">or join </button>
+                <input id="roomToAdd" type="text" size="20" />
+                <br> Optional room parameters<input id="optRoomParms" type="text" size="20" />
+            </div>
+            <div class="postconnection">
+                <hr>
+                <div id="sendMessageArea">
+                    <div id="iam">Not connected yet</div>
+                    Rooms:
+                    <div id="rooms"></div>
+                </div>
+                <div id="receiveMessageArea">
+                    Received Messages:
+                    <div id="conversation"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fixFooter">
+        <input type="text" id="sendMessageText" placeholder="Enter your message here" onkeypress="onMsgKeyPress();" />
+        <button id="sendButton" onCLick="sendMessage(null, 'default');">Send</button>
+    </div>
+    <script type="text/javascript">
+        addQuickJoinButtons({
+            room1: { roomName: "room1", numberClients: " " },
+            room2: { roomName: "room2", numberClients: " " },
+            room3: { roomName: "room3", numberClients: " " }
+        });
+    </script>
+</body>
+</html>

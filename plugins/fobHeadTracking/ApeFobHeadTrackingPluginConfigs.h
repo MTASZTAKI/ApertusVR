@@ -65,6 +65,16 @@ namespace Ape
 
 	struct FobHeadTrackingDisplayConfig
 	{
+		std::string name;
+
+		Ape::CameraWeakPtr cameraLeft;
+
+		Ape::CameraWeakPtr cameraRight;
+
+		std::string cameraLeftName;
+
+		std::string cameraRightName;
+
 		Ape::Vector2 size;
 		
 		Ape::Vector3 position;

@@ -158,9 +158,9 @@ std::string Ape::SystemConfigImpl::getFolderPath()
 	return mFolderPath;
 }
 
-void Ape::SystemConfigImpl::setGeneratedUniqueUserName(std::string generatedUniqueUserName)
+void Ape::SystemConfigImpl::setGeneratedUniqueUserNodeName(std::string generatedUniqueUserName)
 {
-	mSceneSessionConfig.generatedUniqueUserName = generatedUniqueUserName;
+	mSceneSessionConfig.generatedUniqueUserNodeName = generatedUniqueUserName;
 }
 
 void Ape::SystemConfigImpl::writeSessionGUID(Ape::SceneSessionUniqueID sessionGUID)
@@ -194,7 +194,7 @@ void Ape::SystemConfigImpl::writeSessionGUID(Ape::SceneSessionUniqueID sessionGU
 	jsonDocument.Accept(writer);
 
 	std::stringstream contentSS;
-	contentSS << writeBuffer.GetString();
+	contentSS << writeBuffer.GetString() << std::endl;
 	std::string content = contentSS.str();
 	std::ofstream apeSystemConfigFileOut(fileFullPath.str().c_str(), std::ios::binary | std::ios::out);
 	apeSystemConfigFileOut.write(content.c_str(), content.size());

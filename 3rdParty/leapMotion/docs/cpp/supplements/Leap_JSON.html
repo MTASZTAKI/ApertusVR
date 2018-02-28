@@ -1,0 +1,651 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>WebSocket Communication &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Appendices" href="Leap_Supplements.html" />
+    <link rel="next" title="Leap Motion Release Notes" href="SDK_Release_Notes.html" />
+    <link rel="prev" title="Using the Diagnostic Visualizer" href="Leap_Visualizer.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unreal = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/supplements/Leap_JSON.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/supplements/Leap_JSON.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/supplements/Leap_JSON.html";
+            } else {
+                    redirectedLocation ="Leap_Supplements.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/supplements/Leap_JSON.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Visualizer.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("SDK_Release_Notes.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/supplements/Leap_JSON.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/supplements/Leap_JSON.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/supplements/Leap_JSON.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/supplements/Leap_JSON.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/supplements/Leap_JSON.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/supplements/Leap_JSON.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/supplements/Leap_JSON.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Supplements.html" accesskey="U">Appendices</a>&raquo;
+  WebSocket Communication
+</span> -->
+        
+  <div class="section" id="websocket-communication">
+<h1>WebSocket Communication<a class="headerlink" href="#websocket-communication" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion software installed on any computer with a Leap Motion controller provides tracking data through a WebSocket server. The WebSocket server listens to port 6347 on the localhost domain (<a class="reference external" href="../_static/JSONViewer.html">http://127.0.0.1:6437</a>). Any client application, including Web clients, that can make a WebSocket connection can access the Leap Motion tracking data in the form of JSON-formatted messages. The WebSocket server is provided by the <tt class="docutils literal"><span class="pre">leapd</span></tt> process, which runs as a service on Windows and a daemon on OS X and Linux.</p>
+<p>In most cases, you should use an existing client library rather than implement this protocol directly in an application. This article is provided to help you if you are developing your own library. Existing libraries include:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">leap.js</span></tt> &#8211; A JavaScript client library for browsers and Nodejs. Available at <a class="reference external" href="https://github.com/leapmotion/leapjs">https://github.com/leapmotion/leapjs</a>.</li>
+<li><tt class="docutils literal"><span class="pre">LeapMotionAS3</span></tt> &#8211; An ActionScript client library for Adobe Flash and AIR. Available at <a class="reference external" href="https://github.com/logotype/LeapMotionAS3">https://github.com/logotype/LeapMotionAS3</a>.</li>
+</ul>
+<div class="section" id="protocols">
+<h2>Protocols<a class="headerlink" href="#protocols" title="Permalink to this headline">¶</a></h2>
+<p>The communication between the WebSocket server and a client is mediated by a data exchange subprotocol. This subprotocol defines which messages can be sent between the client and the server and the format of the JSON data. The protocol version defines which feature set the server uses to communicate with a client.</p>
+<p>You can request a specific version of the Leap Motion subprotocol by adding a string of the form <tt class="docutils literal"><span class="pre">v6.json</span></tt> to the WebSocket URL, where the digit, in this case <tt class="docutils literal"><span class="pre">6</span></tt> indicates which version to use. If you omit this part of the URL, you will get version 1. Note that the Leap Motion leap.js JavaScript library automatically selects the protocol version corresponding to the library version. When you successfully connect to the Leap Motion WebSocket server, it responds with a message reporting  the protocol version. If the client&#8217;s Leap Motion software is out-of-date, then this version could be less than the one you requested.</p>
+<p>The current version of the protocol is <tt class="docutils literal"><span class="pre">v6.json</span></tt>.</p>
+</div>
+<div class="section" id="client-server-messages">
+<h2>Client-Server Messages<a class="headerlink" href="#client-server-messages" title="Permalink to this headline">¶</a></h2>
+<p>The WebSocket server and a client can exchange the following messages:</p>
+<ul>
+<li><p class="first">Server to client</p>
+<p><tt class="docutils literal"><span class="pre">version</span></tt></p>
+<blockquote>
+<div><p>Indicates the version numbers of the Leap Motion service and WebSocket subprotocol:</p>
+<div class="code javascript highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&quot;serviceVersion&quot;</span><span class="p">:</span><span class="s">&quot;2.3.1+33747&quot;</span><span class="p">,</span> <span class="s">&quot;version&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">deviceEvent</span></tt></p>
+<blockquote>
+<div><p>Sent when the Leap Motion when the service/daemon is paused or resumed and when the controller hardware is plugged in or unplugged:</p>
+<div class="code javascript highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;event&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;attached&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+      <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="s">&quot;NNNNNNNNNNN&quot;</span><span class="p">,</span>
+      <span class="s">&quot;streaming&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+      <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;peripheral&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;deviceEvent&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">id</span></tt></td>
+<td>A string containing the ID of the Leap Mption device.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">attached</span></tt></td>
+<td>Whether the hardware device is plugged in or attached.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">streaming</span></tt></td>
+<td>Whether the service/daemon is sending tracking data. Always false if attached is false.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">type</span></tt></td>
+<td>The hardware form factor. One of: &#8220;peripheral&#8221;, &#8220;keyboard&#8221;, &#8220;laptop&#8221;</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Tracking data</dt>
+<dd><p class="first last">Contains a set of tracking data. See <a class="reference internal" href="#json-tracking-data-format">JSON tracking data format</a>.</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p class="first">Client to server</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">background</span></tt></dt>
+<dd><p class="first">Specifies whether the client wants to receive frames when it is not the <tt class="docutils literal"><span class="pre">focused</span></tt> application:</p>
+<div class="code javascript last highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&quot;background&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">}</span>
+<span class="p">{</span><span class="s">&quot;background&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">focused</span></tt></dt>
+<dd><p class="first">Specifies whether the application is active. Setting <tt class="docutils literal"><span class="pre">focused</span></tt> to true, stops other WebSocket clients from getting data. Setting <tt class="docutils literal"><span class="pre">focused</span></tt> to false stops your WebSocket client from getting data (and potentially unwanted input):</p>
+<div class="code javascript last highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&quot;focused&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">}</span>
+<span class="p">{</span><span class="s">&quot;focused&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">optimizeHMD</span></tt></dt>
+<dd><p class="first">Specifies whether the client application expects the Leap Motion hardware to be attached to a head-mounted display:</p>
+<div class="code javascript last highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&quot;optimizeHMD&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">}</span>
+<span class="p">{</span><span class="s">&quot;optimizeHMD&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+<p>To send a message to the WebSocket server, first encode the desired message as a JSON string. In JavaScript, for example, you can use the JSON <tt class="docutils literal"><span class="pre">stringify()</span></tt> function and then send the message using the WebSocket <tt class="docutils literal"><span class="pre">send</span></tt> function:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="c1">//ws is a connected WebSocket object</span>
+<span class="kd">var</span> <span class="nx">backgroundMessage</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="nx">background</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">backgroundMessage</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="json-tracking-data-format">
+<h2>JSON tracking data format<a class="headerlink" href="#json-tracking-data-format" title="Permalink to this headline">¶</a></h2>
+<p>Each frame of data from the WebSocket server contains JSON defining a frame. The attributes of a frame in the JSON message are similar, but not identical to those of a <a href="#id55"><span class="problematic" id="id56">|Frame|_</span></a> object obtained through the native library. They include:</p>
+<pre class="literal-block">
+&quot;<a class="reference external" href="../../javascript/api/Leap.Frame.html#currentFrameRate">currentFrameRate</a>&quot;: float
+&quot;<a class="reference external" href="../../javascript/api/Leap.Frame.html#id">id</a>&quot;: float
+&quot;<a class="reference internal" href="#rotation"><em>r</em></a>&quot;: array of floats (Matrix)
+&quot;<a class="reference internal" href="#scale"><em>s</em></a>&quot;: float
+&quot;<a class="reference internal" href="#translation"><em>t</em></a>&quot;:  array of floats (vector)
+&quot;<a class="reference external" href="../../javascript/api/Leap.Frame.html#timestamp">timestamp</a>&quot;: integer
+&quot;devices&quot;: not implemented (always an empty array)
+
+&quot;gestures&quot;: array of Gesture objects
+    (Attributes vary by gesture type)
+    &quot;<a class="reference external" href="../../javascript/api/Leap.CircleGesture.html#center">center</a>&quot;: array of floats (vector) -- circle only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.SwipeGesture.html#direction">direction</a>&quot;: array of floats (vector) -- swipe, keyTap, screenTap only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#duration">duration</a>&quot;: integer microseconds
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#handIds">handIds</a>&quot;: array of integers
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#id">id</a>&quot;: integer
+    &quot;<a class="reference external" href="../../javascript/api/Leap.CircleGesture.html#normal">normal</a>&quot;: array of floats -- circle only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#pointableIds">pointableIds</a>&quot;: array
+    &quot;<a class="reference external" href="../../javascript/api/Leap.SwipeGesture.html#position">position</a>&quot;: array of floats (vector) -- swipe, keyTap, screenTap only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.CircleGesture.html#progress">progress</a>&quot;: float -- circle, keyTap, screenTap only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.CircleGesture.html#radius">radius</a>&quot;: float -- circle only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.SwipeGesture.html#speed">speed</a>&quot;: float -- swipe only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.SwipeGesture.html#startPosition">startPosition</a>&quot;: array of float (vector) -- swipe only
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#state">state</a>&quot;: string - one of &quot;start&quot;, &quot;update&quot;, &quot;stop&quot;
+    &quot;<a class="reference external" href="../../javascript/api/Leap.Gesture.html#type">type</a>&quot;: string - one of &quot;circle&quot;, &quot;swipe&quot;, &quot;keyTap&quot;, &quot;screenTap&quot;
+
+&quot;hands&quot;: array of Hand objects
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#arm">armBasis</a>: the 3 basis vectors of the arm (array of vectors)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#arm">armWidth</a>: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#confidence">confidence</a>: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#direction">direction</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../python/api/Leap.Arm.html#elbow_position">elbow</a>: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#grabStrength">grabStrength</a>: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#id">id</a>&quot;: integer
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#palmNormal">palmNormal</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#palmPosition">palmPosition</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#palmVelocity">palmVelocity</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#pinchStrength">pinchStrength</a>: float
+   &quot;<a class="reference internal" href="#rotation"><em>r</em></a>&quot;: array of floats (Matrix)
+   &quot;<a class="reference internal" href="#scale"><em>s</em></a>&quot;: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#sphereCenter">sphereCenter</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#sphereRadius">sphereRadius</a>&quot;: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#stabilizedPalmPosition">stabilizedPalmPosition</a>&quot;: array of floats (vector)
+   &quot;<a class="reference internal" href="#translation"><em>t</em></a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#timeVisible">timeVisible</a>&quot;: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#type">type</a>&quot;: string - one of &quot;right&quot;, &quot;left&quot;
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Hand.html#arm">wrist</a>: array of floats (vector)
+
+&quot;interactionBox&quot;: object
+   &quot;<a class="reference external" href="../../javascript/api/Leap.InteractionBox.html#center">center</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.InteractionBox.html#size">size</a>&quot;: array of floats  (vector)
+
+&quot;pointables&quot;: array of Pointable objects
+   &quot;<a class="reference external" href="../api/Leap.Bone.html?proglang=javascript#Bone.basis">bases</a>&quot;: the 3 basis vectors for each bone, in index order, wrist to tip, (array of vectors).
+   &quot;<a class="reference external" href="../api/Leap.Finger.html?proglang=javascript#Finger.btipPosition">btipPosition</a>&quot;: the position of the tip of the distal phalanx as an array of 3 floats.
+   &quot;<a class="reference external" href="../api/Leap.Finger.html?proglang=javascript#Finger.carpPostion">carpPosition</a>&quot;: the position of the base of metacarpal bone as an array of 3 floats.
+   &quot;<a class="reference external" href="../api/Leap.Finger.html?proglang=javascript#Finger.dipPosition">dipPosition</a>:&quot; the position of the base of the distal phalanx as an array of 3 floats.
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#direction">direction</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#extended">extended</a>&quot;: boolean (true or false)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#handId">handId</a>&quot;: integer
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#id">id</a>&quot;: integer
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#length">length</a>&quot;: float
+   &quot;<a class="reference external" href="../api/Leap.Finger.html?proglang=javascript#Finger.mcpPosition">mcpPosition</a>&quot;: a position vector as an array of 3 floating point numbers
+   &quot;<a class="reference external" href="../api/Leap.Finger.html?proglang=javascript#Finger.pipPosition">pipPosition</a>&quot;: a position vector as an array of 3 floating point numbers
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#stabilizedTipPosition">stabilizedTipPosition</a>&quot;: array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#timeVisible">timeVisible</a>&quot;: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#tipPosition">tipPosition</a>&quot;:  array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#tipVelocity">tipVelocity</a>&quot;:  array of floats (vector)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#tool">tool</a>&quot;: boolean (true or false)
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#touchDistance">touchDistance</a>&quot;: float
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Pointable.html#touchZone">touchZone</a>&quot;: string - one of &quot;none&quot;, &quot;hovering&quot;, &quot;touching&quot;
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Finger.html#type">type</a>&quot;: integer - 0 is thumb; 4 is pinky
+   &quot;<a class="reference external" href="../../javascript/api/Leap.Finger.html#width">width</a>&quot;: float
+</pre>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li>Gesture data is only included in a frame of data if gesture recognition is enabled by sending the <tt class="docutils literal"><span class="pre">enableGestures</span></tt> message to the WebSocket server.</li>
+<li><a class="reference external" href="../api/Leap.Hand.html?proglang=javascript#Hand.basis">Hand.basis</a> is computed from the <a class="reference external" href="../api/Leap.Hand.html?proglang=javascript#Finger.direction">palmNormal</a> and <a class="reference external" href="../api/Leap.Hand.html?proglang=javascript#Finger.direction">direction</a> vectors. It is not included in the JSON data.</li>
+</ul>
+<div class="section" id="motion-factors">
+<h3>Motion factors<a class="headerlink" href="#motion-factors" title="Permalink to this headline">¶</a></h3>
+<p>The motion factors, r, s, t, attached to Hand and Frame objects are snapshots of the motion occuring across frames. These factors must be combined with those of a previous frame to derive the relative motion.</p>
+<ul class="simple">
+<li>r &#8211; a 3x3 rotation matrix</li>
+<li>s &#8211; a scale factor</li>
+<li>t &#8211; a 3-element translation vector</li>
+</ul>
+<div class="section" id="rotation-factor">
+<span id="rotation"></span><h4>Rotation factor<a class="headerlink" href="#rotation-factor" title="Permalink to this headline">¶</a></h4>
+<p>The matrix expressing the relative rotation between two frames can be calculated by multiplying the r matrix from the current frame by the inverse of the r matrix of the starting frame.</p>
+<div class="math">
+\[\mathbf{rotation} = \mathbf{r_{current frame}} * \mathbf{r_{since frame}^{-1}}\]</div>
+</div>
+<div class="section" id="scale-factor">
+<span id="scale"></span><h4>Scale factor<a class="headerlink" href="#scale-factor" title="Permalink to this headline">¶</a></h4>
+<p>The relative scale factor between two frames can be calculated by subtracting the s value from the starting frame from the current s value and computing the natural exponential function of the result.</p>
+<div class="math">
+\[scalefactor = e^{s_{current frame} - s_{sinceframe}}\]</div>
+</div>
+<div class="section" id="translation-factor">
+<span id="translation"></span><h4>Translation factor<a class="headerlink" href="#translation-factor" title="Permalink to this headline">¶</a></h4>
+<p>The relative translation factor between two frames can be calculated by subtracting the t vector from the starting frame from the current t vector.</p>
+<div class="math">
+\[\mathbf{\overrightarrow{translation}} = \mathbf{\vec{t}}_{current frame} - \mathbf{\vec{t}}_{since frame}\]</div>
+</div>
+</div>
+</div>
+<div class="section" id="protocol-changes">
+<h2>Protocol Changes<a class="headerlink" href="#protocol-changes" title="Permalink to this headline">¶</a></h2>
+<p>This document describes the most recent version of the protocol.</p>
+<p>Each version of the protocol corresponds to particular versions of the Leap Motion software installed on a client computer as well as a versions of the leap.js library which use the protocol:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="39%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Protocol</th>
+<th class="head">Leap Motion Client Software</th>
+<th class="head">Leap.js</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>v1.json</td>
+<td>prerelease</td>
+<td>0.1.n</td>
+</tr>
+<tr class="row-odd"><td>v2.json</td>
+<td>prerelease</td>
+<td>0.2.n</td>
+</tr>
+<tr class="row-even"><td>v3.json</td>
+<td>1.0+</td>
+<td>0.3.n</td>
+</tr>
+<tr class="row-odd"><td>v4.json</td>
+<td>1.0.9+</td>
+<td>0.4.n</td>
+</tr>
+<tr class="row-even"><td>v5.json</td>
+<td>1.2.0+</td>
+<td>0.5.n</td>
+</tr>
+<tr class="row-odd"><td>v6.json</td>
+<td>2.0+</td>
+<td>0.6.n</td>
+</tr>
+</tbody>
+</table>
+<p>The following changes were made from previous versions of the protocol:</p>
+<div class="section" id="version-6">
+<h3>Version 6<a class="headerlink" href="#version-6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added additional data from the Leap Motion v2, skeletal tracking model:<ul>
+<li>Hand.confidence</li>
+<li>Hand.grabStrength</li>
+<li>Hand.pinchStrength</li>
+<li>Hand.type</li>
+<li>Pointable.dipPosition</li>
+<li>Pointable.extended</li>
+<li>Pointable.mcpPosition</li>
+<li>Pointable.pipPosition</li>
+<li>Pointable.type</li>
+</ul>
+</li>
+<li>Added Pointable.width for fingers</li>
+<li>Added <tt class="docutils literal"><span class="pre">optimizeHMD</span></tt> client-to-server message.</li>
+</ul>
+</div>
+<div class="section" id="version-5">
+<h3>Version 5<a class="headerlink" href="#version-5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added deviceEvent messages.</li>
+<li>Removed deviceConnected events in favore of deviceEvent messages.</li>
+</ul>
+</div>
+<div class="section" id="version-4">
+<h3>Version 4<a class="headerlink" href="#version-4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added <tt class="docutils literal"><span class="pre">focused</span></tt> and <tt class="docutils literal"><span class="pre">background</span></tt> messages.</li>
+<li>Removed <tt class="docutils literal"><span class="pre">heartbeat</span></tt> messages. Servers supporting protocol version 4 or above ignore heartbeat messages, even when connecting to clients requesting protocol versions 2 or 3.</li>
+</ul>
+</div>
+<div class="section" id="version-3">
+<h3>Version 3<a class="headerlink" href="#version-3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added <tt class="docutils literal"><span class="pre">deviceConnected</span></tt> events.</li>
+</ul>
+</div>
+<div class="section" id="version-2">
+<h3>Version 2<a class="headerlink" href="#version-2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added <tt class="docutils literal"><span class="pre">heartbeat</span></tt> messages. If your application supports protocol version 2 or 3, you should send a heartbeat message every 100ms from clients connecting with version 2 or 3. If a heartbeat is not received by the server within this time period, it assumes the client is not active and stops sending data until it receives another heartbeat. Heartbeats were removed in version 4 in favor of <tt class="docutils literal"><span class="pre">focused</span></tt> and <tt class="docutils literal"><span class="pre">background</span></tt> messages.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Supplements.html">Appendices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Application.html">Using the Leap Motion Control Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Visualizer.html">Using the Diagnostic Visualizer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">WebSocket Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#protocols">Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#client-server-messages">Client-Server Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json-tracking-data-format">JSON tracking data format</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motion-factors">Motion factors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#protocol-changes">Protocol Changes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#version-6">Version 6</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-5">Version 5</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-4">Version 4</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-3">Version 3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-2">Version 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SDK_Release_Notes.html">Leap Motion Release Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Acknowledgements.html">Acknowledgements</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

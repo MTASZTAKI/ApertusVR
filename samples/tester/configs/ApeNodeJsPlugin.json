@@ -1,5 +1,12 @@
 {
-    "jsPlugins": [
-        "plugins/x3dLoader/x3dLoader.js"
-    ]
+    "pluginManager": {
+        "plugins": [
+            {
+                "file": "countryNames/countryNames.js"
+            },
+            {
+                "file": "engineeringScene/engineeringScene.js"
+            }
+        ]
+    }
 }

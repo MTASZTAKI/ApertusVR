@@ -30,6 +30,8 @@ SOFTWARE.*/
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <fstream>
+#include "Ape.h"
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
@@ -49,13 +51,84 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
 #include "ApeIMainWindow.h"
+#include "ApeIBrowser.h"
+#include "ApeIUnitTexture.h"
+#include "ApeInterpolator.h"
+#include "ApeEuler.h"
+#include "ApeIManualPass.h"
+#include "ApeIRayGeometry.h"
+#include "OIS.h"
 
 
 #define THIS_PLUGINNAME "ApePresentationScenePlugin"
 
-class ApePresentationScenePlugin : public Ape::IPlugin
+class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
+	enum Context
+	{
+		UNKOWN,
+		SPACE,
+		BROWSER,
+		INVALID
+	};
+	struct StoryElement
+	{
+		Ape::Vector3 cameraPosition;
+		Ape::Quaternion cameraOrientation;
+		std::string browserName;
+		std::string browserURL;
+		Ape::Vector3 browserPosition;
+		Ape::Quaternion browserOrientation;
+		int browserWidth;
+		int browserHeight;
+		int browserZoom;
+		int browserResolutionVertical;
+		int browserResolutionHorizontal;
+
+		StoryElement()
+		{
+			this->cameraPosition = Ape::Vector3();
+			this->cameraOrientation = Ape::Quaternion();
+			this->browserName = std::string();
+			this->browserURL = std::string();
+			this->browserPosition = Ape::Vector3();
+			this->browserOrientation = Ape::Quaternion();
+			this->browserWidth = int();
+			this->browserHeight = int();
+			this->browserZoom = int();
+			this->browserResolutionVertical = int();
+			this->browserResolutionHorizontal = int();
+		}
+
+		StoryElement(
+			Ape::Vector3 cameraPosition,
+			Ape::Quaternion cameraOrientation,
+			std::string browserName = std::string(),
+			std::string browserURL = std::string(),
+			Ape::Vector3 browserPosition = Ape::Vector3(),
+			Ape::Quaternion browserOrientation = Ape::Quaternion(),
+			int browserWidth = int(),
+			int browserHeight = int(),
+			int browserZoom = 0,
+			int browserResolutionVertical = 1024,
+			int browserResolutionHorizontal = 768
+			)
+		{
+			this->cameraPosition = cameraPosition;
+			this->cameraOrientation = cameraOrientation;
+			this->browserName = browserName;
+			this->browserURL = browserURL;
+			this->browserPosition = browserPosition;
+			this->browserOrientation = browserOrientation;
+			this->browserWidth = browserWidth;
+			this->browserHeight = browserHeight;
+			this->browserZoom = browserZoom;
+			this->browserResolutionVertical = browserResolutionVertical;
+			this->browserResolutionHorizontal = browserResolutionHorizontal;
+		}
+	};
+
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
@@ -65,9 +138,73 @@ private:
 	Ape::IMainWindow* mpMainWindow;
 
 	Ape::NodeWeakPtr mUserNode;
+
+	Ape::CameraWeakPtr mCamera;
 	
 	void eventCallBack(const Ape::Event& event);
+
+	Ape::Vector3 mOldXMLFormatTranslateVector;
+
+	Ape::Vector3 mOldXMLFormatTranslateVectorCamera;
 	
+	Ape::Quaternion mOldXMLFormatRotationQuaternion;
+
+	int mCurrentStoryElementIndex;
+
+	std::vector<StoryElement> mStoryElements;
+
+	float mTranslateSpeedFactor;
+
+	float mRotateSpeedFactor;
+
+	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+	OIS::Keyboard* mpKeyboard;
+
+	OIS::Mouse* mpMouse;
+
+	std::map<std::string, Ape::BrowserWeakPtr> mBrowsers;
+
+	std::map<std::string, Ape::UnitTextureWeakPtr> mGeometriesMouseTextures;
+
+	std::map<std::string, Ape::BrowserWeakPtr> mBrowserMouseTextures;
+
+	Ape::UnitTextureWeakPtr mActiveMouseTexture;
+
+	Ape::BrowserWeakPtr mActiveBrowser;
+
+	Ape::BrowserWeakPtr mOverlayBrowser;
+
+	Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+	Ape::ManualMaterialWeakPtr mOverlayMouseMaterial;
+
+	Ape::RayGeometryWeakPtr mRayGeometry;
+
+	Ape::NodeWeakPtr mRayOverlayNode;
+
+	clock_t mLastLeftClickTime;
+
+	Ape::Vector3 mUserNodePositionBeforeFullScreen;
+
+	Ape::Quaternion mUserNodeOrientationBeforeFullScreen;
+
+	Context mContext;
+
+	bool mIsFirstSpacePressed;
+
+	void moveUserNode();
+
+	void saveUserNodePose(Ape::NodeSharedPtr userNode);
+
+	void animateToStoryElements(Ape::NodeSharedPtr userNode);
+
+	void jumpToStoryElement(Ape::NodeSharedPtr userNode);
+
+	void manageBrowser(StoryElement storyElement);
+
+	void createMesh(std::string name, Ape::Vector3 position = Ape::Vector3(), Ape::Quaternion orientation = Ape::Quaternion());
+
 public:
 	ApePresentationScenePlugin();
 
@@ -84,6 +221,17 @@ public:
 	void Suspend() override;
 
 	void Restart() override;
+
+	bool keyPressed(const OIS::KeyEvent& e) override;
+
+	bool keyReleased(const OIS::KeyEvent& e) override;
+
+	bool mouseMoved(const OIS::MouseEvent& e) override;
+
+	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+
+	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+
 };
 
 APE_PLUGIN_FUNC Ape::IPlugin* CreateApePresentationScenePlugin()

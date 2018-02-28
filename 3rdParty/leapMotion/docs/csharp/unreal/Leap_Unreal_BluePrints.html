@@ -1,0 +1,995 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Blueprint Reference &mdash; Leap Motion C# SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C# SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'csharp';
+    var hasAPI = {};
+    hasAPI.unreal = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'csharp/unreal/Leap_Unreal_BluePrints.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unreal/Leap_Unreal_BluePrints.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unreal/Leap_Unreal_BluePrints.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'csharp/unreal/Leap_Unreal_BluePrints.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/index.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      C#
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/unreal/Leap_Unreal_BluePrints.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Blueprint Reference
+</span> -->
+        
+  <div class="section" id="blueprint-reference">
+<h1>Blueprint Reference<a class="headerlink" href="#blueprint-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="function-library">
+<h2>Function Library<a class="headerlink" href="#function-library" title="Permalink to this headline">¶</a></h2>
+<p>Nodes in the function library are available in all Blueprint constructor and event graphs.</p>
+<div class="section" id="get-all-hands-ids">
+<h3>Get All Hands Ids<a class="headerlink" href="#get-all-hands-ids" title="Permalink to this headline">¶</a></h3>
+<p>Gets all the ids of detected hands. The Leap Motion service assigns a new id every time a hand is newly detected, so a given physical hand can be represented by a different virtual hand with a different id at different times.</p>
+<img alt="unreal/../../../images/unreal/Unreal_GetAllHandIds.png" src="unreal/../../../images/unreal/Unreal_GetAllHandIds.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Out:</td>
+<td>All Hands Ids</td>
+<td>An array containing the Ids of all the tracked hands.</td>
+</tr>
+<tr class="row-even"><td>Returns:</td>
+<td>Boolean</td>
+<td>False if the Leap Motion controller is not connected.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-bone-position-and-orientation">
+<h3>Get Bone Position and Orientation<a class="headerlink" href="#get-bone-position-and-orientation" title="Permalink to this headline">¶</a></h3>
+<p>Gets the position and orientation of a bone of the hand with respect to the position and orientation of the world origin.</p>
+<img alt="unreal/../../../images/unreal/Unreal_GetBonePositionAndOrientation.png" src="unreal/../../../images/unreal/Unreal_GetBonePositionAndOrientation.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Hand Id</td>
+<td>The id of the hand containing the bone of interest.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Leap Bone</td>
+<td>The name of the bone. The palm is included with the other bones for the purposes of this function.</td>
+</tr>
+<tr class="row-odd"><td>Out:</td>
+<td>Position</td>
+<td>The offset of the distal end of the bone from (0, 0, 0).</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Orientation</td>
+<td>The transform of the bone with respect to the orientation of the Unreal world coordinate axes.</td>
+</tr>
+<tr class="row-odd"><td>Returns:</td>
+<td>Boolean</td>
+<td>True if there is a valid hand object with the specified id; false, otherwise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-bone-width-and-length">
+<h3>Get Bone Width and Length<a class="headerlink" href="#get-bone-width-and-length" title="Permalink to this headline">¶</a></h3>
+<p>The length and width of the bone.</p>
+<img alt="unreal/../../../images/unreal/Unreal_GetBoneWidthAndLength.png" src="unreal/../../../images/unreal/Unreal_GetBoneWidthAndLength.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Hand Id</td>
+<td>The id of the hand containing the bone of interest.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Leap Bone</td>
+<td>the name of the bone. The palm is included with the other bones for the purposes of this function.</td>
+</tr>
+<tr class="row-odd"><td>Out:</td>
+<td>Width</td>
+<td>The width of the body part containing the bone.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Length</td>
+<td>The length of the body part containing the bone.</td>
+</tr>
+<tr class="row-odd"><td>Returns:</td>
+<td>Boolean</td>
+<td>True if there is a valid hand object with the specified id; false, otherwise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-grab-strength">
+<h3>Get Grab Strength<a class="headerlink" href="#get-grab-strength" title="Permalink to this headline">¶</a></h3>
+<p>The grab strength of a hand increases from zero as the hand forms a fist to a maximum value of one.</p>
+<img alt="unreal/../../../images/unreal/GetGrabStrength.png" src="unreal/../../../images/unreal/GetGrabStrength.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Hand Id</td>
+<td>The id of the hand of interest.</td>
+</tr>
+<tr class="row-even"><td>Out:</td>
+<td>Grab Strength</td>
+<td>A value between 0 and 1.</td>
+</tr>
+<tr class="row-odd"><td>Returns:</td>
+<td>Boolean</td>
+<td>True if there is a valid hand object with the specified id; false, otherwise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-pinch-strength">
+<h3>Get Pinch Strength<a class="headerlink" href="#get-pinch-strength" title="Permalink to this headline">¶</a></h3>
+<p>The pinch strength of a hand increases from zero as the any fingertip approaches the tip of the thumb, reaching  a maximum value of one.  Note that pinching is not distinct from grabbing; typically the pinch value increases during grabbing.</p>
+<img alt="unreal/../../../images/unreal/Unreal_GetPinchStrength.png" src="unreal/../../../images/unreal/Unreal_GetPinchStrength.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Hand Id</td>
+<td>The id of the hand of interest.</td>
+</tr>
+<tr class="row-even"><td>Out:</td>
+<td>Pinch Strength</td>
+<td>A value between 0 and 1.</td>
+</tr>
+<tr class="row-odd"><td>Returns:</td>
+<td>Boolean</td>
+<td>True if there is a valid hand object with the specified id; false, otherwise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="leap-motion-controller-actor-component-nodes">
+<h2>Leap Motion Controller Actor/Component Nodes<a class="headerlink" href="#leap-motion-controller-actor-component-nodes" title="Permalink to this headline">¶</a></h2>
+<p>The following nodes are defined by the Leap Motion Controller Actor and component.</p>
+<div class="section" id="get-all-hand-actors">
+<h3>Get All Hand Actors<a class="headerlink" href="#get-all-hand-actors" title="Permalink to this headline">¶</a></h3>
+<p>Gets all LeapMotionHandActor objects associated with this Leap Motion Controller Component.</p>
+<img alt="unreal/../../../images/unreal/GetAllHandActors.png" src="unreal/../../../images/unreal/GetAllHandActors.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Target</td>
+<td>A reference to a Leap Motion Controller Component instance.</td>
+</tr>
+<tr class="row-even"><td>Out:</td>
+<td>Hand Actors</td>
+<td>An array containing references to the hand actor objects.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-hand-actor">
+<h3>Get Hand Actor<a class="headerlink" href="#get-hand-actor" title="Permalink to this headline">¶</a></h3>
+<p>Gets the child Leap Motion Hand Actor object associated with a Leap Motion hand ID.</p>
+<img alt="unreal/../../../images/unreal/GetHandActor.png" src="unreal/../../../images/unreal/GetHandActor.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Target</td>
+<td>A reference to a Leap Motion Controller Component instance.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Hand Id</td>
+<td>the id of the hand of interest.</td>
+</tr>
+<tr class="row-odd"><td>Returns:</td>
+<td>LeapMotionHandActor</td>
+<td>A reference to the Hand Actor object with the specified hand id.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-all-hand-ids">
+<h3>Get All Hand Ids<a class="headerlink" href="#get-all-hand-ids" title="Permalink to this headline">¶</a></h3>
+<p>Gets all the hand Ids.</p>
+<img alt="unreal/../../../images/unreal/GetAllHandIds.png" src="unreal/../../../images/unreal/GetAllHandIds.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Target</td>
+<td>A reference to a Leap Motion Controller Component instance.</td>
+</tr>
+<tr class="row-even"><td>Out:</td>
+<td>Hand Ids</td>
+<td>An array containing all the hand ids.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-oldest-left-or-right-hand-actor">
+<h3>Get Oldest Left or Right Hand Actor<a class="headerlink" href="#get-oldest-left-or-right-hand-actor" title="Permalink to this headline">¶</a></h3>
+<p>Gets the child Hand Actor for either the left or the right hand that has been tracked by the Leap Motion controller for the longest amount of time. Using the oldest hand object helps prevent interference if someone else inserts their hand into the field of view.</p>
+<img alt="unreal/../../../images/unreal/GetOldestLeftorRightHandActor.png" src="unreal/../../../images/unreal/GetOldestLeftorRightHandActor.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Target</td>
+<td>A reference to a Leap Motion Controller Component instance.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Leap Side</td>
+<td>Whether to get the right or left hand.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="use-hmd-mode">
+<h3>Use HMD Mode<a class="headerlink" href="#use-hmd-mode" title="Permalink to this headline">¶</a></h3>
+<p>Sets this controller object to HMD mode. HMD mode rotates the hands and projects them in front of the Controller Actor object rather than above it. It also sets the Leap Motion tracking to HMD mode, which is optimized to detect hands when the controller hardware is attached to a head-mounted display.</p>
+<p>Although only the current Actor object is transformed when you execute this function, all controllers receive the same tracking data. Thus, you won&#8217;t get good results when your level contains multiple active controller actors in different modes.</p>
+<img alt="unreal/../../../images/unreal/UseHMDMode.png" src="unreal/../../../images/unreal/UseHMDMode.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Target</td>
+<td>A reference to a Leap Motion Controller Component instance.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Enable or Disable</td>
+<td>Set to True or check to enable HMD mode.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="leap-motion-hand-actor-nodes">
+<h2>Leap Motion Hand Actor Nodes<a class="headerlink" href="#leap-motion-hand-actor-nodes" title="Permalink to this headline">¶</a></h2>
+<p>Leap Motion Hand Actor objects are created by the Controller Actor whenever a hand is detected in the Leap Motion field of view and destroyed when tracking of that hand is lost (usually when the user withdraws his or her hand from the field of view). You can access the hand actors from their parent controller. Hand actors do not have their own position. Get positions from a bone actor. For example, you can use the position for the palm bone as the general position of the hand.</p>
+<div class="section" id="get-bone-actor">
+<h3>Get Bone Actor<a class="headerlink" href="#get-bone-actor" title="Permalink to this headline">¶</a></h3>
+<p>Gets the LeapMotionBoneActor instance for the specified bone.</p>
+<img alt="unreal/../../../images/unreal/HandGetBoneActor.png" src="unreal/../../../images/unreal/HandGetBoneActor.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Leap Bone</td>
+<td>The name of the bone from ELeapBone</td>
+</tr>
+<tr class="row-even"><td>Out:</td>
+<td>Bone Actor object</td>
+<td>The bone actor instance for the bone.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-parenting-controller-component">
+<h3>Get Parenting Controller Component<a class="headerlink" href="#get-parenting-controller-component" title="Permalink to this headline">¶</a></h3>
+<p>Gets the Leap Motion Controller component that spawned the target hand actor.</p>
+<img alt="unreal/../../../images/unreal/HandGetParent.png" src="unreal/../../../images/unreal/HandGetParent.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Out:</td>
+<td>Leap Motion Controller Component</td>
+<td>the parent controller component.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-set-show-mesh">
+<h3>Get/Set Show Mesh<a class="headerlink" href="#get-set-show-mesh" title="Permalink to this headline">¶</a></h3>
+<p>Controls whether the bone mesh objects are rendered.</p>
+<img alt="unreal/../../../images/unreal/HandSetShowMesh.png" src="unreal/../../../images/unreal/HandSetShowMesh.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>Boolean</td>
+<td>True to show mesh.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-set-show-collider">
+<h3>Get/Set Show Collider<a class="headerlink" href="#get-set-show-collider" title="Permalink to this headline">¶</a></h3>
+<p>Controlls whether the bone colliders are rendered.</p>
+<img alt="unreal/../../../images/unreal/HandSetShowCollider.png" src="unreal/../../../images/unreal/HandSetShowCollider.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>Boolean</td>
+<td>True to show colliders.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id1">
+<h3>Get Grab Strength<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The grab strength reported for this hand. Grab strength is a value between 0 and 1 rating how strongly a hand is &#8220;grabbing.&#8221;</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>float</td>
+<td>A value between 0 and 1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-hand-id">
+<h3>Get Hand Id<a class="headerlink" href="#get-hand-id" title="Permalink to this headline">¶</a></h3>
+<p>The Leap Motion id assigned to this hand. The id changes each time a hand is recognized by the Leap Motion device, even though it might be the same physical hand.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>integer</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-hand-side">
+<h3>Get Hand Side<a class="headerlink" href="#get-hand-side" title="Permalink to this headline">¶</a></h3>
+<p>Whether the hand is the left or the right hand.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>ELeapSide</td>
+<td>Left or right</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h3>Get Pinch Strength<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>The pinch strength reported for this hand. Pinch strength is a value between 0 and 1 rating how strongly the thumb and any single finger of a hand is &#8220;pinching.&#8221; Note that there is often overlap between pinching and grabbing.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>float</td>
+<td>A value between 0 and 1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-scale">
+<h3>Get Scale<a class="headerlink" href="#get-scale" title="Permalink to this headline">¶</a></h3>
+<p>The scale value setting for this hand.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>integer</td>
+<td>A value of 1 is life-size.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="show-arm">
+<h3>Show Arm<a class="headerlink" href="#show-arm" title="Permalink to this headline">¶</a></h3>
+<p>The setting controlling whther the arm bone of this hand is rendered.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>Boolean</td>
+<td>True to show arm.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="leap-motion-bone-actor-nodes">
+<h2>Leap Motion Bone Actor Nodes<a class="headerlink" href="#leap-motion-bone-actor-nodes" title="Permalink to this headline">¶</a></h2>
+<p>Leap Motion Bone Actor objects are created by the Hand Actor when that hand is created and destroyed along with that hand actor. You can access the bone actors from their parent hand actor. Bone actors contain the position and orientation information for each part of the hand, converted into the Unreal coordinate system. The bone actors are positioned relative to both the controller and the parent hand actor. However, by default, the transform from the controller to the hand actor is the identity transform; it will only vary if your application changes it.</p>
+<div class="section" id="leap-bone-type">
+<h3>Leap Bone Type<a class="headerlink" href="#leap-bone-type" title="Permalink to this headline">¶</a></h3>
+<p>The bone name from the ELeapBone enumeration.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>ELeapBone</td>
+<td>Bone names.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-set-primitive-component">
+<h3>Get/Set Primitive Component<a class="headerlink" href="#get-set-primitive-component" title="Permalink to this headline">¶</a></h3>
+<p>The Unreal Primitive Component used for this part of the hand.</p>
+<img alt="unreal/../../../images/unreal/BoneSetPrimitiveComponent.png" src="unreal/../../../images/unreal/BoneSetPrimitiveComponent.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>PrimitiveComponent</td>
+<td>An Unreal primitive component instance.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id3">
+<h3>Get/Set Show Mesh<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Whether to render this part of the hand.</p>
+<img alt="unreal/../../../images/unreal/BoneSetMesh.png" src="unreal/../../../images/unreal/BoneSetMesh.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>Boolean</td>
+<td>True to show mesh.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id4">
+<h3>Get/Set Show Collider<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Whether to render the collider for this part of the hand.</p>
+<img alt="unreal/../../../images/unreal/BoneSetCollider.png" src="unreal/../../../images/unreal/BoneSetCollider.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>Boolean</td>
+<td>True to show collider.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-set-static-mesh-component">
+<h3>Get/Set Static Mesh Component<a class="headerlink" href="#get-set-static-mesh-component" title="Permalink to this headline">¶</a></h3>
+<p>The static mesh component used for this part of the hand.</p>
+<img alt="unreal/../../../images/unreal/BoneSetMeshComponent.png" src="unreal/../../../images/unreal/BoneSetMeshComponent.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>StaticMeshComponent</td>
+<td>An Unreal StaticMeshComponent instance.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id5">
+<h3>Get Parenting Controller Component<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>The Leap Motion Controller component that spawned the hand which spawned the target bone.</p>
+<img alt="unreal/../../../images/unreal/BoneGetParentController.png" src="unreal/../../../images/unreal/BoneGetParentController.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Type:</td>
+<td>LeapMotionControllerComponent</td>
+<td>The parent controller component.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="init">
+<h3>Init<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h3>
+<p>A virtual function you can implement to override how bone actors are created.</p>
+<img alt="unreal/../../../images/unreal/BoneInit.png" src="unreal/../../../images/unreal/BoneInit.png" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>In:</td>
+<td>Leap Bone</td>
+<td>The type of bone (from ELeapBone enumeration)</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Scale</td>
+<td>The setting for the hand scale.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Width</td>
+<td>The measured width of the part of the hand represented by this bone. Should be multiplied by the scale setting.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Length</td>
+<td>The measured length of the part of the hand represented by this bone. Should be multiplied by the scale setting.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>Show Collider</td>
+<td>The current state of the controller&#8217;s <tt class="docutils literal"><span class="pre">Show</span> <span class="pre">Collider</span></tt> setting.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Show Mesh</td>
+<td>The current state of the controller&#8217;s <tt class="docutils literal"><span class="pre">Show</span> <span class="pre">Mesh</span></tt> setting.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Only the length and width of bones are measured by the Leap Motion API. For the finger and arm bones, you can use the width value for thickness as well. For the palm bone, you can derive a suitable value from one of the supplied values (i.e. 20% of the palm width).</p>
+</div>
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>A controller dispatches events when a hand is detected, updated, or removed from the game.</p>
+<div class="section" id="onhandadded-event">
+<h3>OnHandAdded Event<a class="headerlink" href="#onhandadded-event" title="Permalink to this headline">¶</a></h3>
+<p>Dispatched when a hand is added to the scene.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Out:</td>
+<td>Hand id</td>
+<td>the id of the new hand.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="onhandupdated-event">
+<h3>OnHandUpdated Event<a class="headerlink" href="#onhandupdated-event" title="Permalink to this headline">¶</a></h3>
+<p>Dispatched every tick while a hand is tracked.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Out:</td>
+<td>Hand Id</td>
+<td>the id of the updated hand.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>Delta Seconds</td>
+<td>seconds since last update</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="onhandremoved-event">
+<h3>OnHandRemoved Event<a class="headerlink" href="#onhandremoved-event" title="Permalink to this headline">¶</a></h3>
+<p>Dispatched when a hand is removed from the scene.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="30%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Out:</td>
+<td>Hand Id</td>
+<td>the id of the removed hand.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C# Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C# and Unity</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

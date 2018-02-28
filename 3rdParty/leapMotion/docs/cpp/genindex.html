@@ -1,0 +1,2978 @@
+
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Index &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="./../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="./../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../javascript/genindex.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../unity/genindex.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../csharp/genindex.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../java/genindex.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../python/genindex.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../objc/genindex.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../unreal/genindex.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="index.html">Home</a>&raquo;
+  
+</span> -->
+        
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.add">add() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.add_listener">add_listener() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.angle_to">angle_to() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.append">append() (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.DeviceList.html#Leap.DeviceList.append">(Leap.DeviceList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.FailedDeviceList.html#Leap.FailedDeviceList.append">(Leap.FailedDeviceList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.append">(Leap.FingerList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.GestureList.html#Leap.GestureList.append">(Leap.GestureList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.append">(Leap.HandList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ImageList.html#Leap.ImageList.append">(Leap.ImageList method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.append">(Leap.ToolList method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm">Arm (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.arm">arm (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.Arm">Arm() (Leap.Arm class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.invalid">Arm.invalid (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.baseline">baseline (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.basis">basis (Leap.Arm attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.basis">(Leap.Bone attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.basis">(Leap.Hand attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone">Bone (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone">Bone() (class)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.Bone">(Leap.Bone class method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone">(in module Leap)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.bone">bone() (Leap.Finger method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.basis">Bone.basis (Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.center">Bone.center() (Bone method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.direction">Bone.direction() (Bone method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.invalid">Bone.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.left">Bone.left() (Bone method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.length">Bone.length (Bone attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Bone.html#Bone.lerp">Bone.lerp() (Bone method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.matrix">Bone.matrix() (Bone method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.nextJoint">Bone.nextJoint (Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.prevJoint">Bone.prevJoint (Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.type">Bone.type (Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.TYPE_DISTAL">Bone.TYPE_DISTAL (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.TYPE_INTERMEDIATE">Bone.TYPE_INTERMEDIATE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.TYPE_METACARPAL">Bone.TYPE_METACARPAL (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.TYPE_PROXIMAL">Bone.TYPE_PROXIMAL (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Bone.width">Bone.width (Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.bytes_per_pixel">bytes_per_pixel (Leap.Image attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.center">center (Leap.Bone attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.center">(Leap.CircleGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.center">(Leap.InteractionBox attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture">CircleGesture (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture">CircleGesture() (class)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.CircleGesture">(Leap.CircleGesture class method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.center">CircleGesture.center (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.class_type">CircleGesture.class_type (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.duration">CircleGesture.duration (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.handIds">CircleGesture.handIds (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.id">CircleGesture.id (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.normal">CircleGesture.normal (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.pointableIds">CircleGesture.pointableIds (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.progress">CircleGesture.progress (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.radius">CircleGesture.radius (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.state">CircleGesture.state (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#CircleGesture.type">CircleGesture.type (CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.class_type">class_type() (Leap.ScreenTapGesture class method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.class_type">(Leap.SwipeGesture class method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.clear_policy">clear_policy() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.confidence">confidence (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Config.html#Leap.Config">Config (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.config">config (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Config.html#Leap.Config.Config">Config() (Leap.Config class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller">Controller (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller">Controller() (class)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.Controller">(Leap.Controller class method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Controller.html#Controller.connect">Controller.connect() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.connected">Controller.connected() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.disconnect">Controller.disconnect() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.blur">Controller.Event.blur (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.connect">Controller.Event.connect (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceAttached">Controller.Event.deviceAttached (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceConnected">Controller.Event.deviceConnected (Controller.Event attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceDisconnected">Controller.Event.deviceDisconnected (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceRemoved">Controller.Event.deviceRemoved (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceStopped">Controller.Event.deviceStopped (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.deviceStreaming">Controller.Event.deviceStreaming (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.disconnect">Controller.Event.disconnect (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.focus">Controller.Event.focus (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.frame">Controller.Event.frame (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.frameEnd">Controller.Event.frameEnd (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.gesture">Controller.Event.gesture (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.protocol">Controller.Event.protocol (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.streamingStarted">Controller.Event.streamingStarted (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.Event.streamingStopped">Controller.Event.streamingStopped (Controller.Event attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.frame">Controller.frame() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.frameEventName">Controller.frameEventName (Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.inBrowser">Controller.inBrowser() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.on">Controller.on() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.plugin">Controller.plugin() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.POLICY_ALLOW_PAUSE_RESUME">Controller.POLICY_ALLOW_PAUSE_RESUME (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.POLICY_BACKGROUND_FRAMES">Controller.POLICY_BACKGROUND_FRAMES (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.POLICY_IMAGES">Controller.POLICY_IMAGES (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.POLICY_OPTIMIZE_HMD">Controller.POLICY_OPTIMIZE_HMD (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.setBackground">Controller.setBackground() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.setOptimizeHMD">Controller.setOptimizeHMD() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.stopUsing">Controller.stopUsing() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.streaming">Controller.streaming() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Controller.use">Controller.use() (Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.cross">cross() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.current_frames_per_second">current_frames_per_second (Leap.Frame attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.data">data (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.data_pointer">data_pointer (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.denormalize_point">denormalize_point() (Leap.InteractionBox method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.depth">depth (Leap.InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.deserialize">deserialize() (Leap.Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device">Device (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.Device">Device() (Leap.Device class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.invalid">Device.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.DeviceList.html#Leap.DeviceList">DeviceList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.DeviceList.html#Leap.DeviceList.DeviceList">DeviceList() (Leap.DeviceList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.devices">devices (Leap.Controller attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.direction">direction (Leap.Arm attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.direction">(Leap.Bone attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.direction">(Leap.Hand attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.direction">(Leap.KeyTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.direction">(Leap.Pointable attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.direction">(Leap.ScreenTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.direction">(Leap.SwipeGesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.distance_to">distance_to() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.distance_to_boundary">distance_to_boundary() (Leap.Device method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.distortion">distortion (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.distortion_height">distortion_height (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.distortion_pointer">distortion_pointer (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.distortion_width">distortion_width (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.div">div() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.dot">dot() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.duration">duration (Leap.Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.duration_seconds">duration_seconds (Leap.Gesture attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.elbow_position">elbow_position (Leap.Arm attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.enable_gesture">enable_gesture() (Leap.Controller method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.eq">eq() (Leap.Device method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.eq">(Leap.FailedDevice method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.eq">(Leap.Frame method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.eq">(Leap.Gesture method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.eq">(Leap.Hand method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.eq">(Leap.Pointable method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.eq">(Leap.Vector method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.extended">extended() (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.extended">(Leap.FingerList method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.failed_devices">failed_devices (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice">FailedDevice (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailedDevice">FailedDevice() (Leap.FailedDevice class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_CALIBRATION">FailedDevice.FailureDevice.FAIL_CALIBRATION (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_CONTROL">FailedDevice.FailureDevice.FAIL_CONTROL (in module Leap)</a>, <a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_CONTROL">[1]</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_COUNT">FailedDevice.FailureDevice.FAIL_COUNT (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_FIRMWARE">FailedDevice.FailureDevice.FAIL_FIRMWARE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_TRANSPORT">FailedDevice.FailureDevice.FAIL_TRANSPORT (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.FailureDevice.FAIL_UNKNOWN">FailedDevice.FailureDevice.FAIL_UNKNOWN (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.invalid">FailedDevice.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDeviceList.html#Leap.FailedDeviceList">FailedDeviceList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDeviceList.html#Leap.FailedDeviceList.FailedDeviceList">FailedDeviceList() (Leap.FailedDeviceList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.failure">failure (Leap.FailedDevice attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger">Finger (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger">Finger() (class)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.Finger">(Leap.Finger class method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.finger">finger() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.finger">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Finger.html#Finger.bones">Finger.bones (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.carpPosition">Finger.carpPosition (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.dipPosition">Finger.dipPosition (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.distal">Finger.distal (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.extended">Finger.extended (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.invalid">Finger.invalid (global variable or constant)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.invalid">(in module Leap)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.JOINT_DIP">Finger.JOINT_DIP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.JOINT_MCP">Finger.JOINT_MCP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.JOINT_PIP">Finger.JOINT_PIP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.JOINT_TIP">Finger.JOINT_TIP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.mcpPosition">Finger.mcpPosition (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.medial">Finger.medial (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.metacarpal">Finger.metacarpal (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.pipPosition">Finger.pipPosition (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.proximal">Finger.proximal (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Finger.type">Finger.type (Finger attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.TYPE_INDEX">Finger.TYPE_INDEX (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.TYPE_MIDDLE">Finger.TYPE_MIDDLE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.TYPE_PINKY">Finger.TYPE_PINKY (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.TYPE_RING">Finger.TYPE_RING (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.TYPE_THUMB">Finger.TYPE_THUMB (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.ZONE_HOVERING">Finger.ZONE_HOVERING (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.ZONE_NONE">Finger.ZONE_NONE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.ZONE_TOUCHING">Finger.ZONE_TOUCHING (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.finger_type">finger_type() (Leap.FingerList method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList">FingerList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.FingerList">FingerList() (Leap.FingerList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.fingers">fingers (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.fingers">(Leap.Hand attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.format">format (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame">Frame (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.frame">frame (Leap.Gesture attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.frame">(Leap.Hand attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.frame">(Leap.Pointable attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Frame">Frame() (class)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.frame">frame() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.Frame">Frame() (Leap.Frame class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.currentFrameRate">Frame.currentFrameRate (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.dump">Frame.dump() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.finger">Frame.finger() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.fingers[]">Frame.fingers[] (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.gestures[]">Frame.gestures[] (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.hand">Frame.hand() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.hands[]">Frame.hands[] (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.id">Frame.id (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.interactionBox">Frame.interactionBox (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.invalid">Frame.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.pointable">Frame.pointable() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.pointables[]">Frame.pointables[] (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.rotationAngle">Frame.rotationAngle() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.rotationAxis">Frame.rotationAxis() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.rotationMatrix">Frame.rotationMatrix() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.scaleFactor">Frame.scaleFactor() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.timestamp">Frame.timestamp (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.tool">Frame.tool() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.tools[]">Frame.tools[] (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.toString">Frame.toString() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.translation">Frame.translation() (Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Frame.valid">Frame.valid (Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.frontmost">frontmost (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.frontmost">(Leap.FingerList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.frontmost">(Leap.HandList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.frontmost">(Leap.ToolList attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture">Gesture (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture">Gesture() (class)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.gesture">gesture() (Leap.Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.Gesture">Gesture() (Leap.Gesture class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.duration">Gesture.duration (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.handIds">Gesture.handIds (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.id">Gesture.id (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.invalid">Gesture.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.pointableIds">Gesture.pointableIds (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.state">Gesture.state (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.STATE_INVALID">Gesture.STATE_INVALID (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.STATE_START">Gesture.STATE_START (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.STATE_STOP">Gesture.STATE_STOP (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.STATE_UPDATE">Gesture.STATE_UPDATE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Gesture.type">Gesture.type (Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.TYPE_CIRCLE">Gesture.TYPE_CIRCLE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.TYPE_INVALID">Gesture.TYPE_INVALID (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.TYPE_KEY_TAP">Gesture.TYPE_KEY_TAP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.TYPE_SCREEN_TAP">Gesture.TYPE_SCREEN_TAP (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.TYPE_SWIPE">Gesture.TYPE_SWIPE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.GestureList.html#Leap.GestureList">GestureList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.GestureList.html#Leap.GestureList.GestureList">GestureList() (Leap.GestureList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.gestures">gestures() (Leap.Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Config.html#Leap.Config.get">get() (Leap.Config method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.getitem">getitem() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.grab_strength">grab_strength (Leap.Hand attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand">Hand (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.hand">hand (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand">Hand() (class)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.hand">hand() (Leap.Frame method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.Hand">Hand() (Leap.Hand class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.arm">Hand.arm (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.confidence">Hand.confidence (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.direction">Hand.direction (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.finger">Hand.finger() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.fingers[]">Hand.fingers[] (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.grabStrength">Hand.grabStrength (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.id">Hand.id (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.indexFinger">Hand.indexFinger (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.Invalid">Hand.Invalid (global variable or constant)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.invalid">Hand.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.middleFinger">Hand.middleFinger (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.palmNormal">Hand.palmNormal (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.palmPosition">Hand.palmPosition (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.palmVelocity">Hand.palmVelocity (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.palmWidth">Hand.palmWidth (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.pinchStrength">Hand.pinchStrength (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.pinky">Hand.pinky (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.pitch">Hand.pitch() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.pointables[]">Hand.pointables[] (Hand attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Hand.html#Hand.ringFinger">Hand.ringFinger (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.roll">Hand.roll() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.rotationAngle">Hand.rotationAngle() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.rotationAxis">Hand.rotationAxis() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.rotationMatrix">Hand.rotationMatrix() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.scaleFactor">Hand.scaleFactor() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.sphereCenter">Hand.sphereCenter (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.sphereRadius">Hand.sphereRadius (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.stabilizedPalmPosition">Hand.stabilizedPalmPosition (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.thumb">Hand.thumb (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.timeVisible">Hand.timeVisible (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.tools[]">Hand.tools[] (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.toString">Hand.toString() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.translation">Hand.translation() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.type">Hand.type (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.valid">Hand.valid (Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Hand.yaw">Hand.yaw() (Hand method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.HandList.html#Leap.HandList">HandList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.HandList">HandList() (Leap.HandList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.hands">hands (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.hands">(Leap.Gesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.has_focus">has_focus (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.height">height (Leap.Image attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.height">(Leap.InteractionBox attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.horizontal_view_angle">horizontal_view_angle (Leap.Device attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.iadd">iadd() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.id">id (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.id">(Leap.Gesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.id">(Leap.Hand attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Image.html#Leap.Image.id">(Leap.Image attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.id">(Leap.Pointable attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.idiv">idiv() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image">Image (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.Image">Image() (Leap.Image class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.FORMAT_INFRARED">Image.FORMAT_INFRARED (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.invalid">Image.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ImageList.html#Leap.ImageList">ImageList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ImageList.html#Leap.ImageList.ImageList">ImageList() (Leap.ImageList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.images">images (Leap.Controller attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.images">(Leap.Frame attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.imul">imul() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.interaction_box">interaction_box (Leap.Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox">InteractionBox (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox">InteractionBox() (built-in function)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox">(class)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.center">InteractionBox.center (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.denormalizePoint">InteractionBox.denormalizePoint() (InteractionBox method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.depth">InteractionBox.depth (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.eq">InteractionBox.eq() (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.height">InteractionBox.height (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.Invalid">InteractionBox.Invalid (global variable or constant)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.invalid">InteractionBox.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.ne">InteractionBox.ne() (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.normalizePoint">InteractionBox.normalizePoint() (InteractionBox method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.size">InteractionBox.size (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.toString">InteractionBox.toString() (InteractionBox method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.valid">InteractionBox.valid (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.InteractionBox.html#InteractionBox.width">InteractionBox.width (InteractionBox attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Invalid">Invalid (global variable or constant)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.is_connected">is_connected (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.is_embedded">is_embedded (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.is_empty">is_empty (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.DeviceList.html#Leap.DeviceList.is_empty">(Leap.DeviceList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.FailedDeviceList.html#Leap.FailedDeviceList.is_empty">(Leap.FailedDeviceList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.is_empty">(Leap.FingerList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.GestureList.html#Leap.GestureList.is_empty">(Leap.GestureList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.is_empty">(Leap.HandList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ImageList.html#Leap.ImageList.is_empty">(Leap.ImageList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.is_empty">(Leap.ToolList attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.is_extended">is_extended (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.is_finger">is_finger (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.is_gesture_enabled">is_gesture_enabled() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.is_left">is_left (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.is_lighting_bad">is_lighting_bad (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.is_paused">is_paused (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.is_policy_set">is_policy_set (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.is_right">is_right (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.is_service_connected">is_service_connected (Leap.Controller attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.is_smudged">is_smudged (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.is_streaming">is_streaming (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.is_tool">is_tool (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.is_valid">is_valid (Leap.Arm attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.is_valid">(Leap.Bone attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Device.html#Leap.Device.is_valid">(Leap.Device attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.is_valid">(Leap.Frame attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.is_valid">(Leap.Gesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.is_valid">(Leap.Hand attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Image.html#Leap.Image.is_valid">(Leap.Image attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.is_valid">(Leap.InteractionBox attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.is_valid">(Leap.Pointable attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.is_valid">(Leap.Vector attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.isub">isub() (Leap.Vector method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.joint_position">joint_position() (Leap.Finger method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture">KeyTapGesture (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture">KeyTapGesture() (built-in function)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.KeyTapGesture">(Leap.KeyTapGesture class method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture">(class)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.class_type">KeyTapGesture.class_type (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.direction">KeyTapGesture.direction (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.duration">KeyTapGesture.duration (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.handIds">KeyTapGesture.handIds (KeyTapGesture attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.id">KeyTapGesture.id (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.pointableIds">KeyTapGesture.pointableIds (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.position">KeyTapGesture.position (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.state">KeyTapGesture.state (KeyTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#KeyTapGesture.type">KeyTapGesture.type (KeyTapGesture attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.leftmost">leftmost (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.leftmost">(Leap.FingerList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.leftmost">(Leap.HandList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.leftmost">(Leap.ToolList attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.length">length (Leap.Bone attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.length">(Leap.Pointable attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener">Listener (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.Listener">Listener() (Leap.Listener class method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.magnitude">magnitude() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.magnitude_squared">magnitude_squared() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix">Matrix (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">Matrix() (Leap.Matrix class method)</a>, <a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">[1]</a>, <a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">[2]</a>, <a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">[3]</a>, <a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">[4]</a>, <a href="api/Leap.Matrix.html#Leap.Matrix.Matrix">[5]</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.eq">Matrix.eq() (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.identity">Matrix.identity (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.imul">Matrix.imul() (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.mul">Matrix.mul() (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.ne">Matrix.ne() (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.mul">mul() (Leap.Vector method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.ne">ne() (Leap.Device method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.ne">(Leap.FailedDevice method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.ne">(Leap.Frame method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.ne">(Leap.Gesture method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.ne">(Leap.Hand method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.ne">(Leap.Pointable method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.ne">(Leap.Vector method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.neg">neg() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.next_joint">next_joint (Leap.Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.normal">normal (Leap.CircleGesture attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.normalize_point">normalize_point() (Leap.InteractionBox method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.normalized">normalized (Leap.Vector attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.now">now() (Leap.Controller method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_connect">on_connect() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_device_change">on_device_change() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_device_failure">on_device_failure() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_diagnostic_event">on_diagnostic_event() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_disconnect">on_disconnect() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_exit">on_exit() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_focus_gained">on_focus_gained() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_focus_lost">on_focus_lost() (Leap.Listener method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_frame">on_frame() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_images">on_images() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_init">on_init() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_service_change">on_service_change() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_service_connect">on_service_connect() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Listener.html#Leap.Listener.on_service_disconnect">on_service_disconnect() (Leap.Listener method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.origin">origin (Leap.Matrix attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.palm_normal">palm_normal (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.palm_position">palm_position (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.palm_velocity">palm_velocity (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.palm_width">palm_width (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.pinch_strength">pinch_strength (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.pitch">pitch (Leap.Vector attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.FailedDevice.html#Leap.FailedDevice.pnp_id">pnp_id (Leap.FailedDevice attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable">Pointable (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.pointable">pointable (Leap.CircleGesture attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.pointable">(Leap.KeyTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.pointable">(Leap.ScreenTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.pointable">(Leap.SwipeGesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable">Pointable() (built-in function)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Pointable.html#Pointable">(class)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.pointable">pointable() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.pointable">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.Pointable">Pointable() (Leap.Pointable class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.direction">Pointable.direction (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.hand">Pointable.hand() (Pointable method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.id">Pointable.id (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.Invalid">Pointable.Invalid (global variable or constant)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.invalid">Pointable.invalid (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.length">Pointable.length (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.stabilizedTipPosition">Pointable.stabilizedTipPosition (Pointable attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.timeVisible">Pointable.timeVisible (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.tipPosition">Pointable.tipPosition (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.tipVelocity">Pointable.tipVelocity (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.tool">Pointable.tool (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.toString">Pointable.toString() (Pointable method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.touchDistance">Pointable.touchDistance (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.touchZone">Pointable.touchZone (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.valid">Pointable.valid (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Pointable.width">Pointable.width (Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.ZONE_HOVERING">Pointable.ZONE_HOVERING (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.ZONE_NONE">Pointable.ZONE_NONE (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.ZONE_TOUCHING">Pointable.ZONE_TOUCHING (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.PointableList">PointableList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.PointableList.PointableList">PointableList() (Leap.PointableList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.pointables">pointables (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.pointables">(Leap.Gesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.pointables">(Leap.Hand attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.position">position (Leap.KeyTapGesture attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.position">(Leap.ScreenTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.position">(Leap.SwipeGesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.prev_joint">prev_joint (Leap.Bone attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.progress">progress (Leap.CircleGesture attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.KeyTapGesture.html#Leap.KeyTapGesture.progress">(Leap.KeyTapGesture attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.progress">(Leap.ScreenTapGesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.CircleGesture.html#Leap.CircleGesture.radius">radius (Leap.CircleGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.range">range (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.ray_offset_x">ray_offset_x (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.ray_offset_y">ray_offset_y (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.ray_scale_x">ray_scale_x (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.ray_scale_y">ray_scale_y (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.rectify">rectify() (Leap.Image method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.remove_listener">remove_listener() (Leap.Controller method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.request_diagnostic">request_diagnostic() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.PointableList.html#Leap.rightmost">rightmost (in module Leap)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.FingerList.html#Leap.FingerList.rightmost">(Leap.FingerList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.HandList.html#Leap.HandList.rightmost">(Leap.HandList attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.rightmost">(Leap.ToolList attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.rigid_inverse">rigid_inverse() (Leap.Matrix method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.roll">roll (Leap.Vector attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.rotation_angle">rotation_angle() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.rotation_angle">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.rotation_axis">rotation_axis() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.rotation_axis">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.rotation_matrix">rotation_matrix() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.rotation_matrix">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.rotation_probability">rotation_probability() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.rotation_probability">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Config.html#Leap.Config.save">save() (Leap.Config method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.scale_factor">scale_factor() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.scale_factor">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.scale_probability">scale_probability() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.scale_probability">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture">ScreenTapGesture (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture">ScreenTapGesture() (built-in function)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#Leap.ScreenTapGesture.ScreenTapGesture">(Leap.ScreenTapGesture class method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture">(class)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.direction">ScreenTapGesture.direction (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.duration">ScreenTapGesture.duration (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.handIds">ScreenTapGesture.handIds (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.id">ScreenTapGesture.id (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.pointableIds">ScreenTapGesture.pointableIds (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.position">ScreenTapGesture.position (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.state">ScreenTapGesture.state (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ScreenTapGesture.html#ScreenTapGesture.type">ScreenTapGesture.type (ScreenTapGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.sequence_id">sequence_id (Leap.Image attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.serial_number">serial_number (Leap.Device attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.serialize">serialize (Leap.Frame attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Config.html#Leap.Config.set">set() (Leap.Config method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.set_paused">set_paused() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Controller.html#Leap.Controller.set_policy">set_policy() (Leap.Controller method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.set_rotation">set_rotation() (Leap.Matrix method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.speed">speed (Leap.SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.sphere_center">sphere_center (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.sphere_radius">sphere_radius (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.stabilized_palm_position">stabilized_palm_position (Leap.Hand attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.stabilized_tip_position">stabilized_tip_position (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.start_position">start_position (Leap.SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.state">state (Leap.Gesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.sub">sub() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture">SwipeGesture (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture">SwipeGesture() (built-in function)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.SwipeGesture.html#Leap.SwipeGesture.SwipeGesture">(Leap.SwipeGesture class method)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture">(class)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.direction">SwipeGesture.direction (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.duration">SwipeGesture.duration (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.handIds">SwipeGesture.handIds (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.id">SwipeGesture.id (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.pointableIds">SwipeGesture.pointableIds (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.position">SwipeGesture.position (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.speed">SwipeGesture.speed (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.startPosition">SwipeGesture.startPosition (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.state">SwipeGesture.state (SwipeGesture attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.SwipeGesture.html#SwipeGesture.type">SwipeGesture.type (SwipeGesture attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.time_visible">time_visible (Leap.Hand attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.time_visible">(Leap.Pointable attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.timestamp">timestamp (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Image.html#Leap.Image.timestamp">(Leap.Image attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.tip_position">tip_position (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.tip_velocity">tip_velocity (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.to_array_3x3">to_array_3x3() (Leap.Matrix method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.to_array_4x4">to_array_4x4() (Leap.Matrix method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.to_float_array">to_float_array() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.to_tuple">to_tuple() (Leap.Vector method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Tool.html#Leap.Tool">Tool (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.tool">tool() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.tool">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Tool.html#Leap.Tool.invalid">Tool.invalid (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList">ToolList (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.ToolList.html#Leap.ToolList.ToolList">ToolList() (Leap.ToolList class method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.tools">tools (Leap.Frame attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.tools">(Leap.Hand attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.touch_distance">touch_distance (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.touch_zone">touch_zone (Leap.Pointable attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.transform_direction">transform_direction() (Leap.Matrix method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.transform_point">transform_point() (Leap.Matrix method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.translation">translation() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.translation">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Frame.html#Leap.Frame.translation_probability">translation_probability() (Leap.Frame method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.translation_probability">(Leap.Hand method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.type">type (Leap.Bone attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Finger.html#Leap.Finger.type">(Leap.Finger attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Gesture.html#Leap.Gesture.type">(Leap.Gesture attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector">Vector (class in Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.Vector">Vector() (Leap.Vector class method)</a>, <a href="api/Leap.Vector.html#Leap.Vector.Vector">[1]</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.backward">Vector.backward (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.down">Vector.down (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.forward">Vector.forward (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.left">Vector.left (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.right">Vector.right (in module Leap)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.up">Vector.up (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.x_axis">Vector.x_axis (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.y_axis">Vector.y_axis (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.z_axis">Vector.z_axis (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.zero">Vector.zero (in module Leap)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Device.html#Leap.Device.vertical_view_angle">vertical_view_angle (Leap.Device attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Image.html#Leap.Image.warp">warp() (Leap.Image method)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.width">width (Leap.Arm attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Bone.html#Leap.Bone.width">(Leap.Bone attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Image.html#Leap.Image.width">(Leap.Image attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.InteractionBox.html#Leap.InteractionBox.width">(Leap.InteractionBox attribute)</a>
+  </dt>
+
+        
+  <dt><a href="api/Leap.Pointable.html#Leap.Pointable.width">(Leap.Pointable attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Arm.html#Leap.Arm.wrist_position">wrist_position (Leap.Arm attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/Leap.Hand.html#Leap.Hand.wrist_position">(Leap.Hand attribute)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.x">x (Leap.Vector attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.x_basis">x_basis (Leap.Matrix attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.y">y (Leap.Vector attribute)</a>
+  </dt>
+
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.y_basis">y_basis (Leap.Matrix attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.yaw">yaw (Leap.Vector attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Vector.html#Leap.Vector.z">z (Leap.Vector attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api/Leap.Matrix.html#Leap.Matrix.z_basis">z_basis (Leap.Matrix attribute)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

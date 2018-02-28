@@ -10,8 +10,6 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -55,7 +53,9 @@ ApeIndustry40Plugin::~ApeIndustry40Plugin()
 
 void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE)
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::NODE_CREATE)
 	{
 		if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
@@ -78,11 +78,11 @@ void ApeIndustry40Plugin::Init()
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;
 
-	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
-	}*/
+	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);

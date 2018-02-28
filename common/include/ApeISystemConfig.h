@@ -116,7 +116,7 @@ namespace Ape
 
 		std::string uniqueUserNamePrefix;
 
-		std::string generatedUniqueUserName;
+		std::string generatedUniqueUserNodeName;
 
 		std::vector<std::string> sessionResourceLocation;
 
@@ -129,7 +129,7 @@ namespace Ape
 			this->participantType = SceneSession::ParticipantType::INVALID;
 			this->sessionGUID = std::string();
 			this->uniqueUserNamePrefix = std::string();
-			this->generatedUniqueUserName = std::string();
+			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
 		}
 
@@ -148,7 +148,7 @@ namespace Ape
 			this->participantType = participantType;
 			this->sessionGUID = sessionName;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
-			this->generatedUniqueUserName = generatedUniqueUserName;
+			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;
 		}
 	};

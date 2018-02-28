@@ -48,11 +48,11 @@ include_directories(
 	)
 
 # Add the dynamic library target to the project
-add_library( ${MY_TARGET_NAME} SHARED ${SOURCES} ${HEADERS} )
+add_library(${MY_TARGET_NAME} SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if (NOT WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} dl pthread )
+	target_link_libraries(${MY_TARGET_NAME} dl pthread)
 endif ()
 
 # Use nodejs lib
@@ -64,26 +64,17 @@ endif ()
 # TODO: MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene MY_NODEJS_LIB )
+target_link_libraries(${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene MY_NODEJS_LIB)
 
 # Add preprocessor definitions
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS )
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI" )
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI")
 
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_DEBUG})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${BUILD_PATH_RELEASE})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/server.js DESTINATION ${BUILD_PATH_DEBUG})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/server.js DESTINATION ${BUILD_PATH_RELEASE})
-
-file(MAKE_DIRECTORY ${TARGET_MODULE_PATH_RELEASE}/logs)
-
+# write and copy configuration files
 set(APEJS_FILE_PATH_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/js/)
-
-set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/configs/dev/paths.json)
+set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/modules/module_manager/config.json)
 file(WRITE ${CONFIG_FILE_PATH_SOURCE} "{\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"source\": {\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apePath\": \"${APE_SOURCE_DIR}/\",\n")
@@ -96,33 +87,17 @@ file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apertusModulePath\": \"apertusvr/\
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t}\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "}\n")
 
-set(CONFIG_FILE_PATH_DEBUG ${BUILD_PATH_DEBUG}/config.json)
-file(WRITE ${CONFIG_FILE_PATH_DEBUG} "{\n")
-file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"configuration\": \"debug\",\n")
-file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
-file(APPEND ${CONFIG_FILE_PATH_DEBUG} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
-file(APPEND ${CONFIG_FILE_PATH_DEBUG} "}\n")
+foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/package.json DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONF})
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/js/server.js DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONF})
 
-set(CONFIG_FILE_PATH_RELEASE ${BUILD_PATH_RELEASE}/config.json)
-file(WRITE ${CONFIG_FILE_PATH_RELEASE} "{\n")
-file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"configuration\": \"release\",\n")
-file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
-file(APPEND ${CONFIG_FILE_PATH_RELEASE} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
-file(APPEND ${CONFIG_FILE_PATH_RELEASE} "}\n")
+	file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONF}/logs)
+	file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONF}/uploads)
 
-
-add_custom_target (
-	npmTargetDebug
-	COMMAND npm install
-	WORKING_DIRECTORY ${BUILD_PATH_DEBUG}
-	USES_TERMINAL
-)
-add_dependencies(${MY_TARGET_NAME} npmTargetDebug)
-
-add_custom_target (
-	npmTargetRelease
-	COMMAND npm install
-	WORKING_DIRECTORY ${BUILD_PATH_RELEASE}
-	USES_TERMINAL
-)
-add_dependencies(${MY_TARGET_NAME} npmTargetRelease)
+	set(CONFIG_FILE_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONF}/config.json)
+	file(WRITE ${CONFIG_FILE_PATH} "{\n")
+	file(APPEND ${CONFIG_FILE_PATH} "\t\"configuration\": \"${CONF}\",\n")
+	file(APPEND ${CONFIG_FILE_PATH} "\t\"sourcePath\": \"${APE_SOURCE_DIR}/\",\n")
+	file(APPEND ${CONFIG_FILE_PATH} "\t\"sourcePathJs\": \"${APEJS_FILE_PATH_SOURCE}\"\n")
+	file(APPEND ${CONFIG_FILE_PATH} "}\n")
+endforeach ()

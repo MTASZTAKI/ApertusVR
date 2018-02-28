@@ -21,6 +21,45 @@
 #SOFTWARE.
 
 # Add all header and cpp files in the directory to the project
+
+if (WIN32)
+set (HEADERS
+	ApeTextGeometryImpl.h
+	ApeLightImpl.h
+	ApeBrowserImpl.h
+	ApeNodeImpl.h
+	ApeCameraImpl.h
+	ApeSceneImpl.h
+	ApeFileGeometryImpl.h
+	ApePlaneGeometryImpl.h
+	ApeBoxGeometryImpl.h
+	ApeIndexedFaceSetGeometryImpl.h
+	ApeIndexedLineSetGeometryImpl.h
+	ApeCylinderGeometryImpl.h
+	ApeConeGeometryImpl.h
+	ApeTorusGeometryImpl.h
+	ApeTubeGeometryImpl.h
+	ApeSphereGeometryImpl.h
+	ApeFileMaterialImpl.h
+	ApePbsPassImpl.h
+	ApeManualPassImpl.h
+	ApeManualMaterialImpl.h
+	ApeManualTextureImpl.h
+	ApeUnitTextureImpl.h
+	ApeRayGeometryImpl.h
+	ApeWaterImpl.h
+	ApeSkyImpl.h
+	ApePointCloudImpl.h
+	session/ApeReplica.h
+	session/ApeSceneSessionImpl.h
+	session/ApeReplicaManagerConnection.h
+	session/ApeReplicaManager.h
+	session/ApeLobbyManager.h
+	session/ApeHttpManager.h
+	)
+endif ()
+
+if (APPLE)
 set (HEADERS
 	ApeTextGeometryImpl.h
 	ApeLightImpl.h
@@ -46,11 +85,48 @@ set (HEADERS
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
 	session/ApeReplicaManager.h
-	session/ApeLobbyManager.h
-	session/ApeHttpManager.h
 	)
+endif ()
 
-set (SOURCES 
+if (WIN32)
+set (SOURCES
+	ApeTextGeometryImpl.cpp
+	ApeLightImpl.cpp
+	ApeBrowserImpl.cpp
+	ApeNodeImpl.cpp
+	ApeCameraImpl.cpp
+	ApeSceneImpl.cpp
+	ApeFileGeometryImpl.cpp
+	ApePlaneGeometryImpl.cpp
+	ApeBoxGeometryImpl.cpp
+	ApeIndexedFaceSetGeometryImpl.cpp
+	ApeIndexedLineSetGeometryImpl.cpp
+	ApeCylinderGeometryImpl.cpp
+	ApeConeGeometryImpl.cpp
+	ApeTorusGeometryImpl.cpp
+	ApeTubeGeometryImpl.cpp
+	ApeSphereGeometryImpl.cpp
+	ApeFileMaterialImpl.cpp
+	ApePbsPassImpl.cpp
+	ApeManualPassImpl.cpp
+	ApeManualMaterialImpl.cpp
+	ApeManualTextureImpl.cpp
+	ApeUnitTextureImpl.cpp
+	ApeRayGeometryImpl.cpp
+	ApeWaterImpl.cpp
+	ApeSkyImpl.cpp
+	ApePointCloudImpl.cpp
+	session/ApeReplica.cpp
+	session/ApeSceneSessionImpl.cpp
+	session/ApeReplicaManagerConnection.cpp
+	session/ApeReplicaManager.cpp
+	session/ApeLobbyManager.cpp
+	session/ApeHttpManager.cpp
+	)
+endif ()
+
+if (APPLE)
+set (SOURCES
 	ApeTextGeometryImpl.cpp
 	ApeLightImpl.cpp
 	ApeNodeImpl.cpp
@@ -75,10 +151,9 @@ set (SOURCES
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp
 	session/ApeReplicaManager.cpp
-	session/ApeLobbyManager.cpp
-	session/ApeHttpManager.cpp
 	)
-	
+endif ()
+
 include_directories(
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
@@ -95,6 +170,12 @@ add_library (ApeScene SHARED ${SOURCES} ${HEADERS})
 if(WIN32)
 	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager RAKNET MY_CURL ws2_32)
 endif()
+
+if(APPLE)
+	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager RAKNET)
+endif()
+
+
 
 # Add preprocessor definitions
 set_property (TARGET ApeScene PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENE_DLL)

@@ -1,14 +1,14 @@
 {
-	"renderSystem" : "DX9",
-	"lodLevels" : {
-			"autoGenerateAndSave": true,
-			"bias" : 0.5 
-		},
+    "renderSystem": "DX9",
+    "lodLevels": {
+        "autoGenerateAndSave": true,
+        "bias": 0.5
+    },
     "renderWindows": [
         {
-			"enable": true,
+            "enable": true,
             "monitorIndex": 0,
-			"name": "0",
+            "name": "0",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -29,7 +29,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
-					    "name": "0",
+                        "name": "0",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45
@@ -40,7 +40,7 @@
         {
             "enable": true,
             "monitorIndex": 1,
-			"name": "1",
+            "name": "1",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -61,7 +61,7 @@
                     "width": 1400,
                     "height": 1050,
                     "camera": {
-						"name": "1",
+                        "name": "1",
                         "nearClip": 1,
                         "farClip": 10000,
                         "fovY": 45

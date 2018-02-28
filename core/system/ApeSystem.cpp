@@ -37,6 +37,7 @@ Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
 
+
 void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 {
 	gpSystemConfigImpl = new SystemConfigImpl(configFolderPath);
@@ -45,15 +46,24 @@ void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
 
-	std::stringstream generatedUniqueUserName;
-	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
-	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
-	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
+	std::stringstream uniqueUserNodeName;
+	std::string delimiter = "-";
+	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
+	std::string sessionGUID = gpSceneSessionImpl->getGUID();
 
-	gpSceneImpl->createNode(generatedUniqueUserName.str());
+	if (sessionGUID == "UNASSIGNED_RAKNET_GUID")
+		sessionGUID = "";
+	if (uniqueUserNamePrefix.empty())
+		uniqueUserNamePrefix = "defaultUserNode";
+	if (sessionGUID.empty())
+		delimiter = "";
+
+	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << sessionGUID;
+	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
+	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
-		; //TODO open a paltform specific window
+		; //TODO open a platform specific window if needed
 
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();

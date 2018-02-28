@@ -37,11 +37,39 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
+	mOverlayBrowser = Ape::BrowserWeakPtr();
+	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
+	mIsNewKeyEvent = false;
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
+
+	/*gallery*/
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-895.301, -22.3373, -44.3792), Ape::Quaternion(0.9987, -0.0509765, -4.37447e-07, 3.08579e-07)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(0, 0, 1, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, -0.05, 0)));
+
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
+
+	
+	/*mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
 
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-50.2942, -267, -39.543), Ape::Quaternion(0.108578, 0.000922807, -0.994053, 0.00844969)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(109.65, -254.404, 683.883), Ape::Quaternion(-0.994235, -0.00845123, -0.106884, 0.000908416)));
@@ -55,7 +83,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(332.168, -562, -343.67), Ape::Quaternion(-0.919263, 0, 0.393645, 0)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(419.488, -510.18, -28.347), Ape::Quaternion(-0.728918, 0.0309977, 0.683282, 0.029057)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-269.323, -469.674, 275.482), Ape::Quaternion(0.506584, -0.0475041, 0.857121, 0.0803752)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));*/
 
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
@@ -71,7 +99,31 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
+	{
+		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
+		std::cout << "overlayBrowser catched" << std::endl;
+	}
+	else if (event.type == Ape::Event::Type::TEXTURE_UNIT_CREATE)
+	{
+		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->getEntity(event.subjectName).lock());
+		std::cout << "overlayMouseTexture catched" << std::endl;
+	}
+	else if (event.type == Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
+	{
+		std::cout << "Ape::OISUserInputPlugin::eventCallBack(): BROWSER_FOCUS_ON_EDITABLE_FIELD: " << std::endl;
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
+				std::cout << "Ape::OISUserInputPlugin::eventCallBack(): mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
+				mIsNewKeyEvent = true;
+			}
+		}
+	}
 }
 
 void Ape::OISUserInputPlugin::Init()
@@ -146,15 +198,56 @@ void Ape::OISUserInputPlugin::Init()
 
 bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "Ape::OISUserInputPlugin::keyPressed(): mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
 	mKeyCodeMap[e.key] = true;
-	auto userNode = mUserNode.lock();
-	if (userNode)
+
+	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_C])
-			saveUserNodePose(userNode);
-		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
-			toggleUserNodePoses(userNode);
+		std::string keyAsString = mpKeyboard->getAsString(e.key);
+
+		if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
+			std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
+
+		std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
+		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
+		if (e.key == OIS::KeyCode::KC_BACK)
+			keyAsWString = 8;
+		else if (e.key == OIS::KeyCode::KC_TAB)
+			keyAsWString = 9;
+		else if (e.key == OIS::KeyCode::KC_RETURN)
+			keyAsWString = 13;
+		else if (e.key == OIS::KeyCode::KC_LSHIFT || e.key == OIS::KeyCode::KC_RSHIFT)
+			keyAsWString = 14;
+		else if (e.key == OIS::KeyCode::KC_SPACE)
+			keyAsWString = 32;
+		else if (e.key == OIS::KeyCode::KC_END)
+			keyAsWString = 35;
+		else if (e.key == OIS::KeyCode::KC_HOME)
+			keyAsWString = 36;
+		else if (e.key == OIS::KeyCode::KC_LEFT)
+			keyAsWString = 37;
+		else if (e.key == OIS::KeyCode::KC_UP)
+			keyAsWString = 38;
+		else if (e.key == OIS::KeyCode::KC_RIGHT)
+			keyAsWString = 39;
+		else if (e.key == OIS::KeyCode::KC_DOWN)
+			keyAsWString = 40;
+		else if (e.key == OIS::KeyCode::KC_DELETE)
+			keyAsWString = 46;
+		else if (e.key == OIS::KeyCode::KC_PERIOD)
+			keyAsWString = 1046;
+		mIsNewKeyEvent = false;
+		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 	}
+
+	std::cout << "Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent << std::endl;
+	while (!mIsNewKeyEvent)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+	mIsNewKeyEvent = false;
+	std::cout << "After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
 	return true;
 }
 
@@ -166,16 +259,49 @@ bool Ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 
 bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
+	if (auto overlayMouseTexture = mOverlayMouseTexture.lock())
+	{
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			Ape::Vector2 cursorTexturePosition;
+			cursorTexturePosition.x = (float)-e.state.X.abs / (float)mpMainWindow->getWidth();
+			cursorTexturePosition.y = (float)-e.state.Y.abs / (float)mpMainWindow->getHeight();
+			overlayMouseTexture->setTextureScroll(cursorTexturePosition.x, cursorTexturePosition.y);
+			Ape::Vector2 cursorBrowserPosition;
+			cursorBrowserPosition.x = ((float)e.state.X.abs / (float)mpMainWindow->getWidth()) * overlayBrowser->getResoultion().x;
+			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * overlayBrowser->getResoultion().y;
+			overlayBrowser->mouseMoved(cursorBrowserPosition);
+			overlayBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
+			/*std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y << std::endl;
+			std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y << std::endl;*/
+		}
+	}
 	return true;
 }
 
 bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	if (id == OIS::MouseButtonID::MB_Left)
+	{
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			overlayBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, true);
+			std::cout << "Ape::OISUserInputPlugin::mousePressed overlayBrowser->mouseClick" << std::endl;
+		}
+	}
 	return true;
 }
 
 bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	if (id == OIS::MouseButtonID::MB_Left)
+	{
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			overlayBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, false);
+			std::cout << "Ape::OISUserInputPlugin::mouseReleased overlayBrowser->mouseClick" << std::endl;
+		}
+	}
 	return true;
 }
 
@@ -236,12 +362,13 @@ void Ape::OISUserInputPlugin::Run()
 	{
 		if (mpKeyboard)
 			mpKeyboard->capture();
-		else if (mpMouse)
+		if (mpMouse)
 			mpMouse->capture();
-		moveUserNode();
+		if (!mEnableOverlayBrowserKeyEvents)
+			moveUserNode();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::OISUserInputPlugin::Step()

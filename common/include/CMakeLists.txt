@@ -65,12 +65,19 @@ set (HEADERS
 	ApeDegree.h
 	ApeRadian.h
 	ApeEuler.h
+	ApeMatrix3.h
 	ApeMatrix4.h
 	ApeSystem.h
 	ApeISystemConfig.h
 	ApeDoubleQueue.h
 	ApeIMainWindow.h
 	ApeInterpolator.h
+	ApeIBrowser.h
+	ApeIUnitTexture.h
+	ApeIRayGeometry.h
+	ApeISky.h
+	ApeIWater.h
+	ApeIPointCloud.h
 	)
 
 add_custom_target(

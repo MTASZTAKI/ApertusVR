@@ -1,1 +1,26 @@
-{"mainWindow":{"name":"Ape","creator":"ApeOgreRenderPlugin"},"sceneSession":{"participantType":"Guest","uniqueUserNamePrefix":"Guest","sessionGUID":"","sessionResourceLocation":"/plugins/engineeringScene/resources","natPunchThroughServer":{"ip":"195.111.2.95","port":"61666"},"lobbyServer":{"ip":"195.111.2.95","port":"8888"}},"pluginManager":{"plugins":["ApeOgreRenderPlugin","ApeOisUserInputPlugin"]}}
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Guest",
+        "uniqueUserNamePrefix": "Guest",
+        "sessionGUID": "",
+        "sessionResourceLocation": "/plugins/engineeringScene/resources",
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "ip": "195.111.2.95",
+            "port": "8888"
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeOgreRenderPlugin",
+            "ApeOisUserInputPlugin"
+        ]
+    }
+}

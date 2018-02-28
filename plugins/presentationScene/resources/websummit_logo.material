@@ -1,0 +1,14 @@
+material Material1
+{
+   technique
+   {
+      pass
+      {
+         emissive 1 1 1 1
+         texture_unit
+         {
+            texture 2048_17C806_01.jpg
+         }
+      }
+   }
+}

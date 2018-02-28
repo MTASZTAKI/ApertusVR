@@ -1,0 +1,498 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting Up a Project &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="System Architecture" href="Leap_Architecture.html" />
+    <link rel="prev" title="Hello World" href="Sample_Tutorial.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/devguide/Project_Setup.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Project_Setup.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/devguide/Project_Setup.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Sample_Tutorial.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Architecture.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/devguide/Project_Setup.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Project_Setup.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Project_Setup.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Project_Setup.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Project_Setup.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Setting Up a Project
+</span> -->
+        
+  <div class="section" id="id12">
+<h1>Setting Up a Project<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h1>
+<p>This article discusses how to import the Python libraries in a Python program.</p>
+<div class="section" id="id13">
+<h2>Libraries<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion Python API is provided as a Python extension module containing both Python and native code.
+The Python API supports Python 2.7.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head stub">&nbsp;</th>
+<th class="head">Windows</th>
+<th class="head">Mac</th>
+<th class="head">Linux</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><th class="stub">Python module</th>
+<td><tt class="docutils literal"><span class="pre">lib/Leap.py</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">lib/Leap.py</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">lib/Leap.py</span></tt></td>
+</tr>
+<tr class="row-odd"><th class="stub">32-bit native libraries</th>
+<td><p class="first"><tt class="docutils literal"><span class="pre">lib/x86/LeapPython.pyd</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">lib/x86/Leap.dll</span></tt></p>
+</td>
+<td>&nbsp;</td>
+<td><p class="first"><tt class="docutils literal"><span class="pre">lib/x86/LeapPython.so</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">lib/x86/libLeap.so</span></tt></p>
+</td>
+</tr>
+<tr class="row-even"><th class="stub">64-bit native libraries</th>
+<td><p class="first"><tt class="docutils literal"><span class="pre">lib/x64/LeapPython.pyd</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">lib/x64/Leap.dll</span></tt></p>
+</td>
+<td>&nbsp;</td>
+<td><p class="first"><tt class="docutils literal"><span class="pre">lib/x64/LeapPython.so</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">lib/x64/libLeap.so</span></tt></p>
+</td>
+</tr>
+<tr class="row-odd"><th class="stub">Universal binary native libraries</th>
+<td>&nbsp;</td>
+<td><p class="first"><tt class="docutils literal"><span class="pre">lib/LeapPython.so</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">lib/libLeap.dylib</span></tt></p>
+</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>You can find these libraries in the <tt class="docutils literal"><span class="pre">lib</span></tt> folder of the Leap Motion SDK download package. On Windows and Linux, you must use the x86 versions of the native libraries for 32-bit versions of Python and the x64 versions for 64-bit versions of Python.</p>
+<p>Leap Motion does not provide these libraries in a standard Python package or install them on end-user computers. Treat the libraries as internal modules of your application. It is your responsibility to distribute the libraries with your application.</p>
+</div>
+<div class="section" id="importing-the-leap-motion-module">
+<h2>Importing the Leap Motion Module<a class="headerlink" href="#importing-the-leap-motion-module" title="Permalink to this headline">¶</a></h2>
+<p>To import the Leap module, the library files must be placed in a location where the Python runtime can find them. The easiest way to do this is to put them in the same directory as your application source code. Python looks in the same directory as the importing file for imported modules.</p>
+<p>If you prefer to keep the libraries in a separate directory from your source code, you can add the path to the Leap Motion libraries to the Python <tt class="docutils literal"><span class="pre">sys.path</span></tt> list before importing the Leap module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;path/to/leap/libraries&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">Leap</span>
+</pre></div>
+</div>
+<p>For example, if your project file structure looked like:</p>
+<div class="highlight-python"><div class="highlight"><pre>SnakesAndLadders/
+    src/
+        Snakes.py
+        Ladders.py
+    lib/
+</pre></div>
+</div>
+<p>You could copy the Leap Motion libraries to the <tt class="docutils literal"><span class="pre">lib</span></tt> subfolder (making sure to copy the appropriate files for your platform and architecture). For example, on a Mac, your project would look like:</p>
+<div class="highlight-python"><div class="highlight"><pre>SnakesAndLadders/
+    src/
+        Snakes.py
+        Ladders.py
+    lib/
+        Leap.py
+        LeapPython.so
+        libLeap.dylib
+</pre></div>
+</div>
+<p>From the <tt class="docutils literal"><span class="pre">Snakes.py</span></tt> or <tt class="docutils literal"><span class="pre">Ladders.py</span></tt> source, you could then import the Leap module with the following:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;../lib&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">Leap</span>
+</pre></div>
+</div>
+<p>This import method assumes that your Python file is always run with the current working directory set to the folder containing your main Python file. To allow the import to work when the main application file is invoked from any directory, you can use the Python <tt class="docutils literal"><span class="pre">inspect</span></tt> module to get the directory containing your source file and then set the  <tt class="docutils literal"><span class="pre">sys.path</span></tt> relative to that folder:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">inspect</span>
+<span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()))</span>
+<span class="n">lib_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="s">&#39;../lib&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lib_dir</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">Leap</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> If you are developing applications solely for your own use, you can put the Leap module and its supporting native libraries in any convenient location: for example, in one of the folders listed in the Python <tt class="docutils literal"><span class="pre">sys.path</span></tt> variable, a folder referenced in your <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> environment variable, etc &#8211; just remember where you put them when it comes time to update your Leap Motion SDK. However, since the Leap module isn&#8217;t currently available through standard Python package managers, copying the Leap Motion libraries to one of the standard Python module search locations isn&#8217;t recommended. Doing so could create conflicts if multiple applications try to install their own version of the Leap Motion libraries.</p>
+</div>
+<div class="section" id="supporting-32-and-64-bit-python-architectures">
+<h2>Supporting 32- and 64-bit Python Architectures<a class="headerlink" href="#supporting-32-and-64-bit-python-architectures" title="Permalink to this headline">¶</a></h2>
+<p>To support both 32-bit and 64-bit architectures at the same time on Windows and Linux, you can use a run-time check for the architecture and then set the <tt class="docutils literal"><span class="pre">sys.path</span></tt> to reference the correct files. On Mac, the Leap Motion libraries are universal binaries that support both architectures, so this technique is not needed.</p>
+<p>Using the hypothetical SnakesAndLadders project as an example again, you would copy both sets of library files to separate folders within the application, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>SnakesAndLadders/
+    src/
+        Snakes.py
+        Ladders.py
+    lib/
+        x86/
+            Leap.py
+            LeapPython.so
+            libLeap.so
+        x64/
+            Leap.py
+            LeapPython.so
+            libLeap.so
+</pre></div>
+</div>
+<p>And then reference the proper Leap module at run time:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">inspect</span>
+<span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()))</span>
+<span class="n">arch_dir</span> <span class="o">=</span> <span class="s">&#39;../lib/x64&#39;</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="k">else</span> <span class="s">&#39;../lib/x86&#39;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">arch_dir</span><span class="p">)))</span>
+
+<span class="kn">import</span> <span class="nn">Leap</span>
+</pre></div>
+</div>
+<p>The same technique could be extended to support multiple platforms at the same time.</p>
+</div>
+<div class="section" id="using-a-different-python-distribution">
+<h2>Using a Different Python Distribution<a class="headerlink" href="#using-a-different-python-distribution" title="Permalink to this headline">¶</a></h2>
+<p>To use the Leap Motion Python libraries with an alternate Python 2.7 distribution on Mac or Linux (i.e HomeBrew or MacPorts, etc.) or with a self-built version of Python, you must update the <tt class="docutils literal"><span class="pre">LeapPython.so</span></tt> loader path to reference the desired instance of Python.</p>
+<p>First, run the <tt class="docutils literal"><span class="pre">otool</span></tt> utility to display the current loader paths:</p>
+<div class="highlight-python"><div class="highlight"><pre>otool -L LeapPython.so
+</pre></div>
+</div>
+<p>Which will display output similar to:</p>
+<div class="highlight-python"><div class="highlight"><pre>LeapPython.so:
+    @loader_path/LeapPython.so (compatibility version 0.0.0, current version 0.0.0)
+    /Library/Frameworks/Python.framework/Versions/2.7/Python (compatibility version 2.7.0, current version 2.7.0)
+    @loader_path/libLeap.dylib (compatibility version 0.7.0, current version 2.0.1)
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 169.3.0)
+    /usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 56.0.0)
+</pre></div>
+</div>
+<p>The line starting with, <tt class="docutils literal"><span class="pre">/Library/Frameworks/Python.framework/Versions/2.7/Python</span></tt> is the reference to Python, which needs to be changed with the <tt class="docutils literal"><span class="pre">install_name_tool</span></tt> utility.</p>
+<p>Second, run the <tt class="docutils literal"><span class="pre">install_name_tool</span></tt> utility to update the Python reference to the desired location. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>install_name_tool -change /Library/Frameworks/Python.framework/Versions/2.7/Python \
+/usr/local/Cellar/python/2.7.5/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib \
+LeapPython.so
+</pre></div>
+</div>
+<p><strong>Note:</strong> <tt class="docutils literal"><span class="pre">otool</span></tt> and <tt class="docutils literal"><span class="pre">install_name_tool</span></tt> are standard Linux and OS X command line utilities.</p>
+</div>
+<div class="section" id="recompiling-leappython-for-python-3">
+<h2>Recompiling LeapPython for Python 3<a class="headerlink" href="#recompiling-leappython-for-python-3" title="Permalink to this headline">¶</a></h2>
+<p>The LeapPython library included in the Leap Motion SDK supports only Python 2.7. However, the SDK also includes the SWIG interface file used to generate the LeapPython source code, so advanced users can generate and compile their own version of LeapPython. For instructions, refer to <a class="reference external" href="https://support.leapmotion.com/entries/39433657-Generating-a-Python-3-3-0-Wrapper-with-SWIG-2-0-9">Generating a Python 3.3.0 Wrapper with SWIG 2.0.9</a> in our support knowledge base.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_Tutorial.html#id32">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">Setting Up a Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#importing-the-leap-motion-module">Importing the Leap Motion Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#supporting-32-and-64-bit-python-architectures">Supporting 32- and 64-bit Python Architectures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-different-python-distribution">Using a Different Python Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recompiling-leappython-for-python-3">Recompiling LeapPython for Python 3</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Configuration.html">Runtime Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

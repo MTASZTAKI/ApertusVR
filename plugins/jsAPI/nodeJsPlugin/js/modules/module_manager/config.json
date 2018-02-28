@@ -1,0 +1,11 @@
+{
+	"source": {
+		"apePath": "C:/AVR/",
+		"jsApiPath": "plugins/jsAPI/nodeJsPlugin/js/"
+	},
+	"build": {
+		"binPath": "C:/AVR-build/bin/",
+		"nodeModulesPath": "node_modules/",
+		"apertusModulePath": "apertusvr/"
+	}
+}

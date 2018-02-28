@@ -1,0 +1,595 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HandList &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Image" href="Leap.Image.html" />
+    <link rel="prev" title="LeapHand" href="Leap.Hand.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/api/Leap.HandList.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.HandList.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.HandList.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/api/Leap.HandList.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Hand.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Image.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.HandList.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.HandList.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.HandList.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  HandList
+</span> -->
+        
+  <div class="section" id="handlist">
+<h1>HandList<a class="headerlink" href="#handlist" title="Permalink to this headline">¶</a></h1>
+</div>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1aa88b64262c71a8f1252fd0b7d5fde07d">HandList()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1af19146e83ae8a8eafbf9d9de7e40b723">append(const HandList &amp;other)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1aa4b02d4f1a8500fb07a551069060709f">begin() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a0745638c9967e2ed90bc96c012288c55">count() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a350132543d80a1c1e5be844e6d2878ea">end() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a4cc0d609e37457187d15d7b06ac6aa7a">frontmost() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a479432127ee77145cc19d6a2d1590821">isEmpty() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a48a1d3fa0e266a34425f1aba7a19a1e1">leftmost() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1a8a6cdcff88836a6bc6559677da3bb0b0">operator[](int index) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_hand_list_1aee897ccd475dfe94ebbc31d22a771044">rightmost() const</a></li>
+</ul>
+</div>
+<div class="line-block" id="cppclass_leap_1_1_hand_list">
+<div class="line"><em>class</em> <strong>Leap::HandList</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> class represents a list of <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> objects. </p>
+<p><p>Get a <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> object by calling <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>Frame::hands()</em></a>.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> allHands = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"></span>typedef ConstListIterator&lt;  <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> ,  <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a>  &gt; <strong>const_iterator</strong></p>
+<blockquote>
+<div><p>A C++ iterator type for this <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> objects. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> hands = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>();
+for(<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"><em>Leap::HandList::const_iterator</em></a> hl = hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); hl != hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); hl++)
+    std::cout &lt;&lt; *hl &lt;&lt; std::endl;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_hand_list_1af19146e83ae8a8eafbf9d9de7e40b723"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>  &amp; <strong>append</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>  &amp; other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Appends the members of the specified <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> to this <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">other</span></tt> - <p>A <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a> object containing <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> objects to append to the end of this <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1aa4b02d4f1a8500fb07a551069060709f"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"><em>const_iterator</em></a> <strong>begin</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The C++ iterator set to the beginning of this <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> hands = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>();
+for(<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"><em>Leap::HandList::const_iterator</em></a> hl = hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); hl != hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); hl++)
+    std::cout &lt;&lt; *hl &lt;&lt; std::endl;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a0745638c9967e2ed90bc96c012288c55"></span><div class="line-block">
+<div class="line">int <strong>count</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns the number of hands in this list. </p>
+<p> <pre class="literal-block">
+if (frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a0745638c9967e2ed90bc96c012288c55"><em>count</em></a>() &gt; 0) {
+    //Process hand data...
+}
+</pre>
+<dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The number of hands in this list. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a350132543d80a1c1e5be844e6d2878ea"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"><em>const_iterator</em></a> <strong>end</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The C++ iterator set to the end of this <a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>HandList</em></a>. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> hands = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>();
+for(<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aacc3f74558d71aa71d48a7bf602f4455"><em>Leap::HandList::const_iterator</em></a> hl = hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); hl != hands.<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); hl++)
+    std::cout &lt;&lt; *hl &lt;&lt; std::endl;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a4cc0d609e37457187d15d7b06ac6aa7a"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> <strong>frontmost</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The member of the list that is farthest to the front within the standard Leap Motion frame of reference (i.e has the smallest Z coordinate). </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Leap::Hand</em></a> frontHand = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a4cc0d609e37457187d15d7b06ac6aa7a"><em>frontmost</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The frontmost hand, or invalid if list is empty. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1aa88b64262c71a8f1252fd0b7d5fde07d"></span><div class="line-block">
+<div class="line"> <strong>HandList</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs an empty list of hands. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a479432127ee77145cc19d6a2d1590821"></span><div class="line-block">
+<div class="line">bool <strong>isEmpty</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether the list is empty. </p>
+<p><p><pre class="literal-block">
+if (!frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a479432127ee77145cc19d6a2d1590821"><em>isEmpty</em></a>()) {
+    //Process hands...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if the list has no members. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a48a1d3fa0e266a34425f1aba7a19a1e1"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> <strong>leftmost</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The member of the list that is farthest to the left within the standard Leap Motion frame of reference (i.e has the smallest X coordinate). </p>
+<p><p>Note: to determine whether a hand is the left hand, use the <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand_1ab276099919561d1b0d49c3cd0e44bd76"><em>Hand::isLeft()</em></a> function.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Leap::Hand</em></a> furthestLeft = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1a48a1d3fa0e266a34425f1aba7a19a1e1"><em>leftmost</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The leftmost hand, or invalid if list is empty. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1a8a6cdcff88836a6bc6559677da3bb0b0"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> <strong>operator[]</strong>(int index)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Access a list member by its position in the list. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Leap::Hand</em></a> firstInList = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>()[0];
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object at the specified index. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">index</span></tt> - <p>The zero-based list position index. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_hand_list_1aee897ccd475dfe94ebbc31d22a771044"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> <strong>rightmost</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The member of the list that is farthest to the right within the standard Leap Motion frame of reference (i.e has the largest X coordinate). </p>
+<p><p>Note: to determine whether a hand is the right hand, use the <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand_1a85f93b21dd887470891f83791c680537"><em>Hand::isRight()</em></a> function.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Leap::Hand</em></a> furthestRight = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_hand_list_1aee897ccd475dfe94ebbc31d22a771044"><em>rightmost</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The rightmost hand, or invalid if list is empty. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#frame">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#hand">Hand</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>
