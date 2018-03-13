@@ -27,14 +27,12 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <map>
+#include <vector>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
-//#include "ApeIJsEventManager.h"
-
-#include <map>
-#include <vector>
 #include "ApeEvent.h"
 
 class ApeNodeJsPlugin : public Ape::IPlugin
@@ -43,8 +41,6 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
-
-	//Ape::IJsEventManager* mpJsEventManager;
 
 	Ape::NodeWeakPtr mNodeWeakPtr;
 

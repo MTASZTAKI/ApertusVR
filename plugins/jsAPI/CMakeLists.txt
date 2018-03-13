@@ -224,11 +224,17 @@ if (WIN32)
 
 		set(NODE_DLL_NAME "node.dll")
 		set(NODE_DLL_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_DLL_NAME}")
+		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_DEBUG: '${NODE_DLL_PATH_DEBUG}'")
 		set(NODE_DLL_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_DLL_NAME}")
+		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_RELEASE: '${NODE_DLL_PATH_RELEASE}'")
 
 		set(NODE_LIB_NAME "node.lib")
+
 		set(NODE_LIB_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_LIB_NAME}")
+		message(STATUS "ApePlugins: Node: NODE_LIB_PATH_DEBUG: '${NODE_LIB_PATH_DEBUG}'")
+
 		set(NODE_LIB_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_LIB_NAME}")
+		message(STATUS "ApePlugins: Node: NODE_LIB_PATH_RELEASE: '${NODE_LIB_PATH_RELEASE}'")
 
 		#--------------------------------------------------------------------------------------------------------
 

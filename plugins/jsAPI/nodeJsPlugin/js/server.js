@@ -35,6 +35,9 @@ if (!fs.existsSync(config.sourcePathJs)) {
 	process.exit(1);
 }
 
+console.log('config: ');
+console.log(config);
+
 var moduleManager = require(config.sourcePathJs + '/modules/module_manager/module_manager.js');
 moduleManager.setConfigType(config.configuration);
 var ape = require(config.sourcePathJs + 'ape.js');
