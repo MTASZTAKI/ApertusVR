@@ -101,6 +101,8 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
 		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == "robotRootNode")
+		mNodeToMove = mpScene->getNode(event.subjectName);
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
 		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
@@ -200,6 +202,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "Ape::OISUserInputPlugin::keyPressed(): mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
+	std::cout << "Ape::OISUserInputPlugin::keyPressed(): OIS::KeyCode: " << (OIS::KeyCode)e.key << std::endl;
 	mKeyCodeMap[e.key] = true;
 
 	if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -259,6 +262,30 @@ bool Ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 
 bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
+	mMouseState.posCurrent = e.state;
+	if (auto coordNode = mNodeToMove.lock())
+	{
+		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Left])
+		{
+			if (mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] || mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
+			{
+				std::cout << "Ape::OISUserInputPlugin::mouseMoved() X velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs << std::endl;
+				coordNode->translate(Ape::Vector3((mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs), 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+			{
+				std::cout << "Ape::OISUserInputPlugin::mouseMoved() Y velocity: " << mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs << std::endl;
+				coordNode->translate(Ape::Vector3(0, -(mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs), 0), Ape::Node::TransformationSpace::LOCAL);
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_LMENU] || mKeyCodeMap[OIS::KeyCode::KC_RMENU])
+			{
+				std::cout << "Ape::OISUserInputPlugin::mouseMoved() Z velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs << std::endl;
+				coordNode->translate(Ape::Vector3(0, 0, -(mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs)), Ape::Node::TransformationSpace::LOCAL);
+			}
+		}
+	}
+	mMouseState.posPrevious = mMouseState.posCurrent;
+
 	if (auto overlayMouseTexture = mOverlayMouseTexture.lock())
 	{
 		if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -281,6 +308,9 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 
 bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	mMouseState.buttonDownMap[id] = true;
+	mMouseState.posStart = e.state;
+
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
 		if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -294,6 +324,9 @@ bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseB
 
 bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	mMouseState.buttonDownMap[id] = false;
+	mMouseState.posEnd = e.state;
+
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
 		if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -326,8 +359,7 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 
 void Ape::OISUserInputPlugin::moveUserNode()
 {
-	auto userNode = mUserNode.lock();
-	if (userNode)
+	if (auto userNode = mUserNode.lock())
 	{
 		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);

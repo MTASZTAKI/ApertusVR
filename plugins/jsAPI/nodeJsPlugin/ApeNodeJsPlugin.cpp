@@ -43,8 +43,8 @@ ApeNodeJsPlugin::~ApeNodeJsPlugin()
 
 void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.subjectName: " << event.subjectName << std::endl;
-	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.group: " << event.group << std::endl;
+	/*std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.subjectName: " << event.subjectName << std::endl;
+	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.group: " << event.group << std::endl;*/
 }
 
 void ApeNodeJsPlugin::Init()
