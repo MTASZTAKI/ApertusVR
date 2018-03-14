@@ -25,22 +25,22 @@ ApertusVR could boosts up the creation of a minimum viable product from scratch.
 
 ## How to use
 ### From Source
-Currently, tested only on Windows Visual Studio Community 2015
-and Windows Visual Studio Community 2017
+
+
 
 1. Clone the [repository](https://github.com/MTASZTAKI/ApertusVR)
 2. Build with [cmake](https://cmake.org/)
 
-### Windows 10 Visual Studio 2015 64bit SDK
-1. Download a SDK [downloads](http://apertusvr.org/?page_id=41)
-2. Build with [Visual Stduio 2015 Community](https://imagine.microsoft.com/en-us/Catalog/Product/101)
 
-### Windows 10 Visual Studio 2017 64bit SDK
-1. Download a SDK [downloads](http://apertusvr.org/?page_id=41)
-2. Build with [Visual Stduio 2017 Community](https://www.visualstudio.com/downloads/)
+
+
+
+
+
+
 
 ### Precompiled binaries
-[Precompiled binaries](http://www.apertusvr.org/downloads/binaries) Coming soon...
+[Precompiled binaries](http://www.apertusvr.org/sdk/)
 
 
 ## Community
