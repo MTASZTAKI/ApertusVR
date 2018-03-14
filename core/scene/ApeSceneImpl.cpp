@@ -272,55 +272,57 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
-		case Ape::Entity::BROWSER:
+
+        /*case Ape::Entity::BROWSER:
 		{
 			auto entity = std::make_shared<Ape::BrowserImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::BROWSER_CREATE));
 			return entity;
 		}
-		case Ape::Entity::TEXTURE_UNIT:
+         */
+		/*case Ape::Entity::TEXTURE_UNIT:
 		{
 			auto entity = std::make_shared<Ape::UnitTextureImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_CREATE));
 			return entity;
-		}
-		case Ape::Entity::GEOMETRY_RAY:
+		}*/
+        /*case Ape::Entity::GEOMETRY_RAY:
 		{
 			auto entity = std::make_shared<Ape::RayGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_CREATE));
 			return entity;
-		}
-		case Ape::Entity::SKY:
+		}*/
+        /*case Ape::Entity::SKY:
 		{
 			auto entity = std::make_shared<Ape::SkyImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::SKY_CREATE));
 			return entity;
-		}
-		case Ape::Entity::WATER:
+		}*/
+        /*case Ape::Entity::WATER:
 		{
 			auto entity = std::make_shared<Ape::WaterImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_CREATE));
 			return entity;
-		}
-		case Ape::Entity::POINT_CLOUD:
+		}/*
+         /*case Ape::Entity::POINT_CLOUD:
 		{
 			auto entity = std::make_shared<Ape::PointCloudImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::POINT_CLOUD_CREATE));
 			return entity;
-		}
-		case Ape::Entity::CAMERA:
+		}*/
+        /*case Ape::Entity::CAMERA:
 		{
 			auto entity = std::make_shared<Ape::CameraImpl>(name);
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_CREATE));
 			return entity;
-		}
+		}*/
 		case Ape::Entity::INVALID:
 			return Ape::EntityWeakPtr();
 		default:
