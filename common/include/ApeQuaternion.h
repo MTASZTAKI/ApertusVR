@@ -129,7 +129,7 @@ namespace Ape
 			FromAngleAxis(Ape::Radian(_angleDegree.toRadian()), _axis);
 		}
 
-		void Quaternion::FromRotationMatrix(const Ape::Matrix3& kRot)
+		void FromRotationMatrix(const Ape::Matrix3& kRot)
 		{
 			float fTrace = kRot[0][0] + kRot[1][1] + kRot[2][2];
 			float fRoot;
@@ -246,7 +246,7 @@ namespace Ape
 			}
 		}
 
-		void Quaternion::ToRotationMatrix(Ape::Matrix3& kRot) const
+		void ToRotationMatrix(Ape::Matrix3& kRot) const
 		{
 			float fTx = x + x;
 			float fTy = y + y;
