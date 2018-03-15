@@ -227,7 +227,7 @@ void Ape::SceneSessionImpl::listen()
 				}
 				break;
 			case ID_ALREADY_CONNECTED:
-					printf("ID_ALREADY_CONNECTED with guid %" PRINTF_64_BIT_MODIFIER "u\n", packet->guid);
+				std::cout << "ID_ALREADY_CONNECTED with: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << std::endl;
 				break;
 			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
 					printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(true), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
