@@ -29,7 +29,7 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakPeer(nullptr)
 	, mpReplicaManager3(nullptr)
 	, mpNatPunchthroughClient(nullptr)
-	, mpLobbyManager(nullptr)
+//	, mpLobbyManager(nullptr)
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mIsConnectedToNATServer = false;

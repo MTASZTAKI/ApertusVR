@@ -100,7 +100,7 @@ namespace Ape
 
 		bool mbIsConnectedToSessionServer;
 
-		LobbyManager* mpLobbyManager;
+//		LobbyManager* mpLobbyManager;
 
 		void init();
 
