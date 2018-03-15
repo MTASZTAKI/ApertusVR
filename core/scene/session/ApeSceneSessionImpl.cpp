@@ -242,7 +242,7 @@ void Ape::SceneSessionImpl::listen()
 					unsigned char weAreTheSender = packet->data[1];
 					if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 					{
-						RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
+						mpRakPeer->GetConnectionState(packet->systemAddress);
 						RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 						if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 							printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
@@ -253,7 +253,7 @@ void Ape::SceneSessionImpl::listen()
 					{
 						if (!weAreTheSender)
 						{
-							RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
+							mpRakPeer->GetConnectionState(packet->systemAddress);
 							RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 							if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 								printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
