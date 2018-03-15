@@ -24,10 +24,6 @@ SOFTWARE.*/
 #include "rapidjson/filereadstream.h"
 #include "ApePluginManagerImpl.h"
 
-
-
-template<> Ape::IPluginManager* Ape::Singleton<Ape::IPluginManager>::msSingleton = 0;
-
 Ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;

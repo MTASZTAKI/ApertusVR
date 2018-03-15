@@ -22,8 +22,6 @@ SOFTWARE.*/
 
 #include "ApeMainWindowImpl.h"
 
-template<> Ape::IMainWindow* Ape::Singleton<Ape::IMainWindow>::msSingleton = 0;
-
 Ape::MainWindowImpl::MainWindowImpl()
 {
 	msSingleton = this;

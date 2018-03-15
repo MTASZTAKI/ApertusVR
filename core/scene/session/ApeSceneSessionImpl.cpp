@@ -25,8 +25,6 @@ SOFTWARE.*/
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
 
-template<> Ape::ISceneSession* Ape::Singleton<Ape::ISceneSession>::msSingleton = 0;
-
 Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakPeer(nullptr)
 	, mpNatPunchthroughClient(nullptr)

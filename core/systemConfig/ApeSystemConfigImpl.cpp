@@ -31,8 +31,6 @@ SOFTWARE.*/
 #include <fstream>
 #include "ApeSystemConfigImpl.h"
 
-template<> Ape::ISystemConfig* Ape::Singleton<Ape::ISystemConfig>::msSingleton = 0;
-
 Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 {
 	msSingleton = this;

@@ -48,8 +48,6 @@ SOFTWARE.*/
 #include "ApeWaterImpl.h"
 #include "ApePointCloudImpl.h"
 
-template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
-
 Ape::SceneImpl::SceneImpl()
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
