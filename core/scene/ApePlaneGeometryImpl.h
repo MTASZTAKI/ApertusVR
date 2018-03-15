@@ -37,15 +37,15 @@ namespace Ape
 
 		~PlaneGeometryImpl();
 
-		void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile);
+		void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile) override;
 
-		Ape::GeometryPlaneParameters getParameters();
+		Ape::GeometryPlaneParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

@@ -38,9 +38,9 @@ namespace Ape
 
 		~FileMaterialImpl();
 		
-		void setFileName(std::string fileName);
+		void setFileName(std::string fileName) override;
 
-		std::string getfFileName();
+		std::string getfFileName() override;
 
 		void setAsSkyBox() override;
 

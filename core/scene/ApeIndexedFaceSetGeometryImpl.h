@@ -37,13 +37,13 @@ namespace Ape
 
 		~IndexedFaceSetGeometryImpl();
 
-		void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material);
+		void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) override;
 
-		Ape::GeometryIndexedFaceSetParameters getParameters();
+		Ape::GeometryIndexedFaceSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
