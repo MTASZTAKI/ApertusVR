@@ -48,7 +48,7 @@ static void raw(void)
 }
 /*****************************************************************************
 *****************************************************************************/
-static int kbhit(void)
+static inline int kbhit(void)
 {
 	struct timeval timeout;
 	fd_set read_handles;
@@ -69,7 +69,7 @@ static int kbhit(void)
 }
 /*****************************************************************************
 *****************************************************************************/
-static int getch(void)
+static inline int getch(void)
 {
 	unsigned char temp;
 
