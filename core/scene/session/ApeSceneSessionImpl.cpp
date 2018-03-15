@@ -27,8 +27,8 @@ SOFTWARE.*/
 
 Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakPeer(nullptr)
-	, mpNatPunchthroughClient(nullptr)
 	, mpReplicaManager3(nullptr)
+	, mpNatPunchthroughClient(nullptr)
 	, mpLobbyManager(nullptr)
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
