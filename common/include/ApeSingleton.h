@@ -60,4 +60,6 @@ namespace Ape
 	};
 }
 
+template<class T> T* Ape::Singleton<T>::msSingleton;
+
 #endif
