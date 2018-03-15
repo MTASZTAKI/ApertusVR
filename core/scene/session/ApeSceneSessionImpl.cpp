@@ -230,14 +230,14 @@ void Ape::SceneSessionImpl::listen()
 				std::cout << "ID_ALREADY_CONNECTED with: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << std::endl;
 				break;
 			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-					printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(true), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+				printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
 				break;
 			case ID_NAT_TARGET_NOT_CONNECTED:
 			case ID_NAT_TARGET_UNRESPONSIVE:
 			case ID_NAT_CONNECTION_TO_TARGET_LOST:
 			case ID_NAT_ALREADY_IN_PROGRESS:
 			case ID_NAT_PUNCHTHROUGH_FAILED:
-					printf("NAT punch to %s failed. Reason %s\n", packet->guid.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+				printf("NAT punch to %s failed. Reason %s\n", packet->guid.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
 				break;
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
@@ -287,10 +287,10 @@ void Ape::SceneSessionImpl::listen()
 				}
 			case ID_RAKVOICE_OPEN_CHANNEL_REQUEST:
 			case ID_RAKVOICE_OPEN_CHANNEL_REPLY:
-					printf("Got new channel from %s\n", packet->systemAddress.ToString());
+				printf("Got new channel from %s\n", packet->systemAddress.ToString());
 				break;
 			case ID_RAKVOICE_CLOSE_CHANNEL:
-					printf("ID_RAKVOICE_CLOSE_CHANNEL\n");
+				printf("ID_RAKVOICE_CLOSE_CHANNEL\n");
 				break;
 			case ID_USER_PACKET_ENUM:
 				break;
