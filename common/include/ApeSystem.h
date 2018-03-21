@@ -30,9 +30,11 @@ SOFTWARE.*/
 #define APE_SYSTEM_DLL_EXPORT __declspec(dllimport)
 #endif
 #else
-#define APE_SYSTEM_DLL_EXPORT 
+#define APE_SYSTEM_DLL_EXPORT
 #endif
 
+
+#ifdef __cplusplus
 #include <string>
 #include "ApeSingleton.h"
 #include "ApeISceneSession.h"
@@ -41,10 +43,11 @@ namespace Ape
 {
 	namespace System
 	{
-		APE_SYSTEM_DLL_EXPORT void Start(std::string configFolderPath, bool isBlockingMode);
-
-		APE_SYSTEM_DLL_EXPORT void Stop();
+		extern "C" APE_SYSTEM_DLL_EXPORT void Start(std::string configFolderPath, bool isBlockingMode);
+		extern "C" APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }
+
+#endif
 
 #endif
