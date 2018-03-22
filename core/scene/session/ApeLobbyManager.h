@@ -56,7 +56,7 @@ namespace Ape
 	{
 	private:
 		HttpManager mHttpManager;
-		
+
 		std::string mIp;
 		
 		std::string mPort;
