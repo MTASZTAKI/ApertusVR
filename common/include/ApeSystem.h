@@ -43,7 +43,7 @@ namespace Ape
 {
 	namespace System
 	{
-		extern "C" APE_SYSTEM_DLL_EXPORT void Start(std::string configFolderPath, bool isBlockingMode);
+		extern "C" APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, int isBlockingMode);
 		extern "C" APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }

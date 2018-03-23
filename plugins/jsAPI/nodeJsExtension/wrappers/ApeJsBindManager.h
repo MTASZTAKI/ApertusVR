@@ -60,8 +60,7 @@ public:
 
 	void start(std::string configFolderPath)
 	{
-		std::stringstream configDir;
-		Ape::System::Start(configFolderPath, true);
+		Ape::System::Start(configFolderPath.c_str(), true);
 	}
 
 	void stop()

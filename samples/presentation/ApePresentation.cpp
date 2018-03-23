@@ -53,7 +53,7 @@ int main (int argc, char** argv)
 		std::cout << "usage: local_monitor | guest_monitor | host_monitor | local_oculusDK2 | guest_oculusDK2 | host_cave_2walls | host_cave_3walls" << std::endl;
 		return 0;
 	}
-	Ape::System::Start(configDir.str(), true);
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

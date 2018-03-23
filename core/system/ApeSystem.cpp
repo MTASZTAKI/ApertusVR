@@ -37,9 +37,9 @@ Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
 
-void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
+void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
-	gpSystemConfigImpl = new SystemConfigImpl(configFolderPath);
+	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
 	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
