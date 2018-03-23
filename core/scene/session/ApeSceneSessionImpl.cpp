@@ -205,7 +205,7 @@ void Ape::SceneSessionImpl::listen()
 				break;
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
-					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s,guid=%s\n", packet->systemAddress.ToString(true), packet->guid.ToString());
+					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s, guid=%s, participantType=%d\n", packet->systemAddress.ToString(true), packet->guid.ToString(), mParticipantType);
 					if (mNATServerIP == packet->systemAddress.ToString(false))
 					{
 						mNATServerAddress = packet->systemAddress;
