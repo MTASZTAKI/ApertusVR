@@ -30,7 +30,7 @@ int main (int argc, char** argv)
 {
 	std::stringstream configDir;
 	configDir << APE_SOURCE_DIR << "\\samples\\singlePlayer\\configs";
-	Ape::System::Start(configDir.str(), true);
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

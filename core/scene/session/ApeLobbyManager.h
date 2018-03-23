@@ -56,15 +56,18 @@ namespace Ape
 	{
 	private:
 		HttpManager mHttpManager;
-		
+
 		std::string mIp;
 		
 		std::string mPort;
+
+		std::string mSessionName;
 		
 		std::string mApiEndPointUrl;
 		
 	public:
 		LobbyManager(const std::string& ip, const std::string& port);
+		LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName);
 		
 		~LobbyManager();
 
