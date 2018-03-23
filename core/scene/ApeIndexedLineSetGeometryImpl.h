@@ -37,11 +37,11 @@ namespace Ape
 
 		~IndexedLineSetGeometryImpl();
 
-		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color);
+		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) override;
 
-		Ape::GeometryIndexedLineSetParameters getParameters();
+		Ape::GeometryIndexedLineSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

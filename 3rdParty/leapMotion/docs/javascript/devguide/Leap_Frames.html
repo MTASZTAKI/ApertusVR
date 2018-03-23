@@ -1,0 +1,540 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Frames &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Hands" href="Leap_Hand.html" />
+    <link rel="prev" title="Tracking Model" href="Leap_Tracking.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/devguide/Leap_Frames.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Frames.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/devguide/Leap_Frames.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Tracking.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Hand.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_Frames.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Frames.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Frames.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Frames.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Frames
+</span> -->
+        
+  <div class="section" id="id482">
+<h1>Frames<a class="headerlink" href="#id482" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion API presents motion tracking data to your application as a series of snapshots called <em>frames</em>. Each frame of tracking data contains the measured positions and other information about each entity detected in that snapshot. This article discusses the details of gettting <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects from the Leap Motion API.</p>
+<p>Each <tt class="docutils literal"><span class="pre">Frame</span></tt> object contains an instantaneous snapshot of the scene recorded by the Leap Motion controller. The Leap Motion WebSocket server sends frames to your application as they are created. These frame messages are consumed by the Leap Motion JavaScript API (<tt class="docutils literal"><span class="pre">leap.js</span></tt>) and are available from the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object as <tt class="docutils literal"><span class="pre">Frame</span></tt> objects.</p>
+<p>The Leap Motion API provides a few ways to connect to the controller and get frame data. The simplest method is to use the <a class="reference internal" href="../api/Leap_Classes.html#Leap.loop" title="Leap.loop"><tt class="xref js js-func docutils literal"><span class="pre">Leap.loop()</span></tt></a> function, but you can also create your own <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object, which gives you a few more options.</p>
+<div class="section" id="getting-frames-with-leap-loop">
+<h2>Getting Frames with Leap.loop()<a class="headerlink" href="#getting-frames-with-leap-loop" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/Leap_Classes.html#Leap.loop" title="Leap.loop"><tt class="xref js js-func docutils literal"><span class="pre">Leap.loop()</span></tt></a> function automatically sets up an update loop for your application, creates a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object, and connects to the Leap Motion WebSocket server. At each update interval, the <tt class="docutils literal"><span class="pre">loop()</span></tt> logic calls your update callback function, passing it the most current frame.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">loop</span><span class="p">({</span><span class="nx">enableGestures</span><span class="o">:</span><span class="kc">true</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">currentFrame</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">previousFrame</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">tenFramesBack</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>By default, the <a class="reference internal" href="../api/Leap_Classes.html#Leap.loop" title="Leap.loop"><tt class="xref js js-func docutils literal"><span class="pre">Leap.loop()</span></tt></a> function uses the following options:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="n">enableGestures</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+<span class="n">frameEventName</span><span class="p">:</span> <span class="s">&quot;animationFrame&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>You can change these settings by passing in an object defining your desired settings.</p>
+</div>
+<div class="section" id="getting-frames-with-a-controller-object">
+<h2>Getting Frames with a Controller Object<a class="headerlink" href="#getting-frames-with-a-controller-object" title="Permalink to this headline">¶</a></h2>
+<p>When create your own <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object, you can either set up an event loop using the <tt class="docutils literal"><span class="pre">Controller</span></tt>&#8216;s internal event mechanism, or poll the <tt class="docutils literal"><span class="pre">Controller</span></tt> for frames at whatever interval is appropriate for your application.</p>
+<div class="section" id="choosing-a-controller-loop-mechanism">
+<h3>Choosing a Controller Loop Mechanism<a class="headerlink" href="#choosing-a-controller-loop-mechanism" title="Permalink to this headline">¶</a></h3>
+<p>Since the Leap Motion tracking data is presented to your application as a series of frames, it makes sense to use a looping mechanism to process the data and update your application as the frames are received. The Leap Motion JavaScript API provides a built-in looping mechanism. You can also implement your own application loop, if you prefer more control.</p>
+<p>The built-in looping mechanism gives you two options:</p>
+<ul class="simple">
+<li><em>browser animation loop</em> &#8211; Provided by <a class="reference external" href="http://www.w3.org/TR/animation-timing/">requestAnimationFrame</a>, the browser animation loop typically runs at 60 fps.</li>
+<li><em>device loop</em> &#8211; Runs at the Leap Motion controller frame rate.</li>
+</ul>
+<p>Use the browser animation loop (<tt class="docutils literal"><span class="pre">animationFrame</span></tt>) if your application uses the Leap Motion data primarily for control and does a lot of drawing. Use the Leap Motion device loop (<tt class="docutils literal"><span class="pre">deviceFrame</span></tt>) outside the browser or if your application needs the highest data fidelity (and doesn&#8217;t perform too much drawing or other processing each frame).</p>
+<p>Set the type of built-in loop to use when you create your <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object by passing an options object to the constructor function specifying either &#8220;animationFrame&#8221; to use the browser loop or &#8220;deviceFrame&#8221; to use the Leap Motion controller loop. If you don&#8217;t set a value, <tt class="docutils literal"><span class="pre">animationFrame</span></tt> is used by default.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">browserLoopController</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span><span class="nx">frameEventName</span><span class="o">:</span> <span class="s1">&#39;animationFrame&#39;</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>The browser animation loop can skip frames of Leap Motion data with this method, since the controller frame rate and the browser frame rate do not match. Often skipped frames do not matter since you could not update your application in between loop iterations anyway. (If it does matter for your application, see <a class="reference internal" href="#getting-data-from-skipped-frames">Getting Data from Skipped Frames</a>.)</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">deviceLoopController</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span><span class="nx">frameEventName</span><span class="o">:</span> <span class="s1">&#39;deviceFrame&#39;</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>When using the device loop, the frame rate can exceed 200 fps, depending on the user&#8217;s settings and the available computing power. While a higher frame rate is often a good thing, too high an update rate can starve other portions of your application and bog everything down.</p>
+</div>
+<div class="section" id="using-frame-event-callbacks">
+<h3>Using Frame Event Callbacks<a class="headerlink" href="#using-frame-event-callbacks" title="Permalink to this headline">¶</a></h3>
+<p>When you create your own <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object, you can use the <a class="reference internal" href="../api/Leap.Controller.html#Controller.on" title="Controller.on"><tt class="xref js js-func docutils literal"><span class="pre">on()</span></tt></a> method to specify one or more callback functions to be invoked at each update interval.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="nx">onFrame</span><span class="p">);</span>
+<span class="kd">function</span> <span class="nx">onFrame</span><span class="p">(</span><span class="nx">frame</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Frame event for frame &quot;</span> <span class="o">+</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Controller object passes the most current frame to the callback function. If your update loop is running faster than the current Leap Motion controller frame rate, then the same <tt class="docutils literal"><span class="pre">Frame</span></tt> object can be passed to the callback function for more than one update. Likewise, if the controller frame rate exceeds your application update rate, then the <tt class="docutils literal"><span class="pre">Frame</span></tt> object passed to your callback can be be a few frames beyond the frame received in the previous update. All frames are temporarily stored in the history cache; see <a class="reference internal" href="#getting-data-from-skipped-frames">Getting Data from Skipped Frames</a> if you need to access data in these in-between frames.</p>
+</div>
+<div class="section" id="polling-for-frames">
+<h3>Polling for Frames<a class="headerlink" href="#polling-for-frames" title="Permalink to this headline">¶</a></h3>
+<p>You can call the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> <tt class="docutils literal"><span class="pre">frame()</span></tt> function at any time to get the latest frame data received from the Leap Motion. If no frames of data are available &#8211; perhaps the Controller has not finished connecting to the Leap Motion WebSocket &#8211; then you get an invalid frame, which contains no data. Otherwise, you get the last frame produced. Note that you can get the same frame more than once if you are polling more often than the Leap Motion controller is producing frames.</p>
+<p>The following example uses a timer interval to poll for frames every half second:</p>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;div id=&quot;frameID&quot;&gt;&lt;/div&gt;
+
+var controller = new Leap.Controller();
+var frameDisplay = document.getElementById(&#39;frameID&#39;);
+
+this.controller.on(&#39;connect&#39;, function(){
+   setInterval(function(){
+      var frame = controller.frame();
+      frameDisplay.innerHTML = &#39;&lt;p&gt;Frame: &#39; + frame.id + &#39; is &#39; + (frame.valid ? &#39;valid.&lt;/p&gt;&#39; : &#39;invalid.&lt;/p&gt;&#39;);
+   }, 500);
+});
+
+controller.connect();
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id483">
+<h2>Getting Data from a Frame<a class="headerlink" href="#id483" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> class defines several functions that provide access to the data in the frame. For example, the following code illustrates how to get the basic objects tracked by the Leap Motion system:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;p&gt;</span>Framerate: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;leapFPS&quot;</span><span class="nt">&gt;</span>FPS<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Number of hands: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;handCount&quot;</span><span class="nt">&gt;</span>Hands<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Number of pointables: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;pointableCount&quot;</span><span class="nt">&gt;</span>Pointables<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Number of tools: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;toolCount&quot;</span><span class="nt">&gt;</span>Tools<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Number of fingers: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;fingerCount&quot;</span><span class="nt">&gt;</span>Fingers<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Number of gestures: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;gestureCount&quot;</span><span class="nt">&gt;</span>Gestures<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+<span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span>
+                         <span class="nx">enableGestures</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                         <span class="nx">frameEventName</span><span class="o">:</span> <span class="s1">&#39;animationFrame&#39;</span>
+                         <span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">fpsDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;leapFPS&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">handCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;handCount&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">pointableCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;pointableCount&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">fingerCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;fingerCount&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">toolCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;toolCount&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gestureCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;gestureCount&#39;</span><span class="p">);</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+  <span class="nx">fpsDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">currentFrameRate</span><span class="p">;</span>
+  <span class="nx">handCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">hands</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="nx">pointableCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">pointables</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="nx">fingerCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">fingers</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="nx">toolCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">tools</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="nx">gestureCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">gestures</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  
+  <span class="p">});</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>If you want to access data from past frames, you can pass a <tt class="docutils literal"><span class="pre">history</span></tt> parameter to the <tt class="docutils literal"><span class="pre">frame()</span></tt> function. See <a class="reference internal" href="#getting-data-from-skipped-frames">Getting Data from Skipped Frames</a>.</p>
+</div>
+<div class="section" id="using-ids-to-track-entities-across-frames">
+<h2>Using IDs to track entities across frames<a class="headerlink" href="#using-ids-to-track-entities-across-frames" title="Permalink to this headline">¶</a></h2>
+<p>If you have an ID of an entity from a different frame, you can get the object representing that entity in the current frame. Pass the ID to the Frame function of the appropriate type. The following example finds a Pointable object in past frames to average the tip position.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;p&gt;</span>Average position: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;avgPosition&quot;</span><span class="nt">&gt;</span>position<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+<span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span>
+                         <span class="nx">enableGestures</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                         <span class="nx">frameEventName</span><span class="o">:</span> <span class="s1">&#39;animationFrame&#39;</span>
+                         <span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">avgDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;avgPosition&#39;</span><span class="p">);</span>
+
+<span class="nx">controller</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">frame</span><span class="p">.</span><span class="nx">valid</span> <span class="o">&amp;&amp;</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">fingers</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">average</span> <span class="o">=</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">vec3</span><span class="p">.</span><span class="nx">create</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">fingerToAverage</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">fingers</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">fingerFromFrame</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="nx">i</span><span class="p">).</span><span class="nx">finger</span><span class="p">(</span><span class="nx">fingerToAverage</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">fingerFromFrame</span><span class="p">.</span><span class="nx">valid</span> <span class="p">)</span>
+            <span class="p">{</span>
+                <span class="nx">Leap</span><span class="p">.</span><span class="nx">vec3</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">average</span><span class="p">,</span> <span class="nx">fingerFromFrame</span><span class="p">.</span><span class="nx">tipPosition</span><span class="p">);</span>
+                <span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">Leap</span><span class="p">.</span><span class="nx">vec3</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">average</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="nx">count</span><span class="p">);</span>
+            <span class="nx">avgDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">average</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">average</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">average</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>If an object with the same ID cannot be found &#8211; perhaps a hand or finger moved out of the Leap field of view &#8211; then a special, invalid object is returned instead. You can check for validity with the boolean <tt class="docutils literal"><span class="pre">valid</span></tt> attribute.</p>
+</div>
+<div class="section" id="getting-data-from-skipped-frames">
+<h2>Getting Data from Skipped Frames<a class="headerlink" href="#getting-data-from-skipped-frames" title="Permalink to this headline">¶</a></h2>
+<p>If the Leap Motion controller frame rate is running faster than your application update loop, more than one new frame of tracking data could be available by the time your update function is executed. The Leap.js library caches Frame objects as they are received. You can pass a <tt class="docutils literal"><span class="pre">history</span></tt> value to the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> <tt class="docutils literal"><span class="pre">frame()</span></tt> function to access these stored frames. The history value counts back from the most recent frame.</p>
+<p>The following example samples the frame history cache once per second and counts the total number of <a class="reference external" href="../api/Leap.Gesture.html"><tt class="docutils literal"><span class="pre">Gesture</span></tt></a> objects received since the last update:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;p&gt;</span>Gesture count: <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;gestures&quot;</span><span class="nt">&gt;</span>Gesture count<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+<span class="kd">var</span> <span class="nx">gestureCountDisplay</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;gestures&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">({</span><span class="nx">enableGestures</span><span class="o">:</span><span class="kc">true</span><span class="p">});</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">lastID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">gestureCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">frameCount</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">().</span><span class="nx">id</span> <span class="o">-</span> <span class="nx">lastID</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="nx">f</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">f</span> <span class="o">&lt;</span> <span class="nx">frameCount</span><span class="p">;</span> <span class="nx">f</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nx">gestureCount</span> <span class="o">+=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">(</span><span class="nx">f</span><span class="p">).</span><span class="nx">gestures</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">gestureCountDisplay</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">gestureCount</span> <span class="o">+</span> <span class="s2">&quot; gesture objects counted in &quot;</span> <span class="o">+</span> <span class="nx">frameCount</span> <span class="o">+</span> <span class="s2">&quot; frames.&quot;</span><span class="p">;</span>
+    <span class="nx">lastID</span> <span class="o">=</span> <span class="nx">controller</span><span class="p">.</span><span class="nx">frame</span><span class="p">().</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">update</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>The length of the history cache is an implementation detail; you should not rely on a particular length. The length is currently 200 frames for the JavaScript API.</p>
+<p>Note that if a computer is bogged down with too many other computing tasks, frames can be abandoned by the Leap Motion software and not sent to your application. In this case, there will be a gap between consecutive frame ID values.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Controllers.html">Connecting to the Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id482">Frames</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames-with-leap-loop">Getting Frames with Leap.loop()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames-with-a-controller-object">Getting Frames with a Controller Object</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#choosing-a-controller-loop-mechanism">Choosing a Controller Loop Mechanism</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-frame-event-callbacks">Using Frame Event Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#polling-for-frames">Polling for Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id483">Getting Data from a Frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-ids-to-track-entities-across-frames">Using IDs to track entities across frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-data-from-skipped-frames">Getting Data from Skipped Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html#id482">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

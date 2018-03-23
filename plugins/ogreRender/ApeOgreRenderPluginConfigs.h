@@ -218,22 +218,26 @@ namespace Ape
 	{
 		OgreRenderWindowConfigList ogreRenderWindowConfigList;
 		OgreLodLevelsConfig ogreLodLevelsConfig;
+		std::string shading;
 		std::string renderSystem;
 
 		OgreRenderPluginConfig()
 		{
 			this->ogreRenderWindowConfigList = OgreRenderWindowConfigList();
 			this->ogreLodLevelsConfig = OgreLodLevelsConfig();
+			this->shading = std::string();
 			this->renderSystem = std::string();
 		}
 
 		OgreRenderPluginConfig(
 			OgreRenderWindowConfigList ogreRenderWindowConfigList,
 			OgreLodLevelsConfig ogreLodLevelsConfig,
+			std::string shading,
 			std::string renderSystem)
 		{
 			this->ogreRenderWindowConfigList = ogreRenderWindowConfigList;
 			this->ogreLodLevelsConfig = ogreLodLevelsConfig;
+			this->shading = shading;
 			this->renderSystem = renderSystem;
 		}
 	};

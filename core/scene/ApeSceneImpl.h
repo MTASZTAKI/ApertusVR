@@ -66,11 +66,11 @@ namespace Ape
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
-		
+
 		Ape::NodeSharedPtrNameMap mNodes;
-		
+
 		Ape::EntitySharedPtrNameMap mEntities;
-		
+
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::SceneSessionImpl* mpSceneSessionImpl;

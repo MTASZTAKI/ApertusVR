@@ -1,0 +1,1055 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Appendices" href="../supplements/Leap_Supplements.html" />
+    <link rel="prev" title="PointableList" href="Leap.PointableList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/api/Leap.Vector.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Vector.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/api/Leap.Vector.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.PointableList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("../supplements/Leap_Supplements.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Vector.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Vector.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Vector.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Vector.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Vector.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Vector.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Vector
+</span> -->
+        
+  <div class="section" id="vector">
+<h1>Vector<a class="headerlink" href="#vector" title="Permalink to this headline">¶</a></h1>
+</div>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4">Vector()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a781d0ab346c40cb3b3c6ee550b933acd">Vector(float _x, float _y, float _z)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1adc82e46d5f02f9f372fa82273a40a08e">Vector(Vector vector)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a3ab621fbac1ae07b78703793b8299efb">angleTo(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa845e87a32cd04efec52a64c1c4ba321">backward()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a52fce08731a8c5569694c5ab74d79ad6">cross(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a3424360d450339dd9d0b401ff9885090">distanceTo(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a0d193b433cd67e00656cc1e097ccdd56">divide(float scalar)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a22c1be419e70892582c67bce863f7d7d">dot(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a96c71dbe641cda9bbbba19984cba95c5">down()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1a089684b63c61477d415ba76c1c794f">equals(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a44457413bc90ff0e61a89963d6ed1c06">forward()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a89f8b8824968300ad470e20433c0d16d">get(long index)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae8f033a71b96920114aee202798dc7e9">getX()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa0f539cec219900ff6cf76edcfa52367">getY()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aff1fdba9fee292cef3c56a5ba2724438">getZ()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a487d5f454cff4db530ed7b5b690ec71d">isValid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae550b5edad3718d874c5d44ba33d4f31">left()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a9d8a8375ec7a44b0b893822c876e6b6a">magnitude()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a44a7879791964fb1522d9412edfc5d44">magnitudeSquared()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a18a0116e4885551dc2343324fb79e7a6">minus(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a5e2d86fc8735f30567f08d1976cc3ae9">normalized()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae7288689a262b2f8a10f45ed3d0e224a">opposite()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ab314f041e4b1e838181629715418725a">pitch()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a10292f758d93b8ab69f54000481cd4cf">plus(Vector other)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a7e0db4bf05faf8bc39e97161f931775a">right()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4f12c6baba5d6f0bf8bc919f9800104b">roll()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a054981188622744a3ba6a6a1c7e3e13b">setX(float value)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1bc97f25ba5ffb37b23b86756ce97933">setY(float value)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aff386330165ca2b0e7e6d4ce9956d3b3">setZ(float value)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ac17c2caa1e320ab769b3d0afcc9668a1">times(float scalar)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ad146fa8579a5f8a876c4688cc5a68520">toString()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a5447a7ccd237ef79ee3c06b695e9ff44">up()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa3f6bd8a9f67a35589e12fc5d6418c41">xAxis()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a45997d02bc4825023d938d2bf901b929">yAxis()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1b55893c916866d03fb7150ff3cb8a58">yaw()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a7fce6fecb880f90f09b9bb6076390631">zAxis()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa736f2f7c2800dce6877f2617de00ced">zero()</a></li>
+</ul>
+</div>
+<div class="line-block" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector">
+<div class="line"><em>class</em> <strong>com::leapmotion::leap::Vector</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> struct represents a three-component mathematical vector or point such as a direction or position in three-dimensional space. </p>
+<p><p>The Leap Motion software employs a right-handed Cartesian coordinate system. Values given are in units of real-world millimeters. The origin is centered at the center of the Leap Motion <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. The x- and z-axes lie in the horizontal plane, with the x-axis running parallel to the long edge of the device. The y-axis is vertical, with positive values increasing upwards (in contrast to the downward orientation of most computer graphics coordinate systems). The z-axis has positive values increasing away from the computer screen.</p>
+<p><img alt="api/../../../images/Leap_Axes.png" src="api/../../../images/Leap_Axes.png" /><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a3ab621fbac1ae07b78703793b8299efb"></span><div class="line-block">
+<div class="line">float <strong>angleTo</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The angle between this vector and the specified vector in radians. </p>
+<p><p>The angle is measured in the plane formed by the two vectors. The angle returned is always the smaller of the two conjugate angles. Thus <tt class="docutils literal"><span class="pre">A.angleTo(B)</span> <span class="pre">==</span> <span class="pre">B.angleTo(A)</span></tt> and is always a positive value less than or equal to pi radians (180 degrees).</p>
+<p>If either vector has zero length, then this function returns zero.</p>
+<p><img alt="api/../../../images/Math_AngleTo.png" src="api/../../../images/Math_AngleTo.png" /></p>
+<p><pre class="literal-block">
+float angleInRadians = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.xAxis().angleTo(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.yAxis());
+// angleInRadians = PI/2 (90 degrees)
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The angle between this vector and the specified vector in radians. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">other</span></tt> - <p>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a52fce08731a8c5569694c5ab74d79ad6"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>cross</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The cross product of this vector and the specified vector. </p>
+<p><p>The cross product is a vector orthogonal to both original vectors. It has a magnitude equal to the area of a parallelogram having the two vectors as sides. The direction of the returned vector is determined by the right-hand rule. Thus <tt class="docutils literal"><span class="pre">A.cross(B)</span> <span class="pre">==</span> <span class="pre">-B.cross(A).</span></tt></p>
+<p><img alt="api/../../../images/Math_Cross.png" src="api/../../../images/Math_Cross.png" /></p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> crossProduct = thisVector.cross(thatVector);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The cross product of this vector and the specified vector. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">other</span></tt> - <p>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a3424360d450339dd9d0b401ff9885090"></span><div class="line-block">
+<div class="line">float <strong>distanceTo</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The distance between the point represented by this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object and a point represented by the specified <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> aPoint = new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>(10f, 0f, 0f);
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> origin = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.zero();
+float distance = origin.distanceTo(aPoint); // distance = 10
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The distance from this point to the specified point. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">other</span></tt> - <p>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a0d193b433cd67e00656cc1e097ccdd56"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>divide</strong>(float scalar)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Divide vector by a scalar. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> quotient = thisVector.divide(2.5f);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a22c1be419e70892582c67bce863f7d7d"></span><div class="line-block">
+<div class="line">float <strong>dot</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The dot product of this vector with another vector. </p>
+<p><p>The dot product is the magnitude of the projection of this vector onto the specified vector.</p>
+<p><img alt="api/../../../images/Math_Dot.png" src="api/../../../images/Math_Dot.png" /></p>
+<p><pre class="literal-block">
+float dotProduct = thisVector.dot(thatVector);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The dot product of this vector and the specified vector. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">other</span></tt> - <p>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1a089684b63c61477d415ba76c1c794f"></span><div class="line-block">
+<div class="line">boolean <strong>equals</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> equality component-wise. </p>
+<p> <pre class="literal-block">
+boolean vectorsAreEqual = thisVector == thatVector;
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a89f8b8824968300ad470e20433c0d16d"></span><div class="line-block">
+<div class="line">float <strong>get</strong>(long index)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Index vector components numerically. </p>
+<p>Index 0 is x, index 1 is y, and index 2 is z.  <pre class="literal-block">
+float x = thisVector.get(0);
+float y = thisVector.get(1);
+float z = thisVector.get(2);
+</pre>
+<dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The x, y, or z component of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a>, if the specified index value is at least 0 and at most 2; otherwise, returns zero.</dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae8f033a71b96920114aee202798dc7e9"></span><div class="line-block">
+<div class="line">float <strong>getX</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The horizontal component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa0f539cec219900ff6cf76edcfa52367"></span><div class="line-block">
+<div class="line">float <strong>getY</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The vertical component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aff1fdba9fee292cef3c56a5ba2724438"></span><div class="line-block">
+<div class="line">float <strong>getZ</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The depth component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a487d5f454cff4db530ed7b5b690ec71d"></span><div class="line-block">
+<div class="line">boolean <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns true if all of the vector&#8217;s components are finite. </p>
+<p><p>If any component is NaN or infinite, then this returns false.</p>
+<p> <pre class="literal-block">
+boolean vectorsIsValid = thisVector.isValid();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a9d8a8375ec7a44b0b893822c876e6b6a"></span><div class="line-block">
+<div class="line">float <strong>magnitude</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The magnitude, or length, of this vector. </p>
+<p><p>The magnitude is the L2 norm, or Euclidean distance between the origin and the point represented by the (x, y, z) components of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object.</p>
+<p><pre class="literal-block">
+float length = thisVector.magnitude();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The length of this vector. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a44a7879791964fb1522d9412edfc5d44"></span><div class="line-block">
+<div class="line">float <strong>magnitudeSquared</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The square of the magnitude, or length, of this vector. </p>
+<p><p><pre class="literal-block">
+float lengthSquared = thisVector.magnitudeSquared();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The square of the length of this vector. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a18a0116e4885551dc2343324fb79e7a6"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>minus</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Subtract vectors component-wise. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> difference = thisVector.minus(thatVector);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a5e2d86fc8735f30567f08d1976cc3ae9"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>normalized</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A normalized copy of this vector. </p>
+<p><p>A normalized vector has the same direction as the original vector, but with a length of one.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> normalizedVector = otherVector.normalized();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object with a length of one, pointing in the same direction as this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae7288689a262b2f8a10f45ed3d0e224a"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>opposite</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A copy of this vector pointing in the opposite direction. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> negation = thisVector.opposite();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> object with all components negated. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ab314f041e4b1e838181629715418725a"></span><div class="line-block">
+<div class="line">float <strong>pitch</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The pitch angle in radians. </p>
+<p><p>Pitch is the angle between the negative z-axis and the projection of the vector onto the y-z plane. In other words, pitch represents rotation around the x-axis. If the vector points upward, the returned angle is between 0 and pi radians (180 degrees); if it points downward, the angle is between 0 and -pi radians.</p>
+<p><img alt="api/../../../images/Math_Pitch_Angle.png" src="api/../../../images/Math_Pitch_Angle.png" /></p>
+<p><pre class="literal-block">
+float pitchInRadians = thisVector.pitch();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The angle of this vector above or below the horizon (x-z plane). </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a10292f758d93b8ab69f54000481cd4cf"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>plus</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> other)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Add vectors component-wise. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> sum = thisVector.plus(thatVector);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4f12c6baba5d6f0bf8bc919f9800104b"></span><div class="line-block">
+<div class="line">float <strong>roll</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The roll angle in radians. </p>
+<p><p>Roll is the angle between the y-axis and the projection of the vector onto the x-y plane. In other words, roll represents rotation around the z-axis. If the vector points to the left of the y-axis, then the returned angle is between 0 and pi radians (180 degrees); if it points to the right, the angle is between 0 and -pi radians.</p>
+<p><img alt="api/../../../images/Math_Roll_Angle.png" src="api/../../../images/Math_Roll_Angle.png" /></p>
+<p>Use this function to get roll angle of the plane to which this vector is a normal. For example, if this vector represents the normal to the palm, then this function returns the tilt or roll of the palm plane compared to the horizontal (x-z) plane.</p>
+<p><pre class="literal-block">
+float rollInRadians = thatVector.roll();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The angle of this vector to the right or left of the y-axis. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a054981188622744a3ba6a6a1c7e3e13b"></span><div class="line-block">
+<div class="line">void <strong>setX</strong>(float value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The horizontal component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1bc97f25ba5ffb37b23b86756ce97933"></span><div class="line-block">
+<div class="line">void <strong>setY</strong>(float value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The vertical component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aff386330165ca2b0e7e6d4ce9956d3b3"></span><div class="line-block">
+<div class="line">void <strong>setZ</strong>(float value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The depth component. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ac17c2caa1e320ab769b3d0afcc9668a1"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>times</strong>(float scalar)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Multiply vector by a scalar. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> product = thisVector.times(5.0f);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ad146fa8579a5f8a876c4688cc5a68520"></span><div class="line-block">
+<div class="line">String <strong>toString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a string containing this vector in a human readable format: (x, y, z). </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"></span><div class="line-block">
+<div class="line"> <strong>Vector</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Creates a new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> with all components set to zero. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a781d0ab346c40cb3b3c6ee550b933acd"></span><div class="line-block">
+<div class="line"> <strong>Vector</strong>(float _x, float _y, float _z)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Creates a new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> with the specified component values. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> newVector = new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>(0.5f, 200.3f, 67f);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1adc82e46d5f02f9f372fa82273a40a08e"></span><div class="line-block">
+<div class="line"> <strong>Vector</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> vector)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Copies the specified <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a>. </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> copiedVector = new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>(otherVector);
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a1b55893c916866d03fb7150ff3cb8a58"></span><div class="line-block">
+<div class="line">float <strong>yaw</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The yaw angle in radians. </p>
+<p><p>Yaw is the angle between the negative z-axis and the projection of the vector onto the x-z plane. In other words, yaw represents rotation around the y-axis. If the vector points to the right of the negative z-axis, then the returned angle is between 0 and pi radians (180 degrees); if it points to the left, the angle is between 0 and -pi radians.</p>
+<p><img alt="api/../../../images/Math_Yaw_Angle.png" src="api/../../../images/Math_Yaw_Angle.png" /></p>
+<p><pre class="literal-block">
+float yawInRadians = thisVector.yaw();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The angle of this vector to the right or left of the negative z-axis. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa845e87a32cd04efec52a64c1c4ba321"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>backward</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing backward along the positive z-axis: (0, 0, 1) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> backwardVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.backward();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a96c71dbe641cda9bbbba19984cba95c5"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>down</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing down along the negative y-axis: (0, -1, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> downVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.down();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a44457413bc90ff0e61a89963d6ed1c06"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>forward</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing forward along the negative z-axis: (0, 0, -1) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> forwardVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.forward();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1ae550b5edad3718d874c5d44ba33d4f31"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>left</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing left along the negative x-axis: (-1, 0, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> leftVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.left();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a7e0db4bf05faf8bc39e97161f931775a"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>right</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing right along the positive x-axis: (1, 0, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> rightVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.right();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a5447a7ccd237ef79ee3c06b695e9ff44"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>up</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The unit vector pointing up along the positive y-axis: (0, 1, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> upVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.up();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa3f6bd8a9f67a35589e12fc5d6418c41"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>xAxis</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The x-axis unit vector: (1, 0, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> xAxisVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.xAxis();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a45997d02bc4825023d938d2bf901b929"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>yAxis</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The y-axis unit vector: (0, 1, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> yAxisVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.yAxis();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a7fce6fecb880f90f09b9bb6076390631"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>zAxis</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The z-axis unit vector: (0, 0, 1) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> zAxisVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.zAxis();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1aa736f2f7c2800dce6877f2617de00ced"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>zero</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The zero vector: (0, 0, 0) </p>
+<p> <pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a> zeroVector = <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_vector_1a4df026156780bc0ca651c342b7d6daa4"><em>Vector</em></a>.zero();
+</pre>
+<dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id12">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id14">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id5">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id12">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id3">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id3">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id15">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id12">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id24">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id5">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

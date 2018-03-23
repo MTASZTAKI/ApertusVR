@@ -37,15 +37,15 @@ namespace Ape
 
 		~BoxGeometryImpl();
 
-		void setParameters(Ape::Vector3 dimensions);
+		void setParameters(Ape::Vector3 dimensions) override;
 
-		Ape::GeometryBoxParameters getParameters();
+		Ape::GeometryBoxParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

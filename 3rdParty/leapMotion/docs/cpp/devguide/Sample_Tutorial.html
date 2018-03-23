@@ -1,0 +1,480 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hello World &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="Setting Up a Project" href="Project_Setup.html" />
+    <link rel="prev" title="SDK Libraries" href="Leap_SDK_Overview.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/devguide/Sample_Tutorial.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Sample_Tutorial.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Sample_Tutorial.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/devguide/Sample_Tutorial.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_SDK_Overview.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Project_Setup.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Sample_Tutorial.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Sample_Tutorial.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Sample_Tutorial.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Sample_Tutorial.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Hello World
+</span> -->
+        
+  <div class="section" id="hello-world">
+<h1>Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h1>
+<p>This article demonstrates how to connect to the Leap Motion controller and access basic tracking data. After reading this article and following along with your own basic program, you should have a solid foundation for beginning your own application development.</p>
+<p>First, a little background...</p>
+<div class="section" id="how-the-leap-motion-controller-works">
+<h2>How the Leap Motion Controller Works<a class="headerlink" href="#how-the-leap-motion-controller-works" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion controller encompasses both hardware and software components.</p>
+<p>The Leap Motion hardware consists primarily of a pair of stereo infrared cameras and illumination LEDs. The camera sensors look upward (when the device is in its standard orientation). The following illustration shows how a user&#8217;s hands look from the perspective of the Leap Motion sensor:</p>
+<img alt="devguide/../../../images/Leap_View.jpg" src="devguide/../../../images/Leap_View.jpg" />
+<p>The Leap Motion software receives the sensor data and analyzes this data specifically for hands, fingers, and arms. The software maintains an internal model of the human hand and compares that model to the sensor data to determine the best fit. Sensor data is analyzed frame-by-frame and the service sends each frame of data to Leap Motion-enabled applications. The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object received by your application contains all the known positions, velocities and identities of tracked entities, such as hands and fingers. For an overview for the tracking data provided by the controller, read <a class="reference internal" href="Leap_Overview.html"><em>API Overview</em></a>.</p>
+<p>The Leap Motion software runs as a service (Windows) or daemon (Mac and Linux) on the client computer. Native Leap Motion-enabled applications can connect to this service using the API provide by the Leap Motion dynamic libraries (provided as part of the Leap Motion SDK). Web applications can connect to a WebSocket server hosted by the service. The WebSocket provides tracking data as a JSON-formatted message &#8211; one message per frame of data. A JavaScript library, LeapJS, provides an API wrapping this data. For more information read <a class="reference internal" href="Leap_Architecture.html"><em>System Architecture</em></a>.</p>
+</div>
+<div class="section" id="set-up-the-files">
+<h2>Set Up the Files<a class="headerlink" href="#set-up-the-files" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial also uses command line compilers and linkers (where needed) in order to focus on the code rather than the environment.</p>
+<p>For details on how to set up projects using the Leap Motion SDK in popular IDEs, see <a class="reference internal" href="Project_Setup.html"><em>Setting Up a Project</em></a>.</p>
+<ol class="arabic simple">
+<li>If you haven&#8217;t already, download and unzip the latest Leap Motion SDK from the <a class="reference external" href="https://developer.leapmotion.com">developer site</a> and install the latest Leap Motion service.</li>
+<li>Open a terminal or console window and navigate to the SDK <tt class="docutils literal"><span class="pre">samples</span></tt> folder.</li>
+</ol>
+<p>3. <tt class="docutils literal"><span class="pre">Sample.cpp</span></tt> contains the finished code for this tutorial, but to get the most out of this lesson, you can rename the existing file, and create a new, blank <tt class="docutils literal"><span class="pre">Sample.cpp</span></tt> file in this folder.
+5. Add the &#8220;structural&#8221; code to define a C++ command-line program:</p>
+<blockquote>
+<div><div class="code cpp highlight-python"><div class="highlight"><pre>#include &lt;iostream&gt;
+#include &lt;string.h&gt;
+#include &quot;Leap.h&quot;
+
+using namespace Leap;
+
+int main(int argc, char** argv) {
+
+    // Keep this process running until Enter is pressed
+    std::cout &lt;&lt; &quot;Press Enter to quit...&quot; &lt;&lt; std::endl;
+    std::cin.get();
+
+    return 0;
+}
+</pre></div>
+</div>
+</div></blockquote>
+<p>This code simply prints a message and then waits for keyboard input before exiting. See <a class="reference external" href="#run-sample">Running the Sample</a> for instructions on running the program.</p>
+</div>
+<div class="section" id="get-connected">
+<h2>Get Connected<a class="headerlink" href="#get-connected" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to add a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object to the program &#8211; which serves as our connection to the Leap Motion service/daemon.</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>int main(int argc, char** argv) {
+    Controller controller;
+
+    // Keep this process running until Enter is pressed
+    std::cout &lt;&lt; &quot;Press Enter to quit...&quot; &lt;&lt; std::endl;
+    std::cin.get();
+
+    return 0;
+}
+</pre></div>
+</div>
+<p>When you create a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object, it automatically connects to the Leap Motion service and, once the connection has been established, you can get tracking data from it using the <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62">Controller.frame()</a> method.</p>
+<p>The connection process is asynchronous, so you can&#8217;t create the <tt class="docutils literal"><span class="pre">Controller</span></tt> in one line and expect to get data in the next line. You have to wait for the connection to complete. But for how long?</p>
+</div>
+<div class="section" id="to-listen-or-not-to-listen">
+<h2>To Listen or not to Listen?<a class="headerlink" href="#to-listen-or-not-to-listen" title="Permalink to this headline">¶</a></h2>
+<p>You can add a <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> object to the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a>, which provides an event-based mechanism for responding to important <tt class="docutils literal"><span class="pre">Controller</span></tt> state changes. This is the approach used in this tutorial &#8211; but it is not always the best approach.</p>
+<p><strong>The Problem with Listeners:</strong> <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> objects use independent threads to invoke the code that you implement for each event. Thus, using the listener mechanism can introduce the complexities of threading into your program. It becomes your responsibility to make sure that the code you implement in your <tt class="docutils literal"><span class="pre">Listener</span></tt> subclass accesses other parts of your program in a thread-safe manner. For example, you might not be able to access variables related to GUI controls from anything except the main thread. There can also be additional overhead associated with the creation and cleanup of threads.</p>
+<p><strong>Avoiding Listeners:</strong> You can avoid using <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> objects by simply polling the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object for frames (or other state) when convenient for your program. Many programs already have a event- or animation-loop to drive user input and animation. If so, you can get the tracking data once per loop &#8211; which is often as fast as you can use the data anyway.</p>
+<p>The <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> class in the API defines the signatures for a function that will be called when a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> event occurs. You create a listener by creating a subclass of <tt class="docutils literal"><span class="pre">Listener</span></tt> and implementing the callback functions for the events you are interested in.</p>
+<p>To continue this tutorial, add the <tt class="docutils literal"><span class="pre">SampleListener</span></tt> class to your program:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>class SampleListener : public Listener {
+    public:
+    virtual void onConnect(const Controller&amp;);
+    virtual void onFrame(const Controller&amp;);
+};
+
+void SampleListener::onConnect(const Controller&amp; controller) {
+    std::cout &lt;&lt; &quot;Connected&quot; &lt;&lt; std::endl;
+}
+
+void SampleListener::onFrame(const Controller&amp; controller) {
+    std::cout &lt;&lt; &quot;Frame available&quot; &lt;&lt; std::endl;
+}
+</pre></div>
+</div>
+<p>If you have already taken a look at the finished file, you may have noticed that several more callback functions are present. You can add those too, if you wish, but to keep things simple, we will concentrate on <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1a6b0dd62da959d048a3cc7917cca1ccba">onConnect()</a> and <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1abda5aa2c81ae8cefe01301bc5f87c8d1">onFrame()</a>.</p>
+<p>Now create a <tt class="docutils literal"><span class="pre">SampleListener</span></tt> object using your new class and add it to your controller:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>int main(int argc, char** argv) {
+    SampleListener listener;
+    Controller controller;
+
+    controller.addListener(listener);
+
+    // Keep this process running until Enter is pressed
+    std::cout &lt;&lt; &quot;Press Enter to quit...&quot; &lt;&lt; std::endl;
+    std::cin.get();
+
+    // Remove the sample listener when done
+    controller.removeListener(listener);
+
+    return 0;
+}
+</pre></div>
+</div>
+<p>Now is a good time to test your sample program. Follow the directions in: <a class="reference external" href="#run-sample">Running the Sample</a>.</p>
+<p>If everything is correct (and your Leap Motion hardware is plugged in), then you should see the string &#8220;Connected&#8221; printed to the terminal window followed by an rapid series of &#8220;Frame available&#8221;. If things go wrong and you cannot figure out why, you can get help on our developer forum at <a class="reference external" href="https://developer.leapmotion.com">developer.leapmotion.com</a>.</p>
+<p>Whenever you run into trouble developing a Leap Motion application, try opening the diagnostic visualizer. This program displays a visualization of the Leap Motion tracking data. You can compare what you see in your program to what you see in the visualizer (which uses the same API) to isolate and identify many problems.</p>
+</div>
+<div class="section" id="on-connect">
+<h2>On Connect<a class="headerlink" href="#on-connect" title="Permalink to this headline">¶</a></h2>
+<p>When your <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object successfully connects to the Leap Motion service/daemon AND the Leap Motion hardware is plugged in, The <tt class="docutils literal"><span class="pre">Controller</span></tt> object changes its isConnected() property to <tt class="docutils literal"><span class="pre">true</span></tt> and invokes your <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1a6b0dd62da959d048a3cc7917cca1ccba">Listener.onConnect()</a> callback (if there is one).</p>
+<p>When the controller connects, you can set controller properties using such methods as <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f">Controller.setPolicy()</a>.</p>
+</div>
+<div class="section" id="on-frame">
+<h2>On Frame<a class="headerlink" href="#on-frame" title="Permalink to this headline">¶</a></h2>
+<p>All the tracking data in the Leap Motion system arrives through the <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object. You can get <tt class="docutils literal"><span class="pre">Frame</span></tt> objects from your controller (after it has connected) by calling the <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62">Controller.frame()</a> method. The <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1abda5aa2c81ae8cefe01301bc5f87c8d1">onFrame()</a> callback of your <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> subclass is called when a new frame of data becomes available. When you aren&#8217;t using a listener, you can compare the <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08">id()</a> value to that of the last frame you processed to see if there is a new frame. Note that by setting the <tt class="docutils literal"><span class="pre">history</span></tt> parameter of the frame() function, you can get earlier frames than the current one (up to 60 frames are stored). Thus, even when polling at a slower rate than the Leap Motion frame rate, you can process every frame, if desired.</p>
+<p>To get the frame, add this call to <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62">frame()</a> to your onFrame() callback:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>void SampleListener::onFrame(const Controller&amp; controller) {
+    const Frame frame = controller.frame();
+}
+</pre></div>
+</div>
+<p>Then, print out some properties of the <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>void SampleListener::onFrame(const Controller&amp; controller) {
+    const Frame frame = controller.frame();
+    std::cout &lt;&lt; &quot;Frame id: &quot; &lt;&lt; frame.id()
+          &lt;&lt; &quot;, timestamp: &quot; &lt;&lt; frame.timestamp()
+          &lt;&lt; &quot;, hands: &quot; &lt;&lt; frame.hands().count()
+          &lt;&lt; &quot;, fingers: &quot; &lt;&lt; frame.fingers().count();
+}
+</pre></div>
+</div>
+<p>Run your sample again, put a hand or two over the Leap Motion device and you should now see the basic statistics of each frame printed to the console window.</p>
+<p>I&#8217;ll end this tutorial here, but you can look at the rest of the code in the original sample program for examples on how to get all the <a class="reference external" href="../api/Leap.Hand.html"><tt class="docutils literal"><span class="pre">Hand</span></tt></a>, <a class="reference external" href="../api/Leap.Finger.html"><tt class="docutils literal"><span class="pre">Finger</span></tt></a>, <a class="reference external" href="../api/Leap.Arm.html"><tt class="docutils literal"><span class="pre">Arm</span></tt></a>, and <a class="reference external" href="../api/Leap.Bone.html"><tt class="docutils literal"><span class="pre">Bone</span></tt></a> objects in a frame.</p>
+</div>
+<div class="section" id="run-sample">
+<span id="id4"></span><h2>Running the Sample<a class="headerlink" href="#run-sample" title="Permalink to this headline">¶</a></h2>
+<p>On Mac and Linux, use <tt class="docutils literal"><span class="pre">make</span></tt> to build your sample program with the <tt class="docutils literal"><span class="pre">makefile</span></tt> included in the SDK samples folder, then execute the result:</p>
+<div class="highlight-python"><div class="highlight"><pre>make
+./sample
+</pre></div>
+</div>
+<p>On Windows, open the Visual Studio solution file in the <tt class="docutils literal"><span class="pre">samples</span></tt> folder, which is already set up to build and run the <cite>Sample.cpp`</cite> file.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Hello World</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-the-leap-motion-controller-works">How the Leap Motion Controller Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-up-the-files">Set Up the Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-connected">Get Connected</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#to-listen-or-not-to-listen">To Listen or not to Listen?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on-connect">On Connect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on-frame">On Frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-sample">Running the Sample</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Setup.html">Setting Up a Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Configuration.html">Runtime Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Policies.html">Controller Policies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

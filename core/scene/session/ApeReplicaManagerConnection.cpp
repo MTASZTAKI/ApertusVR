@@ -39,6 +39,12 @@ SOFTWARE.*/
 #include "ApeManualMaterialImpl.h"
 #include "ApePbsPassImpl.h"
 #include "ApeManualPassImpl.h"
+#include "ApeBrowserImpl.h"
+#include "ApeUnitTextureImpl.h"
+#include "ApeRayGeometryImpl.h"
+#include "ApeSkyImpl.h"
+#include "ApeWaterImpl.h"
+#include "ApePointCloudImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -145,6 +151,36 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::PASS_MANUAL).lock())
 				return ((Ape::ManualPassImpl*)entity.get());
+		}
+		else if (objectType == "Browser")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::BROWSER).lock())
+				return ((Ape::BrowserImpl*)entity.get());
+		}
+		else if (objectType == "UnitTexture")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_UNIT).lock())
+				return ((Ape::UnitTextureImpl*)entity.get());
+		}
+		else if (objectType == "RayGeometry")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_RAY).lock())
+				return ((Ape::RayGeometryImpl*)entity.get());
+		}
+		else if (objectType == "Sky")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::SKY).lock())
+				return ((Ape::SkyImpl*)entity.get());
+		}
+		else if (objectType == "Water")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::WATER).lock())
+				return ((Ape::WaterImpl*)entity.get());
+		}
+		else if (objectType == "PointCloud")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::POINT_CLOUD).lock())
+				return ((Ape::PointCloudImpl*)entity.get());
 		}
 	}
 	

@@ -1,0 +1,847 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pointable &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Matrix" href="Leap.Matrix.html" />
+    <link rel="prev" title="InteractionBox" href="Leap.InteractionBox.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/api/Leap.Pointable.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Pointable.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/api/Leap.Pointable.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.InteractionBox.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Matrix.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Pointable.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Pointable.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Pointable.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Pointable.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Pointable
+</span> -->
+        
+  <div class="section" id="id25">
+<h1>Pointable<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h1>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Pointable.direction" title="Pointable.direction"><tt class="xref js js-attr docutils literal"><span class="pre">direction</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.id" title="Pointable.id"><tt class="xref js js-attr docutils literal"><span class="pre">id</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.length" title="Pointable.length"><tt class="xref js js-attr docutils literal"><span class="pre">length</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.stabilizedTipPosition" title="Pointable.stabilizedTipPosition"><tt class="xref js js-attr docutils literal"><span class="pre">stabilizedTipPosition</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.timeVisible" title="Pointable.timeVisible"><tt class="xref js js-attr docutils literal"><span class="pre">timeVisible</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.tipPosition" title="Pointable.tipPosition"><tt class="xref js js-attr docutils literal"><span class="pre">tipPosition</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.tipVelocity" title="Pointable.tipVelocity"><tt class="xref js js-attr docutils literal"><span class="pre">tipVelocity</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.tool" title="Pointable.tool"><tt class="xref js js-attr docutils literal"><span class="pre">tool</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.touchDistance" title="Pointable.touchDistance"><tt class="xref js js-attr docutils literal"><span class="pre">touchDistance</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.touchZone" title="Pointable.touchZone"><tt class="xref js js-attr docutils literal"><span class="pre">touchZone</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.valid" title="Pointable.valid"><tt class="xref js js-attr docutils literal"><span class="pre">valid</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.width" title="Pointable.width"><tt class="xref js js-attr docutils literal"><span class="pre">width</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Functions:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Pointable.hand" title="Pointable.hand"><tt class="xref js js-func docutils literal"><span class="pre">hand()</span></tt></a></li>
+<li><a class="reference internal" href="#Pointable.toString" title="Pointable.toString"><tt class="xref js js-func docutils literal"><span class="pre">toString()</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Pointable">
+<em class="property">class </em><tt class="descname">Pointable</tt><big>(</big><big>)</big><a class="headerlink" href="#Pointable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Pointable class reports the physical characteristics of a detected
+finger.</p>
+<p>Note that Pointable objects can be invalid, which means that they do not
+contain valid tracking data and do not correspond to a physical entity.
+Invalid Pointable objects can be the result of asking for a Pointable
+object using an ID from an earlier frame when no Pointable objects with
+that ID exist in the current frame. A Pointable object created from the
+Pointable constructor is also invalid. Test for validity with the
+<a class="reference internal" href="#Pointable.valid" title="Pointable.valid"><tt class="xref js js-attr docutils literal"><span class="pre">valid</span></tt></a> property.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">pointable</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">pointables</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">direction</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">stabilizedPosition</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">stabilizedTipPosition</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">position</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">tipPosition</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">speed</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">tipVelocity</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">touchDistance</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">touchDistance</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">zone</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">touchZone</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="constructors container">
+<dl class="function">
+<dt>
+<tt class="descname">Pointable</tt><big>(</big><big>)</big></dt>
+<dd><p>Constructs a Pointable object.</p>
+<p>An uninitialized pointable is considered invalid. Get valid Pointable
+objects from a <a class="reference internal" href="Leap.Frame.html#Frame" title="Frame"><tt class="xref js js-class docutils literal"><span class="pre">Frame()</span></tt></a> or a <a class="reference internal" href="Leap.Hand.html#Hand" title="Hand"><tt class="xref js js-class docutils literal"><span class="pre">Hand()</span></tt></a> object.</p>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Pointable.direction">
+<tt class="descclassname">Pointable.</tt><tt class="descname">direction</tt><a class="headerlink" href="#Pointable.direction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number[] &#8211; A 3-element array representing a unit direction vector.</td>
+</tr>
+</tbody>
+</table>
+<p>The direction in which this finger is pointing.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">direction</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The direction is expressed as a unit vector pointing in the same
+direction as the tip.</p>
+<p><img alt="FingerImage" src="api/../../../images/Leap_Finger_Model.png" /></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.id">
+<tt class="descclassname">Pointable.</tt><tt class="descname">id</tt><a class="headerlink" href="#Pointable.id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">String</td>
+</tr>
+</tbody>
+</table>
+<p>A unique ID assigned to this Pointable object, whose value remains the
+same across consecutive frames while the tracked finger remains
+visible. If tracking is lost (for example, when a finger is occluded by
+another finger or when it is withdrawn from the Leap field of view), the
+Leap may assign a new ID when it detects the entity in a future frame.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Use the ID value with the <a class="reference internal" href="Leap.Frame.html#Frame.pointable" title="Frame.pointable"><tt class="xref js js-func docutils literal"><span class="pre">Frame.pointable()</span></tt></a> and <tt class="xref js js-func docutils literal"><span class="pre">Hand.pointable()</span></tt>
+functions to find this Pointable object in future frames.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.length">
+<tt class="descclassname">Pointable.</tt><tt class="descname">length</tt><a class="headerlink" href="#Pointable.length" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number</td>
+</tr>
+</tbody>
+</table>
+<p>The estimated length of the finger in millimeters.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The reported length is the visible length of the finger from the
+hand to tip. If the length isn&#8217;t known, then a value of 0 is returned.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.stabilizedTipPosition">
+<tt class="descclassname">Pointable.</tt><tt class="descname">stabilizedTipPosition</tt><a class="headerlink" href="#Pointable.stabilizedTipPosition" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number[] &#8211; a 3-element array representing a position vector.</td>
+</tr>
+</tbody>
+</table>
+<p>The tip position in millimeters from the Leap origin. Stabilized based
+on the velocity of the pointable to make precise positioning easier.</p>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;p&gt;Stabilized Position: &lt;span id=&quot;stabPosition&quot;&gt;…&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Difference from tip position: &lt;span id=&quot;delta&quot;&gt;…&lt;/span&gt;&lt;/p&gt;
+&lt;script&gt;
+var stabilizedDisplay = document.getElementById(&quot;stabPosition&quot;);
+var deltaDisplay = document.getElementById(&quot;delta&quot;);
+
+var controller = new Leap.Controller();
+controller.on(&#39;frame&#39;, function(frame){
+    if(frame.pointables.length &gt; 0)
+    {
+        var pointable = frame.pointables[0];
+        var stabilizedPosition = pointable.stabilizedTipPosition;
+        var tipPosition = pointable.tipPosition;
+        stabilizedDisplay.innerText = &quot;(&quot; + stabilizedPosition[0] + &quot;, &quot; 
+                                          + stabilizedPosition[1] + &quot;, &quot; 
+                                          + stabilizedPosition[2] + &quot;)&quot;;
+        deltaDisplay.innerText = &quot;(&quot; + (tipPosition[0] - stabilizedPosition[0]) + &quot;, &quot;
+                                     + (tipPosition[1] - stabilizedPosition[1]) + &quot;, &quot;
+                                     + (tipPosition[2] - stabilizedPosition[2]) + &quot;)&quot;;
+    }
+});
+controller.connect();
+&lt;/script&gt;
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.timeVisible">
+<tt class="descclassname">Pointable.</tt><tt class="descname">timeVisible</tt><a class="headerlink" href="#Pointable.timeVisible" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number</td>
+</tr>
+</tbody>
+</table>
+<p>The amount of time this pointable has been continuously visible to the Leap Motion controller in seconds.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">secondsVisible</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">timeVisible</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>By ignoring Pointable objects with a small timeVisible value, can filter out a certain amount of noise and spuriously detected hands.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.tipPosition">
+<tt class="descclassname">Pointable.</tt><tt class="descname">tipPosition</tt><a class="headerlink" href="#Pointable.tipPosition" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number[] &#8211; a 3-element array representing a position vector.</td>
+</tr>
+</tbody>
+</table>
+<p>The tip position in millimeters from the Leap origin.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">tipPostition</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">tipPosition</span><span class="p">;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.tipVelocity">
+<tt class="descclassname">Pointable.</tt><tt class="descname">tipVelocity</tt><a class="headerlink" href="#Pointable.tipVelocity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number[] &#8211; a 3-element array representing a vector.</td>
+</tr>
+</tbody>
+</table>
+<p>The rate of change of the tip position in millimeters/second.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">speed</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">tipVelocity</span><span class="p">;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.tool">
+<tt class="descclassname">Pointable.</tt><tt class="descname">tool</tt><a class="headerlink" href="#Pointable.tool" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice</strong> Tools are deprecated in version 3.0.</p>
+<p>Whether or not the Pointable is believed to be a tool. Tools are
+generally longer, thinner, and straighter than fingers.</p>
+<p>If tool is false, then this Pointable must be a finger.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.touchDistance">
+<tt class="descclassname">Pointable.</tt><tt class="descname">touchDistance</tt><a class="headerlink" href="#Pointable.touchDistance" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number</td>
+</tr>
+</tbody>
+</table>
+<p>A value proportional to the distance between this Pointable object and the
+adaptive touch plane.</p>
+<p><img alt="Touch_Plane" src="api/../../../images/Leap_Touch_Plane.png" /></p>
+<p>The touch distance is a value in the range [-1, 1]. The value 1.0 indicates the
+Pointable is at the far edge of the hovering zone. The value 0 indicates the
+Pointable is just entering the touching zone. A value of -1.0 indicates the
+Pointable is firmly within the touching zone. Values in between are
+proportional to the distance from the plane. Thus, the touchDistance of 0.5
+indicates that the Pointable is halfway into the hovering zone.</p>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;p&gt;Distance: &lt;span id=&quot;distance&quot;&gt;…&lt;/span&gt;&lt;/p&gt;
+&lt;script&gt;
+var distanceDisplay = document.getElementById(&quot;distance&quot;);
+
+var controller = new Leap.Controller();
+controller.on(&#39;frame&#39;, function(frame){
+    if(frame.pointables.length &gt; 0)
+    {
+        var touchDistance = frame.pointables[0].touchDistance;
+        distanceDisplay.innerText = touchDistance;
+    }
+});
+controller.connect();
+&lt;/script&gt;
+</pre></div>
+</div>
+<p>You can use the <tt class="docutils literal"><span class="pre">touchDistance</span></tt> value to modulate visual feedback given to the
+user as their fingers close in on a touch target, such as a button.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.touchZone">
+<tt class="descclassname">Pointable.</tt><tt class="descname">touchZone</tt><a class="headerlink" href="#Pointable.touchZone" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">String</td>
+</tr>
+</tbody>
+</table>
+<p>The Leap Motion software computes the touch zone based on a floating touch
+plane that adapts to the user&#8217;s finger movement and hand posture. The Leap
+Motion software interprets purposeful movements toward this plane as potential touch
+points. When a Pointable moves close to the adaptive touch plane, it enters the
+&#8220;hovering&#8221; zone. When a Pointable reaches or passes through the plane, it enters
+the &#8220;touching&#8221; zone.</p>
+<div class="highlight-javascript"><div class="highlight"><pre>&lt;p&gt;Zone: &lt;span id=&quot;zone&quot;&gt;…&lt;/span&gt;&lt;/p&gt;
+&lt;script&gt;
+var zoneDisplay = document.getElementById(&quot;zone&quot;);
+
+var controller = new Leap.Controller();
+controller.on(&#39;frame&#39;, function(frame){
+    if(frame.pointables.length &gt; 0)
+    {
+        var touchZone = frame.pointables[0].touchZone;
+        zoneDisplay.innerText = touchZone;
+    }
+});
+controller.connect();
+&lt;/script&gt;
+</pre></div>
+</div>
+<p>The following example (plug in your Leap Motion Controller) illustrates both the <tt class="docutils literal"><span class="pre">touch_zone</span></tt>
+and the <tt class="docutils literal"><span class="pre">touch_distance</span></tt> attributes. Touching pointables are colored red, hovering pointables are
+green, and those outside either zone are a faint blue.</p>
+<div id="stage" style="background-color:rgb(191,191,191); width:400px; height:200"></div>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/kineticjs/5.0.6/kinetic.min.js"></script>
+<script>
+  var touchPoints = {};
+  touchPoints.stageWidth = 400;
+  touchPoints.stageHeight = 200;
+  
+  touchPoints.tips = new Array(10);
+  touchPoints.labels = new Array(10);
+  
+  touchPoints.stage = new Kinetic.Stage({
+    container: 'stage',
+    width: touchPoints.stageWidth,
+    height: touchPoints.stageHeight
+  });
+
+  touchPoints.leap = new Leap.Controller();
+  touchPoints.leap.connect();
+  
+  touchPoints.layer = new Kinetic.Layer();
+  for(var t = 0; t< 10; t++)
+  {
+var tip = new Kinetic.Circle({
+  x: 239,
+  y: 75,
+  radius: 20,
+  fill: 'green',
+  stroke: 'black',
+  strokeWidth: 4,
+  opacity:.5,
+  visible: false
+});
+touchPoints.tips[t] = tip;
+touchPoints.layer.add(tip);
+
+var label = new Kinetic.Text({
+    text: 'bar',
+    fontSize: 15,
+    visible: false,
+    fill: 'black'
+});
+touchPoints.labels[t] = label;
+touchPoints.layer.add(label);
+    } 
+
+  // add the layer to the stage
+  touchPoints.stage.add(touchPoints.layer);
+  
+  touchPoints.anim = new Kinetic.Animation(function(frame) {
+    var time = frame.time,
+  timeDiff = frame.timeDiff,
+  frameRate = frame.frameRate;
+
+    // update stuff
+    var tipPointer = 0;
+    var leapFrame = touchPoints.leap.frame();
+    if(leapFrame.valid)
+    {
+  var iBox = leapFrame.interactionBox;
+  for(var p = 0; p < leapFrame.pointables.length; p++)
+  {
+      var pointable = leapFrame.pointables[p];
+      var pos = iBox.normalizePoint(pointable.tipPosition,true);
+      touchPoints.tips[tipPointer].x(pos[0] * touchPoints.stageWidth);
+      touchPoints.tips[tipPointer].y(touchPoints.stageHeight - pos[1] * touchPoints.stageHeight);
+      touchPoints.tips[tipPointer].visible(true);
+      if(pointable.touchZone == "hovering" )
+      {
+          touchPoints.tips[tipPointer].opacity(.375 - pointable.touchDistance * .2);
+          touchPoints.tips[tipPointer].fill('rgb(0,128,0)');
+      }
+      else if(pointable.touchZone == "touching" )
+      {
+          touchPoints.tips[tipPointer].opacity(.375 - pointable.touchDistance * .5);
+          touchPoints.tips[tipPointer].fill('rgb(128,0,0)');
+      }
+      else
+      {
+         touchPoints.tips[tipPointer].opacity(.1);
+         touchPoints.tips[tipPointer].fill('rgb(0,0,128)');
+      }
+      
+      touchPoints.labels[tipPointer].text(pointable.touchDistance.toFixed(2));
+      touchPoints.labels[tipPointer].x(touchPoints.tips[tipPointer].x() - 15);
+      touchPoints.labels[tipPointer].y(touchPoints.tips[tipPointer].y() - 8);
+      touchPoints.labels[tipPointer].visible(true);
+      if(tipPointer < 9) tipPointer++;
+  }
+  
+  while(tipPointer<=9){
+    touchPoints.labels[tipPointer].visible(false);
+    touchPoints.tips[tipPointer++].visible(false);
+ }
+    }
+  }, touchPoints.layer);
+
+  touchPoints.anim.start();
+</script>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.valid">
+<tt class="descclassname">Pointable.</tt><tt class="descname">valid</tt><a class="headerlink" href="#Pointable.valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Indicates whether this is a valid Pointable object.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="nx">pointable</span><span class="p">.</span><span class="nx">valid</span><span class="p">){</span>
+    <span class="c1">//...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Pointable.width">
+<tt class="descclassname">Pointable.</tt><tt class="descname">width</tt><a class="headerlink" href="#Pointable.width" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">number</td>
+</tr>
+</tbody>
+</table>
+<p>The estimated width of the finger in millimeters.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">averageThickness</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span> 
+</pre></div>
+</div>
+<p>The reported width is the average width of the visible portion of the
+finger from the hand to the tip. If the width isn&#8217;t known, then a value of
+0 is returned.</p>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<dl class="function">
+<dt id="Pointable.hand">
+<tt class="descclassname">Pointable.</tt><tt class="descname">hand</tt><big>(</big><big>)</big><a class="headerlink" href="#Pointable.hand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the hand associated with this a finger.</p>
+<p>In version 2+, tools are not associated with hands. This method always
+returns an invalid Hand object for tools.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">handOfPointable</span> <span class="o">=</span> <span class="nx">pointable</span><span class="p">.</span><span class="nx">hand</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>if the Hand object is no longer available, then an invalid Hand object is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Hand.html#Hand" title="Hand"><tt class="xref js js-class docutils literal"><span class="pre">Hand()</span></tt></a> &#8211; the hand to which this pointable is attached.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Pointable.toString">
+<tt class="descclassname">Pointable.</tt><tt class="descname">toString</tt><big>(</big><big>)</big><a class="headerlink" href="#Pointable.toString" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string containing a brief, human readable description of the Pointable
+object.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">pointable</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String &#8211; A description of the Pointable object as a string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="data container">
+<dl class="data">
+<dt id="Pointable.Invalid">
+<tt class="descclassname">Pointable.</tt><tt class="descname">Invalid</tt><a class="headerlink" href="#Pointable.Invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Pointable</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>An invalid Pointable object.</p>
+<p>You can use this Pointable instance in comparisons testing whether a
+given Pointable instance is valid or invalid. (You can also use the
+<a class="reference internal" href="#Pointable.valid" title="Pointable.valid"><tt class="xref js js-attr docutils literal"><span class="pre">valid</span></tt></a> property.)</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Classes.html#leap-namespace">Leap namespace</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Bone.html#id28">Bone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Controller.html#id33">Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Finger.html#id21">Finger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Frame.html#id30">Frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Hand.html#id54">Hand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id25">Pointable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,9 +1,9 @@
 {
-    "renderSystem" : "DX11",
-	"lodLevels" : {
-			"autoGenerateAndSave": false,
-			"bias" : 0.5 
-		},
+    "renderSystem": "DX11",
+    "lodLevels": {
+        "autoGenerateAndSave": false,
+        "bias": 0.5
+    },
     "renderWindows": [
         {
             "monitorIndex": 0,
@@ -36,4 +36,3 @@
         }
     ]
 }
-

@@ -49,7 +49,7 @@ int main (int argc, char** argv)
 		std::cout << "usage: host | guest | local | local_cave | host_cave " << std::endl;
 		return 0;
 	}
-	Ape::System::Start(configDir.str(), true);
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

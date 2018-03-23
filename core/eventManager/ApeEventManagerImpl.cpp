@@ -23,8 +23,6 @@ SOFTWARE.*/
 
 #include "ApeEventManagerImpl.h"
 
-template<> Ape::IEventManager* Ape::Singleton<Ape::IEventManager>::msSingleton = 0;
-
 Ape::EventManagerImpl::EventManagerImpl()
 {
 	msSingleton = this;

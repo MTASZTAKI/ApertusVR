@@ -1,0 +1,742 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Finger &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/api/Leap.Finger.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Finger.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Finger.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/api/Leap.Finger.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Finger.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Finger.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Finger.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Finger.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Finger.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Finger.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Finger
+</span> -->
+        
+  <div class="section" id="id2">
+<h1>Finger<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Properties:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a3760f0d03c577bd8a45779cf3f9a46a8">Direction</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1aef8c5698150cb2081d459d39748355bc">HandId</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1afe0b47b3c92f2f69ea3da50cb72553eb">Id</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1aa5f9c23366996e146de0128391996bdc">IsExtended</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1ab87d04698fba58ca22fe5ebecef0755e">Length</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a8c7e51d1c84f8673ed9224cc103e6f43">StabilizedTipPosition</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a0be30ced256bcdf3882d4f0d6929e283">TimeVisible</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a24f882775081fa8182a7fca2877d7ed6">TipPosition</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1aa51b84d63c25aeb0fc15554f0f61e4d5">TipVelocity</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a9d9e7e20b5414c59e0560b650a9e8797">Type</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a7de4690b4c35b991ee86032c52d974ab">Width</a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3">Bone(Bone.BoneType boneIx)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1aa6e4212ca6d56bbc5c01a59e6f458e24">Finger()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1a81146e6e16cd7eb1723b8dfd2b110740">Finger(long frameId, int handId, int fingerId, float timeVisible, Vector tipPosition, Vector tipVelocity, Vector direction, Vector stabilizedTipPosition, float width, float length, bool isExtended, Finger.FingerType type, Bone metacarpal, Bone proximal, Bone intermediate, Bone distal)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_finger_1aa73e7c4dd1df5fd5fbf81c7764ee1533">ToString()</a></li>
+</ul>
+</div>
+<div class="line-block" id="csharpclass_leap_1_1_finger">
+<div class="line"><em>class</em> <strong>Leap::Finger</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> class represents a tracked finger. </p>
+<p><p>Fingers are objects that the Leap Motion software has classified as a finger. Get valid <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> objects from a <a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> or a <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> object.</p>
+<p>Fingers may be permanently associated to a hand. In this case the angular order of the finger IDs will be invariant. As fingers move in and out of view it is possible for the guessed ID of a finger to be incorrect. Consequently, it may be necessary for finger IDs to be exchanged. All tracked properties, such as velocity, will remain continuous in the API. However, quantities that are derived from the API output (such as a history of positions) will be discontinuous unless they have a corresponding ID exchange. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_finger_1a10a29d6e6abd79a9d6c8ebad0ba18b9d"></span><strong>FingerType enum</strong></p>
+<blockquote>
+<div><p>Enumerates the names of the fingers. </p>
+<p>Members of this enumeration are returned by Finger::type() to identify a <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.0 </dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">TYPE_THUMB</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - </li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_INDEX</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - </li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_MIDDLE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - </li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_RING</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">3</span></tt> - </li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_PINKY</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">4</span></tt> - <p>The pinky or little finger. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_UNKNOWN</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">-1</span></tt> - </li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> <strong>Bone</strong>(<a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1ac0b6411718b2d0a444dc2fa6c541fc0a"><em>Bone.BoneType</em></a> boneIx)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The bone at a given bone index on this finger. </p>
+<p><p><pre class="literal-block">
+List&lt;Finger&gt; fingers = hand.Fingers;
+foreach(<a class="reference internal" href="#csharpclass_leap_1_1_finger_1aa6e4212ca6d56bbc5c01a59e6f458e24"><em>Finger</em></a> finger in fingers){
+    <a class="reference internal" href="#csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3"><em>Bone</em></a> bone;
+    foreach (<a class="reference internal" href="#csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3"><em>Bone</em></a>.<a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1ac0b6411718b2d0a444dc2fa6c541fc0a"><em>BoneType</em></a> boneType in (<a class="reference internal" href="#csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3"><em>Bone</em></a>.<a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1ac0b6411718b2d0a444dc2fa6c541fc0a"><em>BoneType</em></a>[]) Enum.GetValues(typeof(<a class="reference internal" href="#csharpclass_leap_1_1_finger_1a963225b3ab4b062d235b49a778271db3"><em>Bone</em></a>.<a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1ac0b6411718b2d0a444dc2fa6c541fc0a"><em>BoneType</em></a>)))
+    {
+        bone = finger.<a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1aff891d4ef49cda0171377875375ec7bf"><em>Bone</em></a>(boneType);
+        // ... Use bone
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> that has the specified bone type. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">boneIx</span></tt> - <p>An index value from the <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone_1a034c92ea5bf6a997721a6db36e9c5115"><em>Bone::Type</em></a> enumeration identifying the bone of interest. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1aa6e4212ca6d56bbc5c01a59e6f458e24"></span><div class="line-block">
+<div class="line"> <strong>Finger</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a finger. </p>
+<p><p>An uninitialized finger is considered invalid. Get valid <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> objects from a <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> object.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a81146e6e16cd7eb1723b8dfd2b110740"></span><div class="line-block">
+<div class="line"> <strong>Finger</strong>(long frameId, int handId, int fingerId, float timeVisible, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> tipPosition, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> tipVelocity, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> direction, <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> stabilizedTipPosition, float width, float length, bool isExtended, <a class="reference internal" href="#csharpclass_leap_1_1_finger_1a10a29d6e6abd79a9d6c8ebad0ba18b9d"><em>Finger.FingerType</em></a> type, <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> metacarpal, <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> proximal, <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> intermediate, <a class="reference internal" href="Leap.Bone.html#csharpclass_leap_1_1_bone"><em>Bone</em></a> distal)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a finger. </p>
+<p><p>Generally, you should not create your own finger objects. Such objects will not have valid tracking data. Get valid finger objects from a hand in a frame received from the service.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">frameId</span></tt> - <p>The id of the frame this finger appears in. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">handId</span></tt> - <p>The id of the hand this finger belongs to. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">fingerId</span></tt> - <p>The id of this finger (handId + 0-4 for finger position). </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">timeVisible</span></tt> - <p>How long this instance of the finger has been visible. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">tipPosition</span></tt> - <p>The position of the finger tip. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">tipVelocity</span></tt> - <p>The velocity of the finger tip. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">direction</span></tt> - <p>The pointing direction of the finger. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">stabilizedTipPosition</span></tt> - <p>The stabilized tip position. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">width</span></tt> - <p>The average width of the finger. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">length</span></tt> - <p>The length of the finger. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">isExtended</span></tt> - <p>Whether the finger is more-or-less straight. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">type</span></tt> - <p>The finger name. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">metacarpal</span></tt> - <p>The first bone of the finger (inside the hand). </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">proximal</span></tt> - <p>The second bone of the finger </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">intermediate</span></tt> - <p>The third bone of the finger. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">distal</span></tt> - <p>The end bone. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1aa73e7c4dd1df5fd5fbf81c7764ee1533"></span><div class="line-block">
+<div class="line">override string <strong>ToString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human readable description of the <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. </p>
+<p><p><pre class="literal-block">
+String description = finger.ToString ();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A description of the <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object as a string. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_finger_1a3760f0d03c577bd8a45779cf3f9a46a8"></span><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>Direction</strong></p>
+<blockquote>
+<div><p>The direction in which this finger or tool is pointing. </p>
+<p><p><pre class="literal-block">
+Vector direction = finger.Direction;
+</pre>
+</p>
+<p>The direction is expressed as a unit vector pointing in the same direction as the tip.</p>
+<p><img alt="api/../../../images/Leap_Finger_Model.png" src="api/../../../images/Leap_Finger_Model.png" /></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> pointing in the same direction as the tip of this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1aef8c5698150cb2081d459d39748355bc"></span>int <strong>HandId</strong></p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> associated with a finger. </p>
+<p><p><div class="highlight-python"><div class="highlight"><pre>
+</pre></div>
+</div>
+</p>
+<p>Not that in version 2+, tools are not associated with hands. For tools, this function always returns an invalid <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> object.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The associated <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> object, if available; otherwise, an invalid <a class="reference internal" href="Leap.Hand.html#csharpclass_leap_1_1_hand"><em>Hand</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1afe0b47b3c92f2f69ea3da50cb72553eb"></span>int <strong>Id</strong></p>
+<blockquote>
+<div><p>A unique ID assigned to this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object, whose value remains the same across consecutive frames while the tracked finger or tool remains visible. </p>
+<p><p>If tracking is lost (for example, when a finger is occluded by another finger or when it is withdrawn from the Leap Motion <a class="reference internal" href="Leap.Controller.html#csharpclass_leap_1_1_controller"><em>Controller</em></a> field of view), the Leap Motion software may assign a new ID when it detects the entity in a future frame.</p>
+<p><pre class="literal-block">
+int id = finger.Id;
+</pre>
+</p>
+<p>Use the ID value with the Frame::pointable() function to find this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object in future frames.</p>
+<p>IDs should be from 1 to 100 (inclusive). If more than 100 objects are tracked an IDs of -1 will be used until an ID in the defined range is available.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The ID assigned to this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1aa5f9c23366996e146de0128391996bdc"></span>bool <strong>IsExtended</strong></p>
+<blockquote>
+<div><p>Whether or not this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> is in an extended posture. </p>
+<p><p>A finger is considered extended if it is extended straight from the hand as if pointing. A finger is not extended when it is bent down and curled towards the palm. Tools are always extended.</p>
+<p><pre class="literal-block">
+int extendedFingers = 0;
+for (int f = 0; f &lt; hand.Fingers.Count; f++) {
+    <a class="reference internal" href="#csharpclass_leap_1_1_finger_1aa6e4212ca6d56bbc5c01a59e6f458e24"><em>Finger</em></a> digit = hand.Fingers [f];
+    if (digit.IsExtended)
+        extendedFingers++;
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if the pointable is extended. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1ab87d04698fba58ca22fe5ebecef0755e"></span>float <strong>Length</strong></p>
+<blockquote>
+<div><p>The estimated length of the finger or tool in millimeters. </p>
+<p><p><pre class="literal-block">
+float length = finger.Length;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The estimated length of this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a8c7e51d1c84f8673ed9224cc103e6f43"></span><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>StabilizedTipPosition</strong></p>
+<blockquote>
+<div><p>The stabilized tip position of this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a>. </p>
+<p><p>Smoothing and stabilization is performed in order to make this value more suitable for interaction with 2D content. The stabilized position lags behind the tip position by a variable amount, depending primarily on the speed of movement.</p>
+<p><pre class="literal-block">
+Vector stabilized = finger.StabilizedTipPosition;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A modified tip position of this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object with some additional smoothing and stabilization applied. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a0be30ced256bcdf3882d4f0d6929e283"></span>float <strong>TimeVisible</strong></p>
+<blockquote>
+<div><p>The duration of time this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> has been visible to the Leap Motion <a class="reference internal" href="Leap.Controller.html#csharpclass_leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p><pre class="literal-block">
+float lifetime = finger.TimeVisible;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The duration (in seconds) that this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> has been tracked. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a24f882775081fa8182a7fca2877d7ed6"></span><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>TipPosition</strong></p>
+<blockquote>
+<div><p>The tip position in millimeters from the Leap Motion origin. </p>
+<p><p><pre class="literal-block">
+Vector currentPosition = finger.TipPosition;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the coordinates of the tip position. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1aa51b84d63c25aeb0fc15554f0f61e4d5"></span><a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> <strong>TipVelocity</strong></p>
+<blockquote>
+<div><p>The rate of change of the tip position in millimeters/second. </p>
+<p><p><pre class="literal-block">
+Vector velocity = finger.TipVelocity;
+float speed = velocity.Magnitude;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#csharpstruct_leap_1_1_vector"><em>Vector</em></a> containing the coordinates of the tip velocity. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a9d9e7e20b5414c59e0560b650a9e8797"></span><a class="reference internal" href="#csharpclass_leap_1_1_finger_1a10a29d6e6abd79a9d6c8ebad0ba18b9d"><em>Finger.FingerType</em></a> <strong>Type</strong></p>
+<blockquote>
+<div><p>The name of this finger. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#csharpclass_leap_1_1_finger_1aa6e4212ca6d56bbc5c01a59e6f458e24"><em>Finger</em></a>.FingerType fingerType = finger.Type;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The anatomical type of this finger as a member of the <a class="reference internal" href="#csharpclass_leap_1_1_finger_1a9d9e7e20b5414c59e0560b650a9e8797"><em>Finger::Type</em></a> enumeration. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_finger_1a7de4690b4c35b991ee86032c52d974ab"></span>float <strong>Width</strong></p>
+<blockquote>
+<div><p>The estimated width of the finger or tool in millimeters. </p>
+<p><p><pre class="literal-block">
+float averageThickness = finger.Width;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The estimated width of this <a class="reference internal" href="#csharpclass_leap_1_1_finger"><em>Finger</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="extension-functions">
+<h2>Extension Functions<a class="headerlink" href="#extension-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="public-static-finger-copyfrom-this-finger-finger-finger-source">
+<h3>public static Finger CopyFrom(this Finger finger, Finger source)<a class="headerlink" href="#public-static-finger-copyfrom-this-finger-finger-finger-source" title="Permalink to this headline">¶</a></h3>
+<p>Copies the data from a source finger into this finger.  After the operation is complete, the finger will be identical to the source finger.</p>
+<p>Parameter: <tt class="docutils literal"><span class="pre">source</span></tt> The source finger that is copied into this finger.</p>
+</div>
+<div class="section" id="public-static-finger-transform-this-finger-finger-leaptransform-transform">
+<h3>public static Finger Transform(this Finger finger, LeapTransform transform)<a class="headerlink" href="#public-static-finger-transform-this-finger-finger-leaptransform-transform" title="Permalink to this headline">¶</a></h3>
+<p>Does an in-place, rigid transformation of this Finger.</p>
+<p>Parameter: <tt class="docutils literal"><span class="pre">transform</span></tt> A LeapTransform containing the desired translation, rotation, and scale to be applied to this Finger.</p>
+</div>
+<div class="section" id="public-static-finger-transformedcopy-this-finger-finger-leaptransform-transform">
+<h3>public static Finger TransformedCopy(this Finger finger, LeapTransform transform)<a class="headerlink" href="#public-static-finger-transformedcopy-this-finger-finger-leaptransform-transform" title="Permalink to this headline">¶</a></h3>
+<p>Returns a new finger that is a copy of this finger, with an additional rigid transformation applied to it.</p>
+<p>Parameter: <tt class="docutils literal"><span class="pre">transform</span></tt> The transformation to be applied to the copied finger.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

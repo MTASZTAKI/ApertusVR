@@ -1,0 +1,57 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.ControlsBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2014"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Microsoft.Samples.Kinect.ControlsBasics"
+        Name="ControlsBasicsWindow"
+        Title="Controls Basics"
+        mc:Ignorable="d"
+        d:DesignWidth="1200"
+        d:DesignHeight="700"
+        MinWidth="500"
+        MinHeight="700"
+        FontFamily="Segoe UI"
+        WindowState="Maximized"
+        >
+    
+    <k:KinectRegion x:Name="kinectRegion">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="10 0 10 20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="backButton" Visibility="Hidden" Grid.Column="0" Style="{StaticResource BackButtonStyle}" Click="GoBack" />
+
+                <Image Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Source="Images\Logo.png" Stretch="None" Margin="0 0 0 4"/>
+                <k:KinectUserViewer Grid.Column="1" Height="100" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 -1 0" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontSize="18">Controls Basics</TextBlock>
+            </Grid>
+
+            <ContentControl Grid.Row="1" x:Name="navigationRegion">
+                <Grid x:Name="kinectRegionGrid" Margin="10,20,10,20">
+                    <ScrollViewer Grid.Row="0" Name="scrollViewer" 
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled" 
+                                  k:KinectRegion.IsScrollInertiaEnabled="true" >
+                        <ItemsControl Grid.Row="0" Name="itemsControl" ItemTemplate="{StaticResource Kinect250x250ItemTemplate}" Button.Click="ButtonClick">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="75,0,75,0" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </ContentControl>
+        </Grid>
+    </k:KinectRegion>
+</Window>

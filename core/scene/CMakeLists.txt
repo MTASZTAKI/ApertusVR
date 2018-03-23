@@ -21,9 +21,11 @@
 #SOFTWARE.
 
 # Add all header and cpp files in the directory to the project
+
 set (HEADERS
 	ApeTextGeometryImpl.h
 	ApeLightImpl.h
+	ApeBrowserImpl.h
 	ApeNodeImpl.h
 	ApeCameraImpl.h
 	ApeSceneImpl.h
@@ -42,6 +44,11 @@ set (HEADERS
 	ApeManualPassImpl.h
 	ApeManualMaterialImpl.h
 	ApeManualTextureImpl.h
+	ApeUnitTextureImpl.h
+	ApeRayGeometryImpl.h
+	ApeWaterImpl.h
+	ApeSkyImpl.h
+	ApePointCloudImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -50,9 +57,10 @@ set (HEADERS
 	session/ApeHttpManager.h
 	)
 
-set (SOURCES 
+set (SOURCES
 	ApeTextGeometryImpl.cpp
 	ApeLightImpl.cpp
+	ApeBrowserImpl.cpp
 	ApeNodeImpl.cpp
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp
@@ -71,6 +79,11 @@ set (SOURCES
 	ApeManualPassImpl.cpp
 	ApeManualMaterialImpl.cpp
 	ApeManualTextureImpl.cpp
+	ApeUnitTextureImpl.cpp
+	ApeRayGeometryImpl.cpp
+	ApeWaterImpl.cpp
+	ApeSkyImpl.cpp
+	ApePointCloudImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp
@@ -78,7 +91,7 @@ set (SOURCES
 	session/ApeLobbyManager.cpp
 	session/ApeHttpManager.cpp
 	)
-	
+
 include_directories(
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
@@ -94,6 +107,10 @@ add_library (ApeScene SHARED ${SOURCES} ${HEADERS})
 # Link with dependency libraries
 if(WIN32)
 	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager RAKNET MY_CURL ws2_32)
+endif()
+
+if(APPLE)
+	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager RAKNET)
 endif()
 
 # Add preprocessor definitions

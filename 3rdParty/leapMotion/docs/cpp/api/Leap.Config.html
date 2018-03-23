@@ -1,0 +1,799 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Config &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Controller" href="Leap.Controller.html" />
+    <link rel="prev" title="Bone" href="Leap.Bone.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/api/Leap.Config.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Config.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Config.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/api/Leap.Config.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Bone.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Controller.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Config.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Config.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Config.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Config.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Config.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Config.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Config
+</span> -->
+        
+  <div class="section" id="config">
+<h1>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a539a941e29cde8d13e413c515d9801cd">Config()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a0c29906db526241e103418296078b44c">getBool(const std::string &amp;key) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a33a13a17e6f8e4dfea77a9ae2f532180">getFloat(const std::string &amp;key) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a671ae89e4f66b2f1901d60fae7a9cf0b">getInt32(const std::string &amp;key) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a80d5dd09bca43619081fc73b8fd77a0f">getString(const std::string &amp;key) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a69458f4271dc75dfcceabe6c7b2776b8">save()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1ad72cbd1b347f59032d78732e90883168">setBool(const std::string &amp;key, bool value)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a4a2f925095136a1b720c7e7c51ede0dc">setFloat(const std::string &amp;key, float value)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1ae04917a84d2027ec9d428283d56b52b3">setInt32(const std::string &amp;key, int32_t value)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1ad48f042a50787631fa0a751a0ba935a2">setString(const std::string &amp;key, const std::string &amp;value)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_config_1a688695558ba99efbd5f453a08670aab1">type(const std::string &amp;key) const</a></li>
+</ul>
+</div>
+<div class="line-block" id="cppclass_leap_1_1_config">
+<div class="line"><em>class</em> <strong>Leap::Config</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#cppclass_leap_1_1_config"><em>Config</em></a> class provides access to Leap Motion system configuration information. </p>
+<p><p>You can get and set gesture configuration parameters using the <a class="reference internal" href="#cppclass_leap_1_1_config"><em>Config</em></a> object obtained from a connected <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> object. The key strings required to identify a configuration parameter include:</p>
+<p><table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="15%" />
+<col width="20%" />
+<col width="11%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key string</th>
+<th class="head">Value type</th>
+<th class="head">Default value</th>
+<th class="head">Units</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Gesture.Circle.MinRadius</td>
+<td>float</td>
+<td>5.0</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.Circle.MinArc</td>
+<td>float</td>
+<td>1.5 * pi</td>
+<td>radians</td>
+</tr>
+<tr class="row-even"><td>Gesture.Swipe.MinLength</td>
+<td>float</td>
+<td>150</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.Swipe.MinVelocity</td>
+<td>float</td>
+<td>1000</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-even"><td>Gesture.KeyTap.MinDownVelocity</td>
+<td>float</td>
+<td>50</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-odd"><td>Gesture.KeyTap.HistorySeconds</td>
+<td>float</td>
+<td>0.1</td>
+<td>s</td>
+</tr>
+<tr class="row-even"><td>Gesture.KeyTap.MinDistance</td>
+<td>float</td>
+<td>3.0</td>
+<td>mm</td>
+</tr>
+<tr class="row-odd"><td>Gesture.ScreenTap.MinForwardVelocity</td>
+<td>float</td>
+<td>50</td>
+<td>mm/s</td>
+</tr>
+<tr class="row-even"><td>Gesture.ScreenTap.HistorySeconds</td>
+<td>float</td>
+<td>0.1</td>
+<td>s</td>
+</tr>
+<tr class="row-odd"><td>Gesture.ScreenTap.MinDistance</td>
+<td>float</td>
+<td>5.0</td>
+<td>mm</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>After setting a configuration value, you must call the <a class="reference internal" href="#cppclass_leap_1_1_config_1a69458f4271dc75dfcceabe6c7b2776b8"><em>Config::save()</em></a> method to commit the changes. You can save after the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> has connected to the Leap Motion service/daemon. In other words, after the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> has dispatched the serviceConnected or connected events or <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>Controller::isConnected</em></a> is true. The configuration value changes are not persistent; your application needs to set the values every time it runs.</p>
+<p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="Leap.CircleGesture.html#cppclass_leap_1_1_circle_gesture"><em>CircleGesture</em></a> </dd>
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="Leap.KeyTapGesture.html#cppclass_leap_1_1_key_tap_gesture"><em>KeyTapGesture</em></a> </dd>
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="Leap.ScreenTapGesture.html#cppclass_leap_1_1_screen_tap_gesture"><em>ScreenTapGesture</em></a> </dd>
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="Leap.SwipeGesture.html#cppclass_leap_1_1_swipe_gesture"><em>SwipeGesture</em></a> </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_config_1ad9971b6ef33e02ba2c75d19c1d2518a1"></span><strong>ValueType enum</strong></p>
+<blockquote>
+<div><p>Enumerates the possible data types for configuration values. </p>
+<p>The <a class="reference internal" href="#cppclass_leap_1_1_config_1a688695558ba99efbd5f453a08670aab1"><em>Config::type()</em></a> function returns an item from the ValueType enumeration. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">TYPE_UNKNOWN</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>The data type is unknown. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_BOOLEAN</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>A boolean value. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_INT32</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - <p>A 32-bit integer. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_FLOAT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">6</span></tt> - <p>A floating-point number. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_STRING</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">8</span></tt> - <p>A string of characters. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_config_1a539a941e29cde8d13e413c515d9801cd"></span><div class="line-block">
+<div class="line"> <strong>Config</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#cppclass_leap_1_1_config"><em>Config</em></a> object. </p>
+<p><p>Do not create your own <a class="reference internal" href="#cppclass_leap_1_1_config"><em>Config</em></a> objects. Get a <a class="reference internal" href="#cppclass_leap_1_1_config"><em>Config</em></a> object using the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1af75c5cdc0275a4af12a841369592e5f2"><em>Controller::config()</em></a> function.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_config"><em>Leap::Config</em></a> config = controller.config();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a0c29906db526241e103418296078b44c"></span><div class="line-block">
+<div class="line">bool <strong>getBool</strong>(const std::string &amp; key)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the boolean representation for the specified key. </p>
+<p><p><pre class="literal-block">
+bool booleanValue = controller.config().getBool(&quot;Key.For.Bool.Setting&quot;);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a33a13a17e6f8e4dfea77a9ae2f532180"></span><div class="line-block">
+<div class="line">float <strong>getFloat</strong>(const std::string &amp; key)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the floating point representation for the specified key. </p>
+<p><p><pre class="literal-block">
+float floatValue = controller.config().getFloat(&quot;Gesture.Swipe.MinLength&quot;);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a671ae89e4f66b2f1901d60fae7a9cf0b"></span><div class="line-block">
+<div class="line">int32_t <strong>getInt32</strong>(const std::string &amp; key)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the 32-bit integer representation for the specified key. </p>
+<p><p><pre class="literal-block">
+int32_t intValue = controller.config().getInt32(&quot;Key.For.Integer.Setting&quot;);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a80d5dd09bca43619081fc73b8fd77a0f"></span><div class="line-block">
+<div class="line">std::string <strong>getString</strong>(const std::string &amp; key)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the string representation for the specified key. </p>
+<p><p><pre class="literal-block">
+std::string stringValue = controller.config().getString(&quot;Key.For.String.Setting&quot;);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a69458f4271dc75dfcceabe6c7b2776b8"></span><div class="line-block">
+<div class="line">bool <strong>save</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Saves the current state of the config. </p>
+<p><p>Call <tt class="docutils literal"><a class="reference internal" href="#cppclass_leap_1_1_config_1a69458f4271dc75dfcceabe6c7b2776b8"><em><span class="pre">save()</span></em></a></tt> after making a set of configuration changes. The <tt class="docutils literal"><a class="reference internal" href="#cppclass_leap_1_1_config_1a69458f4271dc75dfcceabe6c7b2776b8"><em><span class="pre">save()</span></em></a></tt> function transfers the configuration changes to the Leap Motion service. You can save after the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> has connected to the Leap Motion service/daemon. In other words, after the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> has dispatched the serviceConnected or connected events or <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>Controller::isConnected</em></a> is true. The configuration value changes are not persistent; your application must set the values every time it runs.</p>
+<p><pre class="literal-block">
+controller.config().setFloat(&quot;Gesture.Circle.MinRadius&quot;, 15);
+controller.config().setFloat(&quot;Gesture.Circle.MinArc&quot;, 1.7);
+bool success = controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true on success, false on failure. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1ad72cbd1b347f59032d78732e90883168"></span><div class="line-block">
+<div class="line">bool <strong>setBool</strong>(const std::string &amp; key, bool value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Sets the boolean representation for the specified key. </p>
+<p><p><pre class="literal-block">
+controller.config().setBool(&quot;tracking_tool_enabled&quot;, true);
+controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true on success, false on failure. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a4a2f925095136a1b720c7e7c51ede0dc"></span><div class="line-block">
+<div class="line">bool <strong>setFloat</strong>(const std::string &amp; key, float value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Sets the floating point representation for the specified key. </p>
+<p><p><pre class="literal-block">
+controller.config().setFloat(&quot;Gesture.Circle.MinRadius&quot;, 15);
+controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true on success, false on failure. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1ae04917a84d2027ec9d428283d56b52b3"></span><div class="line-block">
+<div class="line">bool <strong>setInt32</strong>(const std::string &amp; key, int32_t value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Sets the 32-bit integer representation for the specified key. </p>
+<p><p><pre class="literal-block">
+controller.config().setInt32(&quot;background_app_mode&quot;, 2);
+controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true on success, false on failure. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1ad48f042a50787631fa0a751a0ba935a2"></span><div class="line-block">
+<div class="line">bool <strong>setString</strong>(const std::string &amp; key, const std::string &amp; value)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Sets the string representation for the specified key. </p>
+<p><p><pre class="literal-block">
+controller.config().setString(&quot;Key.For.String.Setting&quot;, &quot;A String&quot;);
+controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true on success, false on failure. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_config_1a688695558ba99efbd5f453a08670aab1"></span><div class="line-block">
+<div class="line">ValueType <strong>type</strong>(const std::string &amp; key)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports the natural data type for the value related to the specified key. </p>
+<p><p><pre class="literal-block">
+Leap::Config::ValueType dataType = controller.config().type(&quot;Gesture.KeyTap.MinDistance&quot;);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The native data type of the value, that is, the type that does not require a data conversion. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">key</span></tt> - <p>The key for the looking up the value in the configuration dictionary. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="value-type">
+<h2>Value Type<a class="headerlink" href="#value-type" title="Permalink to this headline">¶</a></h2>
+<p><span class="target" id="cppclass_leap_1_1_config_1ad9971b6ef33e02ba2c75d19c1d2518a1"></span><strong>ValueType enum</strong></p>
+<blockquote>
+<div><p>Enumerates the possible data types for configuration values. </p>
+<p>The <a class="reference internal" href="#cppclass_leap_1_1_config_1a688695558ba99efbd5f453a08670aab1"><em>Config::type()</em></a> function returns an item from the ValueType enumeration. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">TYPE_UNKNOWN</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>The data type is unknown. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_BOOLEAN</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>A boolean value. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_INT32</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - <p>A 32-bit integer. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_FLOAT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">6</span></tt> - <p>A floating-point number. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_STRING</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">8</span></tt> - <p>A string of characters. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html">Bone</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#value-type">Value Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#frame">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#hand">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

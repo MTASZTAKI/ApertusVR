@@ -10,6 +10,14 @@ Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port)
 	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
 }
 
+Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName)
+{
+	mIp = ip;
+	mPort = port;
+	mSessionName = sessionName;
+	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
+}
+
 Ape::LobbyManager::~LobbyManager()
 {
 	

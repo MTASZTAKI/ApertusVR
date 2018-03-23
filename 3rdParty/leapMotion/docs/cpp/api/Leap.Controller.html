@@ -1,0 +1,1032 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Controller &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Device" href="Leap.Device.html" />
+    <link rel="prev" title="Config" href="Leap.Config.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/api/Leap.Controller.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Controller.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/api/Leap.Controller.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Config.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Device.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Controller.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Controller.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Controller.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Controller.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Controller.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Controller.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Controller
+</span> -->
+        
+  <div class="section" id="controller">
+<h1>Controller<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf">Controller()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a8bf8686875ab3681a080786ee0e8d3fc">Controller(Listener &amp;listener)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a147babfb14a3297648d684ea226dc5a2">addListener(Listener &amp;listener)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1ac3b46593a96240c7462125a8452667e0">clearPolicy(PolicyFlag policy) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1af75c5cdc0275a4af12a841369592e5f2">config() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a54659799281c4b8839bc7531fb2d8552">devices() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a771d9c0aa2093b63124a55b3daa8d39e">enableGesture(Gesture::Type type, bool enable=true) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a44b969a03cd7dff28965a1aac1be1766">failedDevices() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62">frame(int history=0) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1aeec44e083a954233dffcb64615c8061c">hasFocus() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263">images() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227">isConnected() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a7b842601adce8a11214e0058ab3c4d86">isGestureEnabled(Gesture::Type type) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a0eaf52e4ed386823bd1051f44d511fe6">isPaused() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313">isPolicySet(PolicyFlag policy) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a43d650dd9a40aec97b774ff6f0849ff1">isServiceConnected() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a629420c35d3c1192bc44e61f64d1e461">now() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a0fb10f7d2f159d77bf9f25718b7e6dc5">policyFlags() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a49ca389d1a7f610e7f11833a1fd4c678">removeListener(Listener &amp;listener)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1aafab2fafdec7ae38b9da6676ccf01e77">setPaused(bool pause)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f">setPolicy(PolicyFlag policy) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_controller_1a83fe28bd0d9de4aaad86596ea476e1fd">setPolicyFlags(PolicyFlag flags) const</a></li>
+</ul>
+</div>
+<div class="line-block" id="cppclass_leap_1_1_controller">
+<div class="line"><em>class</em> <strong>Leap::Controller</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> class is your main interface to the Leap Motion <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p>Create an instance of this <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> class to access frames of tracking data and configuration information. <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> data can be polled at any time using the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>Controller::frame()</em></a> function. Call <a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame()</em></a> or frame(0) to get the most recent frame. Set the history parameter to a positive integer to access previous frames. A controller stores up to 60 frames in its frame history.</p>
+<p>Polling is an appropriate strategy for applications which already have an intrinsic update loop, such as a game. You can also add an instance of a subclass of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a> to the controller to handle events as they occur. The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> dispatches events to the listener upon initialization and exiting, on connection changes, when the application gains and loses the OS input focus, and when a new frame of tracking data is available. When these events occur, the controller object invokes the appropriate callback function defined in your subclass of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a>.</p>
+<p>To access frames of tracking data as they become available:</p>
+<p></p>
+<p>When an instance of a <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> subclass is added to a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object, it calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener_1a40b6cfe4f9679aa0d1334c12fed3b9c3"><em>Listener::onInit()</em></a> function when the listener is ready for use. When a connection is established between the controller and the Leap Motion software, the controller calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener_1a6b0dd62da959d048a3cc7917cca1ccba"><em>Listener::onConnect()</em></a> function. At this point, your application will start receiving frames of data. The controller calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener_1abda5aa2c81ae8cefe01301bc5f87c8d1"><em>Listener::onFrame()</em></a> function each time a new frame is available. If the controller loses its connection with the Leap Motion software or device for any reason, it calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener_1a399521092032c7f8c8da9e62636ad6d6"><em>Listener::onDisconnect()</em></a> function. If the listener is removed from the controller or the controller is destroyed, it calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener_1ac2e32940081a691303e0fa83ab098bef"><em>Listener::onExit()</em></a> function. At that point, unless the listener is added to another controller again, it will no longer receive frames of tracking data.</p>
+<p>The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object is multithreaded and calls the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> functions on its own thread, not on an application thread. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"></span><strong>PolicyFlag enum</strong></p>
+<blockquote>
+<div><p>The supported controller policies. </p>
+<p><p>The supported policy flags are:</p>
+<p><strong>POLICY_BACKGROUND_FRAMES</strong>  requests that your application receives frames when it is not the foreground application for user input.</p>
+<p>The background frames policy determines whether an application receives frames of tracking data while in the background. By default, the Leap Motion software only sends tracking data to the foreground application. Only applications that need this ability should request the background frames policy. The &#8220;Allow Background Apps&#8221; checkbox must be enabled in the Leap Motion Control Panel or this policy will be denied.</p>
+<p><strong>POLICY_IMAGES</strong>  request that your application receives images from the device cameras. The &#8220;Allow Images&#8221; checkbox must be enabled in the Leap Motion Control Panel or this policy will be denied.</p>
+<p>The images policy determines whether an application receives image data from the Leap Motion sensors with each frame of data. By default, this data is not sent. Only applications that use the image data should request this policy.</p>
+<p><strong>POLICY_OPTIMIZE_HMD</strong>  request that the tracking be optimized for head-mounted tracking.</p>
+<p>The optimize HMD policy improves tracking in situations where the Leap Motion hardware is attached to a head-mounted display. This policy is not granted for devices that cannot be mounted to an HMD, such as Leap Motion controllers embedded in a laptop or keyboard.</p>
+<p><strong>POLICY_ALLOW_PAUSE_RESUME</strong>  request that the application be allowed to pause and unpause the Leap Motion service.</p>
+<p>Some policies can be denied if the user has disabled the feature on their Leap Motion control panel.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">POLICY_DEFAULT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>The default policy. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_BACKGROUND_FRAMES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">0)</span></tt> - <p>Receive background frames. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_IMAGES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">1)</span></tt> - <p>Receive images from sensor cameras. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>2.1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_OPTIMIZE_HMD</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">2)</span></tt> - <p>Optimize the tracking for head-mounted device. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>2.1.2 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_ALLOW_PAUSE_RESUME</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">3)</span></tt> - <p>Allow pausing and unpausing of the Leap Motion service. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>3.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_RAW_IMAGES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">6)</span></tt> - <p>Receive raw images. </p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_controller_1a147babfb14a3297648d684ea226dc5a2"></span><div class="line-block">
+<div class="line">bool <strong>addListener</strong>(<a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a>  &amp; listener)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Adds a listener to this <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p>The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> dispatches Leap Motion events to each associated listener. The order in which listener callback functions are invoked is arbitrary. If you pass a listener to the <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a>&#8216;s constructor function, it is automatically added to the list and can be removed with the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a49ca389d1a7f610e7f11833a1fd4c678"><em>Controller::removeListener()</em></a> function.</p>
+<p><pre class="literal-block">
+SampleListener listener;
+controller.addListener(listener);
+</pre>
+</p>
+<p>The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> does not keep a strong reference to the <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> instance. Ensure that you maintain a reference until the listener is removed from the controller.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Whether or not the listener was successfully added to the list of listeners. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">listener</span></tt> - <p>A subclass of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a> implementing the callback functions for the Leap Motion events you want to handle in your application. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1ac3b46593a96240c7462125a8452667e0"></span><div class="line-block">
+<div class="line">void <strong>clearPolicy</strong>(PolicyFlag policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests clearing a policy. </p>
+<p><p>Policy changes are completed asynchronously and, because they are subject to user approval or system compatibility checks, may not complete successfully. Call <a class="reference internal" href="#cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313"><em>Controller::isPolicySet()</em></a> after a suitable interval to test whether the change was accepted.</p>
+<p><pre class="literal-block">
+controller.clearPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);
+controller.clearPolicy(Leap::Controller::POLICY_OPTIMIZE_HMD);
+controller.clearPolicy(Leap::Controller::POLICY_IMAGES);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">flags</span></tt> - <p>A PolicyFlag value indicating the policy to request. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1af75c5cdc0275a4af12a841369592e5f2"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Config.html#cppclass_leap_1_1_config"><em>Config</em></a> <strong>config</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a <a class="reference internal" href="Leap.Config.html#cppclass_leap_1_1_config"><em>Config</em></a> object, which you can use to query the Leap Motion system for configuration information. </p>
+<p><p><pre class="literal-block">
+controller.config().setFloat(&quot;Gesture.Circle.MinRadius&quot;, 15);
+controller.config().setFloat(&quot;Gesture.Circle.MinArc&quot;, 1.7);
+bool saved = controller.config().save();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a>&#8216;s <a class="reference internal" href="Leap.Config.html#cppclass_leap_1_1_config"><em>Config</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf"></span><div class="line-block">
+<div class="line"> <strong>Controller</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object. </p>
+<p><p>When creating a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object, you may optionally pass in a reference to an instance of a subclass of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a>. Alternatively, you may add a listener using the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a147babfb14a3297648d684ea226dc5a2"><em>Controller::addListener()</em></a> function.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a8bf8686875ab3681a080786ee0e8d3fc"></span><div class="line-block">
+<div class="line"> <strong>Controller</strong>(<a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a>  &amp; listener)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object. </p>
+<p><p>When creating a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object, you may optionally pass in a reference to an instance of a subclass of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a>. Alternatively, you may add a listener using the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a147babfb14a3297648d684ea226dc5a2"><em>Controller::addListener()</em></a> function.</p>
+<p><pre class="literal-block">
+SampleListener listenerSubclass;
+<a class="reference internal" href="#cppclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf"><em>Controller</em></a> leapController = <a class="reference internal" href="#cppclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf"><em>Controller</em></a>(listenerSubclass);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">listener</span></tt> - <p>An instance of <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a> implementing the callback functions for the Leap Motion events you want to handle in your application. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a54659799281c4b8839bc7531fb2d8552"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.DeviceList.html#cppclass_leap_1_1_device_list"><em>DeviceList</em></a> <strong>devices</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of currently attached and recognized Leap Motion controller devices. </p>
+<p><p>The <a class="reference internal" href="Leap.Device.html#cppclass_leap_1_1_device"><em>Device</em></a> objects in the list describe information such as the range and tracking volume.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.DeviceList.html#cppclass_leap_1_1_device_list"><em>Leap::DeviceList</em></a> connectedLeaps = controller.devices();
+</pre>
+</p>
+<p>Currently, the Leap Motion <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> only allows a single active device at a time, however there may be multiple devices physically attached and listed here. Any active device(s) are guaranteed to be listed first, however order is not determined beyond that.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The list of Leap Motion controllers. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a771d9c0aa2093b63124a55b3daa8d39e"></span><div class="line-block">
+<div class="line">void <strong>enableGesture</strong>(Gesture::Type type, bool enable = true)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Enables or disables reporting of a specified gesture type. </p>
+<p><p><pre class="literal-block">
+controller.enableGesture(Leap::Gesture::TYPE_CIRCLE);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="#cppclass_leap_1_1_controller_1a7b842601adce8a11214e0058ab3c4d86"><em>Controller::isGestureEnabled()</em></a> </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">type</span></tt> - <p>The type of gesture to enable or disable. Must be a member of the Gesture::Type enumeration. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">enable</span></tt> - <p>True, to enable the specified gesture type; False, to disable. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a44b969a03cd7dff28965a1aac1be1766"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.FailedDeviceList.html#cppclass_leap_1_1_failed_device_list"><em>FailedDeviceList</em></a> <strong>failedDevices</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A list of any Leap Motion hardware devices that are physically connected to the client computer, but are not functioning correctly. </p>
+<p><p>The list contains <a class="reference internal" href="Leap.FailedDevice.html#cppclass_leap_1_1_failed_device"><em>FailedDevice</em></a> objects containing the pnpID and the reason for failure. No other device information is available.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.FailedDeviceList.html#cppclass_leap_1_1_failed_device_list"><em>Leap::FailedDeviceList</em></a> badDevices = controller.failedDevices();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> <strong>frame</strong>(int history = 0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a frame of tracking data from the Leap Motion software. </p>
+<p><p>Use the optional history parameter to specify which frame to retrieve. Call <a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame()</em></a> or frame(0) to access the most recent frame; call frame(1) to access the previous frame, and so on. If you use a history value greater than the number of stored frames, then the controller returns an invalid frame.</p>
+<p><pre class="literal-block">
+if( controller.isConnected()) //controller is a Controller object
+{
+    <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> <a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a> = controller.frame(); //The latest frame
+    <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> previous = controller.frame(1); //The previous frame
+}
+</pre>
+</p>
+<p>You can call this function in your <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> implementation to get frames at the Leap Motion frame rate:</p>
+<p><pre class="literal-block">
+class FrameListener : <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Leap::Listener</em></a>
+{
+    void onFrame(<a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Leap::Controller</em></a> &amp;controller)
+    {
+        <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> frame = controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(); //The latest frame
+        <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> previous = controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(1); //The previous frame
+        //...
+    }
+};
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The specified frame; or, if no history parameter is specified, the newest frame. If a frame is not available at the specified history position, an invalid <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">history</span></tt> - <p>The age of the frame to return, counting backwards from the most recent frame (0) into the past and up to the maximum age (59). </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1aeec44e083a954233dffcb64615c8061c"></span><div class="line-block">
+<div class="line">bool <strong>hasFocus</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this application is the focused, foreground application. </p>
+<p><p>By default, your application only receives tracking information from the Leap Motion controller when it has the operating system input focus. To receive tracking data when your application is in the background, the background frames policy flag must be set.</p>
+<p><pre class="literal-block">
+if(controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1aeec44e083a954233dffcb64615c8061c"><em>hasFocus</em></a>()){
+    //perform action that requires application to be focused
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if application has focus; false otherwise.</dd>
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="#cppclass_leap_1_1_controller_1a83fe28bd0d9de4aaad86596ea476e1fd"><em>Controller::setPolicyFlags()</em></a> </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> <strong>images</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The most recent set of images from the Leap Motion cameras. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>Leap::ImageList</em></a> <a class="reference internal" href="#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263"><em>images</em></a> = controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263"><em>images</em></a>();
+</pre>
+</p>
+<p>Depending on timing and the current processing frame rate, the images obtained with this function can be newer than images obtained from the current frame of tracking data.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An <a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> object containing the most recent camera images. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.2.1 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"></span><div class="line-block">
+<div class="line">bool <strong>isConnected</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> is connected to the Leap Motion service and the Leap Motion hardware is plugged in. </p>
+<p><p>When you first create a <a class="reference internal" href="#cppclass_leap_1_1_controller"><em>Controller</em></a> object, <a class="reference internal" href="#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>isConnected()</em></a> returns false. After the controller finishes initializing and connects to the Leap Motion software and if the Leap Motion hardware is plugged in, <a class="reference internal" href="#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>isConnected()</em></a> returns true.</p>
+<p>You can either handle the onConnect event using a <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> instance or poll the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>isConnected()</em></a> function if you need to wait for your application to be connected to the Leap Motion software before performing some other operation.</p>
+<p> <pre class="literal-block">
+if(controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>isConnected</em></a>()){
+    //perform action that requires a connected controller
+}
+</pre>
+<dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if connected; false otherwise. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a7b842601adce8a11214e0058ab3c4d86"></span><div class="line-block">
+<div class="line">bool <strong>isGestureEnabled</strong>(Gesture::Type type)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether the specified gesture type is enabled. </p>
+<p><p><pre class="literal-block">
+if(!controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a7b842601adce8a11214e0058ab3c4d86"><em>isGestureEnabled</em></a>(Leap::Gesture::TYPE_SWIPE)){
+    controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a771d9c0aa2093b63124a55b3daa8d39e"><em>enableGesture</em></a>(Leap::Gesture::TYPE_SWIPE);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if the specified type is enabled; false, otherwise. </dd>
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="#cppclass_leap_1_1_controller_1a771d9c0aa2093b63124a55b3daa8d39e"><em>Controller::enableGesture()</em></a> </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">type</span></tt> - <p>The type of gesture to check; a member of the Gesture::Type enumeration. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a0eaf52e4ed386823bd1051f44d511fe6"></span><div class="line-block">
+<div class="line">bool <strong>isPaused</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether the Leap Motion service is currently paused. </p>
+<p><p><pre class="literal-block">
+if(controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a0eaf52e4ed386823bd1051f44d511fe6"><em>isPaused</em></a>()){
+    //Display message to user.
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if the service is paused; false, otherwise. </dd>
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313"></span><div class="line-block">
+<div class="line">bool <strong>isPolicySet</strong>(PolicyFlag policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the active setting for a specific policy. </p>
+<p><p>Keep in mind that setting a policy flag is asynchronous, so changes are not effective immediately after calling setPolicyFlag(). In addition, a policy request can be declined by the user. You should always set the policy flags required by your application at startup and check that the policy change request was successful after an appropriate interval.</p>
+<p>If the controller object is not connected to the Leap Motion software, then the default state for the selected policy is returned.</p>
+<p><pre class="literal-block">
+bool isImagePolicyActive = controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313"><em>isPolicySet</em></a>(Leap::Controller::POLICY_IMAGES);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A boolean indicating whether the specified policy has been set. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">flags</span></tt> - <p>A PolicyFlag value indicating the policy to query. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a43d650dd9a40aec97b774ff6f0849ff1"></span><div class="line-block">
+<div class="line">bool <strong>isServiceConnected</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether your application has a connection to the Leap Motion daemon/service. </p>
+<p>Can be true even if the Leap Motion hardware is not available. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.2 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a629420c35d3c1192bc44e61f64d1e461"></span><div class="line-block">
+<div class="line">int64_t <strong>now</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a timestamp value as close as possible to the current time. </p>
+<p><p>Values are in microseconds, as with all the other timestamp values.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.7 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a0fb10f7d2f159d77bf9f25718b7e6dc5"></span><div class="line-block">
+<div class="line">PolicyFlag <strong>policyFlags</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>This function has been deprecated. </p>
+<p>Use <a class="reference internal" href="#cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313"><em>isPolicySet()</em></a> instead. </p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a49ca389d1a7f610e7f11833a1fd4c678"></span><div class="line-block">
+<div class="line">bool <strong>removeListener</strong>(<a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a>  &amp; listener)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Remove a listener from the list of listeners that will receive Leap Motion events. </p>
+<p><p>A listener must be removed if its lifetime is shorter than the controller to which it is listening.</p>
+<p><pre class="literal-block">
+SampleListener listenerObject;
+leapController.addListener(listenerObject);
+
+// ... much later
+leapController.removeListener(listenerObject);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Whether or not the listener was successfully removed from the list of listeners. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">listener</span></tt> - <p>The listener to remove. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1aafab2fafdec7ae38b9da6676ccf01e77"></span><div class="line-block">
+<div class="line">void <strong>setPaused</strong>(bool pause)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Pauses or resumes the Leap Motion service. </p>
+<p><p>When the service is paused no applications receive tracking data and the service itself uses minimal CPU time.</p>
+<p>Before changing the state of the service, you must set the POLICY_ALLOW_PAUSE_RESUME using the <a class="reference internal" href="#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f"><em>Controller::setPolicy()</em></a> function. Policies must be set every time the application is run.</p>
+<p><pre class="literal-block">
+controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1aafab2fafdec7ae38b9da6676ccf01e77"><em>setPaused</em></a>(true);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">pause</span></tt> - <p>Set true to pause the service; false to resume. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f"></span><div class="line-block">
+<div class="line">void <strong>setPolicy</strong>(PolicyFlag policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests setting a policy. </p>
+<p><p>A request to change a policy is subject to user approval and a policy can be changed by the user at any time (using the Leap Motion settings dialog). The desired policy flags must be set every time an application runs.</p>
+<p>Policy changes are completed asynchronously and, because they are subject to user approval or system compatibility checks, may not complete successfully. Call <a class="reference internal" href="#cppclass_leap_1_1_controller_1a033ebfdf3fe02566075be65269938313"><em>Controller::isPolicySet()</em></a> after a suitable interval to test whether the change was accepted.</p>
+<p><pre class="literal-block">
+controller.<a class="reference internal" href="#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f"><em>setPolicy</em></a>(Leap::Controller::POLICY_BACKGROUND_FRAMES);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">policy</span></tt> - <p>A PolicyFlag value indicating the policy to request. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_controller_1a83fe28bd0d9de4aaad86596ea476e1fd"></span><div class="line-block">
+<div class="line">void <strong>setPolicyFlags</strong>(PolicyFlag flags)</div>
+</div>
+</p>
+<blockquote>
+<div><p>This function has been deprecated. </p>
+<p>Use <a class="reference internal" href="#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f"><em>setPolicy()</em></a> and <a class="reference internal" href="#cppclass_leap_1_1_controller_1ac3b46593a96240c7462125a8452667e0"><em>clearPolicy()</em></a> instead. </p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="policy-flags">
+<h2>Policy Flags<a class="headerlink" href="#policy-flags" title="Permalink to this headline">¶</a></h2>
+<p><span class="target" id="cppclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"></span><strong>PolicyFlag enum</strong></p>
+<blockquote>
+<div><p>The supported controller policies. </p>
+<p><p>The supported policy flags are:</p>
+<p><strong>POLICY_BACKGROUND_FRAMES</strong>  requests that your application receives frames when it is not the foreground application for user input.</p>
+<p>The background frames policy determines whether an application receives frames of tracking data while in the background. By default, the Leap Motion software only sends tracking data to the foreground application. Only applications that need this ability should request the background frames policy. The &#8220;Allow Background Apps&#8221; checkbox must be enabled in the Leap Motion Control Panel or this policy will be denied.</p>
+<p><strong>POLICY_IMAGES</strong>  request that your application receives images from the device cameras. The &#8220;Allow Images&#8221; checkbox must be enabled in the Leap Motion Control Panel or this policy will be denied.</p>
+<p>The images policy determines whether an application receives image data from the Leap Motion sensors with each frame of data. By default, this data is not sent. Only applications that use the image data should request this policy.</p>
+<p><strong>POLICY_OPTIMIZE_HMD</strong>  request that the tracking be optimized for head-mounted tracking.</p>
+<p>The optimize HMD policy improves tracking in situations where the Leap Motion hardware is attached to a head-mounted display. This policy is not granted for devices that cannot be mounted to an HMD, such as Leap Motion controllers embedded in a laptop or keyboard.</p>
+<p><strong>POLICY_ALLOW_PAUSE_RESUME</strong>  request that the application be allowed to pause and unpause the Leap Motion service.</p>
+<p>Some policies can be denied if the user has disabled the feature on their Leap Motion control panel.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">POLICY_DEFAULT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>The default policy. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_BACKGROUND_FRAMES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">0)</span></tt> - <p>Receive background frames. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_IMAGES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">1)</span></tt> - <p>Receive images from sensor cameras. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>2.1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_OPTIMIZE_HMD</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">2)</span></tt> - <p>Optimize the tracking for head-mounted device. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>2.1.2 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_ALLOW_PAUSE_RESUME</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">3)</span></tt> - <p>Allow pausing and unpausing of the Leap Motion service. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>3.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_RAW_IMAGES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">6)</span></tt> - <p>Receive raw images. </p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html">Config</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#policy-flags">Policy Flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#frame">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#hand">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

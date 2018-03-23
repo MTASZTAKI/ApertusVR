@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <fstream>
 #include "OgreSceneManager.h"
 #include "OgreRoot.h"
 #include "OgreConfigFile.h"
@@ -71,6 +72,15 @@ SOFTWARE.*/
 #include "OgreTextureManager.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
+#include "Hydrax.h"
+#ifdef HYDRAX_NEW
+	#include "Noise/Perlin/HydraxPerlin.h"
+	#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#else
+	#include "Noise/Perlin/Perlin.h"
+	#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#endif
+#include "SkyX.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
@@ -80,6 +90,7 @@ SOFTWARE.*/
 #include "ApeICylinderGeometry.h"
 #include "ApeITorusGeometry.h"
 #include "ApeITubeGeometry.h"
+#include "ApeIRayGeometry.h"
 #include "ApeISphereGeometry.h"
 #include "ApeIConeGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"
@@ -89,18 +100,23 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
 #include "ApeICamera.h"
+#include "ApeIPointCloud.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
 #include "ApeOgreMovableText.h"
+#include "ApeOgrePointCloud.h"
 #include "ApeOgreConversions.h"
 #include "ApeOgreRenderPluginConfigs.h"
 #include "ApeISystemConfig.h"
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIUnitTexture.h"
 #include "ApeIPbsPass.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
+#include "ApeISky.h"
+#include "ApeIWater.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
@@ -147,16 +163,6 @@ namespace Ape
 
 		Ogre::OverlayManager* mpOverlayMgr;
 
-		Ogre::Overlay* mpOverlay;
-
-		Ogre::OverlayContainer* mpOverlayContainer;
-
-		Ogre::TextAreaOverlayElement* mpOverlayTextArea;
-
-		Ogre::FontManager* mpOverlayFontManager;
-
-		Ogre::Font* mpOverlayFont;
-
 		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
 		
 		Ogre::Entity* mpCurrentlyLoadingMeshEntity;
@@ -173,6 +179,20 @@ namespace Ape
 
 		Ogre::MeshLodGenerator* mpMeshLodGenerator;
 
+		Ogre::MeshSerializer mMeshSerializer;
+
+		Ogre::MaterialSerializer mMaterialSerializer;
+
+		Hydrax::Hydrax *mpHydrax;
+
+		SkyX::SkyX* mpSkyx;
+
+		Ogre::Light* mpSkyxSunlight;
+
+		Ogre::Light* mpSkyxSkylight;
+
+		SkyX::BasicController* mpSkyxBasicController;
+
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
 		Ape::IScene* mpScene;
@@ -188,6 +208,10 @@ namespace Ape
 		Ape::OgreRenderPluginConfig mOgreRenderPluginConfig;
 
 		Ape::NodeWeakPtr mUserNode;
+
+		int mCameraCountFromConfig;
+
+		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;
 
 		void processEventDoubleQueue();
 

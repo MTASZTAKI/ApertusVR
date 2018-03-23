@@ -12,9 +12,6 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
-	mUserNode.lock()->setFixedYaw(true);
 }
 
 ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
@@ -35,7 +32,11 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 
 void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+	{
+		mUserNode = mpScene->getNode(event.subjectName);
+		mUserNode.lock()->setFixedYaw(true);
+	}
 }
 
 void ApeOculusDK2Plugin::Init()
@@ -78,7 +79,7 @@ void ApeOculusDK2Plugin::Init()
 		fileMaterialLeftEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("RiftRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h);
+			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureLeftEye = manualTexture;
 		}
@@ -88,7 +89,7 @@ void ApeOculusDK2Plugin::Init()
 		fileMaterialRightEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("RiftRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h);
+			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureRightEye = manualTexture;
 		}
@@ -187,6 +188,46 @@ void ApeOculusDK2Plugin::Init()
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
 
+	if (auto node = mpScene->createNode("HeadNode").lock())
+	{
+		node->setParentNode(mUserNode);
+		mHeadNode = node;
+	}
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
+	{
+		camera->setParentNode(mHeadNode);
+		mCameraLeft = camera;
+	}
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdRightCamera", Ape::Entity::Type::CAMERA).lock()))
+	{
+		camera->setParentNode(mHeadNode);
+		mCameraRight = camera;
+	}
+	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
+	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
+	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
+	float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
+	float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
+	float ipd = ovrHmd_GetFloat(mpHMD, OVR_KEY_IPD, 0.064f) * 100;
+	if (auto cameraLeft = mCameraLeft.lock())
+	{
+		cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
+		cameraLeft->setAspectRatio(aspectRatio);
+		cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+
+		if (auto texture = manualTextureLeftEye.lock())
+			texture->setSourceCamera(cameraLeft);
+	}
+	if (auto cameraRight = mCameraRight.lock())
+	{
+		cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));
+		cameraRight->setAspectRatio(aspectRatio);
+		cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+
+		if (auto texture = manualTextureRightEye.lock())
+			texture->setSourceCamera(cameraRight);
+	}
+
 	Ape::CameraWeakPtr cameraExternal;
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
 	{
@@ -196,47 +237,6 @@ void ApeOculusDK2Plugin::Init()
 		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
 		camera->setOrthoWindowSize(2, 2);
 		cameraExternal = camera;
-	}
-
-	if (auto node = mpScene->createNode("HeadNode").lock())
-	{
-		node->setParentNode(mUserNode);
-		mHeadNode = node;
-	}
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
-	{
-		camera->setParentNode(mHeadNode);
-		if (auto texture = manualTextureLeftEye.lock())
-			texture->setSourceCamera(camera);
-		mCameraLeft = camera;
-	}
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdRightCamera", Ape::Entity::Type::CAMERA).lock()))
-	{
-		camera->setParentNode(mHeadNode);
-		if (auto texture = manualTextureRightEye.lock())
-			texture->setSourceCamera(camera);
-		mCameraRight = camera;
-	}
-	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
-	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-	if (auto camera = cameraExternal.lock())
-	{
-		float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
-		float combinedTanHalfFovVertical = std::max(fovLeft.UpTan, fovLeft.DownTan);
-		float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
-		float ipd = ovrHmd_GetFloat(mpHMD, OVR_KEY_IPD, 0.064f) * 100;
-		if (auto cameraLeft = mCameraLeft.lock())
-		{
-			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
-			cameraLeft->setAspectRatio(aspectRatio);
-			cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
-		}
-		if (auto cameraRight = mCameraRight.lock())
-		{
-			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, camera->getNearClipDistance(), camera->getFarClipDistance(), true)));
-			cameraRight->setAspectRatio(aspectRatio);
-			cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
-		}
 	}
 }
 

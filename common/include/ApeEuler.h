@@ -29,9 +29,8 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class Euler
+	struct Euler
 	{
-	private:
 		Ape::Radian m_yaw;
 		
 		Ape::Radian m_pitch; 
@@ -41,10 +40,16 @@ namespace Ape
 		Ape::Quaternion m_cachedQuaternion; 
 		
 		bool m_changed; 
-		
-	public:
+
 		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)):m_yaw(y),m_pitch(p),m_roll(r),m_changed(true) 
 		{
+		}
+
+		Euler(Ape::Quaternion q)
+		{
+			m_yaw = std::atan2(2.0 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+			m_pitch = std::asin(-2.0 * (q.x * q.z - q.w * q.y));
+			m_roll = std::atan2(2.0 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
 		}
 
 		inline Ape::Radian getYaw() 
@@ -99,7 +104,7 @@ namespace Ape
 				double x = c1c2 * s3 + s1s2 * c3;
 				double y = s1 * c2 * c3 + c1 * s2 * s3;
 				double z = c1 * s2 * c3 - s1 * c2 * s3;
-				m_cachedQuaternion = Ape::Quaternion((float) w, (float) x, (float) y, (float) z); 
+				m_cachedQuaternion = Ape::Quaternion((float) w, (float) y, (float) z, (float) x);
 				m_changed = false;
 			}
 			return m_cachedQuaternion;

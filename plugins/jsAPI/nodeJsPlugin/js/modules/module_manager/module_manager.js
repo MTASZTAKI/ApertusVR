@@ -20,21 +20,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var config_manager = require('../../modules/config_manager/config_manager');
+var config = require('./config.json');
+var fs = require('fs');
 
 exports.configType = '';
 
-exports.sourcePath = config_manager.paths.source.apePath + config_manager.paths.source.jsApiPath;
-exports.nodeModulesPath = config_manager.paths.build.binPath + this.configType + config_manager.paths.build.nodeModulesPath;
-exports.apertusModulePath = this.nodeModulesPath + config_manager.paths.build.apertusModulePath;
+exports.sourcePath = config.source.apePath + config.source.jsApiPath;
+exports.pluginPath = this.sourcePath + 'plugins/';
+exports.nodeModulesPath = config.build.binPath + this.configType + config.build.nodeModulesPath;
+exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
 
 exports.requireNodeModule = function(moduleName) {
+	if (!fs.existsSync(this.nodeModulesPath + moduleName)) {
+		console.log('error: required module does not exist: "' + this.nodeModulesPath + moduleName + '"');
+		console.log('config.source.apePath: "' + config.source.apePath + '"');
+		console.log('config.build.binPath: "' + config.build.binPath + '"');
+		console.log('configuration:');
+		console.log(config);
+		process.exit(1);
+	}
 	return require(this.nodeModulesPath + moduleName);
 }
 
 exports.setConfigType = function(configStr) {
-	//this.configType = configStr + '/';
 	exports.configType = configStr + '/';
-	exports.nodeModulesPath = config_manager.paths.build.binPath + this.configType + config_manager.paths.build.nodeModulesPath;
-	exports.apertusModulePath = this.nodeModulesPath + config_manager.paths.build.apertusModulePath;
+	exports.configurationPath = config.build.binPath + this.configType;
+	exports.nodeModulesPath = config.build.binPath + this.configType + config.build.nodeModulesPath;
+	exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
 }

@@ -29,6 +29,7 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 #include "ApeDegree.h"
 #include "ApeRadian.h"
+#include "ApeMatrix3.h"
 
 namespace Ape
 {
@@ -52,6 +53,11 @@ namespace Ape
 		Quaternion(const Ape::Radian& _radRot, const Ape::Vector3& _axRot)
 		{
 			FromAngleAxis(_radRot, _axRot);
+		}
+
+		Quaternion(const Ape::Matrix3& m3x3)
+		{
+			FromRotationMatrix(m3x3);
 		}
 		
 		Quaternion operator+ (const Quaternion& rkQ) const
@@ -121,6 +127,41 @@ namespace Ape
 		void FromAngleAxis(Ape::Degree _angleDegree, const Ape::Vector3& _axis)
 		{
 			FromAngleAxis(Ape::Radian(_angleDegree.toRadian()), _axis);
+		}
+
+		void FromRotationMatrix(const Ape::Matrix3& kRot)
+		{
+			float fTrace = kRot[0][0] + kRot[1][1] + kRot[2][2];
+			float fRoot;
+
+			if (fTrace > 0.0)
+			{
+				fRoot = std::sqrt(fTrace + 1.0f);  
+				w = 0.5f * fRoot;
+				fRoot = 0.5f / fRoot;  
+				x = (kRot[2][1] - kRot[1][2])*fRoot;
+				y = (kRot[0][2] - kRot[2][0])*fRoot;
+				z = (kRot[1][0] - kRot[0][1])*fRoot;
+			}
+			else
+			{
+				static size_t s_iNext[3] = { 1, 2, 0 };
+				size_t i = 0;
+				if (kRot[1][1] > kRot[0][0])
+					i = 1;
+				if (kRot[2][2] > kRot[i][i])
+					i = 2;
+				size_t j = s_iNext[i];
+				size_t k = s_iNext[j];
+
+				fRoot = std::sqrt(kRot[i][i] - kRot[j][j] - kRot[k][k] + 1.0f);
+				float* apkQuat[3] = { &x, &y, &z };
+				*apkQuat[i] = 0.5f * fRoot;
+				fRoot = 0.5f / fRoot;
+				w = (kRot[k][j] - kRot[j][k])*fRoot;
+				*apkQuat[j] = (kRot[j][i] + kRot[i][j]) * fRoot;
+				*apkQuat[k] = (kRot[k][i] + kRot[i][k]) * fRoot;
+			}
 		}
 		
 		bool equals(const Ape::Quaternion& _q2, Ape::Radian _tolerance)
@@ -203,6 +244,32 @@ namespace Ape
 				t.normalise();
 				return t;
 			}
+		}
+
+		void ToRotationMatrix(Ape::Matrix3& kRot) const
+		{
+			float fTx = x + x;
+			float fTy = y + y;
+			float fTz = z + z;
+			float fTwx = fTx*w;
+			float fTwy = fTy*w;
+			float fTwz = fTz*w;
+			float fTxx = fTx*x;
+			float fTxy = fTy*x;
+			float fTxz = fTz*x;
+			float fTyy = fTy*y;
+			float fTyz = fTz*y;
+			float fTzz = fTz*z;
+
+			kRot[0][0] = 1.0f - (fTyy + fTzz);
+			kRot[0][1] = fTxy - fTwz;
+			kRot[0][2] = fTxz + fTwy;
+			kRot[1][0] = fTxy + fTwz;
+			kRot[1][1] = 1.0f - (fTxx + fTzz);
+			kRot[1][2] = fTyz - fTwx;
+			kRot[2][0] = fTxz - fTwy;
+			kRot[2][1] = fTyz + fTwx;
+			kRot[2][2] = 1.0f - (fTxx + fTyy);
 		}
 
 		float getW() { return w; }

@@ -43,7 +43,7 @@ include_directories(
 # Add the dynamic library target to the project
 add_library (ApePluginManager SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApePluginManager ApeSystemConfig)
+target_link_libraries (ApePluginManager ApeSystemConfig ApeScene)
 # Link with dependency libraries
 if (NOT WIN32)
 	target_link_libraries (ApePluginManager ApeSystemConfig dl pthread)

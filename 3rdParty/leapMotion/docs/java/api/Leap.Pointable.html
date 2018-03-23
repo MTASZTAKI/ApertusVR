@@ -1,0 +1,841 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pointable &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="PointableList" href="Leap.PointableList.html" />
+    <link rel="prev" title="Matrix" href="Leap.Matrix.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/api/Leap.Pointable.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Pointable.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Pointable.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/api/Leap.Pointable.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Matrix.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.PointableList.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Pointable.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Pointable.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Pointable.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Pointable.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Pointable
+</span> -->
+        
+  <div class="section" id="id5">
+<h1>Pointable<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f">Pointable()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1af64662b010bb83b86bed0a30280fabff">direction()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1aca25964504825a090668651d6e29ae1b">equals(Pointable arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a927587df126a877842a884f4a536dd8c">frame()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a25dea9334ce543e55077a4547becd199">hand()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a4a716406d3d9d4fdbbe46f100e648f3b">id()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a376708ed9a7b5f6ddbcc4fd9d0405594">invalid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ada0cf872bb60b0b7b8d2ab94f4c77047">isExtended()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a5ad53c8d7ea3b606bad4b33446c647ba">isFinger()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a23b423af9addf50644181ed36e530955">isTool()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a487d5f454cff4db530ed7b5b690ec71d">isValid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1aaff6176152126e0e2e946d4add73fda0">length()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a911134a7be4d118d320769b3049f0c08">stabilizedTipPosition()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a2b95e667f0c9b2de381c5cc0fd48800c">timeVisible()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a96cf628961be23093d1cb2108622f3f2">tipPosition()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a258f42477d9bffb409703cb82bd08e79">tipVelocity()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ad146fa8579a5f8a876c4688cc5a68520">toString()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ab4ac28124ffbc5e485c76e64b979b918">touchDistance()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a039ad18771219decb5929d83fa7016c6">touchZone()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1af97de69a7fb9e061115793fac20ab5d7">width()</a></li>
+</ul>
+</div>
+<div class="line-block" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable">
+<div class="line"><em>class</em> <strong>com::leapmotion::leap::Pointable</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> class reports the physical characteristics of a detected finger or tool. </p>
+<p><p>Both fingers and tools are classified as <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects. Use the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a5ad53c8d7ea3b606bad4b33446c647ba"><em>Pointable::isFinger()</em></a> function to determine whether a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object represents a finger. Use the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a23b423af9addf50644181ed36e530955"><em>Pointable::isTool()</em></a> function to determine whether a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object represents a tool. The Leap Motion software classifies a detected entity as a tool when it is thinner, straighter, and longer than a typical finger.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f"><em>Pointable</em></a> pointable = frame.pointables().frontmost();
+Vector direction = pointable.direction();
+float length = pointable.length();
+float width = pointable.width();
+Vector stabilizedPosition = pointable.stabilizedTipPosition();
+Vector position = pointable.tipPosition();
+Vector speed = pointable.tipVelocity();
+float <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ab4ac28124ffbc5e485c76e64b979b918"><em>touchDistance</em></a> = pointable.touchDistance();
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f"><em>Pointable</em></a>.Zone zone = pointable.touchZone();
+</pre>
+</p>
+<p>To provide touch emulation, the Leap Motion software associates a floating touch plane that adapts to the user&#8217;s finger movement and hand posture. The Leap Motion interprets purposeful movements toward this plane as potential touch points.</p>
+<p>Note that <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects can be invalid, which means that they do not contain valid tracking data and do not correspond to a physical entity. Invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects can be the result of asking for a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object using an ID from an earlier frame when no <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects with that ID exist in the current frame. A <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object created from the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> constructor is also invalid. Test for validity with the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a487d5f454cff4db530ed7b5b690ec71d"><em>Pointable::isValid()</em></a> function.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1af64662b010bb83b86bed0a30280fabff"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>direction</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The direction in which this finger is pointing. </p>
+<p><p><pre class="literal-block">
+Vector pointingToward = pointable.direction();
+</pre>
+</p>
+<p>The direction is expressed as a unit vector pointing in the same direction as the tip.</p>
+<p><img alt="api/../../../images/Leap_Finger_Model.png" src="api/../../../images/Leap_Finger_Model.png" /></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> pointing in the same direction as the tip of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1aca25964504825a090668651d6e29ae1b"></span><div class="line-block">
+<div class="line">boolean <strong>equals</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object equality. </p>
+<p><p><pre class="literal-block">
+Boolean pointableIsEqual = thisPointable.equals(thatPointable);
+</pre>
+</p>
+<p>Two <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects are equal if and only if both <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects represent the exact same physical entities in the same frame and both <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects are valid. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a927587df126a877842a884f4a536dd8c"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame"><em>Frame</em></a> <strong>frame</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame"><em>Frame</em></a> associated with this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><p><pre class="literal-block">
+Frame frameOfThisPointableObject = pointable.frame();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The associated <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame"><em>Frame</em></a> object, if available; otherwise, an invalid <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame"><em>Frame</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a25dea9334ce543e55077a4547becd199"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> <strong>hand</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> associated with a finger. </p>
+<p><p><pre class="literal-block">
+Hand attachedHand = pointable.hand();
+</pre>
+</p>
+<p>This function always returns an invalid <a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> object.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The associated <a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> object, if available; otherwise, an invalid <a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a4a716406d3d9d4fdbbe46f100e648f3b"></span><div class="line-block">
+<div class="line">int <strong>id</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A unique ID assigned to this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object, whose value remains the same across consecutive frames while the tracked finger remains visible. </p>
+<p><p>If tracking is lost (for example, when a finger is occluded by another finger or when it is withdrawn from the Leap Motion <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a> field of view), the Leap Motion software may assign a new ID when it detects the entity in a future frame.</p>
+<p><pre class="literal-block">
+int theID = pointable.id();
+</pre>
+</p>
+<p>Use the ID value with the <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame_1a140f6ce2dd976ea925c07d048615066e"><em>Frame::pointable()</em></a> function to find this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object in future frames.</p>
+<p>IDs should be from 1 to 100 (inclusive). If more than 100 objects are tracked an IDs of -1 will be used until an ID in the defined range is available.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The ID assigned to this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ada0cf872bb60b0b7b8d2ab94f4c77047"></span><div class="line-block">
+<div class="line">boolean <strong>isExtended</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Whether or not this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> is in an extended posture. </p>
+<p><p>A finger is considered extended if it is extended straight from the hand as if pointing. A finger is not extended when it is bent down and curled towards the palm.</p>
+<p><pre class="literal-block">
+int extendedFingers = 0;
+for (Finger finger : hand.fingers())
+{
+    if(finger.isExtended()) extendedFingers++;
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if the pointable is extended. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a5ad53c8d7ea3b606bad4b33446c647ba"></span><div class="line-block">
+<div class="line">boolean <strong>isFinger</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Whether or not this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> is classified as a finger. </p>
+<p><p><pre class="literal-block">
+if (pointable.isTool()) {
+    Tool tool = new Tool(pointable);
+} else {
+    Finger finger = new Finger(pointable);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> is classified as a finger. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a23b423af9addf50644181ed36e530955"></span><div class="line-block">
+<div class="line">boolean <strong>isTool</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Whether or not this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> is classified as a tool. </p>
+<p><p><pre class="literal-block">
+if (pointable.isTool()) {
+    Tool tool = new Tool(pointable);
+} else {
+    Finger finger = new Finger(pointable);
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>false </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a487d5f454cff4db530ed7b5b690ec71d"></span><div class="line-block">
+<div class="line">boolean <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this is a valid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><p><pre class="literal-block">
+if( pointable.isValid()) {
+    //Use it...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object contains valid tracking data. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1aaff6176152126e0e2e946d4add73fda0"></span><div class="line-block">
+<div class="line">float <strong>length</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The estimated length of the finger in millimeters. </p>
+<p><p><pre class="literal-block">
+float apparentlength = pointable.length();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The estimated length of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f"></span><div class="line-block">
+<div class="line"> <strong>Pointable</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><p>An uninitialized pointable is considered invalid. Get valid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> objects from a <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame"><em>Frame</em></a> or a <a class="reference internal" href="Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand"><em>Hand</em></a> object.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f"><em>Pointable</em></a> pointable = frame.pointables().frontmost();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a911134a7be4d118d320769b3049f0c08"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>stabilizedTipPosition</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The stabilized tip position of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a>. </p>
+<p><p>Smoothing and stabilization is performed in order to make this value more suitable for interaction with 2D content. The stabilized position lags behind the tip position by a variable amount, depending primarily on the speed of movement.</p>
+<p><pre class="literal-block">
+Vector stabilizedPosition = pointable.stabilizedTipPosition();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A modified tip position of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object with some additional smoothing and stabilization applied. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a2b95e667f0c9b2de381c5cc0fd48800c"></span><div class="line-block">
+<div class="line">float <strong>timeVisible</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The duration of time this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> has been visible to the Leap Motion <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p><pre class="literal-block">
+float lifetime = pointable.timeVisible();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The duration (in seconds) that this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> has been tracked. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a96cf628961be23093d1cb2108622f3f2"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>tipPosition</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The tip position in millimeters from the Leap Motion origin. </p>
+<p><p><pre class="literal-block">
+Vector currentPosition = pointable.tipPosition();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the coordinates of the tip position. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a258f42477d9bffb409703cb82bd08e79"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>tipVelocity</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The rate of change of the tip position in millimeters/second. </p>
+<p><p><pre class="literal-block">
+Vector currentSpeed = pointable.tipVelocity();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the coordinates of the tip velocity. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ad146fa8579a5f8a876c4688cc5a68520"></span><div class="line-block">
+<div class="line">String <strong>toString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human readable description of the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A description of the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object as a string. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1ab4ac28124ffbc5e485c76e64b979b918"></span><div class="line-block">
+<div class="line">float <strong>touchDistance</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A value proportional to the distance between this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object and the adaptive touch plane. </p>
+<p><p><img alt="api/../../../images/Leap_Touch_Plane.png" src="api/../../../images/Leap_Touch_Plane.png" /></p>
+<p><pre class="literal-block">
+float distance = pointable.touchDistance();
+if (distance &gt; 0) {
+    //Handle hovering ...
+} else {
+    //Handle touching ...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The normalized touch distance of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a039ad18771219decb5929d83fa7016c6"></span><div class="line-block">
+<div class="line">Pointable.Zone <strong>touchZone</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The current touch zone of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><p><pre class="literal-block">
+switch (pointable.touchZone()) {
+    case ZONE_NONE:
+        //Handle distant pointable
+        break;
+    case ZONE_HOVERING:
+        //Handle pointable near touch plane
+        break;
+    case ZONE_TOUCHING:
+        //Handle pointable penetrating touch plane
+        break;
+    default:
+        //Handle error cases...
+        break;
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The touch zone of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1af97de69a7fb9e061115793fac20ab5d7"></span><div class="line-block">
+<div class="line">float <strong>width</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The estimated width of the finger in millimeters. </p>
+<p><p><pre class="literal-block">
+float averageThickness = pointable.width();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The estimated width of this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a376708ed9a7b5f6ddbcc4fd9d0405594"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> <strong>invalid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns an invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object. </p>
+<p><p>You can use the instance returned by this function in comparisons testing whether a given <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> instance is valid or invalid. (You can also use the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a487d5f454cff4db530ed7b5b690ec71d"><em>Pointable::isValid()</em></a> function.)</p>
+<p><pre class="literal-block">
+if(!pointable.equals(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a398664eabda6168d32738ac4fc92577f"><em>Pointable</em></a>.invalid())) {
+    //Use it...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> instance. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<p><p id="javaenumcom_1_1leapmotion_1_1leap_1_1_pointable_1_1_zone"><em>class</em> <strong>Zone</strong></p>
+<blockquote>
+<div><p>Defines the values for reporting the state of a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object in relation to an adaptive touch plane. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_pointable_1_1_zone_1a36da9ac2c1133ce6118f498873f6039c"></span> <strong>ZONE_NONE</strong></p>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable"><em>Pointable</em></a> object is too far from the plane to be considered hovering or touching. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</p>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id12">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id14">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id5">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id12">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id3">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id3">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id15">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id12">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id24">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -89,13 +89,14 @@ namespace Ape
 		struct LobbyServerConfig
 		{
 			std::string ip;
-
 			std::string port;
+			std::string sessionName;
 
 			LobbyServerConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
+				this->sessionName = std::string();
 			}
 
 			LobbyServerConfig(
@@ -105,6 +106,17 @@ namespace Ape
 			{
 				this->ip = ip;
 				this->port = port;
+			}
+
+			LobbyServerConfig(
+				std::string ip,
+				std::string port,
+				std::string sessionName
+			)
+			{
+				this->ip = ip;
+				this->port = port;
+				this->sessionName = sessionName;
 			}
 		};
 		
@@ -116,7 +128,7 @@ namespace Ape
 
 		std::string uniqueUserNamePrefix;
 
-		std::string generatedUniqueUserName;
+		std::string generatedUniqueUserNodeName;
 
 		std::vector<std::string> sessionResourceLocation;
 
@@ -129,7 +141,7 @@ namespace Ape
 			this->participantType = SceneSession::ParticipantType::INVALID;
 			this->sessionGUID = std::string();
 			this->uniqueUserNamePrefix = std::string();
-			this->generatedUniqueUserName = std::string();
+			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
 		}
 
@@ -148,7 +160,7 @@ namespace Ape
 			this->participantType = participantType;
 			this->sessionGUID = sessionName;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
-			this->generatedUniqueUserName = generatedUniqueUserName;
+			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;
 		}
 	};

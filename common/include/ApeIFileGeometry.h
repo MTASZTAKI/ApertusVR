@@ -38,13 +38,17 @@ namespace Ape
 	public:
 		virtual void setFileName (std::string fileName) = 0;
 		
-		virtual std::string getfFileName () = 0;
+		virtual std::string getFileName () = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
 
 		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+
+		virtual void exportMesh() = 0;
+
+		virtual void mergeSubMeshes() = 0;
 	};
 }
 

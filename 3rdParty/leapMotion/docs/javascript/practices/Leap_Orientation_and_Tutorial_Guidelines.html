@@ -1,0 +1,586 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User Orientation and Tutorial Guidelines &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Guidelines" href="Leap_Practices.html" />
+    <link rel="next" title="User Experience Guidelines" href="Leap_UX_Guidelines.html" />
+    <link rel="prev" title="Menu Design Guidelines" href="Leap_Menu_Design_Guidelines.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/practices/Leap_Orientation_and_Tutorial_Guidelines.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/practices/Leap_Orientation_and_Tutorial_Guidelines.html";
+            } else {
+                    redirectedLocation ="Leap_Practices.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/practices/Leap_Orientation_and_Tutorial_Guidelines.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Menu_Design_Guidelines.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_UX_Guidelines.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="../../unity/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/practices/Leap_Orientation_and_Tutorial_Guidelines.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Practices.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Practices.html" accesskey="U">Guidelines</a>&raquo;
+  User Orientation and Tutorial Guidelines
+</span> -->
+        
+  <div class="section" id="user-orientation-and-tutorial-guidelines">
+<h1>User Orientation and Tutorial Guidelines<a class="headerlink" href="#user-orientation-and-tutorial-guidelines" title="Permalink to this headline">¶</a></h1>
+<p>With the introduction of the Leap Motion Controller, we’re unlocking
+a more natural and intuitive way for people to interact with computers.
+This is the first time ever that users have the power to control an
+experience with nuanced hand and finger movements in three dimensional
+space.</p>
+<p>Yet, while consumers may have had a basic introduction to motion
+control in some contexts (e.g. Microsoft Kinect™ and the
+Nintendo Wii™) this is an entirely new experience for them
+as it relates to their everyday machines. Interacting in this new way
+can take some getting used to – and ensuring that you give users a
+proper understanding of exactly how to interact with your software will
+mean the difference between a magical experience and one that might
+leave users frustrated or confused.</p>
+<p>The following are a few different ways to approach the task of
+guiding users and teaching them specific interactions within your apps.
+Whichever you choose, make sure your orientations and tutorials are
+easily accessible from any point in the app.</p>
+<div class="section" id="create-a-great-demo-video">
+<h2>Create a Great Demo Video<a class="headerlink" href="#create-a-great-demo-video" title="Permalink to this headline">¶</a></h2>
+<p>One of the first introductions to your app might be the screen shots
+and demo videos that a user sees. It is highly
+recommended that you publish a video which shows off, not only the app
+functionality, but how a user performs the interactions needed for your
+app. The following apps have video demos that help users understand the
+game play and Leap Motion interaction.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+  <div class="col-md-4">
+    <img src="../../images/BoomBall_TutorialVideo01.jpg" >
+    <dt><a href="https://apps.leapmotion.com/apps/boom-ball/" target="_blank">Watch the BoomBall video</a></dt>
+  </div>
+  <div class="col-md-4">
+    <img src="../../images/Handwave_TutorialVideo_01.jpg" >
+    <dt><a href="https://apps.leapmotion.com/apps/handwave/" target="_blank">Watch the HandWAVE video</a></dt>
+  </div>
+  <div class="col-md-4">
+    <img src="../../images/Pointables_TutorialVideo_01.jpg" >
+    <dt><a href="https://apps.leapmotion.com/apps/pointable/windows" target="_blank">Watch the Pointables video</a></dt>
+  </div>
+</div></div>
+<div class="section" id="interaction-keys">
+<h2>Interaction ‘Keys’<a class="headerlink" href="#interaction-keys" title="Permalink to this headline">¶</a></h2>
+<p>Interaction Keys are discrete screens (shown either before starting
+an experience or accessible via a ‘help’ or ‘info’ menu) that outline
+all of the basic interactions and controls used in an app. It can be
+great to see everything in one place – but diagrams used need to do a
+good job of demonstrating both context and action. Even better, simple
+animations can go a long way in helping users immediately grasp the
+difference between discrete controls.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="../../images/DeadMotion.png" target="_blank"><img src=
+        "../../images/DeadMotion.jpg" width="400"></a><br>
+        <dt><a href="https://apps.leapmotion.com/apps/dead-motion-prologue/" target="_blank">Dead Motion: Prologue</a> displays this thorough help menu to show all of the interactions and optimal Leap Motion controller positioning.</dt>
+    </div>
+    <div class="col-md-6">
+        <a href="../../images/Gravilux_tutorial.png" target=
+        "_blank"><img src="../../images/Gravilux_tutorial.jpg" width=
+        "400"></a><br>
+        <dt><a href="https://apps.leapmotion.com/apps/gravilux/" target="_blank">Gravilux</a> also has a well done interaction key.</dt>
+    </div>
+</div><p>While you may have the resources to design your own gesture hints
+and icons from scratch, it may help to expedite the process by starting
+with some existing design assets. Some of these may focus on touch but
+are a good foundation for designing your specific gestures.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<ul>
+    <li><a href="http://www.gesturecons.com" target=
+    "_blank">Gesturecons.com</a></li>
+
+    <li><a href="http://www.gestureworks.com" target=
+    "_blank">Gestureworks.com</a>: tap on the link for Individual
+    Gesture Icons – Vector and Bitmap to download</li>
+
+    <li><a href="http://www.mobiletuxedo.com" target=
+    "_blank">MobileTuxedo.com</a></li>
+</ul></div>
+<div class="section" id="walk-through-tutorials">
+<h2>Walk-Through Tutorials<a class="headerlink" href="#walk-through-tutorials" title="Permalink to this headline">¶</a></h2>
+<p>A Walk-Through Tutorial is a series of screens, directions or
+interactive tasks that lead new users through each different part of
+your app. Often times, breaking more complicated interactions down into
+discrete parts can be a great way to introducing new users to the
+mechanics of your software. And, as always, letting users learn by
+doing is a great way to help them master controls in a safe environment
+and ultimately bolster their confidence as they dive into your app.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+  <div class="col-md-4">
+    <a href="../../images/DecoSketch001.png" target="_blank"><img src="../../images/DecoSketch001.jpg" width="350"></a>
+  </div>
+  <div class="col-md-4">
+    <a href="../../images/DecoSketch002.png" target="_blank"><img src="../../images/DecoSketch002.jpg" width="350"></a>
+  </div>
+  <div class="col-md-4">
+    <a href="../../images/DecoSketch003.png" target="_blank"><img src="../../images/DecoSketch003.jpg" width="350"></a>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <p>This walk-through tutorial by <a href="https://apps.leapmotion.com/apps/deco-sketch/" target="_blank">Deco Sketch</a> shows how the user’s finger position over the Leap Motion Controller changes the interaction from “Menu” to “Draw” modes.</p>
+    </div>
+</div></div>
+<div class="section" id="in-app-cues-hints">
+<h2>In-App Cues / Hints<a class="headerlink" href="#in-app-cues-hints" title="Permalink to this headline">¶</a></h2>
+<p>Giving hints or cues to a user while they are interacting with your
+software can be an elegant way to subtly direct behavior. Simple
+contextual graphics paired with instructions (e.g. a pointing hand +
+“Tap to Select”) can go a long way in guiding users in the right
+direction. It is important, however, to make sure that these cues are
+as unobtrusive as possible and only support the experience vs.
+distracting from it.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="../../images/JungleJumper_Tutorial02.png" target="_blank"><img src="../../images/JungleJumper_Tutorial02.jpg"></a>
+        <dt><a href="https://apps.leapmotion.com/apps/jungle-jumper/" target="_blank">Jungle Jumper</a> displays in-app cues as well as a small HUD in the lower right corner to show you real-time feedback of your hand.</dt>
+    </div>
+</div><p>The Heads Up Display (HUD), shown in the lower right corner of
+Jungle Jumper, gives the user additional feedback as to their hand
+position and state. While not necessary for every app, this sort of
+visual feedback can be very helpful in describing to the user the
+extent of the Leap Motion interaction zone and what is being detected
+by the device.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="../../images/WoodenSensei_Tutorial02.png" target="_blank"><img src="../../images/WoodenSensei_Tutorial02.jpg"></a>
+        <dt>Every time you receive a new skill, <a href="https://apps.leapmotion.com/apps/wooden-sen-sey/" target="_blank">Wooden Sen’SeY</a> displays an in-app cue to teach you the
+    move.</dt>
+    </div>
+</div></div>
+<div class="section" id="controls-as-demos">
+<h2>Controls As Demos<a class="headerlink" href="#controls-as-demos" title="Permalink to this headline">¶</a></h2>
+<p>Live controls in the tutorials provides an experiential approach to
+teaching interactions by requiring users to perform certain simple
+tasks in menu selections or discreet tutorial mode. This is truly
+‘learning by doing’ and can be a creative way to reinforce gestures
+that are core to your app. Depending upon the complexity of your
+application, providing these interactive tutorials or a practice mode
+might be worthwhile.</p>
+<style type="text/css">
+    td { text-align: center; }
+    td * { display: inline; padding: 2px;}
+    .centered {
+            width:500px;
+            padding:10px;
+            text-align: center;
+            display: block;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="../../images/Handwave_Tutorial02.png" target="_blank"><img src="../../images/Handwave_Tutorial02.jpg" width="400"></a>
+        <dt><a href="https://apps.leapmotion.com/apps/handwave/" target="_blank">HandWAVE</a> provides a comprehensive interactivetutorial.</dt>
+    </div>
+    <div class="col-md-6">
+        <a href="../../images/Cyberscience_Tutorial.png" target=
+        "_blank"><img src="../../images/Cyberscience_Tutorial.jpg" width=
+        "400"></a>
+        <dt><a href="https://apps.leapmotion.com/apps/cyber-science-motion/"target="_blank">Cyber Science 3D Motion</a> has an interactivetutorial that teaches you how to perform the tasks needed within the app.</dt>
+    </div>
+</div><p>Whichever tutorial option you provide in your application, put
+yourself in the user’s shoes and give them what they need to succeed
+within your app. As you can see from some of the above examples,
+additionally including some indication as to the best position of the
+user’s hands in relation to the Leap Motion Controller (this may differ
+depending on the application) can be extremely helpful.</p>
+</div>
+<div class="section" id="help-when-and-where-you-need-it">
+<h2>Help When and Where You Need It<a class="headerlink" href="#help-when-and-where-you-need-it" title="Permalink to this headline">¶</a></h2>
+<p>Lastly, be sure that you enable the user to intuitively access these
+tutorials and help screens from anywhere within your application. We
+highly recommend that a tutorial is shown upon the very first entry
+into the app. Within the app, the tutorials could be accessed via an
+explicit and persistent “Help” or “?” icon or via the main menu, if
+applicable.</p>
+<p>No matter how simple your app may be, a little help can go a long
+way. Set your users up to get the most out of your app and they will
+become your biggest fans.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Practices.html">Guidelines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Menu_Design_Guidelines.html">Menu Design Guidelines</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">User Orientation and Tutorial Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-great-demo-video">Create a Great Demo Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction-keys">Interaction ‘Keys’</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#walk-through-tutorials">Walk-Through Tutorials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#in-app-cues-hints">In-App Cues / Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#controls-as-demos">Controls As Demos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#help-when-and-where-you-need-it">Help When and Where You Need It</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_UX_Guidelines.html">User Experience Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

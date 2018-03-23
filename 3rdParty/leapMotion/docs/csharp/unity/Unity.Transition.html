@@ -1,0 +1,547 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transition &mdash; Leap Motion C# SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C# SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'csharp';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'csharp/unity/Unity.Transition.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity.Transition.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity.Transition.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'csharp/unity/Unity.Transition.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity.Transition.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      C#
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Transition
+</span> -->
+        
+  <div class="section" id="transition">
+<h1>Transition<a class="headerlink" href="#transition" title="Permalink to this headline">¶</a></h1>
+<div class="line-block" id="unitycorea00335">
+<div class="line"><em>class</em> <strong>Leap::Unity::Attachments::Transition</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> class animates the position, rotation, scale, and color of child game objects. </p>
+<p><p>Use a <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> to animate hand attachments when they turn on or off. For example, you could make an arm HUD rotate or fade into view when activated.</p>
+<p>The <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> component should be placed on an empty game object that is a child of one of the hand attachment transforms (i.e. for the palm, one of the fingers, etc.). The attached objects to be affected by the transition should be children of that empty game object.</p>
+<p>Assign the <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> component to the <a class="reference internal" href="Unity.AttachmentController.html#unitycorea00016_1a02ef851ca9d18209f9bcdccae2e9d72e"><em>AttachmentController.Transition</em></a> property. The <a class="reference internal" href="Unity.AttachmentController.html#unitycorea00016"><em>AttachmentController</em></a> will then call the <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> methods at the appropriate times.</p>
+<p>The <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> component uses AnimationCurve objects to control the animation. The curves you use should cover a domain of -1 to 1. The portion of the curve from -1 to 0 is used for the &#8220;in&#8221; transition (off to on state); the portion from 0 to 1 is used for the &#8220;out&#8221; transition (on to off state).</p>
+<p>You can use the Simulate slider in the Unity inspector to observe the affect of the transition in the editor. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="unitycorea00335_1a9a4f057d14718a1ad7c97d9da0a8ace2"></span><div class="line-block">
+<div class="line">override void <strong>TransitionIn</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Play the transition from off to on. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a9050c0c52421cb693851957d34694550"></span><div class="line-block">
+<div class="line">override void <strong>TransitionOut</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Play the transition from on to off. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="unitycorea00335_1a87d7959bf6a84d691f7f1134c690dc75"></span>bool <strong>AnimateColor</strong></p>
+<blockquote>
+<div><p>Specifies whether to animate color. </p>
+<p>The color of each child object (with a Renderer component) is modified individually. Child objects must use a shader that uses the property specified by ColorShaderPropertyName. To change the alpha color component, the shader must also support alpha blending. The standard Unity shaders have a Rendering Mode property that must be set to Transparency or Fade in order for changes in alpha to be rendered. Other shaders may have their own requirements. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a88a60725e010371a7e1d7ffe2c4fdd3c"></span>bool <strong>AnimatePosition</strong></p>
+<blockquote>
+<div><p>Specifies whether to animate position. </p>
+<p>The position of the <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> game object is animated. Any child objects maintain their respective local positions relative to the transition object. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1ad7a6a29142860981d62255fb6df96ac8"></span>bool <strong>AnimateRotation</strong></p>
+<blockquote>
+<div><p>Specifies whether to animate rotation. </p>
+<p>The rotation of the <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> game object is animated. Any child objects maintain their respective local rotations relative to the transition object. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a2db9a2cd066a81d087538c91e4378f22"></span>bool <strong>AnimateScale</strong></p>
+<blockquote>
+<div><p>Specifies whether to animate scale. </p>
+<p>The scale of the <a class="reference internal" href="#unitycorea00335"><em>Transition</em></a> game object is animated. Any child objects maintain their respective local scale relative to the transition object. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a2e0814309114732e5e9bf6928b45ec9e"></span>AnimationCurve <strong>ColorCurve</strong></p>
+<blockquote>
+<div><p>The curve controlling color. </p>
+<p>A curve value of 1 is fully transitioned off. A curve value of 0 is the on state (the transition settings have no influence on color). <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a499848a4ebb4d334862e22b9a7df573b"></span>string <strong>ColorShaderPropertyName</strong></p>
+<blockquote>
+<div><p>The name of the shader property controlling object color. </p>
+<p><p>The default value is the name used by the standard Unity shaders. You can view the names used by a shader by finding the Shader component in the inspector panel for the owning game object and selecting the &#8220;Edit Shader...&#8221; command from the shader component&#8217;s drop-down menu.</p>
+<p>All objects whose color you wish to animate must use the same color name. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a1218892f6c7221004c569cb2412d488b"></span>float <strong>Duration</strong></p>
+<blockquote>
+<div><p>The duration of the transition in seconds. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1af63fbf951d524453e5568f4d9a1189e6"></span>Vector3 <strong>OffPosition</strong></p>
+<blockquote>
+<div><p>The position of the transition object in the fully transitioned (off) state. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a39aac48f1fd0365f8fb2f248e43a1cbe"></span>Vector3 <strong>OffRotation</strong></p>
+<blockquote>
+<div><p>The rotation of the transition object in the fully transitioned (off) state. </p>
+<p>The rotation is expressed as Euler angles in degrees. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a5e00a347cb219d80d9c969be69751e75"></span>Vector3 <strong>OffScale</strong></p>
+<blockquote>
+<div><p>The scale of the transition object in the fully transitioned (off) state. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a65f4b59db9c63cdd36ae2c7c10e0274f"></span>Vector3 <strong>OnPosition</strong></p>
+<blockquote>
+<div><p>The position of the transition object in the fully active state. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a218d539ba82997caddabef365839101c"></span>Vector3 <strong>OnRotation</strong></p>
+<blockquote>
+<div><p>The rotation of the transition object in the fully active state. </p>
+<p>The rotation is expressed as Euler angles in degrees. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a283db8c5f1ce49face3c79c86352102f"></span>Vector3 <strong>OnScale</strong></p>
+<blockquote>
+<div><p>The scale of the transition object in the fully on state. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a157590c174e88ea70a0aa14432eb27eb"></span>AnimationCurve <strong>PositionCurve</strong></p>
+<blockquote>
+<div><p>The curve controlling position. </p>
+<p>A curve value of 1 is fully transitioned off. A curve value of 0 is the on state (the transition settings have no influence on position). <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a081f25ecbfcae8a430d79741d6968b93"></span>AnimationCurve <strong>RotationCurve</strong></p>
+<blockquote>
+<div><p>The curve controlling rotation. </p>
+<p>A curve value of 1 is fully transitioned off. A curve value of 0 is the on state (the transition settings have no influence on rotation). <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1af3dc8bbf17926e1d5a4b96e51cc64eaf"></span>AnimationCurve <strong>ScaleCurve</strong></p>
+<blockquote>
+<div><p>The curve controlling scale. </p>
+<p>A curve value of 1 is fully transitioned off. A curve value of 0 is the on state (the transition settings have no influence on scale). <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1a398a7ba56702d18658738378e7334268"></span>float <strong>Simulate</strong></p>
+<blockquote>
+<div><p>A value used in edit mode to simulate the transition. </p>
+<p>Change the value to observe how the transition will look when played. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00335_1af3e00f5feba7bd0c84a03d4245787642"></span>Color <strong>TransitionColor</strong></p>
+<blockquote>
+<div><p>The color of the transition object in the fully transitioned (out) state. </p>
+<p>The color is applied to the shader property specified by ColorShaderPropertyName variable. The color used when the objects under the transition are fully on is the taken from the assigned material. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>4.1.4 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C# Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C# and Unity</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

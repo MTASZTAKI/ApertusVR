@@ -10,8 +10,6 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -19,8 +17,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -225, 100060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -285, 200060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(19.5237, -141.02, 200067), Ape::Quaternion(0.975645, -0.00829328, -0.219197, -0.00186324)));
 	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
 	/*mSwitchNodeVisibilityNames = std::vector<std::string>();
@@ -55,7 +52,9 @@ ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 
 void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
+		mUserNode = mpScene->getNode(event.subjectName);
+	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			camera->setParentNode(mUserNode);

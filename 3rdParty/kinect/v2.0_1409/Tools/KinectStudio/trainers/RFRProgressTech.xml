@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GestureBuilderFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <TrainerDefinition>
+        <Header>
+            <Name>RFRProgress</Name>
+            <Trainer>RFRProgressTech.dll</Trainer>
+            <Runtime>RFRProgressTech.dll</Runtime>
+            <Date>2012-09-11</Date>
+            <Time>00:00:00.0000000-07:00</Time>
+            <Version>5</Version>
+        </Header>
+        <Attributes>
+            <Items xsi:type="BoolAttribute" Name="Use Rotation Variant Feature" Value="false" />
+            <Items xsi:type="IntAttribute" Name="Number of Trees" Value="50" MinValue="1" MaxValue="100"/>
+            <Items xsi:type="IntAttribute" Name="Max Tree Depth" Value="50" MinValue="10" MaxValue="100"/>
+            <Items xsi:type="FloatAttribute" Name="Cluster Threshold" Value="0.3" MinValue="0" MaxValue="1"/>
+            <Items xsi:type="FloatAttribute" Name="Weight Factor" Value="0.2" MinValue="0"/>
+            <Items xsi:type="BoolAttribute" Name="Use Hands Data" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Left Arm" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Right Arm" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Lower Body" Value="false" />
+        </Attributes>
+        <TagTypes>
+            <Items>FLOAT</Items>
+        </TagTypes>
+    </TrainerDefinition>
+</GestureBuilderFile>

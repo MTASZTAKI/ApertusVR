@@ -141,6 +141,42 @@ namespace Ape
 	typedef std::weak_ptr<IManualTexture> ManualTextureWeakPtr;
 
 	typedef std::shared_ptr<IManualTexture> ManualTextureSharedPtr;
+
+	class IBrowser;
+
+	typedef std::weak_ptr<IBrowser> BrowserWeakPtr;
+
+	typedef std::shared_ptr<IBrowser> BrowserSharedPtr;
+
+	class IUnitTexture;
+
+	typedef std::weak_ptr<IUnitTexture> UnitTextureWeakPtr;
+
+	typedef std::shared_ptr<IUnitTexture> UnitTextureSharedPtr;
+
+	class IRayGeometry;
+
+	typedef std::weak_ptr<IRayGeometry> RayGeometryWeakPtr;
+
+	typedef std::shared_ptr<IRayGeometry> RayGeometrySharedPtr;
+
+	class IWater;
+
+	typedef std::weak_ptr<IWater> WaterWeakPtr;
+
+	typedef std::shared_ptr<IWater> WaterSharedPtr;
+
+	class ISky;
+
+	typedef std::weak_ptr<ISky> SkyWeakPtr;
+
+	typedef std::shared_ptr<ISky> SkySharedPtr;
+
+	class IPointCloud;
+
+	typedef std::weak_ptr<IPointCloud> PointCloudWeakPtr;
+
+	typedef std::shared_ptr<IPointCloud> PointCloudSharedPtr;
 }
 
 #endif

@@ -1,0 +1,30 @@
+
+material <IFCDefault>Dds_BardNa.Ifcwindow
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.058053 0.0753292 0.0675212 0.12
+			specular 0.58053 0.753292 0.675212 0.12 0
+			scene_blend alpha_blend
+			depth_write off
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.058053 0.0753292 0.0675212 0.12
+			specular 0.58053 0.753292 0.675212 0.12 0
+			scene_blend alpha_blend
+			depth_write off
+		}
+
+	}
+
+}

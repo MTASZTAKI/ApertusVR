@@ -1,0 +1,539 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Menu Design Guidelines &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/practices/Leap_Menu_Design_Guidelines.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/practices/Leap_Menu_Design_Guidelines.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/practices/Leap_Menu_Design_Guidelines.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/practices/Leap_Menu_Design_Guidelines.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/practices/Leap_Menu_Design_Guidelines.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="../../csharp/practices/Leap_Menu_Design_Guidelines.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/practices/Leap_Menu_Design_Guidelines.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/practices/Leap_Menu_Design_Guidelines.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/practices/Leap_Menu_Design_Guidelines.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/practices/Leap_Menu_Design_Guidelines.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Menu Design Guidelines
+</span> -->
+        
+  <div class="section" id="menu-design-guidelines">
+<h1>Menu Design Guidelines<a class="headerlink" href="#menu-design-guidelines" title="Permalink to this headline">¶</a></h1>
+<p>Presenting users with intuitive options and controls – whether in the
+form of dedicated menus or simply throughout an experience – is an
+incredibly important component of developing deep applications and
+ensuring users ultimately feel in control. What’s more, many times these
+are the first interactions someone will have with your software. If a
+user’s initial experience with basic menu selection is confusing,
+frustrating or laborious, they might give up on the experience even
+before getting to the heart of your application. Clearly it’s worth
+spending some time to get this right!</p>
+<p>Yet while some existing best practices can be easily applied to Leap
+Motion-enabled apps, there&#8217;s no reason to think that what works best in
+current desktop or mobile menus will be immediately transferable to
+three dimensional interactions. In working through some of these issues
+ourselves and seeing solutions from developer community we’ve
+established a few guidelines to consider when implementing menus and
+settings into your app experiences.</p>
+<div class="section" id="menu-interactions">
+<h2>Menu Interactions<a class="headerlink" href="#menu-interactions" title="Permalink to this headline">¶</a></h2>
+<p>Interacting with a menu are actions that are often repeated and likely
+to be gating factors to other functionality – so clearly they need to
+feel natural, be incredibly reliable and not require too much of the
+user in learning a new or complicated sign language. To avoid user
+frustration, it is always better to err on the side of basic yet stable
+approaches while continuing to refine more innovative ones.</p>
+</div>
+<div class="section" id="menu-design-and-layout">
+<h2>Menu Design and Layout<a class="headerlink" href="#menu-design-and-layout" title="Permalink to this headline">¶</a></h2>
+<p>However you organize your menu to accommodate your experience and
+artwork, keep the usability, legibility and simplicity of interaction in
+mind. Be sure to space the buttons appropriately so that its easy for a
+user to select and tap a particular button without accidentally
+mis-tapping another.</p>
+<div class="line-block">
+<div class="line"><img alt="image0" src="practices/../../../images/menu_left_align_withInfo.jpg" /></div>
+<div class="line-block">
+<div class="line">In this example menu you can see a number of best practices at work.</div>
+</div>
+</div>
+<ol class="arabic simple">
+<li>Buttons are large, well organized and include a clear
+highlight/depressed state</li>
+<li>Buttons use high contrast colors and the text/font are very legible</li>
+<li>The Exit button is easily accessible and clearly indicated</li>
+<li>Required hand motions, gestures or poses are displayed using easy to read iconography..</li>
+</ol>
+</div>
+<div class="section" id="proximity-based-highlighting">
+<h2>Proximity-Based Highlighting<a class="headerlink" href="#proximity-based-highlighting" title="Permalink to this headline">¶</a></h2>
+<p>Another way of simplifying the menu experience for your users is to
+provide a proximity-based highlighting scheme. This would highlight the
+closest item to the user’s cursor, without having to actually be over
+it. In the example below, the five possible actions are outlined to show
+how this might work. The user’s cursor is in the upper left quadrant so
+therefore the Play button is lit. Anticipating what the user might want in these
+contexts can save time and eliminate frustration.</p>
+<div class="line-block">
+<div class="line"><img alt="image1" src="practices/../../../images/Menus_Zones.jpg" /></div>
+<div class="line-block">
+<div class="line">Example of Proximity-Based Highlighting Scheme</div>
+</div>
+</div>
+<p>Combining layout and proximity highlighting can result in some easy to
+use, not to mention great looking, Leap Motion enabled menus. Here are
+some examples using a radial and grid based menu generator we’ve
+provided to help you understand and interact with these concepts. These
+examples are using the tap-zone API (z-axis poke) for the activation
+method. Additionally they include clear visual feedback when
+highlighting and selecting each cell as well as audio feedback as you
+navigate from cell to cell and upon cell selection. Note the change in
+the cursor state as you translate the z-axis, showing your proximity to
+the &#8220;tap&#8221;.</p>
+</div>
+<div class="section" id="radial-menus">
+<h2>Radial Menus<a class="headerlink" href="#radial-menus" title="Permalink to this headline">¶</a></h2>
+<p>The following radial menus show how you can navigate a number of items
+quickly and accurately by arranging their layout in a ring or pie. The
+movement required to target one of the cells is extremely slight which
+reduces the amount of latency and physical strain. The menus with a
+central cell could use that area for the most important item in the menu
+or as a &#8220;neutral zone&#8221;.</p>
+<p>You can find the <a class="reference external" href="http://goo.gl/ZKoTp7">live code example here</a>.</p>
+<table>
+    <tr>
+            <td>
+                    <a href="../../images/Radial_002.png" target="_blank">
+                            <img src="../../images/Radial_002.png" width="350" /></a><br/>
+                    5 Cell Radial Menu with Center Target
+            </td>
+            <td>
+                    <a href="../../images/Radial_005.png" target="_blank">
+                            <img src="../../images/Radial_005.png" width="350" /></a><br/>
+                    6 Cell Symmetrical Radial Menu
+            </td>
+    </tr>
+    <tr>
+            <td>
+                    <a href="../../images/Radial_006.png" target="_blank">
+                            <img src="../../images/Radial_006.png" width="350" /></a><br/>
+                    7 Cell Radial Menu with Center Target
+            </td>
+            <td>
+                    <a href="../../images/Radial_008.png" target="_blank">
+                            <img src="../../images/Radial_008.png" width="350" /></a><br/>
+                    4 Cell Symmetrical Radial Menu with 2 Columns
+            </td>
+    </tr>
+</table></div>
+<div class="section" id="grid-menus">
+<h2>Grid Menus<a class="headerlink" href="#grid-menus" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the radial menus, these grid based menus provide a simple
+method of accessing items with a minimum of effort, but using a
+column/row/grid based layout.</p>
+<p>You can find the <a class="reference external" href="http://goo.gl/6seQ29">live code example here</a>.</p>
+<table>
+    <tr>
+            <td>
+                    <a href="../../images/Grid001.png" target="_blank">
+                            <img src="../../images/Grid001.png" width="350" /></a><br/>
+                    6 Cell Symmetrical Row Menu
+            </td>
+            <td>
+                    <a href="../../images/Grid002.png" target="_blank">
+                            <img src="../../images/Grid002.png" width="350" /></a><br/>
+                    6 Cell Symmetrical Column Menu
+            </td>
+    </tr>
+    <tr>
+            <td>
+                    <a href="../../images/Grid003.png" target="_blank">
+                            <img src="../../images/Grid003.png" width="350" /></a><br/>
+                    9 Cell Symmetrical Grid Menu
+            </td>
+            <td>
+                    <a href="../../images/Grid005.png" target="_blank">
+                            <img src="../../images/Grid005.png" width="350" /></a><br />
+                    5 Cell Row Menu with Right Zone
+            </td>
+    </tr>
+</table></div>
+<div class="section" id="menu-access-and-exit">
+<h2>Menu Access and Exit<a class="headerlink" href="#menu-access-and-exit" title="Permalink to this headline">¶</a></h2>
+<p>With this in mind, accessing these menus as well as exiting your
+application should be handled in the same, simple and foolproof manner.</p>
+<ul class="simple">
+<li>For most games and applications, removing your hands from the field
+of view should pause the interaction and display a “Continue, Main
+Menu, Quit” dialog</li>
+<li>Providing an explicit “Settings” or “Menu” button is another option</li>
+<li>There should be an explicit “Exit” or “Quit” button</li>
+<li>The Escape key should exit the app (on Mac and Windows)</li>
+<li>The Command-Q (Mac) or Alt-F4 (Window) should also exit</li>
+<li>May want to also make your menus accessible via mouse as well</li>
+</ul>
+<div class="line-block">
+<div class="line"><img alt="image18" src="practices/../../../images/DeadMotion.jpg" /></div>
+<div class="line-block">
+<div class="line">The first-person shooter, Dead Motion Prologue, displays this menu
+when a user removes their hands from the field of view.</div>
+</div>
+</div>
+</div>
+<div class="section" id="feedback-feedback-feedback">
+<h2>Feedback. Feedback. Feedback.<a class="headerlink" href="#feedback-feedback-feedback" title="Permalink to this headline">¶</a></h2>
+<p>For any selection approach you utilize, giving users proper cues and
+feedback is integral to ensuring they feel in complete control. It
+should first be immediately clear what elements are interactive – and it
+never hurts to give users unobtrusive graphical or textual cues, e.g. a
+simple illustration and “Tap to select an article.”</p>
+<p>Once interacting with the element, it should respond fluidly with
+appropriate <strong>visual</strong> and <strong>auditory</strong> feedback. Buttons should be
+highlighted when hovered over and should respond with a “click” and
+indent as they are depressed; sliders should move freely; etc. The more
+information you can give to help orient the user and signal their
+selections, the easier it will be for them to complete each task.</p>
+<div class="line-block">
+<div class="line"><img alt="image19" src="practices/../../../images/FrogDissection_lit.jpg" /></div>
+<div class="line-block">
+<div class="line">Frog Dissection uses large buttons that highlight and magnify when
+indicated and a simple z-axis &#8220;poke gesture&#8221; to tap/select.</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><img alt="image20" src="practices/../../../images/SkyMuffins.jpg" /></div>
+<div class="line-block">
+<div class="line">Sky Muffins uses buttons that “fill up” as you push forward on the
+z-axis. Filling the button selects it. This can be done quickly based on
+the speed of your push.</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unity/Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

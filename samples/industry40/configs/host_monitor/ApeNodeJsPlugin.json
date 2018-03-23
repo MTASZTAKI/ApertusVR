@@ -1,6 +1,16 @@
 {
-    "jsPlugins": [
-        "./plugins/x3dLoader/x3dLoader.js"
-    ]
+    "pluginManager": {
+        "plugins": [
+            {
+                "file": "httpSimulator/httpSimulator.js",
+                "args": {
+                    "fileName": "httpSimulator/apertusvr.log",
+                    "delay":  20
+                }
+            },
+            {
+                "file": "x3dLoader/x3dLoader.js"
+            }
+        ]
+    }
 }
-

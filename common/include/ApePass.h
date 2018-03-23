@@ -57,6 +57,14 @@ namespace Ape
 
 	class Pass : public Entity
 	{
+	public:
+		enum SceneBlendingType
+		{
+			ADD,
+			TRANSPARENT_ALPHA,
+			REPLACE,
+			INVALID
+		};
 	protected:
 		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 		
@@ -78,6 +86,8 @@ namespace Ape
 
 		Ape::PassGpuParameters mPassGpuParameters;
 
+		Ape::Pass::SceneBlendingType mSceneBlendingType;
+
 	public:
 		Ape::Color getDiffuseColor() { return mDiffuseColor; };
 
@@ -88,6 +98,8 @@ namespace Ape
 		Ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
+
+		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 
 		Ape::TextureWeakPtr getTexture() { return mTexture; };
 

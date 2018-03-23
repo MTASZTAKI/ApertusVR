@@ -26,13 +26,15 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 exports.moduleTag = 'ApeHTTPApiText';
 
 app.post('/texts', function(req, res) {
-	console.log('ape.httpApi.texts.create()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Creates a new text with the specified name.');
 
 	// handle http param validation errors
 	req.checkBody('name', 'BodyParam is not presented').notEmpty();
@@ -54,8 +56,8 @@ app.post('/texts', function(req, res) {
 });
 
 app.get('/texts/:name/caption', function(req, res) {
-	console.log('ape.httpApi.texts.getCaption()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the caption of the specified text.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -87,8 +89,8 @@ app.get('/texts/:name/caption', function(req, res) {
 });
 
 app.post('/texts/:name/caption', function(req, res) {
-	console.log('ape.httpApi.texts.setCaption()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the caption of the specified text.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty();

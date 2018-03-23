@@ -1,0 +1,24 @@
+
+material Colour(RGB)(0255255)UTSTYRFORVARMEINSTALLASJONERDds_BardNa.Ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 1 1 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 1 1 1
+		}
+
+	}
+
+}

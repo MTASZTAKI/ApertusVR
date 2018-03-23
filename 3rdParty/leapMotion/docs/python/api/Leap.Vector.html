@@ -1,0 +1,1201 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Appendices" href="../supplements/Leap_Supplements.html" />
+    <link rel="prev" title="PointableList" href="Leap.PointableList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Vector.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Vector.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Vector.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Vector.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.PointableList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("../supplements/Leap_Supplements.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Vector.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Vector.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Vector.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Vector.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Vector.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Vector.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Vector
+</span> -->
+        
+  <div class="section" id="vector">
+<h1>Vector<a class="headerlink" href="#vector" title="Permalink to this headline">¶</a></h1>
+</div>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Vector.x" title="Leap.Vector.x"><tt class="xref py py-attr docutils literal"><span class="pre">x</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.y" title="Leap.Vector.y"><tt class="xref py py-attr docutils literal"><span class="pre">y</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.z" title="Leap.Vector.z"><tt class="xref py py-attr docutils literal"><span class="pre">z</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.normalized" title="Leap.Vector.normalized"><tt class="xref py py-attr docutils literal"><span class="pre">normalized</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.pitch" title="Leap.Vector.pitch"><tt class="xref py py-attr docutils literal"><span class="pre">pitch</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.yaw" title="Leap.Vector.yaw"><tt class="xref py py-attr docutils literal"><span class="pre">yaw</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.roll" title="Leap.Vector.roll"><tt class="xref py py-attr docutils literal"><span class="pre">roll</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.is_valid" title="Leap.Vector.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Vector.Vector" title="Leap.Vector.Vector"><tt class="xref py py-meth docutils literal"><span class="pre">Vector()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.magnitude" title="Leap.Vector.magnitude"><tt class="xref py py-meth docutils literal"><span class="pre">magnitude()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.magnitude_squared" title="Leap.Vector.magnitude_squared"><tt class="xref py py-meth docutils literal"><span class="pre">magnitude_squared()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.distance_to" title="Leap.Vector.distance_to"><tt class="xref py py-meth docutils literal"><span class="pre">distance_to()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.angle_to" title="Leap.Vector.angle_to"><tt class="xref py py-meth docutils literal"><span class="pre">angle_to()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.dot" title="Leap.Vector.dot"><tt class="xref py py-meth docutils literal"><span class="pre">dot()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.cross" title="Leap.Vector.cross"><tt class="xref py py-meth docutils literal"><span class="pre">cross()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.to_float_array" title="Leap.Vector.to_float_array"><tt class="xref py py-meth docutils literal"><span class="pre">to_float_array()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.to_tuple" title="Leap.Vector.to_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">to_tuple()</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Constants:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Vector.zero" title="Leap.Vector.zero"><tt class="xref py py-data docutils literal"><span class="pre">zero</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.x_axis" title="Leap.Vector.x_axis"><tt class="xref py py-data docutils literal"><span class="pre">x_axis</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.y_axis" title="Leap.Vector.y_axis"><tt class="xref py py-data docutils literal"><span class="pre">y_axis</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.z_axis" title="Leap.Vector.z_axis"><tt class="xref py py-data docutils literal"><span class="pre">z_axis</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.left" title="Leap.Vector.left"><tt class="xref py py-data docutils literal"><span class="pre">left</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.right" title="Leap.Vector.right"><tt class="xref py py-data docutils literal"><span class="pre">right</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.up" title="Leap.Vector.up"><tt class="xref py py-data docutils literal"><span class="pre">up</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.down" title="Leap.Vector.down"><tt class="xref py py-data docutils literal"><span class="pre">down</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.forward" title="Leap.Vector.forward"><tt class="xref py py-data docutils literal"><span class="pre">forward</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Vector.backward" title="Leap.Vector.backward"><tt class="xref py py-data docutils literal"><span class="pre">backward</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Vector">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Vector</tt><a class="headerlink" href="#Leap.Vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Vector class represents a three-component mathematical vector or point
+such as a direction or position in three-dimensional space.</p>
+<p>The Leap Motion software employs a right-handed Cartesian coordinate system.
+Values given are in units of real-world millimeters. The origin is centered
+at the center of the Leap Motion Controller. The x- and z-axes lie in the horizontal
+plane, with the x-axis running parallel to the long edge of the device.
+The y-axis is vertical, with positive values increasing upwards (in contrast
+to the downward orientation of most computer graphics coordinate systems).
+The z-axis has positive values increasing away from the computer screen.</p>
+<img alt="api/../../../images/Leap_Axes.png" src="api/../../../images/Leap_Axes.png" />
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Vector.Vector">
+<em class="property">classmethod </em><tt class="descname">Vector</tt><big>(</big><span class="optional">[</span><em>x</em>, <em>y</em>, <em>z</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Leap.Vector.Vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Vector with the specified component values. If you do not supply
+arguments, a zero-vector is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">new_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">200.3</span><span class="p">,</span> <span class="mi">67</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>float</em>) &#8211; The x component. Corresponds to the long (left to right) dimension of the
+Leap Motion controller.</li>
+<li><strong>y</strong> (<em>float</em>) &#8211; The y component. Corresponds to height above the device.</li>
+<li><strong>z</strong> (<em>float</em>) &#8211; The z component. Corresponds to the short (front-back) dimension of
+the Leap Motion controller.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">Vector</tt><big>(</big><em>vector</em><big>)</big></dt>
+<dd><p>Copies the specified Vector.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">copied_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="n">other_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vector</strong> (<em>Vector</em>) &#8211; The vector to copy.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> &#8211; the new copy.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Vector.x">
+<tt class="descname">x</tt><a class="headerlink" href="#Leap.Vector.x" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The horizontal component.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.y">
+<tt class="descname">y</tt><a class="headerlink" href="#Leap.Vector.y" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The vertical component.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">y</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">y</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.z">
+<tt class="descname">z</tt><a class="headerlink" href="#Leap.Vector.z" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The depth component.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="n">z</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.normalized">
+<tt class="descname">normalized</tt><a class="headerlink" href="#Leap.Vector.normalized" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>A normalized copy of this vector.</p>
+<p>A normalized vector has the same direction as the original vector,
+but with a length of one.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">normalized_vector</span> <span class="o">=</span> <span class="n">other_vector</span><span class="o">.</span><span class="n">normalized</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.pitch">
+<tt class="descname">pitch</tt><a class="headerlink" href="#Leap.Vector.pitch" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The pitch angle in radians.</p>
+<p>Pitch is the angle between the negative z-axis and the projection of
+the vector onto the y-z plane. In other words, pitch represents rotation
+around the x-axis.
+If the vector points upward, the returned angle is between 0 and pi radians
+(180 degrees); if it points downward, the angle is between 0 and -pi radians.</p>
+<img alt="api/../../../images/Math_Pitch_Angle.png" src="api/../../../images/Math_Pitch_Angle.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pitch_radians</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">pitch</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.yaw">
+<tt class="descname">yaw</tt><a class="headerlink" href="#Leap.Vector.yaw" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The yaw angle in radians.</p>
+<p>Yaw is the angle between the negative z-axis and the projection of
+the vector onto the x-z plane. In other words, yaw represents rotation
+around the y-axis. If the vector points to the right of the negative z-axis,
+then the returned angle is between 0 and pi radians (180 degrees);
+if it points to the left, the angle is between 0 and -pi radians.</p>
+<img alt="api/../../../images/Math_Yaw_Angle.png" src="api/../../../images/Math_Yaw_Angle.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">yaw_radians</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">yaw</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.roll">
+<tt class="descname">roll</tt><a class="headerlink" href="#Leap.Vector.roll" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The roll angle in radians.</p>
+<p>Roll is the angle between the y-axis and the projection of
+the vector onto the x-y plane. In other words, roll represents rotation
+around the z-axis. If the vector points to the left of the y-axis,
+then the returned angle is between 0 and pi radians (180 degrees);
+if it points to the right, the angle is between 0 and -pi radians.</p>
+<img alt="api/../../../images/Math_Roll_Angle.png" src="api/../../../images/Math_Roll_Angle.png" />
+<p>Use this function to get roll angle of the plane to which this vector is a
+normal. For example, if this vector represents the normal to the palm,
+then this function returns the tilt or roll of the palm plane compared
+to the horizontal (x-z) plane.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">roll_radians</span> <span class="o">=</span> <span class="n">normal_vector</span><span class="o">.</span><span class="n">roll</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Vector.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Vector.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>True if all of the vector&#8217;s components are finite.  If any
+component is NaN or infinite, then this is false.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">valid_vector</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">is_valid</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<dl class="method">
+<dt id="Leap.Vector.magnitude">
+<tt class="descname">magnitude</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Vector.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>The magnitude, or length, of this vector.</p>
+<p>The magnitude is the L2 norm, or Euclidean distance between the origin and
+the point represented by the (x, y, z) components of this Vector object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">length</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">magnitude</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float &#8211; The length of this vector.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.magnitude_squared">
+<tt class="descname">magnitude_squared</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Vector.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd><p>The square of the magnitude, or length, of this vector.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">length_squared</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">magnitude_squared</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float &#8211; The square of the length of this vector.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.distance_to">
+<tt class="descname">distance_to</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#Leap.Vector.distance_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distance between the point represented by this Vector
+object and a point represented by the specified Vector object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a_point</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">zero</span>
+<span class="n">distance</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">distance_to</span><span class="p">(</span><span class="n">a_point</span><span class="p">);</span> <span class="c"># distance = 10</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>Vector</em>) &#8211; Another point.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float &#8211; The distance from this point to the specified point.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.angle_to">
+<tt class="descname">angle_to</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#Leap.Vector.angle_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>The angle between this vector and the specified vector in radians.</p>
+<p>The angle is measured in the plane formed by the two vectors. The
+angle returned is always the smaller of the two conjugate angles.
+Thus <tt class="docutils literal"><span class="pre">A.angle_to(B)</span> <span class="pre">==</span> <span class="pre">B.angle_to(A)</span></tt> and is always a positive
+value less than or equal to pi radians (180 degrees).</p>
+<p>If either vector has zero length, then this function returns zero.</p>
+<img alt="api/../../../images/Math_AngleTo.png" src="api/../../../images/Math_AngleTo.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">angle_in_radians</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">x_axis</span><span class="o">.</span><span class="n">angle_to</span><span class="p">(</span><span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">y_axis</span><span class="p">)</span>
+<span class="c"># angle_in_radians = PI/2 (90 degrees)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>Vector</em>) &#8211; Another direction vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float &#8211; The angle between this vector and the specified vector in radians.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.dot">
+<tt class="descname">dot</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#Leap.Vector.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dot product of this vector with another vector.</p>
+<p>The dot product is the magnitude of the projection of this vector
+onto the specified vector.</p>
+<img alt="api/../../../images/Math_Dot.png" src="api/../../../images/Math_Dot.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dot_product</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">that_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>Vector</em>) &#8211; Another vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float &#8211; The dot product of this vector and the specified vector.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.cross">
+<tt class="descname">cross</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#Leap.Vector.cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cross product of this vector and the specified vector.</p>
+<p>The cross product is a vector orthogonal to both original vectors.
+It has a magnitude equal to the area of a parallelogram having the
+two vectors as sides. The direction of the returned vector is
+determined by the right-hand rule. Thus <tt class="docutils literal"><span class="pre">A.cross(B)</span> <span class="pre">==</span> <span class="pre">-B.cross(A)</span></tt>.</p>
+<img alt="api/../../../images/Math_Cross.png" src="api/../../../images/Math_Cross.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cross_product</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">that_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>Vector</em>) &#8211; Another vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> &#8211; The cross product of this vector and the specified vector.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.to_float_array">
+<tt class="descname">to_float_array</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Vector.to_float_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts this vector to a float array.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">array</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">to_float_array</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float[]</span></tt> &#8211; the vector as a three-element array of floating point values.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.to_tuple">
+<tt class="descname">to_tuple</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Vector.to_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts this vector to a tuple containing the x, y, and z components.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">tuple</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">tuple</span></tt> &#8211; The three vector components as a tuple.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="operators container">
+<dl class="method">
+<dt id="Leap.Vector.neg">
+<tt class="descname">neg</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.neg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A copy of this vector pointing in the opposite direction.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">negation</span> <span class="o">=</span> <span class="o">-</span><span class="n">this_vector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.add">
+<tt class="descname">add</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add vectors component-wise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">summed_vectors</span> <span class="o">=</span> <span class="n">this_vector</span> <span class="o">+</span> <span class="n">that_vector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.sub">
+<tt class="descname">sub</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtract vectors component-wise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">difference</span> <span class="o">=</span> <span class="n">this_vector</span> <span class="o">-</span> <span class="n">that_vector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.mul">
+<tt class="descname">mul</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiply vector by a scalar.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">product</span> <span class="o">=</span> <span class="n">this_vector</span> <span class="o">*</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.div">
+<tt class="descname">div</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.div" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide vector by a scalar.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">quotient</span> <span class="o">=</span> <span class="n">this_vector</span><span class="o">/</span><span class="mf">2.5</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.iadd">
+<tt class="descname">iadd</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.iadd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add vectors component-wise and assign the sum.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">thisVector</span> <span class="o">+=</span> <span class="n">thatVector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.isub">
+<tt class="descname">isub</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.isub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtract vectors component-wise and assign the difference.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">thisVector</span> <span class="o">-=</span> <span class="n">thatVector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.imul">
+<tt class="descname">imul</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.imul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiply vector by a scalar and assign the product.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">thisVector</span> <span class="o">*=</span> <span class="n">thatVector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.idiv">
+<tt class="descname">idiv</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.idiv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide vector by a scalar and assign the quotient.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">thisVector</span> <span class="o">/=</span> <span class="n">thatVector</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.eq">
+<tt class="descname">eq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Vector equality component-wise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">vectors_are_equal</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_vector</span> <span class="o">==</span> <span class="n">that_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.ne">
+<tt class="descname">ne</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Vector.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Vector inequality component-wise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">vectors_not_equal</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_vector</span> <span class="o">!=</span> <span class="n">that_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Vector.getitem">
+<tt class="descname">getitem</tt><big>(</big><em>object</em>, <em>index</em><big>)</big><a class="headerlink" href="#Leap.Vector.getitem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index vector components numerically.
+Index 0 is x, index 1 is y, and index 2 is z.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">this_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">this_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">this_vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float &#8211; The x, y, or z component of this Vector, if the specified index
+value is at least 0 and at most 2; otherwise, returns zero.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="data container">
+<dl class="data">
+<dt id="Leap.Vector.zero">
+<tt class="descname">zero</tt><a class="headerlink" href="#Leap.Vector.zero" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The zero vector: (0, 0, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">zero_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">zero</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.x_axis">
+<tt class="descname">x_axis</tt><a class="headerlink" href="#Leap.Vector.x_axis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The x-axis unit vector: (1, 0, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x_axis_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">x_axis</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.y_axis">
+<tt class="descname">y_axis</tt><a class="headerlink" href="#Leap.Vector.y_axis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The y-axis unit vector: (0, 1, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">y_axis_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">y_axis</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.z_axis">
+<tt class="descname">z_axis</tt><a class="headerlink" href="#Leap.Vector.z_axis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The z-axis unit vector: (0, 0, 1)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">z_axis_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">z_axis</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.left">
+<tt class="descname">left</tt><a class="headerlink" href="#Leap.Vector.left" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing left along the negative x-axis: (-1, 0, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">left_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">left</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.right">
+<tt class="descname">right</tt><a class="headerlink" href="#Leap.Vector.right" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing right along the positive x-axis: (1, 0, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">right_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">right</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.down">
+<tt class="descname">down</tt><a class="headerlink" href="#Leap.Vector.down" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing down along the negative y-axis: (0, -1, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">down_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">down</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.up">
+<tt class="descname">up</tt><a class="headerlink" href="#Leap.Vector.up" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing up along the positive y-axis: (0, 1, 0)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">up_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">up</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.forward">
+<tt class="descname">forward</tt><a class="headerlink" href="#Leap.Vector.forward" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing forward along the negative z-axis: (0, 0, -1)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">forward_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">forward</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="Leap.Vector.backward">
+<tt class="descname">backward</tt><a class="headerlink" href="#Leap.Vector.backward" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The unit vector pointing backward along the positive z-axis: (0, 0, 1)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">backward_vector</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Vector</span><span class="o">.</span><span class="n">backward</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id23">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id27">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id16">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id32">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id8">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id5">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id20">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id29">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id53">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id24">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

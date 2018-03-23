@@ -1,0 +1,8 @@
+{
+    "assets": [
+    ],
+    "mergeAndExportMeshes": false,
+    "scale": 0.1,
+    "regenerateNormals": true,
+    "rootNodeName": "robotRootNode"
+}

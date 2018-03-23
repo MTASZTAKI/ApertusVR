@@ -1,0 +1,63 @@
+﻿<UserControl
+    x:Name="pageRoot"
+    x:Class="Microsoft.Samples.Kinect.ControlsBasics.KinectPointerPointSample"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ControlsBasics_XAML"
+    xmlns:common="using:ControlsBasics_XAML.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="36" />
+            <Setter Property="Foreground" Value="Yellow" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="DarkGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="pageTitle" Grid.Column="0" Text="KinectPointerPoint Demo"/>
+            <CheckBox Grid.Column="1" HorizontalAlignment="Right"
+                    Style="{StaticResource CheckBoxStyle}" Name="details" 
+                      Checked="details_Checked" 
+                      Unchecked="details_Checked" 
+                      IsChecked="False">Details</CheckBox>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Canvas Background="DarkGray" Grid.Row="0" Grid.Column="0" />
+            <Canvas Background="DarkGray" Grid.Row="0" Grid.Column="1" />
+            <Canvas Background="DarkGray" Grid.Row="0" Grid.Column="2" />
+            <Canvas Background="DarkGray" Grid.Row="1" Grid.Column="0" />
+            <Canvas Background="DarkGray" Grid.Row="1" Grid.Column="2" />
+            <Canvas Background="DarkGray" Grid.Row="2" Grid.Column="0" />
+            <Canvas Background="DarkGray" Grid.Row="2" Grid.Column="1" />
+            <Canvas Background="DarkGray" Grid.Row="2" Grid.Column="2" />
+            <Rectangle Grid.Row="1" Grid.Column="1" 
+                       StrokeThickness="60" Stroke="Black"
+                       Margin="-60" />
+            <Canvas Name="mainScreen" Background="Blue" Grid.Row="1" Grid.Column="1"  />
+
+        </Grid>
+    </Grid>
+</UserControl>

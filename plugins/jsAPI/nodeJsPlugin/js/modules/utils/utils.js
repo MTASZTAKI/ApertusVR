@@ -23,7 +23,7 @@ SOFTWARE.*/
 var utils = this;
 var ape = require('../../ape.js');
 var util = require('util');
-var logger = require('../../modules/logger/logger');
+var logger = require('../../modules/log_manager/log_manager.js');
 
 String.prototype.format = function(placeholders) {
 	var s = this;

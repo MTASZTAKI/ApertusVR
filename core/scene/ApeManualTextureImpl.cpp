@@ -29,6 +29,7 @@ Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) 
 	mParameters = Ape::ManualTextureParameters();
 	mCameraName = std::string();
 	mCamera = Ape::CameraWeakPtr();
+	mpBuffer = nullptr;
 }
 
 Ape::ManualTextureImpl::~ManualTextureImpl()
@@ -36,10 +37,12 @@ Ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(float width, float height)
+void Ape::ManualTextureImpl::setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;
+	mParameters.pixelFormat = pixelFormat;
+	mParameters.usage = usage;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
@@ -63,6 +66,17 @@ void Ape::ManualTextureImpl::setSourceCamera(Ape::CameraWeakPtr camera)
 Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 {
 	return mCamera;
+}
+
+void Ape::ManualTextureImpl::setBuffer(const void* buffer)
+{
+	mpBuffer = buffer;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
+}
+
+const void* Ape::ManualTextureImpl::getBuffer()
+{
+	return mpBuffer;
 }
 
 void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

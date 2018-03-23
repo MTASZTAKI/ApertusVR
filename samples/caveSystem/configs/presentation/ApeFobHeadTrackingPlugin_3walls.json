@@ -20,6 +20,11 @@
     },
     "displays": [
         {
+            "name": "frontDisplay",
+            "cameras": {
+                "left": "camera1",
+                "right": "camera0"
+            },
             "size": {
                 "width": 300,
                 "height": 225
@@ -56,6 +61,11 @@
             ]
         },
         {
+            "name": "rightDisplay",
+            "cameras": {
+                "left": "camera5",
+                "right": "camera4"
+            },
             "size": {
                 "width": 300,
                 "height": 225
@@ -73,16 +83,16 @@
             },
             "corners": [
                 {
-					"bottomLeftCorner": {
+                    "bottomLeftCorner": {
                         "x": 150,
                         "y": 0,
                         "z": -150
                     },
-                    "bottomRightCorner": {
-                        "x": 150,
-                        "y": 0,
-                        "z": 150
-                    },
+                  "bottomRightCorner": {
+                    "x": 150,
+                    "y": 0,
+                    "z": 150
+                  },
                     "topLeftCorner": {
                         "x": 150,
                         "y": 225,
@@ -91,7 +101,12 @@
                 }
             ]
         },
-        {
+		{
+			"name": "leftDisplay",
+            "cameras": {
+                "left": "camera2",
+                "right": "camera3"
+            },
             "size": {
                 "width": 300,
                 "height": 225

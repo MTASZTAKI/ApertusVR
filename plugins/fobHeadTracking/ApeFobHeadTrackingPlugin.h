@@ -51,6 +51,8 @@ SOFTWARE.*/
 class ApeFobHeadTrackingPlugin : public Ape::IPlugin
 {
 private:
+	int mCameraCount;
+
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
@@ -69,23 +71,32 @@ private:
 
 	Ape::FobHeadTrackingDisplayConfigList mDisplayConfigList;
 
-	std::vector<Ape::CameraWeakPtr> mCameras;
-
 	Ape::Vector3 mTrackedViewerPosition;
+
+	Ape::Vector3 mTrackedPrevViewerPosition;
 
 	Ape::Quaternion mTrackedViewerOrientation;
 
 	Ape::Euler mTrackedViewerOrientationYPR;
 
+	float mNearClip;
+
+	float mFarClip;
+
+	float mC;
+
+	float mD;
+
 	void* mpFobTracker;
 	
 	void eventCallBack(const Ape::Event& event);
 
-	Ape::Matrix4 calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
-		Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip);
+	void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
 
-	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, float cameraNearClip, float cameraFarClip);
-	
+	Ape::Matrix4 calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition);
+
+	Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
+
 public:
 	ApeFobHeadTrackingPlugin();
 

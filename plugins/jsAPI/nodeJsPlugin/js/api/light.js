@@ -28,13 +28,15 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 exports.moduleTag = 'ApeHTTPApiLight';
 
 app.post('/lights', function(req, res) {
-	console.log('ape.httpApi.lights.create()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Creates a new light object with the specified name.');
 
 	// handle http param validation errors
 	req.checkBody('name', 'BodyParam is not presented').notEmpty()
@@ -56,8 +58,8 @@ app.post('/lights', function(req, res) {
 });
 
 app.get('/lights/:name/diffusecolor', function(req, res) {
-	console.log('ape.httpApi.lights.getDiffuseColor()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the diffusecolor of the specified light.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -99,8 +101,8 @@ app.get('/lights/:name/diffusecolor', function(req, res) {
 });
 
 app.post('/lights/:name/diffusecolor', function(req, res) {
-	console.log('ape.httpApi.lights.setDiffuseColor()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the diffusecolor of the specified light.');
 
 	// handle errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
@@ -120,7 +122,7 @@ app.post('/lights/:name/diffusecolor', function(req, res) {
 
 	// get entity name from urlParam
 	var name = req.params.name;
-	console.log('setDiffuseColor() light name: ' + name);
+	logger.debug('setDiffuseColor() light name: ' + name);
 
 	// get position from bodyParam (json)
 	var lightColor = {

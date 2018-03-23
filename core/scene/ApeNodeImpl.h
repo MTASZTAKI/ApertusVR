@@ -56,9 +56,9 @@ namespace Ape
 
 		bool isFixedYaw() override;
 		
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode();
+		Ape::NodeWeakPtr getParentNode() override;
 		
 		void setPosition(Vector3 position) override;
 		

@@ -1,0 +1,403 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SDK Libraries &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="Hello World" href="Sample_Tutorial.html" />
+    <link rel="prev" title="Application Development" href="Leap_Guides.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/devguide/Leap_SDK_Overview.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_SDK_Overview.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_SDK_Overview.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/devguide/Leap_SDK_Overview.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Guides.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Sample_Tutorial.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_SDK_Overview.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Leap_SDK_Overview.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_SDK_Overview.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_SDK_Overview.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_SDK_Overview.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  SDK Libraries
+</span> -->
+        
+  <div class="section" id="sdk-libraries">
+<h1>SDK Libraries<a class="headerlink" href="#sdk-libraries" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion SDK contains two basic libraries that define the API to the Leap Motion tracking data. One library is written in C++, the second is written in C. Wrapper classes for these libraries define language bindings for C# and Objective-C. Language bindings for Java and Python use SWIG, an open source tool. The SWIG-generated bindings translate calls written in the bound programming language to calls into the base C++ Leap Motion library. Each SWIG binding uses two additional libraries. For JavaScript and web application development, Leap Motion provides a WebSocket server and a client-side JavaScript library.</p>
+<p>All the library, code, and header files required to develop Leap-enabled applications and plugins are included in the Leap Motion SDK, except the <cite>leap.js</cite> client JavaScript library. You can download the Leap Motion SDK from the Leap Motion Developer Portal. An SDK package is available for each supported operating system. The JavaScript client library is distributed separately and can be downloaded from the <a class="reference external" href="https://github.com/leapmotion/leapjs">LeapJS GitHub repository</a>.</p>
+<p>Plugins for Unity 5 and Unreal Engine 4 are provided separately from the main SDK. The Unreal plugin is included with Unreal Engine 4. The Unity plugin is available at <a class="reference external" href="https://developer.leapmotion.com/downloads/unity">https://developer.leapmotion.com/downloads/unity</a>.</p>
+<div class="section" id="supported-compilers-and-ides">
+<h2>Supported Compilers and IDEs<a class="headerlink" href="#supported-compilers-and-ides" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>C++ on Windows: Visual Studio 2008, 2010, 2012, and 2013</li>
+<li>C++ on Mac: Xcode 3.0+, clang 3.0+, and gcc</li>
+<li>Objective-C: Mac OS 10.7+, Xcode 4.2+ and clang 3.0+</li>
+<li>C# for .NET framework versions 3.5+</li>
+<li>Mono version 2.10</li>
+<li>Unity Pro and Personal versions 5.3+</li>
+<li>Java versions 6 and 7</li>
+<li>Python version 2.7.3</li>
+<li>UnrealEngine 4.9+</li>
+</ul>
+</div>
+<div class="section" id="python">
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>Leap.py contains the Python module that you reference in your Python application. This module loads LeapPython.so (Mac and Linux) or LeapPython.dll (Windows). These libraries load  libLeap.dylib, Leap.dll, or libLeap.so (depending on platform).</p>
+</div>
+<div class="section" id="id2">
+<h2>C++<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>To develop for the Leap Motion Controller in C++, include the API header files in your program and link with the Leap Motion library, either libLeap.dylib, Leap.dll, or libLeap.so, depending on platform.</p>
+<p>On Windows, separate libraries are provided for 32-bit versus 64-bit architectures as well as debug builds versus release builds (for a total of 4 versions for each component).</p>
+<p>On Mac OS X, both architectures and release modes are supported in a single library file.</p>
+</div>
+<div class="section" id="id3">
+<h2>Objective-C<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Objective-C applications are supported by hand-written wrapper code. To build a Leap-enabled Objective-C application, include the wrapper header and Objective-C++ code file in your application along with the Leap Motion C++ headers. You can then use the classes defined in the wrapper in (otherwise) pure Objective-C applications. Link your application with libLeap.dylib and include the library in your application package.</p>
+</div>
+<div class="section" id="id4">
+<h2>C#<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>The C# class definitions are provided in the src directory. To build a Leap-enabled C# application, include the wrapper cs files in your appplication. Your application code should reference the Leap namespace. Also include libLeapC.dylib (Mac), LeapC.dll (Windows), or libLeapC.so (Linux) as a runtime library.</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h2>Unity<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>As of Unity 5, both the Pro and Personal versions support plugins. The Unity plugin uses the C# class definitions in LeapC folder of the core assets. This library loads the native LeapC.dll (Windows) library.</p>
+</div>
+<div class="section" id="id6">
+<h2>Java<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Leap.jar contains the Leap Motion Java classes. This code loads libLeapJava.dylib (Mac), LeapJava.dll (Windows), or libLeapJava.so (Linux). These libraries contain the native code that translates the Java calls to the base Leap Motion API in libLeap.dylib, Leap.dll, or libLeap.so (depending on platform). The base Leap Motion dynamic library is loaded by the intermediate library. For Windows 64-bit architectures, the Microsoft Visual C runtime libraries are also required.</p>
+</div>
+<div class="section" id="id8">
+<h2>JavaScript<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>Leap Motion JavaScript support has two main components. The first component is the WebSocket server provided by the Leap Motion service. This server allows web applications (or any application that can connect to a WebSocket) to access Leap Motion tracking data as JSON-formatted messages. The second component is the JavaScript client library, Leap.js. Leap.js is an open-source JavaScript API that consumes the WebSocket JSON output and presents it in a form that is consistent in philosophy and structure to the native Leap Motion API.</p>
+</div>
+<div class="section" id="other-languages">
+<h2>Other Languages<a class="headerlink" href="#other-languages" title="Permalink to this headline">¶</a></h2>
+<p>Many community-created language bindings are available, for a partial list, visit: <a class="reference external" href="https://developer.leapmotion.com/links">Community Libraries</a>.</p>
+<div class="section" id="operating-system-support">
+<h3>Operating System Support<a class="headerlink" href="#operating-system-support" title="Permalink to this headline">¶</a></h3>
+<p>The Leap Motion software currently supports Linux (Ubuntu 12), OS X 10.7+, Windows 7+.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">SDK Libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#supported-compilers-and-ides">Supported Compilers and IDEs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">C++</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Objective-C</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">C#</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Unity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Java</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">JavaScript</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-languages">Other Languages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#operating-system-support">Operating System Support</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_Tutorial.html#id32">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Setup.html#id12">Setting Up a Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Configuration.html">Runtime Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

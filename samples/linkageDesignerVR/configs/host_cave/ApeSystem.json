@@ -1,6 +1,6 @@
 {
     "mainWindow": {
-        "name": "Ape",
+        "name": "window0",
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
@@ -23,7 +23,7 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-			"ApeFobHeadTrackingPlugin",
+            "ApeFobHeadTrackingPlugin",
             "ApeLinkageDesignerVRPlugin"
         ]
     }

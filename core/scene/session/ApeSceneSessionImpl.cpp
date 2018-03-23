@@ -25,13 +25,11 @@ SOFTWARE.*/
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
 
-template<> Ape::ISceneSession* Ape::Singleton<Ape::ISceneSession>::msSingleton = 0;
-
 Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakPeer(nullptr)
-	, mpNatPunchthroughClient(nullptr)
 	, mpReplicaManager3(nullptr)
-	, mpLobbyManager(nullptr)
+	, mpNatPunchthroughClient(nullptr)
+//	, mpLobbyManager(nullptr)
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mIsConnectedToNATServer = false;
@@ -45,7 +43,7 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	}
 	if (mParticipantType == Ape::SceneSession::HOST)
 	{
-		//if (mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().sessionName, mGuid.ToString()))
+		//if (mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, mGuid.ToString()))
 			create();
 		/*else
 			std::cout << "SceneSessionImpl(): lobbyManager->createSession() failed." << std::endl;*/
@@ -53,11 +51,12 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	else if (mParticipantType == Ape::SceneSession::GUEST)
 	{
 		/*Ape::SceneSessionUniqueID uuid;
-		if (mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().sessionName, uuid))
+		if (mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, uuid))
 		{
 			if (!uuid.empty())*/
 			connect(mpSystemConfig->getSceneSessionConfig().sessionGUID);
-			/*else
+			/*connect(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
+			else
 				std::cout << "SceneSessionImpl(): lobbyManager->getSessionHostGuid() returned empty uuid." << std::endl;
 		}
 		else
@@ -80,7 +79,7 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 
 	/*if (mpLobbyManager) {
 		if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
-			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().sessionName);
+			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
 
 		delete mpLobbyManager;
 		mpLobbyManager = nullptr;
@@ -94,12 +93,15 @@ void Ape::SceneSessionImpl::init()
 	mNATServerPort = natPunchThroughServerConfig.port;
 
 	Ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
+
 	mLobbyServerIP = lobbyServerConfig.ip;
 	std::cout << "mLobbyServerIP: " << mLobbyServerIP << std::endl;
 	mLobbyServerPort = lobbyServerConfig.port;
 	std::cout << "mLobbyServerPort: " << mLobbyServerPort << std::endl;
-	//mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort);
+	mLobbyServerSessionName = lobbyServerConfig.sessionName;
+	std::cout << "mLobbyServerSessionName: " << mLobbyServerSessionName << std::endl;
 
+	//mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 	mpRakPeer = RakNet::RakPeerInterface::GetInstance();
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
 	mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
@@ -120,17 +122,10 @@ void Ape::SceneSessionImpl::init()
 	printf("Our guid is %s\n", mGuid.ToString());
 	printf("Started on %s\n", mAddress.ToString(true));
 	RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(mNATServerIP.c_str(), atoi(mNATServerPort.c_str()), 0, 0);
-	if (car!=RakNet::CONNECTION_ATTEMPT_STARTED)
+	if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		printf("Failed connect call to %s. Code=%i\n", mNATServerIP.c_str(), car);
 	else
-	{
 		std::cout << "Try to connect to NAT punchthrough server: " << mNATServerIP << "|" << mNATServerPort << std::endl;
-		while (!mIsConnectedToNATServer)
-		{
-			listen();
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		}
-	}
 	std::thread runThread((std::bind(&SceneSessionImpl::run, this)));
 	runThread.detach();
 }
@@ -210,7 +205,7 @@ void Ape::SceneSessionImpl::listen()
 				break;
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
-					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s,guid=%s\n", packet->systemAddress.ToString(true), packet->guid.ToString());
+					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s, guid=%s, participantType=%d\n", packet->systemAddress.ToString(true), packet->guid.ToString(), mParticipantType);
 					if (mNATServerIP == packet->systemAddress.ToString(false))
 					{
 						mNATServerAddress = packet->systemAddress;
@@ -234,24 +229,25 @@ void Ape::SceneSessionImpl::listen()
 				}
 				break;
 			case ID_ALREADY_CONNECTED:
-					printf("ID_ALREADY_CONNECTED with guid %" PRINTF_64_BIT_MODIFIER "u\n", packet->guid);
+				std::cout << "ID_ALREADY_CONNECTED with: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << std::endl;
 				break;
 			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-					printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(true), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+				printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
 				break;
 			case ID_NAT_TARGET_NOT_CONNECTED:
 			case ID_NAT_TARGET_UNRESPONSIVE:
 			case ID_NAT_CONNECTION_TO_TARGET_LOST:
 			case ID_NAT_ALREADY_IN_PROGRESS:
 			case ID_NAT_PUNCHTHROUGH_FAILED:
-					printf("NAT punch to %s failed. Reason %s\n", packet->guid.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+				printf("NAT punch to %s failed. Reason %s\n", packet->guid.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
 				break;
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
 					unsigned char weAreTheSender = packet->data[1];
+					std::cout << "ID_NAT_PUNCHTHROUGH_SUCCEEDED: weAreTheSender=" << weAreTheSender << std::endl;
 					if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 					{
-						RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
+						mpRakPeer->GetConnectionState(packet->systemAddress);
 						RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 						if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 							printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
@@ -262,7 +258,7 @@ void Ape::SceneSessionImpl::listen()
 					{
 						if (!weAreTheSender)
 						{
-							RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
+							mpRakPeer->GetConnectionState(packet->systemAddress);
 							RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 							if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 								printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
@@ -294,10 +290,10 @@ void Ape::SceneSessionImpl::listen()
 				}
 			case ID_RAKVOICE_OPEN_CHANNEL_REQUEST:
 			case ID_RAKVOICE_OPEN_CHANNEL_REPLY:
-					printf("Got new channel from %s\n", packet->systemAddress.ToString());
+				printf("Got new channel from %s\n", packet->systemAddress.ToString());
 				break;
 			case ID_RAKVOICE_CLOSE_CHANNEL:
-					printf("ID_RAKVOICE_CLOSE_CHANNEL\n");
+				printf("ID_RAKVOICE_CLOSE_CHANNEL\n");
 				break;
 			case ID_USER_PACKET_ENUM:
 				break;

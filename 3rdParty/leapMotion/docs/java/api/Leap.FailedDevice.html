@@ -1,0 +1,548 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FailedDevice &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="FailedDeviceList" href="Leap.FailedDeviceList.html" />
+    <link rel="prev" title="DeviceList" href="Leap.DeviceList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/api/Leap.FailedDevice.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.FailedDevice.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.FailedDevice.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/api/Leap.FailedDevice.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.DeviceList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.FailedDeviceList.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.FailedDevice.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.FailedDevice.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.FailedDevice.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.FailedDevice.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  FailedDevice
+</span> -->
+        
+  <div class="section" id="id3">
+<h1>FailedDevice<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a577abe2171a24259f42530490a31b59c">equals(FailedDevice arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a8b5d1eeb0ccfa3721075415510b76344">failure()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1ad777ec76dfa1f812ab18161cf0611d7f">invalid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a487d5f454cff4db530ed7b5b690ec71d">isValid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a44892462671afb2bea27f093d7860e5f">pnpId()</a></li>
+</ul>
+</div>
+<div class="line-block" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device">
+<div class="line"><em>class</em> <strong>com::leapmotion::leap::FailedDevice</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> class provides information about Leap Motion hardware that has been physically connected to the client computer, but is not operating correctly. </p>
+<p><p>Failed devices do not provide any tracking data and do not show up in the <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller"><em>Controller</em></a>:devices() list.</p>
+<p>Get the list of failed devices using <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1acb5e9faaa2ec668860e169e5978caf59"><em>Controller::failedDevices()</em></a>.</p>
+<p><pre class="literal-block">
+public void  onDeviceFailure (Controller controller)
+{
+    System.out.println (&quot;A device was plugged in, but failed..&quot;);
+    FailedDeviceList badDevices = controller.failedDevices();
+    for(FailedDevice badDevice : badDevices){
+        String failureReason = &quot;&quot;;
+        switch (badDevice.failure()) {
+            case FAIL_CALIBRATION:
+                failureReason = &quot; has bad calibration record.&quot;;
+                break;
+            case FAIL_CONTROL:
+                failureReason = &quot; failed to establish USB control interfaces.&quot;;
+                break;
+            case FAIL_FIRMWARE:
+                failureReason = &quot; has corrupt firmware or failed to update&quot;;
+                break;
+            case FAIL_TRANSPORT:
+                failureReason = &quot; not responding.&quot;;
+                break;
+            case FAIL_UNKNOWN:
+                failureReason = &quot; failed for unknown reason.&quot;;
+                break;
+        }
+        System.out.println(&quot;USB device with pnpID: &quot; + badDevice.pnpId() + failureReason);
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a577abe2171a24259f42530490a31b59c"></span><div class="line-block">
+<div class="line">boolean <strong>equals</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Test <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> equality. </p>
+<p>True if the devices are the same. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a8b5d1eeb0ccfa3721075415510b76344"></span><div class="line-block">
+<div class="line">FailedDevice.FailureType <strong>failure</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The reason for device failure. </p>
+<p><p>The failure reasons are defined as members of the <a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type"><em>FailureType</em></a> enumeration:</p>
+<p><strong><a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a5ce80cdb59958e3eab4ffa3d76a4e0fe"><em>FailureType::FAIL_UNKNOWN</em></a></strong> The cause of the error is unknown.</p>
+<p><strong><a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a7629caf388877d70f2bea8d8bb6154cd"><em>FailureType::FAIL_CALIBRATION</em></a></strong> The device has a bad calibration record.</p>
+<p><strong><a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a8888b3477ee71a3f5f26d49afe095dc0"><em>FailureType::FAIL_FIRMWARE</em></a></strong> The device firmware is corrupt or failed to update.</p>
+<p><strong><a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a1247bb58bd127124fc975ce31881266f"><em>FailureType::FAIL_TRANSPORT</em></a></strong> The device is unresponsive.</p>
+<p><strong><a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1ad29cb021703af63adf72fe05ed0cc5f1"><em>FailureType::FAIL_CONTROL</em></a></strong> The service cannot establish the required USB control interfaces.</p>
+<p><strong>FailureType::FAIL_COUNT</strong> Not currently used.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a487d5f454cff4db530ed7b5b690ec71d"></span><div class="line-block">
+<div class="line">boolean <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> object contains valid data. </p>
+<p>An invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> does not represent a physical device and can be the result of creating a new <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> object with the constructor. Get <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> objects from <a class="reference internal" href="Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1acb5e9faaa2ec668860e169e5978caf59"><em>Controller::failedDevices()</em></a> only. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1a44892462671afb2bea27f093d7860e5f"></span><div class="line-block">
+<div class="line">String <strong>pnpId</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The device plug-and-play id string. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device_1ad777ec76dfa1f812ab18161cf0611d7f"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> <strong>invalid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>An invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_failed_device"><em>FailedDevice</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+<p><p id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type"><em>class</em> <strong>FailureType</strong></p>
+<blockquote>
+<div><p>The errors that can cause a device to fail to properly connect to the service. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+<em>Public Members</em><blockquote>
+<div><p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a7629caf388877d70f2bea8d8bb6154cd"></span> <strong>FAIL_CALIBRATION</strong></p>
+<blockquote>
+<div><p>The device firmware is corrupt or failed to update. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1ad29cb021703af63adf72fe05ed0cc5f1"></span> <strong>FAIL_CONTROL</strong></p>
+<blockquote>
+<div><p>Not currently used. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a8888b3477ee71a3f5f26d49afe095dc0"></span> <strong>FAIL_FIRMWARE</strong></p>
+<blockquote>
+<div><p>The device is unresponsive. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a1247bb58bd127124fc975ce31881266f"></span> <strong>FAIL_TRANSPORT</strong></p>
+<blockquote>
+<div><p>The service cannot establish the required USB control interfaces. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaenumcom_1_1leapmotion_1_1leap_1_1_failed_device_1_1_failure_type_1a5ce80cdb59958e3eab4ffa3d76a4e0fe"></span> <strong>FAIL_UNKNOWN</strong></p>
+<blockquote>
+<div><p>The cause of the error is unknown. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0The device has a bad calibration record. </dd>
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</p>
+</div></blockquote>
+<div class="section" id="id7">
+<h2>Failure Types<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">doxygenenum: Cannot find enum &#8220;Leap::FailedDevice::FailureType&#8221; in doxygen xml output for project &#8220;java&#8221; from directory: ../doxygen_out/java/xml/</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id12">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id14">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id5">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id12">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">FailedDevice</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Failure Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id3">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id15">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id12">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id24">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id5">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>
