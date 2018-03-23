@@ -89,13 +89,14 @@ namespace Ape
 		struct LobbyServerConfig
 		{
 			std::string ip;
-
 			std::string port;
+			std::string sessionName;
 
 			LobbyServerConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
+				this->sessionName = std::string();
 			}
 
 			LobbyServerConfig(
@@ -105,6 +106,17 @@ namespace Ape
 			{
 				this->ip = ip;
 				this->port = port;
+			}
+
+			LobbyServerConfig(
+				std::string ip,
+				std::string port,
+				std::string sessionName
+			)
+			{
+				this->ip = ip;
+				this->port = port;
+				this->sessionName = sessionName;
 			}
 		};
 		

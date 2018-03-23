@@ -43,7 +43,7 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	}
 	if (mParticipantType == Ape::SceneSession::HOST)
 	{
-		//if (mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().sessionName, mGuid.ToString()))
+		//if (mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, mGuid.ToString()))
 			create();
 		/*else
 			std::cout << "SceneSessionImpl(): lobbyManager->createSession() failed." << std::endl;*/
@@ -51,11 +51,12 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	else if (mParticipantType == Ape::SceneSession::GUEST)
 	{
 		/*Ape::SceneSessionUniqueID uuid;
-		if (mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().sessionName, uuid))
+		if (mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, uuid))
 		{
 			if (!uuid.empty())*/
 			connect(mpSystemConfig->getSceneSessionConfig().sessionGUID);
-			/*else
+			/*connect(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
+			else
 				std::cout << "SceneSessionImpl(): lobbyManager->getSessionHostGuid() returned empty uuid." << std::endl;
 		}
 		else
@@ -78,7 +79,7 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 
 	/*if (mpLobbyManager) {
 		if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
-			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().sessionName);
+			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
 
 		delete mpLobbyManager;
 		mpLobbyManager = nullptr;
@@ -92,12 +93,15 @@ void Ape::SceneSessionImpl::init()
 	mNATServerPort = natPunchThroughServerConfig.port;
 
 	Ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
+
 	mLobbyServerIP = lobbyServerConfig.ip;
 	std::cout << "mLobbyServerIP: " << mLobbyServerIP << std::endl;
 	mLobbyServerPort = lobbyServerConfig.port;
 	std::cout << "mLobbyServerPort: " << mLobbyServerPort << std::endl;
-	//mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort);
+	mLobbyServerSessionName = lobbyServerConfig.sessionName;
+	std::cout << "mLobbyServerSessionName: " << mLobbyServerSessionName << std::endl;
 
+	//mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 	mpRakPeer = RakNet::RakPeerInterface::GetInstance();
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
 	mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
@@ -240,6 +244,7 @@ void Ape::SceneSessionImpl::listen()
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
 					unsigned char weAreTheSender = packet->data[1];
+					std::cout << "ID_NAT_PUNCHTHROUGH_SUCCEEDED: weAreTheSender=" << weAreTheSender << std::endl;
 					if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 					{
 						mpRakPeer->GetConnectionState(packet->systemAddress);

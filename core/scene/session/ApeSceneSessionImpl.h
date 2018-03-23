@@ -90,6 +90,8 @@ namespace Ape
 
 		std::string mLobbyServerPort;
 
+		std::string mLobbyServerSessionName;
+
 		Ape::SceneSession::ParticipantType mParticipantType;
 
 		bool mIsConnectedToNATServer;

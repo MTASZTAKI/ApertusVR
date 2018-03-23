@@ -86,6 +86,8 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 							mSceneSessionConfig.lobbyServerConfig.ip = lobbyServerMemberIterator->value.GetString();
 						else if (lobbyServerMemberIterator->name == "port")
 							mSceneSessionConfig.lobbyServerConfig.port = lobbyServerMemberIterator->value.GetString();
+						else if (lobbyServerMemberIterator->name == "sessionName")
+							mSceneSessionConfig.lobbyServerConfig.sessionName = lobbyServerMemberIterator->value.GetString();
 					}
 
 				}
