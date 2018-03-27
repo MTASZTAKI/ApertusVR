@@ -11,8 +11,8 @@
             "/plugins/artScene/resources"
         ],
         "natPunchThroughServer": {
-            "ip": "",
-            "port": ""
+            "ip": "195.111.2.95",
+            "port": "61666"
         },
         "lobbyServer": {
             "useLobby": false,

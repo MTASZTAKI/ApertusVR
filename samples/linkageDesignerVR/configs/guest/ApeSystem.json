@@ -6,8 +6,10 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "Guest",
-        "sessionGUID": "",
-        "sessionResourceLocation": "/plugins/engineeringScene/resources",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": [
+            "/plugins/engineeringScene/resources"
+        ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"

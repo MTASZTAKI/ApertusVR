@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "HelloWorldGuest",
-        "sessionGUID": "580964360999477273",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/sampleScene/resources"
         ],
