@@ -40,6 +40,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mOverlayBrowser = Ape::BrowserWeakPtr();
 	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
 	mIsNewKeyEvent = false;
+	mEnableOverlayBrowserKeyEvents = false;
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
@@ -242,15 +243,16 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			keyAsWString = 1046;
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
+
+		std::cout << "Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent << std::endl;
+		while (!mIsNewKeyEvent)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
+		mIsNewKeyEvent = false;
+		std::cout << "After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
 	}
 
-	std::cout << "Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent << std::endl;
-	while (!mIsNewKeyEvent)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	}
-	mIsNewKeyEvent = false;
-	std::cout << "After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents << std::endl;
 	return true;
 }
 
