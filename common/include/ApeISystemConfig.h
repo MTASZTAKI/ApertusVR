@@ -91,32 +91,27 @@ namespace Ape
 			std::string ip;
 			std::string port;
 			std::string sessionName;
+			bool useLobby;
 
 			LobbyServerConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
 				this->sessionName = std::string();
-			}
-
-			LobbyServerConfig(
-				std::string ip,
-				std::string port
-				)
-			{
-				this->ip = ip;
-				this->port = port;
+				this->useLobby = false;
 			}
 
 			LobbyServerConfig(
 				std::string ip,
 				std::string port,
-				std::string sessionName
-			)
+				std::string sessionName = "",
+				bool useLobby = false
+				)
 			{
 				this->ip = ip;
 				this->port = port;
 				this->sessionName = sessionName;
+				this->useLobby = useLobby;
 			}
 		};
 		
