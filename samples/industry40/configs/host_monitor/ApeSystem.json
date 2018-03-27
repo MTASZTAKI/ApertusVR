@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Host",
         "uniqueUserNamePrefix": "HostMonitor",
-        "sessionGUID": "135108085232949451",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
         ],
@@ -15,8 +15,10 @@
             "port": "61666"
         },
         "lobbyServer": {
+            "useLobby": false,
             "ip": "195.111.2.95",
-            "port": "8888"
+            "port": "8888",
+            "sessionName": "test"
         }
     },
     "pluginManager": {

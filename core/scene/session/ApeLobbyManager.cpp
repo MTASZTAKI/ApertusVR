@@ -25,6 +25,9 @@ Ape::LobbyManager::~LobbyManager()
 
 bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResponse& resp)
 {
+	if (httpResponse.empty())
+		return false;
+
 	rapidjson::StringStream in(httpResponse.c_str());
 	rapidjson::Document jsonDocument;
 	jsonDocument.ParseStream(in);

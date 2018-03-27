@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Host",
         "uniqueUserNamePrefix": "HelloWorldHost",
-        "sessionGUID": "67557796199146377",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/sampleScene/resources"
         ],
@@ -15,8 +15,10 @@
             "port": "61666"
         },
         "lobbyServer": {
+            "useLobby": true,
             "ip": "195.111.2.95",
-            "port": "8888"
+            "port": "8888",
+            "sessionName": "MultiPlayer"
         }
     },
     "pluginManager": {
