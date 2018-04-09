@@ -85,6 +85,8 @@ namespace Ape
 		virtual void setChildrenVisibility(bool visible) = 0;
 
 		virtual void setFixedYaw(bool fix) = 0;
+
+		virtual void showBoundingBox(bool show) = 0;
 	};
 }
 

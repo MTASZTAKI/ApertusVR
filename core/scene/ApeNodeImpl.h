@@ -69,6 +69,8 @@ namespace Ape
 		void setChildrenVisibility(bool visible) override;
 
 		void setFixedYaw(bool fix) override;
+
+		void showBoundingBox(bool show) override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -100,6 +102,8 @@ namespace Ape
 		bool mChildrenVisibility;
 
 		bool mIsFixedYaw;
+
+		bool mIsBoundingBoxVisible;
 	};
 }
 

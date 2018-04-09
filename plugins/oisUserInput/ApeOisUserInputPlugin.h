@@ -40,6 +40,7 @@ SOFTWARE.*/
 #include "ApeInterpolator.h"
 #include "ApeIBrowser.h"
 #include "ApeIUnitTexture.h"
+#include "ApeIRayGeometry.h"
 
 namespace Ape
 {
@@ -72,6 +73,14 @@ namespace Ape
 
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
+		bool isNodeSelected(std::string nodeName);
+
+		void addNodeSelection(Ape::NodeWeakPtr node);
+
+		bool removeNodeSelection(std::string nodeName);
+
+		void clearNodeSelection();
+
 	private:
 		struct MouseState
 		{
@@ -80,6 +89,7 @@ namespace Ape
 			OIS::MouseState posPrevious;
 			OIS::MouseState posCurrent;
 			std::map<OIS::MouseButtonID, bool> buttonDownMap;
+			bool isDragMode = false;
 		};
 
 		struct UserNodePose
@@ -121,6 +131,12 @@ namespace Ape
 		Ape::BrowserWeakPtr mOverlayBrowser;
 
 		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+		Ape::RayGeometryWeakPtr mRayGeometry;
+
+		Ape::NodeWeakPtr mRayOverlayNode;
+
+		std::map<std::string, Ape::NodeWeakPtr> mSelectedNodes;
 
 		bool mEnableOverlayBrowserKeyEvents;
 

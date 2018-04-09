@@ -142,6 +142,15 @@ void Ape::NodeImpl::setFixedYaw(bool fix)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
 }
 
+void Ape::NodeImpl::showBoundingBox(bool show)
+{
+	mIsBoundingBoxVisible = show;
+	if (show)
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SHOWBOUNDINGBOX));
+	else
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_HIDEBOUNDINGBOX));
+}
+
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
 {
 	switch(nodeTransformSpace)
