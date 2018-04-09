@@ -37,7 +37,7 @@ namespace Ape
 	class HttpManager 
 	{
 	private:
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
 		void* mpCurl;
 		CurlData mCurlData;
 #endif
