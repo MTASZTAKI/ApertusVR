@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include "ApeHttpManager.h"
 #include <sstream>
 #include <iostream>
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
 #include <curl/curl.h>
 #include <curl/easy.h>
 #endif
@@ -37,14 +37,14 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 
 Ape::HttpManager::HttpManager()
 {
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
     mpCurl = curl_easy_init();
 #endif
 }
 
 Ape::HttpManager::~HttpManager()
 {
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
     curl_easy_cleanup(mpCurl);
 #endif
 }
@@ -52,7 +52,7 @@ Ape::HttpManager::~HttpManager()
 std::string Ape::HttpManager::download(const std::string& url)
 {
 	std::stringstream out;
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
     curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(mpCurl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(mpCurl, CURLOPT_NOSIGNAL, 1); 
@@ -75,7 +75,7 @@ std::string Ape::HttpManager::download(const std::string& url)
 std::string Ape::HttpManager::post(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
 	struct curl_slist *headers;
 
 	headers = NULL;
@@ -112,7 +112,7 @@ std::string Ape::HttpManager::post(const std::string& url, const std::string& da
 std::string Ape::HttpManager::del(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
-#ifdef FEATURE_CURL
+#ifdef HTTPMANAGER_USE_CURL
 	struct curl_slist *headers;
 
 	headers = NULL;

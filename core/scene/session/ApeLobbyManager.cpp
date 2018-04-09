@@ -177,25 +177,22 @@ bool Ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessio
 	try
 	{
 		response = mHttpManager.download(url);
-		std::cout << response << std::endl;
+		std::cout << "getSessionHostGuid response: " << response << std::endl;
 
-		if (parseResponse(response, resp))
+		if (parseResponse(response, resp) && resp.success)
 		{
-			if (resp.success)
-			{
-				guid = resp.data.guid;
-				std::cout << "getSessionHostGuid succeeded" << std::endl;
-				return true;
-			}
-			else
-			{
-				std::cout << "getSessionHostGuid failed" << std::endl;
-			}
+			guid = resp.data.guid;
+			std::cout << "getSessionHostGuid(): result: succeeded" << std::endl;
+			return true;
+		}
+		else
+		{
+			std::cout << "getSessionHostGuid(): result: failed" << std::endl;
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		std::cout << "getSessionHostGuid(): exception: " << e.what() << std::endl;
 	}
 
 	return false;

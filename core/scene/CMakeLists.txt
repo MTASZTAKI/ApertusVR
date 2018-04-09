@@ -114,7 +114,7 @@ if(APPLE)
 endif()
 
 # Add preprocessor definitions
-set_property (TARGET ApeScene PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENE_DLL)
+set_property (TARGET ApeScene PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENE_DLL HTTPMANAGER_USE_CURL)
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET ApeScene PROPERTY FOLDER "Core")
