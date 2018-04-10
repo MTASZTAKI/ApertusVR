@@ -92,6 +92,7 @@ void ApeRobotCalibrationPlugin::Init()
 			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialManualPass);
 		}
 	}
+	/*
 	if (auto coordinateSystemNode = mpScene->createNode("coordinateSystemNode").lock())
 	{
 		if (auto coordinateSystemArrowXTubeNode = mpScene->createNode("coordinateSystemArrowXTubeNode").lock())
@@ -211,6 +212,7 @@ void ApeRobotCalibrationPlugin::Init()
 			}
 		}
 	}
+	*/
 
 	/*overlay begin*/
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
