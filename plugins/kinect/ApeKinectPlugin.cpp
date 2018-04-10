@@ -376,12 +376,12 @@ void Ape::KinectPlugin::Run()
 				{
 					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
 					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
+					/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						pointCloudNodeText->setCaption("Points_Kinect");
 						pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						pointCloudNodeText->setParentNode(pointCloudNode);
-					}
+					}*/
 					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
 					{
 						pointCloud->setParameters(KPts, KCol, 100000);

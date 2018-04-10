@@ -26,11 +26,11 @@
         {
             "enable": true,
             "name": "Normal",
-            "monitorIndex": 0,
+            "monitorIndex": 1,
             "resolution": {
-                "width": 1280,
-                "height": 720,
-                "fullScreen": false
+                "width": 1920,
+                "height": 1080,
+                "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
@@ -44,8 +44,8 @@
                     "zOrder": 0,
                     "left": 0,
                     "top": 0,
-                    "width": 1280,
-                    "height": 720,
+                    "width": 1920,
+                    "height": 1080,
                     "camera": {
                         "nearClip": 1.0,
                         "farClip": 10000.0,
