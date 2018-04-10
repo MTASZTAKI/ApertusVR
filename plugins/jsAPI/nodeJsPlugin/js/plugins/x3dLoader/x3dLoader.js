@@ -27,7 +27,6 @@ var cheerio = moduleManager.requireNodeModule('cheerio');
 var htmlparser = moduleManager.requireNodeModule('htmlparser2');
 var fs = require('fs');
 var async = moduleManager.requireNodeModule('async');
-//const uuidV1 = moduleManager.requireNodeModule('uuid/v1');
 const path = require('path');
 var request = moduleManager.requireNodeModule('request');
 var self = this;
