@@ -4,9 +4,9 @@
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
-        "participantType": "Local",
+        "participantType": "Host",
         "uniqueUserNamePrefix": "",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionGUID": "1013311130628945935",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
         ],
