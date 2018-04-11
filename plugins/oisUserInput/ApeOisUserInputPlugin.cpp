@@ -157,14 +157,6 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 								addNodeSelection(selectedParentNodeWeakPtr);
 						}
 					}
-					/*if (auto mouseTexture = mGeometriesMouseTextures[geometry->getName()].lock())
-					{
-						mActiveMouseTexture = mouseTexture;
-						if (auto overlayMouseMaterial = mOverlayMouseMaterial.lock())
-							overlayMouseMaterial->showOnOverlay(false, 1);
-						if (auto browser = mBrowserMouseTextures[mouseTexture->getName()].lock())
-							mActiveBrowser = browser;
-					}*/
 					break;
 				}
 			}
