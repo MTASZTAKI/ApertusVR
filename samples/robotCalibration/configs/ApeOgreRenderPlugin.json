@@ -28,8 +28,8 @@
             "name": "Normal",
             "monitorIndex": 0,
             "resolution": {
-                "width": 1280,
-                "height": 720,
+                "width": 1920,
+                "height": 1080,
                 "fullScreen": false
             },
             "miscParams": {

@@ -177,6 +177,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_FIXEDYAW:
 							ogreNode->setFixedYawAxis(node->isFixedYaw());
 							break;
+						case Ape::Event::Type::NODE_SHOWBOUNDINGBOX:
+							ogreNode->showBoundingBox(true);
+							break;
+						case Ape::Event::Type::NODE_HIDEBOUNDINGBOX:
+							ogreNode->showBoundingBox(false);
+							break;
 						}
 					}
 				}
