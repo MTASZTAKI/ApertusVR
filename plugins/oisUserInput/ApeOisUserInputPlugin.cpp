@@ -165,6 +165,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 						if (auto browser = mBrowserMouseTextures[mouseTexture->getName()].lock())
 							mActiveBrowser = browser;
 					}*/
+					break;
 				}
 			}
 		}
