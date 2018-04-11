@@ -72,7 +72,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
 
-	
+
 	/*mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
 
 	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-50.2942, -267, -39.543), Ape::Quaternion(0.108578, 0.000922807, -0.994053, 0.00844969)));
@@ -97,7 +97,7 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 {
 	std::cout << "OISUserInputPlugin dtor" << std::endl;
 
-	delete mpKeyboard; 
+	delete mpKeyboard;
 	delete mpMouse;
 }
 
