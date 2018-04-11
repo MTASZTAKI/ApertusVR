@@ -1,7 +1,7 @@
 {
     "mainWindow": {
         "name": "Ape",
-        "creator": "ApeOgreRenderPlugin"
+        "creator": "ApeOgre21RenderPlugin"
     },
     "sceneSession": {
         "participantType": "Local",
@@ -23,7 +23,7 @@
     },
     "pluginManager": {
         "plugins": [
-            "ApeOgreRenderPlugin",
+            "ApeOgre21RenderPlugin",
             "ApeOisUserInputPlugin",
             "ApeSampleScenePlugin"
         ]

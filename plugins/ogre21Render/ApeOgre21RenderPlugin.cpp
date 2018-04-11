@@ -355,7 +355,7 @@ void Ape::Ogre21RenderPlugin::Init()
 		fclose(apeOgreRenderPluginConfigFile);
 	}	
 	
-	mpRoot = new Ogre::Root("", "", "ApeOgre21RenderPlugin.log");
+	mpRoot = OGRE_NEW Ogre::Root("", "", "ApeOgre21RenderPlugin.log");
     
 	Ogre::LogManager::getSingleton().createLog("ApeOgre21RenderPlugin.log", true, false, false);
 
@@ -363,28 +363,21 @@ void Ape::Ogre21RenderPlugin::Init()
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
 		if (mOgreRenderPluginConfig.renderSystem == "DX11")
 			mpRoot->loadPlugin( "RenderSystem_Direct3D11_d" );
-		else if (mOgreRenderPluginConfig.renderSystem == "DX9")
-			mpRoot->loadPlugin("RenderSystem_Direct3D9_d");
 		else 
-			mpRoot->loadPlugin( "RenderSystem_GL_d" );
+			mpRoot->loadPlugin( "RenderSystem_GL3Plus_d" );
 	#else
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
 		if (mOgreRenderPluginConfig.renderSystem == "DX11")
 			mpRoot->loadPlugin("RenderSystem_Direct3D11");
-		else if (mOgreRenderPluginConfig.renderSystem == "DX9")
-			mpRoot->loadPlugin("RenderSystem_Direct3D9");
 		else
-			mpRoot->loadPlugin("RenderSystem_GL");
-		mpRoot->loadPlugin("Plugin_CgProgramManager");
+			mpRoot->loadPlugin("RenderSystem_GL3Plus");
 	#endif
     
 	Ogre::RenderSystem* renderSystem = nullptr;
 	if (mOgreRenderPluginConfig.renderSystem == "DX11")
 		renderSystem = mpRoot->getRenderSystemByName("Direct3D11 Rendering Subsystem");
-	else if (mOgreRenderPluginConfig.renderSystem == "DX9")
-		renderSystem = mpRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 	else
-		renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
+		renderSystem = mpRoot->getRenderSystemByName("OpenGL3Plus Rendering Subsystem");
 	
     
 
@@ -401,20 +394,24 @@ void Ape::Ogre21RenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/Cg", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL150", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");
+	
 	for (auto resourceLocation : mpSystemConfig->getSceneSessionConfig().sessionResourceLocation)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
-	//mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC);
+
+	Ogre::InstancingThreadedCullingMethod instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_SINGLETHREAD;
+
+#if OGRE_DEBUG_MODE
+	const size_t numThreads = 1;
+#else
+	const size_t numThreads = std::max<size_t>(1, Ogre::PlatformInformation::getNumLogicalCores());
+	if (numThreads > 1)
+		instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_THREADED;
+#endif
+	
+
+	mpSceneMgr = mpRoot->createSceneManager(Ogre::ST_GENERIC, numThreads, instancingThreadedCullingMethod);
 
 	mpRoot->addFrameListener(this);
 
