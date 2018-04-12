@@ -1495,7 +1495,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (auto raySpaceNode = rayOverlayNode->getParentNode().lock())
 							{
 								Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
-									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); // TODO: check enabled window in ogreRenderWindowConfigList
 								Ogre::RaySceneQuery *raySceneQuery = mpSceneMgr->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
 								if (raySceneQuery != NULL)
 								{
