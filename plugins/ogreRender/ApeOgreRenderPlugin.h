@@ -104,6 +104,7 @@ SOFTWARE.*/
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeOgreMovableText.h"
 #include "ApeOgrePointCloud.h"
 #include "ApeOgreConversions.h"
@@ -234,7 +235,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
 		return 0;
 	}

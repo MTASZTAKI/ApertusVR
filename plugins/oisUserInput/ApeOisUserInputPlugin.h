@@ -35,12 +35,15 @@ SOFTWARE.*/
 #include "ApeIScene.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
 #include "ApeInterpolator.h"
 #include "ApeIBrowser.h"
 #include "ApeIUnitTexture.h"
 #include "ApeIRayGeometry.h"
+
+#define THIS_PLUGINNAME "ApeOisUserInputPlugin"
 
 namespace Ape
 {
@@ -169,12 +172,12 @@ namespace Ape
 		delete (OISUserInputPlugin*)plugin;
 	}
 
-	APE_PLUGIN_DISPLAY_NAME("ApeOisUserInputPlugin");
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << "ApeOisUserInputPlugin_CREATE" << std::endl;
-		ApeRegisterPlugin("ApeOisUserInputPlugin", CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
 		return 0;
 	}
 }

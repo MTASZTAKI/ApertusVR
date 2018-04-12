@@ -29,6 +29,7 @@ set (HEADERS
 	ApeITextGeometry.h
 	ApeICamera.h
 	ApeILight.h
+	ApeILogManager.h
 	ApeMaterial.h
 	ApePass.h
 	ApeIPbsPass.h

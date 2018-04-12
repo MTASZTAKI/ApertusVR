@@ -82,7 +82,7 @@ include_directories(
 add_library (ApePresentationScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApePresentationScenePlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow MY_OIS)
+target_link_libraries (ApePresentationScenePlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow MY_OIS)
 if (WIN32)
 	# we have to link to some DirectX libraries 
 	target_link_libraries (ApePresentationScenePlugin dinput8 dxguid)

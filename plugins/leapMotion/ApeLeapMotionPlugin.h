@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include "ApeIScene.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
 
@@ -130,7 +131,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateLeapMotionPlugin, DestroyLeapMotionPlugin);
 		return 0;
 	}

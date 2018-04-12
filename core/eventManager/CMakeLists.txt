@@ -28,7 +28,6 @@ set (SOURCES
 	ApeEventManagerImpl.cpp
 	)
 
-
 add_library (ApeEventManager SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries

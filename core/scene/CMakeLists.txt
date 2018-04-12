@@ -93,6 +93,7 @@ set (SOURCES
 	)
 
 include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
 	${PROJECT_SOURCE_DIR}/core/eventManager
@@ -106,11 +107,11 @@ add_library (ApeScene SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager RAKNET MY_CURL ws2_32)
+	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager ApeLogManager RAKNET MY_CURL ws2_32)
 endif()
 
 if(APPLE)
-	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager RAKNET)
+	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager ApeLogManager RAKNET)
 endif()
 
 # Add preprocessor definitions

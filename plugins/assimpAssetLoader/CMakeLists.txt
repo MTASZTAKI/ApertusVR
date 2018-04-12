@@ -89,7 +89,7 @@ add_library (ApeAssimpAssetLoaderPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 set_property (TARGET ApeAssimpAssetLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-target_link_libraries (ApeAssimpAssetLoaderPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow MY_ASSIMP)	
+target_link_libraries (ApeAssimpAssetLoaderPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_ASSIMP)
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET ApeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")

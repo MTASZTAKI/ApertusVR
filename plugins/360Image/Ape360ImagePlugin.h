@@ -33,6 +33,7 @@ SOFTWARE.*/
 #include "ApeINode.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
+#include "ApeILogManager.h"
 
 #define THIS_PLUGINNAME "Ape360ImagePlugin"
 
@@ -74,7 +75,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
 	return 0;
 }

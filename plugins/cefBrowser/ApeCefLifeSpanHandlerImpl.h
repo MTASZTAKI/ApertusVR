@@ -32,6 +32,7 @@ SOFTWARE.*/
 #include "Ape.h"
 #include "ApeIManualTexture.h"
 #include "ApeIBrowser.h"
+#include "ApeILogManager.h"
 
 namespace Ape
 {

@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "ApeIFileMaterial.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIBrowser.h"
+#include "ApeILogManager.h"
 
 #define THIS_PLUGINNAME "ApeGallerySamplePlugin"
 
@@ -64,7 +65,6 @@ public:
 
 APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGallerySamplePlugin()
 {
-
 	return new ApeGallerySamplePlugin;
 }
 
@@ -77,7 +77,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeGallerySamplePlugin, DestroyApeGallerySamplePlugin);
 	return 0;
 }

@@ -54,19 +54,19 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 
 				if (item.HasMember("code"))
 				{
-					std::cout << "errorCode:" << item["code"].GetInt() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorCode:" << item["code"].GetInt());
 					errItem.code = item["code"].GetInt();
 				}
 
 				if (item.HasMember("name"))
 				{
-					std::cout << "errorName:" << item["name"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorName:" << item["name"].GetString());
 					errItem.name = item["name"].GetString();
 				}
 
 				if (item.HasMember("message"))
 				{
-					std::cout << "errorMessage:" << item["message"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorMessage:" << item["message"].GetString());
 					errItem.message = item["message"].GetString();
 				}
 
@@ -85,13 +85,13 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 			{
 				if (item.HasMember("host_guid"))
 				{
-					std::cout << "sessionGuid: " << item["host_guid"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "sessionGuid: " << item["host_guid"].GetString());
 					resp.data.guid = item["host_guid"].GetString();
 				}
 
 				if (item.HasMember("session_name"))
 				{
-					std::cout << "sessionName: " << item["session_name"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "sessionName: " << item["session_name"].GetString());
 					resp.data.name = item["session_name"].GetString();
 				}
 			}
@@ -106,29 +106,29 @@ bool Ape::LobbyManager::createSession(const std::string& sessionName, SceneSessi
 	std::string response;
 	LobbyResponse resp;
 	std::string data = "{ \"sessionName\": \"" + sessionName + "\", \"sessionGuid\": \"" + guid + "\" }";
-	std::cout << "createSession(): " << "Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data);
 
 	try
 	{
 		response = mHttpManager.post(mApiEndPointUrl, data);
-		std::cout << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				std::cout << "createSession succeeded" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: succeeded");
 				return true;
 			}
 			else
 			{
-				std::cout << "createSession failed" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;
@@ -139,29 +139,29 @@ bool Ape::LobbyManager::removeSession(const std::string& sessionName)
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	std::cout << "removeSession(): " << "Sending HTTP POST request to: " << mApiEndPointUrl << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl);
 
 	try
 	{
 		response = mHttpManager.del(mApiEndPointUrl, "");
-		std::cout << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				std::cout << "removeSession succeeded" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: succeeded");
 				return true;
 			}
 			else
 			{
-				std::cout << "removeSession failed" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;
@@ -172,27 +172,27 @@ bool Ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessio
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	std::cout << "getSessionHostGuid(): " << "Sending HTTP GET request to: " << url << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP GET request to: " << url);
 
 	try
 	{
 		response = mHttpManager.download(url);
-		std::cout << "getSessionHostGuid response: " << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
 		if (parseResponse(response, resp) && resp.success)
 		{
 			guid = resp.data.guid;
-			std::cout << "getSessionHostGuid(): result: succeeded" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "result: succeeded");
 			return true;
 		}
 		else
 		{
-			std::cout << "getSessionHostGuid(): result: failed" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "result: failed");
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "getSessionHostGuid(): exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;

@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeInGameBrowserSamplePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeInGameBrowserSamplePlugin ApePluginManager ApeScene ApeEventManager)
+target_link_libraries (ApeInGameBrowserSamplePlugin ApePluginManager ApeScene ApeEventManager ApeLogManager)
 
 set_property (TARGET ApeInGameBrowserSamplePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -3,17 +3,20 @@
 
 ApeInGameBrowserSamplePlugin::ApeInGameBrowserSamplePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeInGameBrowserSamplePlugin::~ApeInGameBrowserSamplePlugin()
 {
-	std::cout << "ApeInGameBrowserSamplePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeInGameBrowserSamplePlugin::Init()
 {
-	std::cout << "ApeInGameBrowserSamplePlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto browserNode = mpScene->createNode("browserNode").lock())
 	{
 		browserNode->setPosition(Ape::Vector3(0, 0, -150));
@@ -38,7 +41,7 @@ void ApeInGameBrowserSamplePlugin::Init()
 			}
 		}
 	}
-
+	LOG_FUNC_LEAVE();
 }
 
 void ApeInGameBrowserSamplePlugin::Run()

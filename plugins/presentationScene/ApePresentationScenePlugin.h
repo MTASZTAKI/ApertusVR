@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "Ape.h"
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
@@ -254,7 +255,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApePresentationScenePlugin, DestroyApePresentationScenePlugin);
 	return 0;
 }

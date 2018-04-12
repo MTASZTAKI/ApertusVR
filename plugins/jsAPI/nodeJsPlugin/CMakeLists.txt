@@ -64,7 +64,7 @@ endif ()
 # TODO: MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries(${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene MY_NODEJS_LIB)
+target_link_libraries(${MY_TARGET_NAME} ApeScene ApePluginManager ApeEventManager ApeLogManager MY_NODEJS_LIB)
 
 # Add preprocessor definitions
 set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)

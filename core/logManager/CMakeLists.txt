@@ -22,24 +22,21 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeSkyWaterTerrainScenePlugin.h
+	ApeLogManagerImpl.h
 	)
-
-set (SOURCES 
-	ApeSkyWaterTerrainScenePlugin.cpp
+set (SOURCES
+	ApeLogManagerImpl.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
 	)
 
-add_library (ApeSkyWaterTerrainScenePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (ApeLogManager SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeSkyWaterTerrainScenePlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow)
+target_link_libraries (ApeLogManager)
 
-set_property (TARGET ApeSkyWaterTerrainScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-
-set_property (TARGET ApeSkyWaterTerrainScenePlugin PROPERTY FOLDER "Plugins")
-
-
+# Place target xxx into the specified folder in IDEs supporting it
+set_property (TARGET ApeLogManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_LOGMANAGER_DLL)
+set_property (TARGET ApeLogManager PROPERTY FOLDER "Core")

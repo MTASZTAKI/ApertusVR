@@ -3,16 +3,20 @@
 
 ApeGallerySamplePlugin::ApeGallerySamplePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeGallerySamplePlugin::~ApeGallerySamplePlugin()
 {
-	std::cout << "ApeGallerySamplePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeGallerySamplePlugin::Init()
 {
+	LOG_FUNC_ENTER();
 	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
@@ -143,7 +147,7 @@ void ApeGallerySamplePlugin::Init()
 			sphereMeshFile->setParentNode(sphereNode);
 		}
 	}
-	std::cout << "ApeGallerySamplePlugin::init" << std::endl;
+	LOG_FUNC_LEAVE();
 }
 
 void ApeGallerySamplePlugin::Run()

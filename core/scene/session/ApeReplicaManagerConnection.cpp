@@ -61,12 +61,12 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 	//TODO how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
 	RakNet::RakString objectType;
 	allocationIdBitstream->Read(objectType);
-	std::cout << "Received: " << objectType << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Received: " << objectType);
 	if (objectType == "Node")
 	{
 		RakNet::RakString nodeName;
 		allocationIdBitstream->Read(nodeName);
-		//std::cout << "Received name: " << nodeName.C_String() << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Received name: " << nodeName.C_String() << std::endl;
 		if (auto node = mpSceneImpl->createNode(nodeName.C_String()).lock())
 			return ((Ape::NodeImpl*)node.get());
 	}
@@ -74,7 +74,7 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 	{
 		RakNet::RakString entityName;
 		allocationIdBitstream->Read(entityName);
-		//std::cout << "Received name: " << entityName.C_String() << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Received name: " << entityName.C_String());
 		if (objectType == "FileGeometry")
 		{
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())

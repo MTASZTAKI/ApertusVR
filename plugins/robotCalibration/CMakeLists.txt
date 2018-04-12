@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeRobotCalibrationPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeRobotCalibrationPlugin ApePluginManager ApeScene ApeEventManager)
+target_link_libraries (ApeRobotCalibrationPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager)
 
 set_property (TARGET ApeRobotCalibrationPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeRobotCalibrationPlugin PROPERTY FOLDER "Plugins")

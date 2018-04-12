@@ -31,6 +31,7 @@ SOFTWARE.*/
 
 Ape::OgreRenderPlugin::OgreRenderPlugin( )
 {
+	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -82,12 +83,14 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
 	mCameraCountFromConfig = 0;
+	LOG_FUNC_LEAVE();
 }
 
 Ape::OgreRenderPlugin::~OgreRenderPlugin()
 {
-	std::cout << "OgreRenderPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
 	delete mpRoot;
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::OgreRenderPlugin::eventCallBack(const Ape::Event& event)
@@ -1381,7 +1384,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
 					if (!ogreTexture.isNull())
 					{
-						//std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write begin" << std::endl;
+						//LOG(LOG_TYPE_DEBUG, "TEXTURE_MANUAL_BUFFER write begin");
 						Ogre::HardwarePixelBufferSharedPtr texBuf = ogreTexture->getBuffer();
 						texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 						memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
@@ -1390,7 +1393,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						std::wostringstream oss;
 						oss << std::setw(4) << std::setfill(L'0') << s++ << L".bmp";
 						Ape::SaveVoidBufferToImage(oss.str(), textureManual->getBuffer(), textureManual->getParameters().width, textureManual->getParameters().height);*/
-						//std::cout << "ApeOgreRenderPlugin::TEXTURE_MANUAL_BUFFER write end" << std::endl;
+						//LOG(LOG_TYPE_DEBUG, "TEXTURE_MANUAL_BUFFER write end");
 					}
 				}
 				break;
@@ -1589,7 +1592,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpRoot->addFrameListener(mpSkyx);
 						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
 						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
-						//std::cout << "skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera) << std::endl;
+						//LOG(LOG_TYPE_DEBUG, "skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera));
 						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
 					}
 				break;
@@ -1800,12 +1803,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							{
 								width = 1.0f / (float)mCameraCountFromConfig;
 								left = zorder * width;
-								std::cout << "camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder << std::endl;
+								LOG(LOG_TYPE_DEBUG, "camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder);
 							}
 							if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width, height))
 							{
 								//TODO why it is working instead of in the init phase?
-								std::cout << "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft() << std::endl;
+								LOG(LOG_TYPE_DEBUG, "ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft());
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 										{
@@ -1824,7 +1827,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 											mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 										}
 										else
-											std::cout << "Problem in the RTSS init" << std::endl;
+											LOG(LOG_TYPE_DEBUG, "Problem in the RTSS init");
 									}
 									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 								}
@@ -1951,9 +1954,10 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	/*if (mRenderWindows.size() > 0)
-		std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount() << std::endl;
-*/
+	//if (mRenderWindows.size() > 0)
+	//{
+		//LOG(LOG_TYPE_DEBUG, "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
+	//}
 	processEventDoubleQueue();
 	if (mpHydrax && mpSkyxSkylight)
 	{
@@ -1985,18 +1989,20 @@ void Ape::OgreRenderPlugin::Restart()
 
 void Ape::OgreRenderPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	try
 	{
         mpRoot->startRendering();
 	}
 	catch (const Ogre::RenderingAPIException& ex)
 	{
-		std::cout << ex.getFullDescription() << std::endl;
+		LOG(LOG_TYPE_ERROR, ex.getFullDescription());
 	}
 	catch (const Ogre::Exception& ex)
 	{
-		std::cout << ex.getFullDescription() << std::endl;
+		LOG(LOG_TYPE_ERROR, ex.getFullDescription());
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::OgreRenderPlugin::Step()
@@ -2010,16 +2016,18 @@ void Ape::OgreRenderPlugin::Step()
 	}
 	catch (const Ogre::RenderingAPIException& ex)
 	{
-		std::cout << ex.getFullDescription() << std::endl;
+		LOG(LOG_TYPE_ERROR, ex.getFullDescription());
 	}
 	catch (const Ogre::Exception& ex)
 	{
-		std::cout << ex.getFullDescription() << std::endl;
+		LOG(LOG_TYPE_ERROR, ex.getFullDescription());
 	}
 }
 
 void Ape::OgreRenderPlugin::Init()
 {
+	LOG_FUNC_ENTER();
+
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
@@ -2178,9 +2186,10 @@ void Ape::OgreRenderPlugin::Init()
 		fclose(apeOgreRenderPluginConfigFile);
 	}	
 	
-	mpRoot = new Ogre::Root("", "", "ApeOgreRenderPlugin.log");
-    
-	Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
+	Ogre::LogManager* lm = new Ogre::LogManager();
+	lm->createLog("ApeOgreRenderPlugin.log", true, false, false);
+	mpRoot = new Ogre::Root("", "", "");
+	//Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
 
 	#if defined (_DEBUG)
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
@@ -2192,7 +2201,7 @@ void Ape::OgreRenderPlugin::Init()
 			mpRoot->loadPlugin( "RenderSystem_GL_d" );
 		mpRoot->loadPlugin("Plugin_CgProgramManager_d");
 	#else
-		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
+		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
 		if (mOgreRenderPluginConfig.renderSystem == "DX11")
 			mpRoot->loadPlugin("RenderSystem_Direct3D11");
 		else if (mOgreRenderPluginConfig.renderSystem == "DX9")
@@ -2286,7 +2295,7 @@ void Ape::OgreRenderPlugin::Init()
 				
 				if (enabledWindowCount == 1)
 				{
-					std::cout << winDesc.width << std::endl;
+					LOG(LOG_TYPE_DEBUG, "winDesc:" << " name=" << winDesc.name << " width=" << winDesc.width << " height=" << winDesc.height << " fullScreen=" << winDesc.useFullScreen);
 					mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 					for (int j=0; j<mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
@@ -2334,4 +2343,5 @@ void Ape::OgreRenderPlugin::Init()
 			}
 		}
 	}
+	LOG_FUNC_LEAVE();
 }

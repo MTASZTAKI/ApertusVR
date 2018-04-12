@@ -25,15 +25,13 @@ SOFTWARE.*/
 #include "ApeNodeJsPlugin.h"
 #include "node.h"
 
-using namespace Ape;
-
 ApeNodeJsPlugin::ApeNodeJsPlugin()
 {
-	std::cout << "ApeNodeJsPlugin::ApeNodeJsPlugin" << std::endl;
-
+	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeNodeJsPlugin::~ApeNodeJsPlugin()
@@ -43,21 +41,21 @@ ApeNodeJsPlugin::~ApeNodeJsPlugin()
 
 void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	/*std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.subjectName: " << event.subjectName << std::endl;
-	std::cout << "ApeNodeJsPlugin::nodeEventCallBack: event.group: " << event.group << std::endl;*/
+	//LOG(LOG_TYPE_DEBUG, "event.subjectName: " << event.subjectName);
+	//LOG(LOG_TYPE_DEBUG, "event.group: " << event.group);
 }
 
 void ApeNodeJsPlugin::Init()
 {
-	std::cout << "ApeHelloWorldPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Run()
 {
-	std::cout << "ApeNodeJsPlugin::run" << std::endl;
-
+	LOG_FUNC_ENTER();
 	char *args[] = { "", "server.js" };
-	std::cout << "Initializing Node..." << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Initializing Node...");
 
 	int res = -1;
 	try
@@ -66,10 +64,12 @@ void ApeNodeJsPlugin::Run()
 	}
 	catch (...)
 	{
-		std::cout << "Exception catched from NodeJS" << std::endl;
+		LOG(LOG_TYPE_ERROR, "Exception catched from NodeJS");
 	}
-	std::cout << "Node server exited with code " << res << std::endl;
+
+	LOG(LOG_TYPE_DEBUG, "Node server exited with code " << res);
 	std::getchar();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Step()

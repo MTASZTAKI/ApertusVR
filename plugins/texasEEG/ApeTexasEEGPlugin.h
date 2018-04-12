@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include <memory>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIMainWindow.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
@@ -111,7 +112,6 @@ public:
 
 APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()
 {
-
 	return new ApeTexasEEGPlugin;
 }
 
@@ -124,7 +124,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTexasEEGPlugin, DestroyApeTexasEEGPlugin);
 	return 0;
 }

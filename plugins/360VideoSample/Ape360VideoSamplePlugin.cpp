@@ -3,16 +3,20 @@
 
 Ape360VideoSamplePlugin::Ape360VideoSamplePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 Ape360VideoSamplePlugin::~Ape360VideoSamplePlugin()
 {
-	std::cout << "Ape360VideoSamplePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void Ape360VideoSamplePlugin::Init()
 {
+	LOG_FUNC_ENTER();
 	if (auto browserNode = mpScene->createNode("browserNode").lock())
 	{
 		//browserNode->setScale(Ape::Vector3(10, 10, 10));
@@ -29,7 +33,7 @@ void Ape360VideoSamplePlugin::Init()
 			}
 		}
 	}
-	std::cout << "Ape360VideoSamplePlugin::init" << std::endl;
+	LOG_FUNC_LEAVE();
 }
 
 void Ape360VideoSamplePlugin::Run()

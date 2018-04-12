@@ -90,7 +90,7 @@ include_directories(
 add_library (ApeOisUserInputPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeOisUserInputPlugin ApePluginManager ApeScene ApeEventManager ApeSystemConfig ApeMainWindow MY_OIS)
+target_link_libraries (ApeOisUserInputPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_OIS)
 if (WIN32)
 	# we have to link to some DirectX libraries 
 	target_link_libraries (ApeOisUserInputPlugin dinput8 dxguid)

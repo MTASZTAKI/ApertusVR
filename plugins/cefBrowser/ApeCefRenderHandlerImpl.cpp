@@ -66,7 +66,7 @@ void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
-		//std::cout << "Ape:::CefRenderHandlerImpl::setURL " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "browser id: " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url)
 	}
 }
 
@@ -78,7 +78,7 @@ void Ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefB
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, !isClickDown, 1);
-		//std::cout << "Ape::CefRenderHandlerImpl::mouseClick " << " type:" << mouseButtonType << "isDown:" << isClickDown << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "type:" << mouseButtonType << " isDown: " << isClickDown);
 	}
 }
 
@@ -90,7 +90,7 @@ void Ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int delta
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseWheelEvent(cefMouseEvent, deltaX, deltaY);
-		//std::cout << "Ape::CefRenderHandlerImpl::mouseScroll " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << " deltaY:" << deltaY << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y << " deltaY: " << deltaY);
 	}
 }
 
@@ -104,7 +104,7 @@ void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseMoveEvent(cefMouseEvent, false);
-		//std::cout << "Ape::CefRenderHandlerImpl::mouseMoved " << "x:" << cefMouseEvent.x << " y:" << cefMouseEvent.y << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y);
 	}
 }
 
@@ -141,6 +141,6 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 		cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYUP;
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
 
-		std::cout << "Ape::CefRenderHandlerImpl::keyValue " << "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue << std::endl;
+		LOG(LOG_TYPE_DEBUG, "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue);
 	}
 }

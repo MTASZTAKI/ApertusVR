@@ -1,8 +1,31 @@
+/*MIT License
+
+Copyright (c) 2016 MTA SZTAKI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
 #include <iostream>
 #include "ApeRobotCalibrationPlugin.h"
 
 ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
@@ -10,11 +33,13 @@ ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mDemoObjectNode = Ape::NodeWeakPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
 {
-	std::cout << "ApeRobotCalibrationPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
@@ -24,7 +49,7 @@ void ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
 
 void ApeRobotCalibrationPlugin::Init()
 {
-	std::cout << "ApeRobotCalibrationPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -234,34 +259,41 @@ void ApeRobotCalibrationPlugin::Init()
 			mouseMaterial->showOnOverlay(true, 1);
 		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	double duration = 0;
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::Step()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::Stop()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::Suspend()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotCalibrationPlugin::Restart()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }

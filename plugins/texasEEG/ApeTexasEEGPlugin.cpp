@@ -4,6 +4,7 @@
 
 ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
@@ -19,11 +20,13 @@ ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 	mMouseMoveRelativeX = 0;
 	mMouseMoveRelativeY = 0;
 	mIsMouseMoved = false;
+	LOG_FUNC_LEAVE();
 }
 
 ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 {
-	std::cout << "ApeTexasEEGPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
@@ -33,15 +36,15 @@ void ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
 
 void ApeTexasEEGPlugin::Init()
 {
-	std::cout << "ApeTexasEEGPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	std::cout << "ApeTexasEEGPlugin waiting for main window" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeTexasEEGPlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "main window was found");
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
 	std::stringstream windowHndStr;
@@ -81,6 +84,7 @@ void ApeTexasEEGPlugin::Init()
 			bubblesMeshFile->setParentNode(bubblesNode);
 		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTexasEEGPlugin::moveUserNodeByKeyBoard()
@@ -132,6 +136,7 @@ void ApeTexasEEGPlugin::moveUserNodeByMouse()
 
 void ApeTexasEEGPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mpKeyboard)
@@ -143,6 +148,7 @@ void ApeTexasEEGPlugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTexasEEGPlugin::Step()
@@ -192,7 +198,7 @@ bool ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
 	mMouseMoveRelativeX = e.state.X.rel;
 	mMouseMoveRelativeY = e.state.Y.rel;
 	mIsMouseMoved = true;
-	//std::cout << e.state.X.rel << "," << e.state.Y.rel << std::endl;
+	//LOG(LOG_TYPE_DEBUG, e.state.X.rel << "," << e.state.Y.rel);
 	return true;
 }
 
