@@ -324,7 +324,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (auto material = geometryFile->getMaterial().lock())
 							{
 								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-								ogreEntity->setMaterial(ogreMaterial);
+								if (!ogreMaterial.isNull())
+									ogreEntity->setMaterial(ogreMaterial);
 							}
 						}
 					}
