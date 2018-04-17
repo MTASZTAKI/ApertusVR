@@ -103,9 +103,7 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == "robotRootNode")
+	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == "robotRootNode")
 		mNodeToMove = mpScene->getNode(event.subjectName);
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
@@ -140,24 +138,28 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 			{
 				if (auto geometry = intersection.lock())
 				{
-					std::cout << "Ape::OISUserInputPlugin::eventCallBack(): GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << std::endl;
-					Ape::NodeWeakPtr selectedParentNodeWeakPtr = geometry->getParentNode();
-					if (auto selectedParentNodeSharedPtr = selectedParentNodeWeakPtr.lock())
+					std::size_t found = geometry->getName().find(mUserNode.lock()->getName()); 
+					if (found == std::string::npos)//Ignore our avatar
 					{
-						if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+						std::cout << "Ape::OISUserInputPlugin::eventCallBack(): GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << std::endl;
+						Ape::NodeWeakPtr selectedParentNodeWeakPtr = geometry->getParentNode();
+						if (auto selectedParentNodeSharedPtr = selectedParentNodeWeakPtr.lock())
 						{
-							clearNodeSelection();
-							addNodeSelection(selectedParentNodeWeakPtr);
-						}
-						else
-						{
-							if (isNodeSelected(selectedParentNodeSharedPtr->getName()))
-								removeNodeSelection(selectedParentNodeSharedPtr->getName());
-							else
+							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+							{
+								clearNodeSelection();
 								addNodeSelection(selectedParentNodeWeakPtr);
+							}
+							else
+							{
+								if (isNodeSelected(selectedParentNodeSharedPtr->getName()))
+									removeNodeSelection(selectedParentNodeSharedPtr->getName());
+								else
+									addNodeSelection(selectedParentNodeWeakPtr);
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -167,6 +169,9 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 void Ape::OISUserInputPlugin::Init()
 {
 	std::cout << "OISUserInputPlugin::Init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
 
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
@@ -233,9 +238,9 @@ void Ape::OISUserInputPlugin::Init()
 		}
 	}
 
-	if (auto rayNode = mpScene->createNode("rayNode").lock())
+	if (auto rayNode = mpScene->createNode("rayNode" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery", Ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -451,12 +456,18 @@ bool Ape::OISUserInputPlugin::removeNodeSelection(std::string nodeName)
 void Ape::OISUserInputPlugin::clearNodeSelection()
 {
 	std::cout << "Ape::OISUserInputPlugin::clearNodeSelection" << std::endl;
-	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
+
+	auto nodeIt = mSelectedNodes.begin();
+	while (nodeIt != mSelectedNodes.end())
 	{
 		if (auto selectedNodeInMap = nodeIt->second.lock())
 		{
 			selectedNodeInMap->showBoundingBox(false);
-			mSelectedNodes.erase(nodeIt);
+			nodeIt = mSelectedNodes.erase(nodeIt);
+		}
+		else
+		{
+			++nodeIt;
 		}
 	}
 }

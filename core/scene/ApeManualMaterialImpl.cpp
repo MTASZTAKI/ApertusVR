@@ -20,20 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApeManualMaterialImpl.h"
 
 Ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated) : Ape::IManualMaterial(name), Ape::Replica("ManualMaterial", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
+	mAmbientColor = Ape::Color();
+	mDiffuseColor = Ape::Color();
+	mSpecularColor = Ape::Color();
+	mEmissiveColor = Ape::Color();
 	mTexture = Ape::TextureWeakPtr();
 	mTextureName = std::string();
-	mCullingMode = Ape::Material::CullingMode::NONE_CM;
-	mManualCullingMode = Ape::Material::ManualCullingMode::NONE_MCM;
+	mPass = Ape::PassWeakPtr();
+	mPassName = std::string();
+	mCullingMode = Ape::Material::CullingMode::INVALID_CM;
+	mManualCullingMode = Ape::Material::ManualCullingMode::INVALID_MCM;
 	mDepthCheckEnabled = false;
 	mDepthWriteEnabled = false;
-	mDepthBias.x = 0.0f;
-	mDepthBias.y = 0.0f;
+	mDepthBias = Ape::Vector2();
 	mLightingEnabled = true;
 	mZOrder = 0;
 	mIsShowOnOverlay = false;
@@ -173,13 +179,13 @@ RakNet::RM3SerializationResult Ape::ManualMaterialImpl::Serialize(RakNet::Serial
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAmbientColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mEmissiveColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mPassName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCullingMode);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mManualCullingMode);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDepthCheckEnabled);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDepthWriteEnabled);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDepthBias);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightingEnabled);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mTextureName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -188,40 +194,78 @@ void Ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_AMBIENT));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
 	RakNet::RakString passName;
+	RakNet::RakString textureName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
+	{
+		//std::cout << "Ape::ManualMaterialImpl::Deserialize mDiffuseColor " << mDiffuseColor.toString() << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DIFFUSE));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
+	{
+		//std::cout << "Ape::ManualMaterialImpl::Deserialize mSpecularColor " << mSpecularColor.toString() << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SPECULAR));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
+	{
+		//std::cout << "Ape::ManualMaterialImpl::Deserialize mAmbientColor " << mAmbientColor.toString() << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_AMBIENT));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
+	{
+		//std::cout << "Ape::ManualMaterialImpl::Deserialize mEmissiveColor " << mEmissiveColor.toString() << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
+	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, passName))
 	{
-		mPassName = passName.C_String();
-		mPass = std::static_pointer_cast<Ape::Pass>(mpScene->getEntity(mPassName).lock());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_PASS));
+		if (auto entity = mpScene->getEntity(passName.C_String()).lock())
+		{
+			if (entity->getName() == mName && entity->getType() == mType)
+			{
+				std::cout << " Ape::ManualMaterialImpl::Deserialize passName " << passName.C_String() << std::endl;
+				mPass = std::static_pointer_cast<Ape::Pass>(entity);
+				mPassName = passName.C_String();
+				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_PASS));
+			}
+		}
 	}
-	RakNet::RakString textureName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCullingMode))
+	{
+		//std::cout << "Deserialize mCullingMode" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
+	{
+		//std::cout << "Deserialize mSceneBlendingType" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mManualCullingMode))
+	{
+		//std::cout << "Deserialize mManualCullingMode" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_MANUALCULLINGMODE));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthCheckEnabled))
+	{
+		//std::cout << "Deserialize mDepthCheckEnabled" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHCHECK));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthWriteEnabled))
+	{
+		//std::cout << "Deserialize mDepthWriteEnabled" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHWRITE));
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthBias))
+	{
+		//std::cout << "Deserialize mDepthBias" << std::endl;
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHBIAS));
+	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
 	{
+		//std::cout << "Deserialize textureName" << std::endl;
 		mTextureName = textureName.C_String();
 		mTexture = std::static_pointer_cast<Ape::Texture>(mpScene->getEntity(mTextureName).lock());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_TEXTURE));
 	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCullingMode))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mManualCullingMode))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_MANUALCULLINGMODE));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthCheckEnabled))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHCHECK));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthWriteEnabled))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHWRITE));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDepthBias))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_DEPTHBIAS));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

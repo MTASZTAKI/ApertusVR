@@ -31,10 +31,9 @@ Ape::PluginManagerImpl::PluginManagerImpl()
 	mUniqueUserNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<Ape::IPlugin*>();
-	mConstructedPluginCount = 0;
+	mInitializedPluginCount = 0;
 	mPluginCount = 0;
-	mpScene = Ape::IScene::getSingletonPtr();
-	isCreateUserBodyNodesFunctionCalled = false;
+	mIsAllPluginInitialized = false;
 }
 
 Ape::PluginManagerImpl::~PluginManagerImpl()
@@ -44,18 +43,7 @@ Ape::PluginManagerImpl::~PluginManagerImpl()
 
 void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
-	Ape::IPlugin* plugin = Ape::PluginFactory::CreatePlugin(pluginname);
-	mConstructedPluginCount++;
-	while (mConstructedPluginCount < mPluginCount)
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	if (!isCreateUserBodyNodesFunctionCalled)
-	{
-		isCreateUserBodyNodesFunctionCalled = true;
-		createUserBodyNodes();
-	}
-	plugin->Init();
-	plugin->Run();
-	Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+	mPluginVector.push_back(Ape::PluginFactory::CreatePlugin(pluginname));
 }
 
 void Ape::PluginManagerImpl::CreatePlugins()
@@ -67,7 +55,27 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
-			mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::CreatePlugin, this, (*it)));
+			CreatePlugin(*it);
+	}
+}
+
+void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
+{
+	plugin->Init();
+	mInitializedPluginCount++;
+	while (mInitializedPluginCount < mPluginCount)
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	mIsAllPluginInitialized = true;
+	plugin->Run();
+	//TODO name
+	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+}
+
+void Ape::PluginManagerImpl::InitAndRunPlugins()
+{
+	for (std::vector<Ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
+	{
+		mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
 	}
 }
 
@@ -81,63 +89,8 @@ void Ape::PluginManagerImpl::detachPluginThreads()
 	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
 }
 
-void Ape::PluginManagerImpl::LoadPlugin(std::string name)
+bool Ape::PluginManagerImpl::isAllPluginInitialized()
 {
-	//TODO;
-}
-
-void Ape::PluginManagerImpl::createUserBodyNodes()
-{
-	if (auto userNode = mpScene->createNode(mUniqueUserNodeName).lock())
-	{
-		if (auto hipNode = mpScene->createNode(mUniqueUserNodeName + "_hip").lock())
-		{
-			hipNode->setParentNode(userNode);
-			if (auto torsoNode = mpScene->createNode(mUniqueUserNodeName + "_torso").lock())
-			{
-				torsoNode->setParentNode(hipNode);
-				if (auto leftShoulderNode = mpScene->createNode(mUniqueUserNodeName + "_leftShoulder").lock())
-				{
-					leftShoulderNode->setParentNode(torsoNode);
-					if (auto leftUpperArmNode = mpScene->createNode(mUniqueUserNodeName + "_leftUpperArm").lock())
-					{
-						leftUpperArmNode->setParentNode(leftShoulderNode);
-						if (auto leftForeArmNode = mpScene->createNode(mUniqueUserNodeName + "_leftForeArm").lock())
-						{
-							leftForeArmNode->setParentNode(leftUpperArmNode);
-							if (auto leftHandNode = mpScene->createNode(mUniqueUserNodeName + "_leftHandNode").lock())
-							{
-								leftHandNode->setParentNode(leftForeArmNode);
-							}
-						}
-					}
-				}
-				if (auto rightShoulderNode = mpScene->createNode(mUniqueUserNodeName + "_rightShoulder").lock())
-				{
-					rightShoulderNode->setParentNode(torsoNode);
-					if (auto rightUpperArmNode = mpScene->createNode(mUniqueUserNodeName + "_rightUpperArm").lock())
-					{
-						rightUpperArmNode->setParentNode(rightShoulderNode);
-						if (auto rightForeArmNode = mpScene->createNode(mUniqueUserNodeName + "_rightForeArm").lock())
-						{
-							rightForeArmNode->setParentNode(rightUpperArmNode);
-							if (auto rightHandNode = mpScene->createNode(mUniqueUserNodeName + "_rightHandNode").lock())
-							{
-								rightHandNode->setParentNode(rightForeArmNode);
-							}
-						}
-					}
-				}
-				if (auto neckNode = mpScene->createNode(mUniqueUserNodeName + "_neck").lock())
-				{
-					neckNode->setParentNode(torsoNode);
-					if (auto headNode = mpScene->createNode(mUniqueUserNodeName + "_head").lock())
-					{
-						headNode->setParentNode(neckNode);
-					}
-				}
-			}
-		}
-	}
+	return mIsAllPluginInitialized;
 }
 

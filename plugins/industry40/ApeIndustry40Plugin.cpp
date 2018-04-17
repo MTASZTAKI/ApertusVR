@@ -53,9 +53,7 @@ ApeIndustry40Plugin::~ApeIndustry40Plugin()
 
 void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE)
+	if (event.type == Ape::Event::Type::NODE_CREATE)
 	{
 		if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
@@ -72,6 +70,9 @@ void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 void ApeIndustry40Plugin::Init()
 {
 	std::cout << "ApeIndustry40Plugin::init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
 
 	std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)

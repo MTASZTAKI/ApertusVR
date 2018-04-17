@@ -32,6 +32,7 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	, mpLobbyManager(nullptr)
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mpPluginManager = Ape::IPluginManager::getSingletonPtr();
 	mIsConnectedToNATServer = false;
 	mbIsConnectedToSessionServer = false;
 	mNATServerAddress.FromString("");
@@ -143,7 +144,6 @@ void Ape::SceneSessionImpl::init()
 void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 {
 	mIsHost = false;
-	mParticipantType = Ape::SceneSession::ParticipantType::GUEST;
 	RakNet::RakNetGUID serverGUID;
 	serverGUID.FromString(sceneSessionUniqueID.c_str());
 	std::cout << "Try to NAT punch to: " << serverGUID.ToString() << std::endl;
@@ -193,6 +193,13 @@ Ape::SceneSession::ParticipantType Ape::SceneSessionImpl::getParticipantType()
 
 void Ape::SceneSessionImpl::run()
 {
+	if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		std::cout << "Ape::SceneSessionImpl::run thread start waiting for all plugin init" << std::endl;
+		while (!mpPluginManager->isAllPluginInitialized())
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		std::cout << "Ape::SceneSessionImpl::run thread start listening after all plugins are inited" << std::endl;
+	}
 	while (true)
 	{
 		listen();

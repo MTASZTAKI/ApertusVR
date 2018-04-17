@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApeSphereGeometryImpl.h"
 
 Ape::SphereGeometryImpl::SphereGeometryImpl(std::string name, bool isHostCreated) : Ape::ISphereGeometry(name), Ape::Replica("SphereGeometry", isHostCreated)
@@ -113,6 +114,7 @@ void Ape::SphereGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseria
 	{
 		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
 		{
+			//std::cout << "Ape::SphereGeometryImpl::Deserialize materialName " << materialName.C_String() << std::endl;
 			mMaterial = material;
 			mMaterialName = material->getName();
 			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_SPHERE_MATERIAL));

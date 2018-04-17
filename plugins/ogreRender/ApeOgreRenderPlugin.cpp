@@ -2088,7 +2088,6 @@ void Ape::OgreRenderPlugin::Run()
 {
 	try
 	{
-        mpRoot->renderOneFrame();
         mpRoot->startRendering();
 	}
 	catch (const Ogre::RenderingAPIException& ex)
@@ -2124,19 +2123,6 @@ void Ape::OgreRenderPlugin::Init()
 {
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
-
-	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
-	{
-		if (auto userNode = mUserNode.lock())
-		{
-			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNode->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
-			{
-				userNameText->setCaption(userNode->getName());
-				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-				userNameText->setParentNode(userNode);
-			}
-		}
-	}
 
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";

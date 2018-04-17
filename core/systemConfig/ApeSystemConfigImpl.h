@@ -63,8 +63,6 @@ namespace Ape
 		std::string getFolderPath() override;
 
 		void setGeneratedUniqueUserNodeName(std::string generatedUniqueUserName);
-
-		void writeSessionGUID(Ape::SceneSessionUniqueID sessionGUID);
 	};
 }
 

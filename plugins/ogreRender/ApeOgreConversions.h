@@ -166,6 +166,8 @@ namespace Ape
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 		else if (type == Ape::Pass::SceneBlendingType::REPLACE)
 			return Ogre::SceneBlendType::SBT_REPLACE;
+		else if (type == Ape::Pass::SceneBlendingType::INVALID)
+			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 	}
 
 	inline Ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
@@ -186,6 +188,8 @@ namespace Ape
 			return Ogre::CullingMode::CULL_CLOCKWISE;
 		else if (type == Ape::Material::CullingMode::ANTICLOCKWISE)
 			return Ogre::CullingMode::CULL_ANTICLOCKWISE;
+		else if (type == Ape::Material::CullingMode::INVALID_CM)
+			return Ogre::CullingMode::CULL_CLOCKWISE;
 	}
 
 	inline Ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)

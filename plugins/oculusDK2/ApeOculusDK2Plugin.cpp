@@ -32,16 +32,19 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 
 void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-	{
-		mUserNode = mpScene->getNode(event.subjectName);
-		mUserNode.lock()->setFixedYaw(true);
-	}
+
 }
 
 void ApeOculusDK2Plugin::Init()
 {
 	std::cout << "ApeOculusDK2Plugin::init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
+		userNode->setFixedYaw(true);
+		mUserNode = userNode;
+	}
+
 	std::cout << "ApeOculusDK2Plugin waiting for main window" << std::endl;
 	while (Ape::IMainWindow::getSingletonPtr()->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
