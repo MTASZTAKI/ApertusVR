@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
+#include <iostream>
 #include <string>
 #include <sstream>
 #include <map>
@@ -29,7 +29,23 @@ SOFTWARE.*/
 int main (int argc, char** argv)
 {
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs";
+	if (argc > 1)
+	{
+		std::string participantType = argv[1];
+		if (participantType == "host")
+			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\host";
+		else if (participantType == "guest")
+			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest";
+		else if (participantType == "local")
+			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\local";
+		else if (participantType == "guest_cave")
+			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest_cave";
+	}
+	else
+	{
+		std::cout << "usage: host | guest | local | guest_cave " << std::endl;
+		return 0;
+	}
 	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;

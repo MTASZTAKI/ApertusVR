@@ -9,10 +9,10 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
-	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
+	//mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mpKeyboard = NULL;
-	mpMouse = NULL;
+	//mpKeyboard = NULL;
+	//mpMouse = NULL;
 	mTranslateSpeedFactor = 3;
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
@@ -47,8 +47,8 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 ApeIndustry40Plugin::~ApeIndustry40Plugin()
 {
 	std::cout << "ApeIndustry40Plugin dtor" << std::endl;
-	delete mpKeyboard;
-	delete mpMouse;
+	//delete mpKeyboard;
+	//delete mpMouse;
 }
 
 void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
@@ -74,10 +74,10 @@ void ApeIndustry40Plugin::Init()
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
+	/*std::cout << "ApeIndustry40Plugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;
+	std::cout << "ApeIndustry40Plugin main window was found" << std::endl;*/
 
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
@@ -101,12 +101,12 @@ void ApeIndustry40Plugin::Init()
 
 	
 
-	std::stringstream hwndStrStream;
+	/*std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
 	std::stringstream windowHndStr;
-	windowHndStr << std::stoul(hwndStrStream.str(), nullptr, 16);
+	windowHndStr << std::stoul(hwndStrStream.str(), nullptr, 16);*/
 
-	OIS::ParamList pl;
+	/*OIS::ParamList pl;
 	pl.insert(std::make_pair("WINDOW", windowHndStr.str()));
 #ifdef WIN32
 	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
@@ -129,86 +129,86 @@ void ApeIndustry40Plugin::Init()
 		const OIS::MouseState &ms = mouse->getMouseState();
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
-	}
+	}*/
 }
 
-void ApeIndustry40Plugin::moveUserNode()
-{
-	auto userNode = mUserNode.lock();
-	if (userNode)
-	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-	}
-}
+//void ApeIndustry40Plugin::moveUserNode()
+//{
+//	auto userNode = mUserNode.lock();
+//	if (userNode)
+//	{
+//		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
+//			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
+//			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_D])
+//			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_A])
+//			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_W])
+//			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_S])
+//			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
+//			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
+//			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
+//			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
+//			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
+//			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+//		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
+//			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+//	}
+//}
 
-void ApeIndustry40Plugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
-{
-	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
-	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
-	mSceneToggleIndex++;
-	if (mScenePoses.size() == mSceneToggleIndex)
-		mSceneToggleIndex = 0;
-}
-
-void ApeIndustry40Plugin::toggleSwitchNodesVisibility()
-{
-	if (mSwitchNodes.size() > 0)
-	{
-		if (auto switchNode = mSwitchNodes[mSwitchNodeVisibilityToggleIndex].lock())
-		{
-			if (!switchNode->getChildrenVisibility())
-				switchNode->setChildrenVisibility(true);
-			else
-				switchNode->setChildrenVisibility(false);
-		}
-		mSwitchNodeVisibilityToggleIndex++;
-		if (mSwitchNodes.size() == mSwitchNodeVisibilityToggleIndex)
-			mSwitchNodeVisibilityToggleIndex = 0;
-	}
-}
-
-void ApeIndustry40Plugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
-{
-	std::ofstream userNodePoseFile;
-	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
-		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
-	userNodePoseFile.close();
-}
+//void ApeIndustry40Plugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
+//{
+//	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
+//	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
+//	mSceneToggleIndex++;
+//	if (mScenePoses.size() == mSceneToggleIndex)
+//		mSceneToggleIndex = 0;
+//}
+//
+//void ApeIndustry40Plugin::toggleSwitchNodesVisibility()
+//{
+//	if (mSwitchNodes.size() > 0)
+//	{
+//		if (auto switchNode = mSwitchNodes[mSwitchNodeVisibilityToggleIndex].lock())
+//		{
+//			if (!switchNode->getChildrenVisibility())
+//				switchNode->setChildrenVisibility(true);
+//			else
+//				switchNode->setChildrenVisibility(false);
+//		}
+//		mSwitchNodeVisibilityToggleIndex++;
+//		if (mSwitchNodes.size() == mSwitchNodeVisibilityToggleIndex)
+//			mSwitchNodeVisibilityToggleIndex = 0;
+//	}
+//}
+//
+//void ApeIndustry40Plugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+//{
+//	std::ofstream userNodePoseFile;
+//	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+//	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+//		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+//	userNodePoseFile.close();
+//}
 
 
 void ApeIndustry40Plugin::Run()
 {
 	while (true)
 	{
-		if (mpKeyboard)
+		/*if (mpKeyboard)
 			mpKeyboard->capture();
 		else if (mpMouse)
 			mpMouse->capture();
-		moveUserNode();
+		moveUserNode();*/
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
@@ -235,39 +235,39 @@ void ApeIndustry40Plugin::Restart()
 
 }
 
-bool ApeIndustry40Plugin::keyPressed(const OIS::KeyEvent& e)
-{
-	mKeyCodeMap[e.key] = true;
-	auto userNode = mUserNode.lock();
-	if (userNode)
-	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
-			toggleScenePoses(userNode);
-		else if (mKeyCodeMap[OIS::KeyCode::KC_C])
-			saveUserNodePose(userNode);
-	}
-	if (mKeyCodeMap[OIS::KeyCode::KC_V])
-		toggleSwitchNodesVisibility();
-	return true;
-}
-
-bool ApeIndustry40Plugin::keyReleased(const OIS::KeyEvent& e)
-{
-	mKeyCodeMap[e.key] = false;
-	return true;
-}
-
-bool ApeIndustry40Plugin::mouseMoved(const OIS::MouseEvent& e)
-{
-	return true;
-}
-
-bool ApeIndustry40Plugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
-{
-	return true;
-}
-
-bool ApeIndustry40Plugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
-{
-	return true;
-}
+//bool ApeIndustry40Plugin::keyPressed(const OIS::KeyEvent& e)
+//{
+//	mKeyCodeMap[e.key] = true;
+//	auto userNode = mUserNode.lock();
+//	if (userNode)
+//	{
+//		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
+//			toggleScenePoses(userNode);
+//		else if (mKeyCodeMap[OIS::KeyCode::KC_C])
+//			saveUserNodePose(userNode);
+//	}
+//	if (mKeyCodeMap[OIS::KeyCode::KC_V])
+//		toggleSwitchNodesVisibility();
+//	return true;
+//}
+//
+//bool ApeIndustry40Plugin::keyReleased(const OIS::KeyEvent& e)
+//{
+//	mKeyCodeMap[e.key] = false;
+//	return true;
+//}
+//
+//bool ApeIndustry40Plugin::mouseMoved(const OIS::MouseEvent& e)
+//{
+//	return true;
+//}
+//
+//bool ApeIndustry40Plugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+//{
+//	return true;
+//}
+//
+//bool ApeIndustry40Plugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+//{
+//	return true;
+//}

@@ -52,12 +52,12 @@ SOFTWARE.*/
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIMainWindow.h"
-#include "OIS.h"
+//#include "OIS.h"
 
 
 #define THIS_PLUGINNAME "ApeIndustry40Plugin"
 
-class ApeIndustry40Plugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+class ApeIndustry40Plugin : public Ape::IPlugin//, public OIS::KeyListener, public OIS::MouseListener
 {
 private:
 	struct ScenePose
@@ -84,15 +84,15 @@ private:
 	
 	void eventCallBack(const Ape::Event& event);
 
-	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+	//std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 	Ape::NodeWeakPtr mUserNode;
 
 	Ape::IMainWindow* mpMainWindow;
 
-	OIS::Keyboard* mpKeyboard;
+	//OIS::Keyboard* mpKeyboard;
 
-	OIS::Mouse* mpMouse;
+	//OIS::Mouse* mpMouse;
 
 	int mSceneToggleIndex;
 
@@ -108,13 +108,13 @@ private:
 
 	float mRotateSpeedFactor;
 
-	void moveUserNode();
+	/*void moveUserNode();
 
 	void toggleScenePoses(Ape::NodeSharedPtr userNode);
 
 	void toggleSwitchNodesVisibility();
 
-	void saveUserNodePose(Ape::NodeSharedPtr userNode);
+	void saveUserNodePose(Ape::NodeSharedPtr userNode);*/
 	
 public:
 	ApeIndustry40Plugin();
@@ -133,7 +133,7 @@ public:
 
 	void Restart() override;
 
-	bool keyPressed(const OIS::KeyEvent& e) override;
+	/*bool keyPressed(const OIS::KeyEvent& e) override;
 
 	bool keyReleased(const OIS::KeyEvent& e) override;
 
@@ -141,7 +141,7 @@ public:
 
 	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
-	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;*/
 };
 
 APE_PLUGIN_FUNC Ape::IPlugin* CreateApeIndustry40Plugin()
