@@ -1505,7 +1505,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									std::vector<Ape::GeometryWeakPtr> intersections;
 									for (size_t i = 0, size = query_result.size(); i < size; ++i)
 									{
-										if (auto geometry = std::static_pointer_cast<Ape::Geometry>(mpScene->getEntity(query_result[i].movable->getName()).lock()))
+										if (auto geometry = std::dynamic_pointer_cast<Ape::Geometry>(mpScene->getEntity(query_result[i].movable->getName()).lock()))
 											intersections.push_back(geometry);
 									}
 									if (intersections.size())

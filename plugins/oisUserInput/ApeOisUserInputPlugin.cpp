@@ -141,21 +141,20 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 					std::size_t found = geometry->getName().find(mUserNode.lock()->getName()); 
 					if (found == std::string::npos)//Ignore our avatar
 					{
-						std::cout << "Ape::OISUserInputPlugin::eventCallBack(): GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << std::endl;
-						Ape::NodeWeakPtr selectedParentNodeWeakPtr = geometry->getParentNode();
-						if (auto selectedParentNodeSharedPtr = selectedParentNodeWeakPtr.lock())
+						std::cout << "Ape::OISUserInputPlugin::eventCallBack(): GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << " type: " << geometry->getType() << std::endl;
+						if (auto selectedParentNode = geometry->getParentNode().lock())
 						{
 							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 							{
 								clearNodeSelection();
-								addNodeSelection(selectedParentNodeWeakPtr);
+								addNodeSelection(selectedParentNode);
 							}
 							else
 							{
-								if (isNodeSelected(selectedParentNodeSharedPtr->getName()))
-									removeNodeSelection(selectedParentNodeSharedPtr->getName());
+								if (isNodeSelected(selectedParentNode->getName()))
+									removeNodeSelection(selectedParentNode->getName());
 								else
-									addNodeSelection(selectedParentNodeWeakPtr);
+									addNodeSelection(selectedParentNode);
 							}
 						}
 						break;
