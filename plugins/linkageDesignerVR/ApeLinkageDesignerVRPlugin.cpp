@@ -52,9 +52,7 @@ ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 
 void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			camera->setParentNode(mUserNode);
@@ -76,6 +74,10 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 void ApeLinkageDesignerVRPlugin::Init()
 {
 	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");

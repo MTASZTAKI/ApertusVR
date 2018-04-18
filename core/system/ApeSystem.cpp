@@ -20,6 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <chrono>
+#include <random>
 #include "ApeSystem.h"
 #include "ApeSystemConfigImpl.h"
 #include "ApeMainWindowImpl.h"
@@ -29,6 +31,10 @@ SOFTWARE.*/
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIManualPass.h"
+#include "ApeISphereGeometry.h"
+#include "ApeIPlaneGeometry.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
@@ -40,32 +46,56 @@ Ape::MainWindowImpl* gpMainWindowImpl;
 void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
 	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
+	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
+	std::string delimiter = "-";
+	auto tp = std::chrono::system_clock::now();
+	auto dur = tp.time_since_epoch();
+	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
+	std::stringstream uniqueUserNodeName;
+	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << nanoseconds;
+	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
+
 	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
+	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
-
-	std::stringstream uniqueUserNodeName;
-	std::string delimiter = "-";
-	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
-	std::string sessionGUID = gpSceneSessionImpl->getGUID();
-
-	if (sessionGUID == "UNASSIGNED_RAKNET_GUID")
-		sessionGUID = "";
-	if (uniqueUserNamePrefix.empty())
-		uniqueUserNamePrefix = "defaultUserNode";
-	if (sessionGUID.empty())
-		delimiter = "";
-
-	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << sessionGUID;
-	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
-	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
 		; //TODO open a platform specific window if needed
 
-	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();
+
+	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
+	if (auto userNode = gpSceneImpl->createNode(uniqueUserNodeName.str()).lock())
+	{
+		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneImpl->createEntity(userNode->getName() + "_ManualMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+			std::vector<double> randomColors;
+			for (int i = 0; i < 3; i++)
+				randomColors.push_back(distDouble(gen));
+			userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+			userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+			if (auto userSphere = std::static_pointer_cast<Ape::ISphereGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_SphereGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
+			{
+				userSphere->setParameters(10.0f, Ape::Vector2(1, 1));
+				userSphere->setParentNode(userNode);
+				userSphere->setMaterial(userMaterial);
+			}
+		}
+		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			userNameText->setCaption(uniqueUserNodeName.str());
+			userNameText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
+			userNameText->setParentNode(userNode);
+		}
+	}
+
+	gpPluginManagerImpl->InitAndRunPlugins();
+
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

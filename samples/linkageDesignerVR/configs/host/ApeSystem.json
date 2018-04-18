@@ -14,12 +14,12 @@
             "ip": "195.111.2.95",
             "port": "61666"
         },
-        "lobbyServer": {
-            "useLobby": false,
-            "ip": "195.111.2.95",
-            "port": "8888",
-            "sessionName": "test"
-        }
+      "lobbyServer": {
+        "useLobby": true,
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "sessionName": "test"
+      }
     },
     "pluginManager": {
         "plugins": [

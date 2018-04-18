@@ -53,9 +53,7 @@ ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 
 void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 			camera->setParentNode(mUserNode);
@@ -77,6 +75,10 @@ void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 void ApeRobotMonitoringPlugin::Init()
 {
 	std::cout << "ApeRobotMonitoringPlugin::init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	if (auto node = mpScene->createNode("standNode").lock())
 	{
 		node->setPosition(Ape::Vector3(0, 0, 0));

@@ -20,17 +20,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeNodeJsPlugin.json
-	ApeX3DLoaderPlugin.json
-	ApeKinectPlugin.json
-	ApeSystem.json
-	)
-
-add_custom_target(
-    Configs_mixedReality ALL
-    SOURCES ${CONFIGS}
-)
-
-set_property (TARGET Configs_mixedReality PROPERTY FOLDER "Samples/MixedReality/Configs")
+add_subdirectory (local)
+add_subdirectory (guest)
+add_subdirectory (host)
+add_subdirectory (guest_cave)

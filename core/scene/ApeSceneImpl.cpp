@@ -270,6 +270,22 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
+		case Ape::Entity::POINT_CLOUD:
+		{
+			auto entity = std::make_shared<Ape::PointCloudImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::POINT_CLOUD_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
+		case Ape::Entity::CAMERA:
+		{
+			auto entity = std::make_shared<Ape::CameraImpl>(name);
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_CREATE));
+			return entity;
+		}
 		case Ape::Entity::BROWSER:
 		{
 			auto entity = std::make_shared<Ape::BrowserImpl>(name, mpSceneSessionImpl->isHost());
@@ -303,20 +319,6 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 			auto entity = std::make_shared<Ape::WaterImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_CREATE));
-			return entity;
-		}
-		case Ape::Entity::POINT_CLOUD:
-		{
-			auto entity = std::make_shared<Ape::PointCloudImpl>(name, mpSceneSessionImpl->isHost());
-			mEntities.insert(std::make_pair(name, entity));
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::POINT_CLOUD_CREATE));
-			return entity;
-		}
-		case Ape::Entity::CAMERA:
-		{
-			auto entity = std::make_shared<Ape::CameraImpl>(name);
-			mEntities.insert(std::make_pair(name, entity));
-			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_CREATE));
 			return entity;
 		}
 		case Ape::Entity::INVALID:

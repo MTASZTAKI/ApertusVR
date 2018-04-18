@@ -44,7 +44,9 @@ namespace Ape
 		PointCloudSetParameters()
 		{
 			this->points = Ape::PointCloudPoints();
+			this->points.resize(0);
 			this->colors = Ape::PointCloudColors();
+			this->colors.resize(0);
 			this->boundigSphereRadius = 0.0f;
 		}
 

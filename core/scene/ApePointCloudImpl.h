@@ -71,6 +71,10 @@ namespace Ape
 
 		Ape::PointCloudSetParameters mParameters;
 
+		int mPointsSize;
+
+		int mColorsSize;
+
 		Ape::PointCloudPoints mCurrentPoints;
 
 		Ape::PointCloudColors mCurrentColors;

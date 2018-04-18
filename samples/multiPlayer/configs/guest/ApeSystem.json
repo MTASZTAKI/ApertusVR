@@ -6,7 +6,7 @@
     "sceneSession": {
         "participantType": "Guest",
         "uniqueUserNamePrefix": "HelloWorldGuest",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionGUID": "369297992814604559",
         "sessionResourceLocation": [
             "/plugins/sampleScene/resources"
         ],
@@ -18,7 +18,7 @@
             "useLobby": true,
             "ip": "195.111.2.95",
             "port": "8888",
-            "sessionName": "MultiPlayer"
+            "sessionName": "Petike"
         }
     },
     "pluginManager": {

@@ -44,7 +44,7 @@ namespace Ape
 		virtual ~IPluginManager() {};
 	
 	public:
-		virtual void LoadPlugin(std::string name) = 0;
+		virtual bool isAllPluginInitialized() = 0;
 	};
 }
 

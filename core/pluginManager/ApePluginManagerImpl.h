@@ -44,7 +44,6 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 #include "ApeISystemConfig.h"
-#include "ApeIScene.h"
 
 namespace Ape
 { 
@@ -59,23 +58,21 @@ namespace Ape
 
 		void CreatePlugin(std::string pluginname);
 
+		void InitAndRunPlugin(Ape::IPlugin* plugin);
+
 		Ape::ISystemConfig* mpSystemConfig;
 
 		std::mutex mConstructedPluginMutex;
 
 		std::condition_variable mConstructedPluginCondition;
 
-		unsigned int mConstructedPluginCount;
+		unsigned int mInitializedPluginCount;
 
 		unsigned int mPluginCount;
 
-		Ape::IScene* mpScene;
-
 		std::string mUniqueUserNodeName;
 
-		void createUserBodyNodes();
-
-		bool isCreateUserBodyNodesFunctionCalled;
+		bool mIsAllPluginInitialized;
 
 	public:
 		PluginManagerImpl();
@@ -84,17 +81,13 @@ namespace Ape
 
 		void CreatePlugins();
 
-		void InitPlugins();
-
-		void RunPlugins();
-
-		void DestroyPlugins();
+		void InitAndRunPlugins();
 
 		void joinPluginThreads();
 
 		void detachPluginThreads();
 
-		virtual void LoadPlugin(std::string name) override;
+		virtual bool isAllPluginInitialized() override;
 	};
 }
 #endif

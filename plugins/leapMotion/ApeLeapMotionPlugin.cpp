@@ -46,17 +46,20 @@ Ape::LeapMotionPlugin::~LeapMotionPlugin()
 
 void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-		mUserNode = mpScene->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
+	/*TODO must create at init not here or think about that (Is this the responsibility of a plugin or a system?)*/
+	/*if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
 		mRightHandNode = mpScene->getNode(event.subjectName);
 	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
-		mLeftHandNode = mpScene->getNode(event.subjectName);
+		mLeftHandNode = mpScene->getNode(event.subjectName);*/
 }
 
 void Ape::LeapMotionPlugin::Init()
 {
 	std::cout << "LeapMotionPlugin::Init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	std::cout << "LeapMotionPlugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

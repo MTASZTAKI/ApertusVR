@@ -4,8 +4,8 @@
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
-        "participantType": "Host",
-        "uniqueUserNamePrefix": "",
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "Local",
         "sessionGUID": "1013311130628945935",
         "sessionResourceLocation": [
             "/plugins/industry40/resources"
@@ -15,7 +15,7 @@
             "port": "61666"
         },
         "lobbyServer": {
-            "useLobby": true,
+            "useLobby": false,
             "ip": "195.111.2.95",
             "port": "8888",
             "sessionName": "k508"
@@ -25,6 +25,7 @@
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
+			"ApeOisUserInputPlugin",
             "ApeIndustry40Plugin",
             "ApeKinectPlugin"
         ]

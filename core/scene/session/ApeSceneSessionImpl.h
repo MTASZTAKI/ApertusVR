@@ -62,6 +62,7 @@ SOFTWARE.*/
 #include "ApeISceneSession.h"
 #include "ApeISystemConfig.h"
 #include "ApeLobbyManager.h"
+#include "ApeIPluginManager.h"
 
 namespace Ape
 {
@@ -99,6 +100,8 @@ namespace Ape
 		bool mIsHost;
 		
 		Ape::ISystemConfig* mpSystemConfig;
+
+		Ape::IPluginManager* mpPluginManager;
 
 		bool mbIsConnectedToSessionServer;
 

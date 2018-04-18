@@ -165,44 +165,6 @@ void Ape::SystemConfigImpl::setGeneratedUniqueUserNodeName(std::string generated
 	mSceneSessionConfig.generatedUniqueUserNodeName = generatedUniqueUserName;
 }
 
-void Ape::SystemConfigImpl::writeSessionGUID(Ape::SceneSessionUniqueID sessionGUID)
-{
-	std::stringstream fileFullPath;
-	fileFullPath << mFolderPath << "\\ApeSystem.json";
-
-	FILE* apeSystemConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	char readBuffer[65536];
-	rapidjson::Document jsonDocument;
-	if (apeSystemConfigFile)
-	{
-		rapidjson::FileReadStream jsonFileReaderStream(apeSystemConfigFile, readBuffer, sizeof(readBuffer));
-		jsonDocument.ParseStream(jsonFileReaderStream);
-		if (jsonDocument.IsObject())
-		{
-			rapidjson::Value& sceneSession = jsonDocument["sceneSession"];
-			for (rapidjson::Value::MemberIterator sceneSessionMemberIterator =
-				sceneSession.MemberBegin();
-				sceneSessionMemberIterator != sceneSession.MemberEnd(); ++sceneSessionMemberIterator)
-			{
-				if (sceneSessionMemberIterator->name == "sessionGUID")
-					jsonDocument["sceneSession"]["sessionGUID"].SetString(rapidjson::StringRef(sessionGUID.c_str()));
-			}
-		}
-		fclose(apeSystemConfigFile);
-	}
-
-	rapidjson::StringBuffer writeBuffer;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(writeBuffer);
-	jsonDocument.Accept(writer);
-
-	std::stringstream contentSS;
-	contentSS << writeBuffer.GetString() << std::endl;
-	std::string content = contentSS.str();
-	std::ofstream apeSystemConfigFileOut(fileFullPath.str().c_str(), std::ios::binary | std::ios::out);
-	apeSystemConfigFileOut.write(content.c_str(), content.size());
-	apeSystemConfigFileOut.flush();
-	apeSystemConfigFileOut.close();
-}
 
 
 

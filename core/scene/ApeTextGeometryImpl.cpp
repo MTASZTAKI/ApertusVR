@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApeTextGeometryImpl.h"
 
 Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : Ape::ITextGeometry(name), Ape::Replica("TextGeometry", isHostCreated)
@@ -94,8 +95,8 @@ RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCaption.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOffset);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
@@ -105,6 +106,7 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString caption;
+	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, caption))
 	{
 		mCaption = caption.C_String();
@@ -112,14 +114,16 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mOffset))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_OFFSET));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
-	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+		if (auto parentNode = mpScene->getNode(parentName.C_String()).lock())
+		{
+			mParentNode = parentNode;
+			mParentNodeName = parentName.C_String();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+		}
 	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

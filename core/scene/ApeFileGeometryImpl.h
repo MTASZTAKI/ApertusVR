@@ -50,7 +50,11 @@ namespace Ape
 
 		void exportMesh() override;
 
+		bool isExportMesh() override;
+
 		void mergeSubMeshes() override;
+
+		bool isMergeSubMeshes() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -68,6 +72,8 @@ namespace Ape
 		Ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
+
+		bool mIsExportMesh;
 
 		bool mIsSubMeshesMerged;
 	};

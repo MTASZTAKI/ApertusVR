@@ -28,15 +28,16 @@ ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 
 void ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName)
-	{
-		mUserNode = mpScene->getNode(event.subjectName);
-	}
+
 }
 
 void ApeTexasEEGPlugin::Init()
 {
 	std::cout << "ApeTexasEEGPlugin::init" << std::endl;
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	std::cout << "ApeTexasEEGPlugin waiting for main window" << std::endl;
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
