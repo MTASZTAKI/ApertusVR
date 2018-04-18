@@ -187,9 +187,12 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+		if (auto parentNode = mpScene->getNode(parentName.C_String()).lock())
+		{
+			mParentNode = parentNode;
+			mParentNodeName = parentName.C_String();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

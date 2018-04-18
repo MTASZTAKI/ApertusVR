@@ -48,7 +48,11 @@ namespace Ape
 
 		virtual void exportMesh() = 0;
 
+		virtual bool isExportMesh() = 0;
+
 		virtual void mergeSubMeshes() = 0;
+
+		virtual bool isMergeSubMeshes() = 0;
 	};
 }
 

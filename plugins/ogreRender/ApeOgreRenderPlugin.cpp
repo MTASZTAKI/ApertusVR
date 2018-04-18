@@ -148,13 +148,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							if (auto parentNode = node->getParentNode().lock())
 							{
-								Ogre::SceneNode* ogreParentNode = ogreNode->getParentSceneNode();
-								if (ogreParentNode)
-									ogreParentNode->removeChild(ogreNode);
+								auto ogreOldParentNode = ogreNode->getParentSceneNode();
+								if (ogreOldParentNode)
+									ogreOldParentNode->removeChild(ogreNode);
 								if (mpSceneMgr->hasSceneNode(parentNode->getName()))
 								{
-									ogreParentNode = mpSceneMgr->getSceneNode(parentNode->getName());
-									ogreParentNode->addChild(ogreNode);
+									auto ogreNewParentNode = mpSceneMgr->getSceneNode(parentNode->getName());
+									ogreNewParentNode->addChild(ogreNode);
 								}
 							}
 						}
@@ -211,7 +211,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (mpSceneMgr->hasSceneNode(parentNodeName))
 							{
 								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								{
 									ogreParentNode->attachObject(ogreEntity);
+								}
 							}
 						}
 					}
@@ -236,80 +238,90 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						std::stringstream meshName;
 						meshName << fileName << ".mesh";
 						if (Ogre::MeshManager::getSingleton().getByName(meshName.str()).isNull())
+						{
 							ogreManual->convertToMesh(meshName.str());
-
-						mpSceneMgr->createEntity(geometryName, meshName.str());
+						}
+						if (!mpSceneMgr->hasEntity(geometryName))
+						{
+							mpSceneMgr->createEntity(geometryName, meshName.str());
+						}
 					}
 				}
 					break;
 				case Ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES:
 				{
-					if (mpSceneMgr->hasEntity(geometryName))
+					if (geometryFile->isMergeSubMeshes())
 					{
-						if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+						if (mpSceneMgr->hasEntity(geometryName))
 						{
-							auto ogreStaticGeometry = mpSceneMgr->createStaticGeometry(geometryName + "SG");
-							ogreStaticGeometry->addEntity(ogreEntity, Ogre::Vector3::ZERO);
-							ogreStaticGeometry->build();
+							if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+							{
+								auto ogreStaticGeometry = mpSceneMgr->createStaticGeometry(geometryName + "SG");
+								ogreStaticGeometry->addEntity(ogreEntity, Ogre::Vector3::ZERO);
+								ogreStaticGeometry->build();
+							}
 						}
 					}
 				}
 				break;
 				case Ape::Event::Type::GEOMETRY_FILE_EXPORT:
 				{
-					if (fileName.find_first_of(".") != std::string::npos)
+					if (geometryFile->isExportMesh())
 					{
-						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
-						if (fileExtension == ".mesh")
+						if (fileName.find_first_of(".") != std::string::npos)
 						{
-							auto mesh = Ogre::MeshManager::getSingleton().getByName(fileName);
-							if (!mesh.isNull())
-								mMeshSerializer.exportMesh(mesh.getPointer(), fileName);
-						}
-					}
-					else if (mpSceneMgr->hasManualObject(geometryName))
-					{
-						auto ogreManual = mpSceneMgr->getManualObject(geometryName);
-						std::stringstream meshName;
-						meshName << geometryName << ".mesh";
-						if (Ogre::MeshManager::getSingleton().getByName(meshName.str()).isNull())
-						{
-							auto mesh = ogreManual->convertToMesh(meshName.str());
-							if (!mesh.isNull())
+							std::string fileExtension = fileName.substr(fileName.find_last_of("."));
+							if (fileExtension == ".mesh")
 							{
-								mMeshSerializer.exportMesh(mesh.getPointer(), meshName.str());
-								Ogre::Mesh::SubMeshIterator subMeshIterator = mesh->getSubMeshIterator();
-								Ogre::SubMesh* subMesh = nullptr;
-								while (subMeshIterator.hasMoreElements())
+								auto mesh = Ogre::MeshManager::getSingleton().getByName(fileName);
+								if (!mesh.isNull())
+									mMeshSerializer.exportMesh(mesh.getPointer(), fileName);
+							}
+						}
+						else if (mpSceneMgr->hasManualObject(geometryName))
+						{
+							auto ogreManual = mpSceneMgr->getManualObject(geometryName);
+							std::stringstream meshName;
+							meshName << geometryName << ".mesh";
+							if (Ogre::MeshManager::getSingleton().getByName(meshName.str()).isNull())
+							{
+								auto mesh = ogreManual->convertToMesh(meshName.str());
+								if (!mesh.isNull())
 								{
-									subMesh = subMeshIterator.getNext();
-									std::string materialName = subMesh->getMaterialName();
-									auto ogreMaterial = Ogre::MaterialManager::getSingletonPtr()->getByName(materialName);
-									if (!ogreMaterial.isNull())
+									mMeshSerializer.exportMesh(mesh.getPointer(), meshName.str());
+									Ogre::Mesh::SubMeshIterator subMeshIterator = mesh->getSubMeshIterator();
+									Ogre::SubMesh* subMesh = nullptr;
+									while (subMeshIterator.hasMoreElements())
 									{
-										std::string filePath = ogreManual->getName();
-										std::size_t found = filePath.find_last_of("/\\");
-										filePath = filePath.substr(0, found + 1);
-										std::string materialFileName = materialName;
-										//TODO automatic filesystem check for filenames and coding conversion
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '<'), materialFileName.end());
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '>'), materialFileName.end());
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/'), materialFileName.end());
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/\\'), materialFileName.end());
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), ':'), materialFileName.end());
-										materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), ','), materialFileName.end());
-										/*std::wstring wMaterialFileName = utf8_decode(materialFileName.c_str());
-										std::wcout << wMaterialFileName << std::endl;*/
-										std::size_t materialFileNameHash = std::hash<std::string>{}(materialFileName);
-										std::stringstream materialFilePath;
-										materialFilePath << filePath << materialFileNameHash << ".material";
-										std::ifstream materialFile(materialFilePath.str());
-										if (!materialFile)
-											mMaterialSerializer.exportMaterial(ogreMaterial, materialFilePath.str());
+										subMesh = subMeshIterator.getNext();
+										std::string materialName = subMesh->getMaterialName();
+										auto ogreMaterial = Ogre::MaterialManager::getSingletonPtr()->getByName(materialName);
+										if (!ogreMaterial.isNull())
+										{
+											std::string filePath = ogreManual->getName();
+											std::size_t found = filePath.find_last_of("/\\");
+											filePath = filePath.substr(0, found + 1);
+											std::string materialFileName = materialName;
+											//TODO automatic filesystem check for filenames and coding conversion
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '<'), materialFileName.end());
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '>'), materialFileName.end());
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/'), materialFileName.end());
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/\\'), materialFileName.end());
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), ':'), materialFileName.end());
+											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), ','), materialFileName.end());
+											/*std::wstring wMaterialFileName = utf8_decode(materialFileName.c_str());
+											std::wcout << wMaterialFileName << std::endl;*/
+											std::size_t materialFileNameHash = std::hash<std::string>{}(materialFileName);
+											std::stringstream materialFilePath;
+											materialFilePath << filePath << materialFileNameHash << ".material";
+											std::ifstream materialFile(materialFilePath.str());
+											if (!materialFile)
+												mMaterialSerializer.exportMaterial(ogreMaterial, materialFilePath.str());
+										}
 									}
+									mpSceneMgr->destroyManualObject(ogreManual);
+									auto ogreEntity = mpSceneMgr->createEntity(geometryName, meshName.str());
 								}
-								mpSceneMgr->destroyManualObject(ogreManual);
-								auto ogreEntity = mpSceneMgr->createEntity(geometryName, meshName.str());
 							}
 						}
 					}
@@ -732,233 +744,233 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					parentNodeName = parentNode->getName();
 				switch (event.type)
 				{
-				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE:
-				{
-					
-				}
-					break;
-				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE:
-				{
-					if (mpSceneMgr->hasManualObject(geometryName))
+					case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE:
 					{
-						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
+
+					}
+					break;
+					case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE:
+					{
+						if (mpSceneMgr->hasManualObject(geometryName))
 						{
-							if (mpSceneMgr->hasSceneNode(parentNodeName))
+							if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
 							{
-								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+								if (mpSceneMgr->hasSceneNode(parentNodeName))
 								{
-									ogreParentNode->attachObject(ogreManual);
+									if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+									{
+										ogreParentNode->attachObject(ogreManual);
+									}
+								}
+							}
+						}
+						else if (mpSceneMgr->hasEntity(geometryName))
+						{
+							if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+							{
+								if (mpSceneMgr->hasSceneNode(parentNodeName))
+								{
+									if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
+										ogreParentNode->attachObject(ogreEntity);
 								}
 							}
 						}
 					}
-					else if (mpSceneMgr->hasEntity(geometryName))
-					{
-						if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
-						{
-							if (mpSceneMgr->hasSceneNode(parentNodeName))
-							{
-								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
-									ogreParentNode->attachObject(ogreEntity);
-							}
-						}
-					}
-				}
 					break;
-				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE:
-					;
-					break;
-				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL:
-				{
-					if (auto ogreEntity = mpSceneMgr->hasEntity(geometryName))
+					case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE:
+						;
+						break;
+					case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_MATERIAL:
 					{
-						if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
+						if (auto ogreEntity = mpSceneMgr->hasEntity(geometryName))
 						{
-							if (auto material = manual->getMaterial().lock())
+							if (auto ogreEntity = mpSceneMgr->getEntity(geometryName))
 							{
-								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-								ogreEntity->setMaterial(ogreMaterial);
-							}
-						}
-					}
-				}
-					break;
-				case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS:
-				{
-					//Convert when command is fired somehow, for example GeometryRef
-					//std::stringstream meshFileName;
-					//meshFileName << geometryName << ".mesh";
-					//if (!Ogre::ResourceGroupManager::getSingleton().resourceExists(Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, meshFileName.str()))
-					//{
-					if (!mpSceneMgr->hasManualObject(geometryName))
-					{
-						auto ogreManual = mpSceneMgr->createManualObject(geometryName);
-						ogreManual->setDynamic(true);
-					}
-					if (mpSceneMgr->hasManualObject(geometryName))
-					{
-						if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
-						{
-							std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
-							if (parameters.generateNormals)
-							{
-								/*for (int i = 0; i < parameters.coordinates.size(); i = i + 9)
+								if (auto material = manual->getMaterial().lock())
 								{
-									Ogre::Vector3 coordinate0(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
-									Ogre::Vector3 coordinate1(parameters.coordinates[i + 3], parameters.coordinates[i + 4], parameters.coordinates[i + 5]);
-									Ogre::Vector3 coordinate2(parameters.coordinates[i + 6], parameters.coordinates[i + 7], parameters.coordinates[i + 8]);
-									Ogre::Vector3 v1;
-									v1.x = coordinate2.x - coordinate0.x;
-									v1.y = coordinate2.y - coordinate0.y;
-									v1.z = coordinate2.z - coordinate0.z;
-									Ogre::Vector3 v2;
-									v2.x = coordinate1.x - coordinate0.x;
-									v2.y = coordinate1.y - coordinate0.y;
-									v2.z = coordinate1.z - coordinate0.z;
-									Ogre::Vector3 coordinateNormal((v1).crossProduct(v2));
-									normals.push_back(coordinateNormal);
-								}*/
-								normals.resize(parameters.coordinates.size() / 3);
-								for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
-									normals[normalIndex] = Ogre::Vector3::ZERO;
+									auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+									ogreEntity->setMaterial(ogreMaterial);
+								}
+							}
+						}
+					}
+					break;
+					case Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS:
+					{
+						//Convert when command is fired somehow, for example GeometryRef
+						//std::stringstream meshFileName;
+						//meshFileName << geometryName << ".mesh";
+						//if (!Ogre::ResourceGroupManager::getSingleton().resourceExists(Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, meshFileName.str()))
+						//{
+						if (!mpSceneMgr->hasManualObject(geometryName))
+						{
+							auto ogreManual = mpSceneMgr->createManualObject(geometryName);
+							ogreManual->setDynamic(true);
+						}
+						if (mpSceneMgr->hasManualObject(geometryName))
+						{
+							if (auto ogreManual = mpSceneMgr->getManualObject(geometryName))
+							{
+								std::vector<Ogre::Vector3> normals = std::vector<Ogre::Vector3>();
+								if (parameters.generateNormals)
+								{
+									/*for (int i = 0; i < parameters.coordinates.size(); i = i + 9)
+									{
+										Ogre::Vector3 coordinate0(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
+										Ogre::Vector3 coordinate1(parameters.coordinates[i + 3], parameters.coordinates[i + 4], parameters.coordinates[i + 5]);
+										Ogre::Vector3 coordinate2(parameters.coordinates[i + 6], parameters.coordinates[i + 7], parameters.coordinates[i + 8]);
+										Ogre::Vector3 v1;
+										v1.x = coordinate2.x - coordinate0.x;
+										v1.y = coordinate2.y - coordinate0.y;
+										v1.z = coordinate2.z - coordinate0.z;
+										Ogre::Vector3 v2;
+										v2.x = coordinate1.x - coordinate0.x;
+										v2.y = coordinate1.y - coordinate0.y;
+										v2.z = coordinate1.z - coordinate0.z;
+										Ogre::Vector3 coordinateNormal((v1).crossProduct(v2));
+										normals.push_back(coordinateNormal);
+									}*/
+									normals.resize(parameters.coordinates.size() / 3);
+									for (int normalIndex = 0; normalIndex < normals.size(); normalIndex++)
+										normals[normalIndex] = Ogre::Vector3::ZERO;
+									int indexIndex = 0;
+									while (indexIndex < parameters.indices.size())
+									{
+										int indexCount = 0;
+										while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
+											indexCount++;
+										if (indexCount == 4)
+										{
+											int coordinate0Index = parameters.indices[indexIndex] * 3;
+											Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
+
+											int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
+											Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
+
+											int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
+											Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
+
+											int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
+											Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
+
+											Ogre::Vector3 v1;
+											v1.x = coordinate2.x - coordinate0.x;
+											v1.y = coordinate2.y - coordinate0.y;
+											v1.z = coordinate2.z - coordinate0.z;
+											Ogre::Vector3 v2;
+											v2.x = coordinate1.x - coordinate0.x;
+											v2.y = coordinate1.y - coordinate0.y;
+											v2.z = coordinate1.z - coordinate0.z;
+											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
+
+											//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											normals[parameters.indices[indexIndex]] += coordinateNormal;
+											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
+											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
+											normals[parameters.indices[indexIndex + 3]] += coordinateNormal;
+
+											indexIndex = indexIndex + 5;
+										}
+										else if (indexCount == 3)
+										{
+											int coordinate0Index = parameters.indices[indexIndex] * 3;
+											Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
+
+											int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
+											Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
+
+											int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
+											Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
+
+											Ogre::Vector3 v1;
+											v1.x = coordinate2.x - coordinate0.x;
+											v1.y = coordinate2.y - coordinate0.y;
+											v1.z = coordinate2.z - coordinate0.z;
+											Ogre::Vector3 v2;
+											v2.x = coordinate1.x - coordinate0.x;
+											v2.y = coordinate1.y - coordinate0.y;
+											v2.z = coordinate1.z - coordinate0.z;
+											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
+
+											//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											normals[parameters.indices[indexIndex]] += coordinateNormal;
+											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
+											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
+
+											indexIndex = indexIndex + 4;
+										}
+										else
+										{
+											// TODO
+											indexIndex = indexIndex + indexCount + 1;
+										}
+									}
+								}
+								Ogre::MaterialPtr ogreMaterial = Ogre::MaterialPtr();
+								if (auto material = parameters.material.lock())
+								{
+									ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+									ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+								}
+								else
+								{
+									ogreManual->begin("FlatVertexColorLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
+								}
+								for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
+								{
+									ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
+									if (parameters.generateNormals)
+									{
+										normals[i / 3].normalise();
+										ogreManual->normal(normals[i / 3]);
+									}
+									else if (parameters.normals.size() > i && parameters.normals.size() > 0)
+									{
+										ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
+									}
+									if (parameters.textureCoordinates.size() > 0)
+									{
+										int textCoordIndex = (i / 3) * 6;
+										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
+										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
+										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
+									}
+									if (parameters.colors.size() > 0)
+									{
+										int colorIndex = (i / 3) * 4;
+										Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);
+										ogreManual->colour(color);
+									}
+								}
 								int indexIndex = 0;
 								while (indexIndex < parameters.indices.size())
 								{
 									int indexCount = 0;
 									while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
 										indexCount++;
+
 									if (indexCount == 4)
 									{
-										int coordinate0Index = parameters.indices[indexIndex] * 3;
-										Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
-
-										int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
-										Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
-
-										int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
-										Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
-
-										int coordinate3Index = parameters.indices[(indexIndex + 3)] * 3;
-										Ogre::Vector3 coordinate3(parameters.coordinates[coordinate3Index], parameters.coordinates[coordinate3Index + 1], parameters.coordinates[coordinate3Index + 2]);
-
-										Ogre::Vector3 v1;
-										v1.x = coordinate2.x - coordinate0.x;
-										v1.y = coordinate2.y - coordinate0.y;
-										v1.z = coordinate2.z - coordinate0.z;
-										Ogre::Vector3 v2;
-										v2.x = coordinate1.x - coordinate0.x;
-										v2.y = coordinate1.y - coordinate0.y;
-										v2.z = coordinate1.z - coordinate0.z;
-										Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
-
-										//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
-										normals[parameters.indices[indexIndex]] += coordinateNormal;
-										normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
-										normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
-										normals[parameters.indices[indexIndex + 3]] += coordinateNormal;
-
+										ogreManual->quad(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2], parameters.indices[indexIndex + 3]);
 										indexIndex = indexIndex + 5;
 									}
 									else if (indexCount == 3)
 									{
-										int coordinate0Index = parameters.indices[indexIndex] * 3;
-										Ogre::Vector3 coordinate0(parameters.coordinates[coordinate0Index], parameters.coordinates[coordinate0Index + 1], parameters.coordinates[coordinate0Index + 2]);
-
-										int coordinate1Index = parameters.indices[(indexIndex + 1)] * 3;
-										Ogre::Vector3 coordinate1(parameters.coordinates[coordinate1Index], parameters.coordinates[coordinate1Index + 1], parameters.coordinates[coordinate1Index + 2]);
-
-										int coordinate2Index = parameters.indices[(indexIndex + 2)] * 3;
-										Ogre::Vector3 coordinate2(parameters.coordinates[coordinate2Index], parameters.coordinates[coordinate2Index + 1], parameters.coordinates[coordinate2Index + 2]);
-
-										Ogre::Vector3 v1;
-										v1.x = coordinate2.x - coordinate0.x;
-										v1.y = coordinate2.y - coordinate0.y;
-										v1.z = coordinate2.z - coordinate0.z;
-										Ogre::Vector3 v2;
-										v2.x = coordinate1.x - coordinate0.x;
-										v2.y = coordinate1.y - coordinate0.y;
-										v2.z = coordinate1.z - coordinate0.z;
-										Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
-
-										//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
-										normals[parameters.indices[indexIndex]] += coordinateNormal;
-										normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
-										normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
-
+										ogreManual->triangle(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2]);
 										indexIndex = indexIndex + 4;
 									}
 									else
 									{
-										// TODO
+										for (int i = 0; i < indexCount; i++)
+											ogreManual->index(parameters.indices[indexIndex + i]);
+
 										indexIndex = indexIndex + indexCount + 1;
 									}
 								}
+								ogreManual->end();
 							}
-							Ogre::MaterialPtr ogreMaterial = Ogre::MaterialPtr();
-							if (auto material = parameters.material.lock())
-							{
-								ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-								ogreManual->begin(material->getName(), Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-							}
-							else
-							{
-								ogreManual->begin("FlatVertexColorLighting", Ogre::RenderOperation::OperationType::OT_TRIANGLE_LIST);
-							}
-							for (int i = 0; i < parameters.coordinates.size(); i = i + 3)
-							{
-								ogreManual->position(parameters.coordinates[i], parameters.coordinates[i + 1], parameters.coordinates[i + 2]);
-								if (parameters.generateNormals)
-								{
-									normals[i / 3].normalise();
-									ogreManual->normal(normals[i / 3]);
-								}
-								else if (parameters.normals.size() > i && parameters.normals.size() > 0)
-								{
-									ogreManual->normal(Ogre::Vector3(parameters.normals[i], parameters.normals[i + 1], parameters.normals[i + 2]));
-								}
-								if (parameters.textureCoordinates.size() > 0)
-								{
-									int textCoordIndex = (i / 3) * 6;
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
-									ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
-								}
-								if (parameters.colors.size() > 0)
-								{
-									int colorIndex = (i / 3) * 4;
-									Ogre::ColourValue color(parameters.colors[colorIndex], parameters.colors[colorIndex + 1], parameters.colors[colorIndex + 2], parameters.colors[colorIndex + 3]);
-									ogreManual->colour(color);
-								}
-							}
-							int indexIndex = 0;
-							while (indexIndex < parameters.indices.size())
-							{
-								int indexCount = 0;
-								while (indexIndex + indexCount < parameters.indices.size() && parameters.indices[indexIndex + indexCount] != -1)
-									indexCount++;
-
-								if (indexCount == 4)
-								{
-									ogreManual->quad(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2], parameters.indices[indexIndex + 3]);
-									indexIndex = indexIndex + 5;
-								}
-								else if (indexCount == 3)
-								{
-									ogreManual->triangle(parameters.indices[indexIndex], parameters.indices[indexIndex + 1], parameters.indices[indexIndex + 2]);
-									indexIndex = indexIndex + 4;
-								}
-								else
-								{
-									for (int i = 0; i < indexCount; i++)
-										ogreManual->index(parameters.indices[indexIndex + i]);
-
-									indexIndex = indexIndex + indexCount + 1;
-								}
-							}
-							ogreManual->end();
 						}
 					}
-				}
 					break;
 				}
 			}
