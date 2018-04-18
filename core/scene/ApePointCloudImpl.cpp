@@ -29,6 +29,8 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mParentNode = Ape::NodeWeakPtr();
 	mParentNodeName = std::string();
 	mParameters = Ape::PointCloudSetParameters();
+	mPointsSize = 0;
+	mColorsSize = 0;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
 }
@@ -40,9 +42,9 @@ Ape::PointCloudImpl::~PointCloudImpl()
 
 void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
 {
-	mParameters.points = points;
-	mParameters.colors = colors;
-	mParameters.boundigSphereRadius = boundigSphereRadius;
+	mPointsSize = static_cast<int>(points.size());
+	mColorsSize = static_cast<int>(colors.size());
+	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
 }
 
@@ -99,33 +101,65 @@ void Ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationC
 
 RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCurrentPoints);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCurrentColors);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	if (serializeParameters->whenLastSerialized == 0)
+	{
+		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPointsSize);
+		for (auto item : mParameters.points)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColorsSize);
+		for (auto item : mParameters.colors)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.boundigSphereRadius);
+
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+		
+		mVariableDeltaSerializer.EndSerialize(&serializationContext);
+		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPointsSize))
+	{
+		while (mParameters.points.size() < mPointsSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.points.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColorsSize))
+	{
+		while (mParameters.colors.size() < mColorsSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.colors.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.boundigSphereRadius))
+	{
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCurrentPoints))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCurrentColors))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
+	}
 	RakNet::RakString parentNodeName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))
 	{
-		mParentNodeName = parentNodeName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
+		if (auto parentNode = mpScene->getNode(parentNodeName.C_String()).lock())
+		{
+			mParentNode = parentNode;
+			mParentNodeName = parentNodeName.C_String();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

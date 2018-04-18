@@ -86,6 +86,7 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+		
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.groupName.c_str()));
 
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
@@ -111,7 +112,9 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.materialName.c_str()));
+		
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+		
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
 		return RakNet::RM3SR_SERIALIZED_ALWAYS;
 	}

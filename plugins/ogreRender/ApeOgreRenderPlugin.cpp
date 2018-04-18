@@ -748,7 +748,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								if (auto ogreParentNode = mpSceneMgr->getSceneNode(parentNodeName))
 								{
 									ogreParentNode->attachObject(ogreManual);
-									//std::cout << "c++: " << ogreParentNode->getName() << std::endl;
 								}
 							}
 						}
