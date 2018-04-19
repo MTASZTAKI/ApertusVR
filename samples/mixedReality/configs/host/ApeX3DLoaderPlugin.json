@@ -1,5 +1,6 @@
 {
-    "files": [
-        
-    ]
+  "files": [
+    "/plugins/x3dLoader/samples/cell.x3d",
+    "/plugins/x3dLoader/samples/TwoUR5.x3d"
+  ]
 }
