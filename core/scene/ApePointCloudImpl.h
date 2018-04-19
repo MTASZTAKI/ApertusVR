@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_POINTCLOUDIMPL_H
 #define APE_POINTCLOUDIMPL_H
 
+#include <mutex>
 #include "ApeIPointCloud.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
@@ -77,7 +78,19 @@ namespace Ape
 
 		Ape::PointCloudPoints mCurrentPoints;
 
+		std::mutex mCurrentPointsMutex;
+
 		Ape::PointCloudColors mCurrentColors;
+
+		int mCurrentPointsSize;
+
+		int mCurrentColorsSize;
+
+		bool mIsCurrentPointsChanged;
+
+		bool mIsCurrentColorsChanged;
+
+		int mSize;
 	};
 }
 
