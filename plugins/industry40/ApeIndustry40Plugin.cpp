@@ -9,6 +9,7 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();	
+	mPointCloud = Ape::PointCloudWeakPtr();
 }
 
 ApeIndustry40Plugin::~ApeIndustry40Plugin()
@@ -74,8 +75,9 @@ void ApeIndustry40Plugin::Init()
 				(float)0.9, 0, 0,
 				(float)0.9, 0, 0
 			};
-			pointCloud->setParameters(points, colors, 1000.0f);
+			pointCloud->setParameters(points, colors, 10.0f);
 			pointCloud->setParentNode(pointCloudNode);
+			mPointCloud = pointCloud;
 		}
 	}
 }
@@ -83,6 +85,43 @@ void ApeIndustry40Plugin::Run()
 {
 	while (true)
 	{
+		if (auto pointCloud = mPointCloud.lock())
+		{
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<> distInt(-5, 3);
+			std::vector<double> randomPoints;
+			for (int i = 0; i < 9; i++)
+				randomPoints.push_back(distInt(gen));
+			Ape::PointCloudPoints points = {
+				(float)randomPoints[0], 0, 0,
+				(float)randomPoints[1], 0, 0,
+				(float)randomPoints[2], 0, 0,
+				(float)randomPoints[3], 0, 0,
+				(float)randomPoints[4], 0, 0,
+				(float)randomPoints[5], 0, 0,
+				(float)randomPoints[6], 0, 0,
+				(float)randomPoints[7], 0, 0,
+				(float)randomPoints[8], 0, 0
+				};
+			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+			std::vector<double> randomRedColors;
+			for (int i = 0; i < 9; i++)
+				randomRedColors.push_back(distDouble(gen));
+			Ape::PointCloudColors colors = {
+				(float)randomRedColors[0], 0, 0,
+				(float)randomRedColors[1], 0, 0,
+				(float)randomRedColors[2], 0, 0,
+				(float)randomRedColors[3], 0, 0,
+				(float)randomRedColors[4], 0, 0,
+				(float)randomRedColors[5], 0, 0,
+				(float)randomRedColors[6], 0, 0,
+				(float)randomRedColors[7], 0, 0,
+				(float)randomRedColors[8], 0, 0
+				};
+			pointCloud->updatePoints(points);
+			pointCloud->updateColors(colors);
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));

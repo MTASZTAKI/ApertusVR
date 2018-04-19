@@ -26,6 +26,7 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <thread>
+#include <random>
 #include <chrono>
 #include <memory>
 #include <mutex>
@@ -71,6 +72,8 @@ private:
 	void eventCallBack(const Ape::Event& event);
 
 	Ape::NodeWeakPtr mUserNode;
+
+	Ape::PointCloudWeakPtr mPointCloud;
 	
 public:
 	ApeIndustry40Plugin();

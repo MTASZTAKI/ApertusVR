@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApePointCloudImpl.h"
 
 Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape::IPointCloud(name), Ape::Replica("PointCloud", isHostCreated)
@@ -31,8 +32,13 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mParameters = Ape::PointCloudSetParameters();
 	mPointsSize = 0;
 	mColorsSize = 0;
+	mCurrentPointsSize = 0;
+	mCurrentColorsSize = 0;
+	mIsCurrentPointsChanged = false;
+	mIsCurrentColorsChanged = false;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
+	mSize = 27;
 }
 
 Ape::PointCloudImpl::~PointCloudImpl()
@@ -55,13 +61,17 @@ Ape::PointCloudSetParameters Ape::PointCloudImpl::getParameters()
 
 void Ape::PointCloudImpl::updatePoints(Ape::PointCloudPoints points)
 {
-	mCurrentPoints = points;
+	mIsCurrentPointsChanged = true;
+	mCurrentPointsSize = static_cast<int>(points.size());
+	mCurrentPoints = Ape::PointCloudPoints(points);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
 }
 
 void Ape::PointCloudImpl::updateColors(Ape::PointCloudColors colors)
 {
-	mCurrentColors = colors;
+	mIsCurrentColorsChanged = true;
+	mCurrentColorsSize = static_cast<int>(colors.size());
+	mCurrentColors = Ape::PointCloudColors(colors);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 }
 
@@ -118,11 +128,26 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.boundigSphereRadius);
 
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-		
+
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
 		return RakNet::RM3SR_SERIALIZED_ALWAYS;
 	}
-	return RakNet::RM3SR_DO_NOT_SERIALIZE;
+	else if (mIsCurrentPointsChanged)
+	{
+		mIsCurrentPointsChanged = false;
+		serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
+		for (auto item : mCurrentPoints)
+			serializeParameters->outputBitstream[1].Write(item);
+		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	}
+	else if (mIsCurrentColorsChanged)
+	{
+		mIsCurrentColorsChanged = false;
+		serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
+		for (auto item : mCurrentColors)
+			serializeParameters->outputBitstream[2].Write(item);
+		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	}
 }
 
 void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
@@ -161,5 +186,38 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
 		}
 	}
+
+	if (deserializeParameters->bitstreamWrittenTo[1])
+	{
+		deserializeParameters->serializationBitstream[1].Read(mCurrentPointsSize);
+		mCurrentPoints.clear();
+		mCurrentPoints.resize(mCurrentPointsSize);
+		for (int i = 0; i < mCurrentPointsSize; i++)
+		{
+			float item;
+			if (deserializeParameters->serializationBitstream[1].Read(item))
+			{
+				mCurrentPoints[i] = item;
+			}
+		}
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
+	}
+
+	if (deserializeParameters->bitstreamWrittenTo[2])
+	{
+		deserializeParameters->serializationBitstream[2].Read(mCurrentColorsSize);
+		mCurrentColors.clear();
+		mCurrentColors.resize(mCurrentColorsSize);
+		for (int i = 0; i < mCurrentColorsSize; i++)
+		{
+			float item;
+			if (deserializeParameters->serializationBitstream[2].Read(item))
+			{
+				mCurrentColors[i] = item;
+			}
+		}
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
+	}
+
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
