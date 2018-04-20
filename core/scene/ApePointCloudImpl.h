@@ -82,6 +82,8 @@ namespace Ape
 
 		Ape::PointCloudColors mCurrentColors;
 
+		std::mutex mCurrentColorsMutex;
+
 		int mCurrentPointsSize;
 
 		int mCurrentColorsSize;
