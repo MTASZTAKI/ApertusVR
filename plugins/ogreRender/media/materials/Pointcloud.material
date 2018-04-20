@@ -4,12 +4,17 @@ material Pointcloud
 	{
 		pass
 		{
+			lighting off
 			diffuse vertexcolour
 			specular vertexcolour
 			ambient vertexcolour
 			point_size 0.01
-			point_sprites on
-			point_size_attenuation on
+			point_sprites off
+			//point_size_attenuation on
+			point_size_attenuation on 0 1 0
+			//point_size_attenuation off
+			//point_size_min 0
+			//point_size_max 0
 		}
 	}
 }

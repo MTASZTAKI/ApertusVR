@@ -484,7 +484,7 @@ void ApeTesterPlugin::Run()
 			pointCloud->updatePoints(points);
 			pointCloud->updateColors(colors);
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 }
