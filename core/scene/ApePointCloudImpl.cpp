@@ -63,7 +63,8 @@ void Ape::PointCloudImpl::updatePoints(Ape::PointCloudPoints points)
 {
 	mIsCurrentPointsChanged = true;
 	mCurrentPointsSize = static_cast<int>(points.size());
-	mCurrentPoints = Ape::PointCloudPoints(points);
+	//std::lock_guard<std::mutex> guard(mCurrentPointsMutex);
+	mCurrentPoints = points;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
 }
 
@@ -71,7 +72,8 @@ void Ape::PointCloudImpl::updateColors(Ape::PointCloudColors colors)
 {
 	mIsCurrentColorsChanged = true;
 	mCurrentColorsSize = static_cast<int>(colors.size());
-	mCurrentColors = Ape::PointCloudColors(colors);
+	//std::lock_guard<std::mutex> guard(mCurrentColorsMutex);
+	mCurrentColors = colors;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 }
 
@@ -136,7 +138,10 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 	{
 		mIsCurrentPointsChanged = false;
 		serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
-		for (auto item : mCurrentPoints)
+		//std::lock_guard<std::mutex> guard(mCurrentPointsMutex);
+		Ape::PointCloudPoints currentPoints = Ape::PointCloudPoints(mCurrentPoints);
+		//for (auto item : mCurrentPoints)
+		for (auto item : currentPoints)
 			serializeParameters->outputBitstream[1].Write(item);
 		return RakNet::RM3SR_SERIALIZED_ALWAYS;
 	}
@@ -144,7 +149,10 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 	{
 		mIsCurrentColorsChanged = false;
 		serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
-		for (auto item : mCurrentColors)
+		//std::lock_guard<std::mutex> guard(mCurrentColorsMutex);
+		Ape::PointCloudColors currentColors = Ape::PointCloudColors(mCurrentColors);
+		//for (auto item : mCurrentColors)
+		for (auto item : currentColors)
 			serializeParameters->outputBitstream[2].Write(item);
 		return RakNet::RM3SR_SERIALIZED_ALWAYS;
 	}
