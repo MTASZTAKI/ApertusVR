@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeSkyWaterTerrainScenePlugin.h"
 
-ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
+Ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
@@ -20,13 +20,13 @@ ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
+Ape::ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
 	{
@@ -46,7 +46,7 @@ void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeSkyWaterTerrainScenePlugin::createSky()
+void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
 {
 	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpScene->createEntity("sky", Ape::Entity::SKY).lock()))
 	{
@@ -67,7 +67,7 @@ void ApeSkyWaterTerrainScenePlugin::createSky()
 	}
 }
 
-void ApeSkyWaterTerrainScenePlugin::createWater()
+void Ape::ApeSkyWaterTerrainScenePlugin::createWater()
 {
 	if (auto water = std::static_pointer_cast<Ape::IWater>(mpScene->createEntity("water", Ape::Entity::WATER).lock()))
 	{
@@ -78,7 +78,7 @@ void ApeSkyWaterTerrainScenePlugin::createWater()
 	}
 }
 
-void ApeSkyWaterTerrainScenePlugin::Init()
+void Ape::ApeSkyWaterTerrainScenePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	LOG(LOG_TYPE_DEBUG, "waiting for main window");
@@ -93,7 +93,7 @@ void ApeSkyWaterTerrainScenePlugin::Init()
 	createWater();
 }
 
-void ApeSkyWaterTerrainScenePlugin::Run()
+void Ape::ApeSkyWaterTerrainScenePlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -104,22 +104,22 @@ void ApeSkyWaterTerrainScenePlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeSkyWaterTerrainScenePlugin::Step()
+void Ape::ApeSkyWaterTerrainScenePlugin::Step()
 {
 
 }
 
-void ApeSkyWaterTerrainScenePlugin::Stop()
+void Ape::ApeSkyWaterTerrainScenePlugin::Stop()
 {
 
 }
 
-void ApeSkyWaterTerrainScenePlugin::Suspend()
+void Ape::ApeSkyWaterTerrainScenePlugin::Suspend()
 {
 
 }
 
-void ApeSkyWaterTerrainScenePlugin::Restart()
+void Ape::ApeSkyWaterTerrainScenePlugin::Restart()
 {
 
 }

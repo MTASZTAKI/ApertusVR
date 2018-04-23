@@ -37,47 +37,50 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "Ape360ImagePlugin"
 
-class Ape360ImagePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IScene* mpScene;
-	
-public:
-	Ape360ImagePlugin();
+	class Ape360ImagePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IScene* mpScene;
 
-	~Ape360ImagePlugin();
-	
-	void Init() override;
+	public:
+		Ape360ImagePlugin();
 
-	void Run() override;
+		~Ape360ImagePlugin();
 
-	void Step() override;
+		void Init() override;
 
-	void Stop() override;
+		void Run() override;
 
-	void Suspend() override;
+		void Step() override;
 
-	void Restart() override;
-};
+		void Stop() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360ImagePlugin()
-{
+		void Suspend() override;
 
-	return new Ape360ImagePlugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_FUNC void DestroyApe360ImagePlugin(Ape::IPlugin *plugin)
-{
-	delete (Ape360ImagePlugin*)plugin;
-}
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360ImagePlugin()
+	{
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		return new Ape::Ape360ImagePlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApe360ImagePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::Ape360ImagePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
+		return 0;
+	}
 }
 
 #endif

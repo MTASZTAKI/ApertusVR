@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeSampleScenePlugin.h"
 
-ApeSampleScenePlugin::ApeSampleScenePlugin()
+Ape::ApeSampleScenePlugin::ApeSampleScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
@@ -10,18 +10,18 @@ ApeSampleScenePlugin::ApeSampleScenePlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeSampleScenePlugin::~ApeSampleScenePlugin()
+Ape::ApeSampleScenePlugin::~ApeSampleScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
+void Ape::ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
 {
 	//LOG(LOG_TYPE_DEBUG, "event.subjectName:" << event.subjectName);
 }
 
-void ApeSampleScenePlugin::Init()
+void Ape::ApeSampleScenePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
@@ -55,7 +55,7 @@ void ApeSampleScenePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeSampleScenePlugin::Run()
+void Ape::ApeSampleScenePlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -68,22 +68,22 @@ void ApeSampleScenePlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeSampleScenePlugin::Step()
+void Ape::ApeSampleScenePlugin::Step()
 {
 
 }
 
-void ApeSampleScenePlugin::Stop()
+void Ape::ApeSampleScenePlugin::Stop()
 {
 
 }
 
-void ApeSampleScenePlugin::Suspend()
+void Ape::ApeSampleScenePlugin::Suspend()
 {
 
 }
 
-void ApeSampleScenePlugin::Restart()
+void Ape::ApeSampleScenePlugin::Restart()
 {
 
 }

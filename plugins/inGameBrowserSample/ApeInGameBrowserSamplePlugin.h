@@ -38,47 +38,50 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeInGameBrowserSamplePlugin"
 
-class ApeInGameBrowserSamplePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IScene* mpScene;
-	
-public:
-	ApeInGameBrowserSamplePlugin();
+	class ApeInGameBrowserSamplePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IScene* mpScene;
 
-	~ApeInGameBrowserSamplePlugin();
-	
-	void Init() override;
+	public:
+		ApeInGameBrowserSamplePlugin();
 
-	void Run() override;
+		~ApeInGameBrowserSamplePlugin();
 
-	void Step() override;
+		void Init() override;
 
-	void Stop() override;
+		void Run() override;
 
-	void Suspend() override;
+		void Step() override;
 
-	void Restart() override;
-};
+		void Stop() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeInGameBrowserSamplePlugin()
-{
+		void Suspend() override;
 
-	return new ApeInGameBrowserSamplePlugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_FUNC void DestroyApeInGameBrowserSamplePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeInGameBrowserSamplePlugin*)plugin;
-}
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeInGameBrowserSamplePlugin()
+	{
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		return new Ape::ApeInGameBrowserSamplePlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeInGameBrowserSamplePlugin, DestroyApeInGameBrowserSamplePlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeInGameBrowserSamplePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeInGameBrowserSamplePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeInGameBrowserSamplePlugin, DestroyApeInGameBrowserSamplePlugin);
+		return 0;
+	}
 }
 
 #endif

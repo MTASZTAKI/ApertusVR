@@ -1,20 +1,20 @@
 #include <iostream>
 #include "ApeGallerySamplePlugin.h"
 
-ApeGallerySamplePlugin::ApeGallerySamplePlugin()
+Ape::ApeGallerySamplePlugin::ApeGallerySamplePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
 	LOG_FUNC_LEAVE();
 }
 
-ApeGallerySamplePlugin::~ApeGallerySamplePlugin()
+Ape::ApeGallerySamplePlugin::~ApeGallerySamplePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeGallerySamplePlugin::Init()
+void Ape::ApeGallerySamplePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
@@ -150,27 +150,27 @@ void ApeGallerySamplePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeGallerySamplePlugin::Run()
+void Ape::ApeGallerySamplePlugin::Run()
 {
 
 }
 
-void ApeGallerySamplePlugin::Step()
+void Ape::ApeGallerySamplePlugin::Step()
 {
 
 }
 
-void ApeGallerySamplePlugin::Stop()
+void Ape::ApeGallerySamplePlugin::Stop()
 {
 
 }
 
-void ApeGallerySamplePlugin::Suspend()
+void Ape::ApeGallerySamplePlugin::Suspend()
 {
 
 }
 
-void ApeGallerySamplePlugin::Restart()
+void Ape::ApeGallerySamplePlugin::Restart()
 {
 
 }

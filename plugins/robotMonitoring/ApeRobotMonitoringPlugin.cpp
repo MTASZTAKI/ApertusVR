@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeRobotMonitoringPlugin.h"
 
-ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
+Ape::ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -46,7 +46,7 @@ ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
+Ape::ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 {
 	LOG_FUNC_ENTER();
 	delete mpKeyboard;
@@ -54,7 +54,7 @@ ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
@@ -75,7 +75,7 @@ void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeRobotMonitoringPlugin::Init()
+void Ape::ApeRobotMonitoringPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -162,7 +162,7 @@ void ApeRobotMonitoringPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotMonitoringPlugin::moveUserNode()
+void Ape::ApeRobotMonitoringPlugin::moveUserNode()
 {
 	auto userNode = mUserNode.lock();
 	if (userNode)
@@ -194,7 +194,7 @@ void ApeRobotMonitoringPlugin::moveUserNode()
 	}
 }
 
-void ApeRobotMonitoringPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
+void Ape::ApeRobotMonitoringPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 {
 	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
 	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
@@ -203,7 +203,7 @@ void ApeRobotMonitoringPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 		mSceneToggleIndex = 0;
 }
 
-void ApeRobotMonitoringPlugin::toggleSwitchNodesVisibility()
+void Ape::ApeRobotMonitoringPlugin::toggleSwitchNodesVisibility()
 {
 	if (mSwitchNodes.size() > 0)
 	{
@@ -220,7 +220,7 @@ void ApeRobotMonitoringPlugin::toggleSwitchNodesVisibility()
 	}
 }
 
-void ApeRobotMonitoringPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::ApeRobotMonitoringPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -230,7 +230,7 @@ void ApeRobotMonitoringPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 }
 
 
-void ApeRobotMonitoringPlugin::Run()
+void Ape::ApeRobotMonitoringPlugin::Run()
 {
 	while (true)
 	{
@@ -245,27 +245,27 @@ void ApeRobotMonitoringPlugin::Run()
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeRobotMonitoringPlugin::Step()
+void Ape::ApeRobotMonitoringPlugin::Step()
 {
 
 }
 
-void ApeRobotMonitoringPlugin::Stop()
+void Ape::ApeRobotMonitoringPlugin::Stop()
 {
 
 }
 
-void ApeRobotMonitoringPlugin::Suspend()
+void Ape::ApeRobotMonitoringPlugin::Suspend()
 {
 
 }
 
-void ApeRobotMonitoringPlugin::Restart()
+void Ape::ApeRobotMonitoringPlugin::Restart()
 {
 
 }
 
-bool ApeRobotMonitoringPlugin::keyPressed(const OIS::KeyEvent& e)
+bool Ape::ApeRobotMonitoringPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
 	auto userNode = mUserNode.lock();
@@ -281,23 +281,23 @@ bool ApeRobotMonitoringPlugin::keyPressed(const OIS::KeyEvent& e)
 	return true;
 }
 
-bool ApeRobotMonitoringPlugin::keyReleased(const OIS::KeyEvent& e)
+bool Ape::ApeRobotMonitoringPlugin::keyReleased(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApeRobotMonitoringPlugin::mouseMoved(const OIS::MouseEvent& e)
+bool Ape::ApeRobotMonitoringPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	return true;
 }
 
-bool ApeRobotMonitoringPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeRobotMonitoringPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }
 
-bool ApeRobotMonitoringPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeRobotMonitoringPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }

@@ -58,58 +58,61 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeIndustry40Plugin"
 
-class ApeIndustry40Plugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeIndustry40Plugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
-	
-	void eventCallBack(const Ape::Event& event);
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 
-	Ape::NodeWeakPtr mUserNode;
+		void eventCallBack(const Ape::Event& event);
 
-	Ape::PointCloudWeakPtr mPointCloud;
-	
-public:
-	ApeIndustry40Plugin();
+		Ape::NodeWeakPtr mUserNode;
 
-	~ApeIndustry40Plugin();
-	
-	void Init() override;
+		Ape::PointCloudWeakPtr mPointCloud;
 
-	void Run() override;
+	public:
+		ApeIndustry40Plugin();
 
-	void Step() override;
+		~ApeIndustry40Plugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeIndustry40Plugin()
-{
-	return new ApeIndustry40Plugin;
-}
+		void Stop() override;
 
-APE_PLUGIN_FUNC void DestroyApeIndustry40Plugin(Ape::IPlugin *plugin)
-{
-	delete (ApeIndustry40Plugin*)plugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Restart() override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeIndustry40Plugin, DestroyApeIndustry40Plugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeIndustry40Plugin()
+	{
+		return new Ape::ApeIndustry40Plugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeIndustry40Plugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeIndustry40Plugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeIndustry40Plugin, DestroyApeIndustry40Plugin);
+		return 0;
+	}
 }
 
 #endif

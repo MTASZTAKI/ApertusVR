@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeOculusDK2Plugin.h"
 
-ApeOculusDK2Plugin::ApeOculusDK2Plugin()
+Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -16,13 +16,13 @@ ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
+Ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
+Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 {
 	Ape::Matrix4 matrix4(
 		ovrMatrix4.M[0][0], ovrMatrix4.M[0][1], ovrMatrix4.M[0][2], ovrMatrix4.M[0][3],
@@ -33,12 +33,12 @@ Ape::Matrix4 ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 }
 
 
-void ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeOculusDK2Plugin::Init()
+void Ape::ApeOculusDK2Plugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -246,7 +246,7 @@ void ApeOculusDK2Plugin::Init()
 	}
 }
 
-void ApeOculusDK2Plugin::Run()
+void Ape::ApeOculusDK2Plugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (mpHMD)
@@ -270,22 +270,22 @@ void ApeOculusDK2Plugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeOculusDK2Plugin::Step()
+void Ape::ApeOculusDK2Plugin::Step()
 {
 
 }
 
-void ApeOculusDK2Plugin::Stop()
+void Ape::ApeOculusDK2Plugin::Stop()
 {
 
 }
 
-void ApeOculusDK2Plugin::Suspend()
+void Ape::ApeOculusDK2Plugin::Suspend()
 {
 
 }
 
-void ApeOculusDK2Plugin::Restart()
+void Ape::ApeOculusDK2Plugin::Restart()
 {
 
 }

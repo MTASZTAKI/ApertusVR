@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApeRobotCalibrationPlugin.h"
 
-ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
+Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -36,18 +36,18 @@ ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
+Ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeRobotCalibrationPlugin::Init()
+void Ape::ApeRobotCalibrationPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
@@ -262,7 +262,7 @@ void ApeRobotCalibrationPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::Run()
+void Ape::ApeRobotCalibrationPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	double duration = 0;
@@ -274,25 +274,25 @@ void ApeRobotCalibrationPlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::Step()
+void Ape::ApeRobotCalibrationPlugin::Step()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::Stop()
+void Ape::ApeRobotCalibrationPlugin::Stop()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::Suspend()
+void Ape::ApeRobotCalibrationPlugin::Suspend()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeRobotCalibrationPlugin::Restart()
+void Ape::ApeRobotCalibrationPlugin::Restart()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();

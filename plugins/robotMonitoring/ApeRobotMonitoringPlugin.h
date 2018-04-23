@@ -57,110 +57,113 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeRobotMonitoringPlugin"
 
-class ApeRobotMonitoringPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+namespace Ape
 {
-private:
-	struct ScenePose
+	class ApeRobotMonitoringPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 	{
-		Ape::Vector3 position;
-		Ape::Quaternion orientation;
-
-		ScenePose(
-			Ape::Vector3 position,
-			Ape::Quaternion orientation)
+	private:
+		struct ScenePose
 		{
-			this->position = position;
-			this->orientation = orientation;
-		}
+			Ape::Vector3 position;
+			Ape::Quaternion orientation;
+
+			ScenePose(
+				Ape::Vector3 position,
+				Ape::Quaternion orientation)
+			{
+				this->position = position;
+				this->orientation = orientation;
+			}
+		};
+
+		Ape::IEventManager* mpEventManager;
+
+		Ape::IScene* mpScene;
+
+		Ape::ISystemConfig* mpSystemConfig;
+
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
+
+		void eventCallBack(const Ape::Event& event);
+
+		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+		Ape::NodeWeakPtr mUserNode;
+
+		Ape::IMainWindow* mpMainWindow;
+
+		OIS::Keyboard* mpKeyboard;
+
+		OIS::Mouse* mpMouse;
+
+		int mSceneToggleIndex;
+
+		std::vector<ScenePose> mScenePoses;
+
+		int mSwitchNodeVisibilityToggleIndex;
+
+		std::vector<std::string> mSwitchNodeVisibilityNames;
+
+		std::vector<Ape::NodeWeakPtr> mSwitchNodes;
+
+		float mTranslateSpeedFactor;
+
+		float mRotateSpeedFactor;
+
+		void moveUserNode();
+
+		void toggleScenePoses(Ape::NodeSharedPtr userNode);
+
+		void toggleSwitchNodesVisibility();
+
+		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+
+	public:
+		ApeRobotMonitoringPlugin();
+
+		~ApeRobotMonitoringPlugin();
+
+		void Init() override;
+
+		void Run() override;
+
+		void Step() override;
+
+		void Stop() override;
+
+		void Suspend() override;
+
+		void Restart() override;
+
+		bool keyPressed(const OIS::KeyEvent& e) override;
+
+		bool keyReleased(const OIS::KeyEvent& e) override;
+
+		bool mouseMoved(const OIS::MouseEvent& e) override;
+
+		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+
+		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 	};
 
-	Ape::IEventManager* mpEventManager;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotMonitoringPlugin()
+	{
+		return new Ape::ApeRobotMonitoringPlugin;
+	}
 
-	Ape::IScene* mpScene;
+	APE_PLUGIN_FUNC void DestroyApeRobotMonitoringPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeRobotMonitoringPlugin*)plugin;
+	}
 
-	Ape::ISystemConfig* mpSystemConfig;
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
-	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
-	
-	void eventCallBack(const Ape::Event& event);
-
-	std::map<OIS::KeyCode, bool> mKeyCodeMap;
-
-	Ape::NodeWeakPtr mUserNode;
-
-	Ape::IMainWindow* mpMainWindow;
-
-	OIS::Keyboard* mpKeyboard;
-
-	OIS::Mouse* mpMouse;
-
-	int mSceneToggleIndex;
-
-	std::vector<ScenePose> mScenePoses;
-
-	int mSwitchNodeVisibilityToggleIndex;
-
-	std::vector<std::string> mSwitchNodeVisibilityNames;
-
-	std::vector<Ape::NodeWeakPtr> mSwitchNodes;
-
-	float mTranslateSpeedFactor;
-
-	float mRotateSpeedFactor;
-
-	void moveUserNode();
-
-	void toggleScenePoses(Ape::NodeSharedPtr userNode);
-
-	void toggleSwitchNodesVisibility();
-
-	void saveUserNodePose(Ape::NodeSharedPtr userNode);
-	
-public:
-	ApeRobotMonitoringPlugin();
-
-	~ApeRobotMonitoringPlugin();
-	
-	void Init() override;
-
-	void Run() override;
-
-	void Step() override;
-
-	void Stop() override;
-
-	void Suspend() override;
-
-	void Restart() override;
-
-	bool keyPressed(const OIS::KeyEvent& e) override;
-
-	bool keyReleased(const OIS::KeyEvent& e) override;
-
-	bool mouseMoved(const OIS::MouseEvent& e) override;
-
-	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-};
-
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotMonitoringPlugin()
-{
-	return new ApeRobotMonitoringPlugin;
-}
-
-APE_PLUGIN_FUNC void DestroyApeRobotMonitoringPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeRobotMonitoringPlugin*)plugin;
-}
-
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
-
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotMonitoringPlugin, DestroyApeRobotMonitoringPlugin);
-	return 0;
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotMonitoringPlugin, DestroyApeRobotMonitoringPlugin);
+		return 0;
+	}
 }
 
 #endif

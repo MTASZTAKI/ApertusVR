@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeAvatarPlugin.h"
 
-ApeAvatarPlugin::ApeAvatarPlugin()
+Ape::ApeAvatarPlugin::ApeAvatarPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
@@ -11,13 +11,13 @@ ApeAvatarPlugin::ApeAvatarPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeAvatarPlugin::~ApeAvatarPlugin()
+Ape::ApeAvatarPlugin::~ApeAvatarPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeAvatarPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeAvatarPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
 		mRightHandNode = mpScene->getNode(event.subjectName);
@@ -25,7 +25,7 @@ void ApeAvatarPlugin::eventCallBack(const Ape::Event& event)
 		mLeftHandNode = mpScene->getNode(event.subjectName);
 }
 
-void ApeAvatarPlugin::Init()
+void Ape::ApeAvatarPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	std::shared_ptr<Ape::IManualMaterial> handMaterial;
@@ -54,7 +54,7 @@ void ApeAvatarPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeAvatarPlugin::Run()
+void Ape::ApeAvatarPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	/*while (true)
@@ -65,22 +65,22 @@ void ApeAvatarPlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeAvatarPlugin::Step()
+void Ape::ApeAvatarPlugin::Step()
 {
 
 }
 
-void ApeAvatarPlugin::Stop()
+void Ape::ApeAvatarPlugin::Stop()
 {
 
 }
 
-void ApeAvatarPlugin::Suspend()
+void Ape::ApeAvatarPlugin::Suspend()
 {
 
 }
 
-void ApeAvatarPlugin::Restart()
+void Ape::ApeAvatarPlugin::Restart()
 {
 
 }

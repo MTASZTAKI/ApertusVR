@@ -118,12 +118,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateCefBrowserPlugin()
 	{
-		return new CefBrowserPlugin;
+		return new Ape::CefBrowserPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyCefBrowserPlugin(Ape::IPlugin *plugin)
 	{
-		delete (CefBrowserPlugin*)plugin;
+		delete (Ape::CefBrowserPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

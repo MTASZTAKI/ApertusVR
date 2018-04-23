@@ -45,88 +45,91 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
 
-class ApeTexasEEGPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeTexasEEGPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
-	
-	void eventCallBack(const Ape::Event& event);
+		Ape::IScene* mpScene;
 
-	OIS::Mouse* mpMouse;
+		void eventCallBack(const Ape::Event& event);
 
-	OIS::Keyboard* mpKeyboard;
+		OIS::Mouse* mpMouse;
 
-	Ape::IMainWindow* mpMainWindow;
+		OIS::Keyboard* mpKeyboard;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::IMainWindow* mpMainWindow;
 
-	Ape::NodeWeakPtr mUserNode;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+		Ape::NodeWeakPtr mUserNode;
 
-	void moveUserNodeByKeyBoard();
+		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
-	void moveUserNodeByMouse();
+		void moveUserNodeByKeyBoard();
 
-	bool mIsMouseMoved;
+		void moveUserNodeByMouse();
 
-	int mTranslateSpeedFactor;
+		bool mIsMouseMoved;
 
-	int mRotateSpeedFactor;
+		int mTranslateSpeedFactor;
 
-	bool mIsSwim;
+		int mRotateSpeedFactor;
 
-	int mMouseMoveRelativeX;
+		bool mIsSwim;
 
-	int mMouseMoveRelativeY;
-	
-public:
-	ApeTexasEEGPlugin();
+		int mMouseMoveRelativeX;
 
-	~ApeTexasEEGPlugin();
-	
-	void Init() override;
+		int mMouseMoveRelativeY;
 
-	void Run() override;
+	public:
+		ApeTexasEEGPlugin();
 
-	void Step() override;
+		~ApeTexasEEGPlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
+		void Step() override;
 
-	bool keyPressed(const OIS::KeyEvent& e) override;
+		void Stop() override;
 
-	bool keyReleased(const OIS::KeyEvent& e) override;
+		void Suspend() override;
 
-	bool mouseMoved(const OIS::MouseEvent& e) override;
+		void Restart() override;
 
-	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+		bool keyPressed(const OIS::KeyEvent& e) override;
 
-	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-};
+		bool keyReleased(const OIS::KeyEvent& e) override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()
-{
-	return new ApeTexasEEGPlugin;
-}
+		bool mouseMoved(const OIS::MouseEvent& e) override;
 
-APE_PLUGIN_FUNC void DestroyApeTexasEEGPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeTexasEEGPlugin*)plugin;
-}
+		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTexasEEGPlugin, DestroyApeTexasEEGPlugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()
+	{
+		return new Ape::ApeTexasEEGPlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeTexasEEGPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeTexasEEGPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTexasEEGPlugin, DestroyApeTexasEEGPlugin);
+		return 0;
+	}
 }
 
 #endif

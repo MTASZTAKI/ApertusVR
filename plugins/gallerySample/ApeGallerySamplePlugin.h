@@ -40,46 +40,49 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeGallerySamplePlugin"
 
-class ApeGallerySamplePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IScene* mpScene;
-	
-public:
-	ApeGallerySamplePlugin();
+	class ApeGallerySamplePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IScene* mpScene;
 
-	~ApeGallerySamplePlugin();
-	
-	void Init() override;
+	public:
+		ApeGallerySamplePlugin();
 
-	void Run() override;
+		~ApeGallerySamplePlugin();
 
-	void Step() override;
+		void Init() override;
 
-	void Stop() override;
+		void Run() override;
 
-	void Suspend() override;
+		void Step() override;
 
-	void Restart() override;
-};
+		void Stop() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGallerySamplePlugin()
-{
-	return new ApeGallerySamplePlugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_FUNC void DestroyApeGallerySamplePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeGallerySamplePlugin*)plugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGallerySamplePlugin()
+	{
+		return new Ape::ApeGallerySamplePlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeGallerySamplePlugin, DestroyApeGallerySamplePlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeGallerySamplePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeGallerySamplePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeGallerySamplePlugin, DestroyApeGallerySamplePlugin);
+		return 0;
+	}
 }
 
 #endif
