@@ -141,6 +141,6 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 		cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYUP;
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
 
-		LOG(LOG_TYPE_DEBUG, "windows_key_code:" << cefKeyEvent.windows_key_code << "keyASCIIValue:" << keyASCIIValue);
+		LOG_TRACE("windows_key_code: " << cefKeyEvent.windows_key_code << " keyASCIIValue: " << keyASCIIValue);
 	}
 }
