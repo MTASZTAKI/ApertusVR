@@ -25,6 +25,7 @@ SOFTWARE.*/
 #define APE_LOBBYMANAGER_H
 
 #include "ApeISceneSession.h"
+#include "ApeILogManager.h"
 #include "ApeHttpManager.h"
 #include <vector>
 #include <string>

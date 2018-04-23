@@ -46,10 +46,10 @@ BYTE bodyIdx[width*height];
 
 Ape::KinectPlugin::KinectPlugin()
 {
+	LOG_FUNC_ENTER();
 	m_pKinectSensor = NULL;
 	m_pCoordinateMapper = NULL;
 	reader = NULL;
-
 
 	mpScene = Ape::IScene::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
@@ -57,10 +57,13 @@ Ape::KinectPlugin::KinectPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
 	RootNode = mpScene->createNode("KinectRootNode").lock();
+	LOG_FUNC_LEAVE();
 }
 
 Ape::KinectPlugin::~KinectPlugin()
 {
+	LOG_FUNC_ENTER();
+
 	// done with body frame reader
 	SafeRelease(reader);
 
@@ -75,7 +78,7 @@ Ape::KinectPlugin::~KinectPlugin()
 
 	SafeRelease(m_pKinectSensor);
 
-	std::cout << "KinectPlugin destroyed" << std::endl;
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
@@ -85,12 +88,13 @@ void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::KinectPlugin::Init()
 {
-	std::cout << "KinectPlugin waiting for main window" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG(LOG_TYPE_DEBUG, "KinectPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "KinectPlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "KinectPlugin main window was found");
 	InitializeDefaultSensor();
-	std::cout << "Sensor init finished" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sensor init finished");
 
 	CloudSize = (int)(size*pointratio);
 	if (CloudSize % 3 != 0)
@@ -104,7 +108,7 @@ void Ape::KinectPlugin::Init()
 
 	std::stringstream kinectPluginConfigFilePath;
 	kinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeKinectPlugin.json";
-	std::cout << kinectPluginConfigFilePath.str() << std::endl;
+	LOG(LOG_TYPE_DEBUG, "kinectPluginConfigFilePath: " << kinectPluginConfigFilePath.str());
 	FILE* KinectPluginConfigFile = std::fopen(kinectPluginConfigFilePath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (KinectPluginConfigFile)
@@ -118,27 +122,27 @@ void Ape::KinectPlugin::Init()
 			for (int i = 0; i < 3; i++)
 			{
 				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
-				std::cout << std::to_string(KPos[i]) << std::endl;
+				LOG(LOG_TYPE_DEBUG, "sensorPosition: " << std::to_string(KPos[i]));
 			}
 
 			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
 			for (int i = 0; i < 4; i++)
 			{
 				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
-				std::cout << std::to_string(KRot[i]) << std::endl;
+				LOG(LOG_TYPE_DEBUG, "sensorOrientation: " << std::to_string(KRot[i]));
 			}
 
 			rapidjson::Value& KSSkeleton = jsonDocument["showSkeleton"];
 			showSkeleton = jsonDocument["showSkeleton"].GetBool();
-			std::cout << std::to_string(showSkeleton) << std::endl;
+			LOG(LOG_TYPE_DEBUG, "showSkeleton: " << std::to_string(showSkeleton));
 
 			rapidjson::Value& KBRemoval = jsonDocument["backgroundRemoval"];
 			backgroundRemoval = jsonDocument["backgroundRemoval"].GetBool();
-			std::cout << std::to_string(backgroundRemoval) << std::endl;
+			LOG(LOG_TYPE_DEBUG, "backgroundRemoval: " << std::to_string(backgroundRemoval));
 
 			rapidjson::Value& KMFPS = jsonDocument["maxFPS"];
 			maxFPS = jsonDocument["maxFPS"].GetBool();
-			std::cout << std::to_string(maxFPS) << std::endl;
+			LOG(LOG_TYPE_DEBUG, "maxFPS: " << std::to_string(maxFPS));
 		}
 		fclose(KinectPluginConfigFile);
 	}
@@ -357,12 +361,12 @@ void Ape::KinectPlugin::Init()
 		}
 	}
 
-
-	std::cout << "KinectPlugin Initialized" << std::endl;
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::KinectPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	while (true)
 	{
 		Update();
@@ -550,11 +554,10 @@ void Ape::KinectPlugin::Run()
 				}
 			}
 		}
-
 		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::KinectPlugin::Step()
@@ -583,40 +586,35 @@ void Ape::KinectPlugin::Restart()
 /// <returns>indicates success or failure</returns>
 HRESULT Ape::KinectPlugin::InitializeDefaultSensor()
 {
+	LOG_FUNC_ENTER();
 	HRESULT hr;
-
 	hr = GetDefaultKinectSensor(&m_pKinectSensor);
 	if (FAILED(hr))
 	{
 		return hr;
-		std::cout << "No ready Kinect error" << std::endl;
+		LOG(LOG_TYPE_ERROR, "Connecting to Kinect failed");
 	}
-
 	if (m_pKinectSensor)
 	{
 		hr = m_pKinectSensor->get_CoordinateMapper(&m_pCoordinateMapper);
-
 		if (SUCCEEDED(hr))
 		{
 			hr = m_pKinectSensor->Open();
 		}
-
 		if (SUCCEEDED(hr))
 		{
 			hr = m_pKinectSensor->OpenMultiSourceFrameReader(
 				FrameSourceTypes::FrameSourceTypes_Depth | FrameSourceTypes::FrameSourceTypes_Color | FrameSourceTypes::FrameSourceTypes_BodyIndex | FrameSourceTypes::FrameSourceTypes_Body ,
 				&reader);
 		}
-
-		std::cout << "Kinect ready" << std::endl;
+		LOG(LOG_TYPE_DEBUG, "Connected to Kinect");
 	}
-
 	if (!m_pKinectSensor || FAILED(hr))
 	{
-		std::cout << "No ready Kinect found!" << std::endl;
+		LOG(LOG_TYPE_ERROR, "Kinect has not found");
 		return E_FAIL;
 	}
-
+	LOG_FUNC_LEAVE();
 	return hr;
 }
 
@@ -629,41 +627,32 @@ void Ape::KinectPlugin::Update()
 	{
 		return;
 	}
-
 	IMultiSourceFrame* pFrame = NULL;
-
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
-		//std::cout << "update" << std::endl;
-
+	//LOG(LOG_TYPE_DEBUG, "update");
 	if (backgroundRemoval)
 	{
 		if (maxFPS)
 		{
 			if (SUCCEEDED(hr))
 			{
-				//	indexes.clear(); //operator function specific
-
+				//indexes.clear(); //operator function specific
 				GetDepthData(pFrame);
 				if (showSkeleton)
 				{
 					GetBodyData(pFrame);
 				}
 				GetRGBData(pFrame);
-
 				//GetOperatorPts();
 				//GetOperatorColrs();
 			}
-
 			SafeRelease(pFrame);
-
 			IMultiSourceFrame* pFrame2 = NULL;
 			HRESULT hr2 = reader->AcquireLatestFrame(&pFrame2);
-
 			if (SUCCEEDED(hr2))
 			{
 				GetBodyIndexes(pFrame2);
 			}
-
 			SafeRelease(pFrame2);
 		}
 		else
@@ -673,12 +662,10 @@ void Ape::KinectPlugin::Update()
 				if (framecount % 2 == 0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
 				{
 					GetDepthData(pFrame);
-
 					if (showSkeleton)
 					{
 						GetBodyData(pFrame);
 					}
-
 					GetRGBData(pFrame);
 				}
 				else
@@ -686,7 +673,6 @@ void Ape::KinectPlugin::Update()
 					GetBodyIndexes(pFrame);
 				}
 			}
-
 			SafeRelease(pFrame);
 			framecount++;
 		}
@@ -697,13 +683,11 @@ void Ape::KinectPlugin::Update()
 		{
 			GetDepthData(pFrame);
 			GetRGBData(pFrame);
-
 			if (showSkeleton)
 			{
 				GetBodyData(pFrame);
 			}
 		}
-
 		SafeRelease(pFrame);
 	}
 }
@@ -711,10 +695,9 @@ void Ape::KinectPlugin::Update()
 void Ape::KinectPlugin::GetOperatorColrs()
 {
 	OperatorColors.clear();
-
 	if (indexes.size() > (UINT64)1)
 	{
-		std::cout << "color start" << std::endl;
+		LOG(LOG_TYPE_DEBUG, "color start");
 		for (UINT64 i = 0; i < indexes.size(); i++)
 		{
 			OperatorColors.push_back(KCol[3 * indexes[i]]);
@@ -726,20 +709,19 @@ void Ape::KinectPlugin::GetOperatorColrs()
 	{
 		OperatorColors = {0.0, 0.0, 0.0};
 	}
-	std::cout << "color finished" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "color finished");
 }
 
 void Ape::KinectPlugin::GetOperatorPts()
 {
 	OperatorPoints.clear();
 	_1Detected = false;
-
 	for (int n = 0; n < BODY_COUNT; n++)
 	{
 		if (body[n][0][0] != 0 && body[n][0][1] != 0 && body[n][0][2] != 0 && !_1Detected)
 		{
 			_1Detected = true;
-			std::cout << "detected" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "detected");
 			for (int i = 0; i < CloudSize / 3; i++)
 			{
 				for (int j = 0; j < 25; j++)
@@ -747,7 +729,6 @@ void Ape::KinectPlugin::GetOperatorPts()
 					std::vector<float> Point = { KPts[3 * i], KPts[3 * i + 1], KPts[3 * i + 2] };
 					std::vector<float> Joint = {100 * body[n][j][0], 100 * body[n][j][1], 100 * body[n][j][2] };
 					float distance = GetDistance(Joint, Point);
-
 					if (j == 0 && distance < 80.0 && distance > 0.0)
 					{
 						indexes.push_back(i);
@@ -757,48 +738,40 @@ void Ape::KinectPlugin::GetOperatorPts()
 					}
 				}
 			}
-			std::cout << "finished" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "finished");
 		}
 	}
-
 	if (!_1Detected)
 		OperatorPoints = {0.0, 0.0, 0.0};
 }
 
 float  Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point)
 {
-	float dist = sqrt(pow((point[0]-joint[0]),2.0)+ pow((point[1] - joint[1]), 2.0) + pow((point[2] - joint[2]), 2.0));
-
-	return dist;
+	return sqrt(pow((point[0]-joint[0]),2.0)+ pow((point[1] - joint[1]), 2.0) + pow((point[2] - joint[2]), 2.0));
 }
 
 void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 {
-	//std::cout << "rgb" << std::endl;
+	//LOG_FUNC_ENTER();
 	IColorFrame* pColorFrame = NULL;
 	IColorFrameReference* pColorFrameRef = NULL;
-
 	HRESULT hr = pframe->get_ColorFrameReference(&pColorFrameRef);
-
 	if (SUCCEEDED(hr))
 	{
 		hr = pColorFrameRef->AcquireFrame(&pColorFrame);
 	}
-
-		SafeRelease(pColorFrameRef);
+	SafeRelease(pColorFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//std::cout << "rgb got" << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "rgb got");
 		
 		// Get data from frame
 		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);
 
 		Ape::PointCloudColors colorpoints;
-
 		for (int i = 0; i < CloudSize / 3; i++) 
 		{
 			ColorSpacePoint p = depth2rgb[i];
-
 			/* Check if color pixel coordinates are in bounds*/
 			if (p.X < 0 || p.Y < 0 || p.X > colorwidth || p.Y > colorheight) {
 				colorpoints.push_back(0.);
@@ -812,7 +785,6 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 				colorpoints.push_back((float)rgbimage[4 * idx + 2] / 255.);
 			}
 		}
-
 		KCol = colorpoints;
 	}
 	SafeRelease(pColorFrame);
@@ -820,28 +792,24 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 
 void Ape::KinectPlugin::GetBodyIndexes(IMultiSourceFrame* pframe)
 {
-	//std::cout << "idx" << std::endl;
+	//LOG_FUNC_ENTER();
 	IBodyIndexFrame* pIndexFrame = NULL;
 	IBodyIndexFrameReference* pIndexFrameRef = NULL;
-
 	HRESULT hr = pframe->get_BodyIndexFrameReference(&pIndexFrameRef);
-
 	if (SUCCEEDED(hr))
 	{
-		//std::cout << "ref found" << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "ref found");
 		hr = pIndexFrameRef->AcquireFrame(&pIndexFrame);
 	}
-	//std::cout << "ref found gd" << std::endl;
-		SafeRelease(pIndexFrameRef);
+	//LOG(LOG_TYPE_DEBUG, "ref found gd");
+	SafeRelease(pIndexFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//std::cout << "idx got" << std::endl;
-		
+		//LOG(LOG_TYPE_DEBUG, "idx got");
 		hr = pIndexFrame->CopyFrameDataToArray(width*height, bodyIdx);
-		
 		if (SUCCEEDED(hr))
 		{
-			//std::cout << "success" << std::endl;
+			//LOG(LOG_TYPE_DEBUG, "success");
 			GetOperator();
 		}
 	}
@@ -854,7 +822,7 @@ void  Ape::KinectPlugin::GetOperator()
 	Ape::PointCloudColors OColor;
 	int j = 0;
 
-	//std::cout << std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]) << std::endl;
+	//LOG(LOG_TYPE_DEBUG, std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]));
 	for (int i = 0; i < CloudSize/3; i++)
 	{
 		if (bodyIdx[i] != 0xff)
@@ -882,34 +850,29 @@ void  Ape::KinectPlugin::GetOperator()
 		}
 	}
 
-		OperatorPoints = OPoint;
-		OperatorColors = OColor;
-
+	OperatorPoints = OPoint;
+	OperatorColors = OColor;
 }
 
 void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 {
-	//std::cout << "depth" << std::endl;
+	//LOG_FUNC_ENTER();
 	IDepthFrame* pDepthframe = NULL;
 	IDepthFrameReference* pDepthFrameRef = NULL;
-
 	HRESULT hr = pframe->get_DepthFrameReference(&pDepthFrameRef);
-
 	if (SUCCEEDED(hr))
 	{
 		hr = pDepthFrameRef->AcquireFrame(&pDepthframe);
 	}
-
-		SafeRelease(pDepthFrameRef);
+	SafeRelease(pDepthFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//std::cout << "depth got" << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "depth got");
 
 		// Get data from frame
 		unsigned int bsize;
 		unsigned short* buf;
 		hr = pDepthframe->AccessUnderlyingBuffer(&bsize, &buf);
-
 		if (SUCCEEDED(hr))
 		{
 			hr = m_pCoordinateMapper->MapDepthFrameToCameraSpace(width*height, buf, width*height, depth2xyz);
@@ -920,11 +883,9 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 				Points.push_back(depth2xyz[i].Y * 100);
 				Points.push_back(depth2xyz[i].Z * 100);
 			}
-
 			KPts = Points;
 		}
-
-	m_pCoordinateMapper->MapDepthFrameToColorSpace(width*height, buf, width*height, depth2rgb);
+		m_pCoordinateMapper->MapDepthFrameToColorSpace(width*height, buf, width*height, depth2rgb);
 	}
 	SafeRelease(pDepthframe);
 }
@@ -934,30 +895,25 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 ///</summary>
 void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 {
-	//std::cout << "body" << std::endl;
+	//LOG_FUNC_ENTER();
 	IBodyFrame* pBodyFrame = NULL;
 	IBodyFrameReference* pBodyFrameRef = NULL;
-
 	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);
-
 	if (SUCCEEDED(hr))
 	{
 		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
 	}
-		SafeRelease(pBodyFrameRef);
+	SafeRelease(pBodyFrameRef);
 
 	if (SUCCEEDED(hr))
 	{
-		//std::cout << "body got" << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "body got");
 		IBody* ppBodies[BODY_COUNT] = { 0 };
-
 		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
-
 		if (SUCCEEDED(hr))
 		{
 			ProcessBody(BODY_COUNT, ppBodies);
 		}
-
 		for (int i = 0; i < _countof(ppBodies); ++i)
 		{
 			SafeRelease(ppBodies[i]);
@@ -975,19 +931,16 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 {
 	HRESULT hr;
-
 	if (m_pCoordinateMapper)
 	{		
 		for (int i = 0; i < nBodyCount; ++i)
 		{
 			Operatorfound[i] = false;
 			IBody* pBody = ppBodies[i];
-
 			if (pBody)
 			{
 				BOOLEAN bTracked = false;
 				hr = pBody->get_IsTracked(&bTracked);
-
 				if (SUCCEEDED(hr) && bTracked)
 				{
 					Operatorfound[i] = true;
@@ -995,14 +948,12 @@ void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 					//HandState leftHandState = HandState_Unknown;
 					//HandState rightHandState = HandState_Unknown;		
 
-					/*pBody->get_HandLeftState(&leftHandState);
-					pBody->get_HandRightState(&rightHandState);*/
+					//pBody->get_HandLeftState(&leftHandState);
+					//pBody->get_HandRightState(&rightHandState);
 
 					hr = pBody->GetJoints(_countof(joints), joints);
-
 					if (SUCCEEDED(hr))
 					{
-						
 						for (int j = 0; j < _countof(joints); ++j)
 						{
 							if (joints[j].TrackingState==2)

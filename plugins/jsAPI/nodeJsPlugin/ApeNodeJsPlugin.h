@@ -31,9 +31,12 @@ SOFTWARE.*/
 #include <vector>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeEvent.h"
+
+#define THIS_PLUGINNAME "ApeNodeJsPlugin"
 
 class ApeNodeJsPlugin : public Ape::IPlugin
 {
@@ -74,13 +77,12 @@ APE_PLUGIN_FUNC void DestroyApeNodeJsPlugin(Ape::IPlugin* ApeNodeJsPlugin)
 	delete ApeNodeJsPlugin;
 }
 
-APE_PLUGIN_DISPLAY_NAME("ApeNodeJsPlugin");
+APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << "ApeNodeJsPlugin_CREATE" << std::endl;
-	ApeRegisterPlugin("ApeNodeJsPlugin", CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
-	std::cout << "ApeRegisterPlugin ApeNodeJsPlugin" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
 	return 0;
 }
 

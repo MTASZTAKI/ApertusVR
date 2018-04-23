@@ -35,8 +35,11 @@ SOFTWARE.*/
 
 #include "ApeIScene.h"
 #include "ApeISystemConfig.h"
+#include "ApeILogManager.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
+
+#define THIS_PLUGINNAME "ApeSceneImpl"
 
 namespace Ape
 {

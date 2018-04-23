@@ -24,7 +24,9 @@ SOFTWARE.*/
 
 Ape::CefKeyboardHandlerImpl::CefKeyboardHandlerImpl()
 {
+	LOG_FUNC_ENTER();
 	mBrowserIDs = std::map<int, Ape::BrowserWeakPtr>();
+	LOG_FUNC_LEAVE();
 }
 
 Ape::CefKeyboardHandlerImpl::~CefKeyboardHandlerImpl()
@@ -34,14 +36,16 @@ Ape::CefKeyboardHandlerImpl::~CefKeyboardHandlerImpl()
 
 void Ape::CefKeyboardHandlerImpl::registerBrowser(int ID, Ape::BrowserWeakPtr browser)
 {
+	LOG_FUNC_ENTER();
 	mBrowserIDs[ID] = browser;
+	LOG_FUNC_LEAVE();
 }
 
 bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event, bool * is_keyboard_shortcut)
 {
 	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
 	{
-		std::cout << "Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(): apeBrowser->setFocusOnEditableField " << event.focus_on_editable_field << std::endl;
+		LOG(LOG_TYPE_DEBUG, "apeBrowser->setFocusOnEditableField " << event.focus_on_editable_field);
 		apeBrowser->setFocusOnEditableField(event.focus_on_editable_field);
 	}
 	return false;
@@ -49,6 +53,6 @@ bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, c
 
 bool Ape::CefKeyboardHandlerImpl::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event)
 {
-	std::cout << "Ape::CefKeyboardHandlerImpl::OnKeyEvent()  event.focus_on_editable_field: " << event.focus_on_editable_field << std::endl;
+	LOG(LOG_TYPE_DEBUG, "event.focus_on_editable_field: " << event.focus_on_editable_field);
 	return false;
 }

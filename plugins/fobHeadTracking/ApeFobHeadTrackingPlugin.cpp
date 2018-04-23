@@ -8,6 +8,7 @@
 
 ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
@@ -27,32 +28,35 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mFarClip = 0.0f;
 	mC = 0.0f;
 	mD = 0.0f;
+	LOG_FUNC_LEAVE();
 }
 
 ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
 {
-	std::cout << "ApeFobHeadTrackingPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr)
 {
-	std::cout << "setCameraConfigByName() cameraName: " << cameraName << std::endl;
+	LOG_FUNC_ENTER();
+	LOG(LOG_TYPE_DEBUG, "cameraName: " << cameraName);
 	for (int i = 0; i < mDisplayConfigList.size(); i++)
 	{
 		if (mDisplayConfigList[i].cameraLeftName == cameraName)
 		{
 			mDisplayConfigList[i].cameraLeft = cameraWkPtr;
-			std::cout << "setCameraConfigByName() mDisplayConfigList[" << i << "].cameraLeftName: " << cameraName << " - found" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "mDisplayConfigList[" << i << "].cameraLeftName: " << cameraName << " - found");
 			return;
 		}
 		else if (mDisplayConfigList[i].cameraRightName == cameraName)
 		{
 			mDisplayConfigList[i].cameraRight = cameraWkPtr;
-			std::cout << "setCameraConfigByName() mDisplayConfigList[" << i << "].cameraRightName: " << cameraName << " - found" << std::endl;
+			LOG(LOG_TYPE_DEBUG, "mDisplayConfigList[" << i << "].cameraRightName: " << cameraName << " - found");
 			return;
 		}
 	}
-	std::cout << "setCameraConfigByName() end - fckn nicht gut!!!!" << std::endl;
+	LOG_FUNC_LEAVE();
 }
 
 void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
@@ -61,7 +65,7 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			std::cout << "eventCallBack() camera: " << camera->getName() << std::endl;
+			LOG(LOG_TYPE_DEBUG, "camera: " << camera->getName());
 			mCameraDoubleQueue.push(camera);
 		}
 	}
@@ -69,16 +73,16 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 
 void ApeFobHeadTrackingPlugin::Init()
 {
-	std::cout << "ApeFobHeadTrackingPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
 	mCamerasNode = mpScene->createNode("FobHeadTrackingNode");
-	std::cout << "ApeFobHeadTrackingPlugin waiting for main window" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "ApeFobHeadTrackingPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeFobHeadTrackingPlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "ApeFobHeadTrackingPlugin main window was found");
 	mpFobTracker = trackdInitTrackerReader(4126);
 	
 	std::stringstream fileFullPath;
@@ -292,13 +296,14 @@ void ApeFobHeadTrackingPlugin::Init()
 						fobHeadTrackingDisplayConfig.normal.x, fobHeadTrackingDisplayConfig.normal.y, fobHeadTrackingDisplayConfig.normal.z, 0,
 						0, 0, 0, 1);
 				}
-				std::cout << "Init() mDisplayConfigList.push_back(" << fobHeadTrackingDisplayConfig.name << ")" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "mDisplayConfigList.push_back(" << fobHeadTrackingDisplayConfig.name << ")");
 				mDisplayConfigList.push_back(fobHeadTrackingDisplayConfig);
 			}
 		}
 		fclose(apeFobHeadTrackingPluginConfigFile);
 	}
-	std::cout << "Init() mCameraCount: " << mCameraCount << std::endl;
+	LOG(LOG_TYPE_DEBUG, "mCameraCount: " << mCameraCount);
+	LOG_FUNC_LEAVE();
 }
 
 Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
@@ -347,6 +352,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTra
 
 void ApeFobHeadTrackingPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	int cameraCount = 0;
     while (cameraCount < mCameraCount)
 	{
@@ -355,7 +361,7 @@ void ApeFobHeadTrackingPlugin::Run()
 		{
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
-				std::cout << "ApeFobHeadTrackingPlugin::Run() camera: " << camera->getName() << std::endl;
+				LOG(LOG_TYPE_DEBUG, "camera: " << camera->getName());
 				setCameraConfigByName(camera->getName(), camera);
 				mCamerasNode.lock()->setParentNode(mUserNode);
 				mNearClip = camera->getNearClipDistance();
@@ -399,6 +405,7 @@ void ApeFobHeadTrackingPlugin::Run()
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeFobHeadTrackingPlugin::Step()

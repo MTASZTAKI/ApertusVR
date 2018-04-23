@@ -65,9 +65,8 @@ std::string Ape::HttpManager::download(const std::string& url)
 
     if (res != CURLE_OK)
 	{
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
+        LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
+	}
 #endif
     return out.str();
 }
@@ -102,8 +101,7 @@ std::string Ape::HttpManager::post(const std::string& url, const std::string& da
 
 	if (res != CURLE_OK) 
 	{
-		fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			curl_easy_strerror(res));
+		LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
 	}
 #endif
 	return out.str();
@@ -141,8 +139,7 @@ std::string Ape::HttpManager::del(const std::string& url, const std::string& dat
 
 	if (res != CURLE_OK)
 	{
-		fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			curl_easy_strerror(res));
+		LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
 	}
 #endif
 	return out.str();

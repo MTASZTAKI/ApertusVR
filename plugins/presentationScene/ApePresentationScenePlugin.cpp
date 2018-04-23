@@ -3,6 +3,7 @@
 
 ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -48,11 +49,13 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mHumanXoffset = 0.0f;
 	mHumanZoffset = 160.0f;
 	mContext = Context::UNKOWN;
+	LOG_FUNC_LEAVE();
 }
 
 ApePresentationScenePlugin::~ApePresentationScenePlugin()
 {
-	std::cout << "ApePresentationScenePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
@@ -84,15 +87,15 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 
 void ApePresentationScenePlugin::Init()
 {
-	std::cout << "ApePresentationScenePlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	std::cout << "ApePresentationScenePlugin waiting for main window" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApePresentationScenePlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -953,7 +956,7 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		mContext = Context::BROWSER;
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
 		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-		//std::cout << "ApePresentationScenePlugin::keyPressed " << "keyAsString:" << keyAsString << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "keyAsString:" << keyAsString);
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -1074,8 +1077,8 @@ bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * activeBrowser->getResoultion().y;
 			activeBrowser->mouseMoved(cursorBrowserPosition);
 			activeBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
-			/*std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y << std::endl;
-			std::cout << "ApePresentationScenePlugin::mouseMoved " << "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y << std::endl;*/
+			//LOG(LOG_TYPE_DEBUG, "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
+			//LOG(LOG_TYPE_DEBUG, "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
 		}
 	}
 	return true;

@@ -3,24 +3,27 @@
 
 ApeSampleScenePlugin::ApeSampleScenePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSampleScenePlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeSampleScenePlugin::~ApeSampleScenePlugin()
 {
-	std::cout << "ApeSampleScenePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeSampleScenePlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	//std::cout  << "event called on the " << event.subjectName << " node" << std::endl;
+	//LOG(LOG_TYPE_DEBUG, "event.subjectName:" << event.subjectName);
 }
 
 void ApeSampleScenePlugin::Init()
 {
-	std::cout << "ApeSampleScenePlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
@@ -49,10 +52,12 @@ void ApeSampleScenePlugin::Init()
 			helloWorldText->setParentNode(planetNode);
 		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void ApeSampleScenePlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
@@ -60,6 +65,7 @@ void ApeSampleScenePlugin::Run()
 			planetNode->rotate(0.0017f, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeSampleScenePlugin::nodeEventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeSampleScenePlugin::Step()

@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_ROBOTCALIBRATIONPLUGIN_H
 #define APE_ROBOTCALIBRATIONPLUGIN_H
 
@@ -35,6 +34,7 @@ SOFTWARE.*/
 #include <random>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
@@ -58,7 +58,6 @@ SOFTWARE.*/
 #include "ApeIBrowser.h"
 #include "ApeIPointCloud.h"
 #include "ApeIUnitTexture.h"
-
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
@@ -113,7 +112,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotCalibrationPlugin, DestroyApeRobotCalibrationPlugin);
 	return 0;
 }

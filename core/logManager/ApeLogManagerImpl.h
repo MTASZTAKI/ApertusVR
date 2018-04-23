@@ -20,39 +20,57 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefClientImpl.h"
+#ifndef APE_LOGMANAGERIMPL_H
+#define APE_LOGMANAGERIMPL_H
 
-Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl) 
-	: mCefRenderHandlerImpl(cefRenderHandlerImpl)
-	, mCefLifeSpanHandlerImpl(cefLifeSpanHandlerImpl)
-	, mCefKeyboardHandlerImpl(cefKeyboardHandlerImpl)
+#ifdef _WIN32
+#ifdef BUILDING_APE_LOGMANAGER_DLL
+#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllexport)
+#else
+#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllimport)
+#endif
+#else
+#define APE_LOGMANAGER_DLL_EXPORT
+#endif
+
+#include <map>
+#include <vector>
+#include <string>
+#include <ostream>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <mutex>
+#include "ApeILogManager.h"
+
+namespace Ape
 {
+	class APE_LOGMANAGER_DLL_EXPORT LogManagerImpl : public ILogManager
+	{
+	private:
+		std::mutex g_pages_mutex;
 
+		int mLevel = LOG_TYPE_DEBUG;
+
+		std::ostream* mStream;
+
+		std::ofstream mOutFileStream;
+
+	public:
+		LogManagerImpl();
+
+		~LogManagerImpl();
+
+		std::string getFileNameFromPath(const std::string& path);
+
+		void setLevel(int level);
+
+		void registerStream(std::ostream& stream);
+
+		std::ostream& getStream(int level = LOG_TYPE_DEBUG);
+
+		void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG);
+	};
 }
 
-Ape::CefClientImpl::~CefClientImpl()
-{
-
-}
-
-CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
-{
-	return mCefRenderHandlerImpl;
-}
-
-CefRefPtr<CefLifeSpanHandler> Ape::CefClientImpl::GetLifeSpanHandler()
-{
-	return mCefLifeSpanHandlerImpl;
-}
-
-CefRefPtr<CefKeyboardHandler> Ape::CefClientImpl::GetKeyboardHandler()
-{
-	return mCefKeyboardHandlerImpl;
-}
-
-bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
-{
-	const std::string& message_name = message->GetName();
-	LOG(LOG_TYPE_DEBUG, "message name: " << message_name);
-	return true;
-}
+#endif

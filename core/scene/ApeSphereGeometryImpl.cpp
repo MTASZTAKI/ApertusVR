@@ -114,7 +114,7 @@ void Ape::SphereGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseria
 	{
 		if (auto material = std::static_pointer_cast<Ape::Material>(mpScene->getEntity(materialName.C_String()).lock()))
 		{
-			//std::cout << "Ape::SphereGeometryImpl::Deserialize materialName " << materialName.C_String() << std::endl;
+			//LOG(LOG_TYPE_DEBUG, "Deserialize materialName " << materialName.C_String());
 			mMaterial = material;
 			mMaterialName = material->getName();
 			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_SPHERE_MATERIAL));

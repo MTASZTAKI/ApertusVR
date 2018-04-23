@@ -38,12 +38,15 @@ SOFTWARE.*/
 #include "ApeIScene.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"
+
+#define THIS_PLUGINNAME "ApeAssimpAssetLoaderPlugin"
 
 namespace Ape
 {
@@ -115,12 +118,12 @@ namespace Ape
 		delete (AssimpAssetLoaderPlugin*)plugin;
 	}
 
-	APE_PLUGIN_DISPLAY_NAME("ApeAssimpAssetLoaderPlugin");
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << "ApeAssimpAssetLoaderPlugin_CREATE" << std::endl;
-		ApeRegisterPlugin("ApeAssimpAssetLoaderPlugin", CreateAssimpAssetLoaderPlugin, DestroyAssimpAssetLoaderPlugin);
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateAssimpAssetLoaderPlugin, DestroyAssimpAssetLoaderPlugin);
 		return 0;
 	}
 }

@@ -24,6 +24,7 @@ SOFTWARE.*/
 #define APE_JSBIND_MANAGER_H
 
 #include <string>
+#include <map>
 #include <iostream>
 #include "nbind/nbind.h"
 #include "nbind/api.h"
@@ -51,301 +52,401 @@ SOFTWARE.*/
 
 class JsBindManager
 {
+	enum ErrorType
+	{
+		DYN_CAST_FAILED,
+		NULLPTR
+	};
+
+	std::map<ErrorType, std::string> mErrorMap;
+
 public:
 	JsBindManager()
 	{
+		LOG_FUNC_ENTER()
 		mpScene = Ape::IScene::getSingletonPtr();
 		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
+		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
+		LOG_FUNC_LEAVE();
 	}
 
 	void start(std::string configFolderPath)
 	{
+		LOG_FUNC_ENTER();
 		Ape::System::Start(configFolderPath.c_str(), true);
+		LOG_FUNC_LEAVE();
 	}
 
 	void stop()
 	{
+		LOG_FUNC_ENTER();
 		Ape::System::Stop();
+		LOG_FUNC_LEAVE();
 	}
 
 	NodeJsPtr createNode(std::string name)
 	{
+		LOG_FUNC_ENTER();
 		return NodeJsPtr(mpScene->createNode(name));
 	}
 
 	bool getNode(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getNode()" << std::endl;
-
+		LOG_FUNC_ENTER();
+		bool success = false;
 		auto entityWeakPtr = mpScene->getNode(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto node = std::dynamic_pointer_cast<Ape::INode>(entity))
 			{
-				done(false, NodeJsPtr(entityWeakPtr));
-				return true;
+				success = true;
+				done(!success, NodeJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	bool getUserNode(nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getUserNode()" << std::endl;
-
+		LOG_FUNC_ENTER();
+		bool success = false;
 		auto nodeWeakPtr = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName);
 		if (auto node = nodeWeakPtr.lock())
 		{
-			done(false, NodeJsPtr(nodeWeakPtr));
-			return true;
+			success = true;
+			done(!success, NodeJsPtr(nodeWeakPtr));
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	LightJsPtr createLight(std::string name)
 	{
-		std::cout << "JsBindManager::createLight()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return LightJsPtr(mpScene->createEntity(name, Ape::Entity::LIGHT));
 	}
 
 	bool getLight(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getText()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto textGeometry = std::dynamic_pointer_cast<Ape::ILight>(entity))
 			{
-				done(false, LightJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, LightJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	TextJsPtr createText(std::string name)
 	{
-		std::cout << "JsBindManager::createText()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return TextJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_TEXT));
 	}
 
 	bool getText(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getText()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto textGeometry = std::dynamic_pointer_cast<Ape::ITextGeometry>(entity))
 			{
-				done(false, TextJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, TextJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name)
 	{
-		std::cout << "JsBindManager::createIndexedFaceSet()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return IndexedFaceSetJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDFACESET));
 	}
 
 	bool getIndexedFaceSet(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getIndexedFaceSet()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto indexedFaceSet = std::dynamic_pointer_cast<Ape::IIndexedFaceSetGeometry>(entity))
 			{
-				done(false, IndexedFaceSetJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	IndexedLineSetJsPtr createIndexedLineSet(std::string name)
 	{
-		std::cout << "JsBindManager::createIndexedLineSet()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return IndexedLineSetJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDLINESET));
 	}
 
 	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getIndexedLineSet()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto indexedLineSet = std::dynamic_pointer_cast<Ape::IIndexedLineSetGeometry>(entity))
 			{
-				done(false, IndexedLineSetJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, IndexedLineSetJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	BoxJsPtr createBox(std::string name)
 	{
-		std::cout << "JsBindManager::createBox()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return BoxJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_BOX));
 	}
 
 	bool getBox(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getBox()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto box = std::dynamic_pointer_cast<Ape::IBoxGeometry>(entity))
 			{
-				done(false, BoxJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, BoxJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	FileGeometryJsPtr createFileGeometry(std::string name)
 	{
-		std::cout << "JsBindManager::createFileGeometry()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return FileGeometryJsPtr(mpScene->createEntity(name, Ape::Entity::GEOMETRY_FILE));
 	}
 
 	bool getFileGeometry(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getFileGeometry()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto box = std::dynamic_pointer_cast<Ape::IFileGeometry>(entity))
 			{
-				done(false, FileGeometryJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, FileGeometryJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	ManualMaterialJsPtr createManualMaterial(std::string name)
 	{
-		std::cout << "JsBindManager::createManualMaterial()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return ManualMaterialJsPtr(mpScene->createEntity(name, Ape::Entity::MATERIAL_MANUAL));
 	}
 
 	bool getManualMaterial(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getManualMaterial()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto manualMaterial = std::dynamic_pointer_cast<Ape::IManualMaterial>(entity))
 			{
-				done(false, ManualMaterialJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, ManualMaterialJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	PbsPassJsPtr createPbsPass(std::string name)
 	{
-		std::cout << "JsBindManager::createPbsPass()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return PbsPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_PBS));
 	}
 
 	bool getPbsPass(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getPbsPass()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto pbsPass = std::dynamic_pointer_cast<Ape::IPbsPass>(entity))
 			{
-				done(false, PbsPassJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, PbsPassJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	ManualPassJsPtr createManualPass(std::string name)
 	{
-		std::cout << "JsBindManager::createManualPass()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return ManualPassJsPtr(mpScene->createEntity(name, Ape::Entity::PASS_MANUAL));
 	}
 
 	bool getManualPass(std::string name, nbind::cbFunction &done)
 	{
-		std::cout << "JsBindManager::getManualPass()" << std::endl;
-
-		if (auto entity = mpScene->getEntity(name).lock())
+		LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpScene->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto ManualPass = std::dynamic_pointer_cast<Ape::IManualPass>(entity))
 			{
-				done(false, ManualPassJsPtr(mpScene->getEntity(name)));
-				return true;
+				success = true;
+				done(!success, ManualPassJsPtr(entityWeakPtr));
 			}
-
-			done(true, std::string("Dynamic cast failed!"));
-			return false;
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
 		}
-
-		done(true, std::string("Return value of getEntity() is nullptr!"));
-		return false;
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		LOG_FUNC_LEAVE();
+		return success;
 	}
 
 	std::string getFolderPath()
 	{
-		std::cout << "JsBindManager::getFolderPath()" << std::endl;
+		LOG_FUNC_ENTER();
+		LOG_FUNC_LEAVE();
 		return mpSystemConfig->getFolderPath();
 	}
 

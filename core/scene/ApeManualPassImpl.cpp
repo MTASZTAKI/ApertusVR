@@ -124,43 +124,41 @@ void Ape::ManualPassImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mAmbientColor " << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mAmbientColor " << mAmbientColor.toString());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_AMBIENT));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mDiffuseColor " <<  mDiffuseColor.toString() <<  std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mDiffuseColor " <<  mDiffuseColor.toString());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_DIFFUSE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mSpecularColor " << mSpecularColor.toString() << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mSpecularColor " << mSpecularColor.toString());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SPECULAR));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mEmissiveColor " << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mEmissiveColor " << mEmissiveColor.toString());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_EMISSIVE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mShininess))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mShininess " << mShininess << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mShininess " << mShininess);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SHININESS));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize mSceneBlendingType " << std::endl;
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mSceneBlendingType " << mSceneBlendingType);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
 	}
 	RakNet::RakString textureName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
 	{
-		//std::cout << " Ape::ManualPassImpl::Deserialize textureName " << std::endl;
 		mTextureName = textureName.C_String();
+		//LOG(LOG_TYPE_DEBUG, "Deserialize mTextureName " << mTextureName);
 		mTexture = std::static_pointer_cast<Ape::Texture>(mpScene->getEntity(mTextureName).lock());
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_TEXTURE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
-
-

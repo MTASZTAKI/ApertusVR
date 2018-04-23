@@ -25,6 +25,7 @@ SOFTWARE.*/
 #define APEHTTPMANAGER_H
 
 #include <string>
+#include "ApeILogManager.h"
 
 namespace Ape
 {

@@ -3,6 +3,7 @@
 
 ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
@@ -42,13 +43,15 @@ ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
 	/*mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");*/
 	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
+	LOG_FUNC_LEAVE();
 }
 
 ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 {
-	std::cout << "ApeRobotMonitoringPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
 	delete mpKeyboard;
 	delete mpMouse;
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
@@ -74,7 +77,7 @@ void ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 
 void ApeRobotMonitoringPlugin::Init()
 {
-	std::cout << "ApeRobotMonitoringPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -122,10 +125,10 @@ void ApeRobotMonitoringPlugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	std::cout << "ApeRobotMonitoringPlugin waiting for main window" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeRobotMonitoringPlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -156,6 +159,7 @@ void ApeRobotMonitoringPlugin::Init()
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void ApeRobotMonitoringPlugin::moveUserNode()

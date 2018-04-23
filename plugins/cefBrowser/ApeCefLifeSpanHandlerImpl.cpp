@@ -48,6 +48,6 @@ bool Ape::CefLifeSpanHandlerImpl::OnBeforePopup(CefRefPtr<CefBrowser> browser, C
 {
 	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
 		apeBrowser->setURL(target_url);
-	//std::cout << "Ape:::CefLifeSpanHandlerImpl::OnBeforePopup " << turl << " id:" << browser->GetIdentifier() << std::endl;
+	//LOG(LOG_TYPE_DEBUG, "url: " << turl << " id:" << browser->GetIdentifier());
 	return true;
 }

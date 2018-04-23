@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
 #include "ApeIBrowser.h"
+#include "ApeILogManager.h"
 
 #define THIS_PLUGINNAME "Ape360VideoSamplePlugin"
 
@@ -75,7 +76,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360VideoSamplePlugin, DestroyApe360VideoSamplePlugin);
 	return 0;
 }

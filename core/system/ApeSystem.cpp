@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include "ApeMainWindowImpl.h"
 #include "ApePluginManagerImpl.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeLogManagerImpl.h"
 #include "ApeSceneImpl.h"
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
@@ -38,6 +39,7 @@ SOFTWARE.*/
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
+Ape::LogManagerImpl* gpLogManagerImpl;
 Ape::SceneImpl* gpSceneImpl;
 Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
@@ -45,6 +47,7 @@ Ape::MainWindowImpl* gpMainWindowImpl;
 
 void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
+	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
 	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
 	std::string delimiter = "-";
@@ -57,6 +60,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 
 	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
+	gpLogManagerImpl = new LogManagerImpl();
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();

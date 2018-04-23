@@ -3,17 +3,20 @@
 
 Ape360ImagePlugin::Ape360ImagePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
 }
 
 Ape360ImagePlugin::~Ape360ImagePlugin()
 {
-	std::cout << "Ape360ImagePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void Ape360ImagePlugin::Init()
 {
-	std::cout << "Ape360ImagePlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto sphereNode = mpScene->createNode("sphereNode").lock())
 	{
 		if (auto sphereMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
@@ -22,6 +25,7 @@ void Ape360ImagePlugin::Init()
 			sphereMeshFile->setParentNode(sphereNode);
 		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void Ape360ImagePlugin::Run()

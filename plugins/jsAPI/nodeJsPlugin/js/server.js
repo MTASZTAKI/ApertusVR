@@ -23,7 +23,6 @@ SOFTWARE.*/
 var http = require("http");
 var express = require('express');
 var bodyParser = require('body-parser');
-var logger = require('morgan');
 var expressValidator = require('express-validator');
 var fs = require('fs');
 
@@ -35,18 +34,17 @@ if (!fs.existsSync(config.sourcePathJs)) {
 	process.exit(1);
 }
 
-console.log('config: ');
-console.log(config);
-
 var moduleManager = require(config.sourcePathJs + '/modules/module_manager/module_manager.js');
 moduleManager.setConfigType(config.configuration);
 var ape = require(config.sourcePathJs + 'ape.js');
+var logger = require(config.sourcePathJs + "/modules/log_manager/log_manager.js");
+
+logger.debug('config:', config);
 
 var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
 var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
 
 var app = express();
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -54,6 +52,6 @@ app.use(bodyParser.urlencoded({
 app.use(expressValidator());
 
 app.listen(port, host, function() {
-	console.log('Listening on ' + host + ':' + port);
+	logger.debug('Listening on ' + host + ':' + port);
 	ape.start(app);
 });

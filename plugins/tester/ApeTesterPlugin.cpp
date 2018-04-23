@@ -3,6 +3,7 @@
 
 ApeTesterPlugin::ApeTesterPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
@@ -10,11 +11,13 @@ ApeTesterPlugin::ApeTesterPlugin()
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mDemoObjectNode = Ape::NodeWeakPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
+	LOG_FUNC_LEAVE();
 }
 
 ApeTesterPlugin::~ApeTesterPlugin()
 {
-	std::cout << "ApeTesterPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTesterPlugin::eventCallBack(const Ape::Event& event)
@@ -24,7 +27,7 @@ void ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 
 void ApeTesterPlugin::Init()
 {
-	std::cout << "ApeTesterPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -401,10 +404,12 @@ void ApeTesterPlugin::Init()
 		);
 		mInterpolators.push_back(std::move(rotateInterpolator));
 	}*/
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTesterPlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	double duration = 0;
 	while (true)
 	{
@@ -487,6 +492,7 @@ void ApeTesterPlugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeTesterPlugin::Step()

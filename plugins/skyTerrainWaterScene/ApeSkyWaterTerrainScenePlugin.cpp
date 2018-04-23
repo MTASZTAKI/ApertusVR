@@ -3,6 +3,7 @@
 
 ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
@@ -16,11 +17,13 @@ ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 	mSkyLightNode = Ape::NodeWeakPtr();
 	mCameras = std::vector<Ape::CameraWeakPtr>();
 	mExpectedCameraCount = 6;
+	LOG_FUNC_LEAVE();
 }
 
 ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
 {
-	std::cout << "ApeSkyWaterTerrainScenePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
@@ -77,26 +80,28 @@ void ApeSkyWaterTerrainScenePlugin::createWater()
 
 void ApeSkyWaterTerrainScenePlugin::Init()
 {
-	std::cout << "ApeSkyWaterTerrainScenePlugin::init" << std::endl;
-	std::cout << "ApeSkyWaterTerrainScenePlugin waiting for main window" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeSkyWaterTerrainScenePlugin main window was found" << std::endl;
-	std::cout << "ApeSkyWaterTerrainScenePlugin is waiting for the cameras" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "main window was found");
+	LOG(LOG_TYPE_DEBUG, "is waiting for the cameras");
 	while (mCameras.size() < mExpectedCameraCount)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeSkyWaterTerrainScenePlugin expected camera count ok" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "expected camera count ok");
 	createSky();
 	createWater();
 }
 
 void ApeSkyWaterTerrainScenePlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
 void ApeSkyWaterTerrainScenePlugin::Step()

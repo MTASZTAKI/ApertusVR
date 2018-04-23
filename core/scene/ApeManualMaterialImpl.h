@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "ApeIManualMaterial.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeReplica.h"

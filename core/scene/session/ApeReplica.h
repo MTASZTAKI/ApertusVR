@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"
+#include "ApeILogManager.h"
 
 namespace Ape
 {
