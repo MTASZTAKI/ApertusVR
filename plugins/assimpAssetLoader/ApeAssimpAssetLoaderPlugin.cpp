@@ -2,7 +2,6 @@
 #include "rapidjson/filereadstream.h"
 #include "ApeAssimpAssetLoaderPlugin.h"
 
-
 Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 {
 	LOG_FUNC_ENTER();

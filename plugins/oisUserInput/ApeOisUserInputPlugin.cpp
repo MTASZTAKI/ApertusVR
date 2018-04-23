@@ -3,7 +3,6 @@
 #include "rapidjson/filereadstream.h"
 #include "ApeOisUserInputPlugin.h"
 
-
 Ape::OISUserInputPlugin::OISUserInputPlugin()
 {
 	LOG_FUNC_ENTER();

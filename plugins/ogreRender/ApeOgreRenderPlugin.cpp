@@ -6,7 +6,6 @@
 #include "ApeOgreRenderPlugin.h"
 #include "ApeOgreUtilities.h"
 
-
 Ape::OgreRenderPlugin::OgreRenderPlugin( )
 {
 	LOG_FUNC_ENTER();
