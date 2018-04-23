@@ -119,12 +119,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateLeapMotionPlugin()
 	{
-		return new LeapMotionPlugin;
+		return new Ape::LeapMotionPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyLeapMotionPlugin(Ape::IPlugin *plugin)
 	{
-		delete (LeapMotionPlugin*)plugin;
+		delete (Ape::LeapMotionPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

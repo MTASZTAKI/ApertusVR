@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_OCULUSDK2PLUGIN_H
 #define APE_OCULUSDK2PLUGIN_H
 
@@ -48,67 +47,69 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
-class ApeOculusDK2Plugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeOculusDK2Plugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	ovrHmd mpHMD;
+		ovrHmd mpHMD;
 
-	ovrFrameTiming mHMDFrameTiming;
+		ovrFrameTiming mHMDFrameTiming;
 
-	Ape::CameraWeakPtr mCameraLeft;
+		Ape::CameraWeakPtr mCameraLeft;
 
-	Ape::CameraWeakPtr mCameraRight;
+		Ape::CameraWeakPtr mCameraRight;
 
-	Ape::NodeWeakPtr mHeadNode;
+		Ape::NodeWeakPtr mHeadNode;
 
-	Ape::NodeWeakPtr mUserNode;
-	
-	void eventCallBack(const Ape::Event& event);
+		Ape::NodeWeakPtr mUserNode;
 
-	Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
-	
-public:
-	ApeOculusDK2Plugin();
+		void eventCallBack(const Ape::Event& event);
 
-	~ApeOculusDK2Plugin();
-	
-	void Init() override;
+		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 
-	void Run() override;
+	public:
+		ApeOculusDK2Plugin();
 
-	void Step() override;
+		~ApeOculusDK2Plugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
-{
+		void Stop() override;
 
-	return new ApeOculusDK2Plugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
-{
-	delete (ApeOculusDK2Plugin*)plugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
+	{
+		return new Ape::ApeOculusDK2Plugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeOculusDK2Plugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
+		return 0;
+	}
 }
 
 #endif

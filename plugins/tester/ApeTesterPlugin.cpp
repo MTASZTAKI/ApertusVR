@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeTesterPlugin.h"
 
-ApeTesterPlugin::ApeTesterPlugin()
+Ape::ApeTesterPlugin::ApeTesterPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -14,18 +14,18 @@ ApeTesterPlugin::ApeTesterPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeTesterPlugin::~ApeTesterPlugin()
+Ape::ApeTesterPlugin::~ApeTesterPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTesterPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeTesterPlugin::Init()
+void Ape::ApeTesterPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
@@ -407,7 +407,7 @@ void ApeTesterPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTesterPlugin::Run()
+void Ape::ApeTesterPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	double duration = 0;
@@ -495,22 +495,22 @@ void ApeTesterPlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTesterPlugin::Step()
+void Ape::ApeTesterPlugin::Step()
 {
 
 }
 
-void ApeTesterPlugin::Stop()
+void Ape::ApeTesterPlugin::Stop()
 {
 
 }
 
-void ApeTesterPlugin::Suspend()
+void Ape::ApeTesterPlugin::Suspend()
 {
 
 }
 
-void ApeTesterPlugin::Restart()
+void Ape::ApeTesterPlugin::Restart()
 {
 
 }

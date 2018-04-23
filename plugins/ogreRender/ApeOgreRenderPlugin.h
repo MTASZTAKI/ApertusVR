@@ -223,12 +223,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOgreRenderPlugin()
 	{
-		return new OgreRenderPlugin;
+		return new Ape::OgreRenderPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyOgreRenderPlugin(Ape::IPlugin *plugin)
 	{
-		delete (OgreRenderPlugin*)plugin;
+		delete (Ape::OgreRenderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

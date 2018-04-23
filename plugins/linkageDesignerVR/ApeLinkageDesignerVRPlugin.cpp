@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeLinkageDesignerVRPlugin.h"
 
-ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
+Ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -45,7 +45,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
+Ape::ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 {
 	LOG_FUNC_ENTER();
 	delete mpKeyboard;
@@ -53,7 +53,7 @@ ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
@@ -74,7 +74,7 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::Init()
+void Ape::ApeLinkageDesignerVRPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -138,7 +138,7 @@ void ApeLinkageDesignerVRPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeLinkageDesignerVRPlugin::moveUserNode()
+void Ape::ApeLinkageDesignerVRPlugin::moveUserNode()
 {
 	auto userNode = mUserNode.lock();
 	if (userNode)
@@ -170,7 +170,7 @@ void ApeLinkageDesignerVRPlugin::moveUserNode()
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
+void Ape::ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 {
 	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
 	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
@@ -179,7 +179,7 @@ void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 		mSceneToggleIndex = 0;
 }
 
-void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
+void Ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 {
 	if (mSwitchNodes.size() > 0)
 	{
@@ -196,7 +196,7 @@ void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -206,7 +206,7 @@ void ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 }
 
 
-void ApeLinkageDesignerVRPlugin::Run()
+void Ape::ApeLinkageDesignerVRPlugin::Run()
 {
 	while (true)
 	{
@@ -221,27 +221,27 @@ void ApeLinkageDesignerVRPlugin::Run()
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeLinkageDesignerVRPlugin::Step()
+void Ape::ApeLinkageDesignerVRPlugin::Step()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Stop()
+void Ape::ApeLinkageDesignerVRPlugin::Stop()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Suspend()
+void Ape::ApeLinkageDesignerVRPlugin::Suspend()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Restart()
+void Ape::ApeLinkageDesignerVRPlugin::Restart()
 {
 
 }
 
-bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
 	auto userNode = mUserNode.lock();
@@ -257,23 +257,23 @@ bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::keyReleased(const OIS::KeyEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::keyReleased(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mouseMoved(const OIS::MouseEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLinkageDesignerVRPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLinkageDesignerVRPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }

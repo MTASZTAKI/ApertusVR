@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_SKYWATERTERRAINLUGIN_H
 #define APE_SKYWATERTERRAINLUGIN_H
 
@@ -44,71 +43,73 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeSkyWaterTerrainScenePlugin"
 
-class ApeSkyWaterTerrainScenePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeSkyWaterTerrainScenePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::WaterWeakPtr mWater;
+		Ape::WaterWeakPtr mWater;
 
-	Ape::SkyWeakPtr mSky;
+		Ape::SkyWeakPtr mSky;
 
-	Ape::IMainWindow* mpMainWindow;
+		Ape::IMainWindow* mpMainWindow;
 
-	Ape::NodeWeakPtr mSkyLightNode;
+		Ape::NodeWeakPtr mSkyLightNode;
 
-	Ape::LightWeakPtr mSkyLight;
+		Ape::LightWeakPtr mSkyLight;
 
-	Ape::LightWeakPtr mSunLight;
+		Ape::LightWeakPtr mSunLight;
 
-	std::vector<Ape::CameraWeakPtr> mCameras;
+		std::vector<Ape::CameraWeakPtr> mCameras;
 
-	int mExpectedCameraCount;
-	
-	void eventCallBack(const Ape::Event& event);
+		int mExpectedCameraCount;
 
-	void createSky();
+		void eventCallBack(const Ape::Event& event);
 
-	void createWater();
-	
-public:
-	ApeSkyWaterTerrainScenePlugin();
+		void createSky();
 
-	~ApeSkyWaterTerrainScenePlugin();
-	
-	void Init() override;
+		void createWater();
 
-	void Run() override;
+	public:
+		ApeSkyWaterTerrainScenePlugin();
 
-	void Step() override;
+		~ApeSkyWaterTerrainScenePlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSkyWaterTerrainScenePlugin()
-{
+		void Stop() override;
 
-	return new ApeSkyWaterTerrainScenePlugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_FUNC void DestroyApeSkyWaterTerrainScenePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeSkyWaterTerrainScenePlugin*)plugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSkyWaterTerrainScenePlugin()
+	{
+		return new Ape::ApeSkyWaterTerrainScenePlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSkyWaterTerrainScenePlugin, DestroyApeSkyWaterTerrainScenePlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeSkyWaterTerrainScenePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeSkyWaterTerrainScenePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSkyWaterTerrainScenePlugin, DestroyApeSkyWaterTerrainScenePlugin);
+		return 0;
+	}
 }
 
 #endif

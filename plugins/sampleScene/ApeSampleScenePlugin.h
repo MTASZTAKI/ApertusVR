@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_SAMPLESCENELUGIN_H
 #define APE_SAMPLESCENELUGIN_H
 
@@ -40,53 +39,55 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeSampleScenePlugin"
 
-class ApeSampleScenePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeSampleScenePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mPlanetNode;
-	
-	void nodeEventCallBack(const Ape::Event& event);
-	
-public:
-	ApeSampleScenePlugin();
+		Ape::NodeWeakPtr mPlanetNode;
 
-	~ApeSampleScenePlugin();
-	
-	void Init() override;
+		void nodeEventCallBack(const Ape::Event& event);
 
-	void Run() override;
+	public:
+		ApeSampleScenePlugin();
 
-	void Step() override;
+		~ApeSampleScenePlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSampleScenePlugin()
-{
+		void Stop() override;
 
-	return new ApeSampleScenePlugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_FUNC void DestroyApeSampleScenePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeSampleScenePlugin*)plugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSampleScenePlugin()
+	{
+		return new Ape::ApeSampleScenePlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSampleScenePlugin, DestroyApeSampleScenePlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeSampleScenePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeSampleScenePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSampleScenePlugin, DestroyApeSampleScenePlugin);
+		return 0;
+	}
 }
 
 #endif

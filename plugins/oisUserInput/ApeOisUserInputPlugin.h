@@ -164,12 +164,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOISUserInputPlugin()
 	{
-		return new OISUserInputPlugin;
+		return new Ape::OISUserInputPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(Ape::IPlugin *plugin)
 	{
-		delete (OISUserInputPlugin*)plugin;
+		delete (Ape::OISUserInputPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

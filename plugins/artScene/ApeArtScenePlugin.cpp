@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeArtScenePlugin.h"
 
-ApeArtScenePlugin::ApeArtScenePlugin()
+Ape::ApeArtScenePlugin::ApeArtScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -11,18 +11,18 @@ ApeArtScenePlugin::ApeArtScenePlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeArtScenePlugin::~ApeArtScenePlugin()
+Ape::ApeArtScenePlugin::~ApeArtScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeArtScenePlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeArtScenePlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeArtScenePlugin::Init()
+void Ape::ApeArtScenePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
@@ -368,7 +368,7 @@ void ApeArtScenePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeArtScenePlugin::Run()
+void Ape::ApeArtScenePlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -379,22 +379,22 @@ void ApeArtScenePlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeArtScenePlugin::Step()
+void Ape::ApeArtScenePlugin::Step()
 {
 
 }
 
-void ApeArtScenePlugin::Stop()
+void Ape::ApeArtScenePlugin::Stop()
 {
 
 }
 
-void ApeArtScenePlugin::Suspend()
+void Ape::ApeArtScenePlugin::Suspend()
 {
 
 }
 
-void ApeArtScenePlugin::Restart()
+void Ape::ApeArtScenePlugin::Restart()
 {
 
 }

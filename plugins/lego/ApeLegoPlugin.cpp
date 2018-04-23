@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeLegoPlugin.h"
 
-ApeLegoPlugin::ApeLegoPlugin()
+Ape::ApeLegoPlugin::ApeLegoPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -78,7 +78,7 @@ ApeLegoPlugin::ApeLegoPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeLegoPlugin::~ApeLegoPlugin()
+Ape::ApeLegoPlugin::~ApeLegoPlugin()
 {
 	LOG_FUNC_ENTER();
 	delete mpKeyboard;
@@ -86,7 +86,7 @@ ApeLegoPlugin::~ApeLegoPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeLegoPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeLegoPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
@@ -95,7 +95,7 @@ void ApeLegoPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeLegoPlugin::Init()
+void Ape::ApeLegoPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -182,7 +182,7 @@ void ApeLegoPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeLegoPlugin::blowModel()
+void Ape::ApeLegoPlugin::blowModel()
 {
 	for (auto meshName : mMeshNames)
 	{
@@ -198,7 +198,7 @@ void ApeLegoPlugin::blowModel()
 	mInterpolatorsToggleIndex = 0;
 }
 
-void ApeLegoPlugin::toggleInterpolators()
+void Ape::ApeLegoPlugin::toggleInterpolators()
 {
 	auto animationThread = std::thread(&ApeLegoPlugin::interpolate, this, mInterpolatorsToggleIndex);
 	animationThread.detach();
@@ -209,7 +209,7 @@ void ApeLegoPlugin::toggleInterpolators()
 	}
 }
 
-void ApeLegoPlugin::interpolate(int interpolatorIndex)
+void Ape::ApeLegoPlugin::interpolate(int interpolatorIndex)
 {
 	if (interpolatorIndex == 0)
 	{
@@ -1213,7 +1213,7 @@ void ApeLegoPlugin::interpolate(int interpolatorIndex)
 	}
 }
 
-void ApeLegoPlugin::moveUserNode()
+void Ape::ApeLegoPlugin::moveUserNode()
 {
 	auto userNode = mUserNode.lock();
 	if (userNode)
@@ -1245,7 +1245,7 @@ void ApeLegoPlugin::moveUserNode()
 	}
 }
 
-void ApeLegoPlugin::Run()
+void Ape::ApeLegoPlugin::Run()
 {
 	while (true)
 	{
@@ -1260,27 +1260,27 @@ void ApeLegoPlugin::Run()
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeLegoPlugin::Step()
+void Ape::ApeLegoPlugin::Step()
 {
 
 }
 
-void ApeLegoPlugin::Stop()
+void Ape::ApeLegoPlugin::Stop()
 {
 
 }
 
-void ApeLegoPlugin::Suspend()
+void Ape::ApeLegoPlugin::Suspend()
 {
 
 }
 
-void ApeLegoPlugin::Restart()
+void Ape::ApeLegoPlugin::Restart()
 {
 
 }
 
-bool ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
+bool Ape::ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
 	if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
@@ -1290,23 +1290,23 @@ bool ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
 	return true;
 }
 
-bool ApeLegoPlugin::keyReleased(const OIS::KeyEvent& e)
+bool Ape::ApeLegoPlugin::keyReleased(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApeLegoPlugin::mouseMoved(const OIS::MouseEvent& e)
+bool Ape::ApeLegoPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	return true;
 }
 
-bool ApeLegoPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLegoPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }
 
-bool ApeLegoPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLegoPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }

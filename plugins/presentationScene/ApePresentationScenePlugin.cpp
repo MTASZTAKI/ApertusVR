@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApePresentationScenePlugin.h"
 
-ApePresentationScenePlugin::ApePresentationScenePlugin()
+Ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
@@ -52,13 +52,13 @@ ApePresentationScenePlugin::ApePresentationScenePlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApePresentationScenePlugin::~ApePresentationScenePlugin()
+Ape::ApePresentationScenePlugin::~ApePresentationScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock());
@@ -85,7 +85,7 @@ void ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApePresentationScenePlugin::Init()
+void Ape::ApePresentationScenePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -795,7 +795,7 @@ void ApePresentationScenePlugin::Init()
 	/*endo meeting 2018.02.14 end*/
 }
 
-void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
+void Ape::ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userNode)
 {
 	StoryElement storyElement = mStoryElements[mCurrentStoryElementIndex];
 	if (auto userNode = mUserNode.lock())
@@ -826,7 +826,7 @@ void ApePresentationScenePlugin::animateToStoryElements(Ape::NodeSharedPtr userN
 		manageBrowser(storyElement);
 }
 
-void ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr userNode)
+void Ape::ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr userNode)
 {
 	StoryElement storyElement = mStoryElements[mCurrentStoryElementIndex];
 	userNode->setPosition(storyElement.cameraPosition);
@@ -835,7 +835,7 @@ void ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr userNode)
 		manageBrowser(storyElement);
 }
 
-void ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
+void Ape::ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 {
 	if (!mpScene->getNode(storyElement.browserName).lock())
 	{
@@ -891,7 +891,7 @@ void ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 	}
 }
 
-void ApePresentationScenePlugin::createMesh(std::string name, Ape::Vector3 position, Ape::Quaternion orientation)
+void Ape::ApePresentationScenePlugin::createMesh(std::string name, Ape::Vector3 position, Ape::Quaternion orientation)
 {
 	if (auto node = mpScene->createNode(name).lock())
 	{
@@ -905,7 +905,7 @@ void ApePresentationScenePlugin::createMesh(std::string name, Ape::Vector3 posit
 	}
 }
 
-void ApePresentationScenePlugin::moveUserNode()
+void Ape::ApePresentationScenePlugin::moveUserNode()
 {
 	if (mContext == SPACE)
 	{
@@ -940,7 +940,7 @@ void ApePresentationScenePlugin::moveUserNode()
 	}
 }
 
-void ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -949,7 +949,7 @@ void ApePresentationScenePlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 	userNodePoseFile.close();
 }
 
-bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
+bool Ape::ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	if (auto activeBrowser = mActiveBrowser.lock())
 	{
@@ -1056,13 +1056,13 @@ bool ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 	return true;
 }
 
-bool ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
+bool Ape::ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
+bool Ape::ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 {
 	if (auto activeMouseTexture = mActiveMouseTexture.lock())
 	{
@@ -1084,7 +1084,7 @@ bool ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 	return true;
 }
 
-bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+bool Ape::ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
@@ -1157,7 +1157,7 @@ bool ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::Mo
 	return true;
 }
 
-bool ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+bool Ape::ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
 	if (id == OIS::MouseButtonID::MB_Left)
 	{
@@ -1167,7 +1167,7 @@ bool ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::M
 	return true;
 }
 
-void ApePresentationScenePlugin::Run()
+void Ape::ApePresentationScenePlugin::Run()
 {
 	while (true)
 	{
@@ -1182,22 +1182,22 @@ void ApePresentationScenePlugin::Run()
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApePresentationScenePlugin::Step()
+void Ape::ApePresentationScenePlugin::Step()
 {
 
 }
 
-void ApePresentationScenePlugin::Stop()
+void Ape::ApePresentationScenePlugin::Stop()
 {
 
 }
 
-void ApePresentationScenePlugin::Suspend()
+void Ape::ApePresentationScenePlugin::Suspend()
 {
 
 }
 
-void ApePresentationScenePlugin::Restart()
+void Ape::ApePresentationScenePlugin::Restart()
 {
 
 }

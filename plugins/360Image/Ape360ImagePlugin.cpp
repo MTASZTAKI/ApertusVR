@@ -1,20 +1,20 @@
 #include <iostream>
 #include "Ape360ImagePlugin.h"
 
-Ape360ImagePlugin::Ape360ImagePlugin()
+Ape::Ape360ImagePlugin::Ape360ImagePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
 	LOG_FUNC_LEAVE();
 }
 
-Ape360ImagePlugin::~Ape360ImagePlugin()
+Ape::Ape360ImagePlugin::~Ape360ImagePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape360ImagePlugin::Init()
+void Ape::Ape360ImagePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto sphereNode = mpScene->createNode("sphereNode").lock())
@@ -28,27 +28,27 @@ void Ape360ImagePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void Ape360ImagePlugin::Run()
+void Ape::Ape360ImagePlugin::Run()
 {
 
 }
 
-void Ape360ImagePlugin::Step()
+void Ape::Ape360ImagePlugin::Step()
 {
 
 }
 
-void Ape360ImagePlugin::Stop()
+void Ape::Ape360ImagePlugin::Stop()
 {
 
 }
 
-void Ape360ImagePlugin::Suspend()
+void Ape::Ape360ImagePlugin::Suspend()
 {
 
 }
 
-void Ape360ImagePlugin::Restart()
+void Ape::Ape360ImagePlugin::Restart()
 {
 
 }

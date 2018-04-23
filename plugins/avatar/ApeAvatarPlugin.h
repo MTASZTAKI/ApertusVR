@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_AVATARPLUGIN_H
 #define APE_AVATARPLUGIN_H
 
@@ -45,57 +44,59 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeAvatarPlugin"
 
-class ApeAvatarPlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeAvatarPlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
-	
-	void eventCallBack(const Ape::Event& event);
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		void eventCallBack(const Ape::Event& event);
 
-	Ape::NodeWeakPtr mLeftHandNode;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	Ape::NodeWeakPtr mRightHandNode;
-	
-public:
-	ApeAvatarPlugin();
+		Ape::NodeWeakPtr mLeftHandNode;
 
-	~ApeAvatarPlugin();
-	
-	void Init() override;
+		Ape::NodeWeakPtr mRightHandNode;
 
-	void Run() override;
+	public:
+		ApeAvatarPlugin();
 
-	void Step() override;
+		~ApeAvatarPlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeAvatarPlugin()
-{
+		void Stop() override;
 
-	return new ApeAvatarPlugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_FUNC void DestroyApeAvatarPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeAvatarPlugin*)plugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeAvatarPlugin()
+	{
+		return new Ape::ApeAvatarPlugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAvatarPlugin, DestroyApeAvatarPlugin);
-	return 0;
+	APE_PLUGIN_FUNC void DestroyApeAvatarPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeAvatarPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAvatarPlugin, DestroyApeAvatarPlugin);
+		return 0;
+	}
 }
 
 #endif

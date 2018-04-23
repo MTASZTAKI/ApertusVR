@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_ENGINEERINGSCENEPLUGIN_H
 #define APE_ENGINEERINGSCENEPLUGIN_H
 
@@ -53,57 +52,59 @@ SOFTWARE.*/
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
 
-
 #define THIS_PLUGINNAME "ApeEngineeringScenePlugin"
 
-class ApeEngineeringScenePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeEngineeringScenePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
-	
-	void eventCallBack(const Ape::Event& event);
-	
-public:
-	ApeEngineeringScenePlugin();
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 
-	~ApeEngineeringScenePlugin();
-	
-	void Init() override;
+		void eventCallBack(const Ape::Event& event);
 
-	void Run() override;
+	public:
+		ApeEngineeringScenePlugin();
 
-	void Step() override;
+		~ApeEngineeringScenePlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeEngineeringScenePlugin()
-{
-	return new ApeEngineeringScenePlugin;
-}
+		void Stop() override;
 
-APE_PLUGIN_FUNC void DestroyApeEngineeringScenePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeEngineeringScenePlugin*)plugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Restart() override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeEngineeringScenePlugin, DestroyApeEngineeringScenePlugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeEngineeringScenePlugin()
+	{
+		return new Ape::ApeEngineeringScenePlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeEngineeringScenePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeEngineeringScenePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeEngineeringScenePlugin, DestroyApeEngineeringScenePlugin);
+		return 0;
+	}
 }
 
 #endif

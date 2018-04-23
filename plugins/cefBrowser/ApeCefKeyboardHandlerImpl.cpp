@@ -45,7 +45,7 @@ bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, c
 {
 	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
 	{
-		LOG(LOG_TYPE_DEBUG, "apeBrowser->setFocusOnEditableField " << event.focus_on_editable_field);
+		LOG_TRACE("apeBrowser->setFocusOnEditableField " << event.focus_on_editable_field);
 		apeBrowser->setFocusOnEditableField(event.focus_on_editable_field);
 	}
 	return false;
@@ -53,6 +53,6 @@ bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, c
 
 bool Ape::CefKeyboardHandlerImpl::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event)
 {
-	LOG(LOG_TYPE_DEBUG, "event.focus_on_editable_field: " << event.focus_on_editable_field);
+	LOG_TRACE("event.focus_on_editable_field: " << event.focus_on_editable_field);
 	return false;
 }

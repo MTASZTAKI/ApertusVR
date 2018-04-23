@@ -110,12 +110,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateAssimpAssetLoaderPlugin()
 	{
-		return new AssimpAssetLoaderPlugin;
+		return new Ape::AssimpAssetLoaderPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyAssimpAssetLoaderPlugin(Ape::IPlugin *plugin)
 	{
-		delete (AssimpAssetLoaderPlugin*)plugin;
+		delete (Ape::AssimpAssetLoaderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -162,12 +162,12 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()
 	{
-		return new KinectPlugin;
+		return new Ape::KinectPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyKinectPlugin(Ape::IPlugin *plugin)
 	{
-		delete (KinectPlugin*)plugin;
+		delete (Ape::KinectPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

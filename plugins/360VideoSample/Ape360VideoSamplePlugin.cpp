@@ -1,20 +1,20 @@
 #include <iostream>
 #include "Ape360VideoSamplePlugin.h"
 
-Ape360VideoSamplePlugin::Ape360VideoSamplePlugin()
+Ape::Ape360VideoSamplePlugin::Ape360VideoSamplePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpScene = Ape::IScene::getSingletonPtr();
 	LOG_FUNC_LEAVE();
 }
 
-Ape360VideoSamplePlugin::~Ape360VideoSamplePlugin()
+Ape::Ape360VideoSamplePlugin::~Ape360VideoSamplePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape360VideoSamplePlugin::Init()
+void Ape::Ape360VideoSamplePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto browserNode = mpScene->createNode("browserNode").lock())
@@ -36,27 +36,27 @@ void Ape360VideoSamplePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void Ape360VideoSamplePlugin::Run()
+void Ape::Ape360VideoSamplePlugin::Run()
 {
 
 }
 
-void Ape360VideoSamplePlugin::Step()
+void Ape::Ape360VideoSamplePlugin::Step()
 {
 
 }
 
-void Ape360VideoSamplePlugin::Stop()
+void Ape::Ape360VideoSamplePlugin::Stop()
 {
 
 }
 
-void Ape360VideoSamplePlugin::Suspend()
+void Ape::Ape360VideoSamplePlugin::Suspend()
 {
 
 }
 
-void Ape360VideoSamplePlugin::Restart()
+void Ape::Ape360VideoSamplePlugin::Restart()
 {
 
 }

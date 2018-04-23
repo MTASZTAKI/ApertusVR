@@ -61,60 +61,63 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
-class ApeRobotCalibrationPlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeRobotCalibrationPlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
-	
-	void eventCallBack(const Ape::Event& event);
-	
-	Ape::NodeWeakPtr mDemoObjectNode;
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 
-	Ape::PointCloudWeakPtr mPointCloud;
+		void eventCallBack(const Ape::Event& event);
 
-	int mPointCloudSize;
+		Ape::NodeWeakPtr mDemoObjectNode;
 
-public:
-	ApeRobotCalibrationPlugin();
+		Ape::PointCloudWeakPtr mPointCloud;
 
-	~ApeRobotCalibrationPlugin();
-	
-	void Init() override;
+		int mPointCloudSize;
 
-	void Run() override;
+	public:
+		ApeRobotCalibrationPlugin();
 
-	void Step() override;
+		~ApeRobotCalibrationPlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotCalibrationPlugin()
-{
-	return new ApeRobotCalibrationPlugin;
-}
+		void Stop() override;
 
-APE_PLUGIN_FUNC void DestroyApeRobotCalibrationPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeRobotCalibrationPlugin*)plugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Restart() override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotCalibrationPlugin, DestroyApeRobotCalibrationPlugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotCalibrationPlugin()
+	{
+		return new Ape::ApeRobotCalibrationPlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeRobotCalibrationPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeRobotCalibrationPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotCalibrationPlugin, DestroyApeRobotCalibrationPlugin);
+		return 0;
+	}
 }
 
 #endif

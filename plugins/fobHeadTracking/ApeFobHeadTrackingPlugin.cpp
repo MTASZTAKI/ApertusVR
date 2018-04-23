@@ -6,7 +6,7 @@
 #include "rapidjson/filewritestream.h"
 #include "ApeFobHeadTrackingPlugin.h"
 
-ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
+Ape::ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -31,13 +31,13 @@ ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
+Ape::ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr)
+void Ape::ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr)
 {
 	LOG_FUNC_ENTER();
 	LOG(LOG_TYPE_DEBUG, "cameraName: " << cameraName);
@@ -59,7 +59,7 @@ void ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape
 	LOG_FUNC_LEAVE();
 }
 
-void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
@@ -71,7 +71,7 @@ void ApeFobHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeFobHeadTrackingPlugin::Init()
+void Ape::ApeFobHeadTrackingPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -306,7 +306,7 @@ void ApeFobHeadTrackingPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
+Ape::Matrix4 Ape::ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
 {
 	float x = 2.0f * mNearClip / (displayDistanceRight - displayDistanceLeft);
 	float y = 2.0f * mNearClip / (displayDistanceTop - displayDistanceBottom);
@@ -320,7 +320,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistan
 	return m;
 }
 
-Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
+Ape::Matrix4 Ape::ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 
@@ -350,7 +350,7 @@ Ape::Matrix4 ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTra
 	return cameraProjection;
 }
 
-void ApeFobHeadTrackingPlugin::Run()
+void Ape::ApeFobHeadTrackingPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	int cameraCount = 0;
@@ -408,22 +408,22 @@ void ApeFobHeadTrackingPlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeFobHeadTrackingPlugin::Step()
+void Ape::ApeFobHeadTrackingPlugin::Step()
 {
 
 }
 
-void ApeFobHeadTrackingPlugin::Stop()
+void Ape::ApeFobHeadTrackingPlugin::Stop()
 {
 
 }
 
-void ApeFobHeadTrackingPlugin::Suspend()
+void Ape::ApeFobHeadTrackingPlugin::Suspend()
 {
 
 }
 
-void ApeFobHeadTrackingPlugin::Restart()
+void Ape::ApeFobHeadTrackingPlugin::Restart()
 {
 
 }

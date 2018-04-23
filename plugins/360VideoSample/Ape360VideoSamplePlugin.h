@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_360VIDEOSAMPLEPLUGIN_H
 #define APE_360VIDEOSAMPLEPLUGIN_H
 
@@ -38,47 +37,49 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "Ape360VideoSamplePlugin"
 
-class Ape360VideoSamplePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IScene* mpScene;
-	
-public:
-	Ape360VideoSamplePlugin();
+	class Ape360VideoSamplePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IScene* mpScene;
 
-	~Ape360VideoSamplePlugin();
-	
-	void Init() override;
+	public:
+		Ape360VideoSamplePlugin();
 
-	void Run() override;
+		~Ape360VideoSamplePlugin();
 
-	void Step() override;
+		void Init() override;
 
-	void Stop() override;
+		void Run() override;
 
-	void Suspend() override;
+		void Step() override;
 
-	void Restart() override;
-};
+		void Stop() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360VideoSamplePlugin()
-{
+		void Suspend() override;
 
-	return new Ape360VideoSamplePlugin;
-}
+		void Restart() override;
+	};
 
-APE_PLUGIN_FUNC void DestroyApe360VideoSamplePlugin(Ape::IPlugin *plugin)
-{
-	delete (Ape360VideoSamplePlugin*)plugin;
-}
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360VideoSamplePlugin()
+	{
+		return new Ape::Ape360VideoSamplePlugin;
+	}
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	APE_PLUGIN_FUNC void DestroyApe360VideoSamplePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::Ape360VideoSamplePlugin*)plugin;
+	}
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360VideoSamplePlugin, DestroyApe360VideoSamplePlugin);
-	return 0;
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360VideoSamplePlugin, DestroyApe360VideoSamplePlugin);
+		return 0;
+	}
 }
 
 #endif

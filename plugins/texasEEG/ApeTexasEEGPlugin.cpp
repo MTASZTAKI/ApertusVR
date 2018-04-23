@@ -2,7 +2,7 @@
 #include <math.h> 
 #include "ApeTexasEEGPlugin.h"
 
-ApeTexasEEGPlugin::ApeTexasEEGPlugin()
+Ape::ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
@@ -23,18 +23,18 @@ ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
+Ape::ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeTexasEEGPlugin::Init()
+void Ape::ApeTexasEEGPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -87,7 +87,7 @@ void ApeTexasEEGPlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTexasEEGPlugin::moveUserNodeByKeyBoard()
+void Ape::ApeTexasEEGPlugin::moveUserNodeByKeyBoard()
 {
 	auto userNode = mUserNode.lock();
 	if (userNode)
@@ -119,7 +119,7 @@ void ApeTexasEEGPlugin::moveUserNodeByKeyBoard()
 	}
 }
 
-void ApeTexasEEGPlugin::moveUserNodeByMouse()
+void Ape::ApeTexasEEGPlugin::moveUserNodeByMouse()
 {
 	if (auto userNode = mUserNode.lock())
 	{
@@ -134,7 +134,7 @@ void ApeTexasEEGPlugin::moveUserNodeByMouse()
 	}
 }
 
-void ApeTexasEEGPlugin::Run()
+void Ape::ApeTexasEEGPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -151,39 +151,39 @@ void ApeTexasEEGPlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeTexasEEGPlugin::Step()
+void Ape::ApeTexasEEGPlugin::Step()
 {
 
 }
 
-void ApeTexasEEGPlugin::Stop()
+void Ape::ApeTexasEEGPlugin::Stop()
 {
 
 }
 
-void ApeTexasEEGPlugin::Suspend()
+void Ape::ApeTexasEEGPlugin::Suspend()
 {
 
 }
 
-void ApeTexasEEGPlugin::Restart()
+void Ape::ApeTexasEEGPlugin::Restart()
 {
 
 }
 
-bool ApeTexasEEGPlugin::keyPressed(const OIS::KeyEvent & e)
+bool Ape::ApeTexasEEGPlugin::keyPressed(const OIS::KeyEvent & e)
 {
 	mKeyCodeMap[e.key] = true;
 	return true;
 }
 
-bool ApeTexasEEGPlugin::keyReleased(const OIS::KeyEvent & e)
+bool Ape::ApeTexasEEGPlugin::keyReleased(const OIS::KeyEvent & e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
+bool Ape::ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
 {
 	/*mMouseMoveRelativeX = 0;
 	if (e.state.X.rel > 0)
@@ -202,13 +202,13 @@ bool ApeTexasEEGPlugin::mouseMoved(const OIS::MouseEvent & e)
 	return true;
 }
 
-bool ApeTexasEEGPlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+bool Ape::ApeTexasEEGPlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
 	mIsSwim = true;
 	return true;
 }
 
-bool ApeTexasEEGPlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+bool Ape::ApeTexasEEGPlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 {
 	mIsSwim = false;
 	return true;

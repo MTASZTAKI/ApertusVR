@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeIndustry40Plugin.h"
 
-ApeIndustry40Plugin::ApeIndustry40Plugin()
+Ape::ApeIndustry40Plugin::ApeIndustry40Plugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -14,18 +14,18 @@ ApeIndustry40Plugin::ApeIndustry40Plugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeIndustry40Plugin::~ApeIndustry40Plugin()
+Ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
 	
 }
 
-void ApeIndustry40Plugin::Init()
+void Ape::ApeIndustry40Plugin::Init()
 {
 	LOG_FUNC_ENTER();
 
@@ -86,7 +86,7 @@ void ApeIndustry40Plugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeIndustry40Plugin::Run()
+void Ape::ApeIndustry40Plugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -135,22 +135,22 @@ void ApeIndustry40Plugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeIndustry40Plugin::Step()
+void Ape::ApeIndustry40Plugin::Step()
 {
 
 }
 
-void ApeIndustry40Plugin::Stop()
+void Ape::ApeIndustry40Plugin::Stop()
 {
 
 }
 
-void ApeIndustry40Plugin::Suspend()
+void Ape::ApeIndustry40Plugin::Suspend()
 {
 
 }
 
-void ApeIndustry40Plugin::Restart()
+void Ape::ApeIndustry40Plugin::Restart()
 {
 
 }

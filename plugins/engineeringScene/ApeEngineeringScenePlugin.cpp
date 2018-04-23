@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApeEngineeringScenePlugin.h"
 
-ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
+Ape::ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -12,18 +12,18 @@ ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
 	LOG_FUNC_LEAVE();
 }
 
-ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
+Ape::ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeEngineeringScenePlugin::Init()
+void Ape::ApeEngineeringScenePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
@@ -178,7 +178,7 @@ void ApeEngineeringScenePlugin::Init()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::Run()
+void Ape::ApeEngineeringScenePlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	while (true)
@@ -189,22 +189,22 @@ void ApeEngineeringScenePlugin::Run()
 	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::Step()
+void Ape::ApeEngineeringScenePlugin::Step()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Stop()
+void Ape::ApeEngineeringScenePlugin::Stop()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Suspend()
+void Ape::ApeEngineeringScenePlugin::Suspend()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Restart()
+void Ape::ApeEngineeringScenePlugin::Restart()
 {
 
 }

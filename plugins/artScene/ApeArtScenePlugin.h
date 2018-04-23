@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_ARTSCENEPLUGIN_H
 #define APE_ARTSCENEPLUGIN_H
 
@@ -52,52 +51,55 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeArtScenePlugin"
 
-class ApeArtScenePlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeArtScenePlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
-	
-	void eventCallBack(const Ape::Event& event);
-	
-public:
-	ApeArtScenePlugin();
+		Ape::ISystemConfig* mpSystemConfig;
 
-	~ApeArtScenePlugin();
-	
-	void Init() override;
+		void eventCallBack(const Ape::Event& event);
 
-	void Run() override;
+	public:
+		ApeArtScenePlugin();
 
-	void Step() override;
+		~ApeArtScenePlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
-};
+		void Step() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeArtScenePlugin()
-{
-	return new ApeArtScenePlugin;
-}
+		void Stop() override;
 
-APE_PLUGIN_FUNC void DestroyApeArtScenePlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeArtScenePlugin*)plugin;
-}
+		void Suspend() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Restart() override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeArtScenePlugin, DestroyApeArtScenePlugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeArtScenePlugin()
+	{
+		return new Ape::ApeArtScenePlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeArtScenePlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeArtScenePlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeArtScenePlugin, DestroyApeArtScenePlugin);
+		return 0;
+	}
 }
 
 #endif
