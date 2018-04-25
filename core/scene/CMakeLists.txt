@@ -97,6 +97,7 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
 	${PROJECT_SOURCE_DIR}/core/eventManager
+	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAKNET_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${RAPIDJSON_INCLUDE_DIR}
