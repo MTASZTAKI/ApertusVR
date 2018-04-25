@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -66,8 +66,6 @@ namespace Ape
 		void setLevel(int level);
 
 		void registerStream(std::ostream& stream);
-
-		std::ostream& getStream(int level = LOG_TYPE_DEBUG);
 
 		void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG);
 	};

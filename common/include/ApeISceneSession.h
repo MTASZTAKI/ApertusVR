@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,20 @@ SOFTWARE.*/
 #define APE_ISCENESESSION_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SCENE_DLL
-#define APE_SCENE_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_SCENE_DLL
+		#define APE_SCENE_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_SCENE_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_SCENE_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_SCENE_DLL_EXPORT 
+	#define APE_SCENE_DLL_EXPORT
 #endif
 
 #include <functional>
 #include <map>
 #include <vector>
 #include "ApeSingleton.h"
-#include "ApeSystem.h" 
+#include "ApeSystem.h"
 
 namespace Ape
 {
@@ -53,7 +53,7 @@ namespace Ape
 			INVALID
 		};
 	}
-	
+
 	class APE_SCENE_DLL_EXPORT ISceneSession : public Singleton<ISceneSession>
 	{
 	protected:

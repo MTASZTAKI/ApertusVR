@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -54,32 +54,6 @@ void Ape::LogManagerImpl::registerStream(std::ostream& stream)
 	mStream = &stream;
 }
 
-std::ostream& Ape::LogManagerImpl::getStream(int level)
-{
-	std::stringstream ssLevel;
-	int levelToCheck = mLevel;
-	if (mLevel != level)
-		levelToCheck = level;
-
-	switch (levelToCheck)
-	{
-		case LOG_TYPE_INFO:
-			ssLevel << COLOR_LIGHT_GREEN << "INFO: " << COLOR_TERM;
-			break;
-		case LOG_TYPE_DEBUG:
-			ssLevel << COLOR_LIGHT_BLUE << "DEBUG: " << COLOR_TERM;
-			break;
-		case LOG_TYPE_WARNING:
-			ssLevel << COLOR_LIGHT_YELLOW << "WARNING: " << COLOR_TERM;
-			break;
-		case LOG_TYPE_ERROR:
-			ssLevel << COLOR_LIGHT_RED << "ERROR: " << COLOR_TERM;
-			break;
-	}
-
-	return *mStream << ssLevel.str();
-}
-
 void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
 {
 	std::lock_guard<std::mutex> guard(g_pages_mutex);
@@ -92,19 +66,19 @@ void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
 	switch (levelToCheck)
 	{
 	case LOG_TYPE_INFO:
-		ssOut << COLOR_LIGHT_GREEN << "INFO: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(5) << " ";
 		break;
 	case LOG_TYPE_DEBUG:
-		ssOut << COLOR_LIGHT_BLUE << "DEBUG: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	case LOG_TYPE_TRACE:
-		ssOut << COLOR_LIGHT_CYAN << "TRACE: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	case LOG_TYPE_WARNING:
-		ssOut << COLOR_LIGHT_YELLOW << "WARNING: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(2) << " ";
 		break;
 	case LOG_TYPE_ERROR:
-		ssOut << COLOR_LIGHT_RED << "ERROR: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	}
 

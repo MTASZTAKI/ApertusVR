@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,12 @@ SOFTWARE.*/
 #ifndef APE_ILIGHT_H
 #define APE_ILIGHT_H
 
-#include "ApeEntity.h"
-#include "ApeVector3.h"
 #include "ApeColor.h"
 #include "ApeDegree.h"
-#include "ApeRadian.h"
+#include "ApeEntity.h"
 #include "ApeINode.h"
+#include "ApeRadian.h"
+#include "ApeVector3.h"
 
 namespace Ape
 {
@@ -42,8 +42,8 @@ namespace Ape
 			INVALID
 		};
 	}
-	
-	struct LightSpotRange 
+
+	struct LightSpotRange
 	{
 		Degree innerAngle;
 		Degree outerAngle;
@@ -51,16 +51,16 @@ namespace Ape
 
 		LightSpotRange() : innerAngle(Degree()), outerAngle(Degree()), falloff(0.0f)
 		{}
-		
+
 		LightSpotRange(Degree innerAngleDeg, Degree outerAngleDeg, float falloff) :
 			innerAngle(innerAngleDeg), outerAngle(outerAngleDeg), falloff(falloff)
 		{}
-		
+
 		LightSpotRange(Radian innerAngleRad, Radian outerAngleRad, float falloff) :
 			innerAngle(innerAngleRad.toDegree()), outerAngle(outerAngleRad.toDegree()), falloff(falloff)
 		{}
 	};
-	
+
 	struct LightAttenuation
 	{
 		float range;
@@ -70,7 +70,7 @@ namespace Ape
 
 		LightAttenuation() : range(0.0f), constant(0.0f), linear(0.0f), quadratic(0.0f)
 		{}
-		
+
 		LightAttenuation(float _range, float _constant, float _linear, float _quadratic) :
 			range(_range), constant(_constant), linear(_linear), quadratic(_quadratic)
 		{}
@@ -79,10 +79,10 @@ namespace Ape
 	class ILight : public Entity
 	{
 	protected:
-	    ILight(std::string name) : Entity(name, Entity::LIGHT) {}
-		
+		ILight(std::string name) : Entity(name, Entity::LIGHT) {}
+
 		virtual ~ILight() {};
-		
+
 	public:
 		virtual Light::Type getLightType() = 0;
 

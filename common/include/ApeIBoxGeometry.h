@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryBoxParameters
 	{
 		Ape::Vector3 dimensions;
@@ -41,8 +41,7 @@ namespace Ape
 			this->dimensions = Ape::Vector3();
 		}
 
-		GeometryBoxParameters(
-			Ape::Vector3 dimensions)
+		GeometryBoxParameters(Ape::Vector3 dimensions)
 		{
 			this->dimensions = dimensions;
 		}
@@ -55,9 +54,7 @@ namespace Ape
 		std::string toString() const
 		{
 			std::ostringstream buff;
-
 			buff << "Dimensions(" << dimensions.toString() << ")" << std::endl;
-
 			return buff.str();
 		}
 	};
@@ -66,12 +63,12 @@ namespace Ape
 	{
 	protected:
 		IBoxGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_BOX) {}
-		
+
 		virtual ~IBoxGeometry() {};
-		
+
 	public:
 		virtual void setParameters(Ape::Vector3 dimensions) = 0;
-		
+
 		virtual Ape::GeometryBoxParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

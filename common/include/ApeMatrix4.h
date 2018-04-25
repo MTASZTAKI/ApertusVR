@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +23,21 @@ SOFTWARE.*/
 #ifndef APE_MATRIX4_H
 #define APE_MATRIX4_H
 
-#include <vector>
+#include <assert.h>
 #include <cmath>
 #include <sstream>
-#include <assert.h>
+#include <vector>
+#include "ApeDegree.h"
+#include "ApeMatrix3.h"
+#include "ApeQuaternion.h"
+#include "ApeRadian.h"
 #include "ApeVector3.h"
 #include "ApeVector4.h"
-#include "ApeDegree.h"
-#include "ApeRadian.h"
-#include "ApeQuaternion.h"
-#include "ApeMatrix3.h"
 
 namespace Ape
 {
 	struct Matrix4
-    {
+	{
 		float m[4][4];
 
 		Matrix4()
@@ -61,10 +61,10 @@ namespace Ape
 		}
 
 		Matrix4(
-			float m00, float m01, float m02, float m03,
-			float m10, float m11, float m12, float m13,
-			float m20, float m21, float m22, float m23,
-			float m30, float m31, float m32, float m33 )
+		    float m00, float m01, float m02, float m03,
+		    float m10, float m11, float m12, float m13,
+		    float m20, float m21, float m22, float m23,
+		    float m30, float m31, float m32, float m33)
 		{
 			m[0][0] = m00;
 			m[0][1] = m01;
@@ -104,19 +104,19 @@ namespace Ape
 			std::swap(m[3][3], other.m[3][3]);
 		}
 
-		float* operator [] ( size_t iRow )
+		float* operator [](size_t iRow)
 		{
-			assert( iRow < 4 );
+			assert(iRow < 4);
 			return m[iRow];
 		}
 
-		const float *operator [] ( size_t iRow ) const
+		const float* operator [](size_t iRow) const
 		{
-			assert( iRow < 4 );
+			assert(iRow < 4);
 			return m[iRow];
 		}
 
-		Matrix4 concatenate(const Matrix4 &m2) const
+		Matrix4 concatenate(const Matrix4& m2) const
 		{
 			Matrix4 r;
 			r.m[0][0] = m[0][0] * m2.m[0][0] + m[0][1] * m2.m[1][0] + m[0][2] * m2.m[2][0] + m[0][3] * m2.m[3][0];
@@ -142,35 +142,35 @@ namespace Ape
 			return r;
 		}
 
-		Matrix4 operator * ( const Matrix4 &m2 ) const
+		Matrix4 operator * (const Matrix4& m2) const
 		{
-			return concatenate( m2 );
+			return concatenate(m2);
 		}
 
-		Ape::Vector3 operator * ( const Ape::Vector3 &v ) const
+		Ape::Vector3 operator * (const Ape::Vector3& v) const
 		{
 			Ape::Vector3 r;
 
-			float fInvW = 1.0f / ( m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] );
+			float fInvW = 1.0f / (m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3]);
 
-			r.x = ( m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] ) * fInvW;
-			r.y = ( m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] ) * fInvW;
-			r.z = ( m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] ) * fInvW;
+			r.x = (m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3]) * fInvW;
+			r.y = (m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3]) * fInvW;
+			r.z = (m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3]) * fInvW;
 
 			return r;
 		}
-		
+
 		Ape::Vector4 operator * (const Ape::Vector4& v) const
 		{
 			return Ape::Vector4(
-				m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w, 
-				m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w,
-				m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w,
-				m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w
-				);
+			           m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w,
+			           m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w,
+			           m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w,
+			           m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w
+			       );
 		}
 
-		Matrix4 operator + ( const Matrix4 &m2 ) const
+		Matrix4 operator + (const Matrix4& m2) const
 		{
 			Matrix4 r;
 
@@ -197,7 +197,7 @@ namespace Ape
 			return r;
 		}
 
-		Matrix4 operator - ( const Matrix4 &m2 ) const
+		Matrix4 operator - (const Matrix4& m2) const
 		{
 			Matrix4 r;
 			r.m[0][0] = m[0][0] - m2.m[0][0];
@@ -223,24 +223,24 @@ namespace Ape
 			return r;
 		}
 
-		bool operator == ( const Matrix4& m2 ) const
+		bool operator == (const Matrix4& m2) const
 		{
-			if( 
-				m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
-				m[1][0] != m2.m[1][0] || m[1][1] != m2.m[1][1] || m[1][2] != m2.m[1][2] || m[1][3] != m2.m[1][3] ||
-				m[2][0] != m2.m[2][0] || m[2][1] != m2.m[2][1] || m[2][2] != m2.m[2][2] || m[2][3] != m2.m[2][3] ||
-				m[3][0] != m2.m[3][0] || m[3][1] != m2.m[3][1] || m[3][2] != m2.m[3][2] || m[3][3] != m2.m[3][3] )
+			if (
+			    m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
+			    m[1][0] != m2.m[1][0] || m[1][1] != m2.m[1][1] || m[1][2] != m2.m[1][2] || m[1][3] != m2.m[1][3] ||
+			    m[2][0] != m2.m[2][0] || m[2][1] != m2.m[2][1] || m[2][2] != m2.m[2][2] || m[2][3] != m2.m[2][3] ||
+			    m[3][0] != m2.m[3][0] || m[3][1] != m2.m[3][1] || m[3][2] != m2.m[3][2] || m[3][3] != m2.m[3][3])
 				return false;
 			return true;
 		}
 
-		bool operator != ( const Matrix4& m2 ) const
+		bool operator != (const Matrix4& m2) const
 		{
-			if( 
-				m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
-				m[1][0] != m2.m[1][0] || m[1][1] != m2.m[1][1] || m[1][2] != m2.m[1][2] || m[1][3] != m2.m[1][3] ||
-				m[2][0] != m2.m[2][0] || m[2][1] != m2.m[2][1] || m[2][2] != m2.m[2][2] || m[2][3] != m2.m[2][3] ||
-				m[3][0] != m2.m[3][0] || m[3][1] != m2.m[3][1] || m[3][2] != m2.m[3][2] || m[3][3] != m2.m[3][3] )
+			if (
+			    m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
+			    m[1][0] != m2.m[1][0] || m[1][1] != m2.m[1][1] || m[1][2] != m2.m[1][2] || m[1][3] != m2.m[1][3] ||
+			    m[2][0] != m2.m[2][0] || m[2][1] != m2.m[2][1] || m[2][2] != m2.m[2][2] || m[2][3] != m2.m[2][3] ||
+			    m[3][0] != m2.m[3][0] || m[3][1] != m2.m[3][1] || m[3][2] != m2.m[3][2] || m[3][3] != m2.m[3][3])
 				return true;
 			return false;
 		}
@@ -248,12 +248,12 @@ namespace Ape
 		Matrix4 transpose(void) const
 		{
 			return Matrix4(m[0][0], m[1][0], m[2][0], m[3][0],
-						   m[0][1], m[1][1], m[2][1], m[3][1],
-						   m[0][2], m[1][2], m[2][2], m[3][2],
-						   m[0][3], m[1][3], m[2][3], m[3][3]);
+			               m[0][1], m[1][1], m[2][1], m[3][1],
+			               m[0][2], m[1][2], m[2][2], m[3][2],
+			               m[0][3], m[1][3], m[2][3], m[3][3]);
 		}
 
-		void makeTransform( const Ape::Vector3& scale, const Ape::Quaternion& rotation, const Ape::Vector3& translate )
+		void makeTransform(const Ape::Vector3& scale, const Ape::Quaternion& rotation, const Ape::Vector3& translate)
 		{
 			Ape::Matrix3 rot3x3;
 			rotation.ToRotationMatrix(rot3x3);
@@ -278,7 +278,7 @@ namespace Ape
 			m3x3.m[2][2] = m[2][2];
 		}
 
-		inline void decomposition( Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
+		inline void decomposition(Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
 		{
 			Ape::Matrix3 m3x3;
 			extract3x3Matrix(m3x3);
@@ -295,18 +295,18 @@ namespace Ape
 		{
 			std::ostringstream buff;
 			buff << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << ", " << m[0][3] << std::endl
-				 << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << ", " << m[1][3] << std::endl
-				 << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << ", " << m[2][3] << std::endl
-				 << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << std::endl;
+			     << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << ", " << m[1][3] << std::endl
+			     << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << ", " << m[2][3] << std::endl
+			     << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << std::endl;
 			return buff.str();
 		}
-    };
+	};
 	static const Matrix4 MATRIX4IDENTITY
-		(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);
+	(
+	    1.0f, 0.0f, 0.0f, 0.0f,
+	    0.0f, 1.0f, 0.0f, 0.0f,
+	    0.0f, 0.0f, 1.0f, 0.0f,
+	    0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 #endif

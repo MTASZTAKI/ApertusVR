@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,17 +31,16 @@ SOFTWARE.*/
 #include "ApeMaterial.h"
 
 namespace Ape
-{		
+{
 	class SubGeometry : public Entity
 	{
 	protected:
-		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType)
-			, mParentGeometry(Ape::GeometryWeakPtr()){};
-		
+		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType), mParentGeometry(Ape::GeometryWeakPtr()) {};
+
 		virtual ~SubGeometry() {};
 
 		Ape::GeometryWeakPtr mParentGeometry;
-		
+
 	public:
 		Ape::GeometryWeakPtr getParentGeometry() { return mParentGeometry; };
 

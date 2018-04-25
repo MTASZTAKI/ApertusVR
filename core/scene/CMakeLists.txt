@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -97,6 +97,7 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
 	${PROJECT_SOURCE_DIR}/core/eventManager
+	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAKNET_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${RAPIDJSON_INCLUDE_DIR}

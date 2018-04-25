@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include "ApeMaterial.h"
 
 namespace Ape
-{	
+{
 	class IManualMaterial : public Material
 	{
 	protected:
-	    IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
-		
+		IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
+
 		virtual ~IManualMaterial() {};
 
 		Ape::Color mDiffuseColor;
@@ -41,7 +41,7 @@ namespace Ape
 		Ape::Color mAmbientColor;
 
 		Ape::Color mEmissiveColor;
-		
+
 	public:
 		virtual void setDiffuseColor(Color diffuse) = 0;
 

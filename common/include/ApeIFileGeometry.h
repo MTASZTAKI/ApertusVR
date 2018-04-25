@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,16 +28,16 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 
 namespace Ape
-{	
+{
 	class IFileGeometry : public Geometry
 	{
 	protected:
 		IFileGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_FILE) {}
 		virtual ~IFileGeometry() {};
-		
+
 	public:
 		virtual void setFileName (std::string fileName) = 0;
-		
+
 		virtual std::string getFileName () = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ namespace Ape
 	{
 		float x, y;
 
-		Vector2() : 
+		Vector2() :
 			x(0.0f), y(0.0f)
 		{}
 

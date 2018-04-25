@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,15 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
+		{
 			CreatePlugin(*it);
+			LOG(LOG_TYPE_INFO, "Plugin loaded: " << *it);
+		}
+		else
+		{
+			mPluginCount--;
+			LOG(LOG_TYPE_ERROR, "Can not load plugin: " << *it);
+		}
 	}
 }
 

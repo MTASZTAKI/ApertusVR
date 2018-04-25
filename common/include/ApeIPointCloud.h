@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_IPOINTCLOUD_H
 #define APE_IPOINTCLOUD_H
 
-#include <memory>
-#include <string>
-#include <sstream>
-#include <vector>
 #include <array>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 #include "Ape.h"
 #include "ApeEntity.h"
 
@@ -77,11 +77,11 @@ namespace Ape
 			std::ostringstream buff;
 
 			buff << "Points(";
-			for (auto const &item : points) buff << item << ", ";
+			for (auto const& item : points) buff << item << ", ";
 			buff << ")" << std::endl;
 
 			buff << "Colors(";
-			for (auto const &item : colors) buff << item << ", ";
+			for (auto const& item : colors) buff << item << ", ";
 			buff << ")" << std::endl;
 
 			buff << "BoundigSphereRadius(" << boundigSphereRadius << ")" << std::endl;
