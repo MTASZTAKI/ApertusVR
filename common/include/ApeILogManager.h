@@ -117,7 +117,6 @@ namespace Ape
 		virtual std::string getFileNameFromPath(const std::string& path) = 0;
 		virtual void setLevel(int level) = 0;
 		virtual void registerStream(std::ostream& stream) = 0;
-		virtual std::ostream& getStream(int level = LOG_TYPE_DEBUG) = 0;
 		virtual void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG) = 0;
 
 		class APE_LOGMANAGER_DLL_EXPORT ScopedLog

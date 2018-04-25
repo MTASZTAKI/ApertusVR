@@ -67,8 +67,6 @@ namespace Ape
 
 		void registerStream(std::ostream& stream);
 
-		std::ostream& getStream(int level = LOG_TYPE_DEBUG);
-
 		void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG);
 	};
 }
