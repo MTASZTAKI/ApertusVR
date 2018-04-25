@@ -81,14 +81,14 @@ SOFTWARE.*/
 
 #define LOG(LEVEL, SS) \
 	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << __LINE__ << COLOR_TERM \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << std::setfill(' ') << std::setw(5) << __LINE__ << COLOR_TERM \
 			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << __FUNCTION_NAME__ << COLOR_TERM \
 			  << LOG_DELIMITER << SS \
 	); \
 
 #define LOGDEEP(LEVEL, FILENAME, LINENUM, FUNCNAME, SS) \
 	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << LINENUM << COLOR_TERM  \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << std::setfill(' ') << std::setw(5) << LINENUM << COLOR_TERM  \
 			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << FUNCNAME << COLOR_TERM \
 			  << LOG_DELIMITER << SS \
 	); \

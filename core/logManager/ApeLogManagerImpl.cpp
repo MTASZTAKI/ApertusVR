@@ -66,19 +66,19 @@ void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
 	switch (levelToCheck)
 	{
 	case LOG_TYPE_INFO:
-		ssOut << COLOR_LIGHT_GREEN << "INFO: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(5) << " ";
 		break;
 	case LOG_TYPE_DEBUG:
-		ssOut << COLOR_LIGHT_BLUE << "DEBUG: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	case LOG_TYPE_TRACE:
-		ssOut << COLOR_LIGHT_CYAN << "TRACE: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	case LOG_TYPE_WARNING:
-		ssOut << COLOR_LIGHT_YELLOW << "WARNING: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(2) << " ";
 		break;
 	case LOG_TYPE_ERROR:
-		ssOut << COLOR_LIGHT_RED << "ERROR: " << COLOR_TERM;
+		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
 		break;
 	}
 
