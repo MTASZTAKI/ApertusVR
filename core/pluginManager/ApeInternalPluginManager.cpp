@@ -51,6 +51,7 @@ bool Ape::InternalPluginManager::Load(const std::string &name)
 	if (! pi->Load())
 	{
 		delete pi;
+		pi = NULL;
 		return false;
 	}
 	mPlugins.push_back(pi);

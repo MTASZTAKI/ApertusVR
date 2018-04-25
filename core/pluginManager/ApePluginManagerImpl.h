@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 #include "ApeISystemConfig.h"
+#include "ApeILogManager.h"
 
 namespace Ape
 { 
