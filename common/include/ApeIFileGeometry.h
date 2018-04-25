@@ -28,16 +28,16 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 
 namespace Ape
-{	
+{
 	class IFileGeometry : public Geometry
 	{
 	protected:
 		IFileGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_FILE) {}
 		virtual ~IFileGeometry() {};
-		
+
 	public:
 		virtual void setFileName (std::string fileName) = 0;
-		
+
 		virtual std::string getFileName () = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

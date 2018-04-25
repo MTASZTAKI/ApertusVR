@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryTubeParameters
 	{
 		float height;
@@ -44,8 +44,8 @@ namespace Ape
 		}
 
 		GeometryTubeParameters(
-			float height,
-			float tile)
+		    float height,
+		    float tile)
 		{
 			this->height = height;
 			this->tile = tile;
@@ -56,12 +56,12 @@ namespace Ape
 	{
 	protected:
 		ITubeGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_TUBE) {}
-		
+
 		virtual ~ITubeGeometry() {};
-		
+
 	public:
 		virtual void setParameters(float height, float tile) = 0;
-		
+
 		virtual Ape::GeometryTubeParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

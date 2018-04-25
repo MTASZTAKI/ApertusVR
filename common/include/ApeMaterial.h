@@ -20,20 +20,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_MATERIAL_H
 #define APE_MATERIAL_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
-#include "ApeVector2.h"
-#include "ApeEntity.h"
 #include "ApeColor.h"
+#include "ApeEntity.h"
 #include "ApePass.h"
+#include "ApeVector2.h"
 
 namespace Ape
-{	
+{
 	class Material : public Entity
 	{
 	public:
@@ -53,8 +52,8 @@ namespace Ape
 		};
 
 	protected:
-	    Material(std::string name, Entity::Type entityType) : Entity(name,entityType) {}
-		
+		Material(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
+
 		virtual ~Material() {};
 
 		Ape::PassWeakPtr mPass;

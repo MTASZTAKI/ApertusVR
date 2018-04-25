@@ -24,27 +24,27 @@ SOFTWARE.*/
 #define APE_IMAINWINDOW_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_MAINWINDOW_DLL
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_MAINWINDOW_DLL
+		#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_MAINWINDOW_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_MAINWINDOW_DLL_EXPORT 
+	#define APE_MAINWINDOW_DLL_EXPORT
 #endif
 
 #include <string>
 #include "ApeSingleton.h"
 
 namespace Ape
-{	
+{
 	class APE_MAINWINDOW_DLL_EXPORT IMainWindow : public Singleton<IMainWindow>
 	{
 	protected:
 		virtual ~IMainWindow() {};
 
 	public:
-		virtual void* getHandle () = 0;	
+		virtual void* getHandle () = 0;
 
 		virtual unsigned int getWidth() = 0;
 

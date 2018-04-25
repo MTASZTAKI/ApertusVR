@@ -243,7 +243,7 @@ namespace Ape
 			POINT_CLOUD_DELETE,
 			ET_INVALID
 		};
-		
+
 		std::string subjectName;
 
 		Event::Type type;

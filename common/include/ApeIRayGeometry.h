@@ -28,14 +28,14 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 
 namespace Ape
-{	
+{
 	class IRayGeometry : public Geometry
 	{
 	protected:
 		IRayGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_RAY) {}
 
 		virtual ~IRayGeometry() {};
-		
+
 	public:
 		virtual void setIntersectingEnabled(bool enable) = 0;
 

@@ -29,7 +29,6 @@ SOFTWARE.*/
 
 namespace Ape
 {	
-
 	struct GeometryIndexedFaceSetParameters
 	{
 		std::string groupName;

@@ -24,26 +24,26 @@ SOFTWARE.*/
 #define APE_ISCENE_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SCENE_DLL
-#define APE_SCENE_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_SCENE_DLL
+		#define APE_SCENE_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_SCENE_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_SCENE_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_SCENE_DLL_EXPORT 
+	#define APE_SCENE_DLL_EXPORT
 #endif
 
 #include "ApeSingleton.h"
 #include "ApeINode.h"
 #include "ApeEntity.h"
- 
+
 namespace Ape
 {
 	class APE_SCENE_DLL_EXPORT IScene : public Singleton<IScene>
 	{
 	protected:
 		virtual ~IScene() {};
-		
+
 	public:
 		virtual Ape::NodeWeakPtrNameMap getNodes() = 0;
 

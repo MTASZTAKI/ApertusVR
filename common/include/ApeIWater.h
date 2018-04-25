@@ -24,23 +24,23 @@ SOFTWARE.*/
 #define APE_IWATER_H
 
 #include "Ape.h"
-#include "ApeEntity.h"
-#include "ApeVector3.h"
 #include "ApeColor.h"
 #include "ApeDegree.h"
-#include "ApeRadian.h"
+#include "ApeEntity.h"
 #include "ApeINode.h"
 #include "ApeISky.h"
+#include "ApeRadian.h"
+#include "ApeVector3.h"
 
 namespace Ape
 {
 	class IWater : public Entity
 	{
 	protected:
-	    IWater(std::string name) : Entity(name, Entity::WATER) {}
-		
+		IWater(std::string name) : Entity(name, Entity::WATER) {}
+
 		virtual ~IWater() {};
-		
+
 	public:
 		virtual void setSky(Ape::SkyWeakPtr sky) = 0;
 

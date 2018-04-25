@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryCylinderParameters
 	{
 		float radius;
@@ -46,9 +46,9 @@ namespace Ape
 		}
 
 		GeometryCylinderParameters(
-			float radius,
-			float height,
-			float tile)
+		    float radius,
+		    float height,
+		    float tile)
 		{
 			this->radius = radius;
 			this->height = height;
@@ -60,12 +60,12 @@ namespace Ape
 	{
 	protected:
 		ICylinderGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CYLINDER) {}
-		
+
 		virtual ~ICylinderGeometry() {};
-		
+
 	public:
 		virtual void setParameters(float radius, float height, float tile) = 0;
-		
+
 		virtual Ape::GeometryCylinderParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

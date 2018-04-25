@@ -20,12 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_PLUGINAPI_H
 #define APE_PLUGINAPI_H
 
-#include "ApePluginDefines.h"
 #include "ApeIPlugin.h"
+#include "ApePluginDefines.h"
 
 #define APE_PLUGIN_API_VERSION  1
 
@@ -36,23 +35,23 @@ SOFTWARE.*/
 #define APE_PLUGIN_ALLOC() \
 	const int ApePluginVersion = APE_PLUGIN_API_VERSION; \
 	APE_PLUGIN_FUNC int ApePluginInit()
-	
+
 #define APE_PLUGIN_FREE() \
 	APE_PLUGIN_FUNC int ApePluginFree()
-	
+
 #define APE_PLUGIN_DISPLAY_NAME(name) \
 	APE_PLUGIN_API const char * ApePluginDisplayName = name
-	
+
 #define PLUGIN_MIN_VERSION(version) \
 	APE_PLUGIN_API const char * ApePluginMinVersion = version
-	
+
 #define PLUGIN_MAX_VERSION(version) \
 	APE_PLUGIN_API const char * ApePluginMaxVersion = version
-	
-typedef Ape::IPlugin *(*ApePluginAllocFunc)();
 
-typedef void (*ApePluginFreeFunc)(Ape::IPlugin *);
+typedef Ape::IPlugin* (*ApePluginAllocFunc)();
 
-APE_PLUGIN_INTERNAL_FUNC void ApeRegisterPlugin(const char *type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb);
+typedef void (*ApePluginFreeFunc)(Ape::IPlugin*);
+
+APE_PLUGIN_INTERNAL_FUNC void ApeRegisterPlugin(const char* type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb);
 
 #endif

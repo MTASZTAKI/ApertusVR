@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryPlaneParameters
 	{
 		Ape::Vector2 numSeg;
@@ -46,9 +46,9 @@ namespace Ape
 		}
 
 		GeometryPlaneParameters(
-			Ape::Vector2 numSeg,
-			Ape::Vector2 size,
-			Ape::Vector2 tile)
+		    Ape::Vector2 numSeg,
+		    Ape::Vector2 size,
+		    Ape::Vector2 tile)
 		{
 			this->numSeg = numSeg;
 			this->size = size;
@@ -60,12 +60,12 @@ namespace Ape
 	{
 	protected:
 		IPlaneGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_PLANE) {}
-		
+
 		virtual ~IPlaneGeometry() {};
-		
+
 	public:
 		virtual void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile) = 0;
-		
+
 		virtual Ape::GeometryPlaneParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

@@ -32,16 +32,16 @@ namespace Ape
 	struct Euler
 	{
 		Ape::Radian m_yaw;
-		
-		Ape::Radian m_pitch; 
-		
-		Ape::Radian m_roll;  
-		
-		Ape::Quaternion m_cachedQuaternion; 
-		
-		bool m_changed; 
 
-		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)):m_yaw(y),m_pitch(p),m_roll(r),m_changed(true) 
+		Ape::Radian m_pitch;
+
+		Ape::Radian m_roll;
+
+		Ape::Quaternion m_cachedQuaternion;
+
+		bool m_changed;
+
+		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)): m_yaw(y), m_pitch(p), m_roll(r), m_changed(true)
 		{
 		}
 
@@ -52,45 +52,45 @@ namespace Ape
 			m_roll = std::atan2(2.0 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
 		}
 
-		inline Ape::Radian getYaw() 
+		inline Ape::Radian getYaw()
 		{
 			return m_yaw;
 		}
 
-		inline Ape::Radian getPitch() 
+		inline Ape::Radian getPitch()
 		{
 			return m_pitch;
 		}
 
-		inline Ape::Radian getRoll() 
+		inline Ape::Radian getRoll()
 		{
 			return m_roll;
 		}
 
-		inline Euler &setYaw(Ape::Radian y) 
+		inline Euler& setYaw(Ape::Radian y)
 		{
-			m_yaw = y; 
-			m_changed = true; 
+			m_yaw = y;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Euler &setPitch(Ape::Radian p) 
+		inline Euler& setPitch(Ape::Radian p)
 		{
-			m_pitch = p; 
-			m_changed = true; 
+			m_pitch = p;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Euler &setRoll(Ape::Radian r) 
+		inline Euler& setRoll(Ape::Radian r)
 		{
-			m_roll = r; 
-			m_changed = true; 
+			m_roll = r;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Ape::Quaternion toQuaternion() 
+		inline Ape::Quaternion toQuaternion()
 		{
-			if(m_changed) 
+			if (m_changed)
 			{
 				double c1 = std::cos(m_yaw.radian / 2.0f);
 				double s1 = std::sin(m_yaw.radian / 2.0f);
@@ -115,11 +115,11 @@ namespace Ape
 			return toQuaternion();
 		}
 
-		inline friend std::ostream &operator<<(std::ostream &o, const Euler &e)
+		inline friend std::ostream& operator<<(std::ostream& o, const Euler& e)
 		{
 			o << "<Y:" << e.m_yaw.toDegree() << "�, P:" << e.m_pitch.toDegree() << "�, R:" << e.m_roll.toDegree() << "�>";
 			return o;
-		}       
+		}
 	};
 }
 

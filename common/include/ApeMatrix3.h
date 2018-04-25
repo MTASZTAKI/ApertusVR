@@ -23,14 +23,14 @@ SOFTWARE.*/
 #ifndef APE_MATRIX3_H
 #define APE_MATRIX3_H
 
-#include <vector>
+#include <assert.h>
 #include <cmath>
 #include <sstream>
-#include <assert.h>
-#include "ApeVector3.h"
-#include "ApeVector4.h"
+#include <vector>
 #include "ApeDegree.h"
 #include "ApeRadian.h"
+#include "ApeVector3.h"
+#include "ApeVector4.h"
 
 namespace Ape
 {
@@ -52,9 +52,9 @@ namespace Ape
 		}
 
 		Matrix3(
-			float m00, float m01, float m02,
-			float m10, float m11, float m12,
-			float m20, float m21, float m22)
+		    float m00, float m01, float m02,
+		    float m10, float m11, float m12,
+		    float m20, float m21, float m22)
 		{
 			m[0][0] = m00;
 			m[0][1] = m01;
@@ -80,13 +80,13 @@ namespace Ape
 			std::swap(m[2][2], other.m[2][2]);
 		}
 
-		float* operator [] (size_t iRow)
+		float* operator [](size_t iRow)
 		{
 			assert(iRow < 3);
 			return m[iRow];
 		}
 
-		const float *operator [] (size_t iRow) const
+		const float* operator [](size_t iRow) const
 		{
 			assert(iRow < 3);
 			return m[iRow];
@@ -113,8 +113,7 @@ namespace Ape
 			{
 				for (size_t iCol = 0; iCol < 3; iCol++)
 				{
-					kSum.m[iRow][iCol] = m[iRow][iCol] +
-						rkMatrix.m[iRow][iCol];
+					kSum.m[iRow][iCol] = m[iRow][iCol] + rkMatrix.m[iRow][iCol];
 				}
 			}
 			return kSum;
@@ -127,8 +126,7 @@ namespace Ape
 			{
 				for (size_t iCol = 0; iCol < 3; iCol++)
 				{
-					kDiff.m[iRow][iCol] = m[iRow][iCol] -
-						rkMatrix.m[iRow][iCol];
+					kDiff.m[iRow][iCol] = m[iRow][iCol] - rkMatrix.m[iRow][iCol];
 				}
 			}
 			return kDiff;
@@ -142,9 +140,9 @@ namespace Ape
 				for (size_t iCol = 0; iCol < 3; iCol++)
 				{
 					kProd.m[iRow][iCol] =
-						m[iRow][0] * rkMatrix.m[0][iCol] +
-						m[iRow][1] * rkMatrix.m[1][iCol] +
-						m[iRow][2] * rkMatrix.m[2][iCol];
+					    m[iRow][0] * rkMatrix.m[0][iCol] +
+					    m[iRow][1] * rkMatrix.m[1][iCol] +
+					    m[iRow][2] * rkMatrix.m[2][iCol];
 				}
 			}
 			return kProd;
@@ -167,7 +165,7 @@ namespace Ape
 			for (size_t iRow = 0; iRow < 3; iRow++)
 			{
 				for (size_t iCol = 0; iCol < 3; iCol++)
-					kProd[iRow][iCol] = fScalar*m[iRow][iCol];
+					kProd[iRow][iCol] = fScalar * m[iRow][iCol];
 			}
 			return kProd;
 		}
@@ -186,28 +184,28 @@ namespace Ape
 		bool Inverse(Matrix3& rkInverse, float fTolerance) const
 		{
 			rkInverse[0][0] = m[1][1] * m[2][2] -
-				m[1][2] * m[2][1];
+			                  m[1][2] * m[2][1];
 			rkInverse[0][1] = m[0][2] * m[2][1] -
-				m[0][1] * m[2][2];
+			                  m[0][1] * m[2][2];
 			rkInverse[0][2] = m[0][1] * m[1][2] -
-				m[0][2] * m[1][1];
+			                  m[0][2] * m[1][1];
 			rkInverse[1][0] = m[1][2] * m[2][0] -
-				m[1][0] * m[2][2];
+			                  m[1][0] * m[2][2];
 			rkInverse[1][1] = m[0][0] * m[2][2] -
-				m[0][2] * m[2][0];
+			                  m[0][2] * m[2][0];
 			rkInverse[1][2] = m[0][2] * m[1][0] -
-				m[0][0] * m[1][2];
+			                  m[0][0] * m[1][2];
 			rkInverse[2][0] = m[1][0] * m[2][1] -
-				m[1][1] * m[2][0];
+			                  m[1][1] * m[2][0];
 			rkInverse[2][1] = m[0][1] * m[2][0] -
-				m[0][0] * m[2][1];
+			                  m[0][0] * m[2][1];
 			rkInverse[2][2] = m[0][0] * m[1][1] -
-				m[0][1] * m[1][0];
+			                  m[0][1] * m[1][0];
 
 			float fDet =
-				m[0][0] * rkInverse[0][0] +
-				m[0][1] * rkInverse[1][0] +
-				m[0][2] * rkInverse[2][0];
+			    m[0][0] * rkInverse[0][0] +
+			    m[0][1] * rkInverse[1][0] +
+			    m[0][2] * rkInverse[2][0];
 
 			if (std::abs(fDet) <= fTolerance)
 				return false;
@@ -232,16 +230,16 @@ namespace Ape
 		float Determinant() const
 		{
 			float fCofactor00 = m[1][1] * m[2][2] -
-				m[1][2] * m[2][1];
+			                    m[1][2] * m[2][1];
 			float fCofactor10 = m[1][2] * m[2][0] -
-				m[1][0] * m[2][2];
+			                    m[1][0] * m[2][2];
 			float fCofactor20 = m[1][0] * m[2][1] -
-				m[1][1] * m[2][0];
+			                    m[1][1] * m[2][0];
 
 			float fDet =
-				m[0][0] * fCofactor00 +
-				m[0][1] * fCofactor10 +
-				m[0][2] * fCofactor20;
+			    m[0][0] * fCofactor00 +
+			    m[0][1] * fCofactor10 +
+			    m[0][2] * fCofactor20;
 
 			return fDet;
 		}
@@ -255,9 +253,9 @@ namespace Ape
 			kQ[2][0] = m[2][0] * fInvLength;
 
 			float fDot = kQ[0][0] * m[0][1] + kQ[1][0] * m[1][1] + kQ[2][0] * m[2][1];
-			kQ[0][1] = m[0][1] - fDot*kQ[0][0];
-			kQ[1][1] = m[1][1] - fDot*kQ[1][0];
-			kQ[2][1] = m[2][1] - fDot*kQ[2][0];
+			kQ[0][1] = m[0][1] - fDot * kQ[0][0];
+			kQ[1][1] = m[1][1] - fDot * kQ[1][0];
+			kQ[2][1] = m[2][1] - fDot * kQ[2][0];
 			fInvLength = 1.0 / std::sqrt(kQ[0][1] * kQ[0][1] + kQ[1][1] * kQ[1][1] + kQ[2][1] * kQ[2][1]);
 
 			kQ[0][1] *= fInvLength;
@@ -265,13 +263,13 @@ namespace Ape
 			kQ[2][1] *= fInvLength;
 
 			fDot = kQ[0][0] * m[0][2] + kQ[1][0] * m[1][2] + kQ[2][0] * m[2][2];
-			kQ[0][2] = m[0][2] - fDot*kQ[0][0];
-			kQ[1][2] = m[1][2] - fDot*kQ[1][0];
-			kQ[2][2] = m[2][2] - fDot*kQ[2][0];
+			kQ[0][2] = m[0][2] - fDot * kQ[0][0];
+			kQ[1][2] = m[1][2] - fDot * kQ[1][0];
+			kQ[2][2] = m[2][2] - fDot * kQ[2][0];
 			fDot = kQ[0][1] * m[0][2] + kQ[1][1] * m[1][2] + kQ[2][1] * m[2][2];
-			kQ[0][2] -= fDot*kQ[0][1];
-			kQ[1][2] -= fDot*kQ[1][1];
-			kQ[2][2] -= fDot*kQ[2][1];
+			kQ[0][2] -= fDot * kQ[0][1];
+			kQ[1][2] -= fDot * kQ[1][1];
+			kQ[2][2] -= fDot * kQ[2][1];
 			fInvLength = 1.0 / std::sqrt(kQ[0][2] * kQ[0][2] + kQ[1][2] * kQ[1][2] + kQ[2][2] * kQ[2][2]);
 
 			kQ[0][2] *= fInvLength;
@@ -279,8 +277,8 @@ namespace Ape
 			kQ[2][2] *= fInvLength;
 
 			float fDet = kQ[0][0] * kQ[1][1] * kQ[2][2] + kQ[0][1] * kQ[1][2] * kQ[2][0] +
-				kQ[0][2] * kQ[1][0] * kQ[2][1] - kQ[0][2] * kQ[1][1] * kQ[2][0] -
-				kQ[0][1] * kQ[1][0] * kQ[2][2] - kQ[0][0] * kQ[1][2] * kQ[2][1];
+			             kQ[0][2] * kQ[1][0] * kQ[2][1] - kQ[0][2] * kQ[1][1] * kQ[2][0] -
+			             kQ[0][1] * kQ[1][0] * kQ[2][2] - kQ[0][0] * kQ[1][2] * kQ[2][1];
 
 			if (fDet < 0.0)
 			{

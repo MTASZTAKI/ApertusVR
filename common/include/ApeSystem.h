@@ -24,13 +24,13 @@ SOFTWARE.*/
 #define APE_SYSTEM_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SYSTEM_DLL
-#define APE_SYSTEM_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_SYSTEM_DLL
+		#define APE_SYSTEM_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_SYSTEM_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_SYSTEM_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_SYSTEM_DLL_EXPORT
+	#define APE_SYSTEM_DLL_EXPORT
 #endif
 
 

@@ -23,16 +23,16 @@ SOFTWARE.*/
 #ifndef APE_INODE_H
 #define APE_INODE_H
 
-#include <vector>
-#include <string>
-#include <memory>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
 #include "Ape.h"
-#include "ApeVector3.h"
 #include "ApeQuaternion.h"
+#include "ApeVector3.h"
 
 namespace Ape
-{	
+{
 	namespace Node
 	{
 		enum TransformationSpace
@@ -48,7 +48,7 @@ namespace Ape
 	{
 	protected:
 		virtual ~INode() {};
-		
+
 	public:
 		virtual std::string getName() const = 0;
 

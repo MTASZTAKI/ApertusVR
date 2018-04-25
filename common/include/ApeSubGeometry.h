@@ -31,17 +31,16 @@ SOFTWARE.*/
 #include "ApeMaterial.h"
 
 namespace Ape
-{		
+{
 	class SubGeometry : public Entity
 	{
 	protected:
-		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType)
-			, mParentGeometry(Ape::GeometryWeakPtr()){};
-		
+		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType), mParentGeometry(Ape::GeometryWeakPtr()) {};
+
 		virtual ~SubGeometry() {};
 
 		Ape::GeometryWeakPtr mParentGeometry;
-		
+
 	public:
 		Ape::GeometryWeakPtr getParentGeometry() { return mParentGeometry; };
 

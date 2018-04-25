@@ -20,19 +20,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_IMANUALTEXTURE_H
 #define APE_IMANUALTEXTURE_H
 
 #include <string>
 #include <vector>
 #include "ApeEntity.h"
+#include "ApeICamera.h"
 #include "ApeTexture.h"
 #include "ApeVector2.h"
-#include "ApeICamera.h"
 
 namespace Ape
-{	
+{
 	struct ManualTextureParameters
 	{
 		float height;
@@ -72,7 +71,7 @@ namespace Ape
 		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
 
 		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
-		
+
 		virtual void setBuffer(const void* buffer) = 0;
 
 		virtual const void* getBuffer() = 0;

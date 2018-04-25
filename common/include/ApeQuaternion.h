@@ -23,13 +23,13 @@ SOFTWARE.*/
 #ifndef APE_QUATERNION_H
 #define APE_QUATERNION_H
 
-#include <vector>
 #include <cmath>
 #include <sstream>
-#include "ApeVector3.h"
+#include <vector>
 #include "ApeDegree.h"
-#include "ApeRadian.h"
 #include "ApeMatrix3.h"
+#include "ApeRadian.h"
+#include "ApeVector3.h"
 
 namespace Ape
 {
@@ -37,19 +37,19 @@ namespace Ape
 	{
 		float w, x, y, z;
 
-		Quaternion() : 
+		Quaternion() :
 			w(1.0f), x(0.0f), y(0.0f), z(0.0f)
 		{}
-		
-		Quaternion(float _w, float _x, float _y, float _z) : 
+
+		Quaternion(float _w, float _x, float _y, float _z) :
 			w(_w), x(_x), y(_y), z(_z)
 		{}
-		
+
 		Quaternion(const Ape::Degree& _degRot, const Ape::Vector3& _axRot)
 		{
 			FromAngleAxis(_degRot, _axRot);
 		}
-		
+
 		Quaternion(const Ape::Radian& _radRot, const Ape::Vector3& _axRot)
 		{
 			FromAngleAxis(_radRot, _axRot);
@@ -59,17 +59,17 @@ namespace Ape
 		{
 			FromRotationMatrix(m3x3);
 		}
-		
+
 		Quaternion operator+ (const Quaternion& rkQ) const
 		{
-			return Quaternion(w+rkQ.w,x+rkQ.x,y+rkQ.y,z+rkQ.z);
+			return Quaternion(w + rkQ.w, x + rkQ.x, y + rkQ.y, z + rkQ.z);
 		}
-		
+
 		Quaternion operator- (const Quaternion& rkQ) const
 		{
 			return Quaternion(w - rkQ.w, x - rkQ.x, y - rkQ.y, z - rkQ.z);
 		}
-		
+
 		Quaternion operator- () const
 		{
 			return Quaternion(-w, -x, -y, -z);
@@ -78,12 +78,12 @@ namespace Ape
 		Quaternion operator / (const float fScalar) const
 		{
 			return Quaternion(
-				w / fScalar,
-				x / fScalar,
-				y / fScalar,
-				z / fScalar);
+			           w / fScalar,
+			           x / fScalar,
+			           y / fScalar,
+			           z / fScalar);
 		}
-		
+
 		Ape::Vector3 operator* (const Ape::Vector3& v) const
 		{
 			Ape::Vector3 uv, uuv;
@@ -104,26 +104,26 @@ namespace Ape
 		{
 			return (w > rkQ.w  && x > rkQ.x && y > rkQ.y && z > rkQ.z);
 		}
-		
+
 		Quaternion operator* (const Quaternion& rkQ) const
 		{
 			return Quaternion(
-				w * rkQ.w - x * rkQ.x - y * rkQ.y - z * rkQ.z,
-				w * rkQ.x + x * rkQ.w + y * rkQ.z - z * rkQ.y,
-				w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
-				w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x);
+			           w * rkQ.w - x * rkQ.x - y * rkQ.y - z * rkQ.z,
+			           w * rkQ.x + x * rkQ.w + y * rkQ.z - z * rkQ.y,
+			           w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
+			           w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x);
 		}
-		
+
 		void FromAngleAxis(Ape::Radian _angleRadian, const Ape::Vector3& _axis)
 		{
-			float fHalfAngle ((float)(0.5* _angleRadian.radian));
+			float fHalfAngle((float)(0.5 * _angleRadian.radian));
 			float fSin = std::sin(fHalfAngle);
 			w = std::cos(fHalfAngle);
 			x = fSin * _axis.x;
 			y = fSin * _axis.y;
 			z = fSin * _axis.z;
 		}
-		
+
 		void FromAngleAxis(Ape::Degree _angleDegree, const Ape::Vector3& _axis)
 		{
 			FromAngleAxis(Ape::Radian(_angleDegree.toRadian()), _axis);
@@ -136,12 +136,12 @@ namespace Ape
 
 			if (fTrace > 0.0)
 			{
-				fRoot = std::sqrt(fTrace + 1.0f);  
+				fRoot = std::sqrt(fTrace + 1.0f);
 				w = 0.5f * fRoot;
-				fRoot = 0.5f / fRoot;  
-				x = (kRot[2][1] - kRot[1][2])*fRoot;
-				y = (kRot[0][2] - kRot[2][0])*fRoot;
-				z = (kRot[1][0] - kRot[0][1])*fRoot;
+				fRoot = 0.5f / fRoot;
+				x = (kRot[2][1] - kRot[1][2]) * fRoot;
+				y = (kRot[0][2] - kRot[2][0]) * fRoot;
+				z = (kRot[1][0] - kRot[0][1]) * fRoot;
 			}
 			else
 			{
@@ -158,24 +158,24 @@ namespace Ape
 				float* apkQuat[3] = { &x, &y, &z };
 				*apkQuat[i] = 0.5f * fRoot;
 				fRoot = 0.5f / fRoot;
-				w = (kRot[k][j] - kRot[j][k])*fRoot;
+				w = (kRot[k][j] - kRot[j][k]) * fRoot;
 				*apkQuat[j] = (kRot[j][i] + kRot[i][j]) * fRoot;
 				*apkQuat[k] = (kRot[k][i] + kRot[i][k]) * fRoot;
 			}
 		}
-		
+
 		bool equals(const Ape::Quaternion& _q2, Ape::Radian _tolerance)
 		{
 			float fCos = w * _q2.w + x * _q2.x + y * _q2.y + z * _q2.z;
-			float angle = std::acos(fCos); 
+			float angle = std::acos(fCos);
 			return (abs(angle) <= _tolerance.radian) || abs(angle - ape_PI) <= _tolerance.radian;
 		}
-		
-		float Norm () const
+
+		float Norm() const
 		{
 			return w * w + x * x + y * y + z * z;
 		}
-		
+
 		float normalise()
 		{
 			float len = Norm();
@@ -186,11 +186,11 @@ namespace Ape
 			z = z * factor;
 			return len;
 		}
-		
-		Quaternion Inverse () const
+
+		Quaternion Inverse() const
 		{
 			float fNorm = w * w + x * x + y * y + z * z;
-			if ( fNorm > 0.0 )
+			if (fNorm > 0.0)
 			{
 				float fInvNorm = 1.0f / fNorm;
 				return Quaternion(w * fInvNorm, -x * fInvNorm, -y * fInvNorm, -z * fInvNorm);
@@ -200,21 +200,21 @@ namespace Ape
 				return Quaternion(0, 0, 0, 0);
 			}
 		}
-		
+
 		std::string toString() const
 		{
 			std::ostringstream buff;
 			buff << "Quaternion(" << w << ", " << x << ", " << y << ", " << z << ")";
 			return buff.str();
 		}
-		
+
 		float Dot(const Quaternion& rkQ) const
 		{
 			return w * rkQ.w + x * rkQ.x + y * rkQ.y + z * rkQ.z;
 		}
 
 		static Quaternion Slerp(float fT, const Quaternion& rkP,
-			const Quaternion& rkQ, bool shortestPath)
+		                        const Quaternion& rkQ, bool shortestPath)
 		{
 			float fCos = rkP.Dot(rkQ);
 			Quaternion rkT;
@@ -251,15 +251,15 @@ namespace Ape
 			float fTx = x + x;
 			float fTy = y + y;
 			float fTz = z + z;
-			float fTwx = fTx*w;
-			float fTwy = fTy*w;
-			float fTwz = fTz*w;
-			float fTxx = fTx*x;
-			float fTxy = fTy*x;
-			float fTxz = fTz*x;
-			float fTyy = fTy*y;
-			float fTyz = fTz*y;
-			float fTzz = fTz*z;
+			float fTwx = fTx * w;
+			float fTwy = fTy * w;
+			float fTwz = fTz * w;
+			float fTxx = fTx * x;
+			float fTxy = fTy * x;
+			float fTxz = fTz * x;
+			float fTyy = fTy * y;
+			float fTyz = fTz * y;
+			float fTzz = fTz * z;
 
 			kRot[0][0] = 1.0f - (fTyy + fTzz);
 			kRot[0][1] = fTxy - fTwz;

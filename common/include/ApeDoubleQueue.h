@@ -23,87 +23,92 @@ SOFTWARE.*/
 #ifndef APE_DOUBLEQUEUE_H
 #define APE_DOUBLEQUEUE_H
 
-#include <vector>
+#include <algorithm>
 #include <mutex>
 #include <set>
-#include <algorithm>
+#include <vector>
 
 namespace Ape
 {
 	template<typename T>
-    class DoubleQueue
-    {
+	class DoubleQueue
+	{
 	private:
 		std::vector<T> mPush;
-		
+
 		std::vector<T> mPop;
-		
+
 		std::mutex mPushMutex;
-		
-    public:
-		DoubleQueue() :mPush(std::vector<T>()), mPop(std::vector<T>())
+
+	public:
+		DoubleQueue() : mPush(std::vector<T>()), mPop(std::vector<T>())
 		{
 		}
-		
+
 		~DoubleQueue()
 		{
 			mPush.clear();
 			mPop.clear();
 		}
-        void swap()
+		void swap()
 		{
 			std::lock_guard<std::mutex> lock(mPushMutex);
 			mPush.swap(mPop);
 		}
 
-        bool empty()
+		bool empty()
 		{
 			return emptyPop() && emptyPush();
 		}
 
-        bool emptyPop()
+		bool emptyPop()
 		{
 			return mPop.empty();
 		}
 
-        bool emptyPush()
+		bool emptyPush()
 		{
 			std::lock_guard<std::mutex> lock(mPushMutex);
 			return mPush.empty();
 		}
 
-        T front()
+		T front()
 		{
 			return mPop.empty() ? T() : (*mPop.begin());
 		}
 
-        void push(T elem)
+		void push(T elem)
 		{
 			std::lock_guard<std::mutex> lock(mPushMutex);
-			#ifdef APE_DOUBLEQUEUE_UNIQUE
-				if (std::find(mPush.begin(), mPush.end(), elem) == mPush.end())
-					mPush.push_back(elem);
-			#else
+#ifdef APE_DOUBLEQUEUE_UNIQUE
+			if (std::find(mPush.begin(), mPush.end(), elem) == mPush.end())
+			{
 				mPush.push_back(elem);
-			#endif
+			}
+#else
+			mPush.push_back(elem);
+#endif
 		}
 
-        void pop()
+		void pop()
 		{
-			if (!mPop.empty()) mPop.erase(mPop.begin());
+			if (!mPop.empty())
+			{
+				mPop.erase(mPop.begin());
+			}
 		}
 
-        size_t size()
+		size_t size()
 		{
 			return mPop.size() + mPush.size();
 		}
 
-        size_t sizePop()
+		size_t sizePop()
 		{
 			return mPop.size();
 		}
 
-        size_t sizePush()
+		size_t sizePush()
 		{
 			return mPush.size();
 		}
@@ -114,7 +119,7 @@ namespace Ape
 			mPop = other.mPop;
 			return *this;
 		}
-    };
+	};
 }
 
 #endif

@@ -30,14 +30,14 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 
 namespace Ape
-{	
+{
 	class ITextGeometry : public Geometry
 	{
 	protected:
 		ITextGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_TEXT) {}
-		
+
 		virtual ~ITextGeometry() {};
-		
+
 	public:
 		virtual std::string getCaption() = 0;
 

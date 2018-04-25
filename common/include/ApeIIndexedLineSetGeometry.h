@@ -28,14 +28,13 @@ SOFTWARE.*/
 #include "ApeGeometry.h"
 
 namespace Ape
-{	
-
+{
 	struct GeometryIndexedLineSetParameters
 	{
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
 		Ape::Color color;
-		
+
 		GeometryIndexedLineSetParameters()
 		{
 			this->coordinates = Ape::GeometryCoordinates();
@@ -44,9 +43,9 @@ namespace Ape
 		}
 
 		GeometryIndexedLineSetParameters(
-			Ape::GeometryCoordinates coordinates,
-			Ape::GeometryIndices indices,
-			Ape::Color color)
+		    Ape::GeometryCoordinates coordinates,
+		    Ape::GeometryIndices indices,
+		    Ape::Color color)
 		{
 			this->coordinates = coordinates;
 			this->indices = indices;
@@ -73,11 +72,11 @@ namespace Ape
 			std::ostringstream buff;
 
 			buff << "Coordinates(";
-			for (auto const &item : coordinates) buff << item << ", ";
+			for (auto const& item : coordinates) buff << item << ", ";
 			buff << ")" << std::endl;
 
 			buff << "Indices(";
-			for (auto const &item : indices) buff << item << ", ";
+			for (auto const& item : indices) buff << item << ", ";
 			buff << ")" << std::endl;
 
 			buff << "Color(" << color.toString() << ")" << std::endl;
@@ -85,17 +84,17 @@ namespace Ape
 			return buff.str();
 		}
 	};
-	
+
 	class IIndexedLineSetGeometry : public Geometry
 	{
 	protected:
 		IIndexedLineSetGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_INDEXEDLINESET) {}
 
 		virtual ~IIndexedLineSetGeometry() {};
-		
+
 	public:
 		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) = 0;
-		
+
 		virtual Ape::GeometryIndexedLineSetParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

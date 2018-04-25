@@ -24,18 +24,18 @@ SOFTWARE.*/
 #define APE_IEVENTMANAGER_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_EVENTMANAGER_DLL
-#define APE_EVENTMANAGER_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_EVENTMANAGER_DLL
+		#define APE_EVENTMANAGER_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_EVENTMANAGER_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_EVENTMANAGER_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_EVENTMANAGER_DLL_EXPORT 
+	#define APE_EVENTMANAGER_DLL_EXPORT
 #endif
 
 #include <functional>
-#include "ApeSingleton.h"
 #include "ApeEvent.h"
+#include "ApeSingleton.h"
 
 namespace Ape
 {
@@ -46,7 +46,7 @@ namespace Ape
 
 	public:
 		virtual void connectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback ) = 0;
-		
+
 		virtual void disconnectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback) = 0;
 	};
 }

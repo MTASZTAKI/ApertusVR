@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_H
 #define APE_H
 
-#include <vector>
-#include <string>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace Ape
 {	

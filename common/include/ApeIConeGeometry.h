@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryConeParameters
 	{
 		float radius;
@@ -48,10 +48,10 @@ namespace Ape
 		}
 
 		GeometryConeParameters(
-			float radius,
-			float height,
-			float tile,
-			Ape::Vector2 numSeg)
+		    float radius,
+		    float height,
+		    float tile,
+		    Ape::Vector2 numSeg)
 		{
 			this->radius = radius;
 			this->height = height;
@@ -64,12 +64,12 @@ namespace Ape
 	{
 	protected:
 		IConeGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CONE) {}
-		
+
 		virtual ~IConeGeometry() {};
-		
+
 	public:
 		virtual void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg) = 0;
-		
+
 		virtual Ape::GeometryConeParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

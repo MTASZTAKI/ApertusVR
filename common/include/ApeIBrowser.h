@@ -29,7 +29,7 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	namespace Browser 
+	namespace Browser
 	{
 		enum MouseClick
 		{
@@ -66,10 +66,10 @@ namespace Ape
 	class IBrowser : public Entity
 	{
 	protected:
-	    IBrowser(std::string name) : Entity(name, Entity::BROWSER) {}
-		
+		IBrowser(std::string name) : Entity(name, Entity::BROWSER) {}
+
 		virtual ~IBrowser() {};
-		
+
 	public:
 		virtual void setURL(std::string url) = 0;
 

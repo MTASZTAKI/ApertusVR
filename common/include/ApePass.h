@@ -20,16 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_PASS_H
 #define APE_PASS_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
+#include "ApeColor.h"
 #include "ApeEntity.h"
 #include "ApeTexture.h"
-#include "ApeColor.h"
 #include "ApeTexture.h"
 #include "ApeVector3.h"
 
@@ -67,7 +66,7 @@ namespace Ape
 		};
 	protected:
 		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
-		
+
 		virtual ~Pass() {};
 
 		Ape::Color mDiffuseColor;

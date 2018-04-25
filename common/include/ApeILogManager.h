@@ -24,25 +24,25 @@ SOFTWARE.*/
 #define APE_ILOGMANAGER_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_LOGMANAGER_DLL
-#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_LOGMANAGER_DLL
+		#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_LOGMANAGER_DLL_EXPORT
+	#define APE_LOGMANAGER_DLL_EXPORT
 #endif
 
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <istream>
+#include <map>
+#include <mutex>
 #include <ostream>
 #include <sstream>
-#include <string>
-#include <map>
 #include <stdlib.h>
-#include <mutex>
-#include <iomanip>
+#include <string>
 #include "ApeSingleton.h"
 
 #ifndef __FUNCTION_NAME__
@@ -80,18 +80,18 @@ SOFTWARE.*/
 #define LOG_FUNC_SCOPE() Ape::ILogManager::ScopedLog sl(THIS_PLUGINNAME, __FILE__, __FUNCTION_NAME__, __LINE__, true);
 
 #define LOG(LEVEL, SS) \
-	LOG_WRITE(LEVEL,						COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
-						<< LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << __LINE__ << COLOR_TERM \
-						<< LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << __FUNCTION_NAME__ << COLOR_TERM \
-						<< LOG_DELIMITER << SS \
-			 ); \
+	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << __LINE__ << COLOR_TERM \
+			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << __FUNCTION_NAME__ << COLOR_TERM \
+			  << LOG_DELIMITER << SS \
+	); \
 
 #define LOGDEEP(LEVEL, FILENAME, LINENUM, FUNCNAME, SS) \
-	LOG_WRITE(LEVEL,						COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
-						<< LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << LINENUM << COLOR_TERM  \
-						<< LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << FUNCNAME << COLOR_TERM \
-						<< LOG_DELIMITER << SS \
-			 ); \
+	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN: " << std::setfill(' ') << std::setw(5) << LINENUM << COLOR_TERM  \
+			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << FUNCNAME << COLOR_TERM \
+			  << LOG_DELIMITER << SS \
+	); \
 
 #define LOG_FUNC(LEVEL, SS) LOG(LEVEL, SS);
 

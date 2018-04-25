@@ -24,20 +24,20 @@ SOFTWARE.*/
 #define APE_PLUGINDEFINES_H
 
 #ifdef _WINDLL
-#ifdef BUILDING_APE_INTERNAL_PLUGINMANAGER
-#define APE_PLUGIN_INTERNAL   __declspec(dllexport)
-#define APE_PLUGIN_API __declspec(dllimport)
+	#ifdef BUILDING_APE_INTERNAL_PLUGINMANAGER
+		#define APE_PLUGIN_INTERNAL   __declspec(dllexport)
+		#define APE_PLUGIN_API __declspec(dllimport)
+	#else
+		#define APE_PLUGIN_INTERNAL  __declspec(dllimport)
+		#define APE_PLUGIN_API __declspec(dllexport)
+	#endif
 #else
-#define APE_PLUGIN_INTERNAL  __declspec(dllimport)
-#define APE_PLUGIN_API __declspec(dllexport)
-#endif
-#else
-#define APE_PLUGIN_INTERNAL
-#define APE_PLUGIN_API
+	#define APE_PLUGIN_INTERNAL
+	#define APE_PLUGIN_API
 #endif
 
 #ifdef _WINDLL
-#pragma warning ( disable : 4251 )
+	#pragma warning ( disable : 4251 )
 #endif
 
 #endif

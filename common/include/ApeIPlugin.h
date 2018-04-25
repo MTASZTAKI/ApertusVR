@@ -20,27 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_IPLUGIN_H
 #define APE_IPLUGIN_H
+
 #include <string>
 #include <vector>
 
 namespace Ape
 {
 	class IPlugin
-	{	
+	{
 	public:
 		virtual void Init() = 0;
 
 		virtual void Run() = 0;
 
 		virtual void Step() = 0;
-		
+
 		virtual void Stop() = 0;
-		
+
 		virtual void Suspend() = 0;
-		
+
 		virtual void Restart() = 0;
 	};
 
@@ -48,4 +48,4 @@ namespace Ape
 
 }
 
-#endif 
+#endif
