@@ -132,30 +132,31 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
-		return RakNet::RM3SR_SERIALIZED_ALWAYS;
 	}
-	else if (mIsCurrentPointsChanged)
+	else
 	{
-		mIsCurrentPointsChanged = false;
-		serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
-		//std::lock_guard<std::mutex> guard(mCurrentPointsMutex);
-		Ape::PointCloudPoints currentPoints = Ape::PointCloudPoints(mCurrentPoints);
-		//for (auto item : mCurrentPoints)
-		for (auto item : currentPoints)
-			serializeParameters->outputBitstream[1].Write(item);
-		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+		if (mIsCurrentPointsChanged)
+		{
+			mIsCurrentPointsChanged = false;
+			serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
+			//std::lock_guard<std::mutex> guard(mCurrentPointsMutex);
+			Ape::PointCloudPoints currentPoints = Ape::PointCloudPoints(mCurrentPoints);
+			//for (auto item : mCurrentPoints)
+			for (auto item : currentPoints)
+				serializeParameters->outputBitstream[1].Write(item);
+		}
+		if (mIsCurrentColorsChanged)
+		{
+			mIsCurrentColorsChanged = false;
+			serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
+			//std::lock_guard<std::mutex> guard(mCurrentColorsMutex);
+			Ape::PointCloudColors currentColors = Ape::PointCloudColors(mCurrentColors);
+			//for (auto item : mCurrentColors)
+			for (auto item : currentColors)
+				serializeParameters->outputBitstream[2].Write(item);
+		}
 	}
-	else if (mIsCurrentColorsChanged)
-	{
-		mIsCurrentColorsChanged = false;
-		serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
-		//std::lock_guard<std::mutex> guard(mCurrentColorsMutex);
-		Ape::PointCloudColors currentColors = Ape::PointCloudColors(mCurrentColors);
-		//for (auto item : mCurrentColors)
-		for (auto item : currentColors)
-			serializeParameters->outputBitstream[2].Write(item);
-		return RakNet::RM3SR_SERIALIZED_ALWAYS;
-	}
+	return RakNet::RM3SR_SERIALIZED_ALWAYS;
 }
 
 void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
