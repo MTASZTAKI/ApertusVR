@@ -61,7 +61,7 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 	//TODO how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
 	RakNet::RakString objectType;
 	allocationIdBitstream->Read(objectType);
-	LOG(LOG_TYPE_DEBUG, "Received: " << objectType);
+	//LOG(LOG_TYPE_DEBUG, "Received: " << objectType);
 	if (objectType == "Node")
 	{
 		RakNet::RakString nodeName;
