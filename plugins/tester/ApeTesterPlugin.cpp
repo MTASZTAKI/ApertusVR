@@ -28,7 +28,7 @@ void Ape::ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeTesterPlugin::Init()
 {
 	LOG_FUNC_ENTER();
-	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
@@ -39,7 +39,7 @@ void Ape::ApeTesterPlugin::Init()
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
-	}
+	}*/
 	//if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	//{
 	//	light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -329,7 +329,7 @@ void Ape::ApeTesterPlugin::Init()
 			pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 			pointCloudNodeText->setParentNode(pointCloudNode);
 		}*/
-		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
+		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud2", Ape::Entity::POINT_CLOUD).lock()))
 		{
 			mPointCloudSize = 307200;
 			Ape::PointCloudPoints points;
