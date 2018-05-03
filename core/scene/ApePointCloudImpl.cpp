@@ -110,8 +110,8 @@ void Ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationC
 
 RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	if (serializeParameters->whenLastSerialized == 0)
-	{
+	//if (serializeParameters->whenLastSerialized == 0)
+	//{
 		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
@@ -130,12 +130,12 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
 
-		LOG(LOG_TYPE_INFO, "[0]");
+		//LOG(LOG_TYPE_INFO, "[0]");
 
-		return RakNet::RM3SR_BROADCAST_IDENTICALLY;
-	}
-	else
-	{
+		//return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	//}
+	//else
+	//{
 		if (mIsCurrentPointsChanged)
 		{
 			mIsCurrentPointsChanged = false;
@@ -144,8 +144,8 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 			serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
 			for (auto item : mCurrentPoints)
 				serializeParameters->outputBitstream[1].Write(item);
-			LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << serializeParameters->curTime);
-			return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+			//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << serializeParameters->curTime);
+			//return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 		}
 		if (mIsCurrentColorsChanged)
 		{
@@ -155,18 +155,18 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 			serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
 			for (auto item : mCurrentColors)
 				serializeParameters->outputBitstream[2].Write(item);
-			LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << serializeParameters->curTime);
-			return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+			//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << serializeParameters->curTime);
+			//return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 		}
-		return RakNet::RM3SR_DO_NOT_SERIALIZE;
-	}
+		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	//}
 }
 
 void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	if (deserializeParameters->bitstreamWrittenTo[0])
 	{
-		LOG(LOG_TYPE_INFO, "[0]");
+		//LOG(LOG_TYPE_INFO, "[0]");
 		RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 		mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 		if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPointsSize))
@@ -216,7 +216,7 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 				mCurrentPoints[i] = item;
 			}
 		}
-		LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << deserializeParameters->timeStamp);
+		//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << deserializeParameters->timeStamp);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
 	}
 
@@ -233,7 +233,7 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 				mCurrentColors[i] = item;
 			}
 		}
-		LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << deserializeParameters->timeStamp);
+		//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << deserializeParameters->timeStamp);
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 	}
 }
