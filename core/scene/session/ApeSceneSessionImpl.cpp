@@ -213,6 +213,27 @@ void Ape::SceneSessionImpl::run()
 	}
 }
 
+void Ape::SceneSessionImpl::stream()
+{
+	if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+	{
+		LOG(LOG_TYPE_DEBUG, "Try to send burst data ");
+		RakNet::BitStream bitStream;
+		for (int i = 0; i < 10000; i++)
+		{
+			bitStream.Reset();
+			bitStream.Write((RakNet::MessageID)ID_USER_PACKET_ENUM);
+			bitStream.Write(64);
+			bitStream.Write(i);
+			bitStream.Write(10000);
+			bitStream.PadWithZeroToByteLength(64);
+			mpRakPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+		LOG(LOG_TYPE_DEBUG, "Burst data is sent to: ");
+	}
+}
+
 void Ape::SceneSessionImpl::listen()
 {
 	RakNet::Packet *packet;
@@ -326,22 +347,37 @@ void Ape::SceneSessionImpl::listen()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						LOG(LOG_TYPE_DEBUG, "Completed all remote downloads");
+						if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+						{
+							std::thread streamThread((std::bind(&SceneSessionImpl::stream, this)));
+							streamThread.detach();
+						}
 					}
 					break;
 				}
-			case ID_RAKVOICE_OPEN_CHANNEL_REQUEST:
-			case ID_RAKVOICE_OPEN_CHANNEL_REPLY:
-				{
-					LOG(LOG_TYPE_DEBUG, "Got new channel from " << packet->systemAddress.ToString());
-					break;
-				}
-			case ID_RAKVOICE_CLOSE_CHANNEL:
-				{
-					LOG(LOG_TYPE_DEBUG, "ID_RAKVOICE_CLOSE_CHANNEL");
-					break;
-				}
 			case ID_USER_PACKET_ENUM:
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_USER_PACKET_ENUM");
+				uint32_t msgSize, msgCount, index;
+				RakNet::BitStream bitStream(packet->data, packet->length, false);
+				bitStream.IgnoreBytes(sizeof(RakNet::MessageID));
+				bitStream.Read(msgSize);
+				bitStream.Read(index);
+				bitStream.Read(msgCount);
+				LOG(LOG_TYPE_DEBUG, "Burst data is received from: " << packet->guid.ToString());
+				//printf("%i/%i len=%i", index + 1, msgCount, packet->length);
+				if (msgSize > BITS_TO_BYTES(bitStream.GetReadOffset()) && packet->length != msgSize)
+				{
+					LOG(LOG_TYPE_DEBUG, "UNDERLENGTH");
+				}
+				else
+				{
+					LOG(LOG_TYPE_DEBUG, "\n");
+				}
 				break;
+			}
+			default:
+				LOG(LOG_TYPE_DEBUG, "Unknown message type" << packet->data[0]);
 		}
 	}
 }

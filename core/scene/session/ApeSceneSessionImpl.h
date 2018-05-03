@@ -111,6 +111,8 @@ namespace Ape
 
 		void run();
 
+		void stream();
+
 		void listen();
 
 	public:

@@ -110,10 +110,10 @@ void Ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationC
 
 RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	//if (serializeParameters->whenLastSerialized == 0)
-	//{
+	if (serializeParameters->whenLastSerialized == 0)
+	{
 		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+		serializeParameters->pro[0].reliability = UNRELIABLE_SEQUENCED;
 		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPointsSize);
@@ -132,33 +132,33 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 
 		//LOG(LOG_TYPE_INFO, "[0]");
 
-		//return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-	//}
+		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	}
 	//else
 	//{
-		if (mIsCurrentPointsChanged)
-		{
-			mIsCurrentPointsChanged = false;
-			serializeParameters->outputBitstream[1].Reset();
-			serializeParameters->pro[1].reliability = UNRELIABLE;
-			serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
-			for (auto item : mCurrentPoints)
-				serializeParameters->outputBitstream[1].Write(item);
-			//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << serializeParameters->curTime);
-			//return RakNet::RM3SR_BROADCAST_IDENTICALLY;
-		}
-		if (mIsCurrentColorsChanged)
-		{
-			mIsCurrentColorsChanged = false;
-			serializeParameters->outputBitstream[2].Reset();
-			serializeParameters->pro[2].reliability = UNRELIABLE;
-			serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
-			for (auto item : mCurrentColors)
-				serializeParameters->outputBitstream[2].Write(item);
-			//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << serializeParameters->curTime);
-			//return RakNet::RM3SR_BROADCAST_IDENTICALLY;
-		}
-		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+		//if (mIsCurrentPointsChanged)
+		//{
+		//	mIsCurrentPointsChanged = false;
+		//	//serializeParameters->outputBitstream[1].Reset();
+		//	serializeParameters->pro[1].reliability = UNRELIABLE;
+		//	serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
+		//	for (auto item : mCurrentPoints)
+		//		serializeParameters->outputBitstream[1].Write(item);
+		//	//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << serializeParameters->curTime);
+		//	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+		//}
+		//if (mIsCurrentColorsChanged)
+		//{
+		//	mIsCurrentColorsChanged = false;
+		//	//serializeParameters->outputBitstream[2].Reset();
+		//	serializeParameters->pro[2].reliability = UNRELIABLE;
+		//	serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
+		//	for (auto item : mCurrentColors)
+		//		serializeParameters->outputBitstream[2].Write(item);
+		//	//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << serializeParameters->curTime);
+		//	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+		//}
+		return RakNet::RM3SR_DO_NOT_SERIALIZE;
 	//}
 }
 

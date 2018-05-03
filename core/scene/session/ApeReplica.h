@@ -49,33 +49,33 @@ namespace Ape
 		
 		virtual void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const = 0;
 		
-		virtual RakNet::RM3ConstructionState QueryConstruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3);
+		RakNet::RM3ConstructionState QueryConstruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3);
 		
-		virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection);
+		bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection);
 		
-		virtual void SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection);
+		void SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection);
 		
-		virtual bool DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection);
+		bool DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection);
 		
-		virtual void SerializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection);
+		void SerializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection);
 		
-		virtual bool DeserializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection);
+		bool DeserializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection);
 		
-		virtual RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(RakNet::Connection_RM3 *droppedConnection) const;
+		RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(RakNet::Connection_RM3 *droppedConnection) const;
 		
-		virtual void DeallocReplica(RakNet::Connection_RM3 *sourceConnection);
+		void DeallocReplica(RakNet::Connection_RM3 *sourceConnection);
 		
-		virtual RakNet::RM3QuerySerializationResult QuerySerialization(RakNet::Connection_RM3 *destinationConnection);
+		RakNet::RM3QuerySerializationResult QuerySerialization(RakNet::Connection_RM3 *destinationConnection);
 		
 		virtual RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) = 0;
 		
 		virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters) = 0;
 		
-		virtual void OnUserReplicaPreSerializeTick();
+		void OnUserReplicaPreSerializeTick();
 		
-		virtual void OnPoppedConnection(RakNet::Connection_RM3 *droppedConnection);
+		void OnPoppedConnection(RakNet::Connection_RM3 *droppedConnection);
 		
-		virtual void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived);
+		void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived);
 		
 	};
 }
