@@ -25,6 +25,10 @@ SOFTWARE.*/
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
 
+#define BIG_PACKET_SIZE 83296256
+//#define BIG_PACKET_SIZE 50000
+char *text;
+
 Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakPeer(nullptr)
 	, mpReplicaManager3(nullptr)
@@ -139,6 +143,11 @@ void Ape::SceneSessionImpl::init()
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}
+	text = new char[BIG_PACKET_SIZE];
+	if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		mpRakPeer->SetSplitMessageProgressInterval(10000);
+	}
 	std::thread runThread((std::bind(&SceneSessionImpl::run, this)));
 	runThread.detach();
 }
@@ -213,25 +222,33 @@ void Ape::SceneSessionImpl::run()
 	}
 }
 
-void Ape::SceneSessionImpl::stream()
+void Ape::SceneSessionImpl::stream(RakNet::AddressOrGUID addressOrGUID)
 {
-	if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+	for (int i = 0; i < 100; i++)
 	{
-		LOG(LOG_TYPE_DEBUG, "Try to send burst data ");
-		RakNet::BitStream bitStream;
-		for (int i = 0; i < 10000; i++)
+		LOG(LOG_TYPE_DEBUG, "Try for starting send " << BIG_PACKET_SIZE << " bytes sized big packet");
+		if (BIG_PACKET_SIZE <= 100000)
 		{
-			bitStream.Reset();
-			bitStream.Write((RakNet::MessageID)ID_USER_PACKET_ENUM);
-			bitStream.Write(64);
-			bitStream.Write(i);
-			bitStream.Write(10000);
-			bitStream.PadWithZeroToByteLength(64);
-			mpRakPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			for (int i = 0; i < BIG_PACKET_SIZE; i++)
+				text[i] = 255 - (i & 255);
 		}
-		LOG(LOG_TYPE_DEBUG, "Burst data is sent to: ");
+		else
+			text[0] = (unsigned char)255;
+		mpRakPeer->Send(text, BIG_PACKET_SIZE, LOW_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, addressOrGUID, false);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
+	/*RakNet::BitStream bitStream;
+	for (int i = 0; i < 5000; i++)
+	{
+		bitStream.Reset();
+		bitStream.Write((RakNet::MessageID)ID_USER_PACKET_ENUM);
+		bitStream.Write(1000000);
+		bitStream.Write(i);
+		bitStream.Write(5000);
+		bitStream.PadWithZeroToByteLength(1000000);
+		mpRakPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}*/
 }
 
 void Ape::SceneSessionImpl::listen()
@@ -243,9 +260,6 @@ void Ape::SceneSessionImpl::listen()
 		{
 			case ID_DISCONNECTION_NOTIFICATION:
 				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION");
-				break;
-			case ID_NEW_INCOMING_CONNECTION:
-				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from: " << packet->systemAddress.ToString(true) << " guid: " << packet->guid.ToString());
 				break;
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
@@ -308,6 +322,9 @@ void Ape::SceneSessionImpl::listen()
 						else
 						{
 							LOG(LOG_TYPE_DEBUG, "NAT punch success from remote system " << packet->systemAddress.ToString(true));
+
+							std::thread streamThread((std::bind(&SceneSessionImpl::stream, this, packet->systemAddress)));
+							streamThread.detach();
 						}
 					}
 					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
@@ -347,15 +364,15 @@ void Ape::SceneSessionImpl::listen()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						LOG(LOG_TYPE_DEBUG, "Completed all remote downloads");
-						if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+						/*if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 						{
 							std::thread streamThread((std::bind(&SceneSessionImpl::stream, this)));
 							streamThread.detach();
-						}
+						}*/
 					}
 					break;
 				}
-			case ID_USER_PACKET_ENUM:
+			/*case ID_USER_PACKET_ENUM:
 			{
 				LOG(LOG_TYPE_DEBUG, "ID_USER_PACKET_ENUM");
 				uint32_t msgSize, msgCount, index;
@@ -373,6 +390,48 @@ void Ape::SceneSessionImpl::listen()
 				else
 				{
 					LOG(LOG_TYPE_DEBUG, "\n");
+				}
+				break;
+			}*/
+			case ID_DOWNLOAD_PROGRESS:
+			{
+				if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+				{
+					RakNet::BitStream progressBS(packet->data, packet->length, false);
+					progressBS.IgnoreBits(8); // ID_DOWNLOAD_PROGRESS
+					unsigned int progress;
+					unsigned int total;
+					unsigned int partLength;
+
+					// Disable endian swapping on reading this, as it's generated locally in ReliabilityLayer.cpp
+					progressBS.ReadBits((unsigned char*)&progress, BYTES_TO_BITS(sizeof(progress)), true);
+					progressBS.ReadBits((unsigned char*)&total, BYTES_TO_BITS(sizeof(total)), true);
+					progressBS.ReadBits((unsigned char*)&partLength, BYTES_TO_BITS(sizeof(partLength)), true);
+
+					LOG(LOG_TYPE_DEBUG, "Progress: msgID=" << (unsigned char)packet->data[0] << " Progress " << progress << " "<< total << " Partsize=" << partLength);
+				}
+				break;
+			}
+			case 255:
+			{
+				if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+				{
+					if (packet->length != BIG_PACKET_SIZE)
+					{
+						LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (wrong number of bytes)." << packet->length);
+						break;
+					}
+					if (BIG_PACKET_SIZE <= 100000)
+					{
+						for (int i = 0; i < BIG_PACKET_SIZE; i++)
+						{
+							if (packet->data[i] != 255 - (i & 255))
+							{
+								LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (bad data)." << packet->length);
+								break;
+							}
+						}
+					}
 				}
 				break;
 			}

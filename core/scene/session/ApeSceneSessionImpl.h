@@ -111,7 +111,7 @@ namespace Ape
 
 		void run();
 
-		void stream();
+		void stream(RakNet::AddressOrGUID addressOrGUID);
 
 		void listen();
 
