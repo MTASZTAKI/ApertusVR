@@ -69,7 +69,9 @@ namespace Ape
 	class APE_SCENE_DLL_EXPORT SceneSessionImpl : public Ape::ISceneSession
 	{
 	private:
-		RakNet::RakPeerInterface* mpRakPeer;
+		RakNet::RakPeerInterface* mpRakReplicaPeer;
+
+		RakNet::RakPeerInterface* mpRakStreamPeer;
 		
 		std::shared_ptr<RakNet::ReplicaManager3> mpReplicaManager3;
 		
@@ -80,6 +82,10 @@ namespace Ape
 		RakNet::RakNetGUID mGuid;
 
 		RakNet::SystemAddress mAddress;
+
+		RakNet::RakNetGUID mHostGuid;
+
+		RakNet::SystemAddress mHostAddress;
 
 		std::string mNATServerIP;
 
@@ -103,17 +109,19 @@ namespace Ape
 
 		Ape::IPluginManager* mpPluginManager;
 
-		bool mbIsConnectedToSessionServer;
+		bool mIsConnectedToHost;
 
 		LobbyManager* mpLobbyManager;
 
 		void init();
 
-		void run();
+		void runReplicaPeerListen();
 
-		void stream(RakNet::AddressOrGUID addressOrGUID);
+		void runStreamPeerListen();
 
-		void listen();
+		void listenReplicaPeer();
+
+		void listenStreamPeer();
 
 	public:
 		SceneSessionImpl();
