@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #define STREAM_PORT 3000
+#define SPLIT_MSG_PROGRESS_INTERVAL 1000
 
 #include "ApeSceneSessionImpl.h"
 #include "ApeReplicaManager.h"
@@ -204,7 +205,7 @@ void Ape::SceneSessionImpl::init()
 		{
 			LOG(LOG_TYPE_DEBUG, "Stream client failed to start. Error=" << sr);
 		}
-		//mpRakStreamPeer->SetSplitMessageProgressInterval(10000);
+		mpRakStreamPeer->SetSplitMessageProgressInterval(SPLIT_MSG_PROGRESS_INTERVAL);
 		LOG(LOG_TYPE_DEBUG, "Started stream client on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 	}
 }
