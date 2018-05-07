@@ -51,6 +51,16 @@ namespace Ape
 			return x * x + y * y + z * z;
 		}
 
+		float length() const
+		{
+			return std::sqrt(x * x + y * y + z * z);
+		}
+
+		float distance(const Vector3& rkVector) const
+		{
+			return (*this - rkVector).length();
+		}
+
 		Vector3 crossProduct(const Vector3& rkVector) const
 		{
 			return Vector3(
