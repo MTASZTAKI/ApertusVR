@@ -20,15 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#define STREAM_PORT 3000
 
 #include "ApeSceneSessionImpl.h"
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
-
-#define STREAM_PORT 3000
-#define BIG_PACKET_SIZE 83296256
-//#define BIG_PACKET_SIZE 50000
-char *text;
 
 Ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakReplicaPeer(nullptr)
@@ -39,6 +35,9 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpPluginManager = Ape::IPluginManager::getSingletonPtr();
+	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&SceneSessionImpl::eventCallBack, this, std::placeholders::_1));
+	mStreamReplicas = std::vector<Ape::Replica*>();
 	mIsConnectedToNATServer = false;
 	mIsConnectedToHost = false;
 	mNATServerAddress.FromString("");
@@ -98,6 +97,31 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 	}
 }
 
+void Ape::SceneSessionImpl::eventCallBack(const Ape::Event & event)
+{
+	if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+	{
+		if (auto entity = mpScene->getEntity(event.subjectName).lock())
+		{
+			if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+			{
+				mStreamReplicas.push_back(pointCloud);
+				LOG(LOG_TYPE_DEBUG, "runStreamPeerListenThread for replica named: " << event.subjectName);
+				if (mParticipantType == Ape::SceneSession::HOST)
+				{
+					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
+					runStreamPeerListenThread.detach();
+				}
+				else if (mParticipantType == Ape::SceneSession::GUEST)
+				{
+					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
+					runStreamPeerListenThread.detach();
+				}
+			}
+		}
+	}
+}
+
 void Ape::SceneSessionImpl::init()
 {
 	Ape::SceneSessionConfig::NatPunchThroughServerConfig natPunchThroughServerConfig = mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig;
@@ -152,7 +176,6 @@ void Ape::SceneSessionImpl::init()
 	std::thread runReplicaPeerListenThread((std::bind(&SceneSessionImpl::runReplicaPeerListen, this)));
 	runReplicaPeerListenThread.detach();
 
-	text = new char[BIG_PACKET_SIZE];
 	mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
 	int socketFamily;
 	socketFamily = AF_INET;
@@ -184,9 +207,6 @@ void Ape::SceneSessionImpl::init()
 		mpRakStreamPeer->SetSplitMessageProgressInterval(10000);
 		LOG(LOG_TYPE_DEBUG, "Started stream client on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 	}
-	LOG(LOG_TYPE_DEBUG, "runStreamPeerListenThread");
-	std::thread runStreamPeerListenThread((std::bind(&SceneSessionImpl::runStreamPeerListen, this)));
-	runStreamPeerListenThread.detach();
 }
 
 void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
@@ -236,6 +256,11 @@ std::weak_ptr<RakNet::ReplicaManager3> Ape::SceneSessionImpl::getReplicaManager(
 	return mpReplicaManager3;
 }
 
+void Ape::SceneSessionImpl::setScene(Ape::IScene * scene)
+{
+	mpScene = scene;
+}
+
 Ape::SceneSession::ParticipantType Ape::SceneSessionImpl::getParticipantType()
 {
 	return mParticipantType;
@@ -255,15 +280,6 @@ void Ape::SceneSessionImpl::runReplicaPeerListen()
 	{
 		listenReplicaPeer();
 		std::this_thread::sleep_for (std::chrono::milliseconds(10));
-	}
-}
-
-void Ape::SceneSessionImpl::runStreamPeerListen()
-{
-	while (true)
-	{
-		listenStreamPeer();
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }
 
@@ -385,112 +401,6 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 				}
 			default:
 				LOG(LOG_TYPE_DEBUG, "Unknown message type" << packet->data[0]);
-		}
-	}
-}
-
-void Ape::SceneSessionImpl::listenStreamPeer()
-{
-	RakNet::Packet *packet;
-	if (mParticipantType == Ape::SceneSession::HOST)
-	{
-		for (packet = mpRakStreamPeer->Receive(); packet; mpRakStreamPeer->DeallocatePacket(packet), packet = mpRakStreamPeer->Receive())
-		{
-			if (packet->data[0] == ID_NEW_INCOMING_CONNECTION || packet->data[0] == 253)
-			{
-				for (int i = 0; i < 100; i++)
-				{
-					LOG(LOG_TYPE_DEBUG, "Try for starting send " << BIG_PACKET_SIZE << " bytes sized big packet to " << packet->systemAddress.ToString(true));
-					if (BIG_PACKET_SIZE <= 100000)
-					{
-						for (int i = 0; i < BIG_PACKET_SIZE; i++)
-							text[i] = 255 - (i & 255);
-					}
-					else
-						text[0] = (unsigned char)255;
-					mpRakStreamPeer->Send(text, BIG_PACKET_SIZE, IMMEDIATE_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
-					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-				}
-			}
-			if (packet->data[0] == ID_CONNECTION_LOST)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
-			}
-		}
-	}
-	else if (mParticipantType == Ape::SceneSession::GUEST)
-	{
-		for (packet = mpRakStreamPeer->Receive(); packet; mpRakStreamPeer->DeallocatePacket(packet), packet = mpRakStreamPeer->Receive())
-		{
-			if (packet->data[0] == ID_DOWNLOAD_PROGRESS)
-			{
-				RakNet::BitStream progressBS(packet->data, packet->length, false);
-				progressBS.IgnoreBits(8);
-				unsigned int progress;
-				unsigned int total;
-				unsigned int partLength;
-
-				progressBS.ReadBits((unsigned char*)&progress, BYTES_TO_BITS(sizeof(progress)), true);
-				progressBS.ReadBits((unsigned char*)&total, BYTES_TO_BITS(sizeof(total)), true);
-				progressBS.ReadBits((unsigned char*)&partLength, BYTES_TO_BITS(sizeof(partLength)), true);
-
-				LOG(LOG_TYPE_DEBUG, "Progress: msgID=" << (unsigned char)packet->data[0] << " Progress " << progress << " " << total << " Partsize=" << partLength);
-			}
-			else if (packet->data[0] == 255)
-			{
-				if (packet->length != BIG_PACKET_SIZE)
-				{
-					LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (wrong number of bytes)." << packet->length);
-					break;
-				}
-				if (BIG_PACKET_SIZE <= 100000)
-				{
-					for (int i = 0; i < BIG_PACKET_SIZE; i++)
-					{
-						if (packet->data[i] != 255 - (i & 255))
-						{
-							LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (bad data)." << packet->length);
-							break;
-						}
-					}
-				}
-			}
-			else if (packet->data[0] == 254)
-			{
-				LOG(LOG_TYPE_DEBUG, "Got high priority message");
-			}
-			else if (packet->data[0] == ID_CONNECTION_LOST)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
-			}
-			else if (packet->data[0] == ID_CONNECTION_ATTEMPT_FAILED)
-			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
-			}
 		}
 	}
 }

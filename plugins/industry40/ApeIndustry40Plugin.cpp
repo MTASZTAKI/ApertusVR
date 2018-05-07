@@ -22,7 +22,7 @@ Ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
 
 void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
-	
+
 }
 
 void Ape::ApeIndustry40Plugin::Init()

@@ -70,6 +70,10 @@ namespace Ape
 		virtual RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) = 0;
 		
 		virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters) = 0;
+
+		virtual void listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer);
+
+		virtual void listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer);
 		
 		void OnUserReplicaPreSerializeTick();
 		

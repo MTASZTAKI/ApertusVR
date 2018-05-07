@@ -63,6 +63,9 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeLobbyManager.h"
 #include "ApeIPluginManager.h"
+#include "ApeIEventManager.h"
+#include "ApePointCloudImpl.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
@@ -109,6 +112,14 @@ namespace Ape
 
 		Ape::IPluginManager* mpPluginManager;
 
+		Ape::IEventManager* mpEventManager;
+
+		Ape::IScene* mpScene;
+
+		std::vector<Ape::Replica*> mStreamReplicas;
+
+		void eventCallBack(const Ape::Event& event);
+
 		bool mIsConnectedToHost;
 
 		LobbyManager* mpLobbyManager;
@@ -117,11 +128,7 @@ namespace Ape
 
 		void runReplicaPeerListen();
 
-		void runStreamPeerListen();
-
 		void listenReplicaPeer();
-
-		void listenStreamPeer();
 
 	public:
 		SceneSessionImpl();
@@ -143,6 +150,8 @@ namespace Ape
 		bool isHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
+
+		void setScene(Ape::IScene* scene);
 	};
 }
 

@@ -20,6 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+
+#define BIG_PACKET_SIZE 83296256
+char *text;
+
 #include <iostream>
 #include "ApePointCloudImpl.h"
 
@@ -38,6 +42,7 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mIsCurrentColorsChanged = false;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
+	text = new char[BIG_PACKET_SIZE];
 }
 
 Ape::PointCloudImpl::~PointCloudImpl()
@@ -113,7 +118,7 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 	if (serializeParameters->whenLastSerialized == 0)
 	{
 		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-		serializeParameters->pro[0].reliability = UNRELIABLE_SEQUENCED;
+		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPointsSize);
@@ -130,43 +135,15 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
 
-		//LOG(LOG_TYPE_INFO, "[0]");
-
 		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 	}
-	//else
-	//{
-		//if (mIsCurrentPointsChanged)
-		//{
-		//	mIsCurrentPointsChanged = false;
-		//	//serializeParameters->outputBitstream[1].Reset();
-		//	serializeParameters->pro[1].reliability = UNRELIABLE;
-		//	serializeParameters->outputBitstream[1].Write(mCurrentPointsSize);
-		//	for (auto item : mCurrentPoints)
-		//		serializeParameters->outputBitstream[1].Write(item);
-		//	//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << serializeParameters->curTime);
-		//	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-		//}
-		//if (mIsCurrentColorsChanged)
-		//{
-		//	mIsCurrentColorsChanged = false;
-		//	//serializeParameters->outputBitstream[2].Reset();
-		//	serializeParameters->pro[2].reliability = UNRELIABLE;
-		//	serializeParameters->outputBitstream[2].Write(mCurrentColorsSize);
-		//	for (auto item : mCurrentColors)
-		//		serializeParameters->outputBitstream[2].Write(item);
-		//	//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << serializeParameters->curTime);
-		//	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-		//}
-		return RakNet::RM3SR_DO_NOT_SERIALIZE;
-	//}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	if (deserializeParameters->bitstreamWrittenTo[0])
 	{
-		//LOG(LOG_TYPE_INFO, "[0]");
 		RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 		mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 		if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPointsSize))
@@ -203,37 +180,117 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 		}
 		mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 	}
-	if (deserializeParameters->bitstreamWrittenTo[1])
-	{
-		deserializeParameters->serializationBitstream[1].Read(mCurrentPointsSize);
-		mCurrentPoints.clear();
-		mCurrentPoints.resize(mCurrentPointsSize);
-		for (int i = 0; i < mCurrentPointsSize; i++)
-		{
-			float item;
-			if (deserializeParameters->serializationBitstream[1].Read(item))
-			{
-				mCurrentPoints[i] = item;
-			}
-		}
-		//LOG(LOG_TYPE_INFO, "[1] size: " << mCurrentPointsSize << " time: " << deserializeParameters->timeStamp);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
-	}
+}
 
-	if (deserializeParameters->bitstreamWrittenTo[2])
+void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
+{
+	while (true)
 	{
-		deserializeParameters->serializationBitstream[2].Read(mCurrentColorsSize);
-		mCurrentColors.clear();
-		mCurrentColors.resize(mCurrentColorsSize);
-		for (int i = 0; i < mCurrentColorsSize; i++)
+		RakNet::Packet *packet;
+		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
 		{
-			float item;
-			if (deserializeParameters->serializationBitstream[2].Read(item))
+			if (packet->data[0] == ID_NEW_INCOMING_CONNECTION || packet->data[0] == 253)
 			{
-				mCurrentColors[i] = item;
+				for (int i = 0; i < 100; i++)
+				{
+					LOG(LOG_TYPE_DEBUG, "Try for starting send " << BIG_PACKET_SIZE << " bytes sized big packet to " << packet->systemAddress.ToString(true));
+					if (BIG_PACKET_SIZE <= 100000)
+					{
+						for (int i = 0; i < BIG_PACKET_SIZE; i++)
+							text[i] = 255 - (i & 255);
+					}
+					else
+						text[0] = (unsigned char)255;
+					streamPeer->Send(text, BIG_PACKET_SIZE, IMMEDIATE_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
+					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				}
+			}
+			if (packet->data[0] == ID_CONNECTION_LOST)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
 			}
 		}
-		//LOG(LOG_TYPE_INFO, "[2] size: " << mCurrentColorsSize << " time: " << deserializeParameters->timeStamp);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+
+void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
+{
+	while (true)
+	{
+		RakNet::Packet *packet;
+		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
+		{
+			if (packet->data[0] == ID_DOWNLOAD_PROGRESS)
+			{
+				RakNet::BitStream progressBS(packet->data, packet->length, false);
+				progressBS.IgnoreBits(8);
+				unsigned int progress;
+				unsigned int total;
+				unsigned int partLength;
+
+				progressBS.ReadBits((unsigned char*)&progress, BYTES_TO_BITS(sizeof(progress)), true);
+				progressBS.ReadBits((unsigned char*)&total, BYTES_TO_BITS(sizeof(total)), true);
+				progressBS.ReadBits((unsigned char*)&partLength, BYTES_TO_BITS(sizeof(partLength)), true);
+
+				LOG(LOG_TYPE_DEBUG, "Progress: msgID=" << (unsigned char)packet->data[0] << " Progress " << progress << " " << total << " Partsize=" << partLength);
+			}
+			else if (packet->data[0] == 255)
+			{
+				if (packet->length != BIG_PACKET_SIZE)
+				{
+					LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (wrong number of bytes)." << packet->length);
+					break;
+				}
+				if (BIG_PACKET_SIZE <= 100000)
+				{
+					for (int i = 0; i < BIG_PACKET_SIZE; i++)
+					{
+						if (packet->data[i] != 255 - (i & 255))
+						{
+							LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (bad data)." << packet->length);
+							break;
+						}
+					}
+				}
+			}
+			else if (packet->data[0] == 254)
+			{
+				LOG(LOG_TYPE_DEBUG, "Got high priority message");
+			}
+			else if (packet->data[0] == ID_CONNECTION_LOST)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
+			}
+			else if (packet->data[0] == ID_CONNECTION_ATTEMPT_FAILED)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
+			}
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }

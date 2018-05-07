@@ -23,6 +23,8 @@ SOFTWARE.*/
 #ifndef APE_POINTCLOUDIMPL_H
 #define APE_POINTCLOUDIMPL_H
 
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
 #include "ApeIPointCloud.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
@@ -59,6 +61,10 @@ namespace Ape
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
 
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+		void listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer) override;
+
+		void listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer) override;
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;

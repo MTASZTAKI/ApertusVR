@@ -22,7 +22,7 @@ Ape::ApeTesterPlugin::~ApeTesterPlugin()
 
 void Ape::ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	
 }
 
 void Ape::ApeTesterPlugin::Init()

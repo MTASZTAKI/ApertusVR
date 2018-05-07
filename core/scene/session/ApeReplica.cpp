@@ -80,6 +80,16 @@ RakNet::RM3QuerySerializationResult Ape::Replica::QuerySerialization( RakNet::Co
 	return QuerySerialization_ClientSerializable(destinationConnection, mIsHostCreated);
 }
 
+void Ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
+{
+
+}
+
+void Ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
+{
+
+}
+
 void Ape::Replica::OnUserReplicaPreSerializeTick()
 {
 	mVariableDeltaSerializer.OnPreSerializeTick();
