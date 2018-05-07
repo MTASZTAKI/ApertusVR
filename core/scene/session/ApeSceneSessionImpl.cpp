@@ -204,7 +204,7 @@ void Ape::SceneSessionImpl::init()
 		{
 			LOG(LOG_TYPE_DEBUG, "Stream client failed to start. Error=" << sr);
 		}
-		mpRakStreamPeer->SetSplitMessageProgressInterval(10000);
+		//mpRakStreamPeer->SetSplitMessageProgressInterval(10000);
 		LOG(LOG_TYPE_DEBUG, "Started stream client on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 	}
 }

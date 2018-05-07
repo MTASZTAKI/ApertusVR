@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 
-#define BIG_PACKET_SIZE 83296256
-char *text;
+//#define BIG_PACKET_SIZE 20000000
+//char *text;
 
 #include <iostream>
 #include "ApePointCloudImpl.h"
@@ -42,7 +42,7 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mIsCurrentColorsChanged = false;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
-	text = new char[BIG_PACKET_SIZE];
+	//text = new char[BIG_PACKET_SIZE];
 }
 
 Ape::PointCloudImpl::~PointCloudImpl()
@@ -184,7 +184,7 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 
 void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
 {
-	while (true)
+	/*while (true)
 	{
 		RakNet::Packet *packet;
 		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
@@ -223,6 +223,21 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}*/
+	LOG(LOG_TYPE_DEBUG, "Try to send burst data ");
+	RakNet::BitStream bitStream;
+	int msgCount = 1000;
+	int msgSize = 64;
+	for (int i = 0; i < msgCount; i++)
+	{
+		bitStream.Reset();
+		bitStream.Write((RakNet::MessageID)ID_USER_PACKET_ENUM);
+		bitStream.Write(msgSize);
+		bitStream.Write(i);
+		bitStream.Write(msgCount);
+		bitStream.PadWithZeroToByteLength(msgSize);
+		streamPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 }
 
@@ -233,7 +248,7 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 		RakNet::Packet *packet;
 		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
 		{
-			if (packet->data[0] == ID_DOWNLOAD_PROGRESS)
+			/*if (packet->data[0] == ID_DOWNLOAD_PROGRESS)
 			{
 				RakNet::BitStream progressBS(packet->data, packet->length, false);
 				progressBS.IgnoreBits(8);
@@ -289,6 +304,27 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 			else if (packet->data[0] == ID_CONNECTION_ATTEMPT_FAILED)
 			{
 				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
+			}*/
+			if (packet->data[0] == ID_USER_PACKET_ENUM)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_USER_PACKET_ENUM");
+				uint32_t msgSize, msgCount, i;
+				RakNet::BitStream bitStream(packet->data, packet->length, false);
+				bitStream.IgnoreBytes(sizeof(RakNet::MessageID));
+				bitStream.Read(msgSize);
+				bitStream.Read(i);
+				bitStream.Read(msgCount);
+				LOG(LOG_TYPE_DEBUG, "Burst data is received from: " << packet->guid.ToString());
+				//printf("%i/%i len=%i", index + 1, msgCount, packet->length);
+				if (msgSize > BITS_TO_BYTES(bitStream.GetReadOffset()) && packet->length != msgSize)
+				{
+					LOG(LOG_TYPE_DEBUG, "UNDERLENGTH");
+				}
+				else
+				{
+					LOG(LOG_TYPE_DEBUG, "\n");
+				}
+				break;
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
