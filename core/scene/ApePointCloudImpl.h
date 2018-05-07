@@ -30,6 +30,11 @@ SOFTWARE.*/
 #include "ApeReplica.h"
 #include "ApeIScene.h"
 
+union dataUnion {
+	float f;
+	char fBuff[sizeof(float)];
+};
+
 namespace Ape
 {
 	class PointCloudImpl : public IPointCloud, public Ape::Replica
@@ -80,6 +85,10 @@ namespace Ape
 		int mPointsSize;
 
 		int mColorsSize;
+
+		int mStreamPacketSizeInBytes;
+
+		char* mpStreamPacket;
 
 		Ape::PointCloudPoints mCurrentPoints;
 

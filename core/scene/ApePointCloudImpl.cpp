@@ -20,11 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#define BIG_PACKET_SIZE 2457600
-#define SPLIT_MSG_PROGRESS_INTERVAL 1000
-char *text;
-
 #include <iostream>
 #include "ApePointCloudImpl.h"
 
@@ -43,7 +38,7 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mIsCurrentColorsChanged = false;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
-	text = new char[BIG_PACKET_SIZE];
+	mStreamPacketSizeInBytes = 0;
 }
 
 Ape::PointCloudImpl::~PointCloudImpl()
@@ -56,6 +51,8 @@ void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::Point
 	mPointsSize = static_cast<int>(points.size());
 	mColorsSize = static_cast<int>(colors.size());
 	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius);
+	mStreamPacketSizeInBytes = (mPointsSize * 4) + (mColorsSize * 4);
+	mpStreamPacket = new char[mStreamPacketSizeInBytes];
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
 }
 
@@ -194,15 +191,16 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 			{
 				for (int i = 0; i < 100; i++)
 				{
-					LOG(LOG_TYPE_DEBUG, "Try for starting send " << BIG_PACKET_SIZE << " bytes sized big packet to " << packet->systemAddress.ToString(true));
-					if (BIG_PACKET_SIZE <= SPLIT_MSG_PROGRESS_INTERVAL)
+					LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true));
+					mpStreamPacket[0] = (unsigned char)255;
+					
+					dataUnion myUnion;
+					myUnion.f = 3.24;
+					for (int i = 0; i<sizeof(float); i++)
 					{
-						for (int i = 0; i < BIG_PACKET_SIZE; i++)
-							text[i] = 255 - (i & 255);
+						mpStreamPacket[i + 1] = myUnion.fBuff[i];
 					}
-					else
-						text[0] = (unsigned char)255;
-					streamPeer->Send(text, BIG_PACKET_SIZE, IMMEDIATE_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
+					streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, IMMEDIATE_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 				}
 			}
@@ -222,27 +220,13 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 			{
 				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
 			}
+			else
+			{
+				LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
-	//while (true)
-	//{
-	//	RakNet::BitStream bitStream;
-	//	int msgCount = 1000;
-	//	int msgSize = mPointsSize * mColorsSize * 4;
-	//	for (int i = 0; i < msgCount; i++)
-	//	{
-	//		bitStream.Reset();
-	//		bitStream.Write((RakNet::MessageID)ID_USER_PACKET_ENUM);
-	//		bitStream.Write(msgSize);
-	//		bitStream.Write(i);
-	//		bitStream.Write(msgCount);
-	//		bitStream.PadWithZeroToByteLength(msgSize);
-	//		LOG(LOG_TYPE_DEBUG, "Try to send burst data ");
-	//		streamPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	//	}
-	//}
 }
 
 void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
@@ -252,38 +236,14 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 		RakNet::Packet *packet;
 		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
 		{
-			if (packet->data[0] == ID_DOWNLOAD_PROGRESS)
+			if (packet->data[0] == 255)
 			{
-				RakNet::BitStream progressBS(packet->data, packet->length, false);
-				progressBS.IgnoreBits(8);
-				unsigned int progress;
-				unsigned int total;
-				unsigned int partLength;
-
-				progressBS.ReadBits((unsigned char*)&progress, BYTES_TO_BITS(sizeof(progress)), true);
-				progressBS.ReadBits((unsigned char*)&total, BYTES_TO_BITS(sizeof(total)), true);
-				progressBS.ReadBits((unsigned char*)&partLength, BYTES_TO_BITS(sizeof(partLength)), true);
-
-				LOG(LOG_TYPE_DEBUG, "Progress: msgID=" << (unsigned char)packet->data[0] << " Progress " << progress << " " << total << " Partsize=" << partLength);
-			}
-			else if (packet->data[0] == 255)
-			{
-				if (packet->length != BIG_PACKET_SIZE)
+				dataUnion myUnion;
+				for (int i = 0; i<sizeof(float); i++)
 				{
-					LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (wrong number of bytes)." << packet->length);
-					break;
+					myUnion.fBuff[i] = packet->data[i + 1];
 				}
-				if (BIG_PACKET_SIZE <= SPLIT_MSG_PROGRESS_INTERVAL)
-				{
-					for (int i = 0; i < BIG_PACKET_SIZE; i++)
-					{
-						if (packet->data[i] != 255 - (i & 255))
-						{
-							LOG(LOG_TYPE_DEBUG, "Test failed. %i bytes (bad data)." << packet->length);
-							break;
-						}
-					}
-				}
+				LOG(LOG_TYPE_DEBUG, "Received packed with size: " << packet->length << " last value is: " << myUnion.f);
 			}
 			else if (packet->data[0] == 254)
 			{
@@ -309,22 +269,10 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 			{
 				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
 			}
-			//if (packet->data[0] == ID_USER_PACKET_ENUM)
-			//{
-			//	uint32_t msgSize, msgCount, i;
-			//	RakNet::BitStream bitStream(packet->data, packet->length, false);
-			//	bitStream.IgnoreBytes(sizeof(RakNet::MessageID));
-			//	bitStream.Read(msgSize);
-			//	bitStream.Read(i);
-			//	bitStream.Read(msgCount);
-			//	LOG(LOG_TYPE_DEBUG, "Burst data is received from: " << packet->guid.ToString() << " size: " << packet->length << " index: " << i);
-			//	//printf("%i/%i len=%i", index + 1, msgCount, packet->length);
-			//	if (msgSize > BITS_TO_BYTES(bitStream.GetReadOffset()) && packet->length != msgSize)
-			//	{
-			//		LOG(LOG_TYPE_DEBUG, "UNDERLENGTH");
-			//	}
-			//	break;
-			//}
+			else
+			{
+				LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
