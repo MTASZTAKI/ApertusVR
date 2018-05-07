@@ -316,6 +316,7 @@ bool Ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	mMouseState.posCurrent = e.state;
+	mMouseState.isMouseMoved = true;
 	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
 	{
 		if (auto selectedNodeInMap = nodeIt->second.lock())
@@ -498,7 +499,7 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 }
 
 
-void Ape::OISUserInputPlugin::moveUserNode()
+void Ape::OISUserInputPlugin::moveUserNodeByKeyBoard()
 {
 	if (auto userNode = mUserNode.lock())
 	{
@@ -558,6 +559,20 @@ void Ape::OISUserInputPlugin::moveUserNode()
 	}
 }
 
+void Ape::OISUserInputPlugin::moveUserNodeByMouse()
+{
+	if (auto userNode = mUserNode.lock())
+	{
+		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isMouseMoved)
+		{
+			float rotateSpeedFactor = 0.2;
+			userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * rotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * rotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			mMouseState.isMouseMoved = false;
+		}
+	}
+}
+
 void Ape::OISUserInputPlugin::Run()
 {
 	while (true)
@@ -567,7 +582,10 @@ void Ape::OISUserInputPlugin::Run()
 		if (mpMouse)
 			mpMouse->capture();
 		if (!mEnableOverlayBrowserKeyEvents)
-			moveUserNode();
+		{
+			moveUserNodeByKeyBoard();
+			moveUserNodeByMouse();
+		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
