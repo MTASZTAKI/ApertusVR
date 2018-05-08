@@ -30,9 +30,14 @@ SOFTWARE.*/
 #include "ApeReplica.h"
 #include "ApeIScene.h"
 
-union dataUnion {
+union dataUnionBytesFloat {
 	float f;
 	char fBuff[sizeof(float)];
+};
+
+union dataUnionBytesInt {
+	int i;
+	char iBuff[sizeof(int)];
 };
 
 namespace Ape
@@ -87,6 +92,8 @@ namespace Ape
 		int mColorsSize;
 
 		int mStreamPacketSizeInBytes;
+
+		int mStreamHeaderSizeInBytes;
 
 		char* mpStreamPacket;
 

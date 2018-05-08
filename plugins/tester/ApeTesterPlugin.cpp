@@ -331,7 +331,7 @@ void Ape::ApeTesterPlugin::Init()
 		}*/
 		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud2", Ape::Entity::POINT_CLOUD).lock()))
 		{
-			mPointCloudSize = 307200;
+			mPointCloudSize = 921600;
 			Ape::PointCloudPoints points;
 			points.resize(mPointCloudSize);
 			Ape::PointCloudColors colors;

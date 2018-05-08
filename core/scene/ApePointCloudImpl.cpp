@@ -39,6 +39,7 @@ Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape:
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
 	mStreamPacketSizeInBytes = 0;
+	mStreamHeaderSizeInBytes = 9; // 9 means 1byte(char) for packetID and 8 more(2 integer) for point cloud size
 }
 
 Ape::PointCloudImpl::~PointCloudImpl()
@@ -51,8 +52,6 @@ void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::Point
 	mPointsSize = static_cast<int>(points.size());
 	mColorsSize = static_cast<int>(colors.size());
 	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius);
-	mStreamPacketSizeInBytes = (mPointsSize * 4) + (mColorsSize * 4);
-	mpStreamPacket = new char[mStreamPacketSizeInBytes];
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
 }
 
@@ -189,19 +188,50 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 		{
 			if (packet->data[0] == ID_NEW_INCOMING_CONNECTION || packet->data[0] == 253)
 			{
-				for (int i = 0; i < 100; i++)
+				while (true) //TODO if you have more guests or you would like to handle errors, than it would be a new thread for streaming the data
 				{
-					LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true));
+					mStreamPacketSizeInBytes = (mCurrentPointsSize * 4) + (mCurrentColorsSize * 4) + mStreamHeaderSizeInBytes;
+					mpStreamPacket = new char[mStreamPacketSizeInBytes];
+					/*LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+						" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);*/
 					mpStreamPacket[0] = (unsigned char)255;
-					
-					dataUnion myUnion;
-					myUnion.f = 3.24;
-					for (int i = 0; i<sizeof(float); i++)
+
+					dataUnionBytesInt myUnion;
+					myUnion.i = mCurrentPointsSize;
+					mpStreamPacket[1] = myUnion.iBuff[0];
+					mpStreamPacket[2] = myUnion.iBuff[1];
+					mpStreamPacket[3] = myUnion.iBuff[2];
+					mpStreamPacket[4] = myUnion.iBuff[3];
+					myUnion.i = mCurrentColorsSize;
+					mpStreamPacket[5] = myUnion.iBuff[0];
+					mpStreamPacket[6] = myUnion.iBuff[1];
+					mpStreamPacket[7] = myUnion.iBuff[2];
+					mpStreamPacket[8] = myUnion.iBuff[3];
+
+					int packetDataIndex = mStreamHeaderSizeInBytes;
+					for (auto item : mCurrentPoints)
 					{
-						mpStreamPacket[i + 1] = myUnion.fBuff[i];
+						dataUnionBytesFloat myUnion;
+						myUnion.f = item;
+						for (int i = 0; i < sizeof(float); i++)
+						{
+							mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
+							packetDataIndex++;
+						}
 					}
-					streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, IMMEDIATE_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
-					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+					for (auto item : mCurrentColors)
+					{
+						dataUnionBytesFloat myUnion;
+						myUnion.f = item;
+						for (int i = 0; i < sizeof(float); i++)
+						{
+							mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
+							packetDataIndex++;
+						}
+					}
+
+					streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, IMMEDIATE_PRIORITY, UNRELIABLE, 0, packet->systemAddress, false);
+					std::this_thread::sleep_for(std::chrono::milliseconds(500));
 				}
 			}
 			if (packet->data[0] == ID_CONNECTION_LOST)
@@ -238,12 +268,45 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 		{
 			if (packet->data[0] == 255)
 			{
-				dataUnion myUnion;
-				for (int i = 0; i<sizeof(float); i++)
+				dataUnionBytesInt myUnion;
+				myUnion.iBuff[0] = packet->data[1];
+				myUnion.iBuff[1] = packet->data[2];
+				myUnion.iBuff[2] = packet->data[3];
+				myUnion.iBuff[3] = packet->data[4];
+				mCurrentPointsSize = myUnion.i;
+				myUnion.iBuff[0] = packet->data[5];
+				myUnion.iBuff[1] = packet->data[6];
+				myUnion.iBuff[2] = packet->data[7];
+				myUnion.iBuff[3] = packet->data[8];
+				mCurrentColorsSize = myUnion.i;
+				mCurrentPoints.clear();
+				mCurrentPoints.resize(mCurrentPointsSize);
+				mCurrentColors.clear();
+				mCurrentColors.resize(mCurrentColorsSize);
+				//LOG(LOG_TYPE_DEBUG, "Received packed with size: " << packet->length <<  " mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
+				int packetDataIndex = mStreamHeaderSizeInBytes;
+				for (int i = 0; i < mPointsSize; i++)
 				{
-					myUnion.fBuff[i] = packet->data[i + 1];
+					dataUnionBytesFloat myUnion;
+					for (int j = 0; j<sizeof(float); j++)
+					{
+						myUnion.fBuff[j] = packet->data[packetDataIndex];
+						mCurrentPoints[i] = myUnion.f;
+						packetDataIndex++;
+					}
 				}
-				LOG(LOG_TYPE_DEBUG, "Received packed with size: " << packet->length << " last value is: " << myUnion.f);
+				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
+				for (int i = 0; i < mColorsSize; i++)
+				{
+					dataUnionBytesFloat myUnion;
+					for (int j = 0; j<sizeof(float); j++)
+					{
+						myUnion.fBuff[j] = packet->data[packetDataIndex];
+						mCurrentColors[i] = myUnion.f;
+						packetDataIndex++;
+					}
+				}
+				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == 254)
 			{
@@ -274,6 +337,6 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
 			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
