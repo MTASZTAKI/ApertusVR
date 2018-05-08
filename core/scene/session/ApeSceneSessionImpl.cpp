@@ -399,7 +399,9 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 					break;
 				}
 			default:
-				LOG(LOG_TYPE_DEBUG, "Unknown message type" << packet->data[0]);
+			{
+				//LOG(LOG_TYPE_DEBUG, "Unknown message type" << packet->data[0]);
+			}
 		}
 	}
 }

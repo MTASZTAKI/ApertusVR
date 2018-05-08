@@ -179,60 +179,60 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 	}
 }
 
+void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet * packet)
+{
+	mStreamPacketSizeInBytes = (mCurrentPointsSize * 4) + (mCurrentColorsSize * 4) + mStreamHeaderSizeInBytes;
+	mpStreamPacket = new char[mStreamPacketSizeInBytes];
+	/*LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+	" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);*/
+	mpStreamPacket[0] = (unsigned char)255;
+
+	dataUnionBytesInt myUnion;
+	myUnion.i = mCurrentPointsSize;
+	mpStreamPacket[1] = myUnion.iBuff[0];
+	mpStreamPacket[2] = myUnion.iBuff[1];
+	mpStreamPacket[3] = myUnion.iBuff[2];
+	mpStreamPacket[4] = myUnion.iBuff[3];
+	myUnion.i = mCurrentColorsSize;
+	mpStreamPacket[5] = myUnion.iBuff[0];
+	mpStreamPacket[6] = myUnion.iBuff[1];
+	mpStreamPacket[7] = myUnion.iBuff[2];
+	mpStreamPacket[8] = myUnion.iBuff[3];
+
+	int packetDataIndex = mStreamHeaderSizeInBytes;
+	for (auto item : mCurrentPoints)
+	{
+		dataUnionBytesFloat myUnion;
+		myUnion.f = item;
+		for (int i = 0; i < sizeof(float); i++)
+		{
+			mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
+			packetDataIndex++;
+		}
+	}
+	for (auto item : mCurrentColors)
+	{
+		dataUnionBytesFloat myUnion;
+		myUnion.f = item;
+		for (int i = 0; i < sizeof(float); i++)
+		{
+			mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
+			packetDataIndex++;
+		}
+	}
+	streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, HIGH_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
+}
+
 void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
 {
 	while (true)
 	{
-		RakNet::Packet *packet;
+		RakNet::Packet* packet;
 		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
 		{
 			if (packet->data[0] == ID_NEW_INCOMING_CONNECTION || packet->data[0] == 253)
 			{
-				while (true) //TODO if you have more guests or you would like to handle errors, than it would be a new thread for streaming the data
-				{
-					mStreamPacketSizeInBytes = (mCurrentPointsSize * 4) + (mCurrentColorsSize * 4) + mStreamHeaderSizeInBytes;
-					mpStreamPacket = new char[mStreamPacketSizeInBytes];
-					/*LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
-						" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);*/
-					mpStreamPacket[0] = (unsigned char)255;
-
-					dataUnionBytesInt myUnion;
-					myUnion.i = mCurrentPointsSize;
-					mpStreamPacket[1] = myUnion.iBuff[0];
-					mpStreamPacket[2] = myUnion.iBuff[1];
-					mpStreamPacket[3] = myUnion.iBuff[2];
-					mpStreamPacket[4] = myUnion.iBuff[3];
-					myUnion.i = mCurrentColorsSize;
-					mpStreamPacket[5] = myUnion.iBuff[0];
-					mpStreamPacket[6] = myUnion.iBuff[1];
-					mpStreamPacket[7] = myUnion.iBuff[2];
-					mpStreamPacket[8] = myUnion.iBuff[3];
-
-					int packetDataIndex = mStreamHeaderSizeInBytes;
-					for (auto item : mCurrentPoints)
-					{
-						dataUnionBytesFloat myUnion;
-						myUnion.f = item;
-						for (int i = 0; i < sizeof(float); i++)
-						{
-							mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
-							packetDataIndex++;
-						}
-					}
-					for (auto item : mCurrentColors)
-					{
-						dataUnionBytesFloat myUnion;
-						myUnion.f = item;
-						for (int i = 0; i < sizeof(float); i++)
-						{
-							mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
-							packetDataIndex++;
-						}
-					}
-
-					streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, IMMEDIATE_PRIORITY, UNRELIABLE, 0, packet->systemAddress, false);
-					std::this_thread::sleep_for(std::chrono::milliseconds(500));
-				}
+				sendStreamPacket(streamPeer, packet);
 			}
 			if (packet->data[0] == ID_CONNECTION_LOST)
 			{
@@ -250,9 +250,14 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 			{
 				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
 			}
+			else if (packet->data[0] == ID_SND_RECEIPT_ACKED)
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_SND_RECEIPT_ACKED from " << packet->systemAddress.ToString());
+				sendStreamPacket(streamPeer, packet);
+			}
 			else
 			{
-				LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+				//LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -263,7 +268,7 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 {
 	while (true)
 	{
-		RakNet::Packet *packet;
+		RakNet::Packet* packet;
 		for (packet = streamPeer->Receive(); packet; streamPeer->DeallocatePacket(packet), packet = streamPeer->Receive())
 		{
 			if (packet->data[0] == 255)
@@ -334,9 +339,11 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 			}
 			else
 			{
-				LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+				//LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
+
+

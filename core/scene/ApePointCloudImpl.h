@@ -108,6 +108,8 @@ namespace Ape
 		bool mIsCurrentPointsChanged;
 
 		bool mIsCurrentColorsChanged;
+
+		void sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet* packet);
 	};
 }
 
