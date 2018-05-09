@@ -99,7 +99,7 @@ RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParamete
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTime);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSize);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

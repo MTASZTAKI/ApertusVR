@@ -64,6 +64,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
+	gpSceneSessionImpl->setScene(gpSceneImpl);
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
 		; //TODO open a platform specific window if needed

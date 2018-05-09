@@ -22,7 +22,7 @@ Ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
 
 void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 {
-	
+
 }
 
 void Ape::ApeIndustry40Plugin::Init()
@@ -51,7 +51,7 @@ void Ape::ApeIndustry40Plugin::Init()
 		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
-	if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
+	/*if (auto pointCloudNode = mpScene->createNode("pointCloudNode").lock())
 	{
 		pointCloudNode->setPosition(Ape::Vector3(0, 50, -300));
 		if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud", Ape::Entity::POINT_CLOUD).lock()))
@@ -82,7 +82,7 @@ void Ape::ApeIndustry40Plugin::Init()
 			pointCloud->setParentNode(pointCloudNode);
 			mPointCloud = pointCloud;
 		}
-	}
+	}*/
 	LOG_FUNC_LEAVE();
 }
 
@@ -91,7 +91,7 @@ void Ape::ApeIndustry40Plugin::Run()
 	LOG_FUNC_ENTER();
 	while (true)
 	{
-		if (auto pointCloud = mPointCloud.lock())
+		/*if (auto pointCloud = mPointCloud.lock())
 		{
 			std::random_device rd;
 			std::mt19937 gen(rd());
@@ -127,7 +127,7 @@ void Ape::ApeIndustry40Plugin::Run()
 				};
 			pointCloud->updatePoints(points);
 			pointCloud->updateColors(colors);
-		}
+		}*/
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));

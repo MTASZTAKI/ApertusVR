@@ -101,7 +101,7 @@ RakNet::RM3SerializationResult Ape::UnitTextureImpl::Serialize(RakNet::Serialize
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAddressingMode);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mFiltering);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::UnitTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

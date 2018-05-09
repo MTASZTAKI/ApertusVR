@@ -116,7 +116,7 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 		
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
-		return RakNet::RM3SR_SERIALIZED_ALWAYS;
+		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 	}
 	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }

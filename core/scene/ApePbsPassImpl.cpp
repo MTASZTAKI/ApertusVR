@@ -133,7 +133,7 @@ RakNet::RM3SerializationResult Ape::PbsPassImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightRoughnessOffset);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mF0);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::PbsPassImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

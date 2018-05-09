@@ -23,11 +23,27 @@ SOFTWARE.*/
 #ifndef APE_POINTCLOUDIMPL_H
 #define APE_POINTCLOUDIMPL_H
 
-#include <mutex>
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
 #include "ApeIPointCloud.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 #include "ApeIScene.h"
+
+union dataUnionBytesFloat {
+	float f;
+	char fBuff[sizeof(float)];
+};
+
+union dataUnionBytesInt {
+	int i;
+	char iBuff[sizeof(int)];
+};
+
+union dataUnionBytesShort {
+	short s;
+	char sBuff[sizeof(short)];
+};
 
 namespace Ape
 {
@@ -61,6 +77,10 @@ namespace Ape
 
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
+		void listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer) override;
+
+		void listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer) override;
+
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -72,17 +92,17 @@ namespace Ape
 
 		Ape::PointCloudSetParameters mParameters;
 
+		bool mIsInitSerializeFunctionFinished;
+
 		int mPointsSize;
 
 		int mColorsSize;
 
+		int mStreamHeaderSizeInBytes;
+
 		Ape::PointCloudPoints mCurrentPoints;
 
-		std::mutex mCurrentPointsMutex;
-
 		Ape::PointCloudColors mCurrentColors;
-
-		std::mutex mCurrentColorsMutex;
 
 		int mCurrentPointsSize;
 
@@ -92,7 +112,7 @@ namespace Ape
 
 		bool mIsCurrentColorsChanged;
 
-		int mSize;
+		void sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet* packet);
 	};
 }
 

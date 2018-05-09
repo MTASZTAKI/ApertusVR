@@ -143,7 +143,7 @@ RakNet::RM3SerializationResult Ape::LightImpl::Serialize(RakNet::SerializeParame
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightDirection);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::LightImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

@@ -116,7 +116,7 @@ RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsExportMesh);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

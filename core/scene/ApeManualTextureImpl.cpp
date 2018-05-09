@@ -93,7 +93,7 @@ RakNet::RM3SerializationResult Ape::ManualTextureImpl::Serialize(RakNet::Seriali
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

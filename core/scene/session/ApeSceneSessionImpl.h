@@ -63,13 +63,18 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeLobbyManager.h"
 #include "ApeIPluginManager.h"
+#include "ApeIEventManager.h"
+#include "ApePointCloudImpl.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
 	class APE_SCENE_DLL_EXPORT SceneSessionImpl : public Ape::ISceneSession
 	{
 	private:
-		RakNet::RakPeerInterface* mpRakPeer;
+		RakNet::RakPeerInterface* mpRakReplicaPeer;
+
+		RakNet::RakPeerInterface* mpRakStreamPeer;
 		
 		std::shared_ptr<RakNet::ReplicaManager3> mpReplicaManager3;
 		
@@ -80,6 +85,10 @@ namespace Ape
 		RakNet::RakNetGUID mGuid;
 
 		RakNet::SystemAddress mAddress;
+
+		RakNet::RakNetGUID mHostGuid;
+
+		RakNet::SystemAddress mHostAddress;
 
 		std::string mNATServerIP;
 
@@ -103,15 +112,23 @@ namespace Ape
 
 		Ape::IPluginManager* mpPluginManager;
 
-		bool mbIsConnectedToSessionServer;
+		Ape::IEventManager* mpEventManager;
+
+		Ape::IScene* mpScene;
+
+		std::vector<Ape::Replica*> mStreamReplicas;
+
+		void eventCallBack(const Ape::Event& event);
+
+		bool mIsConnectedToHost;
 
 		LobbyManager* mpLobbyManager;
 
 		void init();
 
-		void run();
+		void runReplicaPeerListen();
 
-		void listen();
+		void listenReplicaPeer();
 
 	public:
 		SceneSessionImpl();
@@ -133,6 +150,8 @@ namespace Ape
 		bool isHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
+
+		void setScene(Ape::IScene* scene);
 	};
 }
 
