@@ -91,7 +91,7 @@ RakNet::RM3SerializationResult Ape::WaterImpl::Serialize(RakNet::SerializeParame
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCamerasName);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSkyName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

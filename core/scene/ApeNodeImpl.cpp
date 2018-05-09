@@ -217,7 +217,7 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

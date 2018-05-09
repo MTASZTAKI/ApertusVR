@@ -81,7 +81,7 @@ RakNet::RM3SerializationResult Ape::RayGeometryImpl::Serialize(RakNet::Serialize
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIntersections);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::RayGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

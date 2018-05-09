@@ -91,7 +91,7 @@ RakNet::RM3SerializationResult Ape::BoxGeometryImpl::Serialize(RakNet::Serialize
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::BoxGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

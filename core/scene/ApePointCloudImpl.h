@@ -92,15 +92,13 @@ namespace Ape
 
 		Ape::PointCloudSetParameters mParameters;
 
+		bool mIsInitSerializeFunctionFinished;
+
 		int mPointsSize;
 
 		int mColorsSize;
 
-		int mStreamPacketSizeInBytes;
-
 		int mStreamHeaderSizeInBytes;
-
-		char* mpStreamPacket;
 
 		Ape::PointCloudPoints mCurrentPoints;
 

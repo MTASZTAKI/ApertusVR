@@ -73,7 +73,7 @@ RakNet::RM3SerializationResult Ape::IndexedLineSetGeometryImpl::Serialize(RakNet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
