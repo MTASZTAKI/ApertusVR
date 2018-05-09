@@ -181,10 +181,10 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 
 void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet * packet)
 {
-	mStreamPacketSizeInBytes = (mCurrentPointsSize * 4) + (mCurrentColorsSize * 4) + mStreamHeaderSizeInBytes;
+	mStreamPacketSizeInBytes = (mCurrentPointsSize * sizeof(short)) + (mCurrentColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	mpStreamPacket = new char[mStreamPacketSizeInBytes];
-	/*LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
-	" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);*/
+	LOG(LOG_TYPE_DEBUG, "Try for starting send " << mStreamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+	" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 	mpStreamPacket[0] = (unsigned char)255;
 
 	dataUnionBytesInt myUnion;
@@ -202,23 +202,18 @@ void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 	int packetDataIndex = mStreamHeaderSizeInBytes;
 	for (auto item : mCurrentPoints)
 	{
-		dataUnionBytesFloat myUnion;
-		myUnion.f = item;
-		for (int i = 0; i < sizeof(float); i++)
+		dataUnionBytesShort myUnion;
+		myUnion.s = item;
+		for (int i = 0; i < sizeof(short); i++)
 		{
-			mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
+			mpStreamPacket[packetDataIndex] = myUnion.sBuff[i];
 			packetDataIndex++;
 		}
 	}
 	for (auto item : mCurrentColors)
 	{
-		dataUnionBytesFloat myUnion;
-		myUnion.f = item;
-		for (int i = 0; i < sizeof(float); i++)
-		{
-			mpStreamPacket[packetDataIndex] = myUnion.fBuff[i];
-			packetDataIndex++;
-		}
+		mpStreamPacket[packetDataIndex] = (short)(item * 255.0f);
+		packetDataIndex++;
 	}
 	streamPeer->Send(mpStreamPacket, mStreamPacketSizeInBytes, HIGH_PRIORITY, RELIABLE_ORDERED_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 }
@@ -288,28 +283,23 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				mCurrentPoints.resize(mCurrentPointsSize);
 				mCurrentColors.clear();
 				mCurrentColors.resize(mCurrentColorsSize);
-				//LOG(LOG_TYPE_DEBUG, "Received packed with size: " << packet->length <<  " mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
+				LOG(LOG_TYPE_DEBUG, "Received packed with size: " << packet->length <<  " mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 				int packetDataIndex = mStreamHeaderSizeInBytes;
 				for (int i = 0; i < mPointsSize; i++)
 				{
-					dataUnionBytesFloat myUnion;
-					for (int j = 0; j<sizeof(float); j++)
+					dataUnionBytesShort myUnion;
+					for (int j = 0; j<sizeof(short); j++)
 					{
-						myUnion.fBuff[j] = packet->data[packetDataIndex];
-						mCurrentPoints[i] = myUnion.f;
+						myUnion.sBuff[j] = packet->data[packetDataIndex];
+						mCurrentPoints[i] = myUnion.s;
 						packetDataIndex++;
 					}
 				}
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
 				for (int i = 0; i < mColorsSize; i++)
 				{
-					dataUnionBytesFloat myUnion;
-					for (int j = 0; j<sizeof(float); j++)
-					{
-						myUnion.fBuff[j] = packet->data[packetDataIndex];
-						mCurrentColors[i] = myUnion.f;
-						packetDataIndex++;
-					}
+					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f; 
+					packetDataIndex++;
 				}
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 			}

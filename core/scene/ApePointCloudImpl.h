@@ -40,6 +40,11 @@ union dataUnionBytesInt {
 	char iBuff[sizeof(int)];
 };
 
+union dataUnionBytesShort {
+	short s;
+	char sBuff[sizeof(short)];
+};
+
 namespace Ape
 {
 	class PointCloudImpl : public IPointCloud, public Ape::Replica
