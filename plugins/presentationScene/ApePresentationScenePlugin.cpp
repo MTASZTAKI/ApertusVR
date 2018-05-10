@@ -166,220 +166,220 @@ void Ape::ApePresentationScenePlugin::Init()
 	//}
 	/*ApertusVR begin*/
 	/*static elements begin*/
-	//std::string name = "metalroom";
-	//Ape::Vector3 position = Ape::Vector3();
-	//Ape::Quaternion orientation = Ape::Quaternion();
-	//createMesh(name);
-	//name = "ID10_monitor";
-	//position = Ape::Vector3(-100, 710, 87) - mOldXMLFormatTranslateVector;
-	//orientation = Ape::Quaternion(-0.981, -0, -0.195, -0);
-	//createMesh(name, position, orientation);
-	//name = "ID9_monitortalp";
-	//position = Ape::Vector3(-186, 633, 56) - mOldXMLFormatTranslateVector;
-	//orientation = Ape::Quaternion(-0.995, -0, -0.098, -0);
-	//createMesh(name, position, orientation);
-	//StoryElement storyElement;
-	//storyElement.browserName = "periodicTable";
-	//storyElement.browserURL = "http://sciencenotes.org/wp-content/uploads/2015/01/PeriodicTableMuted.png";
-	//storyElement.browserPosition = Ape::Vector3(442.29, 364.444, -543.149) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.924, -0, 0.383, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//storyElement.browserZoom = 0;
-	//storyElement.browserResolutionVertical = 1024;
-	//storyElement.browserResolutionHorizontal = 768;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "feyman";
-	//storyElement.browserURL = "https://upload.wikimedia.org/wikipedia/en/4/42/Richard_Feynman_Nobel.jpg";
-	//storyElement.browserPosition = Ape::Vector3(-551.88, 364.444, 432.824) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.383, -0, -0.924, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "universe";
-	//storyElement.browserURL = "http://scienceblogs.com/startswithabang/files/2012/08/seqb_0631.jpeg";
-	//storyElement.browserPosition = Ape::Vector3(-697.103, 364.444, 71.468) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, -0.707, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "moseley";
-	//storyElement.browserURL = "http://www.mhs.ox.ac.uk/moseley/wp-content/uploads/sites/5/2015/05/Moseley_in_his_prime_c1914.jpg";
-	//storyElement.browserPosition = Ape::Vector3(695.979, 364.444, 71.505) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, 0.707, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "first";
-	//storyElement.browserURL = "http://google.com";
-	//storyElement.browserPosition = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 267;
-	//storyElement.browserHeight = 150;
-	//storyElement.browserResolutionVertical = 2048;
-	//storyElement.browserResolutionHorizontal = 1024;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "linkageDesigner";
-	//storyElement.browserURL = "http://www.linkagedesigner.com/";
-	//storyElement.browserPosition = Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 143;
-	//storyElement.browserHeight = 85;
-	//storyElement.browserResolutionVertical = 1024;
-	//storyElement.browserResolutionHorizontal = 768;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "t-system";
-	//storyElement.browserURL = "https://www.t-systems.com/";
-	//storyElement.browserPosition = Ape::Vector3(199.758, 677.017, -702.303) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.957, -0, 0.29, -0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo2";
-	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo2";
-	//storyElement.browserPosition = Ape::Vector3(-74, 727, 726) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "karsai";
-	//storyElement.browserURL = "http://www.karsai.hu";
-	//storyElement.browserPosition = Ape::Vector3(-706, 727, 51) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "motohotwear";
-	//storyElement.browserURL = "http://www.motohotwear.com/";
-	//storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo5";
-	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
-	//storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo";
-	//storyElement.browserURL = "https://www.endo-kapszula.hu/";
-	//storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 143;
-	//storyElement.browserHeight = 85;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo1";
-	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
-	//storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 143;
-	//storyElement.browserHeight = 85;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo3";
-	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
-	//storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "arUserManual";
-	//storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
-	//storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 143;
-	//storyElement.browserHeight = 85;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "endo4";
-	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
-	//storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "ios-android";
-	//storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
-	//storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 77;
-	//storyElement.browserHeight = 46;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "bimGeometry";
-	//storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
-	//storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 143;
-	//storyElement.browserHeight = 85;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "smartProfile";
-	//storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
-	//storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "qvii";
-	//storyElement.browserURL = "https://www.qvii.com/";
-	//storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 139;
-	//storyElement.browserHeight = 78;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "kotem";
-	//storyElement.browserURL = "http://kotem.com/";
-	//storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 139;
-	//storyElement.browserHeight = 78;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "pridgeonandclay";
-	//storyElement.browserURL = "http://www.pridgeonandclay.com/";
-	//storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 278;
-	//storyElement.browserHeight = 157;
-	//manageBrowser(storyElement);
-	//storyElement.browserName = "arShopFloor";
-	//storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
-	//storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
-	//storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	//storyElement.browserWidth = 139;
-	//storyElement.browserHeight = 78;
-	//manageBrowser(storyElement);
-	///*story begin*/
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 409.5), Ape::Quaternion(1, 0, 0, 0))); //indigo
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5, -273.943, -114), Ape::Quaternion(1, 0, 0, 0),
-	//	"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5, -247.443, -161), Ape::Quaternion(1, 0, 0, 0),
-	//	"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5, -278.943, -121), Ape::Quaternion(1, 0, 0, 0),
-	//	"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127, 79.2832, 317.68), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724, 78.6628, 287.429), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123, 67.057, 422.253), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586, 100.834, 573.667), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
-	//	"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(253.464, 88.8106, 280.662), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(268.471, 112.444, 489.413), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024, 82.1165, 121.716), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853, 78.5688, 116.881), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718, 94.0923, 162.253), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394, 84.057, -492.757), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12, 387, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
-	//	"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(13, 359, -52) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
-	//	"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053, -304.943, -172.531), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
-	//	"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
-	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
-	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
-	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	std::string name = "metalroom";
+	Ape::Vector3 position = Ape::Vector3();
+	Ape::Quaternion orientation = Ape::Quaternion();
+	createMesh(name);
+	name = "ID10_monitor";
+	position = Ape::Vector3(-100, 710, 87) - mOldXMLFormatTranslateVector;
+	orientation = Ape::Quaternion(-0.981, -0, -0.195, -0);
+	createMesh(name, position, orientation);
+	name = "ID9_monitortalp";
+	position = Ape::Vector3(-186, 633, 56) - mOldXMLFormatTranslateVector;
+	orientation = Ape::Quaternion(-0.995, -0, -0.098, -0);
+	createMesh(name, position, orientation);
+	StoryElement storyElement;
+	storyElement.browserName = "periodicTable";
+	storyElement.browserURL = "http://sciencenotes.org/wp-content/uploads/2015/01/PeriodicTableMuted.png";
+	storyElement.browserPosition = Ape::Vector3(442.29, 364.444, -543.149) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.924, -0, 0.383, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	storyElement.browserZoom = 0;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 768;
+	manageBrowser(storyElement);
+	storyElement.browserName = "feyman";
+	storyElement.browserURL = "https://upload.wikimedia.org/wikipedia/en/4/42/Richard_Feynman_Nobel.jpg";
+	storyElement.browserPosition = Ape::Vector3(-551.88, 364.444, 432.824) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, -0, -0.924, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "universe";
+	storyElement.browserURL = "http://scienceblogs.com/startswithabang/files/2012/08/seqb_0631.jpeg";
+	storyElement.browserPosition = Ape::Vector3(-697.103, 364.444, 71.468) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, -0.707, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "moseley";
+	storyElement.browserURL = "http://www.mhs.ox.ac.uk/moseley/wp-content/uploads/sites/5/2015/05/Moseley_in_his_prime_c1914.jpg";
+	storyElement.browserPosition = Ape::Vector3(695.979, 364.444, 71.505) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.707, -0, 0.707, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "first";
+	storyElement.browserURL = "http://google.com";
+	storyElement.browserPosition = Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(1, 0, 0, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 267;
+	storyElement.browserHeight = 150;
+	storyElement.browserResolutionVertical = 2048;
+	storyElement.browserResolutionHorizontal = 1024;
+	manageBrowser(storyElement);
+	storyElement.browserName = "linkageDesigner";
+	storyElement.browserURL = "http://www.linkagedesigner.com/";
+	storyElement.browserPosition = Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	storyElement.browserResolutionVertical = 1024;
+	storyElement.browserResolutionHorizontal = 768;
+	manageBrowser(storyElement);
+	storyElement.browserName = "t-system";
+	storyElement.browserURL = "https://www.t-systems.com/";
+	storyElement.browserPosition = Ape::Vector3(199.758, 677.017, -702.303) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.957, -0, 0.29, -0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo2";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo2";
+	storyElement.browserPosition = Ape::Vector3(-74, 727, 726) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "karsai";
+	storyElement.browserURL = "http://www.karsai.hu";
+	storyElement.browserPosition = Ape::Vector3(-706, 727, 51) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "motohotwear";
+	storyElement.browserURL = "http://www.motohotwear.com/";
+	storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo5";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
+	storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo";
+	storyElement.browserURL = "https://www.endo-kapszula.hu/";
+	storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo1";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
+	storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo3";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
+	storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arUserManual";
+	storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
+	storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "endo4";
+	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
+	storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "ios-android";
+	storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
+	storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 77;
+	storyElement.browserHeight = 46;
+	manageBrowser(storyElement);
+	storyElement.browserName = "bimGeometry";
+	storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
+	storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 143;
+	storyElement.browserHeight = 85;
+	manageBrowser(storyElement);
+	storyElement.browserName = "smartProfile";
+	storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
+	storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "qvii";
+	storyElement.browserURL = "https://www.qvii.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "kotem";
+	storyElement.browserURL = "http://kotem.com/";
+	storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	storyElement.browserName = "pridgeonandclay";
+	storyElement.browserURL = "http://www.pridgeonandclay.com/";
+	storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 278;
+	storyElement.browserHeight = 157;
+	manageBrowser(storyElement);
+	storyElement.browserName = "arShopFloor";
+	storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
+	storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
+	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	storyElement.browserWidth = 139;
+	storyElement.browserHeight = 78;
+	manageBrowser(storyElement);
+	/*story begin*/
+	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 409.5), Ape::Quaternion(1, 0, 0, 0))); //indigo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5, -273.943, -114), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5, -247.443, -161), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5, -278.943, -121), Ape::Quaternion(1, 0, 0, 0),
+		"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127, 79.2832, 317.68), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724, 78.6628, 287.429), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123, 67.057, 422.253), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586, 100.834, 573.667), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
+		"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
+	mStoryElements.push_back(StoryElement(Ape::Vector3(253.464, 88.8106, 280.662), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(268.471, 112.444, 489.413), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024, 82.1165, 121.716), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853, 78.5688, 116.881), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718, 94.0923, 162.253), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
+	mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394, 84.057, -492.757), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12, 387, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233, -261.939, -547.675), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
+		"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
+	mStoryElements.push_back(StoryElement(Ape::Vector3(13, 359, -52) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
+		"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053, -304.943, -172.531), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5, -270.943, 461.5), Ape::Quaternion(1, 0, 0, 0),
+		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
 	/*ApertusVR end*/
 
 	/*2017Farewell begin*/
@@ -580,218 +580,218 @@ void Ape::ApePresentationScenePlugin::Init()
 	/*2017Farewell end*/
 
 	/*endo meeting 2018.02.14 begin*/
-	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
-	{
-		universeSkyBoxMaterial->setFileName("universe.material");
-		universeSkyBoxMaterial->setAsSkyBox();
-	}
-	Ape::Radian angle0(1.57f);
-	Ape::Vector3 axis0(1, 0, 0);
-	Ape::Quaternion orientation0;
-	orientation0.FromAngleAxis(angle0, axis0);
-	Ape::Radian angle2(1.57f);
-	Ape::Vector3 axis2(0, 1, 0);
-	Ape::Quaternion orientation2;
-	orientation2.FromAngleAxis(angle2, axis2);
-	Ape::Radian angle3(3.14f);
-	Ape::Vector3 axis3(1, 0, 0);
-	Ape::Quaternion orientation3;
-	orientation3.FromAngleAxis(angle3, axis3);
-	Ape::Quaternion defaultOrientation;
-	defaultOrientation = orientation0 * orientation2 * orientation3;
-	StoryElement storyElement;
-	storyElement.browserName = "pub1";
-	storyElement.browserURL = "https://www.ncbi.nlm.nih.gov/pubmed/28828201";
-	storyElement.browserPosition = Ape::Vector3(0, 0, 0);
-	storyElement.browserOrientation = defaultOrientation;
-	storyElement.browserWidth = 300;
-	storyElement.browserHeight = 225;
-	storyElement.browserZoom = 0;
-	storyElement.browserResolutionVertical = 1024;
-	storyElement.browserResolutionHorizontal = 768;
-	manageBrowser(storyElement);
-	storyElement.browserName = "pub2";
-	storyElement.browserURL = "http://gut.bmj.com/content/early/2017/11/09/gutjnl-2017-314547";
-	storyElement.browserPosition = Ape::Vector3(0, 0, 400);
-	manageBrowser(storyElement);
-	storyElement.browserName = "pub3";
-	storyElement.browserURL = "http://www.giejournal.org/article/S0016-5107(17)31032-5/pdf";
-	storyElement.browserPosition = Ape::Vector3(0, 0, -400);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_roadmap";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_roadMap.png";
-	storyElement.browserPosition = Ape::Vector3(-325, 0, 0);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_content";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content_2.png";
-	storyElement.browserPosition = Ape::Vector3(0, 325, 0);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_result";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result.png";
-	storyElement.browserPosition = Ape::Vector3(400, 0, 400);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_result_2";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result_2.png";
-	storyElement.browserPosition = Ape::Vector3(400, 0, 0);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_pub";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_pub.png";
-	storyElement.browserPosition = Ape::Vector3(0, -325, 0);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_pub_cnn";
-	storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
-	storyElement.browserPosition = Ape::Vector3(0, -325, 400);
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo_pub_cnn_2";
-	storyElement.browserURL = "http://colah.github.io/posts/2014-10-Visualizing-MNIST/";
-	storyElement.browserPosition = Ape::Vector3(0, -325, -400);
-	manageBrowser(storyElement);
-	storyElement.browserName = "motohotwear";
-	storyElement.browserURL = "http://www.motohotwear.com/";
-	storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 77;
-	storyElement.browserHeight = 46;
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo5";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
-	storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 77;
-	storyElement.browserHeight = 46;
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo";
-	storyElement.browserURL = "https://www.endo-kapszula.hu/";
-	storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 143;
-	storyElement.browserHeight = 85;
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo1";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
-	storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 143;
-	storyElement.browserHeight = 85;
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo3";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
-	storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 77;
-	storyElement.browserHeight = 46;
-	manageBrowser(storyElement);
-	storyElement.browserName = "arUserManual";
-	storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
-	storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 143;
-	storyElement.browserHeight = 85;
-	manageBrowser(storyElement);
-	storyElement.browserName = "endo4";
-	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
-	storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 77;
-	storyElement.browserHeight = 46;
-	manageBrowser(storyElement);
-	storyElement.browserName = "ios-android";
-	storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
-	storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 77;
-	storyElement.browserHeight = 46;
-	manageBrowser(storyElement);
-	storyElement.browserName = "bimGeometry";
-	storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
-	storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 143;
-	storyElement.browserHeight = 85;
-	manageBrowser(storyElement);
-	storyElement.browserName = "smartProfile";
-	storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
-	storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 278;
-	storyElement.browserHeight = 157;
-	manageBrowser(storyElement);
-	storyElement.browserName = "qvii";
-	storyElement.browserURL = "https://www.qvii.com/";
-	storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 139;
-	storyElement.browserHeight = 78;
-	manageBrowser(storyElement);
-	storyElement.browserName = "kotem";
-	storyElement.browserURL = "http://kotem.com/";
-	storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 139;
-	storyElement.browserHeight = 78;
-	manageBrowser(storyElement);
-	storyElement.browserName = "pridgeonandclay";
-	storyElement.browserURL = "http://www.pridgeonandclay.com/";
-	storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 278;
-	storyElement.browserHeight = 157;
-	manageBrowser(storyElement);
-	storyElement.browserName = "arShopFloor";
-	storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
-	storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
-	storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
-	storyElement.browserWidth = 139;
-	storyElement.browserHeight = 78;
-	manageBrowser(storyElement);
-	/*story begin*/
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0 - mHumanXoffset, 0 - mHumanHeight, 0 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 409.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //indigo
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5 - mHumanXoffset, -273.943 - mHumanHeight, -114 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5 - mHumanXoffset, -247.443 - mHumanHeight, -161 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5 - mHumanXoffset, -278.943 - mHumanHeight, -121 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127 - mHumanXoffset, 79.2832 - mHumanHeight, 317.68 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724 - mHumanXoffset, 78.6628 - mHumanHeight, 287.429 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123 - mHumanXoffset, 67.057 - mHumanHeight, 422.253 - mHumanZoffset), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586 - mHumanXoffset, 100.834 - mHumanHeight, 573.667 - mHumanZoffset), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
-		"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(253.464 - mHumanXoffset, 88.8106 - mHumanHeight, 280.662 - mHumanZoffset), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(268.471 - mHumanXoffset, 112.444 - mHumanHeight, 489.413 - mHumanZoffset), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024 - mHumanXoffset, 82.1165 - mHumanHeight, 121.716 - mHumanZoffset), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853 - mHumanXoffset, 78.5688 - mHumanHeight, 116.881 - mHumanZoffset), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718 - mHumanXoffset, 94.0923 - mHumanHeight, 162.253 - mHumanZoffset), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
-	mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394 - mHumanXoffset, 84.057 - mHumanHeight, -492.757 - mHumanZoffset), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12 - mHumanXoffset, 387 - mHumanHeight, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
-		"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
-	mStoryElements.push_back(StoryElement(Ape::Vector3(13 - mHumanXoffset, 359 - mHumanHeight, -52 - mHumanZoffset) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
-		"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053 - mHumanXoffset, -304.943 - mHumanHeight, -172.531 - mHumanZoffset), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
-		"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	//if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
+	//{
+	//	universeSkyBoxMaterial->setFileName("universe.material");
+	//	universeSkyBoxMaterial->setAsSkyBox();
+	//}
+	//Ape::Radian angle0(1.57f);
+	//Ape::Vector3 axis0(1, 0, 0);
+	//Ape::Quaternion orientation0;
+	//orientation0.FromAngleAxis(angle0, axis0);
+	//Ape::Radian angle2(1.57f);
+	//Ape::Vector3 axis2(0, 1, 0);
+	//Ape::Quaternion orientation2;
+	//orientation2.FromAngleAxis(angle2, axis2);
+	//Ape::Radian angle3(3.14f);
+	//Ape::Vector3 axis3(1, 0, 0);
+	//Ape::Quaternion orientation3;
+	//orientation3.FromAngleAxis(angle3, axis3);
+	//Ape::Quaternion defaultOrientation;
+	//defaultOrientation = orientation0 * orientation2 * orientation3;
+	//StoryElement storyElement;
+	//storyElement.browserName = "pub1";
+	//storyElement.browserURL = "https://www.ncbi.nlm.nih.gov/pubmed/28828201";
+	//storyElement.browserPosition = Ape::Vector3(0, 0, 0);
+	//storyElement.browserOrientation = defaultOrientation;
+	//storyElement.browserWidth = 300;
+	//storyElement.browserHeight = 225;
+	//storyElement.browserZoom = 0;
+	//storyElement.browserResolutionVertical = 1024;
+	//storyElement.browserResolutionHorizontal = 768;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "pub2";
+	//storyElement.browserURL = "http://gut.bmj.com/content/early/2017/11/09/gutjnl-2017-314547";
+	//storyElement.browserPosition = Ape::Vector3(0, 0, 400);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "pub3";
+	//storyElement.browserURL = "http://www.giejournal.org/article/S0016-5107(17)31032-5/pdf";
+	//storyElement.browserPosition = Ape::Vector3(0, 0, -400);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_roadmap";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_roadMap.png";
+	//storyElement.browserPosition = Ape::Vector3(-325, 0, 0);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_content";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_content_2.png";
+	//storyElement.browserPosition = Ape::Vector3(0, 325, 0);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_result";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result.png";
+	//storyElement.browserPosition = Ape::Vector3(400, 0, 400);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_result_2";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_result_2.png";
+	//storyElement.browserPosition = Ape::Vector3(400, 0, 0);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_pub";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo_prezi/endo_pub.png";
+	//storyElement.browserPosition = Ape::Vector3(0, -325, 0);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_pub_cnn";
+	//storyElement.browserURL = "http://scs.ryerson.ca/~aharley/vis/conv/";
+	//storyElement.browserPosition = Ape::Vector3(0, -325, 400);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo_pub_cnn_2";
+	//storyElement.browserURL = "http://colah.github.io/posts/2014-10-Visualizing-MNIST/";
+	//storyElement.browserPosition = Ape::Vector3(0, -325, -400);
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "motohotwear";
+	//storyElement.browserURL = "http://www.motohotwear.com/";
+	//storyElement.browserPosition = Ape::Vector3(-706, 677, 51) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.831, 0, -0.556, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 77;
+	//storyElement.browserHeight = 46;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo5";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo5";
+	//storyElement.browserPosition = Ape::Vector3(188, 727, 708) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 77;
+	//storyElement.browserHeight = 46;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo";
+	//storyElement.browserURL = "https://www.endo-kapszula.hu/";
+	//storyElement.browserPosition = Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 143;
+	//storyElement.browserHeight = 85;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo1";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo1";
+	//storyElement.browserPosition = Ape::Vector3(62, 723, 729) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0, 0, -1, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 143;
+	//storyElement.browserHeight = 85;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo3";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo3";
+	//storyElement.browserPosition = Ape::Vector3(-74, 677, 726) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0.098, 0, -0.995, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 77;
+	//storyElement.browserHeight = 46;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "arUserManual";
+	//storyElement.browserURL = "https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c";
+	//storyElement.browserPosition = Ape::Vector3(-688, 723, 184) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.556, 0, -0.831, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 143;
+	//storyElement.browserHeight = 85;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "endo4";
+	//storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/endo4";
+	//storyElement.browserPosition = Ape::Vector3(188, 677, 708) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 77;
+	//storyElement.browserHeight = 46;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "ios-android";
+	//storyElement.browserURL = "https://nowitzkiblog.files.wordpress.com/2017/03/ios-android-icon_-e1447071162262.jpg?w=580";
+	//storyElement.browserPosition = Ape::Vector3(199, 727, -702) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.957, 0, 0.29, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 77;
+	//storyElement.browserHeight = 46;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "bimGeometry";
+	//storyElement.browserURL = "http://www.teslacad.ca/blog/wp-content/uploads/2014/04/MEP-Services-Samples-13.jpg";
+	//storyElement.browserPosition = Ape::Vector3(65, 723, -711) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.995, 0, -0.098, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 143;
+	//storyElement.browserHeight = 85;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "smartProfile";
+	//storyElement.browserURL = "http://kotem.com/Pages/Products.htm";
+	//storyElement.browserPosition = Ape::Vector3(-544, 706, 440) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 278;
+	//storyElement.browserHeight = 157;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "qvii";
+	//storyElement.browserURL = "https://www.qvii.com/";
+	//storyElement.browserPosition = Ape::Vector3(-392, 749, 592) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 139;
+	//storyElement.browserHeight = 78;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "kotem";
+	//storyElement.browserURL = "http://kotem.com/";
+	//storyElement.browserPosition = Ape::Vector3(-392, 663, 592) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(-0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 139;
+	//storyElement.browserHeight = 78;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "pridgeonandclay";
+	//storyElement.browserURL = "http://www.pridgeonandclay.com/";
+	//storyElement.browserPosition = Ape::Vector3(542, 706, 441) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 278;
+	//storyElement.browserHeight = 157;
+	//manageBrowser(storyElement);
+	//storyElement.browserName = "arShopFloor";
+	//storyElement.browserURL = "http://thearea.org/wp-content/uploads/2017/03/Augmented-Reality-and-IoT.jpg";
+	//storyElement.browserPosition = Ape::Vector3(392, 749, 592) - mOldXMLFormatTranslateVector;
+	//storyElement.browserOrientation = Ape::Quaternion(0.383, 0, -0.924, 0) *  mOldXMLFormatRotationQuaternion;
+	//storyElement.browserWidth = 139;
+	//storyElement.browserHeight = 78;
+	//manageBrowser(storyElement);
+	///*story begin*/
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(0 - mHumanXoffset, 0 - mHumanHeight, 0 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //zero
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 409.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0))); //indigo
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-24.5 - mHumanXoffset, -273.943 - mHumanHeight, -114 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"github", "https://github.com/MTASZTAKI/ApertusVR", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-30.5 - mHumanXoffset, -247.443 - mHumanHeight, -161 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"github", "https://github.com/MTASZTAKI/ApertusVR#about", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-27.5 - mHumanXoffset, -278.943 - mHumanHeight, -121 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", Ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-312.127 - mHumanXoffset, 79.2832 - mHumanHeight, 317.68 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-393.724 - mHumanXoffset, 78.6628 - mHumanHeight, 287.429 - mHumanZoffset), Ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(97.6123 - mHumanXoffset, 67.057 - mHumanHeight, 422.253 - mHumanZoffset), Ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-197.586 - mHumanXoffset, 100.834 - mHumanHeight, 573.667 - mHumanZoffset), Ape::Quaternion(0.116897, -0.00596791, 0.991839, 0.0506278),
+	//	"endo", "https://www.youtube.com/embed/MSvpU8bYZiE?vq=hd480&autoplay=1&loop=1&playlist=MSvpU8bYZiE", Ape::Vector3(-201, 723, 692) - mOldXMLFormatTranslateVector, Ape::Quaternion(-0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 143, 85));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(253.464 - mHumanXoffset, 88.8106 - mHumanHeight, 280.662 - mHumanZoffset), Ape::Quaternion(-0.397588, -1.02083e-08, 0.917568, 0.0))); //pridgeonandclay1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(268.471 - mHumanXoffset, 112.444 - mHumanHeight, 489.413 - mHumanZoffset), Ape::Quaternion(-0.257203, -0.00218629, 0.966327, -0.00821397))); //pridgeonandclay2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-539.024 - mHumanXoffset, 82.1165 - mHumanHeight, 121.716 - mHumanZoffset), Ape::Quaternion(0.653925, -0.0166771, 0.756182, 0.0192854))); //karsai1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-590.853 - mHumanXoffset, 78.5688 - mHumanHeight, 116.881 - mHumanZoffset), Ape::Quaternion(0.808807, -0.0206272, 0.587596, 0.0149859))); //karsai2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-607.718 - mHumanXoffset, 94.0923 - mHumanHeight, 162.253 - mHumanZoffset), Ape::Quaternion(0.573593, -0.0121893, 0.818928, 0.0174032))); //karsai3
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(16.7394 - mHumanXoffset, 84.057 - mHumanHeight, -492.757 - mHumanZoffset), Ape::Quaternion(0.981627, 0, -0.190809, 0))); //t-system
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12 - mHumanXoffset, 387 - mHumanHeight, -659) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(0, 0, -1, 0))); //linkageDesigner1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999))); //linkageDesigner2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-16.4233 - mHumanXoffset, -261.939 - mHumanHeight, -547.675 - mHumanZoffset), Ape::Quaternion(0.000344675, 0.0, -0.999992, -0.00424999),
+	//	"linkageDesigner", "https://www.youtube.com/embed/YxcRr_QbPfg?vq=hd480&autoplay=1&loop=1&playlist=YxcRr_QbPfg", Ape::Vector3(9.504, 364.896, -423) - mOldXMLFormatTranslateVector, Ape::Quaternion(0, -0, -1, -0) *  mOldXMLFormatRotationQuaternion, 143, 85)); //linkageDesigner3
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(13 - mHumanXoffset, 359 - mHumanHeight, -52 - mHumanZoffset) - mOldXMLFormatTranslateVectorCamera, Ape::Quaternion(1, 0, 0, 0),
+	//	"symbio-tic", "http://www.symbio-tic.eu/index.php?option=com_content&view=article&id=2&Itemid=25", Ape::Vector3(0, 360, -320) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150, 0, 2048, 1024)); //symbio-tic1
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-25.9053 - mHumanXoffset, -304.943 - mHumanHeight, -172.531 - mHumanZoffset), Ape::Quaternion(1, 0, -0.000392581, 0))); //symbio-tic2
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"first", "https://techcrunch.com/2016/07/30/tech-trends-that-will-impact-your-home/", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-12.5 - mHumanXoffset, -270.943 - mHumanHeight, 461.5 - mHumanZoffset), Ape::Quaternion(1, 0, 0, 0),
+	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", Ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, Ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
 
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
-	mStoryElements.push_back(StoryElement(Ape::Vector3(496.297, 242.352, 1207.09), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //begin
-	mStoryElements.push_back(StoryElement(Ape::Vector3(244.285, 362.639, 560.672), Ape::Quaternion(0.986104, -0.0755844, 0.147775, 0.0113269)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(5.85465, 10.0267, 707.353), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(5.85456, 3.26078, 309.411), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(13.8545, -3.70919, -100.53), Ape::Quaternion(-0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(397.854, -4.1349, 719.624), Ape::Quaternion(0.999991, -0.00850005, 1.54037e-07, 3.07597e-08)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(443.9, -10.9689, 318.012), Ape::Quaternion(0.997068, -0.00847519, 0.076425, 0.000649651)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(2.50844, -290.186, 310.75), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-8.69246, -321.79, 687.259), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(6.05867, -327.824, -106.902), Ape::Quaternion(1.00002, 9.40636e-08, -0.00424997, 2.96732e-08)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-495.589, 2.94523, 334.519), Ape::Quaternion(0.977535, 0.00830944, -0.210911, 0.00179282)));
-	mStoryElements.push_back(StoryElement(Ape::Vector3(-359.585, -2.15281, 320.593), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //end
-	mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(496.297, 242.352, 1207.09), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //begin
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(244.285, 362.639, 560.672), Ape::Quaternion(0.986104, -0.0755844, 0.147775, 0.0113269)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(5.85465, 10.0267, 707.353), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(5.85456, 3.26078, 309.411), Ape::Quaternion(0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(13.8545, -3.70919, -100.53), Ape::Quaternion(-0.99999, -0.00850004, 1.54037e-07, 3.07597e-08)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(397.854, -4.1349, 719.624), Ape::Quaternion(0.999991, -0.00850005, 1.54037e-07, 3.07597e-08)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(443.9, -10.9689, 318.012), Ape::Quaternion(0.997068, -0.00847519, 0.076425, 0.000649651)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(2.50844, -290.186, 310.75), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-8.69246, -321.79, 687.259), Ape::Quaternion(0.999985, -0.00849999, -0.00424981, -3.60945e-05)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(6.05867, -327.824, -106.902), Ape::Quaternion(1.00002, 9.40636e-08, -0.00424997, 2.96732e-08)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-495.589, 2.94523, 334.519), Ape::Quaternion(0.977535, 0.00830944, -0.210911, 0.00179282)));
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(-359.585, -2.15281, 320.593), Ape::Quaternion(0.976142, -0.125137, 0.176116, 0.0225773))); //end
+	//mStoryElements.push_back(StoryElement(Ape::Vector3(0, 0, 0), Ape::Quaternion(1, 0, 0, 0))); //zero
 	/*endo meeting 2018.02.14 end*/
 }
 
