@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local)
-add_subdirectory (guest)
-add_subdirectory (host)
-add_subdirectory (guest_cave)
-add_subdirectory (guest_oculusDK2)
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	ApeSystem.json
+	)
+
+add_custom_target(
+    Configs_mixedReality_oculusDK2 ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_mixedReality_oculusDK2 PROPERTY FOLDER "Samples/MixedReality/Configs")

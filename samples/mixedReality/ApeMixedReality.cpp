@@ -40,10 +40,12 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\local";
 		else if (participantType == "guest_cave")
 			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest_cave";
+		else if (participantType == "guest_oculusDK2")
+			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest_oculusDK2";
 	}
 	else
 	{
-		std::cout << "usage: host | guest | local | guest_cave " << std::endl;
+		std::cout << "usage: host | guest | local | guest_cave | guest_oculusDK2 " << std::endl;
 		return 0;
 	}
 	Ape::System::Start(configDir.str().c_str(), true);
