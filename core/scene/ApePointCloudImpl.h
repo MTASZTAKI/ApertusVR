@@ -92,8 +92,6 @@ namespace Ape
 
 		Ape::PointCloudSetParameters mParameters;
 
-		bool mIsInitSerializeFunctionFinished;
-
 		int mPointsSize;
 
 		int mColorsSize;
@@ -113,6 +111,8 @@ namespace Ape
 		bool mIsCurrentColorsChanged;
 
 		void sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet* packet);
+
+		void sendInitStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet* packet);
 	};
 }
 

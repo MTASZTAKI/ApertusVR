@@ -99,21 +99,32 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 
 void Ape::SceneSessionImpl::eventCallBack(const Ape::Event & event)
 {
-	if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+	if (mParticipantType == Ape::SceneSession::HOST)
 	{
-		if (auto entity = mpScene->getEntity(event.subjectName).lock())
+		if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
 		{
-			if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+			if (auto entity = mpScene->getEntity(event.subjectName).lock())
 			{
-				mStreamReplicas.push_back(pointCloud);
-				LOG(LOG_TYPE_DEBUG, "runStreamPeerListenThread for replica named: " << event.subjectName);
-				if (mParticipantType == Ape::SceneSession::HOST)
+				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
 				{
+					mStreamReplicas.push_back(pointCloud);
+					LOG(LOG_TYPE_DEBUG, "listenStreamPeerSendThread for replica named: " << event.subjectName);
 					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
 					runStreamPeerListenThread.detach();
 				}
-				else if (mParticipantType == Ape::SceneSession::GUEST)
+			}
+		}
+	}
+	else if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		if (event.type == Ape::Event::Type::POINT_CLOUD_CREATE)
+		{
+			if (auto entity = mpScene->getEntity(event.subjectName).lock())
+			{
+				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
 				{
+					mStreamReplicas.push_back(pointCloud);
+					LOG(LOG_TYPE_DEBUG, "listenStreamPeerReceiveThread for replica named: " << event.subjectName);
 					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
 					runStreamPeerListenThread.detach();
 				}
