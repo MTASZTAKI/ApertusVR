@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"
 #include "ApeISphereGeometry.h"
+#include "ApeIConeGeometry.h"
 #include "ApeIPlaneGeometry.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
@@ -84,12 +85,17 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 				randomColors.push_back(distDouble(gen));
 			userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
 			userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-			if (auto userSphere = std::static_pointer_cast<Ape::ISphereGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_SphereGeometry", Ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto userConeNode = gpSceneImpl->createNode(userNode->getName() + "_ConeNode").lock())
 			{
-				userSphere->setParameters(10.0f, Ape::Vector2(1, 1));
-				userSphere->setParentNode(userNode);
-				userSphere->setMaterial(userMaterial);
-			}
+				userConeNode->setParentNode(userNode);
+				userConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+				if (auto userCone = std::static_pointer_cast<Ape::IConeGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+				{
+					userCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
+					userCone->setParentNode(userConeNode);
+					userCone->setMaterial(userMaterial);
+				}
+		}
 		}
 		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
