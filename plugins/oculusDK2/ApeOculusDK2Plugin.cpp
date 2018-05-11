@@ -194,10 +194,33 @@ void Ape::ApeOculusDK2Plugin::Init()
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
 
-	if (auto node = mpScene->createNode("HeadNode").lock())
+	if (auto headNode = mpScene->createNode("HeadNode").lock())
 	{
-		node->setParentNode(mUserNode);
-		mHeadNode = node;
+		if (auto userNode = mUserNode.lock())
+		{
+			headNode->setParentNode(mUserNode);
+			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_ManualMaterial").lock()))
+			{
+				if (auto headConeNode = mpScene->createNode(userNode->getName() + "_HeadConeNode").lock())
+				{
+					headConeNode->setParentNode(headNode);
+					headConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+					if (auto headCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity(userNode->getName() + "_HeadConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+					{
+						headCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
+						headCone->setParentNode(headConeNode);
+						headCone->setMaterial(userMaterial);
+					}
+				}
+				if (auto headNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNode->getName() + "_HeadTextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+				{
+					headNameText->setCaption(userNode->getName() + "_Head");
+					headNameText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
+					headNameText->setParentNode(headNode);
+				}
+			}
+			mHeadNode = headNode;
+		}
 	}
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
 	{

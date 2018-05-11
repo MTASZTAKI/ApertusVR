@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIConeGeometry.h"
 #include "ApeIFileMaterial.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"

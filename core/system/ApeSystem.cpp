@@ -95,7 +95,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 					userCone->setParentNode(userConeNode);
 					userCone->setMaterial(userMaterial);
 				}
-		}
+			}
 		}
 		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
