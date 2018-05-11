@@ -152,8 +152,8 @@ void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 {
 	int streamPacketSizeInBytes = (mCurrentPointsSize * sizeof(short)) + (mCurrentColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
-	LOG(LOG_TYPE_DEBUG, "Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
-	" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
+	//LOG(LOG_TYPE_DEBUG, "Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+	//" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 	streamPacket[0] = (unsigned char)255;
 
 	dataUnionBytesInt myUnion;
@@ -256,7 +256,7 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 			}
 			else if (packet->data[0] == ID_SND_RECEIPT_ACKED)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_SND_RECEIPT_ACKED from " << packet->systemAddress.ToString());
+				//LOG(LOG_TYPE_DEBUG, "ID_SND_RECEIPT_ACKED from " << packet->systemAddress.ToString());
 				sendStreamPacket(streamPeer, packet);
 			}
 			else
@@ -346,7 +346,7 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
-				LOG(LOG_TYPE_DEBUG, "Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
+				//LOG(LOG_TYPE_DEBUG, "Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)

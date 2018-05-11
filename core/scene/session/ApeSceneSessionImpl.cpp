@@ -387,10 +387,6 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 							if (mpReplicaManager3->PushConnection(connection))
 							{
 								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
-								mIsConnectedToHost = true;
-								mHostAddress = packet->systemAddress;
-								LOG(LOG_TYPE_DEBUG, "Try to connect to host after NatPunchthrough for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
-								mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);
 							}
 							else
 							{
@@ -406,6 +402,13 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						LOG(LOG_TYPE_DEBUG, "Completed all remote downloads");
+						if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+						{
+							mIsConnectedToHost = true;
+							mHostAddress = packet->systemAddress;
+							LOG(LOG_TYPE_DEBUG, "Try to connect to host after NatPunchthrough for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
+							mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);
+						}
 					}
 					break;
 				}
