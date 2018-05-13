@@ -8,7 +8,7 @@
         "uniqueUserNamePrefix": "Host",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
       "sessionResourceLocation": [
-        "/plugins/industry40/resources",
+        "/plugins/robotMonitoring/resources",
         "/plugins/assimpAssetLoader/resources"
       ],
         "natPunchThroughServer": {
@@ -28,7 +28,7 @@
         "ApeOgreRenderPlugin",
         "ApeOisUserInputPlugin",
         "ApeAssimpAssetLoaderPlugin",
-        "ApeIndustry40Plugin",
+        "ApeRobotMonitoringPlugin",
         "ApeKinectPlugin"
       ]
     }

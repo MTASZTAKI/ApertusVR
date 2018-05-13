@@ -7,10 +7,10 @@
         "participantType": "Guest",
         "uniqueUserNamePrefix": "Guest",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": [
-            "/plugins/industry40/resources",
-            "/plugins/oculusDK2/resources"
-        ],
+      "sessionResourceLocation": [
+        "/plugins/robotMonitoring/resources",
+        "/plugins/oculusDK2/resources"
+      ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
