@@ -295,6 +295,17 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
+			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
+			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
+			rapidjson::Value& scale = jsonDocument["scale"];
+			mSceneUnitScale = scale.GetFloat();
+			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
+			mRegenerateNormals = regenerateNormals.GetBool();
+			LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
+			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
+			mRootNode = mpScene->createNode(rootNodeName.GetString());
+			LOG(LOG_TYPE_DEBUG, "mRootNode: " << rootNodeName.GetString());
+
 			rapidjson::Value& assimpAssetFileNames = jsonDocument["assets"];
 			for (auto& assimpAssetFileName : assimpAssetFileNames.GetArray())
 			{
@@ -336,16 +347,6 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 					}
 				}
 			}
-			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
-			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
-			rapidjson::Value& scale = jsonDocument["scale"];
-			mSceneUnitScale = scale.GetFloat();
-			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
-			mRegenerateNormals = regenerateNormals.GetBool();
-			LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
-			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
-			mRootNode = mpScene->createNode(rootNodeName.GetString());
-			LOG(LOG_TYPE_DEBUG, "mRootNode: " << rootNodeName.GetString());
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
 	}
@@ -376,6 +377,8 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 					//TODO somehow detect the unit of the scene
 					LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale);
 					node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
+					rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+					rootNode->setPosition(Ape::Vector3(0, 0, 0));
 					rootNode->setParentNode(node);
 				}
 			}
