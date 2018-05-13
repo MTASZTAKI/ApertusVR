@@ -7,9 +7,10 @@
         "participantType": "Host",
         "uniqueUserNamePrefix": "Host",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": [
-            "/plugins/industry40/resources"
-        ],
+      "sessionResourceLocation": [
+        "/plugins/industry40/resources",
+        "/plugins/assimpAssetLoader/resources"
+      ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
