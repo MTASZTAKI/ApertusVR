@@ -81,18 +81,7 @@ void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
 			LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
 			LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
 
-			const aiScene* assimpScene = mpAssimpImporter->ReadFile(fileGeometry->getFileName(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
-			if (!assimpScene)
-			{
-				LOG(LOG_TYPE_ERROR, "Loading the asset " << fileGeometry->getFileName() << " was failed due to: " << mpAssimpImporter->GetErrorString());
-			}
-			else
-			{
-				mAssimpAssetFileNames.push_back(fileGeometry->getFileName());
-				mAssimpScenes.push_back(assimpScene);
-				loadScene(assimpScene, mAssetCount);
-				mAssetCount++;
-			}
+			readFile(fileGeometry->getFileName());
 		}
 	}
 }
@@ -321,9 +310,9 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 						if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
 						{
 							meshFile->setFileName(fileName);
-							meshFile->mergeSubMeshes();
+							//meshFile->mergeSubMeshes();
 							//TODO how to use it when static geomtery is created?
-							//meshFile->setParentNode(node);
+							meshFile->setParentNode(node);
 							//TODO how to export the optimized mesh when static geomtery is created?
 							//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
 							//meshFile->exportMesh();
@@ -333,22 +322,28 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 				//TODO end
 				else
 				{
-					const aiScene* assimpScene = mpAssimpImporter->ReadFile(assimpAssetFileNamePath.str(), aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
-					if (!assimpScene)
-					{
-						LOG(LOG_TYPE_ERROR, "Loading the asset: " << assimpAssetFileNamePath.str() << " was failed due to: " << mpAssimpImporter->GetErrorString());
-					}
-					else
-					{
-						mAssimpAssetFileNames.push_back(assimpAssetFileNamePath.str());
-						mAssimpScenes.push_back(assimpScene);
-						loadScene(assimpScene, mAssetCount);
-						mAssetCount++;
-					}
+					readFile(assimpAssetFileNamePath.str());
 				}
 			}
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
+	}
+}
+
+void Ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
+{
+	std::lock_guard<std::mutex> guard(mMutex);
+	const aiScene* assimpScene = mpAssimpImporter->ReadFile(fileName, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+	if (!assimpScene)
+	{
+		LOG(LOG_TYPE_ERROR, "Loading the asset " << fileName << " was failed due to: " << mpAssimpImporter->GetErrorString());
+	}
+	else
+	{
+		mAssimpAssetFileNames.push_back(fileName);
+		mAssimpScenes.push_back(assimpScene);
+		loadScene(assimpScene, mAssetCount);
+		mAssetCount++;
 	}
 }
 
@@ -378,7 +373,7 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 					LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale);
 					node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
 					rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-					rootNode->setPosition(Ape::Vector3(0, 0, 0));
+					rootNode->setPosition(Ape::Vector3(-2700, 600, 0));
 					rootNode->setParentNode(node);
 				}
 			}
