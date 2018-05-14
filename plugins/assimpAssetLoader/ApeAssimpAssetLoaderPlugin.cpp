@@ -15,7 +15,8 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	std::srand(std::time(0));
 	mMergeAndExportMeshes = false;
 	mObjectCount = 0;
-	mSceneUnitScale = 1;
+	mSceneUnitScale = Ape::Vector3();
+	mSceneUnitPosition = Ape::Vector3();
 	mRegenerateNormals = false;
 	mRootNode = Ape::NodeWeakPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -78,8 +79,8 @@ void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
 		{
-			LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-			LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+			//LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+			//LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
 
 			readFile(fileGeometry->getFileName());
 		}
@@ -112,7 +113,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 		node->setPosition(Ape::Vector3(position.x, position.y, position.z));
 		node->setOrientation(Ape::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
 		node->setScale(Ape::Vector3(scaling.x, scaling.y, scaling.z));
-		LOG(LOG_TYPE_DEBUG, "nodeName: " << node->getName());
+		//LOG(LOG_TYPE_DEBUG, "nodeName: " << node->getName());
 		for (int i = 0; i < assimpNode->mNumMeshes; i++)
 		{
 			mObjectCount++;
@@ -170,9 +171,9 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							materialManualPass->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
 							materialManualPass->setAmbientColor(Ape::Color(0, 0, 0));
 							materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-							LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+							//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 							material->setPass(materialManualPass);
-							LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
+							//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
 						}
 					}
 				}
@@ -203,29 +204,29 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						materialManualPass->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
 						aiColor3D colorTransparent(0.0f, 0.0f, 0.0f);
 						asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
-						LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
+						//LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
 						int sceneBlendingType = 0;
 						asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
 						if (sceneBlendingType == aiBlendMode_Additive)
 						{
 							materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
-							LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
+							//LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
 						}
 						else if (sceneBlendingType == aiBlendMode_Default)
 						{
 							if (opacity < 0.99)
 							{
 								materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-								LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+								//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 							}
 							else
 							{
 								materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
-								LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
+								//LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
 							}
 						}
 						material->setPass(materialManualPass);
-						LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
+						//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
 					}
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
@@ -238,7 +239,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						normals.push_back(assimpNormal.y);
 						normals.push_back(assimpNormal.z);
 					}
-					LOG(LOG_TYPE_DEBUG, "hasNormal: " << assimpMesh->mName.C_Str());
+					//LOG(LOG_TYPE_DEBUG, "hasNormal: " << assimpMesh->mName.C_Str());
 				}
 				Ape::GeometryColors colors = Ape::GeometryColors();
 				for (int colorSetIndex = 0; colorSetIndex < AI_MAX_NUMBER_OF_COLOR_SETS; colorSetIndex++)
@@ -253,7 +254,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							colors.push_back(assimpColor.b);
 							colors.push_back(assimpColor.a);
 						}
-						LOG(LOG_TYPE_DEBUG, "hasVertexColors: " << assimpMesh->mName.C_Str());
+						//LOG(LOG_TYPE_DEBUG, "hasVertexColors: " << assimpMesh->mName.C_Str());
 					}
 				}
 				std::string groupName = std::string();
@@ -262,7 +263,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				mesh->setParameters(groupName, coordinates, indices, normals, mRegenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
 				if (!mMergeAndExportMeshes)
 					mesh->setParentNode(node);
-				LOG(LOG_TYPE_DEBUG, "createIndexedFaceSetGeometry: " << mesh->getName());
+				//LOG(LOG_TYPE_DEBUG, "createIndexedFaceSetGeometry: " << mesh->getName());
 			}
 		}
 	}
@@ -286,14 +287,18 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 		{
 			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
 			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
-			rapidjson::Value& scale = jsonDocument["scale"];
-			mSceneUnitScale = scale.GetFloat();
+			mSceneUnitScale.x = jsonDocument["scale"].GetArray()[0].GetFloat();
+			mSceneUnitScale.y = jsonDocument["scale"].GetArray()[1].GetFloat();
+			mSceneUnitScale.z = jsonDocument["scale"].GetArray()[2].GetFloat();
+			mSceneUnitPosition.x = jsonDocument["position"].GetArray()[0].GetFloat();
+			mSceneUnitPosition.y = jsonDocument["position"].GetArray()[1].GetFloat();
+			mSceneUnitPosition.z = jsonDocument["position"].GetArray()[2].GetFloat();
 			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
 			mRegenerateNormals = regenerateNormals.GetBool();
-			LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
+			//LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
 			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
 			mRootNode = mpScene->createNode(rootNodeName.GetString());
-			LOG(LOG_TYPE_DEBUG, "mRootNode: " << rootNodeName.GetString());
+			//LOG(LOG_TYPE_DEBUG, "mRootNode: " << rootNodeName.GetString());
 
 			rapidjson::Value& assimpAssetFileNames = jsonDocument["assets"];
 			for (auto& assimpAssetFileName : assimpAssetFileNames.GetArray())
@@ -352,7 +357,7 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 	LOG_FUNC_ENTER();
 	if (assimpScene->mRootNode)
 	{
-		LOG(LOG_TYPE_DEBUG, "mNumMeshes: " << assimpScene->mNumMeshes);
+		//LOG(LOG_TYPE_DEBUG, "mNumMeshes: " << assimpScene->mNumMeshes);
 		createNode(ID, assimpScene->mRootNode);
 		if (auto rootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
 		{
@@ -370,10 +375,11 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 				if (auto node = mRootNode.lock())
 				{
 					//TODO somehow detect the unit of the scene
-					LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale);
-					node->setScale(Ape::Vector3(mSceneUnitScale, mSceneUnitScale, mSceneUnitScale));
-					rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-					rootNode->setPosition(Ape::Vector3(-2700, 600, 0));
+					//LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale.toString() << " setPosition to " << mSceneUnitPosition.toString());
+					node->setScale(mSceneUnitScale);
+					//TODO get ori form json
+					//rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+					rootNode->setPosition(mSceneUnitPosition);
 					rootNode->setParentNode(node);
 				}
 			}

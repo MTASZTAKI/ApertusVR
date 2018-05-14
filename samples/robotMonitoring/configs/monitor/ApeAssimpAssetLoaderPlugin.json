@@ -2,8 +2,9 @@
   "assets": [
     "/plugins/assimpAssetLoader/resources/stand.3ds"
   ],
-    "mergeAndExportMeshes": false,
-    "scale": 1,
-    "regenerateNormals": true,
-    "rootNodeName": "stand"
+  "mergeAndExportMeshes": false,
+  "scale": [ 4, 4, 4 ],
+  "position": [ -3385, -50, -575 ],
+  "regenerateNormals": true,
+  "rootNodeName": "stand"
 }
