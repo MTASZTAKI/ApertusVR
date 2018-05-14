@@ -125,6 +125,10 @@ namespace Ape
 
 		Ape::NodeWeakPtr mNodeToMove;
 
+		Ape::NodeWeakPtr mHeadNode;
+
+		Ape::NodeWeakPtr mDummyNode;
+
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		MouseState mMouseState;
