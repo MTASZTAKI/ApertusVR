@@ -161,73 +161,56 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					if (!material)
 					{
 						material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
-						std::stringstream manualPassName;
-						manualPassName << modifiedMaterialName << "ManualPass" << std::rand();
-						if (auto materialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity(manualPassName.str(), Ape::Entity::PASS_MANUAL).lock()))
-						{
-							float opacity = 0.12f;
-							materialManualPass->setShininess(0.0f);
-							materialManualPass->setDiffuseColor(Ape::Color(0.058053, 0.0753292, 0.0675212, opacity));
-							materialManualPass->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
-							materialManualPass->setAmbientColor(Ape::Color(0, 0, 0));
-							materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-							//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
-							material->setPass(materialManualPass);
-							//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
-						}
+						float opacity = 0.12f;
+						material->setDiffuseColor(Ape::Color(0.058053, 0.0753292, 0.0675212, opacity));
+						material->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
+						material->setAmbientColor(Ape::Color(0, 0, 0));
+						material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+						//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 					}
 				}
 				//TODO end
 				if (!material)
 				{
 					material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
-					std::stringstream manualPassName;
-					manualPassName << modifiedMaterialName << "ManualPass" << std::rand();
-					if (auto materialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity(manualPassName.str(), Ape::Entity::PASS_MANUAL).lock()))
+					aiColor3D colorDiffuse(0.0f, 0.0f, 0.0f);
+					asssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorDiffuse);
+					float opacity = 1.0f;
+					asssimpMaterial->Get(AI_MATKEY_OPACITY, opacity);
+					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
+					aiColor3D colorSpecular(0.0f, 0.0f, 0.0f);
+					asssimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, colorSpecular);
+					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
+					aiColor3D colorAmbient(0.0f, 0.0f, 0.0f);
+					asssimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, colorAmbient);
+					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
+					aiColor3D colorEmissive(0.0f, 0.0f, 0.0f);
+					asssimpMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, colorEmissive);
+					material->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
+					aiColor3D colorTransparent(0.0f, 0.0f, 0.0f);
+					asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
+					//LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
+					int sceneBlendingType = 0;
+					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
+					if (sceneBlendingType == aiBlendMode_Additive)
 					{
-						float shininess = 0.0f;
-						asssimpMaterial->Get(AI_MATKEY_SHININESS, shininess);
-						materialManualPass->setShininess(shininess);
-						aiColor3D colorDiffuse(0.0f, 0.0f, 0.0f);
-						asssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorDiffuse);
-						float opacity = 1.0f;
-						asssimpMaterial->Get(AI_MATKEY_OPACITY, opacity);
-						materialManualPass->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
-						aiColor3D colorSpecular(0.0f, 0.0f, 0.0f);
-						asssimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, colorSpecular);
-						materialManualPass->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
-						aiColor3D colorAmbient(0.0f, 0.0f, 0.0f);
-						asssimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, colorAmbient);
-						materialManualPass->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
-						aiColor3D colorEmissive(0.0f, 0.0f, 0.0f);
-						asssimpMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, colorEmissive);
-						materialManualPass->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
-						aiColor3D colorTransparent(0.0f, 0.0f, 0.0f);
-						asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
-						//LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
-						int sceneBlendingType = 0;
-						asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
-						if (sceneBlendingType == aiBlendMode_Additive)
-						{
-							materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
-							//LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
-						}
-						else if (sceneBlendingType == aiBlendMode_Default)
-						{
-							if (opacity < 0.99)
-							{
-								materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-								//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
-							}
-							else
-							{
-								materialManualPass->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
-								//LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
-							}
-						}
-						material->setPass(materialManualPass);
-						//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
+						material->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
+						//LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
 					}
+					else if (sceneBlendingType == aiBlendMode_Default)
+					{
+						if (opacity < 0.99)
+						{
+							material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+							//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+						}
+						else
+						{
+							material->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
+							//LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
+						}
+					}
+					//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
 				if (assimpMesh->HasNormals() && !mRegenerateNormals)
