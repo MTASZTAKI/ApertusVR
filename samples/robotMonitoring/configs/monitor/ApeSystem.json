@@ -6,17 +6,19 @@
     "sceneSession": {
         "participantType": "Host",
         "uniqueUserNamePrefix": "Host",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+      "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+      "sessionIP":  "192.168.1.101",
       "sessionResourceLocation": [
         "/plugins/robotMonitoring/resources",
         "/plugins/assimpAssetLoader/resources"
       ],
-        "natPunchThroughServer": {
-            "ip": "195.111.2.95",
-            "port": "61666"
-        },
+      "natPunchThroughServer": {
+        "use":  false,
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
         "lobbyServer": {
-            "useLobby": true,
+            "useLobby": false,
             "ip": "195.111.2.95",
             "port": "8888",
             "sessionName": "robotMonitoring"

@@ -66,21 +66,26 @@ namespace Ape
 	{
 		struct NatPunchThroughServerConfig
 		{
+			bool use;
+
 			std::string ip;
 
 			std::string port;
 
 			NatPunchThroughServerConfig()
 			{
+				this->use = true;
 				this->ip = std::string();
 				this->port = std::string();
 			}
 
 			NatPunchThroughServerConfig(
+				bool use,
 			    std::string ip,
 			    std::string port
 			)
 			{
+				this->use = use;
 				this->ip = ip;
 				this->port = port;
 			}
@@ -129,12 +134,15 @@ namespace Ape
 
 		std::string sessionGUID;
 
+		std::string sessionIP;
+
 		SceneSessionConfig()
 		{
 			this->natPunchThroughServerConfig = NatPunchThroughServerConfig();
 			this->lobbyServerConfig = LobbyServerConfig();
 			this->participantType = SceneSession::ParticipantType::INVALID;
 			this->sessionGUID = std::string();
+			this->sessionIP = std::string();
 			this->uniqueUserNamePrefix = std::string();
 			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
@@ -147,13 +155,15 @@ namespace Ape
 		    std::string sessionName,
 		    std::string uniqueUserNamePrefix,
 		    std::string generatedUniqueUserName,
-		    std::vector<std::string> sessionResourceLocation
+		    std::vector<std::string> sessionResourceLocation,
+			std::string sessionIP
 		)
 		{
 			this->natPunchThroughServerConfig = natPunchThroughServerConfig;
 			this->lobbyServerConfig = lobbyServerConfig;
 			this->participantType = participantType;
 			this->sessionGUID = sessionName;
+			this->sessionIP = sessionIP;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
 			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;

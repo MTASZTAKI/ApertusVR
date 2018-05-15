@@ -68,7 +68,9 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 						natPunchThroughServer.MemberBegin();
 						natPunchThroughServerMemberIterator != natPunchThroughServer.MemberEnd(); ++natPunchThroughServerMemberIterator)
 					{
-						if (natPunchThroughServerMemberIterator->name == "ip")
+						if (natPunchThroughServerMemberIterator->name == "use")
+							mSceneSessionConfig.natPunchThroughServerConfig.use = natPunchThroughServerMemberIterator->value.GetBool();
+						else if (natPunchThroughServerMemberIterator->name == "ip")
 							mSceneSessionConfig.natPunchThroughServerConfig.ip = natPunchThroughServerMemberIterator->value.GetString();
 						else if (natPunchThroughServerMemberIterator->name == "port")
 							mSceneSessionConfig.natPunchThroughServerConfig.port = natPunchThroughServerMemberIterator->value.GetString();
@@ -109,6 +111,8 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					mSceneSessionConfig.uniqueUserNamePrefix = jsonDocument["sceneSession"]["uniqueUserNamePrefix"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionGUID")
 					mSceneSessionConfig.sessionGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
+				else if (sceneSessionMemberIterator->name == "sessionIP")
+					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionIP"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
 				{
 					for (auto& resourceLocation : jsonDocument["sceneSession"]["sessionResourceLocation"].GetArray())
