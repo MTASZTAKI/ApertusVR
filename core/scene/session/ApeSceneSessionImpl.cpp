@@ -251,6 +251,10 @@ void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 			LOG(LOG_TYPE_DEBUG, "Failed to connect.......");
 		}
 	}
+	else
+	{
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSceneSessionConfig().sessionIP.c_str(), atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str()), 0, 0);
+	}
 }
 
 void Ape::SceneSessionImpl::leave()
@@ -344,26 +348,39 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
 					LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString(true) << ", guid=" << packet->guid.ToString() << ", participantType=" << mParticipantType);
-					if (mNATServerIP == packet->systemAddress.ToString(false))
+					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+					if (mpReplicaManager3->PushConnection(connection))
 					{
-						mNATServerAddress = packet->systemAddress;
-						RakNet::ConnectionState cs = mpRakReplicaPeer->GetConnectionState(mNATServerAddress);
-						if (cs == RakNet::IS_CONNECTED)
-							mIsConnectedToNATServer = true;
-						else
-							mIsConnectedToNATServer = false;
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
 					}
-					else if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+					else
 					{
-						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
-						if (mpReplicaManager3->PushConnection(connection))
+						mpReplicaManager3->DeallocConnection(connection);
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+					}
+					if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+					{
+						if (mNATServerIP == packet->systemAddress.ToString(false))
 						{
-							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+							mNATServerAddress = packet->systemAddress;
+							RakNet::ConnectionState cs = mpRakReplicaPeer->GetConnectionState(mNATServerAddress);
+							if (cs == RakNet::IS_CONNECTED)
+								mIsConnectedToNATServer = true;
+							else
+								mIsConnectedToNATServer = false;
 						}
-						else
+						else if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 						{
-							mpReplicaManager3->DeallocConnection(connection);
-							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+							if (mpReplicaManager3->PushConnection(connection))
+							{
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+							}
+							else
+							{
+								mpReplicaManager3->DeallocConnection(connection);
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+							}
 						}
 					}
 				}

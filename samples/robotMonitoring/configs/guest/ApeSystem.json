@@ -11,7 +11,7 @@
     "sessionPort": "62666",
     "sessionResourceLocation": [
       "/plugins/robotMonitoring/resources",
-      "/plugins/oculusDK2/resources"
+      "/plugins/assimpAssetLoader/resources"
     ],
     "natPunchThroughServer": {
       "use": false,
@@ -26,10 +26,9 @@
     }
   },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeOculusDK2Plugin"
-        ]
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin"
+      ]
     }
 }

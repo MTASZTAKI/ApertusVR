@@ -37,10 +37,12 @@ int main (int argc, char** argv)
 			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\monitor";
 		else if (participantType == "oculusDK2")
 			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\oculusDK2";
+		else if (participantType == "guest")
+			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\guest";
 	}
 	else
 	{
-		std::cout << "usage: monitor | oculusDK2 " << std::endl;
+		std::cout << "usage: monitor | oculusDK2 | guest " << std::endl;
 		return 0;
 	}
 	Ape::System::Start(configDir.str().c_str(), true);
