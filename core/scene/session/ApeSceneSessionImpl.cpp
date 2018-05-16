@@ -253,6 +253,7 @@ void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 	}
 	else
 	{
+		LOG(LOG_TYPE_DEBUG, "Try to connect to host IP: " << mpSystemConfig->getSceneSessionConfig().sessionIP << " port: " << mpSystemConfig->getSceneSessionConfig().sessionPort);
 		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSceneSessionConfig().sessionIP.c_str(), atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str()), 0, 0);
 	}
 }
@@ -348,16 +349,6 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
 					LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString(true) << ", guid=" << packet->guid.ToString() << ", participantType=" << mParticipantType);
-					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
-					if (mpReplicaManager3->PushConnection(connection))
-					{
-						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
-					}
-					else
-					{
-						mpReplicaManager3->DeallocConnection(connection);
-						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
-					}
 					if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
 					{
 						if (mNATServerIP == packet->systemAddress.ToString(false))
@@ -381,6 +372,19 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 								mpReplicaManager3->DeallocConnection(connection);
 								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 							}
+						}
+					}
+					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+					{
+						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+						if (mpReplicaManager3->PushConnection(connection))
+						{
+							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+						}
+						else
+						{
+							mpReplicaManager3->DeallocConnection(connection);
+							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 						}
 					}
 				}

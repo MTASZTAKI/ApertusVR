@@ -114,7 +114,7 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 				else if (sceneSessionMemberIterator->name == "sessionIP")
 					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionIP"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionPort")
-					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionPort"].GetString();
+					mSceneSessionConfig.sessionPort = jsonDocument["sceneSession"]["sessionPort"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
 				{
 					for (auto& resourceLocation : jsonDocument["sceneSession"]["sessionResourceLocation"].GetArray())
