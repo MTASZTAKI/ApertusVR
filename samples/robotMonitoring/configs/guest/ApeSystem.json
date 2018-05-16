@@ -7,11 +7,10 @@
     "participantType": "Guest",
     "uniqueUserNamePrefix": "Guest",
     "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-    "sessionIP": "192.168.1.103",
+    "sessionIP": "192.168.1.101",
     "sessionPort": "62666",
     "sessionResourceLocation": [
-      "/plugins/robotMonitoring/resources",
-      "/plugins/assimpAssetLoader/resources"
+      "/plugins/robotMonitoring/resources"
     ],
     "natPunchThroughServer": {
       "use": false,
