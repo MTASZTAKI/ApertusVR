@@ -255,6 +255,14 @@ void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 	{
 		LOG(LOG_TYPE_DEBUG, "Try to connect to host IP: " << mpSystemConfig->getSceneSessionConfig().sessionIP << " port: " << mpSystemConfig->getSceneSessionConfig().sessionPort);
 		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSceneSessionConfig().sessionIP.c_str(), atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str()), 0, 0);
+		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
+		{
+			LOG(LOG_TYPE_DEBUG, "Failed connect call to " << mpSystemConfig->getSceneSessionConfig().sessionIP << ". Code=" << car);
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "Connection attempt was successful to remote system " << mpSystemConfig->getSceneSessionConfig().sessionIP);
+		}
 	}
 }
 
