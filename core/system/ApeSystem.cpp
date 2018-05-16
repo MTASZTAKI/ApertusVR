@@ -85,7 +85,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 				randomColors.push_back(distDouble(gen));
 			userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
 			userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-			/*if (auto userConeNode = gpSceneImpl->createNode(userNode->getName() + "_ConeNode").lock())
+			if (auto userConeNode = gpSceneImpl->createNode(userNode->getName() + "_ConeNode").lock())
 			{
 				userConeNode->setParentNode(userNode);
 				userConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
@@ -95,14 +95,14 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 					userCone->setParentNode(userConeNode);
 					userCone->setMaterial(userMaterial);
 				}
-			}*/
+			}
 		}
-		/*if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
 			userNameText->setCaption(uniqueUserNodeName.str());
 			userNameText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
 			userNameText->setParentNode(userNode);
-		}*/
+		}
 	}
 
 	gpPluginManagerImpl->InitAndRunPlugins();

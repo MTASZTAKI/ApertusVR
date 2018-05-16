@@ -163,8 +163,16 @@ void Ape::SceneSessionImpl::init()
 	mpReplicaManager3->SetNetworkIDManager(mpNetworkIDManager);
 	mpReplicaManager3->SetAutoManageConnections(false,true);
 	RakNet::SocketDescriptor sd;
-	sd.socketFamily = AF_INET; 
-	sd.port = 0;
+	sd.socketFamily = AF_INET;
+	if (mParticipantType == Ape::SceneSession::HOST)
+	{
+		sd.port = atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str());
+	}
+	else if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		sd.port = 0;
+	}
+
 	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
 	RakAssert(sr == RakNet::RAKNET_STARTED);
 	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
@@ -312,6 +320,24 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 	{
 		switch (packet->data[0])
 		{
+			case ID_NEW_INCOMING_CONNECTION:
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION"); 
+				if (mParticipantType == Ape::SceneSession::HOST)
+				{
+					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+					if (mpReplicaManager3->PushConnection(connection))
+					{
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+					}
+					else
+					{
+						mpReplicaManager3->DeallocConnection(connection);
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+					}
+				}
+			}
+				break;
 			case ID_DISCONNECTION_NOTIFICATION:
 				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION");
 				break;

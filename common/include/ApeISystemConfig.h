@@ -136,6 +136,8 @@ namespace Ape
 
 		std::string sessionIP;
 
+		std::string sessionPort;
+
 		SceneSessionConfig()
 		{
 			this->natPunchThroughServerConfig = NatPunchThroughServerConfig();
@@ -143,6 +145,7 @@ namespace Ape
 			this->participantType = SceneSession::ParticipantType::INVALID;
 			this->sessionGUID = std::string();
 			this->sessionIP = std::string();
+			this->sessionPort = std::string();
 			this->uniqueUserNamePrefix = std::string();
 			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
@@ -156,7 +159,8 @@ namespace Ape
 		    std::string uniqueUserNamePrefix,
 		    std::string generatedUniqueUserName,
 		    std::vector<std::string> sessionResourceLocation,
-			std::string sessionIP
+			std::string sessionIP,
+			std::string sessionPort
 		)
 		{
 			this->natPunchThroughServerConfig = natPunchThroughServerConfig;
@@ -164,6 +168,7 @@ namespace Ape
 			this->participantType = participantType;
 			this->sessionGUID = sessionName;
 			this->sessionIP = sessionIP;
+			this->sessionPort = sessionPort;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
 			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;

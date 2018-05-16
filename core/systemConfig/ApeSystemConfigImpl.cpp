@@ -113,6 +113,8 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 					mSceneSessionConfig.sessionGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionIP")
 					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionIP"].GetString();
+				else if (sceneSessionMemberIterator->name == "sessionPort")
+					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionPort"].GetString();
 				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
 				{
 					for (auto& resourceLocation : jsonDocument["sceneSession"]["sessionResourceLocation"].GetArray())
