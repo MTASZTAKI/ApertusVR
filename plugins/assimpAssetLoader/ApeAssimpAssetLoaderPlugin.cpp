@@ -180,13 +180,13 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
 					aiColor3D colorSpecular(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, colorSpecular);
-					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
+					//material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
 					aiColor3D colorAmbient(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, colorAmbient);
 					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
 					aiColor3D colorEmissive(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, colorEmissive);
-					material->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
+					//material->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
 					aiColor3D colorTransparent(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
 					//LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
@@ -194,19 +194,19 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
 					if (sceneBlendingType == aiBlendMode_Additive)
 					{
-						material->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
+						//material->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
 						//LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
 					}
 					else if (sceneBlendingType == aiBlendMode_Default)
 					{
 						if (opacity < 0.99)
 						{
-							material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+							//material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 							//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 						}
 						else
 						{
-							material->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
+							//material->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
 							//LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
 						}
 					}

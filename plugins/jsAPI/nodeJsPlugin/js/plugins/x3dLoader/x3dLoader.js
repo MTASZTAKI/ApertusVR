@@ -1,4 +1,4 @@
-﻿/*MIT License
+/*MIT License
 
 Copyright (c) 2017 MTA SZTAKI
 
@@ -366,9 +366,9 @@ exports.parseMaterial = function(matItem, parentGeometry) {
 		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
 		var transparency = self.parseTransparencyAttr(matItem);
 		var diffuseColor = self.parseDiffuseColorAttr(matItem, transparency);
-		var specularColor = self.parseSpecularColorAttr(matItem, transparency);
+		//var specularColor = self.parseSpecularColorAttr(matItem, transparency);
 		manualMaterial.setDiffuseColor(diffuseColor);
-		manualMaterial.setSpecularColor(specularColor);
+		//manualMaterial.setSpecularColor(specularColor);
 		//manualPass.setDiffuseColor(diffuseColor);
 		//manualPass.setSpecularColor(specularColor);
 		//manualMaterial.setManualPass(manualPass);
