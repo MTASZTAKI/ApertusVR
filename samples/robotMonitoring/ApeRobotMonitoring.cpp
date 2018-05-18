@@ -30,12 +30,14 @@ SOFTWARE.*/
 
 int main (int argc, char** argv)
 {
-	std::stringstream configPath;
 	if (argc > 1)
 	{
+		std::stringstream configPath;
+		std::stringstream configFilePath;
 		std::string configDirName = argv[1];
-		configPath << APE_SOURCE_DIR << configDirName;
-		std::ifstream f(configDirName.c_str());
+		configPath << APE_SOURCE_DIR << "/samples/robotMonitoring/configs/" << configDirName;
+		configFilePath << configPath.str() << "/ApeSystem.json";
+		std::ifstream f(configFilePath.str().c_str());
 		if (f.good())
 		{
 			Ape::System::Start(configPath.str().c_str(), true);
@@ -43,7 +45,7 @@ int main (int argc, char** argv)
 		}
 		else
 		{
-			std::cout << "wrong configDirName" << std::endl;
+			std::cout << "wrong configDirName: " << configPath.str() << std::endl;
 			return 0;
 		}
 	}
