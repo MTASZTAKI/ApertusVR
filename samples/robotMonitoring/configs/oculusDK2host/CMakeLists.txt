@@ -21,14 +21,16 @@
 #SOFTWARE.
 
 set (CONFIGS
+	ApeAssimpAssetLoaderPlugin.json
+	ApeNodeJsPlugin.json
 	ApeOgreRenderPlugin.json
 	ApeOisUserInputPlugin.json
 	ApeSystem.json
 	)
 
 add_custom_target(
-    Configs_robotMonitoring_oculusDK2 ALL
+    Configs_robotMonitoring_oculusDK2host ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_robotMonitoring_oculusDK2 PROPERTY FOLDER "Samples/RobotMonitoring/Configs")
+set_property (TARGET Configs_robotMonitoring_oculusDK2host PROPERTY FOLDER "Samples/RobotMonitoring/Configs")

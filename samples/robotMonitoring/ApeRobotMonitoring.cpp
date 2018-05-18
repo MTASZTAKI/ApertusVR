@@ -24,28 +24,33 @@ SOFTWARE.*/
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include "ApeSystem.h"
 
 int main (int argc, char** argv)
 {
-	std::stringstream configDir;
+	std::stringstream configPath;
 	if (argc > 1)
 	{
-		std::string participantType = argv[1];
-		if (participantType == "monitor")
-			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\monitor";
-		else if (participantType == "oculusDK2")
-			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\oculusDK2";
-		else if (participantType == "guest")
-			configDir << APE_SOURCE_DIR << "\\samples\\robotMonitoring\\configs\\guest";
+		std::string configDirName = argv[1];
+		configPath << APE_SOURCE_DIR << configDirName;
+		std::ifstream f(configDirName.c_str());
+		if (f.good())
+		{
+			Ape::System::Start(configPath.str().c_str(), true);
+			Ape::System::Stop();
+		}
+		else
+		{
+			std::cout << "wrong configDirName" << std::endl;
+			return 0;
+		}
 	}
 	else
 	{
-		std::cout << "usage: monitor | oculusDK2 | guest " << std::endl;
+		std::cout << "configDirName is not present as argument" << std::endl;
 		return 0;
 	}
-	Ape::System::Start(configDir.str().c_str(), true);
-	Ape::System::Stop();
 	return 0;
 }
