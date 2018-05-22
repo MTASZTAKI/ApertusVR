@@ -45,10 +45,7 @@ namespace Ape
 		bool isVisible() override;
 		
 		void setVisible(bool enabled) override;
-		
-		Vector3 getOffset() override;
-		
-		void setOffset(Vector3 position) override;
+	
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
@@ -66,8 +63,6 @@ namespace Ape
 		std::string mCaption;
 
 		bool mVisibility;
-
-		Vector3 mOffset;
 	};
 }
 

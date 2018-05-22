@@ -64,14 +64,6 @@ namespace Ape
 
 		void setProjection(Ape::Matrix4 projection) override;
 
-		Ape::Vector3 getPosition() override;
-
-		void setPosition(Ape::Vector3 positionOffset) override;
-
-		Ape::Quaternion getOrientation() override;
-
-		void setOrientation(Ape::Quaternion orientationOffset) override;
-
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
 		Ape::NodeWeakPtr getParentNode() override;
@@ -106,10 +98,6 @@ namespace Ape
 		float mAspectRatio;
 		
 		Ape::Matrix4 mProjection;
-
-		Ape::Quaternion mOrientationOffset;
-
-		Ape::Vector3 mPositionOffset;
 
 		NodeWeakPtr mParentNode;
 

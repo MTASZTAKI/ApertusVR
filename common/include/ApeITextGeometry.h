@@ -47,10 +47,6 @@ namespace Ape
 
 		virtual void setVisible(bool enabled) = 0;
 
-		virtual Vector3 getOffset() = 0;
-
-		virtual void setOffset(Vector3 position) = 0;
-
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 	};
 }

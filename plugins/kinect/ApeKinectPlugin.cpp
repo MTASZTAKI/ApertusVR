@@ -358,12 +358,16 @@ void Ape::KinectPlugin::Run()
 				{
 					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
 					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_Kinect", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("pointCloudNode_Kinect_Text_Node").lock())
 					{
-						pointCloudNodeText->setCaption("Points_Kinect");
-						pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						pointCloudNodeText->setParentNode(pointCloudNode);
-					}*/
+						textNode->setParentNode(pointCloudNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNode_Kinect_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("Kinect");
+							text->setParentNode(textNode);
+						}
+					}
 					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
 					{
 						pointCloud->setParameters(KPts, KCol, 100000);
@@ -390,11 +394,15 @@ void Ape::KinectPlugin::Run()
 				{
 					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
 					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectOperator_Node").lock())
 					{
-						pointCloudNodeText->setCaption("Points_KinectOperator");
-						pointCloudNodeText->setOffset(Ape::Vector3(0.0f, -1.0f, 0.0f));
-						pointCloudNodeText->setParentNode(pointCloudNode);
+						textNode->setParentNode(pointCloudNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							userNameText->setCaption("pointCloudNodeText_KinectOperator");
+							userNameText->setParentNode(textNode);
+						}
 					}
 					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
 					{

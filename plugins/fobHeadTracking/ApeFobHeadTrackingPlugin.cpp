@@ -20,7 +20,7 @@ Ape::ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
 	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
-	mCamerasNode = Ape::NodeWeakPtr();
+	mHeadNode = Ape::NodeWeakPtr();
 	mTrackedViewerPosition = Ape::Vector3();
 	mTrackedViewerOrientation = Ape::Quaternion();
 	mTrackedViewerOrientationYPR = Ape::Euler();
@@ -76,9 +76,18 @@ void Ape::ApeFobHeadTrackingPlugin::Init()
 	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
 		mUserNode = userNode;
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+		}
+		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
+		{
+			mUserMaterial = userMaterial;
+		}
+	}
 
-	mCamerasNode = mpScene->createNode("FobHeadTrackingNode");
 	LOG(LOG_TYPE_DEBUG, "ApeFobHeadTrackingPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -363,12 +372,10 @@ void Ape::ApeFobHeadTrackingPlugin::Run()
 			{
 				LOG(LOG_TYPE_DEBUG, "camera: " << camera->getName());
 				setCameraConfigByName(camera->getName(), camera);
-				mCamerasNode.lock()->setParentNode(mUserNode);
 				mNearClip = camera->getNearClipDistance();
 				mFarClip = camera->getFarClipDistance();
 				mC = -(mFarClip + mNearClip) / (mFarClip - mNearClip);
 				mD = -(2.0f * mFarClip * mNearClip) / (mFarClip - mNearClip);
-				camera->setParentNode(mCamerasNode);
 				cameraCount++;
 			}
 			mCameraDoubleQueue.pop();
@@ -386,8 +393,8 @@ void Ape::ApeFobHeadTrackingPlugin::Run()
 			mTrackedViewerOrientationYPR = Ape::Euler(Ape::Degree(orientationDataFromTracker[1]).toRadian(), Ape::Degree(orientationDataFromTracker[2]).toRadian() - 1.57f, Ape::Degree(orientationDataFromTracker[0]).toRadian());
 			mTrackedViewerOrientation = mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation;
 		}
-		if (auto camerasNode = mCamerasNode.lock())
-			camerasNode->setPosition(mTrackedViewerPosition);
+		if (auto headNode = mHeadNode.lock())
+			headNode->setPosition(mTrackedViewerPosition);
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];

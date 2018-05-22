@@ -13,6 +13,7 @@ Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
+	mUserMaterial = Ape::ManualMaterialWeakPtr();
 	LOG_FUNC_LEAVE();
 }
 
@@ -32,6 +33,40 @@ Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 	return matrix4;
 }
 
+Ape::CameraWeakPtr Ape::ApeOculusDK2Plugin::createCamera(std::string name)
+{
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
+	{
+		if (auto cameraNode = mpScene->createNode(name + "_Node").lock())
+		{
+			cameraNode->setParentNode(mHeadNode);
+			if (auto cameraConeNode = mpScene->createNode(name + "_ConeNode").lock())
+			{
+				cameraConeNode->setParentNode(cameraNode);
+				cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+				if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity(name + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+				{
+					cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
+					cameraCone->setParentNode(cameraConeNode);
+					cameraCone->setMaterial(mUserMaterial);
+				}
+			}
+			if (auto userNameTextNode = mpScene->createNode(name + "_TextNode").lock())
+			{
+				userNameTextNode->setParentNode(cameraNode);
+				userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+				if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(name + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+				{
+					userNameText->setCaption(name);
+					userNameText->setParentNode(userNameTextNode);
+				}
+			}
+			camera->setParentNode(cameraNode);
+		}
+		return camera;
+	}
+}
+
 
 void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
@@ -46,6 +81,14 @@ void Ape::ApeOculusDK2Plugin::Init()
 	{
 		userNode->setFixedYaw(true);
 		mUserNode = userNode;
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+		}
+		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
+		{
+			mUserMaterial = userMaterial;
+		}
 	}
 
 	LOG(LOG_TYPE_DEBUG, "waiting for main window");
@@ -136,7 +179,7 @@ void Ape::ApeOculusDK2Plugin::Init()
 			if (auto fileMaterial = fileMaterialLeftEye.lock())
 				fileMaterial->setPassGpuParameters(params);
 		}
-		else 
+		else
 		{
 			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov, recommendedTex1Size, viewports[eyeNum], UVScaleOffset);
 			Ape::PassGpuParameters params;
@@ -193,45 +236,12 @@ void Ape::ApeOculusDK2Plugin::Init()
 		}
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
+	if (auto userNode = mUserNode.lock())
+	{
+		mCameraLeft = createCamera(userNode->getName() + "HmdLeftCamera");
+		mCameraRight = createCamera(userNode->getName() + "HmdRightCamera");
+	}
 
-	if (auto headNode = mpScene->createNode("HeadNode").lock())
-	{
-		if (auto userNode = mUserNode.lock())
-		{
-			headNode->setParentNode(mUserNode);
-			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_ManualMaterial").lock()))
-			{
-				if (auto headConeNode = mpScene->createNode(userNode->getName() + "_HeadConeNode").lock())
-				{
-					headConeNode->setParentNode(headNode);
-					headConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-					if (auto headCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity(userNode->getName() + "_HeadConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
-					{
-						headCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
-						headCone->setParentNode(headConeNode);
-						headCone->setMaterial(userMaterial);
-					}
-				}
-				if (auto headNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNode->getName() + "_HeadTextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
-				{
-					headNameText->setCaption(userNode->getName() + "_Head");
-					headNameText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
-					headNameText->setParentNode(headNode);
-				}
-			}
-			mHeadNode = headNode;
-		}
-	}
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdLeftCamera", Ape::Entity::Type::CAMERA).lock()))
-	{
-		camera->setParentNode(mHeadNode);
-		mCameraLeft = camera;
-	}
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("HmdRightCamera", Ape::Entity::Type::CAMERA).lock()))
-	{
-		camera->setParentNode(mHeadNode);
-		mCameraRight = camera;
-	}
 	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
 	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
@@ -242,7 +252,10 @@ void Ape::ApeOculusDK2Plugin::Init()
 	{
 		cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
 		cameraLeft->setAspectRatio(aspectRatio);
-		cameraLeft->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+		if (auto cameraNode = cameraLeft->getParentNode().lock())
+		{
+			cameraNode->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+		}
 
 		if (auto texture = manualTextureLeftEye.lock())
 			texture->setSourceCamera(cameraLeft);
@@ -251,7 +264,10 @@ void Ape::ApeOculusDK2Plugin::Init()
 	{
 		cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));
 		cameraRight->setAspectRatio(aspectRatio);
-		cameraRight->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+		if (auto cameraNode = cameraRight->getParentNode().lock())
+		{
+			cameraNode->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+		}
 
 		if (auto texture = manualTextureRightEye.lock())
 			texture->setSourceCamera(cameraRight);

@@ -1043,15 +1043,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::GEOMETRY_TEXT_DELETE:
 					;
 					break;
-				case Ape::Event::Type::GEOMETRY_TEXT_OFFSET:
-				{
-					if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
-					{
-						if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
-							ogreText->setLocalTranslation(Ape::ConversionToOgre(textGeometry->getOffset()));
-					}
-				}
-					break;
 				case Ape::Event::Type::GEOMETRY_TEXT_CAPTION:
 				{
 					if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
@@ -1877,18 +1868,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setCustomProjectionMatrix(true, Ape::ConversionToOgre(camera->getProjection()));
 				}
 					break;
-				case Ape::Event::Type::CAMERA_POSITION:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setPosition(ConversionToOgre(camera->getPosition()));
-				}
-					break;
-				case Ape::Event::Type::CAMERA_ORIENTATION:
-				{
-					if (mpSceneMgr->hasCamera(event.subjectName))
-						mpSceneMgr->getCamera(event.subjectName)->setOrientation(ConversionToOgre(camera->getOrientation()));
-				}
-					break;
 				case Ape::Event::Type::CAMERA_PROJECTIONTYPE:
 					{
 						if (mpSceneMgr->hasCamera(event.subjectName))
@@ -2006,7 +1985,13 @@ void Ape::OgreRenderPlugin::Init()
 	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
 		mUserNode = userNode;
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+		}
+	}
 
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";
@@ -2275,20 +2260,51 @@ void Ape::OgreRenderPlugin::Init()
 					LOG(LOG_TYPE_DEBUG, "winDesc:" << " name=" << winDesc.name << " width=" << winDesc.width << " height=" << winDesc.height << " fullScreen=" << winDesc.useFullScreen);
 					mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-					for (int j=0; j<mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
+					for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 					{
-						auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name, Ape::Entity::Type::CAMERA).lock());
-						if (camera)
+						if (auto userNode = mUserNode.lock())
 						{
-							//TODO why it is not ok
-							//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-							camera->setWindow(winDesc.name);
-							camera->setFocalLength(1.0f);
-							camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.nearClip);
-							camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.farClip);
-							camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.fovY.toRadian());
-							if (auto userNode = mUserNode.lock())
-								camera->setParentNode(mUserNode);
+							std::string cameraName = userNode->getName() + mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name;
+							if (auto cameraNode = mpScene->createNode(cameraName + "_Node").lock())
+							{
+								cameraNode->setParentNode(mHeadNode);
+								auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(cameraName, Ape::Entity::Type::CAMERA).lock());
+								if (camera)
+								{
+									//TODO why it is not ok
+									//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
+									camera->setWindow(winDesc.name);
+									camera->setFocalLength(1.0f);
+									camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.nearClip);
+									camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.farClip);
+									camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.fovY.toRadian());
+									camera->setParentNode(cameraNode);
+									if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
+									{
+										if (auto cameraConeNode = mpScene->createNode(cameraName + "_ConeNode").lock())
+										{
+											cameraConeNode->setParentNode(cameraNode);
+											cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
+											if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity(cameraName + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+											{
+												cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
+												cameraCone->setParentNode(cameraConeNode);
+												cameraCone->setMaterial(userMaterial);
+											}
+										}
+										if (auto userNameTextNode = mpScene->createNode(cameraName + "_TextNode").lock())
+										{
+											userNameTextNode->setParentNode(cameraNode);
+											userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+											if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(cameraName + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+											{
+												userNameText->setCaption(cameraName);
+												userNameText->setParentNode(userNameTextNode);
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 

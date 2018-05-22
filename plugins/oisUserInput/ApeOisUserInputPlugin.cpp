@@ -90,10 +90,6 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 		{
 			mNodeToMove = mpScene->getNode(event.subjectName);
 		}
-		else if (event.subjectName == "HeadNode")
-		{
-			mHeadNode = mpScene->getNode(event.subjectName);
-		}
 	}
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
@@ -163,6 +159,10 @@ void Ape::OISUserInputPlugin::Init()
 	{
 		mUserNode = userNode;
 		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+		}
 	}
 
 	Ape::OisWindowConfig oisWindowConfig;
@@ -496,12 +496,9 @@ void Ape::OISUserInputPlugin::moveUserNode()
 	{
 		if (auto dummyNode = mDummyNode.lock())
 		{
-			Ape::Quaternion headNodeOrientation;
 			if (auto headNode = mHeadNode.lock())
 			{
-				headNodeOrientation = headNode->getDerivedOrientation();
-				dummyNode->setOrientation(headNodeOrientation);
-				//LOG_TRACE("headNodeOrientation " << headNodeOrientation.toString());
+				dummyNode->setOrientation(headNode->getDerivedOrientation());
 			}
 			if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 			{
@@ -536,27 +533,19 @@ void Ape::OISUserInputPlugin::moveUserNode()
 			if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
 			{
 				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-				//dummyNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 			}
 			if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
 			{
 				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-				//dummyNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 			}
 			if (mKeyCodeMap[OIS::KeyCode::KC_UP])
 			{
 				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-				//dummyNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 			}
 			if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
 			{
 				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-				//dummyNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 			}
-			//if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			//	dummyNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-			//if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			//	dummyNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
 		}
 	}
 }

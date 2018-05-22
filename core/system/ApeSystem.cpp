@@ -75,33 +75,20 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
 	if (auto userNode = gpSceneImpl->createNode(uniqueUserNodeName.str()).lock())
 	{
-		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneImpl->createEntity(userNode->getName() + "_ManualMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		if (auto headNode = gpSceneImpl->createNode(uniqueUserNodeName.str() + "_HeadNode").lock())
 		{
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-			std::vector<double> randomColors;
-			for (int i = 0; i < 3; i++)
-				randomColors.push_back(distDouble(gen));
-			userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-			userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-			if (auto userConeNode = gpSceneImpl->createNode(userNode->getName() + "_ConeNode").lock())
+			headNode->setParentNode(userNode);
+			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneImpl->createEntity(uniqueUserNodeName.str() + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
 			{
-				userConeNode->setParentNode(userNode);
-				userConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-				if (auto userCone = std::static_pointer_cast<Ape::IConeGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
-				{
-					userCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
-					userCone->setParentNode(userConeNode);
-					userCone->setMaterial(userMaterial);
-				}
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+				std::vector<double> randomColors;
+				for (int i = 0; i < 3; i++)
+					randomColors.push_back(distDouble(gen));
+				userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+				userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
 			}
-		}
-		if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(gpSceneImpl->createEntity(userNode->getName() + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
-		{
-			userNameText->setCaption(uniqueUserNodeName.str());
-			userNameText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
-			userNameText->setParentNode(userNode);
 		}
 	}
 

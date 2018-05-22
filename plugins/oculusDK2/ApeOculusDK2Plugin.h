@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeMatrix4.h"
 #include "ApeIMainWindow.h"
+#include "ApeIManualMaterial.h"
 #include "ApeISystemConfig.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
@@ -71,9 +72,13 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::ManualMaterialWeakPtr mUserMaterial;
+
 		void eventCallBack(const Ape::Event& event);
 
 		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
+
+		Ape::CameraWeakPtr createCamera(std::string name);
 
 	public:
 		ApeOculusDK2Plugin();

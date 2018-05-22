@@ -14,12 +14,12 @@
       "/plugins/oculusDK2/resources"
     ],
     "natPunchThroughServer": {
-      "use": false,
+      "use": true,
       "ip": "195.111.2.95",
       "port": "61666"
     },
     "lobbyServer": {
-      "useLobby": false,
+      "useLobby": true,
       "ip": "195.111.2.95",
       "port": "8888",
       "sessionName": "robotMonitoring"
