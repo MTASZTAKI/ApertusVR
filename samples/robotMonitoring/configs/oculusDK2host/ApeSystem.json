@@ -27,13 +27,14 @@
     }
   },
     "pluginManager": {
-        "plugins": [
-	    	  "ApeNodeJsPlugin",
-	        "ApeOgreRenderPlugin",
-	        "ApeOisUserInputPlugin",
-	        "ApeOculusDK2Plugin",
-	        "ApeRobotMonitoringPlugin",
-	        "ApeAssimpAssetLoaderPlugin"
-        ]
+      "plugins": [
+        "ApeNodeJsPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeOculusDK2Plugin",
+        "ApeRobotMonitoringPlugin",
+        "ApeKinectPlugin",
+        "ApeAssimpAssetLoaderPlugin"
+      ]
     }
 }

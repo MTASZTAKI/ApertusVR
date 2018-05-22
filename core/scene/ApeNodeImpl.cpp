@@ -34,6 +34,7 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mOrientation = Ape::Quaternion();
 	mChildrenVisibility = true;
 	mIsFixedYaw = false;
+	mIsInheritOrientation = true;
 }
 
 Ape::NodeImpl::~NodeImpl()
@@ -151,6 +152,17 @@ void Ape::NodeImpl::showBoundingBox(bool show)
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_HIDEBOUNDINGBOX));
 }
 
+void Ape::NodeImpl::setInheritOrientation(bool enable)
+{
+	mIsInheritOrientation = enable;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+}
+
+bool Ape::NodeImpl::isInheritOrientation()
+{
+	return mIsInheritOrientation;
+}
+
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
 {
 	switch(nodeTransformSpace)
@@ -216,6 +228,7 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -241,5 +254,7 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsInheritOrientation))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

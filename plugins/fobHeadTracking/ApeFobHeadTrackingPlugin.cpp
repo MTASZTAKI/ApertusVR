@@ -377,6 +377,10 @@ void Ape::ApeFobHeadTrackingPlugin::Run()
 				mC = -(mFarClip + mNearClip) / (mFarClip - mNearClip);
 				mD = -(2.0f * mFarClip * mNearClip) / (mFarClip - mNearClip);
 				cameraCount++;
+				if (auto cameraNode = camera->getParentNode().lock())
+				{
+					cameraNode->setInheritOrientation(false);
+				}
 			}
 			mCameraDoubleQueue.pop();
 		}
@@ -394,7 +398,10 @@ void Ape::ApeFobHeadTrackingPlugin::Run()
 			mTrackedViewerOrientation = mTrackedViewerOrientationYPR.toQuaternion() * mTrackerConfig.rotation;
 		}
 		if (auto headNode = mHeadNode.lock())
+		{
 			headNode->setPosition(mTrackedViewerPosition);
+			headNode->setOrientation(mTrackedViewerOrientation);
+		}
 		for (int i = 0; i < mDisplayConfigList.size(); i++)
 		{
 			auto displayConfig = mDisplayConfigList[i];

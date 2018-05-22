@@ -87,6 +87,10 @@ namespace Ape
 		virtual void setFixedYaw(bool fix) = 0;
 
 		virtual void showBoundingBox(bool show) = 0;
+
+		virtual void setInheritOrientation(bool enable) = 0;
+
+		virtual bool isInheritOrientation() = 0;
 	};
 }
 
