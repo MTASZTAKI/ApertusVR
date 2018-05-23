@@ -125,7 +125,8 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 				if (auto geometry = intersection.lock())
 				{
 					std::size_t found = geometry->getName().find(mUserNode.lock()->getName()); 
-					if (found == std::string::npos)//Ignore our avatar
+					std::size_t foundCoord = geometry->getName().find("coord");
+					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
 					{
 						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << " type: " << geometry->getType());
 						if (auto selectedParentNode = geometry->getParentNode().lock())
