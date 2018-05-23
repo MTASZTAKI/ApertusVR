@@ -20,77 +20,70 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_BUBBLE_H
-#define APE_BUBBLE_H
+#ifndef APE_GAMEMANAGER_H
+#define APE_GAMEMANAGER_H
 
+#include <thread>
+#include <mutex>
 #include "Ape.h"
-#include "ApeILogManager.h"
 #include "ApeIScene.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
+#include "ApeISystemConfig.h"
+#include "ApeILogManager.h"
+#include "ApeIPlaneGeometry.h"
+#include "ApeIManualPass.h"
+#include "BubbleManager.h"
 
 namespace TexasEEG
 {
-	class Bubble
+	class GameManager
 	{
 	private:
-		std::thread* mTimerThread;
-
 		Ape::IScene* mpScene;
 
-		Ape::NodeWeakPtr mBubbleNode;
+		std::thread* mGameThread;
 
-		Ape::EntityWeakPtr mGeometry;
+		std::thread* mTimerThread;
 
-		Ape::EntityWeakPtr mCounterText;
+		TexasEEG::BubbleManager* mBubbleManager;
 
-		Ape::EntityWeakPtr mMaterial;
+		Ape::NodeWeakPtr mUserNode;
 
-		Ape::Vector3 mPosition;
+		std::mutex lockMutex;
 
-		int mValue;
+		Ape::EntityWeakPtr mStatusText;
 
-		int mTimerCount;
+		Ape::EntityWeakPtr mTimeText;
 
-		static int geometryCount;
+		Ape::EntityWeakPtr mScoreText;
 
-		bool mIsTimedOut;
+		int mTime;
 
-		int id;
+		int mScore;
 
-		void init();
+		void Timer();
+
+		void Init();
+
+		void Run();
 
 	public:
-		Bubble(Ape::Vector3 pos = Ape::Vector3(0, 0, 0), int maxCount = 10);
+		GameManager(Ape::NodeWeakPtr userNode);
 
-		~Bubble();
+		~GameManager();
 
-		void start(int counter);
+		void Start();
 
-		void finish();
+		void Pause();
 
-		void hide();
+		void Stop();
 
-		std::string getName();
+		int GetScore();
 
-		int getId();
+		void UpdateTime();
 
-		Ape::Vector3 getPosition();
+		void UpdateScore(int score);
 
-		int getValue();
-
-		int getCounter();
-
-		void setCounter(int num);
-
-		void decCounter();
-
-		void setColor(Ape::Color color);
-
-		void setText(std::string caption);
-
-		bool isTimedOut();
+		void UpdateStatus();
 	};
 }
 

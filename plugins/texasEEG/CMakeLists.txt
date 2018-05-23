@@ -24,11 +24,15 @@
 set (HEADERS
 	ApeTexasEEGPlugin.h
 	Bubble.h
+	BubbleManager.h
+	GameManager.h
 	)
 
 set (SOURCES 
 	ApeTexasEEGPlugin.cpp
 	Bubble.cpp
+	BubbleManager.cpp
+	GameManager.cpp
 	)
 
 include_directories(

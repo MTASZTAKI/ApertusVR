@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h> 
 #include "ApeTexasEEGPlugin.h"
+#include <Windows.h>
 
 Ape::ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 {
@@ -11,12 +12,19 @@ Ape::ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 	mUserNode = Ape::NodeWeakPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mScore = 0;
+	while (ShowCursor(0) >= 0);
 	LOG_FUNC_LEAVE();
 }
 
 Ape::ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 {
 	LOG_FUNC_ENTER();
+	if (mBubbleManager)
+	{
+		delete mBubbleManager;
+		mBubbleManager = NULL;
+	}
+	ShowCursor(true);
 	LOG_FUNC_LEAVE();
 }
 
@@ -32,37 +40,8 @@ void Ape::ApeTexasEEGPlugin::Init()
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	/*if (auto bubblesNode = mpScene->createNode("bubblesNode").lock())
-	{
-		bubblesNode->setPosition(Ape::Vector3(0, 0, 0));
-		bubblesNode->setScale(Ape::Vector3(0.1, 0.1, 0.1));
-		if (auto bubblesMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("bubbles.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			bubblesMeshFile->setFileName("bubbles.mesh");
-			bubblesMeshFile->setParentNode(bubblesNode);
-		}
-	}*/
-
-	mScoreText = mpScene->createEntity("scoreText", Ape::Entity::GEOMETRY_TEXT);
-	if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
-	{
-		scoreText->setCaption(std::to_string(mScore));
-		scoreText->setOffset(Ape::Vector3(20.0f, 10.0f, -30.0f));
-		scoreText->setParentNode(mUserNode);
-	}
-
-	int newXDist = 0;
-	int newYDist = 0;
-	int newZDist = 0;
-	for (int i = 0; i < 50; i++)
-	{
-		newXDist = (std::rand() % 100) - 10;
-		newYDist = (std::rand() % 50) - 50;
-		newZDist -= (std::rand() % 300) + 150;
-		mBubbleQueue.push(new TexasEEG::Bubble(Ape::Vector3(newXDist, newYDist, newZDist)));
-	}
-
-	mBubbleQueue.front()->startThread();
+	mGameManager = new TexasEEG::GameManager(mUserNode);
+	mGameManager->Start();
 
 	LOG_FUNC_LEAVE();
 }
@@ -71,48 +50,21 @@ void Ape::ApeTexasEEGPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	bool isTimedOut = false;
-	while (true && !isTimedOut)
+	bool removedBubbles = false;
+
+	while (true)
 	{
 		if (auto userNode = mUserNode.lock())
 		{
-			if (!mBubbleQueue.empty())
+			Ape::Vector3 pos = userNode->getPosition();
+			if (pos.y < -100)
 			{
-				isTimedOut = mBubbleQueue.front()->isTimedOut();
-				if (!isTimedOut && userNode->getPosition().distance(mBubbleQueue.front()->getPosition()) < 30)
-				{
-					mScore++;
-					if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
-					{
-						scoreText->setCaption(std::to_string(mScore));
-					}
-
-					if (mBubbleQueue.front())
-					{
-						delete mBubbleQueue.front();
-						mBubbleQueue.pop();
-					}
-					if (!mBubbleQueue.empty() && !isTimedOut)
-					{
-						mBubbleQueue.front()->startThread();
-					}
-				}
+				pos.y = -100;
+				userNode->setPosition(pos);
 			}
 		}
-
+			
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	}
-
-	if (isTimedOut)
-	{
-		LOG(LOG_TYPE_DEBUG, "Game Over!");
-
-		mStatusText = mpScene->createEntity("statusText", Ape::Entity::GEOMETRY_TEXT);
-		if (auto statusText = std::static_pointer_cast<Ape::ITextGeometry>(mStatusText.lock()))
-		{
-			statusText->setCaption("Game Over");
-			statusText->setOffset(Ape::Vector3(0.0f, 0.0f, -30.0f));
-			statusText->setParentNode(mUserNode);
-		}
 	}
 
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));

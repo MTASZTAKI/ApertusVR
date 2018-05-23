@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
-#include <queue>
+#include <deque>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
@@ -40,7 +40,7 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeICamera.h"
 #include "ApeEuler.h"
-#include "Bubble.h"
+#include "GameManager.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
 
@@ -59,15 +59,17 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
-		std::vector<TexasEEG::Bubble*> mBubbleVector;
-
-		std::queue<TexasEEG::Bubble*> mBubbleQueue;
+		int mBubblesActivateNextCount;
 
 		int mScore;
 
 		Ape::EntityWeakPtr mStatusText;
 
 		Ape::EntityWeakPtr mScoreText;
+
+		TexasEEG::GameManager* mGameManager;
+
+		TexasEEG::BubbleManager* mBubbleManager;
 
 	public:
 		ApeTexasEEGPlugin();
@@ -85,6 +87,8 @@ namespace Ape
 		void Suspend() override;
 
 		void Restart() override;
+
+		void UpdateScore(int score);
 	};
 
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()

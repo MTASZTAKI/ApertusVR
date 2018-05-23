@@ -20,77 +20,59 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_BUBBLE_H
-#define APE_BUBBLE_H
+#ifndef APE_BUBBLEMANAGER_H
+#define APE_BUBBLEMANAGER_H
 
+#include <deque>
+#include <thread>
+#include <mutex>
 #include "Ape.h"
 #include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
+#include "Bubble.h"
 
 namespace TexasEEG
 {
-	class Bubble
+	class BubbleManager
 	{
 	private:
+		Ape::NodeWeakPtr mUserNode;
+
 		std::thread* mTimerThread;
 
-		Ape::IScene* mpScene;
+		std::deque<TexasEEG::Bubble*> mBubbleQueue;
 
-		Ape::NodeWeakPtr mBubbleNode;
+		std::deque<TexasEEG::Bubble*> mActivatedBubbleQueue;
 
-		Ape::EntityWeakPtr mGeometry;
+		std::mutex lockMutex;
 
-		Ape::EntityWeakPtr mCounterText;
+		int mSkippedValue;
 
-		Ape::EntityWeakPtr mMaterial;
+		bool mGameOver;
 
-		Ape::Vector3 mPosition;
+		void Run();
 
-		int mValue;
-
-		int mTimerCount;
-
-		static int geometryCount;
-
-		bool mIsTimedOut;
-
-		int id;
-
-		void init();
+		void UpdateTimers();
 
 	public:
-		Bubble(Ape::Vector3 pos = Ape::Vector3(0, 0, 0), int maxCount = 10);
+		BubbleManager(Ape::NodeWeakPtr userNode);
 
-		~Bubble();
+		~BubbleManager();
 
-		void start(int counter);
+		void CreateBubbles(int num);
 
-		void finish();
+		void RemoveBubbles(int num);
 
-		void hide();
+		void StartBubbles(int num);
 
-		std::string getName();
+		void StartGame();
 
-		int getId();
+		bool isGameOver();
 
-		Ape::Vector3 getPosition();
+		int getSkippedValue();
 
-		int getValue();
+		void resetSkippedValue();
 
-		int getCounter();
-
-		void setCounter(int num);
-
-		void decCounter();
-
-		void setColor(Ape::Color color);
-
-		void setText(std::string caption);
-
-		bool isTimedOut();
+		std::deque<TexasEEG::Bubble*>* getAvtivatedBubblesQueue();
 	};
 }
 

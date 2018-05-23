@@ -1,41 +1,31 @@
 #include <thread>
+#include <ctime>
 #include "Bubble.h"
 
 int TexasEEG::Bubble::geometryCount = 0;
 
 TexasEEG::Bubble::Bubble(Ape::Vector3 pos, int maxCount)
 {
-	LOG(LOG_TYPE_DEBUG, "pos: " << pos.toString() << " maxCount: " << maxCount);
 	mPosition = pos;
 	mTimerCount = maxCount;
 	mIsTimedOut = false;
+	geometryCount++;
+	id = geometryCount;
+	LOG(LOG_TYPE_DEBUG, "Bubbl" << " id: " << id << " pos: " << pos.toString() << " maxCount: " << maxCount);
 }
 
 TexasEEG::Bubble::~Bubble()
 {
 	LOG(LOG_TYPE_DEBUG, "");
-	hide();
-	if (mTimerThread)
-	{
-		delete mTimerThread;
-		mTimerThread = NULL;
-	}
-}
-
-void TexasEEG::Bubble::startThread()
-{
-	mTimerThread = new std::thread(std::bind(&Bubble::init, this));
-	mTimerThread->detach();
+	finish();
 }
 
 void TexasEEG::Bubble::init()
 {
-	geometryCount++;
-	std::string indexStr = std::to_string(geometryCount);
+	std::string indexStr = std::to_string(id);
 	LOG(LOG_TYPE_DEBUG, "geometryCount: " << indexStr);
-	mTimerCount = 10;
 	mpScene = Ape::IScene::getSingletonPtr();
-	
+
 	mBubbleNode = mpScene->createNode("bubbleNode" + indexStr);
 	if (auto bubbleNode = mBubbleNode.lock())
 	{
@@ -47,6 +37,16 @@ void TexasEEG::Bubble::init()
 		{
 			bubbleGeometry->setParameters(200.0f, Ape::Vector2(1, 1));
 			bubbleGeometry->setParentNode(bubbleNode);
+
+			mMaterial = mpScene->createEntity("bubbleMaterial" + indexStr, Ape::Entity::MATERIAL_MANUAL);
+			if (auto material = std::static_pointer_cast<Ape::IManualMaterial>(mMaterial.lock()))
+			{
+				float opacity = 0.12f;
+				material->setDiffuseColor(Ape::Color(0.3f, 0.3f, 0.3f, opacity));
+				material->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f, opacity));
+				material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+				bubbleGeometry->setMaterial(material);
+			}
 		}
 
 		mCounterText = mpScene->createEntity("bubbleText" + indexStr, Ape::Entity::GEOMETRY_TEXT);
@@ -57,21 +57,20 @@ void TexasEEG::Bubble::init()
 			counterText->setParentNode(bubbleNode);
 		}
 	}
-
-	startCounter();
 }
 
-void TexasEEG::Bubble::startCounter()
+void TexasEEG::Bubble::start(int counter)
 {
-	LOG(LOG_TYPE_DEBUG, "Start[" << geometryCount << "]");
-	while (mTimerCount > 1)
-	{
-		mTimerCount--;
-		LOG(LOG_TYPE_DEBUG, "mTimerCount[" << geometryCount << "]: " << mTimerCount);
-		setText(std::to_string(mTimerCount));
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
+	mValue = counter;
+	setCounter(counter);
+	init();
+}
+
+void TexasEEG::Bubble::finish()
+{
+	setText("-");
 	mIsTimedOut = true;
+	mTimerCount = 0;
 	hide();
 }
 
@@ -83,14 +82,61 @@ void TexasEEG::Bubble::hide()
 	}
 }
 
+std::string TexasEEG::Bubble::getName()
+{
+	std::string indexStr = std::to_string(id);
+	return "Bubble[" + indexStr + "]";
+}
+
+int TexasEEG::Bubble::getId()
+{
+	return id;
+}
+
 Ape::Vector3 TexasEEG::Bubble::getPosition()
 {
 	return mPosition;
 }
 
-bool TexasEEG::Bubble::isTimedOut()
+int TexasEEG::Bubble::getValue()
 {
-	return mIsTimedOut;
+	return mValue;
+}
+
+int TexasEEG::Bubble::getCounter()
+{
+	return mTimerCount;
+}
+
+void TexasEEG::Bubble::setCounter(int num)
+{
+	mTimerCount = num;
+	setText(std::to_string(mTimerCount));
+}
+
+void TexasEEG::Bubble::decCounter()
+{
+	setCounter(mTimerCount - 1);
+	if (mTimerCount == 3)
+		setColor(Ape::Color(1.0f, 0.0f, 0.0f, 0.10f));
+	else if (mTimerCount == 2)
+		setColor(Ape::Color(1.0f, 0.0f, 0.0f, 0.30f));
+	else if (mTimerCount == 1)
+		setColor(Ape::Color(1.0f, 0.0f, 0.0f, 0.60f));
+}
+
+void TexasEEG::Bubble::setColor(Ape::Color color)
+{
+	if (auto bubbleGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mGeometry.lock()))
+	{
+		if (auto material = std::static_pointer_cast<Ape::IManualMaterial>(mMaterial.lock()))
+		{
+			material->setDiffuseColor(color);
+			material->setSpecularColor(color);
+			material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			bubbleGeometry->setMaterial(material);
+		}
+	}
 }
 
 void TexasEEG::Bubble::setText(std::string caption)
@@ -99,4 +145,9 @@ void TexasEEG::Bubble::setText(std::string caption)
 	{
 		counterText->setCaption(caption);
 	}
+}
+
+bool TexasEEG::Bubble::isTimedOut()
+{
+	return mIsTimedOut;
 }
