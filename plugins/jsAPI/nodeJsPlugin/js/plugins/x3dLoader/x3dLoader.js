@@ -482,7 +482,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			if (currentlyLoadingFileName == 'SZTAKIUr5Cell') {
 				log(' scene world node created for: ' + currentlyLoadingFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-				nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
+				nodeObj.setPosition(new ape.nbind.Vector3(0, 80, -150));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0, 0, 0.707, 0.707));
 			}
 			if (currentlyLoadingFileName == 'PersonalComputer') {

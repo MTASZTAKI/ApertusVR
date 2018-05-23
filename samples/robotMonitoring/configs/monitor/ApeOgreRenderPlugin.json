@@ -29,8 +29,8 @@
                 "width": 1280,
                 "height": 720,
                 "camera": {
-                  "nearClip": 1.0,
-                  "farClip": 10000.0,
+                  "nearClip": 10.0,
+                  "farClip": 100000.0,
                   "fovY": 45.0
                 }
               }

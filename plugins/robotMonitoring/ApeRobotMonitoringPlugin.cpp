@@ -36,38 +36,69 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 			meshFile->setParentNode(node);
 		}
 	}*/
+	if (auto environmentNode = mpScene->createNode("environmentNode").lock())
+	{
+		environmentNode->setScale(Ape::Vector3(100, 100, 100));
+		if (auto environmentMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			environmentMeshFile->setFileName("sphere.mesh");
+			environmentMeshFile->setParentNode(environmentNode);
+		}
+	}
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	Ape::Color lightColor(0.4f, 0.4f, 0.44f);
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(-1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, 1));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
+	}*/
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, 1, -1));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, 1, 1));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(1, -1, 0));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
 
 	LOG_FUNC_LEAVE();

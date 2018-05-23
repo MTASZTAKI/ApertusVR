@@ -159,7 +159,7 @@ namespace Ape
 
 		void moveUserNode();
 
-		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+		void saveUserNodePose();
 
 		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 

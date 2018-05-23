@@ -252,6 +252,11 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 
 	mKeyCodeMap[e.key] = true;
 
+	if (e.key == OIS::KeyCode::KC_C)
+	{
+		saveUserNodePose();
+	}
+
 	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
@@ -471,13 +476,16 @@ void Ape::OISUserInputPlugin::clearNodeSelection()
 	}
 }
 
-void Ape::OISUserInputPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::OISUserInputPlugin::saveUserNodePose()
 {
-	std::ofstream userNodePoseFile;
-	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
-		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
-	userNodePoseFile.close();
+	if (auto userNode = mUserNode.lock())
+	{
+		std::ofstream userNodePoseFile;
+		userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+		userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+			userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+		userNodePoseFile.close();
+	}
 }
 
 void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
