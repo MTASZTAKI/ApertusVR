@@ -154,21 +154,21 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), ','), modifiedMaterialName.end());
 				auto material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
 				//TODO just a hotfix for window mesh where no transparent material is created
-				if (meshUniqueName.str().find("window") != std::string::npos || meshUniqueName.str().find("Window") != std::string::npos)
-				{
-					modifiedMaterialName += "window";
-					material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
-					if (!material)
-					{
-						material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
-						float opacity = 0.12f;
-						material->setDiffuseColor(Ape::Color(0.058053, 0.0753292, 0.0675212, opacity));
-						material->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
-						material->setAmbientColor(Ape::Color(0, 0, 0));
-						material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-						//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
-					}
-				}
+				//if (meshUniqueName.str().find("window") != std::string::npos || meshUniqueName.str().find("Window") != std::string::npos)
+				//{
+				//	modifiedMaterialName += "window";
+				//	material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
+				//	if (!material)
+				//	{
+				//		material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
+				//		float opacity = 0.12f;
+				//		material->setDiffuseColor(Ape::Color(0.058053, 0.0753292, 0.0675212, opacity));
+				//		material->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
+				//		material->setAmbientColor(Ape::Color(0, 0, 0));
+				//		material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+				//		//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+				//	}
+				//}
 				//TODO end
 				if (!material)
 				{
@@ -276,6 +276,10 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 			mSceneUnitPosition.x = jsonDocument["position"].GetArray()[0].GetFloat();
 			mSceneUnitPosition.y = jsonDocument["position"].GetArray()[1].GetFloat();
 			mSceneUnitPosition.z = jsonDocument["position"].GetArray()[2].GetFloat();
+			mSceneUnitOrientation.w = jsonDocument["orientation"].GetArray()[0].GetFloat();
+			mSceneUnitOrientation.x = jsonDocument["orientation"].GetArray()[1].GetFloat();
+			mSceneUnitOrientation.y = jsonDocument["orientation"].GetArray()[2].GetFloat();
+			mSceneUnitOrientation.z = jsonDocument["orientation"].GetArray()[3].GetFloat();
 			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
 			mRegenerateNormals = regenerateNormals.GetBool();
 			//LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
@@ -362,11 +366,10 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 				if (auto node = mRootNode.lock())
 				{
 					//TODO somehow detect the unit of the scene
-					//LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale.toString() << " setPosition to " << mSceneUnitPosition.toString());
+					LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale.toString() << " setPosition to " << mSceneUnitPosition.toString() << " setOrientation to " << mSceneUnitOrientation.toString());
 					node->setScale(mSceneUnitScale);
-					//TODO get ori form json
-					//rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-					rootNode->setPosition(mSceneUnitPosition);
+					node->setOrientation(mSceneUnitOrientation);
+					node->setPosition(mSceneUnitPosition);
 					rootNode->setParentNode(node);
 				}
 			}

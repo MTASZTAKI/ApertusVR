@@ -95,6 +95,8 @@ namespace Ape
 
 		Ape::Vector3 mSceneUnitPosition;
 
+		Ape::Quaternion mSceneUnitOrientation;
+
 		bool mRegenerateNormals;
 
 		Ape::NodeWeakPtr mRootNode;

@@ -4,7 +4,8 @@
   ],
   "mergeAndExportMeshes": false,
   "scale": [ 4, 4, 4 ],
-  "position": [ -6370, 0, -1500 ],
+  "position": [ -25500, 0, -6000 ],
+  "orientation": [ 1, 0, 0, 0 ],
   "regenerateNormals": true,
   "rootNodeName": "stand"
 }
