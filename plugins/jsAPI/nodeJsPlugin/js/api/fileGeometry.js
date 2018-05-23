@@ -52,7 +52,10 @@ app.post('/filegeometries/', function(req, res){
     // rename it to it's orignal name
     form.on('file', function(field, file) {
       fullFilePath = path.join(form.uploadDir, file.name);
-      fs.rename(file.path, fullFilePath);
+      fs.rename(file.path, fullFilePath, function(err){
+        if (err)
+          logger.error('An error has occured: \n' + err);
+      });
     });
   
     // log any errors that occur
