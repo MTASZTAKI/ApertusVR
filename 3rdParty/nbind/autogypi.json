@@ -1,0 +1,11 @@
+{
+	"dependencies": [
+		"nan"
+	],
+	"includes": [
+		"src/nbind.gypi"
+	],
+	"topIncludes": [
+		"src/nbind-common.gypi"
+	]
+}

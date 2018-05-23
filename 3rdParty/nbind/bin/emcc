@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# This script calls emcc (the Emscripten C++ compiler) with given command line
+# arguments. It removes the "-arch" flag and its parameter, which node-gyp
+# will add on OS X hosts causing a compiler error.
+
+skip=0
+
+for arg; do
+	shift
+	[ "$skip" = "1" ] && skip=0 && continue
+	case "$arg" in
+		-arch) skip=1 ;;
+		-mmacosx-version-min=*) ;;
+		-fno-tree-sink) ;;
+		-fno-tree-vrp) ;;
+		*) set -- "$@" "$arg" ;;
+	esac
+done
+
+emcc $@
