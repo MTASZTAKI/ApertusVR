@@ -121,7 +121,6 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemXText->setCaption("X");
-						coordinateSystemXText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemXText->setParentNode(coordinateSystemArrowXConeNode);
 					}
 					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -159,7 +158,6 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemYText->setCaption("Y");
-						coordinateSystemYText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemYText->setParentNode(coordinateSystemArrowYConeNode);
 					}
 					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -198,7 +196,6 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemZText->setCaption("Z");
-						coordinateSystemZText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemZText->setParentNode(coordinateSystemArrowZConeNode);
 					}
 					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
