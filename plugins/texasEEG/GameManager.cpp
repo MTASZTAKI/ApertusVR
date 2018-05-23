@@ -22,7 +22,7 @@ void TexasEEG::GameManager::Init()
 	if (auto timeText = std::static_pointer_cast<Ape::ITextGeometry>(mTimeText.lock()))
 	{
 		timeText->setCaption(std::to_string(mTime));
-		timeText->setOffset(Ape::Vector3(-18.0f, 10.0f, -30.0f));
+		//timeText->setOffset(Ape::Vector3(-18.0f, 10.0f, -30.0f));
 		timeText->setParentNode(mUserNode);
 		LOG(LOG_TYPE_DEBUG, "timeText create ok");
 	}
@@ -58,7 +58,7 @@ void TexasEEG::GameManager::Init()
 	if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
 	{
 		scoreText->setCaption(std::to_string(mScore));
-		scoreText->setOffset(Ape::Vector3(20.0f, 10.0f, -30.0f));
+		//scoreText->setOffset(Ape::Vector3(20.0f, 10.0f, -30.0f));
 		scoreText->setParentNode(mUserNode);
 		LOG(LOG_TYPE_DEBUG, "scoreText ok");
 	}
@@ -154,7 +154,7 @@ void TexasEEG::GameManager::UpdateStatus()
 	if (auto statusText = std::static_pointer_cast<Ape::ITextGeometry>(mStatusText.lock()))
 	{
 		statusText->setCaption("Game Over");
-		statusText->setOffset(Ape::Vector3(0.0f, 0.0f, -30.0f));
+		//statusText->setOffset(Ape::Vector3(0.0f, 0.0f, -30.0f));
 		statusText->setParentNode(mUserNode);
 	}
 }
