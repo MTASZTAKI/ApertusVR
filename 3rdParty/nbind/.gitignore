@@ -1,9 +1,0 @@
-node_modules/
-build/
-dist/
-*.log.*
-*.log
-*.tgz
-
-auto*.gypi
-
