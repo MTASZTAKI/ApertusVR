@@ -24,6 +24,7 @@ var ape = require('../../ape.js');
 var moduleManager = require('../../modules/module_manager/module_manager.js');
 var async = moduleManager.requireNodeModule('async');
 var logger = require("../../modules/log_manager/log_manager.js");
+var utils = require('../../modules/utils/utils.js');
 var config = require('./config.json');
 
 exports.moduleTag = 'PluginManager';
@@ -48,10 +49,11 @@ exports.loadPlugins = function(app, express) {
 			var pluginFilePath = moduleManager.pluginPath + plugin.file;
 			logger.debug('pluginFilePath: ' + pluginFilePath);
 
-			var pluginPublicPath = moduleManager.pluginPath + plugin.public;
-
-			app.use('/' + plugin.public, express.static(pluginPublicPath));
-			logger.debug('Express: route ' + plugin.public + ' registered to folder ' + pluginPublicPath);
+			if (utils.isDefined(plugin.public)) {
+				var pluginPublicPath = moduleManager.pluginPath + plugin.public;
+				app.use('/' + plugin.public, express.static(pluginPublicPath));
+				logger.debug('Express: route ' + plugin.public + ' registered to folder ' + pluginPublicPath);
+			}
 
 			var pluginInstance = require(pluginFilePath);
 			pluginInstance.init(plugin.args);
