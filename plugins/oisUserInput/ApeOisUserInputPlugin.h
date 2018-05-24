@@ -128,6 +128,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mHeadNode;
 
+		std::string mHeadNodeName;
+
 		Ape::NodeWeakPtr mDummyNode;
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;

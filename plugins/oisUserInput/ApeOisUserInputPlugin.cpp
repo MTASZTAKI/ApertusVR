@@ -91,6 +91,19 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 			mNodeToMove = mpScene->getNode(event.subjectName);
 		}
 	}
+	else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
+	{
+		if (event.subjectName == mHeadNodeName)
+		{
+			if (auto dummyNode = mDummyNode.lock())
+			{
+				if (auto headNode = mHeadNode.lock())
+				{
+					dummyNode->setOrientation(headNode->getDerivedOrientation());
+				}
+			}
+		}
+	}
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
 		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
@@ -163,6 +176,7 @@ void Ape::OISUserInputPlugin::Init()
 		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
+			mHeadNodeName = headNode->getName();
 		}
 	}
 
