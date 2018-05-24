@@ -39,36 +39,48 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		glassMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 		glassMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
 	}
-	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(-1, 0, 0));
 		light->setDiffuseColor(lightColor);
 		light->setSpecularColor(lightColor);
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
 		light->setDiffuseColor(lightColor);
 		light->setSpecularColor(lightColor);
-	}*/
-	//if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
-	//{
-	//	light->setLightType(Ape::Light::Type::DIRECTIONAL);
-	//	light->setLightDirection(Ape::Vector3(0, -1, 1));
-	//	light->setDiffuseColor(lightColor);
-	//	light->setSpecularColor(lightColor);
-	//}
-	if (auto lightNode = mpScene->createNode("lightNode").lock())
+	}
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
 	{
-		lightNode->setPosition(Ape::Vector3(0, 1000, 0));
+		light->setLightType(Ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(Ape::Vector3(0, 1, 1));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
+	}*/
+	if (auto lightNode = mpScene->createNode("lightNode2").lock())
+	{
+		lightNode->setPosition(Ape::Vector3(0, 1500, -500));
 		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 		{
 			light->setLightType(Ape::Light::Type::SPOT);
 			light->setLightDirection(Ape::Vector3(0, -1, 0));
 			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
-			light->setLightAttenuation(Ape::LightAttenuation(1000, 1, 0, 0));
+			light->setLightAttenuation(Ape::LightAttenuation(3000, 1, 0, 0));
+			light->setParentNode(lightNode);
+		}
+	}
+	if (auto lightNode = mpScene->createNode("lightNode3").lock())
+	{
+		lightNode->setPosition(Ape::Vector3(-1000, 1500, -500));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::SPOT);
+			light->setLightDirection(Ape::Vector3(0, -1, 0));
+			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
+			light->setLightAttenuation(Ape::LightAttenuation(3000, 1, 0, 0));
 			light->setParentNode(lightNode);
 		}
 	}
