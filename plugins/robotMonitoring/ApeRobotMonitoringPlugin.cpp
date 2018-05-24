@@ -60,31 +60,45 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		light->setDiffuseColor(lightColor);
 		light->setSpecularColor(lightColor);
 	}*/
-	if (auto lightNode = mpScene->createNode("lightNode2").lock())
+	/*if (auto lightNode = mpScene->createNode("lightNode2").lock())
 	{
-		lightNode->setPosition(Ape::Vector3(0, 1500, -500));
+		lightNode->setPosition(Ape::Vector3(0, 2500, -500));
 		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 		{
 			light->setLightType(Ape::Light::Type::SPOT);
 			light->setLightDirection(Ape::Vector3(0, -1, 0));
 			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
-			light->setLightAttenuation(Ape::LightAttenuation(3000, 1, 0, 0));
+			light->setLightAttenuation(Ape::LightAttenuation(4000, 1, 0, 0));
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
 			light->setParentNode(lightNode);
 		}
 	}
 	if (auto lightNode = mpScene->createNode("lightNode3").lock())
 	{
-		lightNode->setPosition(Ape::Vector3(-1000, 1500, -500));
+		lightNode->setPosition(Ape::Vector3(-1000, 2500, -500));
 		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
 		{
 			light->setLightType(Ape::Light::Type::SPOT);
 			light->setLightDirection(Ape::Vector3(0, -1, 0));
 			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
-			light->setLightAttenuation(Ape::LightAttenuation(3000, 1, 0, 0));
+			light->setLightAttenuation(Ape::LightAttenuation(4000, 1, 0, 0));
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
+			light->setParentNode(lightNode);
+		}
+	}*/
+	if (auto lightNode = mpScene->createNode("lightNode4").lock())
+	{
+		lightNode->setPosition(Ape::Vector3(-303.136, 250.268, -500.706));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::POINT);
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
 			light->setParentNode(lightNode);
 		}
 	}
-
 	if (auto environmentNode = mpScene->createNode("environmentNode").lock())
 	{
 		environmentNode->setPosition(Ape::Vector3(0, 0, -100));
