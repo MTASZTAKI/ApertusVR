@@ -205,7 +205,7 @@ void Ape::OISUserInputPlugin::Init()
 	OIS::ParamList pl;
 	pl.insert(std::make_pair("WINDOW", oisWindowConfig.handler));
 #ifdef WIN32
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_BACKGROUND")));
+	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
 	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
 	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
 	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
