@@ -37,27 +37,40 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		glassMaterial->setSpecularColor(Ape::Color(0.2, 0.2, 0.2, opacity));
 		glassMaterial->setEmissiveColor(Ape::Color(0.2, 0.2, 0.2));
 		glassMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+		glassMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(0, 1, -1));
+		light->setLightDirection(Ape::Vector3(-1, 0, 0));
 		light->setDiffuseColor(lightColor);
 		light->setSpecularColor(lightColor);
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(0, 1, 1));
+		light->setLightDirection(Ape::Vector3(0, -1, -1));
 		light->setDiffuseColor(lightColor);
 		light->setSpecularColor(lightColor);
-	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	}*/
+	//if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+	//{
+	//	light->setLightType(Ape::Light::Type::DIRECTIONAL);
+	//	light->setLightDirection(Ape::Vector3(0, -1, 1));
+	//	light->setDiffuseColor(lightColor);
+	//	light->setSpecularColor(lightColor);
+	//}
+	if (auto lightNode = mpScene->createNode("lightNode").lock())
 	{
-		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(lightColor);
-		light->setSpecularColor(lightColor);
+		lightNode->setPosition(Ape::Vector3(0, 1000, 0));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::SPOT);
+			light->setLightDirection(Ape::Vector3(0, -1, 0));
+			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
+			light->setLightAttenuation(Ape::LightAttenuation(1000, 1, 0, 0));
+			light->setParentNode(lightNode);
+		}
 	}
 
 	if (auto environmentNode = mpScene->createNode("environmentNode").lock())
@@ -80,19 +93,15 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 	}
 	if (auto glassWallNode = mpScene->createNode("glassWallNode").lock())
 	{
-		glassWallNode->setPosition(Ape::Vector3(0, 0, 200));
-		Ape::Radian angle(1.57f);
+		glassWallNode->setPosition(Ape::Vector3(0, 0, 195));
+		Ape::Degree angle(90);
 		Ape::Vector3 axis(1, 0, 0);
 		Ape::Quaternion orientation;
 		orientation.FromAngleAxis(angle, axis);
-		Ape::Radian angle2(1.57f);
-		Ape::Vector3 axis2(0, 1, 0);
-		Ape::Quaternion orientation2;
-		orientation2.FromAngleAxis(angle2, axis2);
-		glassWallNode->setOrientation(orientation * orientation2);
+		glassWallNode->setOrientation(orientation);
 		if (auto glassWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("glassWallGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
-			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(500, 500), Ape::Vector2(1, 1));
+			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(5000, 5000), Ape::Vector2(1, 1));
 			glassWallGeometry->setMaterial(glassMaterial);
 			glassWallGeometry->setParentNode(glassWallNode);
 		}
@@ -116,23 +125,30 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		Ape::Vector3 axis(1, 0, 0);
 		Ape::Quaternion orientation;
 		orientation.FromAngleAxis(angle, axis);
-		Ape::Radian angle2(1.57f);
-		Ape::Vector3 axis2(0, 1, 0);
-		Ape::Quaternion orientation2;
-		orientation2.FromAngleAxis(angle2, axis2);
-		glassWallNode->setOrientation(orientation * orientation2);
+		glassWallNode->setOrientation(orientation);
 		if (auto glassWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("glassWallGeometry3", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
-			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(500, 500), Ape::Vector2(1, 1));
+			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(5000, 5000), Ape::Vector2(1, 1));
 			glassWallGeometry->setMaterial(glassMaterial);
 			glassWallGeometry->setParentNode(glassWallNode);
 		}
 	}
+	if (auto entranceWallNode = mpScene->createNode("entranceWallNode").lock())
+	{
+		entranceWallNode->setPosition(Ape::Vector3(410, 0, -500));
+		Ape::Quaternion orientation(0.707, 0.707, 0, 0);
+		Ape::Quaternion orientation2(0.707, 0, 0, 0.707);
+		Ape::Quaternion orientation3;
+		orientation3 = orientation * orientation2;
+		entranceWallNode->setOrientation(orientation3);
+		if (auto entranceWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("entranceWallGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			entranceWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
+			entranceWallGeometry->setParentNode(entranceWallNode);
+		}
+	}
 	LOG_FUNC_LEAVE();
 }
-
-
-
 
 void Ape::ApeRobotMonitoringPlugin::Run()
 {

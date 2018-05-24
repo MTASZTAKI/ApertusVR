@@ -118,6 +118,16 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 		{
 			mObjectCount++;
 			aiMesh* assimpMesh = mAssimpScenes[assimpSceneID]->mMeshes[assimpNode->mMeshes[i]];
+			//TODO just for own demo, just remove it when it necessary 
+			std::string meshName = assimpMesh->mName.C_Str();
+			int id = atoi(meshName.c_str());
+			if (id > 970 && id < 990 )
+				continue;
+			if (id > 1025 && id < 1027)
+				continue;
+			if (id > 885 && id < 890)
+				continue;
+			//TODO end
 			//TODO get uuid generator
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
@@ -177,21 +187,29 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					asssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorDiffuse);
 					float opacity = 1.0f;
 					asssimpMaterial->Get(AI_MATKEY_OPACITY, opacity);
-					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
 					aiColor3D colorSpecular(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, colorSpecular);
-					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
 					aiColor3D colorAmbient(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, colorAmbient);
-					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
 					aiColor3D colorEmissive(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, colorEmissive);
-					material->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
 					aiColor3D colorTransparent(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
-					//LOG(LOG_TYPE_DEBUG, "colorTransparent: " << colorTransparent.r << colorTransparent.g << colorTransparent.b);
 					int sceneBlendingType = 0;
 					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
+					//TODO just for own demo, just remove it when it necessary 
+					if (material->getName().find("veg - ") != std::string::npos)
+					{
+						colorDiffuse = aiColor3D(1, 1, 1);
+						colorSpecular = aiColor3D(1, 1, 1);
+						opacity = 0.9f;
+					}
+					//TODO end
+					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
+					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
+					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
+					material->setEmissiveColor(Ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
+
 					if (sceneBlendingType == aiBlendMode_Additive)
 					{
 						material->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
