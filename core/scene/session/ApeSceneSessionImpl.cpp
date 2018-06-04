@@ -471,9 +471,10 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 						LOG(LOG_TYPE_DEBUG, "Completed all remote downloads");
 						if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
 						{
+							//std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 							mIsConnectedToHost = true;
 							mHostAddress = packet->systemAddress;
-							LOG(LOG_TYPE_DEBUG, "Try to connect to host after NatPunchthrough for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
+							LOG(LOG_TYPE_DEBUG, "Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
 							mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);
 						}
 					}

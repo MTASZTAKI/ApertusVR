@@ -1,4 +1,4 @@
-/*MIT License
+﻿/*MIT License
 
 Copyright (c) 2017 MTA SZTAKI
 
@@ -488,8 +488,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			if (currentlyLoadingFileName == 'ifkaCell') {
 				log(' scene world node created for: ' + currentlyLoadingFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-				nodeObj.setPosition(new ape.nbind.Vector3(0, 80, 0));
-				nodeObj.setOrientation(new ape.nbind.Quaternion(0, 0, 0.707, 0.707));
+				nodeObj.setPosition(new ape.nbind.Vector3(0, 15, 50));
+				nodeObj.setOrientation(new ape.nbind.Quaternion(0.270595, -0.270595, 0.653275, 0.653275));
 			}
 			if (currentlyLoadingFileName == 'PersonalComputer') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
