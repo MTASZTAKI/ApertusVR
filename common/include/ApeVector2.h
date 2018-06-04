@@ -38,6 +38,22 @@ namespace Ape
 		Vector2(float _x, float _y) :
 			x(_x), y(_y)
 		{}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y };
+			return vec;
+		}
 	};
 }
 

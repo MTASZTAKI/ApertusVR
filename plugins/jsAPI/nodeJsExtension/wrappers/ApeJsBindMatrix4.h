@@ -42,10 +42,14 @@ NBIND_CLASS(Matrix4)
 	method(swap);
 	method(concatenate);
 	method(transpose);
+	method(inverse);
 	method(makeTransform);
 	method(extract3x3Matrix);
 	method(decomposition);
+
 	method(toString);
+	method(toJsonString);
+	method(toVector);
 }
 
 #endif

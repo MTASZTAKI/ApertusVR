@@ -305,6 +305,34 @@ namespace Ape
 			kU.z = kR[1][2] / kD.y;
 		}
 
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << std::endl
+				 << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << std::endl
+				 << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << std::endl;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "[ ";
+			buff << "[ " << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << " ], ";
+			buff << "[ " << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << " ], ";
+			buff << "[ " << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << " ]";
+			buff << " ]";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ m[0][0], m[0][1], m[0][2],
+									m[1][0], m[1][1], m[1][2],
+									m[2][0], m[2][1], m[2][2] };
+			return vec;
+		}
+
 	};
 }
 

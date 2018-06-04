@@ -38,16 +38,19 @@ NBIND_CLASS(Vector3)
 	construct<float, float, float>();
 	construct<float>();
 
-	getter(getX);
-	getter(getY);
-	getter(getZ);
+	method(getX);
+	method(getY);
+	method(getZ);
 
 	method(squaredLength);
 	method(crossProduct);
 	method(isNaN);
-	method(toString);
 	method(normalise);
 	method(equalTo);
+
+	method(toString);
+	method(toJsonString);
+	method(toVector);
 }
 
 #endif

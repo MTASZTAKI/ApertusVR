@@ -29,6 +29,7 @@
             "ApeOisUserInputPlugin",
             "ApeCefBrowserPlugin",
             "ApeAssimpAssetLoaderPlugin",
+            "ApeWebserverPlugin"
             "ApeKinectPlugin"
         ]
     }

@@ -38,6 +38,51 @@ namespace Ape
 		Vector4(float _x, float _y, float _z, float _w) :
 			x(_x), y(_y), z(_z), w(_w)
 		{}
+
+		float getX()
+		{
+			return x;
+		}
+
+		float getY()
+		{
+			return y;
+		}
+
+		float getZ()
+		{
+			return z;
+		}
+
+		float getW()
+		{
+			return w;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << x << ", " << y << ", " << z << std::endl;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y << ", ";
+			buff << "\"z\": " << z << ", ";
+			buff << "\"w\": " << w;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y, z, w};
+			return vec;
+		}
 	};
 }
 

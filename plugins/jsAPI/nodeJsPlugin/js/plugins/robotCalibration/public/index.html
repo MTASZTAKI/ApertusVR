@@ -34,9 +34,9 @@
                             Save
                         </button>
                     </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="saveConfigButton">Sace Config</a>
-                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#" id="saveConfigButton">Save Config</a>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal">About</a>
                     </li>
@@ -176,6 +176,19 @@
                     <div id="quatZRange" class="input-range-quat slider info" data-input-handler="quatZ"></div>
                 </div>
             </div>
+            <div class="card m-2">
+                <div class="card-header">
+                    Robot World Trans
+                    <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear data">
+                        <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                    <button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('invRotTransMatrix');" data-toggle="tooltip" title="Click here to copy data">
+                        <li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+                    </button>
+                </div>
+
+                <textarea class="form-control" rows="5" id="invRotTransMatrix" readonly></textarea>
+            </div>
         </div>
 
         <div class="panel-right">
@@ -292,7 +305,7 @@
 
             <div class="card m-2">
                 <div class="card-header">
-                    Transformation
+                    World Space Trans
                     <button type="button" class="btn btn-sm float-right" onClick="resetQuat();" data-toggle="tooltip" title="Click here to clear data">
                         <li class="ion-close" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
                     </button>
