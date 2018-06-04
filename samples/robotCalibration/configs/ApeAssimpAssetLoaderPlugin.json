@@ -5,6 +5,7 @@
     "mergeAndExportMeshes": false,
     "scale": [ 0.1, 0.1, 0.1 ],
     "position": [ 0, 0, 0 ],
+    "orientation": [1, 0, 0, 0],
     "regenerateNormals": true,
     "rootNodeName": "robotRootNode"
 }
