@@ -276,7 +276,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 		{
 			if (auto userNode = mUserNode.lock())
 			{
-				saveUserNodePose(userNode);
+				saveUserNodePose();
 			}
 		}
 		else if (e.key == OIS::KeyCode::KC_V)
