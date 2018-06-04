@@ -41,6 +41,10 @@ NBIND_CLASS(Euler)
 	method(getRoll);
 
 	method(toQuaternion);
+
+	method(toString);
+	method(toJsonString);
+	method(toVector);
 }
 
 #endif

@@ -1,5 +1,5 @@
 html {
-    font-size: 70%;
+    font-size: 65%;
 }
 
 body {
@@ -12,14 +12,14 @@ body {
 }
 
 .panel-left {
-    width: 210px;
+    width: 240px;
     position: absolute;
     top: 45px;
     left: 0px;
 }
 
 .panel-right {
-    width: 210px;
+    width: 240px;
     position: absolute;
     top: 45px;
     right: 0px;

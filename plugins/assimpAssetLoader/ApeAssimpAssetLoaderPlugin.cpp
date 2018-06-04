@@ -100,8 +100,11 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 	std::stringstream nodeUniqueName;
 	std::string assimpNodeOriginalName = assimpNode->mName.C_Str();
 	nodeUniqueName << assimpNode->mName.C_Str() << "_" << mObjectCount;
-	assimpNode->mName = nodeUniqueName.str();
-	if (auto node = mpScene->createNode(nodeUniqueName.str()).lock())
+	std::string escapedNodeName = nodeUniqueName.str();
+	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '<'), escapedNodeName.end());
+	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '>'), escapedNodeName.end());
+	assimpNode->mName = escapedNodeName;
+	if (auto node = mpScene->createNode(escapedNodeName).lock())
 	{
 		auto parentNode = Ape::NodeWeakPtr();
 		if (assimpNode->mParent)
@@ -162,6 +165,9 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '/\\'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), ':'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), ','), modifiedMaterialName.end());
+				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '<'), modifiedMaterialName.end());
+				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '>'), modifiedMaterialName.end());
+
 				auto material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
 				//TODO just a hotfix for window mesh where no transparent material is created
 				//if (meshUniqueName.str().find("window") != std::string::npos || meshUniqueName.str().find("Window") != std::string::npos)
@@ -370,6 +376,7 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 		createNode(ID, assimpScene->mRootNode);
 		if (auto rootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
 		{
+			//LOG(LOG_TYPE_DEBUG, "rootNode: " << rootNode->getName());
 			if (mMergeAndExportMeshes)
 			{
 				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetFileNames[ID], Ape::Entity::GEOMETRY_FILE).lock()))

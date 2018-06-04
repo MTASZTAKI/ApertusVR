@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -21,11 +21,16 @@ test('weak', function (t) {
     count++;
   });
 
-  // run weak callback, should dispose
-  gc();
+  var timeout = setTimeout(function () {
+    // run weak callback, should dispose
+    gc();
 
-  // do not run weak callback
-  gc();
+    // do not run weak callback
+    gc();
 
-  t.equal(count, 1);
+    if (count > 0) {
+      clearTimeout(timeout);
+      t.equal(count, 1);
+    }
+  }, 100);
 });

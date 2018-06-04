@@ -1,16 +1,14 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
 
-#ifndef _WIN32
-#include <unistd.h>
-#define Sleep(x) usleep((x)*1000)
-#endif
 #include <nan.h>
+
+#include "sleep.h"  // NOLINT(build/include)
 
 using namespace Nan;  // NOLINT(build/namespaces)
 
@@ -23,7 +21,10 @@ class ProgressWorker : public AsyncProgressWorker {
     , int iters)
     : AsyncProgressWorker(callback), progress(progress)
     , milliseconds(milliseconds), iters(iters) {}
-  ~ProgressWorker() {}
+
+  ~ProgressWorker() {
+    delete progress;
+  }
 
   void Execute (const AsyncProgressWorker::ExecutionProgress& progress) {
     for (int i = 0; i < iters; ++i) {
@@ -32,13 +33,13 @@ class ProgressWorker : public AsyncProgressWorker {
     }
   }
 
-  void HandleProgressCallback(const char *data, size_t size) {
+  void HandleProgressCallback(const char *data, size_t count) {
     HandleScope scope;
 
     v8::Local<v8::Value> argv[] = {
         New<v8::Integer>(*reinterpret_cast<int*>(const_cast<char*>(data)))
     };
-    progress->Call(1, argv);
+    progress->Call(1, argv, async_resource);
   }
 
  private:
@@ -48,8 +49,8 @@ class ProgressWorker : public AsyncProgressWorker {
 };
 
 NAN_METHOD(DoProgress) {
-  Callback *progress = new Callback(info[2].As<v8::Function>());
-  Callback *callback = new Callback(info[3].As<v8::Function>());
+  Callback *progress = new Callback(To<v8::Function>(info[2]).ToLocalChecked());
+  Callback *callback = new Callback(To<v8::Function>(info[3]).ToLocalChecked());
   AsyncQueueWorker(new ProgressWorker(
       callback
     , progress

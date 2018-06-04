@@ -1,16 +1,14 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
 
-#ifndef _WIN32
-#include <unistd.h>
-#define Sleep(x) usleep((x)*1000)
-#endif
 #include <nan.h>
+
+#include "sleep.h"  // NOLINT(build/include)
 
 using namespace Nan;  // NOLINT(build/namespaces)
 
@@ -37,13 +35,13 @@ class BufferWorker : public AsyncWorker {
     HandleScope scope;
 
     v8::Local<v8::Value> handle = GetFromPersistent("buffer");
-    callback->Call(1, &handle);
+    callback->Call(1, &handle, async_resource);
 
     handle = GetFromPersistent(New("puffer").ToLocalChecked());
-    callback->Call(1, &handle);
+    callback->Call(1, &handle, async_resource);
 
     handle = GetFromPersistent(0u);
-    callback->Call(1, &handle);
+    callback->Call(1, &handle, async_resource);
   }
 
  private:
@@ -51,8 +49,8 @@ class BufferWorker : public AsyncWorker {
 };
 
 NAN_METHOD(DoSleep) {
-  v8::Local<v8::Object> bufferHandle = info[1].As<v8::Object>();
-  Callback *callback = new Callback(info[2].As<v8::Function>());
+  v8::Local<v8::Object> bufferHandle = To<v8::Object>(info[1]).ToLocalChecked();
+  Callback *callback = new Callback(To<v8::Function>(info[2]).ToLocalChecked());
   assert(!callback->IsEmpty() && "Callback shoud not be empty");
   AsyncQueueWorker(new BufferWorker(
       callback

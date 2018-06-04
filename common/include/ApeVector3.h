@@ -51,6 +51,16 @@ namespace Ape
 			return x * x + y * y + z * z;
 		}
 
+		float length() const
+		{
+			return std::sqrt(x * x + y * y + z * z);
+		}
+
+		float distance(const Vector3& rkVector) const
+		{
+			return (*this - rkVector).length();
+		}
+
 		Vector3 crossProduct(const Vector3& rkVector) const
 		{
 			return Vector3(
@@ -160,13 +170,6 @@ namespace Ape
 			return std::isnan(x) && std::isnan(y) && std::isnan(z);
 		}
 
-		std::string toString() const
-		{
-			std::ostringstream buff;
-			buff << "Vector3(" << x << ", " << y << ", " << z << ")";
-			return buff.str();
-		}
-
 		float normalise()
 		{
 			float fLength = sqrt(x * x + y * y + z * z);
@@ -193,6 +196,30 @@ namespace Ape
 		float getZ()
 		{
 			return z;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << x << ", " << y << ", " << z;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y << ", ";
+			buff << "\"z\": " << z;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y, z };
+			return vec;
 		}
 	};
 }

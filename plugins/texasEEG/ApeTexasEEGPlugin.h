@@ -27,10 +27,10 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <deque>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
-#include "ApeIMainWindow.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
@@ -40,13 +40,13 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeICamera.h"
 #include "ApeEuler.h"
-#include "OIS.h"
+#include "GameManager.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
 
 namespace Ape
 {
-	class ApeTexasEEGPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class ApeTexasEEGPlugin : public Ape::IPlugin
 	{
 	private:
 		Ape::IEventManager* mpEventManager;
@@ -55,33 +55,21 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		OIS::Mouse* mpMouse;
-
-		OIS::Keyboard* mpKeyboard;
-
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::NodeWeakPtr mUserNode;
 
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+		int mBubblesActivateNextCount;
 
-		void moveUserNodeByKeyBoard();
+		int mScore;
 
-		void moveUserNodeByMouse();
+		Ape::EntityWeakPtr mStatusText;
 
-		bool mIsMouseMoved;
+		Ape::EntityWeakPtr mScoreText;
 
-		int mTranslateSpeedFactor;
+		TexasEEG::GameManager* mGameManager;
 
-		int mRotateSpeedFactor;
-
-		bool mIsSwim;
-
-		int mMouseMoveRelativeX;
-
-		int mMouseMoveRelativeY;
+		TexasEEG::BubbleManager* mBubbleManager;
 
 	public:
 		ApeTexasEEGPlugin();
@@ -100,15 +88,7 @@ namespace Ape
 
 		void Restart() override;
 
-		bool keyPressed(const OIS::KeyEvent& e) override;
-
-		bool keyReleased(const OIS::KeyEvent& e) override;
-
-		bool mouseMoved(const OIS::MouseEvent& e) override;
-
-		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+		void UpdateScore(int score);
 	};
 
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()

@@ -73,6 +73,11 @@ SOFTWARE.*/
 #define LOG_DELIMITER ": "
 #define LOG_LINE_END std::endl
 
+#define LOG_FILE_WIDTH 31
+#define LOG_LINE_WIDTH 5
+#define LOG_FUNC_WIDTH 55
+#define LOG_FILL(WIDTH) std::setfill(' ') << std::setw(WIDTH)
+
 #define LOG_WRITE(LEVEL, SS) { std::stringstream superStringStream; superStringStream << SS << LOG_LINE_END; Ape::ILogManager::getSingletonPtr()->log(superStringStream, LEVEL); }
 
 #define LOG_SCOPE() Ape::ILogManager::ScopedLog sl(THIS_PLUGINNAME, __FILE__, __FUNCTION_NAME__, __LINE__, false);
@@ -80,16 +85,16 @@ SOFTWARE.*/
 #define LOG_FUNC_SCOPE() Ape::ILogManager::ScopedLog sl(THIS_PLUGINNAME, __FILE__, __FUNCTION_NAME__, __LINE__, true);
 
 #define LOG(LEVEL, SS) \
-	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << std::setfill(' ') << std::setw(5) << __LINE__ << COLOR_TERM \
-			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << __FUNCTION_NAME__ << COLOR_TERM \
+	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << LOG_FILL(LOG_FILE_WIDTH) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << __LINE__ << COLOR_TERM \
+			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << LOG_FILL(LOG_FUNC_WIDTH) << __FUNCTION_NAME__ << COLOR_TERM \
 			  << LOG_DELIMITER << SS \
 	); \
 
 #define LOGDEEP(LEVEL, FILENAME, LINENUM, FUNCNAME, SS) \
-	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << std::setfill(' ') << std::setw(31) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << std::setfill(' ') << std::setw(5) << LINENUM << COLOR_TERM  \
-			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << std::setfill(' ') << std::setw(55) << FUNCNAME << COLOR_TERM \
+	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << LOG_FILL(LOG_FILE_WIDTH) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
+			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << LINENUM << COLOR_TERM  \
+			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << LOG_FILL(LOG_FUNC_WIDTH) << FUNCNAME << COLOR_TERM \
 			  << LOG_DELIMITER << SS \
 	); \
 

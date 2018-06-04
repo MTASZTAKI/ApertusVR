@@ -139,6 +139,11 @@ static void registerMethods(
 		param = new SignatureParam();
 
 		switch(signature->getType()) {
+			case SignatureType :: none:
+
+				// Impossible!
+				abort();
+
 			case SignatureType :: method:
 				param->methodNum = func.getNum();
 				Nan::SetPrototypeTemplate(constructorTemplate, func.getName(),
@@ -262,9 +267,15 @@ static void initModule(Handle<Object> exports) {
 
 	Local<FunctionTemplate> superTemplate = Nan::New<FunctionTemplate>(nop);
 
-	auto &classList = getClassList();
+	// Wrapper for temporary data pointer when passing objects by value.
+
+	auto storageTemplate = Nan::New<ObjectTemplate>();
+	storageTemplate->SetInternalFieldCount(1);
+	Nan::SetCallAsFunctionHandler(storageTemplate, Overloader::createValue);
 
 	// Create all class constructor templates.
+
+	auto &classList = getClassList();
 
 	for(auto *bindClass : classList) bindClass->unvisit();
 
@@ -288,7 +299,7 @@ static void initModule(Handle<Object> exports) {
 		param = new SignatureParam();
 		param->overloadNum = bindClass->wrapperConstructorNum;
 
-		Local<FunctionTemplate> constructorTemplate = Nan::New<FunctionTemplate>(
+		auto constructorTemplate = Nan::New<FunctionTemplate>(
 			Overloader::create,
 			Nan::New<v8::External>(param)
 		);
@@ -298,6 +309,7 @@ static void initModule(Handle<Object> exports) {
 
 		bindClass->constructorTemplate.Reset(constructorTemplate);
 		bindClass->superTemplate.Reset(superTemplate);
+		bindClass->storageTemplate.Reset(storageTemplate);
 	}
 
 	// Add NBind reference to base class to enforce its visibility.

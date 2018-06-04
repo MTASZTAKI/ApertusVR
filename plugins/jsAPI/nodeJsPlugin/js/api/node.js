@@ -108,24 +108,23 @@ app.get('/nodes/:name', function(req, res) {
 
 		logger.debug(utils.convertToJsObj(obj));
 
-		var scaleObj = obj.getScale();
-		var eulerObj = obj.getEuler();
+		var matrix = obj.getTransformationMatrix();
+		var rotMatrix = new ape.nbind.Matrix4(-1, 0, 0, 0,
+											  0, -1, 0, 0,
+											  0, 0, 1, 0,
+											  0, 0, 0, 1);
+		var invRotTransMatrix = matrix.inverse().concatenate(rotMatrix);
 
 		respObj.addDataItem({
 			name: name,
-			scale: {
-				x: scaleObj.x,
-				y: scaleObj.y,
-				z: scaleObj.z
-			},
-			position: utils.convertToJsObj(obj.getPosition()),
-			orientation: utils.convertToJsObj(obj.getOrientation()),
-			euler: {
-				y: Number(eulerObj.getYaw().toDegree()),
-				p: Number(eulerObj.getPitch().toDegree()),
-				r: Number(eulerObj.getRoll().toDegree()),
-			},
-			transformation: obj.getTransformationMatrix().toString()
+			scale: JSON.parse(obj.getScale().toJsonString()),
+			position: JSON.parse(obj.getPosition().toJsonString()),
+			orientation: JSON.parse(obj.getOrientation().toJsonString()),
+			euler: JSON.parse(obj.getEuler().toJsonString()),
+			transformation: {
+				transformationmatrix: JSON.parse(matrix.toJsonString()),
+				invRotTransMatrix: JSON.parse(invRotTransMatrix.toJsonString())
+			}
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -155,9 +154,16 @@ app.get('/nodes/:name/transformationmatrix', function(req, res) {
 		}
 
 		logger.debug(utils.convertToJsObj(obj));
+		var matrix = obj.getTransformationMatrix();
+		var rotMatrix = new ape.nbind.Matrix4(-1, 0, 0, 0,
+											  0, -1, 0, 0,
+											  0, 0, 1, 0,
+											  0, 0, 0, 1);
+		var invRotTransMatrix = matrix.inverse().concatenate(rotMatrix);
 
 		respObj.addDataItem({
-			transformationmatrix: obj.getTransformationMatrix().toString()
+			transformationmatrix: matrix.toString(),
+			invRotTransMatrix: invRotTransMatrix.toString()
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -186,14 +192,8 @@ app.get('/nodes/:name/scale', function(req, res) {
 			return;
 		}
 
-		var scaleObj = obj.getScale();
-		var scale = {
-			x: scaleObj.x,
-			y: scaleObj.y,
-			z: scaleObj.z
-		};
 		respObj.addDataItem({
-			scale: scale
+			scale: JSON.parse(obj.getScale().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -230,7 +230,7 @@ app.post('/nodes/:name/scale', function(req, res) {
 										     Number(req.body.z));
 		obj.setScale(newScale);
 		respObj.addDataItem({
-			position: utils.convertToJsObj(obj.getPosition())
+			scale: JSON.parse(obj.getScale().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -260,7 +260,7 @@ app.get('/nodes/:name/position', function(req, res) {
 		}
 
 		respObj.addDataItem({
-			position: utils.convertToJsObj(obj.getPosition())
+			position: JSON.parse(obj.getPosition().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -297,7 +297,7 @@ app.post('/nodes/:name/position', function(req, res) {
 										   Number(req.body.z));
 		obj.setPosition(newPos);
 		respObj.addDataItem({
-			position: utils.convertToJsObj(obj.getPosition())
+			position: JSON.parse(obj.getPosition().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -327,7 +327,7 @@ app.get('/nodes/:name/orientation', function(req, res) {
 		}
 
 		respObj.addDataItem({
-			orientation: utils.convertToJsObj(obj.getOrientation())
+			orientation: JSON.parse(obj.getOrientation().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -366,7 +366,7 @@ app.post('/nodes/:name/orientation', function(req, res) {
 											  Number(req.body.z));
 		obj.setOrientation(newOrt);
 		respObj.addDataItem({
-			orientation: utils.convertToJsObj(obj.getOrientation())
+			orientation: JSON.parse(obj.getOrientation().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -395,14 +395,8 @@ app.get('/nodes/:name/euler', function(req, res) {
 			return;
 		}
 
-		var eulerObj = obj.getEuler();
-		var eulerObjDegree = {
-			y: Number(eulerObj.getYaw().toDegree()),
-			p: Number(eulerObj.getPitch().toDegree()),
-			r: Number(eulerObj.getRoll().toDegree()),
-		}
 		respObj.addDataItem({
-			euler: eulerObjDegree
+			euler: JSON.parse(obj.getEuler().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
@@ -443,7 +437,7 @@ app.post('/nodes/:name/euler', function(req, res) {
 									 ape.nbind.Radian(ape.nbind.Degree(Number(req.body.p)).toRadian()),
 									 ape.nbind.Radian(ape.nbind.Degree(Number(req.body.r)).toRadian())));
 		respObj.addDataItem({
-			euler: newEuler
+			euler: JSON.parse(obj.getEuler().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});

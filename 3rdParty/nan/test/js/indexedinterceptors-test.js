@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -19,5 +19,5 @@ test('indexedinterceptors', function (t) {
   delete interceptor[0];
   t.equal(interceptor[0], 'goober');
   t.ok(Object.prototype.hasOwnProperty.call(interceptor, 1));
-  t.equal(Object.keys(interceptor)[0], 'whee');
+  t.equal(Object.keys(interceptor)[0], '42');
 });

@@ -166,9 +166,10 @@ namespace Ape
 
 		bool equals(const Ape::Quaternion& _q2, Ape::Radian _tolerance)
 		{
-			float fCos = w * _q2.w + x * _q2.x + y * _q2.y + z * _q2.z;
+			/*float fCos = w * _q2.w + x * _q2.x + y * _q2.y + z * _q2.z;
 			float angle = std::acos(fCos);
-			return (abs(angle) <= _tolerance.radian) || abs(angle - ape_PI) <= _tolerance.radian;
+			return (abs(angle) <= _tolerance.radian) || abs(angle - ape_PI) <= _tolerance.radian;*/
+			return (_q2.x == x) && (_q2.y == y) && (_q2.z == z) && (_q2.w == w);
 		}
 
 		float Norm() const
@@ -199,13 +200,6 @@ namespace Ape
 			{
 				return Quaternion(0, 0, 0, 0);
 			}
-		}
-
-		std::string toString() const
-		{
-			std::ostringstream buff;
-			buff << "Quaternion(" << w << ", " << x << ", " << y << ", " << z << ")";
-			return buff.str();
 		}
 
 		float Dot(const Quaternion& rkQ) const
@@ -277,6 +271,25 @@ namespace Ape
 		float getY() { return y; }
 		float getZ() { return z; }
 
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << w << ", " << x << ", " << y << ", " << z;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ \"w\": " << w << ", \"x\": " << x << ", \"y\": " << y << ", \"z\": " << z << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ w, x, y, z };
+			return vec;
+		}
 	};
 }
 

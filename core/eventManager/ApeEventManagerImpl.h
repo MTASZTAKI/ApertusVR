@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include <map>
 #include <vector>
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 
 namespace Ape
 { 

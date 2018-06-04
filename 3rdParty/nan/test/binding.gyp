@@ -44,6 +44,14 @@
       , "sources"     : [ "cpp/returnemptystring.cpp" ]
     }
   , {
+        "target_name" : "asyncprogressqueueworker"
+      , "sources"     : [ "cpp/asyncprogressqueueworker.cpp" ]
+    }
+  , {
+        "target_name" : "asyncprogressqueueworkerstream"
+      , "sources"     : [ "cpp/asyncprogressqueueworkerstream.cpp" ]
+    }
+  , {
         "target_name" : "asyncworker"
       , "sources"     : [ "cpp/asyncworker.cpp" ]
     }
@@ -81,6 +89,14 @@
     , {
         "target_name" : "makecallback"
       , "sources"     : [ "cpp/makecallback.cpp" ]
+    }
+    , {
+        "target_name" : "asyncresource"
+      , "sources"     : [ "cpp/asyncresource.cpp" ]
+    }
+    , {
+        "target_name" : "callbackcontext"
+      , "sources"     : [ "cpp/callbackcontext.cpp" ]
     }
     , {
         "target_name" : "isolatedata"

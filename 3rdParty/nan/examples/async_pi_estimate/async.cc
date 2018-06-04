@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -47,7 +47,7 @@ class PiWorker : public AsyncWorker {
       , New<Number>(estimate)
     };
 
-    callback->Call(2, argv);
+    callback->Call(2, argv, async_resource);
   }
 
  private:
@@ -58,7 +58,7 @@ class PiWorker : public AsyncWorker {
 // Asynchronous access to the `Estimate()` function
 NAN_METHOD(CalculateAsync) {
   int points = To<int>(info[0]).FromJust();
-  Callback *callback = new Callback(info[1].As<Function>());
+  Callback *callback = new Callback(To<Function>(info[1]).ToLocalChecked());
 
   AsyncQueueWorker(new PiWorker(callback, points));
 }

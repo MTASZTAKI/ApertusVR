@@ -51,7 +51,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
 	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpScene->createEntity("sky", Ape::Entity::SKY).lock()))
 	{
 		sky->setSize(9500);
-		sky->setTime(14.00);
+		sky->setTime(6.00, 4.00, 22.00);
 		if (auto skyLight = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("skylight", Ape::Entity::Type::LIGHT).lock()))
 		{
 			sky->setSkyLight(skyLight);

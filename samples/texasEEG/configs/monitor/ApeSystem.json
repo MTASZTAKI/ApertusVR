@@ -25,6 +25,7 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeSkyWaterTerrainScenePlugin",
+            "ApeOisUserInputPlugin",
             "ApeTexasEEGPlugin"
         ]
     }

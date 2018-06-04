@@ -1,54 +1,56 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var apiEndPointNode = apiEndPoint + 'nodes/';
 var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
-var nodeName = 'robotRootNode';
+var nodeName = 'STL_BINARY_1';
+
+
 
 function getNodePosition(nodeName) {
-    console.log('getting Node position: ', nodeName);
+    console.log('getNodePosition(): ', nodeName);
     doGetRequest(apiEndPointNode + nodeName + '/position', function(res){
         var pos = res.data.items[0].position;
-        console.log(pos);
-        $('#posX').val(pos.x.trim());
-        $('#posY').val(pos.y.trim());
-        $('#posZ').val(pos.z.trim());
+        console.log('getNodePosition(): res: ', pos);
+        $('#posX').val(pos.x);
+        $('#posY').val(pos.y);
+        $('#posZ').val(pos.z);
     });
 }
 
 function setNodePosition(nodeName) {
-    console.log('setting Node position: ', nodeName);
+    console.log('setNodePosition(): ', nodeName);
     var pos = {
         x: $('#posX').val(),
         y: $('#posY').val(),
         z: $('#posZ').val()
     };
     doPostRequest(apiEndPointNode + nodeName + '/position', pos, function(res){
-        console.log(res);
+        console.log('setNodePosition(): res: ', res);
         getTransformationMatrix(nodeName);
     });
 }
 
 function getNodeOrientation(nodeName) {
-    console.log('getting Node orientation: ', nodeName);
+    console.log('getNodeOrientation(): ', nodeName);
     doGetRequest(apiEndPointNode + nodeName + '/orientation', function(res){
         var ori = res.data.items[0].orientation;
-        console.log(ori);
+        console.log('getNodeOrientation(): res: ', ori);
 
-        $('#quatW').val(ori.w.trim());
-        $("#quatWRange").slider("value", ori.w.trim());
+        $('#quatW').val(ori.w);
+        $("#quatWRange").slider("value", ori.w);
 
-        $('#quatX').val(ori.x.trim());
-        $("#quatXRange").slider("value", ori.x.trim());
+        $('#quatX').val(ori.x);
+        $("#quatXRange").slider("value", ori.x);
 
-        $('#quatY').val(ori.y.trim());
-        $("#quatYRange").slider("value", ori.y.trim());
+        $('#quatY').val(ori.y);
+        $("#quatYRange").slider("value", ori.y);
 
-        $('#quatZ').val(ori.z.trim());
-        $("#quatZRange").slider("value", ori.z.trim());
+        $('#quatZ').val(ori.z);
+        $("#quatZRange").slider("value", ori.z);
     });
 }
 
 function setNodeOrientation(nodeName) {
-    console.log('setting Node orientation: ', nodeName);
+    console.log('setNodeOrientation(): ', nodeName);
     var ori = {
         w: $('#quatW').val(),
         x: $('#quatX').val(),
@@ -56,17 +58,17 @@ function setNodeOrientation(nodeName) {
         z: $('#quatZ').val()
     };
     doPostRequest(apiEndPointNode + nodeName + '/orientation', ori, function(res){
-        console.log(res);
+        console.log('setNodeOrientation(): res: ', res);
         getNodeEuler(nodeName);
         getTransformationMatrix(nodeName);
     });
 }
 
 function getNodeEuler(nodeName) {
-    console.log('getting Node euler: ', nodeName);
+    console.log('getNodeEuler(): ', nodeName);
     doGetRequest(apiEndPointNode + nodeName + '/euler', function(res){
         var euler = res.data.items[0].euler;
-        console.log(euler);
+        console.log('getNodeEuler(): res: ', euler);
 
         $('#eulerY').val(euler.y);
         $("#eulerYRange").slider("value", euler.y);
@@ -80,33 +82,35 @@ function getNodeEuler(nodeName) {
 }
 
 function setNodeEuler(nodeName) {
-    console.log('setting Node euler: ', nodeName);
+    console.log('setNodeEuler(): ', nodeName);
     var euler = {
         y: $('#eulerY').val(),
         p: $('#eulerP').val(),
         r: $('#eulerR').val()
     };
     doPostRequest(apiEndPointNode + nodeName + '/euler', euler, function(res){
-        console.log(res);
-        getNodeOrientation(nodeName);
+        console.log('setNodeEuler(): res: ', res);
+        //getNodeOrientation(nodeName);
         getTransformationMatrix(nodeName);
     });
 }
 
 function getTransformationMatrix(nodeName) {
-    console.log('getting Node transformation matrix: ', nodeName);
+    console.log('getTransformationMatrix(): ', nodeName);
     doGetRequest(apiEndPointNode + nodeName + '/transformationmatrix', function(res){
         var matrix = res.data.items[0].transformationmatrix;
-        console.log(matrix);
+        var invRotMatrix = res.data.items[0].invRotTransMatrix;
+        console.log('getTransformationMatrix(): res: ', matrix);
         $('#transMatrix').val(matrix);
+        $('#invRotTransMatrix').val(invRotMatrix);
     });
 }
 
 function getNodeScale(nodeName) {
-    console.log('getting Node scale: ', nodeName);
+    console.log('getNodeScale(): ', nodeName);
     doGetRequest(apiEndPointNode + nodeName + '/scale', function(res){
         var scale = res.data.items[0].scale;
-        console.log(scale);
+        console.log('getNodeScale(): res: ', scale);
         $('#scaleX').val(scale.x);
         $('#scaleY').val(scale.y);
         $('#scaleZ').val(scale.z);
@@ -114,14 +118,14 @@ function getNodeScale(nodeName) {
 }
 
 function setNodeScale(nodeName) {
-    console.log('setting Node scale: ', nodeName);
+    console.log('setNodeScale(): ', nodeName);
     var scale = {
         x: $('#scaleX').val(),
         y: $('#scaleY').val(),
         z: $('#scaleZ').val()
     };
     doPostRequest(apiEndPointNode + nodeName + '/scale', scale, function(res){
-        console.log(res);
+        console.log('setNodeScale(): res: ', res);
         getTransformationMatrix(nodeName);
     });
 }
@@ -139,14 +143,14 @@ function updateProperties() {
 
 function doGetRequest(apiEndPointUrl, callback) {
     $.get(apiEndPointUrl, function(res) {
-        console.log(res);
+        // console.log('doGetRequest(): ', res);
         callback(res);
     });
 }
 
 function doPostRequest(apiEndPointUrl, data, callback) {
     $.post(apiEndPointUrl, data, function(res) {
-        console.log(res);
+        // console.log('doPostRequest(): ', res);
         callback(res);
     }, "json");
 }
@@ -219,9 +223,9 @@ function resetEuler() {
 function resetScale() {
     console.log('resetScale');
 
-    $('#scaleX').val(0);
-    $('#scaleY').val(0);
-    $('#scaleZ').val(0);
+    $('#scaleX').val(1);
+    $('#scaleY').val(1);
+    $('#scaleZ').val(1);
 
     setNodeScale(nodeName);
 }
@@ -257,6 +261,34 @@ function onFilePathChange(files) {
 }
 
 $(document).ready(function(){
+
+    var sock = new WebSocket("ws://localhost:40080/ws");
+    sock.onopen = ()=>{
+        console.log('open')
+    }
+    sock.onerror = (e)=>{
+        console.log('error',e)
+    }
+    sock.onclose = ()=>{
+        console.log('close')
+    }
+    sock.onmessage = (e)=>{
+        console.log('onmessage:' + e.data);
+        var eventObj = JSON.parse(e.data);
+        if (eventObj.subjectName == "STL_BINARY_1") {
+            if (eventObj.type == 3) { // position
+                getNodePosition(nodeName);
+            }
+            else if (eventObj.type == 4) { // orientation
+                getNodeOrientation(nodeName);
+                getNodeEuler(nodeName);
+            }
+            else if (eventObj.type == 5) { // scale
+                getNodeScale(nodeName);
+            }
+            getTransformationMatrix(nodeName);
+        }
+    }
 
     $("#nodeName").change(function(){
         nodeName = $(this).val();

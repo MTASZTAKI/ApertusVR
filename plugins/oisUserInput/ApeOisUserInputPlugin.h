@@ -93,6 +93,7 @@ namespace Ape
 			OIS::MouseState posCurrent;
 			std::map<OIS::MouseButtonID, bool> buttonDownMap;
 			bool isDragMode = false;
+			bool isMouseMoved = false;
 		};
 
 		struct UserNodePose
@@ -127,6 +128,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mHeadNode;
 
+		std::string mHeadNodeName;
+
 		Ape::NodeWeakPtr mDummyNode;
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
@@ -157,7 +160,9 @@ namespace Ape
 
 		bool mIsKeyPressed;
 
-		void moveUserNode();
+		void moveUserNodeByKeyBoard();
+
+		void moveUserNodeByMouse();
 
 		void saveUserNodePose();
 

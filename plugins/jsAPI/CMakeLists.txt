@@ -49,6 +49,47 @@ if (NOT PYTHONINTERP_FOUND)
 	endif ()
 endif ()
 
+# choco
+message("Checking Choco...")
+if (WIN32)
+	message("Choco: Starting installer...")
+	execute_process(
+		COMMAND cmd /c "choco -v"
+		RESULT_VARIABLE CHOCO_SETUP_RESULT
+	)
+	if (${CHOCO_SETUP_RESULT} EQUAL 0)
+		message("Choco: found, exit code (${CHOCO_SETUP_RESULT})")
+
+		# install nasm
+		execute_process(
+			COMMAND cmd /c "choco install nasm -y"
+			RESULT_VARIABLE NASM_SETUP_RESULT
+		)
+		if (${NASM_SETUP_RESULT} EQUAL 0)
+			message("Choco: NASM installation ok, exit code (${NASM_SETUP_RESULT})")
+		else ()
+			message("Choco: NASM installation error, exit code (${NASM_SETUP_RESULT})")
+		endif ()
+	else ()
+		message("Choco: not foud, exit code (${CHOCO_SETUP_RESULT})")
+		message("Choco: try to install...")
+
+		# install choco
+		execute_process(
+			COMMAND cmd /c "@\"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe\" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command \"iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))\" && SET \"PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin\""
+			RESULT_VARIABLE CHOCO_INSTALL_RESULT
+		)
+		if (${CHOCO_INSTALL_RESULT} EQUAL 0)
+			message("Choco: installation ok, exit code (${CHOCO_INSTALL_RESULT})")
+			message(FATAL_ERROR "Choco: please rerun CMAKE to install NASM by Choco")
+		else ()
+			message("Choco: installation error, exit code (${CHOCO_INSTALL_RESULT})")
+			message(FATAL_ERROR "Choco: please install manually")
+		endif ()
+	endif ()
+
+endif ()
+
 message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
@@ -62,7 +103,7 @@ message(STATUS "APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
 set(JS_API_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "JS_API_DIR: ${JS_API_DIR}")
 
-set(NODE_VERSION "8.0.0")
+set(NODE_VERSION "10.1.0")
 message(STATUS "NODE_VERSION: ${NODE_VERSION}")
 
 set(NODE_ROOT_DIR ${APE_SOURCE_DIR}/3rdParty/nodejs)
@@ -186,7 +227,6 @@ if (WIN32)
 				set(MSBUILD_SETUP_PATH ${MSBUILD_SETUP_PATH_X64})
 			endif ()
 			message(STATUS "MS Build Tools Path: ${MSBUILD_SETUP_PATH}")
-
 			if (NOT EXISTS ${MSBUILD_SETUP_PATH})
 
 				# Install MSBuildTools

@@ -28,47 +28,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
-
-	/*gallery*/
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-941.765, 47.9583, 631.489), Ape::Quaternion(0.977507, -0.210903, -4.55392e-07, 2.41213e-07)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-895.301, -22.3373, -44.3792), Ape::Quaternion(0.9987, -0.0509765, -4.37447e-07, 3.08579e-07)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(0, 0, 1, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, 0), Ape::Quaternion(1, 0, -0.05, 0)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(0, 0, 1, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, -600, -600), Ape::Quaternion(1, 0, -0.05, 0)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(0, 0, 1, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, -500), Ape::Quaternion(1, 0, -0.05, 0)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, -500), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, -600, 100), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-1200, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-600, 0, 100), Ape::Quaternion(1, 0, 0, 0)));
-
-
-	/*mUserNodePoses.push_back(UserNodePose(Ape::Vector3(100.079, -583, -478.537), Ape::Quaternion(0.250597, 0, 0.968092, 0)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-50.2942, -267, -39.543), Ape::Quaternion(0.108578, 0.000922807, -0.994053, 0.00844969)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(109.65, -254.404, 683.883), Ape::Quaternion(-0.994235, -0.00845123, -0.106884, 0.000908416)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(182.939, -582, 322.612), Ape::Quaternion(0.299624, 3.09414e-10, 0.954057, -8.78543e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-33.8135, -582, 524.087), Ape::Quaternion(-0.0356937, -1.2817e-12, 0.999363, -9.31436e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(136.762, -582, 607.147), Ape::Quaternion(-0.938136, -8.84368e-10, -0.346269, 2.9235e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-636.561, -267, 251.884), Ape::Quaternion(0.809606, 7.34888e-10, -0.586974, 5.72286e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(47.2687, -579, -656.354), Ape::Quaternion(-0.152424, -1.73481e-10, -0.988316, 9.15137e-10)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(95.8991, -579, -640.988), Ape::Quaternion(-0.152424, -1.73481e-10, -0.988316, 9.15137e-10)));
-
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(332.168, -562, -343.67), Ape::Quaternion(-0.919263, 0, 0.393645, 0)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(419.488, -510.18, -28.347), Ape::Quaternion(-0.728918, 0.0309977, 0.683282, 0.029057)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-269.323, -469.674, 275.482), Ape::Quaternion(0.506584, -0.0475041, 0.857121, 0.0803752)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(-374.755, -506.984, 53.2619), Ape::Quaternion(0.689286, -0.0528335, 0.720448, 0.0552219)));*/
-
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(214.078, 108.361, 234.466), Ape::Quaternion(0.932731, -0.0476105, 0.356952, 0.0182203)));
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
 	LOG_FUNC_LEAVE();
@@ -91,6 +51,19 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 			mNodeToMove = mpScene->getNode(event.subjectName);
 		}
 	}
+	/*else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
+	{
+		if (event.subjectName == mHeadNodeName)
+		{
+			if (auto dummyNode = mDummyNode.lock())
+			{
+				if (auto headNode = mHeadNode.lock())
+				{
+					dummyNode->setOrientation(headNode->getDerivedOrientation());
+				}
+			}
+		}
+	}*/
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
 		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
@@ -125,7 +98,8 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 				if (auto geometry = intersection.lock())
 				{
 					std::size_t found = geometry->getName().find(mUserNode.lock()->getName()); 
-					if (found == std::string::npos)//Ignore our avatar
+					std::size_t foundCoord = geometry->getName().find("coord");
+					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
 					{
 						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << " type: " << geometry->getType());
 						if (auto selectedParentNode = geometry->getParentNode().lock())
@@ -162,6 +136,12 @@ void Ape::OISUserInputPlugin::Init()
 		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
+			mHeadNodeName = headNode->getName();
+		}
+		if (auto dummyNode = mDummyNode.lock())
+		{
+			toggleUserNodePoses(userNode);
+			toggleUserNodePoses(dummyNode);
 		}
 	}
 
@@ -292,6 +272,25 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			keyAsWString = 46;
 		else if (e.key == OIS::KeyCode::KC_PERIOD)
 			keyAsWString = 1046;
+		else if (e.key == OIS::KeyCode::KC_C)
+		{
+			if (auto userNode = mUserNode.lock())
+			{
+				saveUserNodePose();
+			}
+		}
+		else if (e.key == OIS::KeyCode::KC_V)
+		{
+			if (auto userNode = mUserNode.lock())
+			{
+				if (auto dummyNode = mDummyNode.lock())
+				{
+					toggleUserNodePoses(userNode);
+					toggleUserNodePoses(dummyNode);
+				}
+			}
+		}
+
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 
@@ -316,6 +315,7 @@ bool Ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	mMouseState.posCurrent = e.state;
+	mMouseState.isMouseMoved = true;
 	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
 	{
 		if (auto selectedNodeInMap = nodeIt->second.lock())
@@ -492,13 +492,14 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 {
 	userNode->setPosition(mUserNodePoses[mUserNodePosesToggleIndex].position);
 	userNode->setOrientation(mUserNodePoses[mUserNodePosesToggleIndex].orientation);
+	LOG(LOG_TYPE_DEBUG, "Camera position and orientation are toggled: " << userNode->getPosition().toString() << " | " << userNode->getOrientation().toString());
 	mUserNodePosesToggleIndex++;
 	if (mUserNodePoses.size() == mUserNodePosesToggleIndex)
 		mUserNodePosesToggleIndex = 0;
 }
 
 
-void Ape::OISUserInputPlugin::moveUserNode()
+void Ape::OISUserInputPlugin::moveUserNodeByKeyBoard()
 {
 	if (auto userNode = mUserNode.lock())
 	{
@@ -506,7 +507,10 @@ void Ape::OISUserInputPlugin::moveUserNode()
 		{
 			if (auto headNode = mHeadNode.lock())
 			{
-				dummyNode->setOrientation(headNode->getDerivedOrientation());
+				if (!dummyNode->getOrientation().equals(headNode->getDerivedOrientation(), Ape::Radian(0.0f)))
+				{
+					dummyNode->setOrientation(headNode->getDerivedOrientation());
+				}
 			}
 			if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 			{
@@ -558,6 +562,20 @@ void Ape::OISUserInputPlugin::moveUserNode()
 	}
 }
 
+void Ape::OISUserInputPlugin::moveUserNodeByMouse()
+{
+	if (auto userNode = mUserNode.lock())
+	{
+		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isMouseMoved)
+		{
+			float rotateSpeedFactor = 0.2;
+			userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * rotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * rotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			mMouseState.isMouseMoved = false;
+		}
+	}
+}
+
 void Ape::OISUserInputPlugin::Run()
 {
 	while (true)
@@ -567,7 +585,10 @@ void Ape::OISUserInputPlugin::Run()
 		if (mpMouse)
 			mpMouse->capture();
 		if (!mEnableOverlayBrowserKeyEvents)
-			moveUserNode();
+		{
+			moveUserNodeByKeyBoard();
+			moveUserNodeByMouse();
+		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));

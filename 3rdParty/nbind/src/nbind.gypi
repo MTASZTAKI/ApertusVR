@@ -51,18 +51,23 @@
 
 		}, {
 
+			"copies": [{"destination": "<(INTERMEDIATE_DIR)", "files": ["symbols.txt"]}],
+			"symbols_path": "<(INTERMEDIATE_DIR)/symbols.txt",
+
 			"sources": [
 				"v8/Buffer.cc",
 				"v8/Binding.cc"
 			],
 
 			"cflags": [
-				"-O3"
+				"-O3",
+				"-fPIC"
 			],
 
 			"cflags_cc": [
 				"-std=c++11",
-				"-fexceptions"
+				"-fexceptions",
+				"-fPIC"
 			],
 
 			"msbuild_settings": {
@@ -82,7 +87,10 @@
 					"<@(_cflags_cc)",
 					"-stdlib=libc++"
 				],
-				"OTHER_LDFLAGS": [ "-stdlib=libc++" ]
+				"OTHER_LDFLAGS": [
+					"-stdlib=libc++",
+					"-exported_symbols_list", "<(_symbols_path)"
+				]
 			}
 
 		}]

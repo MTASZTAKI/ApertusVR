@@ -265,7 +265,7 @@ namespace Ape
 			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 		}
 
-		inline void extract3x3Matrix(Ape::Matrix3& m3x3) const
+		void extract3x3Matrix(Ape::Matrix3& m3x3) const
 		{
 			m3x3.m[0][0] = m[0][0];
 			m3x3.m[0][1] = m[0][1];
@@ -278,7 +278,7 @@ namespace Ape
 			m3x3.m[2][2] = m[2][2];
 		}
 
-		inline void decomposition(Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
+		void decomposition(Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
 		{
 			Ape::Matrix3 m3x3;
 			extract3x3Matrix(m3x3);
@@ -291,7 +291,7 @@ namespace Ape
 			translate = Ape::Vector3(m[0][3], m[1][3], m[2][3]);
 		}
 
-		inline Ape::Matrix4 inverse() const
+		Ape::Matrix4 inverse() const
 		{
 			float m00 = m[0][0], m01 = m[0][1], m02 = m[0][2], m03 = m[0][3];
 			float m10 = m[1][0], m11 = m[1][1], m12 = m[1][2], m13 = m[1][3];
@@ -353,7 +353,7 @@ namespace Ape
 				d30, d31, d32, d33);
 		}
 
-		inline std::string toString() const
+		std::string toString() const
 		{
 			std::ostringstream buff;
 			buff << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << ", " << m[0][3] << std::endl
@@ -362,13 +362,36 @@ namespace Ape
 			     << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << std::endl;
 			return buff.str();
 		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "[ ";
+			buff << "[ " << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << ", " << m[0][3] << " ], ";
+			buff << "[ " << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << ", " << m[1][3] << " ], ";
+			buff << "[ " << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << ", " << m[2][3] << " ], ";
+			buff << "[ " << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << " ]";
+			buff << " ]";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ m[0][0], m[0][1], m[0][2], m[0][3],
+									m[1][0], m[1][1], m[1][2], m[1][3],
+									m[2][0], m[2][1], m[2][2], m[2][3],
+									m[3][0], m[3][1], m[3][2], m[3][3] };
+			return vec;
+		}
 	};
+
 	static const Matrix4 MATRIX4IDENTITY
 	(
 	    1.0f, 0.0f, 0.0f, 0.0f,
 	    0.0f, 1.0f, 0.0f, 0.0f,
 	    0.0f, 0.0f, 1.0f, 0.0f,
-	    0.0f, 0.0f, 0.0f, 1.0f);
+	    0.0f, 0.0f, 0.0f, 1.0f
+	);
 }
 
 #endif

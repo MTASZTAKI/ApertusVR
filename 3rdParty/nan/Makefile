@@ -21,6 +21,7 @@ LINT_SOURCES = \
 	nan_converters.h \
 	nan_converters_43_inl.h \
 	nan_converters_pre_43_inl.h \
+	nan_define_own_property_helper.h \
 	nan_implementation_12_inl.h \
 	nan_implementation_pre_12_inl.h \
 	nan_json.h \
@@ -35,16 +36,20 @@ LINT_SOURCES = \
 	nan_weak.h \
 	test/cpp/accessors.cpp \
 	test/cpp/accessors2.cpp \
+	test/cpp/asyncresource.cpp \
 	test/cpp/asyncworker.cpp \
 	test/cpp/asyncprogressworker.cpp \
 	test/cpp/asyncprogressworkerstream.cpp \
 	test/cpp/asyncprogressworkersignal.cpp \
+	test/cpp/asyncprogressqueueworker.cpp \
+	test/cpp/asyncprogressqueueworkerstream.cpp \
 	test/cpp/asyncworkererror.cpp \
 	test/cpp/buffer.cpp \
 	test/cpp/bufferworkerpersistent.cpp \
 	test/cpp/error.cpp \
 	test/cpp/gc.cpp \
 	test/cpp/indexedinterceptors.cpp \
+	test/cpp/callbackcontext.cpp \
 	test/cpp/converters.cpp \
 	test/cpp/isolatedata.cpp \
 	test/cpp/json-parse.cpp \
@@ -67,6 +72,7 @@ LINT_SOURCES = \
 	test/cpp/returnvalue.cpp \
 	test/cpp/setcallhandler.cpp \
 	test/cpp/settemplate.cpp \
+	test/cpp/sleep.h \
 	test/cpp/strings.cpp \
 	test/cpp/symbols.cpp \
 	test/cpp/threadlocal.cpp \
@@ -100,6 +106,7 @@ docs: README.md doc/.build.sh doc/asyncworker.md doc/buffers.md doc/callback.md 
 $(ADDONS): nan.h nan_new.h nan_implementation_pre_12_inl.h nan_implementation_12_inl.h \
 		nan_callbacks.h nan_callbacks_12_inl.h nan_callbacks_pre_12_inl.h \
 		nan_converters.h nan_converters_43_inl.h nan_converters_pre_43_inl.h \
+		nan_define_own_property_helper.h \
 		nan_json.h nan_maybe_43_inl.h nan_maybe_pre_43_inl.h \
 		nan_persistent_12_inl.h nan_persistent_pre_12_inl.h nan_private.h \
 		nan_weak.h nan_string_bytes.h test/binding.gyp $(SOURCES)

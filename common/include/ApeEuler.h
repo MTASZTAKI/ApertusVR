@@ -52,43 +52,43 @@ namespace Ape
 			m_roll = std::atan2(2.0 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
 		}
 
-		inline Ape::Radian getYaw()
+		Ape::Radian getYaw()
 		{
 			return m_yaw;
 		}
 
-		inline Ape::Radian getPitch()
+		Ape::Radian getPitch()
 		{
 			return m_pitch;
 		}
 
-		inline Ape::Radian getRoll()
+		Ape::Radian getRoll()
 		{
 			return m_roll;
 		}
 
-		inline Euler& setYaw(Ape::Radian y)
+		Euler& setYaw(Ape::Radian y)
 		{
 			m_yaw = y;
 			m_changed = true;
 			return *this;
 		}
 
-		inline Euler& setPitch(Ape::Radian p)
+		Euler& setPitch(Ape::Radian p)
 		{
 			m_pitch = p;
 			m_changed = true;
 			return *this;
 		}
 
-		inline Euler& setRoll(Ape::Radian r)
+		Euler& setRoll(Ape::Radian r)
 		{
 			m_roll = r;
 			m_changed = true;
 			return *this;
 		}
 
-		inline Ape::Quaternion toQuaternion()
+		Ape::Quaternion toQuaternion()
 		{
 			if (m_changed)
 			{
@@ -110,14 +110,34 @@ namespace Ape
 			return m_cachedQuaternion;
 		}
 
-		inline operator Ape::Quaternion()
+		operator Ape::Quaternion()
 		{
 			return toQuaternion();
 		}
 
-		inline friend std::ostream& operator<<(std::ostream& o, const Euler& e)
+		std::string toString() const
 		{
-			o << "<Y:" << e.m_yaw.toDegree() << "�, P:" << e.m_pitch.toDegree() << "�, R:" << e.m_roll.toDegree() << "�>";
+			std::ostringstream buff;
+			buff << "y: " << m_yaw.toDegree() << ", p: " << m_pitch.toDegree() << ", r: " << m_roll.toDegree();
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ \"y\": " << m_yaw.toDegree() << ", \"p\": " << m_pitch.toDegree() << ", \"r\": " << m_roll.toDegree() << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ m_yaw.toDegree(), m_pitch.toDegree(), m_roll.toDegree() };
+			return vec;
+		}
+
+		friend std::ostream& operator<<(std::ostream& o, const Euler& e)
+		{
+			o << e.toString();
 			return o;
 		}
 	};

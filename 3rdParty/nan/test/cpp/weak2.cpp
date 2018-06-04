@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -10,12 +10,15 @@
 
 using namespace Nan;  // NOLINT(build/namespaces)
 
+static AsyncResource* async_resource;
 static Persistent<v8::Function> cb;
 void weakCallback(
     const WeakCallbackInfo<int> &data) {  // NOLINT(runtime/references)
   int *parameter = static_cast<int*>(data.GetInternalField(0));
   v8::Local<v8::Value> val = New(*parameter);
-  MakeCallback(GetCurrentContext()->Global(), New(cb), 1, &val);
+  async_resource->runInAsyncScope(
+      GetCurrentContext()->Global(), New(cb), 1, &val);
+  delete async_resource;
   delete parameter;
 }
 
@@ -36,7 +39,8 @@ v8::Local<v8::String> wrap() {
 }
 
 NAN_METHOD(Hustle) {
-  cb.Reset(info[0].As<v8::Function>());
+  async_resource = new AsyncResource("nan:test:weak2");
+  cb.Reset(To<v8::Function>(info[0]).ToLocalChecked());
   info.GetReturnValue().Set(wrap());
 }
 

@@ -38,10 +38,10 @@ NBIND_CLASS(Quaternion)
 	construct<Degree, Vector3>();
 	construct<Radian, Vector3>();
 
-	getter(getW);
-	getter(getX);
-	getter(getY);
-	getter(getZ);
+	method(getW);
+	method(getX);
+	method(getY);
+	method(getZ);
 
 	// TODO: check/fix
 	//multimethod(FromAngleAxis, args(Radian, Vector3));
@@ -50,9 +50,12 @@ NBIND_CLASS(Quaternion)
 	method(Norm);
 	method(normalise);
 	method(Inverse);
-	method(toString);
 	method(Dot);
 	method(Slerp);
+
+	method(toString);
+	method(toJsonString);
+	method(toVector);
 }
 
 #endif
