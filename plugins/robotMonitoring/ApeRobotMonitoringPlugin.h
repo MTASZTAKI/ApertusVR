@@ -51,29 +51,14 @@ SOFTWARE.*/
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIMainWindow.h"
-#include "OIS.h"
 
 #define THIS_PLUGINNAME "ApeRobotMonitoringPlugin"
 
 namespace Ape
 {
-	class ApeRobotMonitoringPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class ApeRobotMonitoringPlugin : public Ape::IPlugin
 	{
 	private:
-		struct ScenePose
-		{
-			Ape::Vector3 position;
-			Ape::Quaternion orientation;
-
-			ScenePose(
-				Ape::Vector3 position,
-				Ape::Quaternion orientation)
-			{
-				this->position = position;
-				this->orientation = orientation;
-			}
-		};
-
 		Ape::IEventManager* mpEventManager;
 
 		Ape::IScene* mpScene;
@@ -84,37 +69,9 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
-
 		Ape::NodeWeakPtr mUserNode;
 
 		Ape::IMainWindow* mpMainWindow;
-
-		OIS::Keyboard* mpKeyboard;
-
-		OIS::Mouse* mpMouse;
-
-		int mSceneToggleIndex;
-
-		std::vector<ScenePose> mScenePoses;
-
-		int mSwitchNodeVisibilityToggleIndex;
-
-		std::vector<std::string> mSwitchNodeVisibilityNames;
-
-		std::vector<Ape::NodeWeakPtr> mSwitchNodes;
-
-		float mTranslateSpeedFactor;
-
-		float mRotateSpeedFactor;
-
-		void moveUserNode();
-
-		void toggleScenePoses(Ape::NodeSharedPtr userNode);
-
-		void toggleSwitchNodesVisibility();
-
-		void saveUserNodePose(Ape::NodeSharedPtr userNode);
 
 	public:
 		ApeRobotMonitoringPlugin();
@@ -132,16 +89,6 @@ namespace Ape
 		void Suspend() override;
 
 		void Restart() override;
-
-		bool keyPressed(const OIS::KeyEvent& e) override;
-
-		bool keyReleased(const OIS::KeyEvent& e) override;
-
-		bool mouseMoved(const OIS::MouseEvent& e) override;
-
-		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 	};
 
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotMonitoringPlugin()

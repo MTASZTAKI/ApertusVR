@@ -125,6 +125,10 @@ namespace Ape
 
 		Ape::NodeWeakPtr mNodeToMove;
 
+		Ape::NodeWeakPtr mHeadNode;
+
+		Ape::NodeWeakPtr mDummyNode;
+
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		MouseState mMouseState;
@@ -155,7 +159,7 @@ namespace Ape
 
 		void moveUserNode();
 
-		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+		void saveUserNodePose();
 
 		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 

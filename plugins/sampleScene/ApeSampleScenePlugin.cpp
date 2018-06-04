@@ -45,11 +45,15 @@ void Ape::ApeSampleScenePlugin::Init()
 			planetMeshFile->setFileName("planet.mesh");
 			planetMeshFile->setParentNode(planetNode);
 		}
-		if (auto helloWorldText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("helloWorldText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		if (auto textNode = mpScene->createNode("helloWorldText_Node").lock())
 		{
-			helloWorldText->setOffset(Ape::Vector3(0.0f, 10.0f, 0.0f));
-			helloWorldText->setCaption("helloWorld");
-			helloWorldText->setParentNode(planetNode);
+			textNode->setParentNode(planetNode);
+			textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("helloWorldText", Ape::Entity::GEOMETRY_TEXT).lock()))
+			{
+				userNameText->setCaption("helloWorld");
+				userNameText->setParentNode(textNode);
+			}
 		}
 	}
 	LOG_FUNC_LEAVE();

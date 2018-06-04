@@ -71,6 +71,10 @@ namespace Ape
 		void setFixedYaw(bool fix) override;
 
 		void showBoundingBox(bool show) override;
+
+		void setInheritOrientation(bool enable) override;
+
+		bool isInheritOrientation() override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -104,6 +108,8 @@ namespace Ape
 		bool mIsFixedYaw;
 
 		bool mIsBoundingBoxVisible;
+
+		bool mIsInheritOrientation;
 	};
 }
 

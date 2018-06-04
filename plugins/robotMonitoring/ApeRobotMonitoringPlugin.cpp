@@ -9,236 +9,177 @@ Ape::ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
-	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
-	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mpKeyboard = NULL;
-	mpMouse = NULL;
-	mTranslateSpeedFactor = 3;
-	mRotateSpeedFactor = 1;
-	mSceneToggleIndex = 0;
-	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -225, 100060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -285, 200060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
-	mSwitchNodeVisibilityToggleIndex = 0;
-	/*mSwitchNodeVisibilityNames = std::vector<std::string>();
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base1Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base2Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base3Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@base4Switch");*/
-	/*mSwitchNodeVisibilityNames.push_back("WeldingFixture@p1Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p2Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p3Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@p4Switch");*/
-	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@fixture_1Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_1Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_2Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_3Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_4Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_5Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_6Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_7Switch");
-	mSwitchNodeVisibilityNames.push_back("WeldingFixture@wp_8Switch");
-	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
-	/*mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");*/
-	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
 	LOG_FUNC_LEAVE();
 }
 
 Ape::ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 {
 	LOG_FUNC_ENTER();
-	delete mpKeyboard;
-	delete mpMouse;
 	LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
-	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
-			camera->setParentNode(mUserNode);
-	}
-	else if (event.type == Ape::Event::Type::NODE_CREATE)
-	{
-		if (auto node = mpScene->getNode(event.subjectName).lock())
-		{
-			for (auto switchNodeName : mSwitchNodeVisibilityNames)
-			{
-				std::size_t found = node->getName().find(switchNodeName);
-				if (found != std::string::npos)
-					mSwitchNodes.push_back(node);
-			}
-		}
-	}
+
 }
 
 void Ape::ApeRobotMonitoringPlugin::Init()
 {
 	LOG_FUNC_ENTER();
-
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-		mUserNode = userNode;
-
-	if (auto node = mpScene->createNode("standNode").lock())
+	Ape::Color lightColor(0.4f, 0.4f, 0.44f);
+	Ape::ManualMaterialSharedPtr glassMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("glassMaterial", Ape::Entity::MATERIAL_MANUAL).lock());
+	if (glassMaterial)
 	{
-		node->setPosition(Ape::Vector3(0, 0, 0));
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("stand.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			meshFile->setFileName("stand.mesh");
-			meshFile->setParentNode(node);
-		}
+		float opacity = 0.6f;
+		glassMaterial->setDiffuseColor(Ape::Color(0.2, 0.2, 0.2, opacity));
+		glassMaterial->setAmbientColor(Ape::Color(0.2, 0.2, 0.2));
+		glassMaterial->setSpecularColor(Ape::Color(0.2, 0.2, 0.2, opacity));
+		glassMaterial->setEmissiveColor(Ape::Color(0.2, 0.2, 0.2));
+		glassMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+		glassMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
 	}
-	/*if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
-	{
-		skyBoxMaterial->setFileName("skyBox.material");
-		skyBoxMaterial->setAsSkyBox();
-	}*/
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(-1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setLightDirection(Ape::Vector3(-1, 0, 0));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
-	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+		light->setLightDirection(Ape::Vector3(0, 1, 1));
+		light->setDiffuseColor(lightColor);
+		light->setSpecularColor(lightColor);
+	}*/
+	/*if (auto lightNode = mpScene->createNode("lightNode2").lock())
 	{
-		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(0, -1, 1));
-		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
+		lightNode->setPosition(Ape::Vector3(0, 2500, -500));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::SPOT);
+			light->setLightDirection(Ape::Vector3(0, -1, 0));
+			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
+			light->setLightAttenuation(Ape::LightAttenuation(4000, 1, 0, 0));
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
+			light->setParentNode(lightNode);
+		}
 	}
-
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
-
-	std::stringstream hwndStrStream;
-	hwndStrStream << mpMainWindow->getHandle();
-	std::stringstream windowHndStr;
-	windowHndStr << std::stoul(hwndStrStream.str(), nullptr, 16);
-
-	OIS::ParamList pl;
-	pl.insert(std::make_pair("WINDOW", windowHndStr.str()));
-#ifdef WIN32
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
-	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
-	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
-#endif
-	OIS::InputManager* inputManager = OIS::InputManager::createInputSystem(pl);
-	if (inputManager->getNumberOfDevices(OIS::OISKeyboard) > 0)
+	if (auto lightNode = mpScene->createNode("lightNode3").lock())
 	{
-		OIS::Keyboard* keyboard = static_cast<OIS::Keyboard*>(inputManager->createInputObject(OIS::OISKeyboard, true));
-		mpKeyboard = keyboard;
-		mpKeyboard->setEventCallback(this);
+		lightNode->setPosition(Ape::Vector3(-1000, 2500, -500));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::SPOT);
+			light->setLightDirection(Ape::Vector3(0, -1, 0));
+			light->setLightSpotRange(Ape::LightSpotRange(Ape::Degree(10), Ape::Degree(70), 2));
+			light->setLightAttenuation(Ape::LightAttenuation(4000, 1, 0, 0));
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
+			light->setParentNode(lightNode);
+		}
+	}*/
+	if (auto lightNode = mpScene->createNode("lightNode4").lock())
+	{
+		lightNode->setPosition(Ape::Vector3(-303.136, 250.268, -500.706));
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::POINT);
+			light->setDiffuseColor(lightColor);
+			light->setSpecularColor(lightColor);
+			light->setParentNode(lightNode);
+		}
 	}
-	else if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
+	if (auto environmentNode = mpScene->createNode("environmentNode").lock())
 	{
-		OIS::Mouse*    mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
-		mpMouse = mouse;
-		mpMouse->setEventCallback(this);
-		const OIS::MouseState &ms = mouse->getMouseState();
-		ms.width = mpMainWindow->getWidth();
-		ms.height = mpMainWindow->getHeight();
+		environmentNode->setPosition(Ape::Vector3(0, 0, -100));
+		environmentNode->setScale(Ape::Vector3(-100, 100, 100));
+		Ape::Quaternion rot1(0, 0, 1, 0);
+		Ape::Degree angle(8);
+		Ape::Vector3 axis(0, 0, 1);
+		Ape::Quaternion rot2;
+		rot2.FromAngleAxis(angle, axis);
+		Ape::Quaternion rot3;
+		rot3 = rot1 * rot2;
+		environmentNode->setOrientation(rot3);
+		if (auto environmentMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			environmentMeshFile->setFileName("sphere.mesh");
+			environmentMeshFile->setParentNode(environmentNode);
+		}
+	}
+	if (auto glassWallNode = mpScene->createNode("glassWallNode").lock())
+	{
+		glassWallNode->setPosition(Ape::Vector3(0, 0, 195));
+		Ape::Degree angle(90);
+		Ape::Vector3 axis(1, 0, 0);
+		Ape::Quaternion orientation;
+		orientation.FromAngleAxis(angle, axis);
+		glassWallNode->setOrientation(orientation);
+		if (auto glassWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("glassWallGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(5000, 5000), Ape::Vector2(1, 1));
+			glassWallGeometry->setMaterial(glassMaterial);
+			glassWallGeometry->setParentNode(glassWallNode);
+		}
+	}
+	if (auto environmentNode = mpScene->createNode("environmentNode_3").lock())
+	{
+		environmentNode->setPosition(Ape::Vector3(0, 0, 100));
+		environmentNode->setScale(Ape::Vector3(-100, 100, 100));
+		Ape::Quaternion rot1(0, 0, 1, 0);
+		environmentNode->setOrientation(rot1);
+		if (auto environmentMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("sphere_3.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			environmentMeshFile->setFileName("sphere_3.mesh");
+			environmentMeshFile->setParentNode(environmentNode);
+		}
+	}
+	if (auto glassWallNode = mpScene->createNode("glassWallNode3").lock())
+	{
+		glassWallNode->setPosition(Ape::Vector3(0, 0, -1320));
+		Ape::Radian angle(1.57f);
+		Ape::Vector3 axis(1, 0, 0);
+		Ape::Quaternion orientation;
+		orientation.FromAngleAxis(angle, axis);
+		glassWallNode->setOrientation(orientation);
+		if (auto glassWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("glassWallGeometry3", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			glassWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(5000, 5000), Ape::Vector2(1, 1));
+			glassWallGeometry->setMaterial(glassMaterial);
+			glassWallGeometry->setParentNode(glassWallNode);
+		}
+	}
+	if (auto entranceWallNode = mpScene->createNode("entranceWallNode").lock())
+	{
+		entranceWallNode->setPosition(Ape::Vector3(410, 0, -500));
+		Ape::Quaternion orientation(0.707, 0.707, 0, 0);
+		Ape::Quaternion orientation2(0.707, 0, 0, 0.707);
+		Ape::Quaternion orientation3;
+		orientation3 = orientation * orientation2;
+		entranceWallNode->setOrientation(orientation3);
+		if (auto entranceWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("entranceWallGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+		{
+			entranceWallGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
+			entranceWallGeometry->setParentNode(entranceWallNode);
+		}
 	}
 	LOG_FUNC_LEAVE();
 }
-
-void Ape::ApeRobotMonitoringPlugin::moveUserNode()
-{
-	auto userNode = mUserNode.lock();
-	if (userNode)
-	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-	}
-}
-
-void Ape::ApeRobotMonitoringPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
-{
-	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
-	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
-	mSceneToggleIndex++;
-	if (mScenePoses.size() == mSceneToggleIndex)
-		mSceneToggleIndex = 0;
-}
-
-void Ape::ApeRobotMonitoringPlugin::toggleSwitchNodesVisibility()
-{
-	if (mSwitchNodes.size() > 0)
-	{
-		if (auto switchNode = mSwitchNodes[mSwitchNodeVisibilityToggleIndex].lock())
-		{
-			if (!switchNode->getChildrenVisibility())
-				switchNode->setChildrenVisibility(true);
-			else
-				switchNode->setChildrenVisibility(false);
-		}
-		mSwitchNodeVisibilityToggleIndex++;
-		if (mSwitchNodes.size() == mSwitchNodeVisibilityToggleIndex)
-			mSwitchNodeVisibilityToggleIndex = 0;
-	}
-}
-
-void Ape::ApeRobotMonitoringPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
-{
-	std::ofstream userNodePoseFile;
-	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
-		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
-	userNodePoseFile.close();
-}
-
 
 void Ape::ApeRobotMonitoringPlugin::Run()
 {
 	while (true)
 	{
-		if (mpKeyboard)
-			mpKeyboard->capture();
-		else if (mpMouse)
-			mpMouse->capture();
-		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
@@ -265,39 +206,3 @@ void Ape::ApeRobotMonitoringPlugin::Restart()
 
 }
 
-bool Ape::ApeRobotMonitoringPlugin::keyPressed(const OIS::KeyEvent& e)
-{
-	mKeyCodeMap[e.key] = true;
-	auto userNode = mUserNode.lock();
-	if (userNode)
-	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
-			toggleScenePoses(userNode);
-		else if (mKeyCodeMap[OIS::KeyCode::KC_C])
-			saveUserNodePose(userNode);
-	}
-	if (mKeyCodeMap[OIS::KeyCode::KC_V])
-		toggleSwitchNodesVisibility();
-	return true;
-}
-
-bool Ape::ApeRobotMonitoringPlugin::keyReleased(const OIS::KeyEvent& e)
-{
-	mKeyCodeMap[e.key] = false;
-	return true;
-}
-
-bool Ape::ApeRobotMonitoringPlugin::mouseMoved(const OIS::MouseEvent& e)
-{
-	return true;
-}
-
-bool Ape::ApeRobotMonitoringPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
-{
-	return true;
-}
-
-bool Ape::ApeRobotMonitoringPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
-{
-	return true;
-}

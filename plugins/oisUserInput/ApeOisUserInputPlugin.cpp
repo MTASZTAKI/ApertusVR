@@ -19,6 +19,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
 	mRayGeometry = Ape::RayGeometryWeakPtr();
 	mRayOverlayNode = Ape::NodeWeakPtr();
+	mHeadNode = Ape::NodeWeakPtr();
+	mDummyNode = Ape::NodeWeakPtr();
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
@@ -82,8 +84,13 @@ Ape::OISUserInputPlugin::~OISUserInputPlugin()
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == "robotRootNode")
-		mNodeToMove = mpScene->getNode(event.subjectName);
+	if (event.type == Ape::Event::Type::NODE_CREATE)
+	{
+		if (event.subjectName == "robotRootNode")
+		{
+			mNodeToMove = mpScene->getNode(event.subjectName);
+		}
+	}
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
 		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
@@ -149,7 +156,14 @@ void Ape::OISUserInputPlugin::Init()
 	LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
 		mUserNode = userNode;
+		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+		}
+	}
 
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
@@ -237,6 +251,11 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	LOG_TRACE("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 
 	mKeyCodeMap[e.key] = true;
+
+	if (e.key == OIS::KeyCode::KC_C)
+	{
+		saveUserNodePose();
+	}
 
 	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
@@ -457,13 +476,16 @@ void Ape::OISUserInputPlugin::clearNodeSelection()
 	}
 }
 
-void Ape::OISUserInputPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::OISUserInputPlugin::saveUserNodePose()
 {
-	std::ofstream userNodePoseFile;
-	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
-		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
-	userNodePoseFile.close();
+	if (auto userNode = mUserNode.lock())
+	{
+		std::ofstream userNodePoseFile;
+		userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
+		userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
+			userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+		userNodePoseFile.close();
+	}
 }
 
 void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
@@ -480,30 +502,59 @@ void Ape::OISUserInputPlugin::moveUserNode()
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			userNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			userNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			userNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			userNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			userNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			userNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD4])
-			userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
-		if (mKeyCodeMap[OIS::KeyCode::KC_NUMPAD6])
-			userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::WORLD);
+		if (auto dummyNode = mDummyNode.lock())
+		{
+			if (auto headNode = mHeadNode.lock())
+			{
+				dummyNode->setOrientation(headNode->getDerivedOrientation());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
+			{
+				dummyNode->translate(Ape::Vector3(0, 1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
+			{
+				dummyNode->translate(Ape::Vector3(0, -1 * mTranslateSpeedFactor, 0), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_D])
+			{
+				dummyNode->translate(Ape::Vector3(1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_A])
+			{
+				dummyNode->translate(Ape::Vector3(-1 * mTranslateSpeedFactor, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_W])
+			{
+				dummyNode->translate(Ape::Vector3(0, 0, -1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_S])
+			{
+				dummyNode->translate(Ape::Vector3(0, 0, 1 * mTranslateSpeedFactor), Ape::Node::TransformationSpace::LOCAL);
+				userNode->setPosition(dummyNode->getPosition());
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
+			{
+				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
+			{
+				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_UP])
+			{
+				userNode->rotate(0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			}
+			if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
+			{
+				userNode->rotate(-0.017f * mRotateSpeedFactor, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			}
+		}
 	}
 }
 

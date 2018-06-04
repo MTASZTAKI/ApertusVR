@@ -81,14 +81,6 @@ namespace Ape
 
 		virtual void setProjection(Ape::Matrix4 projection) = 0;
 
-		virtual Ape::Vector3 getPosition() = 0;
-
-		virtual void setPosition(Ape::Vector3 positionOffset) = 0;
-
-		virtual Ape::Quaternion getOrientation() = 0;
-
-		virtual void setOrientation(Ape::Quaternion orientation) = 0;
-
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;

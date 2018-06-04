@@ -138,16 +138,6 @@ public:
 		mPtr.lock()->setVisible(enabled);
 	}
 
-	Vector3 getOffset()
-	{
-		return mPtr.lock()->getOffset();
-	}
-
-	void setOffset(Ape::Vector3 position)
-	{
-		mPtr.lock()->setOffset(position);
-	}
-
 };
 
 NBIND_CLASS(TextJsPtr)
@@ -184,9 +174,6 @@ NBIND_CLASS(TextJsPtr)
 
 	method(isVisible);
 	method(setVisible);
-
-	method(getOffset);
-	method(setOffset);
 }
 
 #endif

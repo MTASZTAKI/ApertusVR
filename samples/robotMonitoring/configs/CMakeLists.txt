@@ -21,4 +21,6 @@
 #SOFTWARE.
 
 add_subdirectory (monitor)
-add_subdirectory (oculusDK2)
+add_subdirectory (guest)
+add_subdirectory (oculusDK2host)
+add_subdirectory (oculusDK2guest)

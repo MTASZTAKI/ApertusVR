@@ -34,8 +34,6 @@ Ape::CameraImpl::CameraImpl(std::string name) : Ape::ICamera(name)
 	mFarClipDistance = 0.0f;
 	mAspectRatio = 0.0f;
 	mProjection = Ape::Matrix4();
-	mPositionOffset = Ape::Vector3();
-	mOrientationOffset = Ape::Quaternion();
 	mParentNode = Ape::NodeWeakPtr();
 	mProjectionType = Ape::Camera::ProjectionType::INVALID;
 	mOrthoWindowSize = Ape::Vector2();
@@ -122,28 +120,6 @@ void Ape::CameraImpl::setProjection(Ape::Matrix4 projection)
 {
 	mProjection = projection;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_PROJECTION));
-}
-
-Ape::Vector3 Ape::CameraImpl::getPosition()
-{
-	return mPositionOffset;
-}
-
-void Ape::CameraImpl::setPosition(Ape::Vector3 positionOffset)
-{
-	mPositionOffset = positionOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_POSITION));
-}
-
-Ape::Quaternion Ape::CameraImpl::getOrientation()
-{
-	return mOrientationOffset;
-}
-
-void Ape::CameraImpl::setOrientation(Ape::Quaternion orientationOffset)
-{
-	mOrientationOffset = orientationOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::CAMERA_ORIENTATION));
 }
 
 void Ape::CameraImpl::setParentNode(Ape::NodeWeakPtr parentNode)

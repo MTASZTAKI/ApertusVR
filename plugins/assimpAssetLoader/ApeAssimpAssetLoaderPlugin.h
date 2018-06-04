@@ -24,6 +24,7 @@ SOFTWARE.*/
 #define APE_ASSIMPASSETLOADERPLUGIN_H
 
 #include <iostream>
+#include <mutex>
 #include <string>
 #include <thread> 
 #include <functional>
@@ -44,7 +45,6 @@ SOFTWARE.*/
 #include "ApeIFileGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeIManualMaterial.h"
-#include "ApeIManualPass.h"
 
 #define THIS_PLUGINNAME "ApeAssimpAssetLoaderPlugin"
 
@@ -91,7 +91,11 @@ namespace Ape
 
 		bool mMergeAndExportMeshes;
 
-		float mSceneUnitScale;
+		Ape::Vector3 mSceneUnitScale;
+
+		Ape::Vector3 mSceneUnitPosition;
+
+		Ape::Quaternion mSceneUnitOrientation;
 
 		bool mRegenerateNormals;
 
@@ -99,11 +103,15 @@ namespace Ape
 
 		int mAssetCount;
 
+		std::mutex mMutex;
+
 		void eventCallBack(const Ape::Event& event);
 
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 
 		void loadConfig();
+
+		void readFile(std::string fileName);
 
 		void loadScene(const aiScene* assimpScene, int ID);
 	};

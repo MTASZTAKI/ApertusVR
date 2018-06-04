@@ -45,6 +45,9 @@ SOFTWARE.*/
 #include "ApeDoubleQueue.h"
 #include "ApeFobHeadTrackingPluginConfigs.h"
 #include "ApeMatrix4.h"
+#include "ApeIConeGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeITextGeometry.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
@@ -61,7 +64,9 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
-		Ape::NodeWeakPtr mCamerasNode;
+		Ape::NodeWeakPtr mHeadNode;
+
+		Ape::ManualMaterialWeakPtr mUserMaterial;
 
 		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 

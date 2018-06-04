@@ -210,6 +210,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mHeadNode;
+
 		int mCameraCountFromConfig;
 
 		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;

@@ -28,7 +28,6 @@ Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : 
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mCaption = "";
-	mOffset = Ape::Vector3();
 	mVisibility = false;
 }
 
@@ -59,17 +58,6 @@ void Ape::TextGeometryImpl::setVisible( bool enabled )
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
 }
 
-Ape::Vector3 Ape::TextGeometryImpl::getOffset()
-{
-	return mOffset;
-}
-
-void Ape::TextGeometryImpl::setOffset( Vector3 position )
-{
-	mOffset = position;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_OFFSET));
-}
-
 void Ape::TextGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
@@ -94,7 +82,6 @@ RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::Serializ
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCaption.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOffset);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
@@ -112,8 +99,6 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mCaption = caption.C_String();
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_CAPTION));
 	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mOffset))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_OFFSET));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		if (auto parentNode = mpScene->getNode(parentName.C_String()).lock())

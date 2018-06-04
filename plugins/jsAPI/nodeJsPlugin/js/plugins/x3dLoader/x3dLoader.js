@@ -1,4 +1,4 @@
-﻿/*MIT License
+/*MIT License
 
 Copyright (c) 2017 MTA SZTAKI
 
@@ -366,9 +366,9 @@ exports.parseMaterial = function(matItem, parentGeometry) {
 		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
 		var transparency = self.parseTransparencyAttr(matItem);
 		var diffuseColor = self.parseDiffuseColorAttr(matItem, transparency);
-		var specularColor = self.parseSpecularColorAttr(matItem, transparency);
+		//var specularColor = self.parseSpecularColorAttr(matItem, transparency);
 		manualMaterial.setDiffuseColor(diffuseColor);
-		manualMaterial.setSpecularColor(specularColor);
+		//manualMaterial.setSpecularColor(specularColor);
 		//manualPass.setDiffuseColor(diffuseColor);
 		//manualPass.setSpecularColor(specularColor);
 		//manualMaterial.setManualPass(manualPass);
@@ -482,8 +482,14 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			if (currentlyLoadingFileName == 'SZTAKIUr5Cell') {
 				log(' scene world node created for: ' + currentlyLoadingFileName);
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-				nodeObj.setPosition(new ape.nbind.Vector3(-140, -110, 50));
-				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, 0.5, 0.5));
+				nodeObj.setPosition(new ape.nbind.Vector3(0, 80, 0));
+				nodeObj.setOrientation(new ape.nbind.Quaternion(0, 0, 0.707, 0.707));
+			}
+			if (currentlyLoadingFileName == 'ifkaCell') {
+				log(' scene world node created for: ' + currentlyLoadingFileName);
+				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
+				nodeObj.setPosition(new ape.nbind.Vector3(0, 80, 0));
+				nodeObj.setOrientation(new ape.nbind.Quaternion(0, 0, 0.707, 0.707));
 			}
 			if (currentlyLoadingFileName == 'PersonalComputer') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));

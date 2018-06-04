@@ -39,7 +39,7 @@ void Ape::ApeEngineeringScenePlugin::Init()
 		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
-	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("SystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
 		coordinateSystemArrowXMaterial->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
 		coordinateSystemArrowXMaterial->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
@@ -78,11 +78,15 @@ void Ape::ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowXCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowXCone->setParentNode(coordinateSystemArrowXConeNode);
 					coordinateSystemArrowXCone->setMaterial(coordinateSystemArrowXMaterial);
-					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemXText_Node").lock())
 					{
-						coordinateSystemXText->setCaption("X");
-						coordinateSystemXText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemXText->setParentNode(coordinateSystemArrowXConeNode);
+						textNode->setParentNode(coordinateSystemArrowXConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("X");
+							text->setParentNode(textNode);
+						}
 					}
 					/*if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
@@ -116,11 +120,15 @@ void Ape::ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowYCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowYCone->setParentNode(coordinateSystemArrowYConeNode);
 					coordinateSystemArrowYCone->setMaterial(coordinateSystemArrowYMaterial);
-					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemYText_Node").lock())
 					{
-						coordinateSystemYText->setCaption("Y");
-						coordinateSystemYText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemYText->setParentNode(coordinateSystemArrowYConeNode);
+						textNode->setParentNode(coordinateSystemArrowYConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("Y");
+							text->setParentNode(textNode);
+						}
 					}
 					/*if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
@@ -155,11 +163,15 @@ void Ape::ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowZCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowZCone->setParentNode(coordinateSystemArrowZConeNode);
 					coordinateSystemArrowZCone->setMaterial(coordinateSystemArrowZMaterial);
-					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemZText_Node").lock())
 					{
-						coordinateSystemZText->setCaption("Z");
-						coordinateSystemZText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemZText->setParentNode(coordinateSystemArrowZConeNode);
+						textNode->setParentNode(coordinateSystemArrowZConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("Z");
+							text->setParentNode(textNode);
+						}
 					}
 					/*if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
