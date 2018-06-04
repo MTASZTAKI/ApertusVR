@@ -35,9 +35,14 @@
 set(Boost_USE_STATIC_LIBS ON)
 set(BOOST_ROOT "${PROJECT_SOURCE_DIR}/3rdParty/boost/1.67.0")
 set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
+
 set(BOOST_LIB_SYSTEM "${BOOST_LIBRARYDIR}/libboost_system-vc141-mt-x64-1_67.lib")
 set(BOOST_LIB_DATETIME "${BOOST_LIBRARYDIR}/libboost_date_time-vc141-mt-x64-1_67.lib")
 set(BOOST_LIB_REGEX "${BOOST_LIBRARYDIR}/libboost_regex-vc141-mt-x64-1_67.lib")
+
+set(BOOST_LIB_SYSTEM_D "${BOOST_LIBRARYDIR}/libboost_system-vc141-mt-gd-x64-1_67.lib")
+set(BOOST_LIB_DATETIME_D "${BOOST_LIBRARYDIR}/libboost_date_time-vc141-mt-gd-x64-1_67.lib")
+set(BOOST_LIB_REGEX_D "${BOOST_LIBRARYDIR}/libboost_regex-vc141-mt-gd-x64-1_67.lib")
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
@@ -66,7 +71,25 @@ add_library (ApeWebserverPlugin SHARED ${SOURCES} ${HEADERS})
 	#message(FATAL_ERROR "Boost: missing libraries.")
 #endif()
 
-target_link_libraries (ApeWebserverPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ${BOOST_LIB_SYSTEM} ${BOOST_LIB_DATETIME} ${BOOST_LIB_REGEX})
+add_library(MY_BOOST_SYSTEM STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_BOOST_SYSTEM PROPERTY IMPORTED_LOCATION_DEBUG ${BOOST_LIB_SYSTEM_D})
+	set_property(TARGET MY_BOOST_SYSTEM PROPERTY IMPORTED_LOCATION_RELEASE ${BOOST_LIB_SYSTEM})
+endif ()
+
+add_library(MY_BOOST_DATETIME STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_BOOST_DATETIME PROPERTY IMPORTED_LOCATION_DEBUG ${BOOST_LIB_DATETIME_D})
+	set_property(TARGET MY_BOOST_DATETIME PROPERTY IMPORTED_LOCATION_RELEASE ${BOOST_LIB_DATETIME})
+endif ()
+
+add_library(MY_BOOST_REGEX STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_BOOST_REGEX PROPERTY IMPORTED_LOCATION_DEBUG ${BOOST_LIB_REGEX_D})
+	set_property(TARGET MY_BOOST_REGEX PROPERTY IMPORTED_LOCATION_RELEASE ${BOOST_LIB_REGEX})
+endif ()
+
+target_link_libraries (ApeWebserverPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager MY_BOOST_SYSTEM MY_BOOST_DATETIME MY_BOOST_REGEX)
 
 set_property (TARGET ApeWebserverPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
