@@ -395,12 +395,6 @@ app.get('/nodes/:name/euler', function(req, res) {
 			return;
 		}
 
-		var eulerObj = obj.getEuler();
-		var eulerObjDegree = {
-			y: Number(eulerObj.getYaw().toDegree()),
-			p: Number(eulerObj.getPitch().toDegree()),
-			r: Number(eulerObj.getRoll().toDegree()),
-		}
 		respObj.addDataItem({
 			euler: JSON.parse(obj.getEuler().toJsonString())
 		});
