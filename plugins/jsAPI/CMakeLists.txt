@@ -285,9 +285,21 @@ if (WIN32)
 
 		#--------------------------------------------------------------------------------------------------------
 
+
+		if (HOST_ARCH_X64)
+			set(TARGET_STRING "x64")
+		elseif (HOST_ARCH_X86)
+			set(TARGET_STRING "x86")
+		endif ()
+
+		#--------------------------------------------------------------------------------------------------------
+
 		###
 		### RELEASE
 		###
+
+		set(NODE_BUILD_CONFIG "release")
+		set(NODE_VCBUILD_COMMAND "${NODE_VCBUILD_PATH} ${NODE_BUILD_CONFIG} ${TARGET_STRING} dll vs2017")
 
 		if (EXISTS ${NODE_DLL_PATH_RELEASE})
 			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/release folder...")
@@ -305,7 +317,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message("ApePlugins: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} release x64 dll vs2017
+				COMMAND cmd /c ${NODE_VCBUILD_COMMAND}
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
@@ -373,6 +385,9 @@ if (WIN32)
 		### DEBUG
 		###
 
+		set(NODE_BUILD_CONFIG "debug")
+		set(NODE_VCBUILD_COMMAND "${NODE_VCBUILD_PATH} ${NODE_BUILD_CONFIG} ${TARGET_STRING} dll vs2017")
+
 		if (EXISTS ${NODE_DLL_PATH_DEBUG})
 			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/debug folder...")
 			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
@@ -390,7 +405,7 @@ if (WIN32)
 			# Use vcbuild to generate solution files
 			message(STATUS "ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
 			execute_process(
-				COMMAND cmd /c ${NODE_VCBUILD_PATH} debug x64 dll vs2017
+				COMMAND cmd /c ${NODE_VCBUILD_COMMAND}
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
