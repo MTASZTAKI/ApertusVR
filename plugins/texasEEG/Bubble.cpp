@@ -53,7 +53,6 @@ void TexasEEG::Bubble::init()
 		if (auto counterText = std::static_pointer_cast<Ape::ITextGeometry>(mCounterText.lock()))
 		{
 			counterText->setCaption(std::to_string(mTimerCount));
-			//counterText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 			counterText->setParentNode(bubbleNode);
 		}
 	}
