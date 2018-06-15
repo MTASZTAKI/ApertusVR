@@ -10,7 +10,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 build/
+
+# IDE settings
 .vs/
+.vscode/
 
 # Generated Files
 *.exe
@@ -66,7 +69,7 @@ Makefile.inc.cmake
 # Curl
 3rdParty/curl/DartConfiguration.tcl
 
-#CEF
+# CEF
 3rdParty/cef_binary_3.3071.1643.ga83b8e9_windows64/
 3rdParty/cef_binary_3.3113.1650.g6da2bbf_windows64/
 3rdParty/cef_ffmpeg/
@@ -77,16 +80,22 @@ node_modules/
 3rdParty/nodejs/**/source/config.mk
 3rdParty/nodejs/**/source/config.gypi
 3rdParty/nodejs/**/source/icu_config.gypi
+3rdParty/nodejs/**/source/deps/openssl/openssl.props
+3rdParty/nodejs/**/source/deps/openssl/openssl.targets
+3rdParty/nodejs/**/source/deps/openssl/openssl.xml
 3rdParty/nodejs/**/*.pyc
 3rdParty/nodejs/**/genfiles/
 3rdParty/nodejs/**/Debug/
 3rdParty/nodejs/**/Release/
 
-#leapMotion
+# LeapMotion
 !3rdParty/leapMotion/lib/x64/*
 !3rdParty/leapMotion/lib/x86/*
+
+# Boost
+3rdParty/boost/**/project-config.jam
+3rdParty/boost/**/bin.v2/*
 
 # Exclude thirdparties
 !3rdParty/oculus/LibOVR/Lib/*
 !3rdParty/oculusRT/*
-
