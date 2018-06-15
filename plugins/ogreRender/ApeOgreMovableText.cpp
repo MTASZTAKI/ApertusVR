@@ -490,8 +490,7 @@ void Ape::OgreMovableText::_updateRenderQueue(Ogre::RenderQueue* queue)
         if (mUpdateColors)
             this->_updateColors();
 
-        queue->addRenderable(this, mRenderQueueID, OGRE_RENDERABLE_DEFAULT_PRIORITY);
-        //queue->addRenderable(this, mRenderQueueID, RENDER_QUEUE_SKIES_LATE);
+		queue->addRenderable(this, mRenderQueueID, OGRE_RENDERABLE_DEFAULT_PRIORITY);
     }
 }
 

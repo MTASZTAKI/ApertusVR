@@ -29,6 +29,7 @@ Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : 
 	mpScene = Ape::IScene::getSingletonPtr();
 	mCaption = "";
 	mVisibility = false;
+	mShowOnTop = false;
 }
 
 Ape::TextGeometryImpl::~TextGeometryImpl()
@@ -56,6 +57,17 @@ void Ape::TextGeometryImpl::setVisible( bool enabled )
 {
 	mVisibility = enabled;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
+}
+
+void Ape::TextGeometryImpl::showOnTop(bool show)
+{
+	mShowOnTop = show;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_SHOWONTOP));
+}
+
+bool Ape::TextGeometryImpl::isShownOnTop()
+{
+	return mShowOnTop;
 }
 
 void Ape::TextGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)

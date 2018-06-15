@@ -48,6 +48,10 @@ namespace Ape
 		virtual void setVisible(bool enabled) = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void showOnTop(bool show) = 0;
+
+		virtual bool isShownOnTop() = 0;
 	};
 }
 
