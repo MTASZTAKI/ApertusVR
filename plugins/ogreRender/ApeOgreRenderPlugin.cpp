@@ -1030,10 +1030,19 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->createMovableObject(geometryName, "MovableText"))
 					{
 						ogreText->setTextAlignment(Ape::OgreMovableText::H_CENTER, Ape::OgreMovableText::V_ABOVE);
-						ogreText->showOnTop(true);
+						ogreText->showOnTop(false);
 					}
 				}
 					break;
+				case Ape::Event::Type::GEOMETRY_TEXT_SHOWONTOP:
+				{
+					if (auto ogreText = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))
+					{
+						if (auto textGeometry = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->getEntity(geometryName).lock()))
+							ogreText->showOnTop(textGeometry->isShownOnTop());
+					}
+				}
+				break;
 				case Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE:
 				{
 					if (auto ogreTextGeometry = (Ape::OgreMovableText*)mpSceneMgr->getMovableObject(geometryName, "MovableText"))

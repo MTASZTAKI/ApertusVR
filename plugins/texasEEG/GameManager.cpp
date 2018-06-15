@@ -18,13 +18,19 @@ TexasEEG::GameManager::~GameManager()
 void TexasEEG::GameManager::Init()
 {
 	LOG(LOG_TYPE_DEBUG, "timeText create");
-	mTimeText = mpScene->createEntity("timeTextKrixkrax", Ape::Entity::GEOMETRY_TEXT);
-	if (auto timeText = std::static_pointer_cast<Ape::ITextGeometry>(mTimeText.lock()))
+	if (auto timerNode = mpScene->createNode("timerNode").lock())
 	{
-		timeText->setCaption(std::to_string(mTime));
-		//timeText->setOffset(Ape::Vector3(-18.0f, 10.0f, -30.0f));
-		timeText->setParentNode(mUserNode);
-		LOG(LOG_TYPE_DEBUG, "timeText create ok");
+		timerNode->setParentNode(mUserNode);
+		timerNode->setPosition(Ape::Vector3(-18, 10, -30));
+
+		mTimeText = mpScene->createEntity("timeTextKrixkrax", Ape::Entity::GEOMETRY_TEXT);
+		if (auto timeText = std::static_pointer_cast<Ape::ITextGeometry>(mTimeText.lock()))
+		{
+			timeText->setCaption(std::to_string(mTime));
+			timeText->showOnTop(true);
+			timeText->setParentNode(timerNode);
+			LOG(LOG_TYPE_DEBUG, "timeText create ok");
+		}
 	}
 
 	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
@@ -54,13 +60,19 @@ void TexasEEG::GameManager::Init()
 	}*/
 
 	LOG(LOG_TYPE_DEBUG, "scoreText create");
-	mScoreText = mpScene->createEntity("scoreText", Ape::Entity::GEOMETRY_TEXT);
-	if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
+	if (auto scoreNode = mpScene->createNode("scoreNode").lock())
 	{
-		scoreText->setCaption(std::to_string(mScore));
-		//scoreText->setOffset(Ape::Vector3(20.0f, 10.0f, -30.0f));
-		scoreText->setParentNode(mUserNode);
-		LOG(LOG_TYPE_DEBUG, "scoreText ok");
+		scoreNode->setParentNode(mUserNode);
+		scoreNode->setPosition(Ape::Vector3(18, 10, -30));
+
+		mScoreText = mpScene->createEntity("scoreText", Ape::Entity::GEOMETRY_TEXT);
+		if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
+		{
+			scoreText->setCaption(std::to_string(mScore));
+			scoreText->showOnTop(true);
+			scoreText->setParentNode(scoreNode);
+			LOG(LOG_TYPE_DEBUG, "scoreText ok");
+		}
 	}
 
 	mTimerThread = new std::thread(std::bind(&GameManager::Timer, this));

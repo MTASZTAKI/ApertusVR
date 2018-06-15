@@ -46,6 +46,9 @@ namespace Ape
 		
 		void setVisible(bool enabled) override;
 	
+		void showOnTop(bool show) override;
+
+		bool isShownOnTop() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
@@ -63,6 +66,8 @@ namespace Ape
 		std::string mCaption;
 
 		bool mVisibility;
+
+		bool mShowOnTop;
 	};
 }
 

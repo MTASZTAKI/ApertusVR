@@ -118,10 +118,15 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					coordinateSystemArrowXCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowXCone->setParentNode(coordinateSystemArrowXConeNode);
 					coordinateSystemArrowXCone->setMaterial(coordinateSystemArrowXMaterial);
-					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto coordinateSystemXTextNode = mpScene->createNode("coordinateSystemXTextNode").lock())
 					{
-						coordinateSystemXText->setCaption("X");
-						coordinateSystemXText->setParentNode(coordinateSystemArrowXConeNode);
+						coordinateSystemXTextNode->setParentNode(coordinateSystemArrowXConeNode);
+						coordinateSystemXTextNode->setPosition(Ape::Vector3(0, 0, 5));
+						if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							coordinateSystemXText->setCaption("X");
+							coordinateSystemXText->setParentNode(coordinateSystemXTextNode);
+						}
 					}
 					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
@@ -155,10 +160,15 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					coordinateSystemArrowYCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowYCone->setParentNode(coordinateSystemArrowYConeNode);
 					coordinateSystemArrowYCone->setMaterial(coordinateSystemArrowYMaterial);
-					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto coordinateSystemYTextNode = mpScene->createNode("coordinateSystemYTextNode").lock())
 					{
-						coordinateSystemYText->setCaption("Y");
-						coordinateSystemYText->setParentNode(coordinateSystemArrowYConeNode);
+						coordinateSystemYTextNode->setParentNode(coordinateSystemArrowYConeNode);
+						coordinateSystemYTextNode->setPosition(Ape::Vector3(0, 0, 5));
+						if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							coordinateSystemYText->setCaption("Y");
+							coordinateSystemYText->setParentNode(coordinateSystemYTextNode);
+						}
 					}
 					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
@@ -193,10 +203,15 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 					coordinateSystemArrowZCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowZCone->setParentNode(coordinateSystemArrowZConeNode);
 					coordinateSystemArrowZCone->setMaterial(coordinateSystemArrowZMaterial);
-					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto coordinateSystemZTextNode = mpScene->createNode("coordinateSystemZTextNode").lock())
 					{
-						coordinateSystemZText->setCaption("Z");
-						coordinateSystemZText->setParentNode(coordinateSystemArrowZConeNode);
+						coordinateSystemZTextNode->setParentNode(coordinateSystemArrowZConeNode);
+						coordinateSystemZTextNode->setPosition(Ape::Vector3(5, 0, 0));
+						if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							coordinateSystemXText->setCaption("Z");
+							coordinateSystemXText->setParentNode(coordinateSystemZTextNode);
+						}
 					}
 					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
