@@ -22,7 +22,7 @@
 
 # Add all header and cpp files in the directory to the project
 
-set (HEADERS
+set(HEADERS
 	ApeTextGeometryImpl.h
 	ApeLightImpl.h
 	ApeBrowserImpl.h
@@ -57,7 +57,7 @@ set (HEADERS
 	session/ApeHttpManager.h
 	)
 
-set (SOURCES
+set(SOURCES
 	ApeTextGeometryImpl.cpp
 	ApeLightImpl.cpp
 	ApeBrowserImpl.cpp
@@ -99,24 +99,37 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/eventManager
 	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAKNET_INCLUDE_DIR}
-	${CURL_INCLUDE_DIR}
+	${CURL_INCLUDE_DIRS}
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeScene SHARED ${SOURCES} ${HEADERS})
+add_library(ApeScene SHARED ${SOURCES} ${HEADERS})
 
-# Link with dependency libraries
-if(WIN32)
-	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager ApeLogManager RAKNET MY_CURL ws2_32)
-endif()
+# Link with dependency libraries and add preprocessor definitions with lists
+set(APE_LINK_LIBS_SCENE
+	ApeSystemConfig
+	ApeEventManager
+	ApePluginManager
+	ApeLogManager
+	RAKNET
+	)
 
-if(APPLE)
-	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager ApePluginManager ApeLogManager RAKNET)
-endif()
+set(APE_PREPROC_DEF_SCENE
+	BUILDING_APE_SCENE_DLL
+	)
 
-# Add preprocessor definitions
-set_property (TARGET ApeScene PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENE_DLL HTTPMANAGER_USE_CURL)
+if (${CURL_FOUND})
+	list(APPEND APE_LINK_LIBS_SCENE MY_CURL)
+	list(APPEND APE_PREPROC_DEF_SCENE HTTPMANAGER_USE_CURL)
+endif ()
+
+if (WIN32)
+	list(APPEND APE_LINK_LIBS_SCENE ws2_32)
+endif ()
+
+target_link_libraries(ApeScene ${APE_LINK_LIBS_SCENE})
+set_property(TARGET ApeScene PROPERTY COMPILE_DEFINITIONS ${APE_PREPROC_DEF_SCENE})
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeScene PROPERTY FOLDER "Core")
+set_property(TARGET ApeScene PROPERTY FOLDER "Core")

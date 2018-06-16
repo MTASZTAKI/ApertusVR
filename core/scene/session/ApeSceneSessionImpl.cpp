@@ -64,7 +64,8 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
 		{
 			LOG(LOG_TYPE_DEBUG, "use lobbyManager to get scene session guid");
-			bool getSessionRes = mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, uuid);
+			std::string name = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName;
+			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
 			LOG(LOG_TYPE_DEBUG, "lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 			if (getSessionRes && !uuid.empty())
 			{
@@ -174,6 +175,7 @@ void Ape::SceneSessionImpl::init()
 	}
 
 	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
+	LOG(LOG_TYPE_DEBUG, "Raknet StartupResult: " << (int)sr);
 	RakAssert(sr == RakNet::RAKNET_STARTED);
 	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
 	mpRakReplicaPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);

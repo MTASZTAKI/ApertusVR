@@ -185,7 +185,7 @@ void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 		packetDataIndex++;
 	}
 	streamPeer->Send(streamPacket, streamPacketSizeInBytes, HIGH_PRIORITY, RELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
-	delete streamPacket;
+	delete[] streamPacket;
 	streamPacket = nullptr;
 }
 
@@ -226,7 +226,7 @@ void Ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * stream
 		packetDataIndex++;
 	}
 	streamPeer->Send(streamPacket, streamPacketSizeInBytes, HIGH_PRIORITY, RELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
-	delete streamPacket;
+	delete[] streamPacket;
 	streamPacket = nullptr;
 }
 
