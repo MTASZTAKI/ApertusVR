@@ -80,10 +80,6 @@ SOFTWARE.*/
 
 #define LOG_WRITE(LEVEL, SS) { std::stringstream superStringStream; superStringStream << SS << LOG_LINE_END; Ape::ILogManager::getSingletonPtr()->log(superStringStream, LEVEL); }
 
-#define LOG_SCOPE() Ape::ILogManager::ScopedLog sl(THIS_PLUGINNAME, __FILE__, __FUNCTION_NAME__, __LINE__, false);
-
-#define LOG_FUNC_SCOPE() Ape::ILogManager::ScopedLog sl(THIS_PLUGINNAME, __FILE__, __FUNCTION_NAME__, __LINE__, true);
-
 #define LOG(LEVEL, SS) \
 	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << LOG_FILL(LOG_FILE_WIDTH) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
 			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << __LINE__ << COLOR_TERM \
@@ -123,51 +119,6 @@ namespace Ape
 		virtual void setLevel(int level) = 0;
 		virtual void registerStream(std::ostream& stream) = 0;
 		virtual void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG) = 0;
-
-		class APE_LOGMANAGER_DLL_EXPORT ScopedLog
-		{
-		private:
-			int mLevel = LOG_TYPE_DEBUG;
-			bool mUseFuncName = false;
-
-			std::string mPluginName;
-			std::string mFileName;
-			std::string mFuncName;
-			int mLineNum;
-
-		public:
-			ScopedLog(std::string pluginName, std::string fileName, std::string funcName, int lineNum, bool useFuncName = false)
-				: mPluginName(pluginName)
-				, mFileName(fileName)
-				, mFuncName(funcName)
-				, mLineNum(lineNum)
-				, mUseFuncName(useFuncName)
-			{
-				genLog(true);
-			}
-
-			~ScopedLog()
-			{
-				genLog(false);
-			}
-
-			void genLog(bool start)
-			{
-				std::stringstream ss;
-
-				if (mUseFuncName)
-					ss << "Function " << (start ? "Start" : "End");
-				else
-					ss << "Scope Start" << (start ? "Start" : "End");
-
-				LOGDEEP(mLevel, mFileName, mLineNum, mFuncName, ss.str());
-			}
-
-			void setLevel(int level)
-			{
-				mLevel = level;
-			}
-		};
 	};
 }
 
