@@ -62,6 +62,12 @@ Makefile.inc.cmake
 3rdParty/ogre_procedural/version.txt
 3rdParty/ogre_procedural/CPackConfig.cmake
 3rdParty/ogre_procedural/CPackSourceConfig.cmake
+3rdParty/ogre/pkgconfig/*
+3rdParty/ogre/**/*.d
+3rdParty/ogre/**/*.data
+3rdParty/ogre/**/*.dia
+3rdParty/ogre/**/*.pch
+3rdParty/ogre/**/*.hash-criteria
 
 # RakNet
 3rdParty/raknet/include

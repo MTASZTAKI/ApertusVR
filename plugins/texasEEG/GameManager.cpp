@@ -17,7 +17,7 @@ TexasEEG::GameManager::~GameManager()
 
 void TexasEEG::GameManager::Init()
 {
-	LOG(LOG_TYPE_DEBUG, "timeText create");
+	LOG_TRACE("timeText create");
 	if (auto timerNode = mpScene->createNode("timerNode").lock())
 	{
 		timerNode->setParentNode(mUserNode);
@@ -29,37 +29,11 @@ void TexasEEG::GameManager::Init()
 			timeText->setCaption(std::to_string(mTime));
 			timeText->showOnTop(true);
 			timeText->setParentNode(timerNode);
-			LOG(LOG_TYPE_DEBUG, "timeText create ok");
+			LOG_TRACE("timeText create ok");
 		}
 	}
 
-	/*if (auto planeNode = mpScene->createNode("planeNode").lock())
-	{
-		planeNode->setPosition(Ape::Vector3(0, 0, -30));
-		planeNode->setOrientation(Ape::Quaternion(Ape::Degree(90), Ape::Vector3(1, 0, 0)));
-		planeNode->setParentNode(mUserNode);
-
-		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("timePlane", Ape::Entity::GEOMETRY_PLANE).lock()))
-		{
-			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(10, 10), Ape::Vector2(1, 1));
-			plane->setParentNode(planeNode);
-			if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-			{
-				planeMaterial->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
-				planeMaterial->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
-				if (auto planeMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("planeMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-				{
-					planeMaterialManualPass->setShininess(15.0f);
-					planeMaterialManualPass->setDiffuseColor(Ape::Color(0.29f, 0.266f, 0.29f));
-					planeMaterialManualPass->setSpecularColor(Ape::Color(0.29f, 0.266f, 0.29f));
-					planeMaterial->setPass(planeMaterialManualPass);
-				}
-				plane->setMaterial(planeMaterial);
-			}
-		}
-	}*/
-
-	LOG(LOG_TYPE_DEBUG, "scoreText create");
+	LOG_TRACE("scoreText create");
 	if (auto scoreNode = mpScene->createNode("scoreNode").lock())
 	{
 		scoreNode->setParentNode(mUserNode);
@@ -71,7 +45,7 @@ void TexasEEG::GameManager::Init()
 			scoreText->setCaption(std::to_string(mScore));
 			scoreText->showOnTop(true);
 			scoreText->setParentNode(scoreNode);
-			LOG(LOG_TYPE_DEBUG, "scoreText ok");
+			LOG_TRACE("scoreText ok");
 		}
 	}
 
@@ -117,7 +91,7 @@ void TexasEEG::GameManager::Run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	LOG(LOG_TYPE_DEBUG, "gameOver");
+	LOG_TRACE("gameOver");
 }
 
 void TexasEEG::GameManager::Start()
@@ -166,7 +140,6 @@ void TexasEEG::GameManager::UpdateStatus()
 	if (auto statusText = std::static_pointer_cast<Ape::ITextGeometry>(mStatusText.lock()))
 	{
 		statusText->setCaption("Game Over");
-		//statusText->setOffset(Ape::Vector3(0.0f, 0.0f, -30.0f));
 		statusText->setParentNode(mUserNode);
 	}
 }

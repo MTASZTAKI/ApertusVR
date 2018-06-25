@@ -40,7 +40,6 @@ namespace Ape
 	private:
 #ifdef HTTPMANAGER_USE_CURL
 		void* mpCurl;
-		CurlData mCurlData;
 #endif
 		
 	public:
