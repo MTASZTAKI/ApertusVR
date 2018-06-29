@@ -40,7 +40,7 @@ Ape::CameraWeakPtr Ape::ApeOculusDK2Plugin::createCamera(std::string name)
 		if (auto cameraNode = mpScene->createNode(name + "_Node").lock())
 		{
 			cameraNode->setParentNode(mHeadNode);
-			if (auto cameraConeNode = mpScene->createNode(name + "_ConeNode").lock())
+			/*if (auto cameraConeNode = mpScene->createNode(name + "_ConeNode").lock())
 			{
 				cameraConeNode->setParentNode(cameraNode);
 				cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
@@ -60,7 +60,7 @@ Ape::CameraWeakPtr Ape::ApeOculusDK2Plugin::createCamera(std::string name)
 					userNameText->setCaption(name);
 					userNameText->setParentNode(userNameTextNode);
 				}
-			}
+			}*/
 			camera->setParentNode(cameraNode);
 		}
 		return camera;
