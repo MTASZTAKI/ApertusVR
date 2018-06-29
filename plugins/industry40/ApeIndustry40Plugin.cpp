@@ -37,20 +37,20 @@ void Ape::ApeIndustry40Plugin::Init()
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
-	//if (auto planeNode = mpScene->createNode("planeNode").lock())
-	//{
-	//	if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-	//	{
-	//		planeMaterial->setDiffuseColor(Ape::Color(0.1f, 0.1f, 0.1f));
-	//		planeMaterial->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.2f));
-	//		if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
-	//		{
-	//			plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
-	//			plane->setParentNode(planeNode);
-	//			plane->setMaterial(planeMaterial);
-	//		}
-	//	}
-	//}
+	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	{
+		if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			planeMaterial->setDiffuseColor(Ape::Color(0.1f, 0.1f, 0.1f));
+			planeMaterial->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.2f));
+			if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
+			{
+				plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
+				plane->setParentNode(planeNode);
+				plane->setMaterial(planeMaterial);
+			}
+		}
+	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
