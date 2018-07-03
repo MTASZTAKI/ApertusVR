@@ -29,12 +29,29 @@ SOFTWARE.*/
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "ApeSystemConfigImpl.h"
 
 Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 {
+	struct stat info;
 	msSingleton = this;
 	mFolderPath = folderPath;
+
+	if (stat(mFolderPath.c_str(), &info) != 0)
+	{
+		std::cout << "SystemConfigImpl: cannot access to " << mFolderPath << std::endl;
+	}
+	else if (info.st_mode & S_IFDIR)
+	{
+		std::cout << "SystemConfigImpl: loading config files from " << mFolderPath << std::endl;
+	}
+	else
+	{
+		std::cout << "SystemConfigImpl: no directory at " << mFolderPath << std::endl;
+	}
+
 	std::stringstream fileFullPath; 
 	fileFullPath << folderPath << "\\ApeSystem.json";
 	FILE* apeSystemConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
