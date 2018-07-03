@@ -21,34 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
+	int minExtraArgs = 1;
 	std::stringstream configDir;
-	if (argc > 1)
+	configDir << APE_SOURCE_DIR << "/samples/mixedReality/configs/";
+	auto dirs = Ape::FileSystem::getDirectories(configDir.str());
+	if (argc < minExtraArgs + 1)
 	{
-		std::string participantType = argv[1];
-		if (participantType == "host")
-			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\host";
-		else if (participantType == "guest")
-			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest";
-		else if (participantType == "local")
-			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\local";
-		else if (participantType == "guest_cave")
-			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest_cave";
-		else if (participantType == "guest_oculusDK2")
-			configDir << APE_SOURCE_DIR << "\\samples\\mixedReality\\configs\\guest_oculusDK2";
+		std::cout << "Use one of the configurations:" << std::endl;
+		for (auto& dir : dirs.subDirs)
+			std::cout << dir << std::endl;
+		return 1;
 	}
 	else
 	{
-		std::cout << "usage: host | guest | local | guest_cave | guest_oculusDK2 " << std::endl;
+		if (argc > 1)
+			configDir << argv[1];
+		Ape::System::Start(configDir.str().c_str(), true);
+		Ape::System::Stop();
 		return 0;
 	}
-	Ape::System::Start(configDir.str().c_str(), true);
-	Ape::System::Stop();
-	return 0;
 }

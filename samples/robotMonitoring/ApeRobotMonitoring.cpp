@@ -20,39 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <fstream>
-#include <map>
 #include "ApeSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
-	if (argc > 1)
-	{
-		std::stringstream configPath;
-		std::stringstream configFilePath;
-		std::string configDirName = argv[1];
-		configPath << APE_SOURCE_DIR << "/samples/robotMonitoring/configs/" << configDirName;
-		configFilePath << configPath.str() << "/ApeSystem.json";
-		std::ifstream f(configFilePath.str().c_str());
-		if (f.good())
-		{
-			Ape::System::Start(configPath.str().c_str(), true);
-			Ape::System::Stop();
-		}
-		else
-		{
-			std::cout << "wrong configDirName: " << configPath.str() << std::endl;
-			return 0;
-		}
-	}
-	else
-	{
-		std::cout << "configDirName is not present as argument" << std::endl;
-		return 0;
-	}
+	int minExtraArgs = 0;
+	std::stringstream configDir;
+	configDir << APE_SOURCE_DIR << "/samples/robotMonitoring/configs/";
+	Ape::System::Start(configDir.str().c_str(), true);
+	Ape::System::Stop();
 	return 0;
 }
