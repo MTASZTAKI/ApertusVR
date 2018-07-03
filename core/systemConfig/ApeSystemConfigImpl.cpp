@@ -53,7 +53,7 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 	}
 
 	std::stringstream fileFullPath; 
-	fileFullPath << folderPath << "\\ApeSystem.json";
+	fileFullPath << mFolderPath << "/ApeSystem.json";
 	FILE* apeSystemConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeSystemConfigFile)
