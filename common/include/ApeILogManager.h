@@ -53,7 +53,12 @@ SOFTWARE.*/
 	#endif
 #endif
 
-//#define LOG_ENABLE_TRACE 1
+#define LOG_ENABLE_INFO
+#define LOG_ENABLE_DEBUG
+//#define LOG_ENABLE_TRACE
+#define LOG_ENABLE_WARNING
+#define LOG_ENABLE_ERROR
+#define LOG_ENABLE_COLORIZE
 
 #define COLOR_ORANGE "\033[0;33m"
 #define COLOR_LIGHT_RED "\033[0;91m"
@@ -75,35 +80,57 @@ SOFTWARE.*/
 
 #define LOG_FILE_WIDTH 31
 #define LOG_LINE_WIDTH 5
-#define LOG_FUNC_WIDTH 55
+#define LOG_FUNC_WIDTH 45
 #define LOG_FILL(WIDTH) std::setfill(' ') << std::setw(WIDTH)
 
 #define LOG_WRITE(LEVEL, SS) { std::stringstream superStringStream; superStringStream << SS << LOG_LINE_END; Ape::ILogManager::getSingletonPtr()->log(superStringStream, LEVEL); }
 
-#define LOG(LEVEL, SS) \
-	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << LOG_FILL(LOG_FILE_WIDTH) << Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(__FILE__) << COLOR_TERM  \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << __LINE__ << COLOR_TERM \
-			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << LOG_FILL(LOG_FUNC_WIDTH) << __FUNCTION_NAME__ << COLOR_TERM \
-			  << LOG_DELIMITER << SS \
-	); \
+#ifdef LOG_ENABLE_COLORIZE
+	#define LOG(LEVEL, SS) \
+		LOG_WRITE(LEVEL, COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << __LINE__ << COLOR_TERM \
+				  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << LOG_FILL(LOG_FUNC_WIDTH) << __FUNCTION_NAME__ << COLOR_TERM \
+				  << LOG_DELIMITER << SS \
+		);
+#else
+	#define LOG(LEVEL, SS) \
+		LOG_WRITE(LEVEL, "LN " << LOG_FILL(LOG_LINE_WIDTH) << __LINE__ \
+				  << LOG_DELIMITER << LOG_FILL(LOG_FUNC_WIDTH) << __FUNCTION_NAME__ \
+				  << LOG_DELIMITER << SS \
+		);
+#endif
 
-#define LOGDEEP(LEVEL, FILENAME, LINENUM, FUNCNAME, SS) \
-	LOG_WRITE(LEVEL, COLOR_LIGHT_MAGENTA << LOG_FILL(LOG_FILE_WIDTH) <<  Ape::ILogManager::getSingletonPtr()->getFileNameFromPath(FILENAME) << COLOR_TERM \
-			  << LOG_DELIMITER << COLOR_LIGHT_CYAN << "LN " << LOG_FILL(LOG_LINE_WIDTH) << LINENUM << COLOR_TERM  \
-			  << LOG_DELIMITER << COLOR_LIGHT_YELLOW << LOG_FILL(LOG_FUNC_WIDTH) << FUNCNAME << COLOR_TERM \
-			  << LOG_DELIMITER << SS \
-	); \
+#ifdef LOG_ENABLE_INFO
+	#define LOG_INFO(SS) LOG(LOG_TYPE_INFO, SS);
+#else
+	#define LOG_INFO(SS) do { } while(0);
+#endif
 
-#define LOG_FUNC(LEVEL, SS) LOG(LEVEL, SS);
+#ifdef LOG_ENABLE_DEBUG
+	#define LOG_DEBUG(SS) LOG(LOG_TYPE_DEBUG, SS);
+#else
+	#define LOG_DEBUG(SS) do { } while(0);
+#endif
 
 #ifdef LOG_ENABLE_TRACE
 	#define LOG_FUNC_ENTER() LOG(LOG_TYPE_TRACE, "Enter");
 	#define LOG_FUNC_LEAVE() LOG(LOG_TYPE_TRACE, "Leave");
 	#define LOG_TRACE(SS) LOG(LOG_TYPE_TRACE, SS);
 #else
-	#define LOG_FUNC_ENTER()
-	#define LOG_FUNC_LEAVE()
-	#define LOG_TRACE(SS)
+	#define LOG_FUNC_ENTER() do { } while(0);
+	#define LOG_FUNC_LEAVE() do { } while(0);
+	#define LOG_TRACE(SS) do { } while(0);
+#endif
+
+#ifdef LOG_ENABLE_WARNING
+	#define LOG_WARNING(SS) LOG(LOG_TYPE_WARNING, SS);
+#else
+	#define LOG_WARNING(SS) do { } while(0);
+#endif
+
+#ifdef LOG_ENABLE_ERROR
+	#define LOG_ERROR(SS) LOG(LOG_TYPE_ERROR, SS);
+#else
+	#define LOG_ERROR(SS) do { } while(0);
 #endif
 
 namespace Ape

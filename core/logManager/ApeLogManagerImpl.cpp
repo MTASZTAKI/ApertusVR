@@ -26,7 +26,9 @@ Ape::LogManagerImpl::LogManagerImpl()
 	: mStream(&std::cout)
 {
 	msSingleton = this;
+#ifdef LOG_ENABLE_COLORIZE
 	system("color 0F");
+#endif
 	mOutFileStream = std::ofstream("ApertusVR.log");
 }
 
@@ -66,19 +68,39 @@ void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
 	switch (levelToCheck)
 	{
 	case LOG_TYPE_INFO:
-		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(5) << " ";
+#ifdef LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << LOG_DELIMITER << " ";
+#else
+		ssOut << "INFO" << LOG_DELIMITER << " ";
+#endif
 		break;
 	case LOG_TYPE_DEBUG:
-		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
+#ifdef LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << LOG_DELIMITER;
+#else
+		ssOut << "DEBUG" << LOG_DELIMITER;
+#endif
 		break;
 	case LOG_TYPE_TRACE:
-		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
+#ifdef LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << LOG_DELIMITER;
+#else
+		ssOut << "TRACE" << LOG_DELIMITER;
+#endif
 		break;
 	case LOG_TYPE_WARNING:
-		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(2) << " ";
+#ifdef LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << LOG_DELIMITER << " ";
+#else
+		ssOut << "WARN" << LOG_DELIMITER << " ";
+#endif
 		break;
 	case LOG_TYPE_ERROR:
-		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << ":" << std::setfill(' ') << std::setw(4) << " ";
+#ifdef LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << LOG_DELIMITER;
+#else
+		ssOut << "ERROR" << LOG_DELIMITER;
+#endif
 		break;
 	}
 
