@@ -92,7 +92,9 @@ namespace Ape
 			OIS::MouseState posPrevious;
 			OIS::MouseState posCurrent;
 			std::map<OIS::MouseButtonID, bool> buttonDownMap;
-			bool isDragMode = false;
+			bool isDragModeLeft = false;
+			bool isDragModeMiddle = false;
+			bool isDragModeRight = false;
 			bool isMouseMoved = false;
 		};
 
@@ -154,9 +156,15 @@ namespace Ape
 
 		int mUserNodePosesToggleIndex;
 
-		int mTranslateSpeedFactor;
+		float mTranslateSpeedFactorKeyboard;
 
-		int mRotateSpeedFactor;
+		float mRotateSpeedFactorKeyboard;
+
+		float mTranslateSpeedFactorMouse;
+
+		float mRotateSpeedFactorMouse;
+
+		float mGeneralSpeedFactor;
 
 		bool mIsKeyPressed;
 
