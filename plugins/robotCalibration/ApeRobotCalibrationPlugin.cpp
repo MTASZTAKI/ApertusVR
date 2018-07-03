@@ -9,7 +9,6 @@ Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
-	mDemoObjectNode = Ape::NodeWeakPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	LOG_FUNC_LEAVE();
 }

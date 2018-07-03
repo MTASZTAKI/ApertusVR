@@ -76,8 +76,6 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		Ape::NodeWeakPtr mDemoObjectNode;
-
 		Ape::PointCloudWeakPtr mPointCloud;
 
 		int mPointCloudSize;
