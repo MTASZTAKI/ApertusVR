@@ -79,6 +79,8 @@ set (HEADERS
 	ApeISky.h
 	ApeIWater.h
 	ApeIPointCloud.h
+	ApeFileSystem.h
+	ApePlatform.h
 	)
 
 add_custom_target(
