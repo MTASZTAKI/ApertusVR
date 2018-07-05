@@ -23,11 +23,10 @@
     },
     "pluginManager": {
         "plugins": [
-            "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-			"ApeOisUserInputPlugin",
+			      "ApeOisUserInputPlugin",
             "ApeIndustry40Plugin",
-            "ApeKinectPlugin"
+            "ApeZedPlugin"
         ]
     }
 }

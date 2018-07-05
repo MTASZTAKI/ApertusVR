@@ -45,6 +45,11 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeZedPlugin"
 
+union dataUnionBytesFloat {
+	float f;
+	char fBuff[sizeof(float)];
+};
+
 namespace Ape
 {
 	class ZedPlugin : public Ape::IPlugin
@@ -92,10 +97,6 @@ namespace Ape
 		int mPointCloudBoundingSphereRadius;
 
 		sl::Mat mZedPointCloud;
-
-		sl::Mat mZedDepthImage;
-
-		sl::Mat mZedImage;
 		
 		Ape::PointCloudPoints mApePointCloudPoints;
 

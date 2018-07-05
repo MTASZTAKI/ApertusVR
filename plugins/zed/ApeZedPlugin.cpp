@@ -17,7 +17,6 @@ Ape::ZedPlugin::ZedPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
-	mZed = sl::Camera();
 	mZedResolutionWidth = 0;
 	mZedResolutionHeight = 0;
 	mPointCloudSize = 0;
@@ -51,8 +50,8 @@ void Ape::ZedPlugin::Init()
 	LOG(LOG_TYPE_DEBUG, "main window was found");
 	LOG(LOG_TYPE_DEBUG, "try to init Zed");
 	sl::InitParameters initParameters;
-	initParameters.camera_resolution = sl::RESOLUTION_VGA;
-	initParameters.depth_mode = sl::DEPTH_MODE_PERFORMANCE;
+	initParameters.camera_resolution = sl::RESOLUTION_HD1080;
+	initParameters.depth_mode = sl::DEPTH_MODE_ULTRA;
 	initParameters.coordinate_system = sl::COORDINATE_SYSTEM_RIGHT_HANDED_Y_UP;
 	initParameters.coordinate_units = sl::UNIT_CENTIMETER;
 	sl::ERROR_CODE err = mZed.open(initParameters);
@@ -60,14 +59,10 @@ void Ape::ZedPlugin::Init()
 		LOG(LOG_TYPE_DEBUG, "Zed error: " << sl::toString(err));
 		mZed.close();
 	}
-	mZedResolutionWidth = (int)mZed.getResolution().width / 2;
-	mZedResolutionHeight = (int)mZed.getResolution().height / 2;
+	mZed.setConfidenceThreshold(95);
+	mZedResolutionWidth = (int)mZed.getResolution().width;
+	mZedResolutionHeight = (int)mZed.getResolution().height;
 	mPointCloudSize = mZedResolutionWidth * mZedResolutionHeight;
-	mZedDepthImage = sl::Mat(mZedResolutionWidth, mZedResolutionHeight, sl::MAT_TYPE_8U_C4);
-	mZedImage = sl::Mat(mZedResolutionWidth, mZedResolutionHeight, sl::MAT_TYPE_8U_C4);
-	mZedPointCloud = sl::Mat();
-	mApePointCloudPoints.clear();
-	mApePointCloudColors.clear();
 	mApePointCloudPoints.resize(mPointCloudSize * 3);
 	mApePointCloudColors.resize(mPointCloudSize * 3);
 	LOG(LOG_TYPE_DEBUG, "Zed init was successful, point cloud size: " << mPointCloudSize);
@@ -99,32 +94,32 @@ void Ape::ZedPlugin::Run()
 	{
 		if (mZed.grab(runtime_parameters) == sl::SUCCESS)
 		{
-			//mZed.retrieveImage(mZedImage, sl::VIEW_LEFT, sl::MEM_CPU, mZedResolutionWidth, mZedResolutionHeight);
-			//mZed.retrieveImage(mZedDepthImage, sl::VIEW_DEPTH, sl::MEM_CPU, mZedResolutionWidth, mZedResolutionHeight);
-			sl::ERROR_CODE zedRetrieveMeasureResult = mZed.retrieveMeasure(mZedPointCloud, sl::MEASURE_XYZRGBA, sl::MEM_CPU, mZedResolutionWidth, mZedResolutionHeight);
-			if (zedRetrieveMeasureResult == sl::SUCCESS)
+			mApePointCloudPoints.clear();
+			mApePointCloudColors.clear();
+			mZed.retrieveMeasure(mZedPointCloud, sl::MEASURE_XYZRGBA);
+			for (int i = 0; i < mZedResolutionWidth; i++)
 			{
-				auto data = mZedPointCloud.getPtr<sl::float4>(sl::MEM_CPU);
-				mApePointCloudPoints.clear();
-				mApePointCloudColors.clear();
-				for (int i = 0; i < mPointCloudSize; i++)
+				for (int j = 0; j < mZedResolutionHeight; j++)
 				{
-					mApePointCloudPoints.push_back(data[i].x);
-					mApePointCloudPoints.push_back(data[i].y);
-					mApePointCloudPoints.push_back(data[i].z);
-					mApePointCloudColors.push_back(data[i].r);
-					mApePointCloudColors.push_back(data[i].g);
-					mApePointCloudColors.push_back(data[i].b);
-				}
-				if (auto apePointCloud = mApePointCloud.lock())
-				{
-					apePointCloud->updatePoints(mApePointCloudPoints);
-					apePointCloud->updateColors(mApePointCloudColors);
+					sl::float4 point_cloud_value;
+					mZedPointCloud.getValue(i, j, &point_cloud_value);
+					mApePointCloudPoints.push_back(point_cloud_value.x);
+					mApePointCloudPoints.push_back(point_cloud_value.y);
+					mApePointCloudPoints.push_back(point_cloud_value.z);
+					dataUnionBytesFloat myUnion;
+					myUnion.f = point_cloud_value.w;
+					mApePointCloudColors.push_back(255 - myUnion.fBuff[0]);
+					mApePointCloudColors.push_back(255 - myUnion.fBuff[1]);
+					mApePointCloudColors.push_back(255 - myUnion.fBuff[2]);
 				}
 			}
-			LOG(LOG_TYPE_DEBUG, "Zed retrieveMeasure result: " << zedRetrieveMeasureResult);
+			if (auto apePointCloud = mApePointCloud.lock())
+			{
+				apePointCloud->updatePoints(mApePointCloudPoints);
+				apePointCloud->updateColors(mApePointCloudColors);
+			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
