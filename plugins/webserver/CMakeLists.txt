@@ -41,7 +41,7 @@ message(STATUS "Boost: BOOST_BUILD_SYSTEM_PATH: ${BOOST_BUILD_SYSTEM_PATH}")
 set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
 message(STATUS "BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR}")
 
-if (NOT EXISTS ${BOOST_LIBRARYDIR})
+if (EXISTS ${BOOST_LIBRARYDIR})
 	message(STATUS "Boost: BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR} does exist, skip building boost.")
 else ()
 	message(STATUS "Boost: BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR} does nost exist, building boost...")
