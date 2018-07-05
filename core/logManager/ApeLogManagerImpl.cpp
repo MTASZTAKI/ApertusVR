@@ -26,7 +26,8 @@ Ape::LogManagerImpl::LogManagerImpl()
 	: mStream(&std::cout)
 {
 	msSingleton = this;
-#ifdef LOG_ENABLE_COLORIZE
+
+#if defined(LOG_ENABLE_COLORIZE) && defined(APE_PLATFORM_WIN)
 	system("color 0F");
 #endif
 	mOutFileStream = std::ofstream("ApertusVR.log");

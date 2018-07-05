@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include <fstream>
 #include <mutex>
 #include "ApeILogManager.h"
+#include "ApePlatform.h"
 
 namespace Ape
 {
