@@ -20,30 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
-#include <sstream>
 #include <iostream>
-#include <map>
+#include <sstream>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
 int main(int argc, char** argv)
 {
+	int minExtraArgs = 1;
 	std::stringstream configDir;
-	if (argc > 1)
+	configDir << APE_SOURCE_DIR << "/samples/360Image/configs/";
+	auto dirs = Ape::FileSystem::getDirectories(configDir.str());
+	if (argc < minExtraArgs + 1)
 	{
-		std::string participantType = argv[1];
-		if (participantType == "monitor")
-			configDir << APE_SOURCE_DIR << "\\samples\\360Image\\configs\\monitor";
-		else if (participantType == "oculusDK2")
-			configDir << APE_SOURCE_DIR << "\\samples\\360Image\\configs\\oculusDK2";
+		std::cout << "Use one of the configurations:" << std::endl;
+		for (auto& dir : dirs.subDirs)
+			std::cout << dir << std::endl;
+		return 1;
 	}
 	else
 	{
-		std::cout << "usage: monitor | oculusDK2" << std::endl;
+		if (argc > 1)
+			configDir << argv[1];
+		Ape::System::Start(configDir.str().c_str(), true);
+		Ape::System::Stop();
 		return 0;
 	}
-	Ape::System::Start(configDir.str().c_str(), true);
-	Ape::System::Stop();
-	return 0;
 }

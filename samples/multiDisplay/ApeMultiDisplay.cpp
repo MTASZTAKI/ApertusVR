@@ -20,16 +20,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <map>
 #include "ApeSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
+	int minExtraArgs = 0;
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\multiDisplay\\configs";
+	configDir << APE_SOURCE_DIR << "/samples/multiDisplay/configs/";
 	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;

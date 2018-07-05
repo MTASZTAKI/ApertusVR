@@ -20,56 +20,46 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_LOGMANAGERIMPL_H
-#define APE_LOGMANAGERIMPL_H
+#ifndef APE_PLATFORM_H
+#define APE_PLATFORM_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_LOGMANAGER_DLL
-#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllexport)
+	#define APE_PLATFORM_WIN
+	#ifdef _WIN64
+		#define APE_PLATFORM_WIN64
+		#define APE_PLATFORM_STRING "Windows 64"
+	#else
+		#define APE_PLATFORM_WIN32
+		#define APE_PLATFORM_STRING "Windows 32"
+	#endif
+#elif __APPLE__
+	#include "TargetConditionals.h"
+	#define APE_PLATFORM_APPLE
+	#if TARGET_IPHONE_SIMULATOR
+		#define APE_PLATFORM_APPLE_IOS_SIMULATOR
+		#define APE_PLATFORM_STRING "Apple - iOS Simulator"
+	#elif TARGET_OS_IPHONE
+		#define APE_PLATFORM_APPLE_IOS_DEVICE
+		#define APE_PLATFORM_STRING "Apple - iOS device"
+	#elif TARGET_OS_MAC
+		#define APE_PLATFORM_APPLE_MACOS
+		#define APE_PLATFORM_STRING "Apple - MacOS"
+	#else
+		#define APE_PLATFORM_APPLE_UNKNOWN
+		#define APE_PLATFORM_STRING "Apple - Unknown"
+	#endif
+#elif __linux__
+	#define APE_PLATFORM_LINUX
+	#define APE_PLATFORM_STRING "Linux"
+#elif __unix__
+	#define APE_PLATFORM_UNIX
+	#define APE_PLATFORM_STRING "Unix"
+#elif defined(_POSIX_VERSION)
+	#define APE_PLATFORM_POSIX
+	#define APE_PLATFORM_STRING "Posix"
 #else
-#define APE_LOGMANAGER_DLL_EXPORT __declspec(dllimport)
+	#define APE_PLATFORM_UNKNOWN
+	#define APE_PLATFORM_STRING "Unknown"
 #endif
-#else
-#define APE_LOGMANAGER_DLL_EXPORT
-#endif
-
-#include <map>
-#include <vector>
-#include <string>
-#include <ostream>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <mutex>
-#include "ApeILogManager.h"
-#include "ApePlatform.h"
-
-namespace Ape
-{
-	class APE_LOGMANAGER_DLL_EXPORT LogManagerImpl : public ILogManager
-	{
-	private:
-		std::mutex g_pages_mutex;
-
-		int mLevel = LOG_TYPE_DEBUG;
-
-		std::ostream* mStream;
-
-		std::ofstream mOutFileStream;
-
-	public:
-		LogManagerImpl();
-
-		~LogManagerImpl();
-
-		std::string getFileNameFromPath(const std::string& path);
-
-		void setLevel(int level);
-
-		void registerStream(std::ostream& stream);
-
-		void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG);
-	};
-}
 
 #endif

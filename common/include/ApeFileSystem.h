@@ -20,30 +20,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <iostream>
-#include <sstream>
-#include "ApeSystem.h"
-#include "ApeFileSystem.h"
+#ifndef APE_FILESYSTEM_H
+#define APE_FILESYSTEM_H
 
-int main(int argc, char** argv)
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <vector>
+#include <dirent.h>
+
+namespace Ape
 {
-	int minExtraArgs = 1;
-	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "/samples/caveSystem/configs/";
-	auto dirs = Ape::FileSystem::getDirectories(configDir.str());
-	if (argc < minExtraArgs + 1)
-	{
-		std::cout << "Use one of the configurations:" << std::endl;
-		for (auto& dir : dirs.subDirs)
-			std::cout << dir << std::endl;
-		return 1;
-	}
-	else
-	{
-		if (argc > 1)
-			configDir << argv[1];
-		Ape::System::Start(configDir.str().c_str(), true);
-		Ape::System::Stop();
-		return 0;
-	}
+	class FileSystem {
+	public:
+		struct DirInfo {
+			std::vector<std::string> subDirs;
+		};
+
+		static DirInfo getDirectories(const std::string& dirName)
+		{
+			DirInfo info;
+			DIR *dir = opendir(dirName.c_str());
+			struct dirent *entry = readdir(dir);
+			while (entry != NULL)
+			{
+				std::string folder = entry->d_name;
+				if (entry->d_type == DT_DIR && folder != ".." && folder != ".")
+					info.subDirs.push_back(folder);
+				entry = readdir(dir);
+			}
+			closedir(dir);
+			return info;
+		}
+
+		static void listDirectories(const std::string& dirName)
+		{
+			for (auto& dir : getDirectories(dirName).subDirs)
+			{
+				std::cout << dir << std::endl;
+			}
+		}
+	};
 }
+
+#endif

@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (host_monitor)
-add_subdirectory (guest_monitor)
-add_subdirectory (guest_oculusDK2)
-add_subdirectory (local_monitor)
-add_subdirectory (local_monitor_window)
-add_subdirectory (local_oculusDK2)
-add_subdirectory (host_cave_2walls)
-add_subdirectory (host_cave_3walls)
+set (CONFIGS
+	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	ApeSystem.json
+	)
+
+add_custom_target(
+    Configs_presentation_local_monitor_window ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_presentation_local_monitor_window PROPERTY FOLDER "Samples/Presentation/Configs")

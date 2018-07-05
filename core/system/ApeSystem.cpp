@@ -22,6 +22,7 @@ SOFTWARE.*/
 
 #include <chrono>
 #include <random>
+#include "ApePlatform.h"
 #include "ApeSystem.h"
 #include "ApeSystemConfigImpl.h"
 #include "ApeMainWindowImpl.h"
@@ -49,6 +50,8 @@ Ape::MainWindowImpl* gpMainWindowImpl;
 void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
 	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
+	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
+
 	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
 	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
 	std::string delimiter = "-";

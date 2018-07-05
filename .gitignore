@@ -68,6 +68,7 @@ Makefile.inc.cmake
 3rdParty/ogre/**/*.dia
 3rdParty/ogre/**/*.pch
 3rdParty/ogre/**/*.hash-criteria
+3rdParty/ogre/EnabledFeatures.txt
 
 # RakNet
 3rdParty/raknet/include
