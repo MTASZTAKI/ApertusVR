@@ -104,9 +104,10 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 					std::size_t foundCoord = geometry->getName().find("coord");
 					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
 					{
-						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << " type: " << geometry->getType());
+						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: geometry: " << geometry->getName() << " type: " << geometry->getType());
 						if (auto selectedParentNode = geometry->getParentNode().lock())
 						{
+							LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
 							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 							{
 								clearNodeSelection();
