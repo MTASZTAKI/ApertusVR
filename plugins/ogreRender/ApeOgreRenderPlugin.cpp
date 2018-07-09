@@ -2146,6 +2146,10 @@ void Ape::OgreRenderPlugin::Init()
 											orientationOffset.FromAngleAxis(angle, axis);
 											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
 										}
+										else if (cameraMemberIterator->name == "parentNodeName")
+										{
+											ogreViewPortConfig.camera.parentNodeName = cameraMemberIterator->value.GetString();
+										}
 									}
 									mCameraCountFromConfig++;
 								}
@@ -2291,7 +2295,22 @@ void Ape::OgreRenderPlugin::Init()
 									camera->setNearClipDistance(cameraSetting.nearClip);
 									camera->setFarClipDistance(cameraSetting.farClip);
 									camera->setFOVy(cameraSetting.fovY.toRadian());
-									camera->setParentNode(cameraNode);
+									if (cameraSetting.parentNodeName == "" || cameraSetting.parentNodeName == "cameraNode")
+									{
+										camera->setParentNode(cameraNode);
+									}
+									else if (cameraSetting.parentNodeName == "userNode")
+									{
+										camera->setParentNode(userNode);
+									}
+									else
+									{
+										if (auto parentNode = mpScene->getNode(cameraSetting.parentNodeName).lock())
+										{
+											camera->setParentNode(parentNode);
+										}
+									}
+
 									if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
 									{
 										if (auto cameraConeNode = mpScene->createNode(cameraName + "_ConeNode").lock())

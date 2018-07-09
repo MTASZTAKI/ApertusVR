@@ -46,6 +46,8 @@ namespace Ape
 
 		Degree fovY;
 
+		std::string parentNodeName;
+
 		OgreCameraConfig()
 		{
 			this->name = std::string();
@@ -54,6 +56,7 @@ namespace Ape
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
+			this->parentNodeName = std::string();
 		}
 
 		OgreCameraConfig(
@@ -62,7 +65,8 @@ namespace Ape
 			Ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
-			Degree fovY)
+			Degree fovY,
+			std::string parentNodeName = "")
 		{
 			this->name = name;
 			this->positionOffset = positionOffset;
@@ -70,6 +74,7 @@ namespace Ape
 			this->nearClip = nearClip;
 			this->farClip = farClip;
 			this->fovY = fovY;
+			this->parentNodeName = parentNodeName;
 		}
 	};
 
@@ -142,7 +147,7 @@ namespace Ape
 		bool enable;
 
 		std::string name;
-		
+
 		int monitorIndex;
 
 		int width;
