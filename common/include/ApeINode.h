@@ -72,6 +72,12 @@ namespace Ape
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
 
+		virtual std::vector<Ape::NodeWeakPtr> getChildNodes() = 0;
+
+		virtual bool hasChildNode() = 0;
+
+		virtual bool isChildNode(Ape::NodeWeakPtr childNode) = 0;
+
 		virtual void setPosition(Vector3 position) = 0;
 
 		virtual void setOrientation(Quaternion orientation) = 0;

@@ -59,7 +59,17 @@ namespace Ape
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
 		Ape::NodeWeakPtr getParentNode() override;
-		
+
+		void addChildNode(Ape::NodeWeakPtr node);
+
+		void removeChildNode(Ape::NodeWeakPtr childNode);
+
+		std::vector<Ape::NodeWeakPtr> getChildNodes() override;
+
+		bool hasChildNode() override;
+
+		bool isChildNode(Ape::NodeWeakPtr childNode) override;
+
 		void setPosition(Vector3 position) override;
 		
 		void setOrientation(Quaternion orientation) override;
@@ -87,6 +97,7 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
+
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		Ape::IScene* mpScene;
@@ -94,6 +105,8 @@ namespace Ape
 		std::string mName;
 
 		Ape::NodeWeakPtr mParentNode;
+
+		std::vector<Ape::NodeWeakPtr> mChildNodes;
 
 		std::string mParentNodeName;
 

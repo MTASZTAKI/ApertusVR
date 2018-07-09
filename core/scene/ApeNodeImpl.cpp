@@ -96,12 +96,17 @@ bool Ape::NodeImpl::isFixedYaw()
 	return mIsFixedYaw;
 }
 
-void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr newParentNode)
 {
-	if (auto parentNodeSP = parentNode.lock())
+	if (auto parentNodeSP = mpScene->getNode(mParentNodeName).lock())
 	{
-		mParentNode = parentNode;
-		mParentNodeName = parentNodeSP->getName();
+		((Ape::NodeImpl*)parentNodeSP.get())->removeChildNode(mpScene->getNode(mName));
+	}
+	if (auto newParentNodeSP = newParentNode.lock())
+	{
+		mParentNode = newParentNode;
+		mParentNodeName = newParentNodeSP->getName();
+		((Ape::NodeImpl*)newParentNodeSP.get())->addChildNode(mpScene->getNode(mName));
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	else
@@ -111,6 +116,64 @@ void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 Ape::NodeWeakPtr Ape::NodeImpl::getParentNode()
 {
 	return mParentNode;
+}
+
+void Ape::NodeImpl::addChildNode(Ape::NodeWeakPtr node)
+{
+	mChildNodes.push_back(node);
+}
+
+std::vector<Ape::NodeWeakPtr> Ape::NodeImpl::getChildNodes()
+{
+	return mChildNodes;
+}
+
+bool Ape::NodeImpl::hasChildNode()
+{
+	return mChildNodes.size() > 0;
+}
+
+bool Ape::NodeImpl::isChildNode(Ape::NodeWeakPtr childNode)
+{
+	if (auto childNodeSP = childNode.lock())
+	{
+		for (std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin(); it != mChildNodes.end(); ++it)
+		{
+			if (auto itemSP = it->lock())
+			{
+				if (itemSP->getName() == childNodeSP->getName())
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void Ape::NodeImpl::removeChildNode(Ape::NodeWeakPtr childNode)
+{
+	if (auto childNodeSP = childNode.lock())
+	{
+		std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin();
+		for (; it != mChildNodes.end(); ++it)
+		{
+			if (auto itemSP = it->lock())
+			{
+				if (itemSP->getName() == childNodeSP->getName())
+				{
+					break;
+				}
+			}
+		}
+		if (it != mChildNodes.end())
+		{
+			if (auto itemSP = it->lock())
+			{
+				mChildNodes.erase(it);
+			}
+		}
+	}
 }
 
 void Ape::NodeImpl::setPosition( Vector3 position )
@@ -246,6 +309,10 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
+		if (auto parentNode = mParentNode.lock())
+		{
+			((Ape::NodeImpl*)parentNode.get())->addChildNode(mpScene->getNode(mName));
+		}
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
