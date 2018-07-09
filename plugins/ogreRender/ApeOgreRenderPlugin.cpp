@@ -2146,6 +2146,10 @@ void Ape::OgreRenderPlugin::Init()
 											orientationOffset.FromAngleAxis(angle, axis);
 											ogreViewPortConfig.camera.orientationOffset = Ape::ConversionFromOgre(orientationOffset);
 										}
+										else if (cameraMemberIterator->name == "parentNodeName")
+										{
+											ogreViewPortConfig.camera.parentNodeName = cameraMemberIterator->value.GetString();
+										}
 									}
 									mCameraCountFromConfig++;
 								}
@@ -2274,9 +2278,10 @@ void Ape::OgreRenderPlugin::Init()
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 					for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 					{
+						OgreCameraConfig cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
 						if (auto userNode = mUserNode.lock())
 						{
-							std::string cameraName = userNode->getName() + mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name;
+							std::string cameraName = userNode->getName() + cameraSetting.name;
 							if (auto cameraNode = mpScene->createNode(cameraName + "_Node").lock())
 							{
 								cameraNode->setParentNode(mHeadNode);
@@ -2287,10 +2292,25 @@ void Ape::OgreRenderPlugin::Init()
 									//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
 									camera->setWindow(winDesc.name);
 									camera->setFocalLength(1.0f);
-									camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.nearClip);
-									camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.farClip);
-									camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.fovY.toRadian());
-									camera->setParentNode(cameraNode);
+									camera->setNearClipDistance(cameraSetting.nearClip);
+									camera->setFarClipDistance(cameraSetting.farClip);
+									camera->setFOVy(cameraSetting.fovY.toRadian());
+									if (cameraSetting.parentNodeName == "" || cameraSetting.parentNodeName == "cameraNode")
+									{
+										camera->setParentNode(cameraNode);
+									}
+									else if (cameraSetting.parentNodeName == "userNode")
+									{
+										camera->setParentNode(userNode);
+									}
+									else
+									{
+										if (auto parentNode = mpScene->getNode(cameraSetting.parentNodeName).lock())
+										{
+											camera->setParentNode(parentNode);
+										}
+									}
+
 									if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
 									{
 										if (auto cameraConeNode = mpScene->createNode(cameraName + "_ConeNode").lock())
