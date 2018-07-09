@@ -2274,9 +2274,10 @@ void Ape::OgreRenderPlugin::Init()
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 					for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 					{
+						OgreCameraConfig cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
 						if (auto userNode = mUserNode.lock())
 						{
-							std::string cameraName = userNode->getName() + mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name;
+							std::string cameraName = userNode->getName() + cameraSetting.name;
 							if (auto cameraNode = mpScene->createNode(cameraName + "_Node").lock())
 							{
 								cameraNode->setParentNode(mHeadNode);
@@ -2287,9 +2288,9 @@ void Ape::OgreRenderPlugin::Init()
 									//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
 									camera->setWindow(winDesc.name);
 									camera->setFocalLength(1.0f);
-									camera->setNearClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.nearClip);
-									camera->setFarClipDistance(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.farClip);
-									camera->setFOVy(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.fovY.toRadian());
+									camera->setNearClipDistance(cameraSetting.nearClip);
+									camera->setFarClipDistance(cameraSetting.farClip);
+									camera->setFOVy(cameraSetting.fovY.toRadian());
 									camera->setParentNode(cameraNode);
 									if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
 									{
