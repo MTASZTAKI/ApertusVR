@@ -40,7 +40,7 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 
 	rapidjson::Value& result = jsonDocument["result"];
 	if (result.IsString())
-		resp.success = (std::strcmp(result.GetString(), "success") == 0);
+		resp.success = std::string(result.GetString()) == "success";
 
 	rapidjson::Value& errors = jsonDocument["errors"];
 	if (errors.HasMember("items"))
