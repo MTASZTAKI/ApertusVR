@@ -326,11 +326,11 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	mMouseState.posCurrent = e.state;
 	mMouseState.isMouseMoved = true;
-	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
+	if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Left])
 	{
-		if (auto selectedNodeInMap = nodeIt->second.lock())
+		for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
 		{
-			if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Left])
+			if (auto selectedNodeInMap = nodeIt->second.lock())
 			{
 				if (mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] || mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 				{
