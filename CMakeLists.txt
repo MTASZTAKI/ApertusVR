@@ -98,14 +98,11 @@ add_library(RAKNET STATIC IMPORTED)
 if (WIN32)
 	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_DEBUG ${RAKNET_HOME}/Lib/LibStatic/Debug/RakNetLibStatic.lib)
 	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_RELEASE ${RAKNET_HOME}/Lib/LibStatic/Release/RakNetLibStatic.lib)
-	set(RAKNET_INCLUDE_DIR ${RAKNET_HOME}/Source)
-endif ()
-
-if (APPLE)
+elseif (APPLE)
 	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_DEBUG ${RAKNET_HOME}/Lib/LibStatic/Debug/libRakNetLibStatic.a)
 	set_property(TARGET RAKNET PROPERTY IMPORTED_LOCATION_RELEASE ${RAKNET_HOME}/Lib/LibStatic/Release/libRakNetLibStatic.a)
-	set(RAKNET_INCLUDE_DIR ${RAKNET_HOME}/Source)
 endif()
+set(RAKNET_INCLUDE_DIR ${RAKNET_HOME}/Source)
 
 
 
