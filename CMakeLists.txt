@@ -114,7 +114,7 @@ if (WIN32)
 	set (CURL_READY FALSE)
 
 	set(CURL_SOURCE_DIR ${APE_SOURCE_DIR}/3rdParty/curl)
-	set(CURL_INCLUDE_DIR ${CURL_SOURCE_DIR}/include/)
+	set(CURL_INCLUDE_DIRS ${CURL_SOURCE_DIR}/include/)
 
 	set(CURL_DLL_FILENAME libcurl.dll)
 	set(CURL_LIB_FILENAME libcurl_imp.lib)
