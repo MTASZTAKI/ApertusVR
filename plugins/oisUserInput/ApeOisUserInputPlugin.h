@@ -96,6 +96,7 @@ namespace Ape
 			bool isDragModeMiddle = false;
 			bool isDragModeRight = false;
 			bool isMouseMoved = false;
+			int scrollVelocity = 0;
 		};
 
 		struct UserNodePose

@@ -367,6 +367,7 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 	{
 		mMouseState.isDragModeRight = true;
 	}
+	mMouseState.scrollVelocity = mMouseState.posCurrent.Z.abs - mMouseState.posPrevious.Z.abs;
 	mMouseState.posPrevious = mMouseState.posCurrent;
 
 	if (auto overlayMouseTexture = mOverlayMouseTexture.lock())
@@ -623,6 +624,17 @@ void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 				{
 					dummyNode->translate(Ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
 					dummyNode->translate(Ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
+					userNode->setPosition(dummyNode->getPosition());
+				}
+				if (mMouseState.scrollVelocity != 0)
+				{
+					LOG_TRACE("z: " << mMouseState.scrollVelocity);
+					int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
+					if (transScalar < 0)
+						transScalar -= mGeneralSpeedFactor;
+					if (transScalar > 0)
+						transScalar += mGeneralSpeedFactor;
+					dummyNode->translate(Ape::Vector3(0, 0, -transScalar), Ape::Node::TransformationSpace::LOCAL);
 					userNode->setPosition(dummyNode->getPosition());
 				}
 				mMouseState.isMouseMoved = false;
