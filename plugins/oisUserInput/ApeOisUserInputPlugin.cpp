@@ -183,8 +183,6 @@ void Ape::OISUserInputPlugin::Init()
 	oisWindowConfig.width = mpMainWindow->getWidth();
 	oisWindowConfig.height = mpMainWindow->getHeight();
 
-
-
 	OIS::ParamList pl;
 	pl.insert(std::make_pair("WINDOW", oisWindowConfig.handler));
 #ifdef WIN32
@@ -204,7 +202,7 @@ void Ape::OISUserInputPlugin::Init()
 		}
 		else if ((*it) == "mouse" && inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
 		{
-			OIS::Mouse*    mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+			OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 			mpMouse = mouse;
 			mpMouse->setEventCallback(this);
 			const OIS::MouseState &ms = mouse->getMouseState();
