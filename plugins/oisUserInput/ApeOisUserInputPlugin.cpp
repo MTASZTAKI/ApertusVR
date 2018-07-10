@@ -464,7 +464,11 @@ void Ape::OISUserInputPlugin::addNodeSelection(Ape::NodeWeakPtr node)
 {
 	if (auto nodeSharedPtr = node.lock())
 	{
-		LOG_TRACE("nodeName: " << nodeSharedPtr->getName());
+		Ape::NodeWeakPtrVector childNodes = nodeSharedPtr->getChildNodes();
+		LOG_DEBUG("childNodes size: " << childNodes.size());
+		for (auto childNode : childNodes)
+			if (auto childNodeSP = childNode.lock())
+				LOG_DEBUG("childNode: " << childNodeSP->getName());
 		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(nodeSharedPtr->getName(), node));
 		nodeSharedPtr->showBoundingBox(true);
 	}
