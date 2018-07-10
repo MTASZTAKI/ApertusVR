@@ -24,8 +24,8 @@ SOFTWARE.*/
 #include <sstream>
 #include <iostream>
 #ifdef HTTPMANAGER_USE_CURL
-#include <curl/curl.h>
-#include <curl/easy.h>
+	#include <curl/curl.h>
+	#include <curl/easy.h>
 #endif
 
 size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)

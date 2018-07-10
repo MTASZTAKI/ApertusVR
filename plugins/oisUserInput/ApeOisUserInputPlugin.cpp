@@ -104,9 +104,10 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 					std::size_t foundCoord = geometry->getName().find("coord");
 					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
 					{
-						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: " << geometry->getName() << " type: " << geometry->getType());
+						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: geometry: " << geometry->getName() << " type: " << geometry->getType());
 						if (auto selectedParentNode = geometry->getParentNode().lock())
 						{
+							LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
 							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 							{
 								clearNodeSelection();
@@ -182,8 +183,6 @@ void Ape::OISUserInputPlugin::Init()
 	oisWindowConfig.width = mpMainWindow->getWidth();
 	oisWindowConfig.height = mpMainWindow->getHeight();
 
-
-
 	OIS::ParamList pl;
 	pl.insert(std::make_pair("WINDOW", oisWindowConfig.handler));
 #ifdef WIN32
@@ -203,7 +202,7 @@ void Ape::OISUserInputPlugin::Init()
 		}
 		else if ((*it) == "mouse" && inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
 		{
-			OIS::Mouse*    mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+			OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 			mpMouse = mouse;
 			mpMouse->setEventCallback(this);
 			const OIS::MouseState &ms = mouse->getMouseState();
@@ -327,11 +326,11 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	mMouseState.posCurrent = e.state;
 	mMouseState.isMouseMoved = true;
-	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
+	if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Left])
 	{
-		if (auto selectedNodeInMap = nodeIt->second.lock())
+		for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
 		{
-			if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Left])
+			if (auto selectedNodeInMap = nodeIt->second.lock())
 			{
 				if (mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] || mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 				{
@@ -368,6 +367,7 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 	{
 		mMouseState.isDragModeRight = true;
 	}
+	mMouseState.scrollVelocity = mMouseState.posCurrent.Z.abs - mMouseState.posPrevious.Z.abs;
 	mMouseState.posPrevious = mMouseState.posCurrent;
 
 	if (auto overlayMouseTexture = mOverlayMouseTexture.lock())
@@ -463,7 +463,11 @@ void Ape::OISUserInputPlugin::addNodeSelection(Ape::NodeWeakPtr node)
 {
 	if (auto nodeSharedPtr = node.lock())
 	{
-		LOG_TRACE("nodeName: " << nodeSharedPtr->getName());
+		Ape::NodeWeakPtrVector childNodes = nodeSharedPtr->getChildNodes();
+		LOG_DEBUG("childNodes size: " << childNodes.size());
+		for (auto childNode : childNodes)
+			if (auto childNodeSP = childNode.lock())
+				LOG_DEBUG("childNode: " << childNodeSP->getName());
 		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(nodeSharedPtr->getName(), node));
 		nodeSharedPtr->showBoundingBox(true);
 	}
@@ -620,6 +624,17 @@ void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 				{
 					dummyNode->translate(Ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
 					dummyNode->translate(Ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
+					userNode->setPosition(dummyNode->getPosition());
+				}
+				if (mMouseState.scrollVelocity != 0)
+				{
+					LOG_TRACE("z: " << mMouseState.scrollVelocity);
+					int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
+					if (transScalar < 0)
+						transScalar -= mGeneralSpeedFactor;
+					if (transScalar > 0)
+						transScalar += mGeneralSpeedFactor;
+					dummyNode->translate(Ape::Vector3(0, 0, -transScalar), Ape::Node::TransformationSpace::LOCAL);
 					userNode->setPosition(dummyNode->getPosition());
 				}
 				mMouseState.isMouseMoved = false;
