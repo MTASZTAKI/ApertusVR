@@ -99,6 +99,9 @@ node_modules/
 !3rdParty/leapMotion/lib/x64/*
 !3rdParty/leapMotion/lib/x86/*
 
+# openvr
+!3rdParty/openvr/*
+
 # Boost
 3rdParty/boost/**/project-config.jam
 3rdParty/boost/**/bin.v2/*
