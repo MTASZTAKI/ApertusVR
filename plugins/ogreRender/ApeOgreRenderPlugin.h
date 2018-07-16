@@ -28,54 +28,59 @@ SOFTWARE.*/
 #include <chrono>
 #include <memory>
 #include <fstream>
-
-//Ogre 1.10 header includes
+#include "OgreSceneManager.h"
+#include "OgreRoot.h"
 #include "OgreConfigFile.h"
-#include "OgreEntity.h"
-#include "OgreFont.h"
-#include "OgreFontManager.h"
-#include "OgreFrameListener.h"
-#include "OgreHardwarePixelBuffer.h"
-#include "OgreHlmsManager.h"
-#include "OgreHlmsPbsMaterial.h"
-#include "OgreLodConfig.h"
-#include "OgreLodWorkQueueInjectorListener.h"
-#include "OgreLodWorkQueueInjector.h"
-#include "OgreLodWorkQueueRequest.h"
-#include "OgreLodWorkQueueWorker.h"
 #include "OgreLogManager.h"
-#include "OgreMaterial.h"
-#include "OgreManualObject.h"
+#include "OgreResourceGroupManager.h"
+#include "OgreSceneNode.h"
+#include "OgreEntity.h"
+#include "OgreMovableObject.h"
+#include "OgreMeshManager.h"
 #include "OgreMaterialManager.h"
 #include "OgreMesh.h"
-#include "OgreMeshLodGenerator.h"
-#include "OgreMeshManager.h"
-#include "OgreMovableObject.h"
+#include "OgreSubMesh.h"
+#include "OgreRenderWindow.h"
+#include "OgreManualObject.h"
+#include "OgreMaterial.h"
+#include "OgreMaterialManager.h"
 #include "OgreOverlaySystem.h"
 #include "OgreOverlayManager.h"
 #include "OgreOverlay.h"
 #include "OgreOverlayContainer.h"
-#include "OgrePanelOverlayElement.h"
-#include "OgrePixelCountLodStrategy.h"
-#include "OgreRenderWindow.h"
-#include "OgreResourceGroupManager.h"
-#include "OgreRoot.h"
+#include "OgreTextAreaOverlayElement.h"
+#include "OgreFontManager.h"
+#include "OgreFont.h"
 #include "OgreRTShaderSystem.h"
 #include "OgreShaderGenerator.h"
-#include "OgreSceneManager.h"
-#include "OgreSceneNode.h"
-#include "OgreSubMesh.h"
-#include "OgreTechnique.h" 
-#include "OgreTextAreaOverlayElement.h"
+#include "OgreFrameListener.h"
 #include "OgreTextureManager.h"
+#include "OgreHardwarePixelBuffer.h"
+#include "OgreMaterial.h"
+#include "OgreTechnique.h"
+#include "OgrePanelOverlayElement.h"
 #include "OgreWindowEventUtilities.h"
+#include "OgreHlmsManager.h"
+#include "OgreHlmsPbsMaterial.h"
+#include "OgreLodConfig.h"
+#include "OgreMeshLodGenerator.h"
+#include "OgreLodWorkQueueInjectorListener.h"
+#include "OgreLodWorkQueueInjector.h"
+#include "OgrePixelCountLodStrategy.h"
+#include "OgreLodWorkQueueRequest.h"
+#include "OgreLodWorkQueueWorker.h"
+#include "OgreTextureManager.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
-
-
-
-
-//Apertus includes
+#include "Hydrax.h"
+#ifdef HYDRAX_NEW
+	#include "Noise/Perlin/HydraxPerlin.h"
+	#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#else
+	#include "Noise/Perlin/Perlin.h"
+	#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#endif
+#include "SkyX.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
@@ -111,6 +116,8 @@ SOFTWARE.*/
 #include "ApeIPbsPass.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
+#include "ApeISky.h"
+#include "ApeIWater.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
@@ -177,15 +184,15 @@ namespace Ape
 
 		Ogre::MaterialSerializer mMaterialSerializer;
 
-		// Hydrax::Hydrax *mpHydrax;
+		Hydrax::Hydrax *mpHydrax;
 
-		// SkyX::SkyX* mpSkyx;
+		SkyX::SkyX* mpSkyx;
 
-		// Ogre::Light* mpSkyxSunlight;
+		Ogre::Light* mpSkyxSunlight;
 
-		// Ogre::Light* mpSkyxSkylight;
+		Ogre::Light* mpSkyxSkylight;
 
-		// SkyX::BasicController* mpSkyxBasicController;
+		SkyX::BasicController* mpSkyxBasicController;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 

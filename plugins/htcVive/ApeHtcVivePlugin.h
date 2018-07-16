@@ -27,6 +27,8 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include "openvr.h"
+#include "openvr_capi.h"
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
@@ -57,6 +59,8 @@ namespace Ape
 
 		Ape::IScene* mpScene;
 
+		Ape::IMainWindow* mpMainWindow;
+
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::CameraWeakPtr mCameraLeft;
@@ -69,9 +73,19 @@ namespace Ape
 
 		Ape::ManualMaterialWeakPtr mUserMaterial;
 
+		vr::IVRSystem* mpOpenVrSystem;
+
+		vr::HmdError mOpenVrHmdError;
+
+		vr::TrackedDevicePose_t mOpenVrTrackedPoses[vr::k_unMaxTrackedDeviceCount];
+
 		void eventCallBack(const Ape::Event& event);
 
 		Ape::CameraWeakPtr createCamera(std::string name);
+
+		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
+
+		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
 
 	public:
 		ApeHtcVivePlugin();
