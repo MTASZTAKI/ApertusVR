@@ -80,6 +80,8 @@ namespace Ape
 
 		int mPointCloudSize;
 
+		Ape::NodeWeakPtr mUserNode;
+
 	public:
 		ApeRobotCalibrationPlugin();
 

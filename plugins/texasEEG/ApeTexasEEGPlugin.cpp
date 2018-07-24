@@ -49,21 +49,8 @@ void Ape::ApeTexasEEGPlugin::Init()
 void Ape::ApeTexasEEGPlugin::Run()
 {
 	LOG_FUNC_ENTER();
-	bool isTimedOut = false;
-	bool removedBubbles = false;
-
 	while (true)
 	{
-		if (auto userNode = mUserNode.lock())
-		{
-			Ape::Vector3 pos = userNode->getPosition();
-			if (pos.y < -100)
-			{
-				pos.y = -100;
-				userNode->setPosition(pos);
-			}
-		}
-			
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 
