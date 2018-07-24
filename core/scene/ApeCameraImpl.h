@@ -59,6 +59,10 @@ namespace Ape
 		float getAspectRatio() override;
 
 		void setAspectRatio(float aspectRatio) override;
+
+		void setAutoAspectRatio(bool enable) override;
+
+		bool isAutoAspectRatio() override;
 		
 		Ape::Matrix4 getProjection() override;
 
@@ -96,6 +100,8 @@ namespace Ape
 		float mFarClipDistance;
 
 		float mAspectRatio;
+
+		bool mIsAutoAspectRatio;
 		
 		Ape::Matrix4 mProjection;
 

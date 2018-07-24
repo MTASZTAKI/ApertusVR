@@ -299,6 +299,7 @@ void Ape::ApeOculusDK2Plugin::Run()
 			headNode->setOrientation(Ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z));
 			headNode->setPosition(Ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100));
 		}
+		//TODO is it needed? or it is enough to uopdate the projection for the cameras only once?
 		if (auto cameraLeft = mCameraLeft.lock())
 			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
 		if (auto cameraRight = mCameraRight.lock())

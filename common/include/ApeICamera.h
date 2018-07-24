@@ -77,6 +77,10 @@ namespace Ape
 
 		virtual void setAspectRatio(float aspectRatio) = 0;
 
+		virtual void setAutoAspectRatio(bool enable) = 0;
+
+		virtual bool isAutoAspectRatio() = 0;
+
 		virtual Ape::Matrix4 getProjection() = 0;
 
 		virtual void setProjection(Ape::Matrix4 projection) = 0;

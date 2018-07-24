@@ -1850,6 +1850,12 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSceneMgr->getCamera(event.subjectName)->setAspectRatio(camera->getAspectRatio());
 				}
 					break;
+				case Ape::Event::Type::CAMERA_AUTOASPECTRATIO:
+				{
+					if (mpSceneMgr->hasCamera(event.subjectName))
+						mpSceneMgr->getCamera(event.subjectName)->setAutoAspectRatio(camera->isAutoAspectRatio());
+				}
+					break;
 				case Ape::Event::Type::CAMERA_FOVY:
 				{
 					if (mpSceneMgr->hasCamera(event.subjectName))

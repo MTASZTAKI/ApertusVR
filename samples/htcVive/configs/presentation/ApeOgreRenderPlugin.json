@@ -1,0 +1,26 @@
+{
+    "renderSystem": "OGL",
+    "lodLevels": {
+        "autoGenerateAndSave": false,
+        "bias": 0.5
+    },
+    "renderWindows": [
+        {
+            "enable": true,
+            "name": "HtcVive",
+            "monitorIndex": 1,
+            "resolution": {
+                "width": 1920,
+                "height": 1080,
+                "fullScreen": true
+            },
+            "miscParams": {
+                "vSync": true,
+                "vSyncInterval": 1,
+                "colorDepth": 32,
+                "FSAA": 8,
+                "FSAAHint": "Quality"
+            }
+        }
+    ]
+}
