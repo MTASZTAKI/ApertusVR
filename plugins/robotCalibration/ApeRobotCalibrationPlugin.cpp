@@ -10,6 +10,7 @@ Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mPointCloud = Ape::PointCloudWeakPtr();
+	mUserNode = Ape::NodeWeakPtr();
 	LOG_FUNC_LEAVE();
 }
 
@@ -27,6 +28,19 @@ void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeRobotCalibrationPlugin::Init()
 {
 	LOG_FUNC_ENTER();
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
+		mUserNode = userNode;
+
+		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(Ape::Light::Type::POINT);
+			light->setLightDirection(Ape::Vector3(0, 0, 0));
+			light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
+			light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
+			light->setParentNode(userNode);
+		}
+	}
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
