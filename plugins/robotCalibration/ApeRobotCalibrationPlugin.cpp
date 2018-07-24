@@ -46,20 +46,13 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
-	{
-		light->setLightType(Ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(Ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
-		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
-	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
-	}
+	}*/
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light3", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -67,13 +60,13 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
+	/*if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light4", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(-1, -1, 0));
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
-	}
+	}*/
 
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
