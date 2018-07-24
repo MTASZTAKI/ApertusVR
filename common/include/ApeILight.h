@@ -79,12 +79,12 @@ namespace Ape
 	class ILight : public Entity
 	{
 	protected:
-		ILight(std::string name) : Entity(name, Entity::LIGHT) {}
+		ILight(std::string name) : Entity(name, Ape::Entity::LIGHT) {}
 
 		virtual ~ILight() {};
 
 	public:
-		virtual Light::Type getLightType() = 0;
+		virtual Ape::Light::Type getLightType() = 0;
 
 		virtual Color getDiffuseColor() = 0;
 
@@ -96,7 +96,7 @@ namespace Ape
 
 		virtual Vector3 getLightDirection() = 0;
 
-		virtual void setLightType(Light::Type lightType) = 0;
+		virtual void setLightType(Ape::Light::Type lightType) = 0;
 
 		virtual void setDiffuseColor(Color diffuseColor) = 0;
 
