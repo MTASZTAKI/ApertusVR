@@ -425,10 +425,10 @@ bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 
 		if (!mMouseState.isDragModeLeft)
 		{
-			if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+			/*if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 			{
 				clearNodeSelection();
-			}
+			}*/
 
 			if (auto rayOverlayNode = mRayOverlayNode.lock())
 			{
