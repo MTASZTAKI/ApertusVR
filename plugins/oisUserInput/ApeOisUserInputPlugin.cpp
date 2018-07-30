@@ -111,14 +111,14 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 							{
 								clearNodeSelection();
-								addNodeSelection(selectedParentNode);
+								addNodeSelection(selectedParentNode->getName());
 							}
 							else
 							{
 								if (isNodeSelected(selectedParentNode->getName()))
 									removeNodeSelection(selectedParentNode->getName());
 								else
-									addNodeSelection(selectedParentNode);
+									addNodeSelection(selectedParentNode->getName());
 							}
 						}
 						break;
@@ -459,16 +459,16 @@ bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 	return (findIt != mSelectedNodes.end());
 }
 
-void Ape::OISUserInputPlugin::addNodeSelection(Ape::NodeWeakPtr node)
+void Ape::OISUserInputPlugin::addNodeSelection(std::string nodeName)
 {
-	if (auto nodeSharedPtr = node.lock())
+	if (auto nodeSharedPtr = mpScene->getNode(nodeName).lock())
 	{
 		Ape::NodeWeakPtrVector childNodes = nodeSharedPtr->getChildNodes();
 		LOG_DEBUG("childNodes size: " << childNodes.size());
 		for (auto childNode : childNodes)
 			if (auto childNodeSP = childNode.lock())
 				LOG_DEBUG("childNode: " << childNodeSP->getName());
-		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(nodeSharedPtr->getName(), node));
+		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(nodeSharedPtr->getName(), nodeSharedPtr));
 		nodeSharedPtr->showBoundingBox(true);
 	}
 }
