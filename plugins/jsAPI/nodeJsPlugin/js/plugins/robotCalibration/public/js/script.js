@@ -3,7 +3,9 @@ var apiEndPointNode = apiEndPoint + 'nodes/';
 var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
 var nodeName = 'STL_BINARY_1';
 
-
+function enableEditor(val) {
+    //$("body *").attr("disabled", !val);
+}
 
 function getNodePosition(nodeName) {
     console.log('getNodePosition(): ', nodeName);
@@ -275,19 +277,31 @@ $(document).ready(function(){
     sock.onmessage = (e)=>{
         console.log('onmessage:' + e.data);
         var eventObj = JSON.parse(e.data);
-        if (eventObj.subjectName == "STL_BINARY_1") {
-            if (eventObj.type == 3) { // position
-                getNodePosition(nodeName);
-            }
-            else if (eventObj.type == 4) { // orientation
-                getNodeOrientation(nodeName);
-                getNodeEuler(nodeName);
-            }
-            else if (eventObj.type == 5) { // scale
-                getNodeScale(nodeName);
-            }
+
+        if (eventObj.type == 9) { // show bounding box - select
+            enableEditor(true);
+
+            $("#nodeName").val(eventObj.subjectName);
+            nodeName = eventObj.subjectName;
+
+            getNodePosition(nodeName);
+            getNodeOrientation(nodeName);
+            getNodeEuler(nodeName);
+            getNodeScale(nodeName);
             getTransformationMatrix(nodeName);
         }
+
+        if (eventObj.type == 3) { // position
+            getNodePosition(nodeName);
+        }
+        else if (eventObj.type == 4) { // orientation
+            getNodeOrientation(nodeName);
+            getNodeEuler(nodeName);
+        }
+        else if (eventObj.type == 5) { // scale
+            getNodeScale(nodeName);
+        }
+        getTransformationMatrix(nodeName);
     }
 
     $("#nodeName").change(function(){
@@ -355,6 +369,8 @@ $(document).ready(function(){
     $('#openModelButton').click(function(){
         $('#filePath').click();
     });
+
+    enableEditor(false);
 
     updateProperties();
 });
