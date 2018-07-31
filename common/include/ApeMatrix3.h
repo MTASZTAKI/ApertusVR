@@ -170,6 +170,13 @@ namespace Ape
 			return kProd;
 		}
 
+		Vector3 operator * (const Vector3& rkVector) const
+		{
+			return Vector3((m[0][0] * rkVector.x + m[0][1] * rkVector.y + m[0][2] * rkVector.z),
+				(m[1][0] * rkVector.x + m[1][1] * rkVector.y + m[1][2] * rkVector.z), 
+				(m[2][0] * rkVector.x + m[2][1] * rkVector.y + m[2][2] * rkVector.z));
+		}
+
 		Matrix3 Transpose() const
 		{
 			Matrix3 kTranspose;
@@ -246,7 +253,7 @@ namespace Ape
 
 		void QDUDecomposition(Ape::Matrix3& kQ, Ape::Vector3& kD, Ape::Vector3& kU) const
 		{
-			float fInvLength = 1.0 / std::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0] + m[2][0] * m[2][0]);
+			float fInvLength = 1.0f / std::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0] + m[2][0] * m[2][0]);
 
 			kQ[0][0] = m[0][0] * fInvLength;
 			kQ[1][0] = m[1][0] * fInvLength;
@@ -256,7 +263,7 @@ namespace Ape
 			kQ[0][1] = m[0][1] - fDot * kQ[0][0];
 			kQ[1][1] = m[1][1] - fDot * kQ[1][0];
 			kQ[2][1] = m[2][1] - fDot * kQ[2][0];
-			fInvLength = 1.0 / std::sqrt(kQ[0][1] * kQ[0][1] + kQ[1][1] * kQ[1][1] + kQ[2][1] * kQ[2][1]);
+			fInvLength = 1.0f / std::sqrt(kQ[0][1] * kQ[0][1] + kQ[1][1] * kQ[1][1] + kQ[2][1] * kQ[2][1]);
 
 			kQ[0][1] *= fInvLength;
 			kQ[1][1] *= fInvLength;
@@ -270,7 +277,7 @@ namespace Ape
 			kQ[0][2] -= fDot * kQ[0][1];
 			kQ[1][2] -= fDot * kQ[1][1];
 			kQ[2][2] -= fDot * kQ[2][1];
-			fInvLength = 1.0 / std::sqrt(kQ[0][2] * kQ[0][2] + kQ[1][2] * kQ[1][2] + kQ[2][2] * kQ[2][2]);
+			fInvLength = 1.0f / std::sqrt(kQ[0][2] * kQ[0][2] + kQ[1][2] * kQ[1][2] + kQ[2][2] * kQ[2][2]);
 
 			kQ[0][2] *= fInvLength;
 			kQ[1][2] *= fInvLength;

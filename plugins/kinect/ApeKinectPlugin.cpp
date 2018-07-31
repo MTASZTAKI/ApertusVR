@@ -1,17 +1,5 @@
-#include <fstream>
-#include "stdafx.h"
-#include <strsafe.h>
-#include "resource.h"
 #include "ApeKinectPlugin.h"
-#include <sstream>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
-#include "rapidjson/writer.h"
-
+//#define HALF
 const int width = 512;
 const int height = 424;
 const int colorwidth = 1920;
@@ -61,7 +49,13 @@ Ape::KinectPlugin::~KinectPlugin()
 
 void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE)
+	{
+		if (event.subjectName == "clothNode")
+		{
+			mClothNode = mpScene->getNode(event.subjectName);
+		}
+	}
 }
 
 void Ape::KinectPlugin::Init()
@@ -74,7 +68,20 @@ void Ape::KinectPlugin::Init()
 	InitializeDefaultSensor();
 	LOG(LOG_TYPE_DEBUG, "Sensor init finished");
 
-	CloudSize = (int)(size*pointratio);
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
+	if (auto mClothNode = mpScene->createNode("clothNode").lock())
+	{
+		mClothNode->setScale(Ape::Vector3(1.0, 1.0, 1.2));
+		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("T-Shirt.3DS.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			meshFile->setFileName("T-Shirt.3DS.mesh");
+			meshFile->setParentNode(mClothNode);
+		}
+	}
+
+	CloudSize = (unsigned int)(size*pointratio);
 	if (CloudSize % 3 != 0)
 	{
 		CloudSize -= CloudSize % 3;
@@ -87,43 +94,52 @@ void Ape::KinectPlugin::Init()
 	std::stringstream kinectPluginConfigFilePath;
 	kinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeKinectPlugin.json";
 	LOG(LOG_TYPE_DEBUG, "kinectPluginConfigFilePath: " << kinectPluginConfigFilePath.str());
-	FILE* KinectPluginConfigFile = std::fopen(kinectPluginConfigFilePath.str().c_str(), "r");
-	char readBuffer[65536];
-	if (KinectPluginConfigFile)
+	FILE* KinectPluginConfigFile;
+	if (errno_t err = fopen_s(&KinectPluginConfigFile, kinectPluginConfigFilePath.str().c_str(), "r") == 0)
 	{
-		rapidjson::FileReadStream jsonFileReaderStream(KinectPluginConfigFile, readBuffer, sizeof(readBuffer));
-		rapidjson::Document jsonDocument;
-		jsonDocument.ParseStream(jsonFileReaderStream);
-		if (jsonDocument.IsObject())
+		char readBuffer[65536];
+		if (KinectPluginConfigFile)
 		{
-			rapidjson::Value& KPosition = jsonDocument["sensorPosition"];
-			for (int i = 0; i < 3; i++)
+			rapidjson::FileReadStream jsonFileReaderStream(KinectPluginConfigFile, readBuffer, sizeof(readBuffer));
+			rapidjson::Document jsonDocument;
+			jsonDocument.ParseStream(jsonFileReaderStream);
+			if (jsonDocument.IsObject())
 			{
-				KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
-				LOG(LOG_TYPE_DEBUG, "sensorPosition: " << std::to_string(KPos[i]));
+				rapidjson::Value& KPosition = jsonDocument["sensorPosition"];
+				for (int i = 0; i < 3; i++)
+				{
+					KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
+					LOG(LOG_TYPE_DEBUG, "sensorPosition: " << std::to_string(KPos[i]));
+				}
+
+				rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
+				for (int i = 0; i < 4; i++)
+				{
+					KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
+					LOG(LOG_TYPE_DEBUG, "sensorOrientation: " << std::to_string(KRot[i]));
+				}
+
+				rapidjson::Value& KSSkeleton = jsonDocument["showSkeleton"];
+				showSkeleton = jsonDocument["showSkeleton"].GetBool();
+				LOG(LOG_TYPE_DEBUG, "showSkeleton: " << std::to_string(showSkeleton));
+
+				rapidjson::Value& KBRemoval = jsonDocument["backgroundRemoval"];
+				backgroundRemoval = jsonDocument["backgroundRemoval"].GetBool();
+				LOG(LOG_TYPE_DEBUG, "backgroundRemoval: " << std::to_string(backgroundRemoval));
+
+				rapidjson::Value& KMFPS = jsonDocument["maxFPS"];
+				maxFPS = jsonDocument["maxFPS"].GetBool();
+				LOG(LOG_TYPE_DEBUG, "maxFPS: " << std::to_string(maxFPS));
+
+				rapidjson::Value& KM3DS = jsonDocument["3dScan"];
+				_3dScan = jsonDocument["3dScan"].GetBool();
+				LOG(LOG_TYPE_DEBUG, "3dScan: " << std::to_string(_3dScan));
 			}
-
-			rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
-			for (int i = 0; i < 4; i++)
-			{
-				KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
-				LOG(LOG_TYPE_DEBUG, "sensorOrientation: " << std::to_string(KRot[i]));
-			}
-
-			rapidjson::Value& KSSkeleton = jsonDocument["showSkeleton"];
-			showSkeleton = jsonDocument["showSkeleton"].GetBool();
-			LOG(LOG_TYPE_DEBUG, "showSkeleton: " << std::to_string(showSkeleton));
-
-			rapidjson::Value& KBRemoval = jsonDocument["backgroundRemoval"];
-			backgroundRemoval = jsonDocument["backgroundRemoval"].GetBool();
-			LOG(LOG_TYPE_DEBUG, "backgroundRemoval: " << std::to_string(backgroundRemoval));
-
-			rapidjson::Value& KMFPS = jsonDocument["maxFPS"];
-			maxFPS = jsonDocument["maxFPS"].GetBool();
-			LOG(LOG_TYPE_DEBUG, "maxFPS: " << std::to_string(maxFPS));
+			fclose(KinectPluginConfigFile);
 		}
-		fclose(KinectPluginConfigFile);
 	}
+	else
+		LOG(LOG_TYPE_DEBUG, "Error cannot open config file");
 
 	if (auto rootNode = RootNode.lock())
 	{
@@ -349,76 +365,266 @@ void Ape::KinectPlugin::Run()
 	{
 		Update();
 
-		if (!backgroundRemoval)
+		if (sstate != 2)
 		{
-			//Generate the Point Cloud
-			if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
+			if (!backgroundRemoval)
 			{
-				if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
+				//Generate the Point Cloud
+				if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
 				{
-					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
-					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					if (auto textNode = mpScene->createNode("pointCloudNode_Kinect_Text_Node").lock())
+					if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Kinect").lock())
 					{
-						textNode->setParentNode(pointCloudNode);
-						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNode_Kinect_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+						pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+						pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+						if (auto textNode = mpScene->createNode("pointCloudNode_Kinect_Text_Node").lock())
 						{
-							text->setCaption("Kinect");
-							text->setParentNode(textNode);
+							textNode->setParentNode(pointCloudNode);
+							textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+							if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNode_Kinect_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+							{
+								text->setCaption("Kinect");
+								text->setParentNode(textNode);
+							}
+						}
+						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
+						{
+							pointCloud->setParameters(KPts, KCol, 100000);
+							pointCloud->setParentNode(pointCloudNode);
+							mPointCloud = pointCloud;
 						}
 					}
-					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
-					{
-						pointCloud->setParameters(KPts, KCol, 100000);
-						pointCloud->setParentNode(pointCloudNode);
-						mPointCloud = pointCloud;
-					}
+
+					pointsGenerated = true;
 				}
 
-				pointsGenerated = true;
+				//Refresh the Point Cloud
+				if (auto pointCloud = mPointCloud.lock())
+				{
+					pointCloud->updatePoints(KPts);
+					pointCloud->updateColors(KCol);
+				}
 			}
-
-			//Refresh the Point Cloud
-			if (auto pointCloud = mPointCloud.lock())
+			else
 			{
-				pointCloud->updatePoints(KPts);
-				pointCloud->updateColors(KCol);
+				if (_1Detected && !operatorPointsGenerated)
+				{
+					if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectOperator").lock())
+					{
+						pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+						pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+						if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectOperator_Node").lock())
+						{
+							textNode->setParentNode(pointCloudNode);
+							textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+							if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+							{
+								userNameText->setCaption("pointCloudNodeText_KinectOperator");
+								userNameText->setParentNode(textNode);
+							}
+						}
+						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
+						{
+							pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
+							pointCloud->setParentNode(pointCloudNode);
+							mOperatorPointCloud = pointCloud;
+						}
+					}
+
+					operatorPointsGenerated = true;
+				}
+
+				if (auto pointCloud = mOperatorPointCloud.lock())
+				{
+					pointCloud->updatePoints(OperatorPoints);
+					pointCloud->updateColors(OperatorColors);
+				}
+#ifdef HALF
+				//show the scanned body so far
+				if (!halfscan && sstate == 1 && ScannedPoints.size() != 0)
+				{
+					std::cout << ScannedPoints.size() << std::endl;
+					std::cout << ScannedColors.size() << std::endl;
+
+					if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectHalfScan").lock())
+					{
+						pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
+						pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
+						if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectHalfScan_Node").lock())
+						{
+							textNode->setParentNode(pointCloudNode);
+							textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+							if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectHalfScan", Ape::Entity::GEOMETRY_TEXT).lock()))
+							{
+								userNameText->setCaption("pointCloudNodeText_KinectHalfScan");
+								userNameText->setParentNode(textNode);
+							}
+						}
+						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectHalfScan", Ape::Entity::POINT_CLOUD).lock()))
+						{
+							pointCloud->setParameters(ScannedPoints, ScannedColors, 100000);
+							pointCloud->setParentNode(pointCloudNode);
+							//mOperatorPointCloud = pointCloud;
+						}
+					}
+					halfscan = true;
+				}
+#endif
 			}
 		}
 		else
 		{
-			if (_1Detected && !operatorPointsGenerated)
+			if (!operatorPointsGenerated)
 			{
-				if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectOperator").lock())
+				if (auto pointCloudNode = mpScene->getNode("pointCloudNode_KinectOperator").lock())//hide point cloud
+				{
+					pointCloudNode->setChildrenVisibility(false);
+				}
+#ifdef HALF
+				if (auto pointCloudNode = mpScene->getNode("pointCloudNode_KinectHalfScan").lock())//hide halfscan point cloud
+				{
+					pointCloudNode->setChildrenVisibility(false);
+				}
+#endif
+				//show scanned point cloud
+				if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectScanner").lock())
 				{
 					pointCloudNode->setPosition(Ape::Vector3(KPos[0], KPos[1], KPos[2]));
 					pointCloudNode->setOrientation(Ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectOperator_Node").lock())
+					if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectScanner_Node").lock())
 					{
 						textNode->setParentNode(pointCloudNode);
 						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectOperator", Ape::Entity::GEOMETRY_TEXT).lock()))
+						if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectScanner", Ape::Entity::GEOMETRY_TEXT).lock()))
 						{
-							userNameText->setCaption("pointCloudNodeText_KinectOperator");
+							userNameText->setCaption("pointCloudNodeText_KinectScanner");
 							userNameText->setParentNode(textNode);
 						}
 					}
-					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
+					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectScanner", Ape::Entity::POINT_CLOUD).lock()))
 					{
-						pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
+						pointCloud->setParameters(ScannedPoints, ScannedColors, 100000);
 						pointCloud->setParentNode(pointCloudNode);
 						mOperatorPointCloud = pointCloud;
 					}
 				}
 
-				operatorPointsGenerated = true;
-			}
+				//Affix cloth node to scanned point cloud
+				if (auto rootClothNode = mpScene->getNode("clothNode").lock())
+				{
+					std::cout << "locked" << std::endl;
+					rootClothNode->setPosition(anchor);
+					std::cout << rootClothNode->getPosition().toString() << std::endl;
 
-			if (auto pointCloud = mOperatorPointCloud.lock())
-			{
-				pointCloud->updatePoints(OperatorPoints);
-				pointCloud->updateColors(OperatorColors);
+					if (auto userNode = mUserNode.lock())
+					{
+						auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
+						moveInterpolator->addSection(
+							userNode->getPosition(),
+							Ape::Vector3(-0.931241, 31.6337, 110.023),
+							5.0,
+							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+						);
+						auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
+						rotateInterpolator->addSection(
+							userNode->getOrientation(),
+							Ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706),
+							5.0,
+							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+						);
+						while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
+						{
+							if (!moveInterpolator->isQueueEmpty())
+								moveInterpolator->iterateTopSection();
+							if (!rotateInterpolator->isQueueEmpty())
+								rotateInterpolator->iterateTopSection();
+						}
+						auto moveInterpolator2 = std::make_unique<Ape::Interpolator>(false);
+						moveInterpolator2->addSection(
+							userNode->getPosition(),
+							Ape::Vector3(-406.561, 45.8449, -250.643),
+							15.0,
+							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+						);
+						auto rotateInterpolator2 = std::make_unique<Ape::Interpolator>(false);
+						rotateInterpolator2->addSection(
+							userNode->getOrientation(),
+							Ape::Quaternion(-0.710511, 0.0605394, 0.698546, 0.0595197),
+							15.0,
+							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+						);
+						while (!moveInterpolator2->isQueueEmpty() && !rotateInterpolator2->isQueueEmpty())
+						{
+							if (!moveInterpolator2->isQueueEmpty())
+								moveInterpolator2->iterateTopSection();
+							if (!rotateInterpolator2->isQueueEmpty())
+								rotateInterpolator2->iterateTopSection();
+						}
+						auto moveInterpolator3 = std::make_unique<Ape::Interpolator>(false);
+						moveInterpolator3->addSection(
+							userNode->getPosition(),
+							Ape::Vector3(11.0208, 51.4279, -695.983),
+							15.0,
+							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+						);
+						auto rotateInterpolator3 = std::make_unique<Ape::Interpolator>(false);
+						rotateInterpolator3->addSection(
+							userNode->getOrientation(),
+							Ape::Quaternion(0.0135394, -0.00138574, 0.994711, 0.101814),
+							15.0,
+							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+						);
+						while (!moveInterpolator3->isQueueEmpty() && !rotateInterpolator3->isQueueEmpty())
+						{
+							if (!moveInterpolator3->isQueueEmpty())
+								moveInterpolator3->iterateTopSection();
+							if (!rotateInterpolator3->isQueueEmpty())
+								rotateInterpolator3->iterateTopSection();
+						}
+						auto moveInterpolator4 = std::make_unique<Ape::Interpolator>(false);
+						moveInterpolator4->addSection(
+							userNode->getPosition(),
+							Ape::Vector3(460.696, 62.134, -252.101),
+							15.0,
+							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+						);
+						auto rotateInterpolator4 = std::make_unique<Ape::Interpolator>(false);
+						rotateInterpolator4->addSection(
+							userNode->getOrientation(),
+							Ape::Quaternion(0.704635, -0.0721229, 0.702226, 0.0718766),
+							15.0,
+							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+						);
+						while (!moveInterpolator4->isQueueEmpty() && !rotateInterpolator4->isQueueEmpty())
+						{
+							if (!moveInterpolator4->isQueueEmpty())
+								moveInterpolator4->iterateTopSection();
+							if (!rotateInterpolator4->isQueueEmpty())
+								rotateInterpolator4->iterateTopSection();
+						}
+						auto moveInterpolator5 = std::make_unique<Ape::Interpolator>(false);
+						moveInterpolator5->addSection(
+							userNode->getPosition(),
+							Ape::Vector3(-0.931241, 31.6337, 110.023),
+							15.0,
+							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+						);
+						auto rotateInterpolator5 = std::make_unique<Ape::Interpolator>(false);
+						rotateInterpolator5->addSection(
+							userNode->getOrientation(),
+							Ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706),
+							15.0,
+							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+						);
+						while (!moveInterpolator5->isQueueEmpty() && !rotateInterpolator5->isQueueEmpty())
+						{
+							if (!moveInterpolator5->isQueueEmpty())
+								moveInterpolator5->iterateTopSection();
+							if (!rotateInterpolator5->isQueueEmpty())
+								rotateInterpolator5->iterateTopSection();
+						}
+					}
+				}
+				operatorPointsGenerated = true;
 			}
 		}
 
@@ -648,7 +854,7 @@ void Ape::KinectPlugin::Update()
 				if (framecount % 2 == 0) //OPT GetBodyIndexes and GetDepthData can only work with different frames //needs too much resources?? 
 				{
 					GetDepthData(pFrame);
-					if (showSkeleton)
+					if (showSkeleton || _3dScan)
 					{
 						GetBodyData(pFrame);
 					}
@@ -657,8 +863,14 @@ void Ape::KinectPlugin::Update()
 				else
 				{
 					GetBodyIndexes(pFrame);
+
+					if (_3dScan && sstate!=2)
+					{
+						ScanOperator();
+					}
 				}
 			}
+
 			SafeRelease(pFrame);
 			framecount++;
 		}
@@ -678,6 +890,139 @@ void Ape::KinectPlugin::Update()
 	}
 }
 
+/// <summary>
+/// Record point cloud if the pose is correct
+/// </summary>
+void Ape::KinectPlugin::ScanOperator()
+{
+	bool onefound = false;
+	for (int i = 0; i < cBodyCount; ++i)
+	{
+		if (Operatorfound[i] && !onefound && (framecount > (scanframe + 100)))
+		{
+			onefound = true;
+			if (CheckAngles(i))
+			{
+				std::cout << "true" << std::endl;
+				if (sstate == 0)
+				{
+					spoint1 = Vector3(body[i][0][0] * 100, body[i][0][1] * 100, body[i][0][2] * 100);
+					anchor = Vector3(-body[i][0][0] * 100, body[i][0][1] * 100 - 131, -body[i][0][2] * 100 + 4.4);
+				}
+				else
+				{
+					spoint2 = Vector3(body[i][0][0] * 100, body[i][0][1] * 100, body[i][0][2] * 100);				
+				}
+
+				for (unsigned int j = 0; j < CloudSize / 3; ++j)
+				{
+					if (bodyIdx[j] != 0xff && (spoint1.z - OperatorPoints[3 * j + 2]) < 40.0f)
+					{
+						if (sstate == 1)
+						{
+							Vector3 point = Vector3(OperatorPoints[3 * j], OperatorPoints[3 * j + 1], OperatorPoints[3 * j + 2]);
+							point -= spoint2;
+							point = turnaraound * point;
+							point = point + spoint1 * 0.97f;
+
+							ScannedPoints.push_back(point.x);
+							ScannedPoints.push_back(point.y);
+							ScannedPoints.push_back(point.z);
+						}
+						else
+						{
+							ScannedPoints.push_back(OperatorPoints[3 * j]);
+							ScannedPoints.push_back(OperatorPoints[3 * j + 1]);
+							ScannedPoints.push_back(OperatorPoints[3 * j + 2]);
+						}
+
+						ScannedColors.push_back(OperatorColors[3 * j]);
+						ScannedColors.push_back(OperatorColors[3 * j + 1]);
+						ScannedColors.push_back(OperatorColors[3 * j + 2]);
+					}
+				}
+				if (sstate == WAITING)
+				{
+					sstate = FIRST_DONE;
+					scanframe = framecount;
+				}
+				else
+				{				
+					sstate = SECOND_DONE;
+					operatorPointsGenerated = false;
+					std::cout << ScannedPoints.size() << std::endl;
+				}
+			}
+		}
+	}
+}
+
+/// <summary>
+/// Check body angles for correct pose recognition
+/// </summary>
+/// <param name='index'> index of operator's body </param>
+/// <returns> True if pose is correct </returns>
+bool Ape::KinectPlugin::CheckAngles(int index)
+{
+	Vector3 spine(body[index][0][0] - body[index][20][0], body[index][0][1] - body[index][20][1], body[index][0][2] - body[index][20][2]);
+	Vector3 head(body[index][20][0] - body[index][3][0], body[index][20][1] - body[index][3][1], body[index][20][2] - body[index][3][2]);
+	Vector3 rhand(body[index][10][0] - body[index][8][0], body[index][10][1] - body[index][8][1], body[index][10][2] - body[index][8][2]);
+	Vector3 lhand(body[index][6][0] - body[index][4][0], body[index][6][1] - body[index][4][1], body[index][6][2] - body[index][4][2]);
+	Vector3 rleg(body[index][18][0] - body[index][16][0], body[index][18][1] - body[index][16][1], body[index][18][2] - body[index][16][2]);
+	Vector3 lleg(body[index][14][0] - body[index][12][0], body[index][14][1] - body[index][12][1], body[index][14][2] - body[index][12][2]);
+
+	float sang = AngleBetween(spine, Vector3(0.0f, -1.0f, 0.0f));
+	float hang = AngleBetween(head, Vector3(0.0f, -1.0f, 0.0f));
+	float rhang = AngleBetween(rhand, Vector3(1.0f, -1.0f, 0.0f));
+	float lhang = AngleBetween(lhand, Vector3(-1.0f, -1.0f, 0.0f));
+	float rlang = AngleBetween(rleg, Vector3(0.2f, -1.0f, 0.0f));
+	float llang = AngleBetween(lleg, Vector3(-0.2f, -1.0f, 0.0f));
+
+	std::cout << rhang;
+	std::cout << "  ";
+	std::cout << lhang;
+	std::cout << "  ";
+	std::cout << rlang;
+	std::cout << "  ";
+	std::cout << llang;
+	std::cout << "  ";
+	std::cout << sang;
+	std::cout << "  ";
+	std::cout << hang << std::endl;
+
+	return (CheckMaxDifference(rhang, 0.0f, 8.5f) && CheckMaxDifference(lhang, 0.0f, 8.5f) && CheckMaxDifference(rlang, 0.0f, 8.5f) && CheckMaxDifference(llang, 0.0f, 8.5f) &&
+		CheckMaxDifference(sang, 0.0f, 4.0f) && CheckMaxDifference(hang, 0.0f, 8.5f));
+}
+
+/// <summary>
+/// Calculate the angle between two vectors
+/// </summary>
+/// <param name='p1'> first vector </param>
+/// <param name='p2'> second vector </param>
+/// <returns> the angle value in degrees </returns>
+float Ape::KinectPlugin::AngleBetween(Vector3 p1, Vector3 p2)
+{
+	p1.normalise();
+	p2.normalise();
+	Radian angle = acos(p1.dotProduct(p2) / sqrt(p1.squaredLength() * p2.squaredLength()));
+
+	return angle.toDegree();
+}
+
+bool Ape::KinectPlugin::CheckDifference(float data, float ref, float perc)
+{
+	if (data > ref * (1 - perc) && data < ref * (1 + perc))
+		return true;
+	else
+		return false;
+}
+
+bool Ape::KinectPlugin::CheckMaxDifference(float data, float ref, float maxdev)
+{
+	return (data > (ref - maxdev) && data < (ref + maxdev));
+}
+
+//Legacy
 void Ape::KinectPlugin::GetOperatorColrs()
 {
 	OperatorColors.clear();
@@ -702,13 +1047,13 @@ void Ape::KinectPlugin::GetOperatorPts()
 {
 	OperatorPoints.clear();
 	_1Detected = false;
-	for (int n = 0; n < BODY_COUNT; n++)
+	for (int n = 0; n < cBodyCount; n++)
 	{
 		if (body[n][0][0] != 0 && body[n][0][1] != 0 && body[n][0][2] != 0 && !_1Detected)
 		{
 			_1Detected = true;
 			LOG(LOG_TYPE_DEBUG, "detected");
-			for (int i = 0; i < CloudSize / 3; i++)
+			for (unsigned int i = 0; i < CloudSize / 3; i++)
 			{
 				for (int j = 0; j < 25; j++)
 				{
@@ -731,9 +1076,9 @@ void Ape::KinectPlugin::GetOperatorPts()
 		OperatorPoints = {0.0, 0.0, 0.0};
 }
 
-float  Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point)
+float Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point)
 {
-	return sqrt(pow((point[0]-joint[0]),2.0)+ pow((point[1] - joint[1]), 2.0) + pow((point[2] - joint[2]), 2.0));
+	return sqrtf(powf((point[0]-joint[0]),2.0)+ powf((point[1] - joint[1]), 2.0) + powf((point[2] - joint[2]), 2.0));
 }
 
 void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
@@ -755,7 +1100,7 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);
 
 		Ape::PointCloudColors colorpoints;
-		for (int i = 0; i < CloudSize / 3; i++) 
+		for (unsigned int i = 0; i < CloudSize / 3; i++) 
 		{
 			ColorSpacePoint p = depth2rgb[i];
 			/* Check if color pixel coordinates are in bounds*/
@@ -766,9 +1111,9 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 			}
 			else {
 				int idx = (int)p.X + colorwidth * (int)p.Y;
-				colorpoints.push_back((float)rgbimage[4 * idx + 0] / 255.);
-				colorpoints.push_back((float)rgbimage[4 * idx + 1] / 255.);
-				colorpoints.push_back((float)rgbimage[4 * idx + 2] / 255.);
+				colorpoints.push_back((float)rgbimage[4 * idx + 0] / 255.0f);
+				colorpoints.push_back((float)rgbimage[4 * idx + 1] / 255.0f);
+				colorpoints.push_back((float)rgbimage[4 * idx + 2] / 255.0f);
 			}
 		}
 		KCol = colorpoints;
@@ -806,10 +1151,9 @@ void  Ape::KinectPlugin::GetOperator()
 {
 	Ape::PointCloudPoints OPoint;
 	Ape::PointCloudColors OColor;
-	int j = 0;
 
 	//LOG(LOG_TYPE_DEBUG, std::to_string(bodyIdx[50000]) + "; " + std::to_string(bodyIdx[100000]) + "; " + std::to_string(bodyIdx[150000]));
-	for (int i = 0; i < CloudSize/3; i++)
+	for (unsigned int i = 0; i < CloudSize/3; i++)
 	{
 		if (bodyIdx[i] != 0xff)
 		{
@@ -822,7 +1166,6 @@ void  Ape::KinectPlugin::GetOperator()
 			OColor.push_back(KCol[3 * i]);
 			OColor.push_back(KCol[3 * i + 1]);
 			OColor.push_back(KCol[3 * i + 2]);
-			j++;
 		}
 		else
 		{
@@ -863,7 +1206,7 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 		{
 			hr = m_pCoordinateMapper->MapDepthFrameToCameraSpace(width*height, buf, width*height, depth2xyz);
 			Ape::PointCloudPoints Points;
-			for (int i = 0; i < CloudSize / 3; i++)
+			for (unsigned int i = 0; i < CloudSize / 3; i++)
 			{
 				Points.push_back(depth2xyz[i].X * 100);
 				Points.push_back(depth2xyz[i].Y * 100);
@@ -894,11 +1237,11 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 	if (SUCCEEDED(hr))
 	{
 		//LOG(LOG_TYPE_DEBUG, "body got");
-		IBody* ppBodies[BODY_COUNT] = { 0 };
+		IBody* ppBodies[cBodyCount] = { 0 };
 		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
 		if (SUCCEEDED(hr))
 		{
-			ProcessBody(BODY_COUNT, ppBodies);
+			ProcessBody(cBodyCount, ppBodies);
 		}
 		for (int i = 0; i < _countof(ppBodies); ++i)
 		{
@@ -918,7 +1261,7 @@ void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 {
 	HRESULT hr;
 	if (m_pCoordinateMapper)
-	{		
+	{
 		for (int i = 0; i < nBodyCount; ++i)
 		{
 			Operatorfound[i] = false;
@@ -942,7 +1285,7 @@ void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 					{
 						for (int j = 0; j < _countof(joints); ++j)
 						{
-							if (joints[j].TrackingState==2)
+							if (joints[j].TrackingState == 2)
 							{
 								body[i][j][0] = joints[j].Position.X;
 								body[i][j][1] = joints[j].Position.Y;
@@ -957,17 +1300,14 @@ void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 						}
 					}
 				}
-			}
-		}
-		for (int i = 0; i < nBodyCount; i++)
-		{
-			if (!Operatorfound[i])
-			{
-				for (int j = 0; j < 25; j++)
+				else
 				{
-					body[i][j][0] = 0;
-					body[i][j][1] = 0;
-					body[i][j][2] = 0;
+					for (int j = 0; j < 25; j++)
+					{
+						body[i][j][0] = 0;
+						body[i][j][1] = 0;
+						body[i][j][2] = 0;
+					}
 				}
 			}
 		}

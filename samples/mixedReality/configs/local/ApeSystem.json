@@ -7,9 +7,10 @@
         "participantType": "Local",
         "uniqueUserNamePrefix": "Local",
         "sessionGUID": "1013311130628945935",
-        "sessionResourceLocation": [
-            "/plugins/industry40/resources"
-        ],
+      "sessionResourceLocation": [
+        "/plugins/industry40/resources",
+        "/plugins/assimpAssetLoader/resources"
+      ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
@@ -22,11 +23,11 @@
         }
     },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-			      "ApeOisUserInputPlugin",
-            "ApeIndustry40Plugin",
-            "ApeZedPlugin"
-        ]
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeIndustry40Plugin",
+        "ApeKinectPlugin"
+      ]
     }
 }
