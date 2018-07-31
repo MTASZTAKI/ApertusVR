@@ -10,24 +10,24 @@
             "monitorIndex": 0,
             "name": "0",
             "resolution": {
-                "width": 1440,
-                "height": 900,
+                "width": 1920,
+                "height": 1080,
                 "fullScreen": true
             },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 8,
+                "FSAAHint": "Quality"
             },
             "viewports": [
               {
                 "zOrder": 0,
                 "left": 0,
                 "top": 0,
-                "width": 1440,
-                "height": 900,
+                "width": 1920,
+                "height": 1080,
                 "camera": {
                   "name": "0",
                   "nearClip": 1,
