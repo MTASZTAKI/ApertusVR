@@ -48,6 +48,11 @@ void Ape::TextGeometryImpl::setCaption( std::string caption )
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_CAPTION));
 }
 
+void Ape::TextGeometryImpl::clearCaption()
+{
+	setCaption("");
+}
+
 bool Ape::TextGeometryImpl::isVisible()
 {
 	return mVisibility;

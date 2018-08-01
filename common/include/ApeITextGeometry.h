@@ -43,6 +43,8 @@ namespace Ape
 
 		virtual void setCaption(std::string caption) = 0;
 
+		virtual void clearCaption() = 0;
+
 		virtual bool isVisible() = 0;
 
 		virtual void setVisible(bool enabled) = 0;

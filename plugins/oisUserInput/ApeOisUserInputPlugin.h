@@ -78,7 +78,7 @@ namespace Ape
 
 		bool isNodeSelected(std::string nodeName);
 
-		void addNodeSelection(Ape::NodeWeakPtr node);
+		void addNodeSelection(std::string nodeName);
 
 		bool removeNodeSelection(std::string nodeName);
 

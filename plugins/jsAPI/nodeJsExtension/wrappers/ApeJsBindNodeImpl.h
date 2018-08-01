@@ -76,6 +76,31 @@ public:
 		mPtr.lock()->setParentNode(parentNode.getNodeWeakPtr());
 	}
 
+	// ChildNodes
+
+	std::vector<NodeJsPtr> getChildNodes()
+	{
+		std::vector<NodeJsPtr> vec;
+		if (auto nodeSharedPtr = mPtr.lock())
+		{
+			for (auto nodeWeakPtr : nodeSharedPtr->getChildNodes())
+			{
+				vec.push_back(NodeJsPtr(nodeWeakPtr));
+			}
+		}
+		return vec;
+	}
+
+	bool hasChildNode()
+	{
+		return mPtr.lock()->hasChildNode();
+	}
+
+	bool isChildNode(NodeJsPtr childNode)
+	{
+		return mPtr.lock()->isChildNode(childNode.getNodeWeakPtr());
+	}
+
 	// INode
 
 	const std::string getName()
@@ -156,6 +181,11 @@ public:
 	void rotate(Ape::Radian angle, Ape::Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace)
 	{
 		mPtr.lock()->rotate(angle, axis, nodeTransformSpace);
+	}
+
+	void showBoundingBox(bool show)
+	{
+		mPtr.lock()->showBoundingBox(show);
 	}
 };
 

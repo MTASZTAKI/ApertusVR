@@ -101,5 +101,3 @@ void Ape::RayGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializ
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
-
-
