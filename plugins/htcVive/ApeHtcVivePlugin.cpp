@@ -9,14 +9,14 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
 	mUserMaterial = Ape::ManualMaterialWeakPtr();
-	mpOpenVrSystem = nullptr;
-	mOpenVrHmdError = vr::HmdError();
-	mOpenVrTrackedPoses[vr::k_unMaxTrackedDeviceCount] = vr::TrackedDevicePose_t();
+	mOpenVrRttTextureIDs[0] = nullptr;
+	mOpenVrRttTextureIDs[1] = nullptr;
 	LOG_FUNC_LEAVE();
 }
 
@@ -83,7 +83,20 @@ Ape::CameraWeakPtr Ape::ApeHtcVivePlugin::createCamera(std::string name)
 
 void Ape::ApeHtcVivePlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
+	{
+		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.subjectName == "OpenVrRenderTextureLeft")
+			{
+				mOpenVrRttTextureIDs[0] = textureManual->getGraphicsApiID();
+			}
+			else if (event.subjectName == "OpenVrRenderTextureRight")
+			{
+				mOpenVrRttTextureIDs[1] = textureManual->getGraphicsApiID();
+			}
+		}
+	}
 }
 
 void Ape::ApeHtcVivePlugin::Init()
@@ -194,6 +207,17 @@ void Ape::ApeHtcVivePlugin::Init()
 void Ape::ApeHtcVivePlugin::Run()
 {
 	LOG_FUNC_ENTER();
+	mOpenVrTextures[0] = { (void*)mOpenVrRttTextureIDs[0], vr::ETextureType::TextureType_OpenGL, vr::ColorSpace_Gamma };
+	mOpenVrTextures[1] = { (void*)mOpenVrRttTextureIDs[1], vr::ETextureType::TextureType_OpenGL, vr::ColorSpace_Gamma };
+	mOpenVrTextureBounds = {};
+	mOpenVrTextureBounds.uMin = 0;
+	mOpenVrTextureBounds.uMax = 1;
+	mOpenVrTextureBounds.vMin = 1;
+	mOpenVrTextureBounds.vMax = 0;
+	LOG(LOG_TYPE_DEBUG, "Wait while RTT textures are created...");
+	while (mOpenVrRttTextureIDs[0] == nullptr && mOpenVrRttTextureIDs[1] == nullptr)
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	LOG(LOG_TYPE_DEBUG, "RTT textures are successfully created...");
 	while (true)
 	{
 		vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
@@ -204,20 +228,17 @@ void Ape::ApeHtcVivePlugin::Run()
 			Ape::Vector3 scale;
 			Ape::Quaternion rotation;
 			Ape::Vector3 translate;
-			conversionFromOpenVR(pose).makeTransform(scale, rotation, translate);
+			Ape::Matrix4 apePose = conversionFromOpenVR(pose);
+			apePose.decomposition(scale, rotation, translate);
 			if (auto headNode = mHeadNode.lock())
 			{
 				headNode->setOrientation(rotation);
 				headNode->setPosition(translate);
+				//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
 			}
 		}
-		//TODO is it needed? or it is enough to uopdate the projection for the cameras only once?
-		vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
-		vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
-		if (auto cameraLeft = mCameraLeft.lock())
-			cameraLeft->setProjection(conversionFromOpenVR(projectionLeft));
-		if (auto cameraRight = mCameraRight.lock())
-			cameraRight->setProjection(conversionFromOpenVR(projectionRight));
+		vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds);
+		vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds);
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));

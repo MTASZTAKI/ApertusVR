@@ -22,12 +22,13 @@
 
 set (CONFIGS
 	ApeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
 	ApeSystem.json
 	)
 
 add_custom_target(
-    Configs_htcVive_lego ALL
+    Configs_htcVive_sampleScene ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_htcVive_lego PROPERTY FOLDER "Samples/htcVive/Configs")
+set_property (TARGET Configs_htcVive_sampleScene PROPERTY FOLDER "Samples/HtcVive/Configs")

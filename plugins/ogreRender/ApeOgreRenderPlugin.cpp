@@ -1357,6 +1357,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ape::ConversionToOgre(parameters.pixelFormat),
 							Ape::ConversionToOgre(parameters.usage));
+						textureManual->setGraphicsApiID(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer());
 					}
 					break;
 				case Ape::Event::Type::TEXTURE_MANUAL_BUFFER:
@@ -1391,8 +1392,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
 										{
 											ogreViewport->setClearEveryFrame(true);
-											//ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
-											//ogreViewport->setOverlaysEnabled(false);
 											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 												ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 										}
@@ -1938,6 +1937,7 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 		mpHydrax->setSunPosition(mpSkyxSkylight->getPosition());
 		mpHydrax->update(evt.timeSinceLastFrame);
 	}
+	//Ogre::WindowEventUtilities::messagePump();
 	return Ogre::FrameListener::frameRenderingQueued( evt );
 }
 

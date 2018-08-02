@@ -21,4 +21,4 @@
 #SOFTWARE.
 
 add_subdirectory (presentation)
-add_subdirectory (lego)
+add_subdirectory (sampleScene)

@@ -75,6 +75,12 @@ namespace Ape
 
 		vr::IVRSystem* mpOpenVrSystem;
 
+		vr::Texture_t mOpenVrTextures[2];
+
+		void* mOpenVrRttTextureIDs[2];
+
+		vr::VRTextureBounds_t mOpenVrTextureBounds;
+
 		vr::HmdError mOpenVrHmdError;
 
 		vr::TrackedDevicePose_t mOpenVrTrackedPoses[vr::k_unMaxTrackedDeviceCount];

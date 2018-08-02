@@ -5,10 +5,10 @@
     },
     "sceneSession": {
         "participantType": "Local",
-        "uniqueUserNamePrefix": "",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "uniqueUserNamePrefix": "Local",
+        "sessionGUID": "1013311130628945935",
         "sessionResourceLocation": [
-            "/plugins/lego/resources"
+            "/plugins/sampleScene/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -18,14 +18,15 @@
             "useLobby": false,
             "ip": "195.111.2.95",
             "port": "8888",
-            "sessionName": "test"
+            "sessionName": "k508"
         }
     },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-            "ApeHtcVivePlugin",
-            "ApeLegoPlugin"
-        ]
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeSampleScenePlugin",
+        "ApeHtcVivePlugin"
+      ]
     }
 }

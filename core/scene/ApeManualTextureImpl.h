@@ -46,6 +46,10 @@ namespace Ape
 
 		Ape::CameraWeakPtr getSourceCamera() override;
 
+		void setGraphicsApiID(void* id) override;
+
+		void* getGraphicsApiID() override;
+
 		void setBuffer(const void* buffer) override;
 
 		const void* getBuffer() override;
@@ -68,6 +72,8 @@ namespace Ape
 		Ape::CameraWeakPtr mCamera;
 
 		const void* mpBuffer;
+
+		void* mpGraphicsApiID;
 	};
 }
 
