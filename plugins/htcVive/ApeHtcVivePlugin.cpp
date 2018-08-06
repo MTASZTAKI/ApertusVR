@@ -150,19 +150,19 @@ void Ape::ApeHtcVivePlugin::Init()
 	{
 		LOG(LOG_TYPE_DEBUG, "OpenVR device system driver name: " << buf);
 	}
-	unsigned int widht, height;
-	mpOpenVrSystem->GetRecommendedRenderTargetSize(&widht, &height);
-	LOG(LOG_TYPE_DEBUG, "Recomended Render Target Size : " << widht << "x" << height);
+	unsigned int width, height;
+	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
+	LOG(LOG_TYPE_DEBUG, "Recomended Render Target Size : " << width << "x" << height);
 
 	Ape::ManualTextureWeakPtr manualTextureRightEye, manualTextureLeftEye;
 	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(widht, height, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
 		manualTextureLeftEye = manualTexture;
 	}
 	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(widht, height, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
 		manualTextureRightEye = manualTexture;
 	}
 	if (auto userNode = mUserNode.lock())
@@ -207,39 +207,61 @@ void Ape::ApeHtcVivePlugin::Init()
 void Ape::ApeHtcVivePlugin::Run()
 {
 	LOG_FUNC_ENTER();
-	mOpenVrTextures[0] = { (void*)mOpenVrRttTextureIDs[0], vr::ETextureType::TextureType_OpenGL, vr::ColorSpace_Gamma };
-	mOpenVrTextures[1] = { (void*)mOpenVrRttTextureIDs[1], vr::ETextureType::TextureType_OpenGL, vr::ColorSpace_Gamma };
-	mOpenVrTextureBounds = {};
-	mOpenVrTextureBounds.uMin = 0;
-	mOpenVrTextureBounds.uMax = 1;
-	mOpenVrTextureBounds.vMin = 1;
-	mOpenVrTextureBounds.vMax = 0;
 	LOG(LOG_TYPE_DEBUG, "Wait while RTT textures are created...");
-	while (mOpenVrRttTextureIDs[0] == nullptr && mOpenVrRttTextureIDs[1] == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	LOG(LOG_TYPE_DEBUG, "RTT textures are successfully created...");
 	while (true)
 	{
-		vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-		vr::TrackedDevicePose_t hmdPose;
-		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
-		{
-			auto pose = hmdPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 scale;
-			Ape::Quaternion rotation;
-			Ape::Vector3 translate;
-			Ape::Matrix4 apePose = conversionFromOpenVR(pose);
-			apePose.decomposition(scale, rotation, translate);
-			if (auto headNode = mHeadNode.lock())
-			{
-				headNode->setOrientation(rotation);
-				headNode->setPosition(translate);
-				//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
-			}
-		}
-		vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds);
-		vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds);
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		if (mOpenVrRttTextureIDs[0] != nullptr && mOpenVrRttTextureIDs[1] != nullptr)
+		{
+			break;
+		}
+	}
+	LOG(LOG_TYPE_DEBUG, "RTT textures are successfully created...");
+	mOpenVrTextures[0].handle = mOpenVrRttTextureIDs[0];
+	mOpenVrTextures[0].eType = vr::ETextureType::TextureType_OpenGL;
+	mOpenVrTextures[0].eColorSpace = vr::ColorSpace_Gamma;
+	mOpenVrTextures[1].handle = mOpenVrRttTextureIDs[1];
+	mOpenVrTextures[1].eType = vr::ETextureType::TextureType_OpenGL;
+	mOpenVrTextures[1].eColorSpace = vr::ColorSpace_Gamma;
+	mOpenVrTextureBounds[0].uMin = 0;
+	mOpenVrTextureBounds[0].uMax = 1;
+	mOpenVrTextureBounds[0].vMin = 1;
+	mOpenVrTextureBounds[0].vMax = 0;
+	mOpenVrTextureBounds[1].uMin = 0;
+	mOpenVrTextureBounds[1].uMax = 1;
+	mOpenVrTextureBounds[1].vMin = 1;
+	mOpenVrTextureBounds[1].vMax = 0;
+	LOG(LOG_TYPE_DEBUG, "mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
+	while (true)
+	{
+		vr::EVRCompositorError error;
+		error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+		if (!error)
+		{
+			vr::TrackedDevicePose_t hmdPose;
+			if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
+			{
+				auto pose = hmdPose.mDeviceToAbsoluteTracking;
+				Ape::Vector3 scale;
+				Ape::Quaternion rotation;
+				Ape::Vector3 translate;
+				Ape::Matrix4 apePose = conversionFromOpenVR(pose);
+				apePose.decomposition(scale, rotation, translate);
+				if (auto headNode = mHeadNode.lock())
+				{
+					headNode->setOrientation(rotation);
+					headNode->setPosition(translate);
+					//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
+				}
+			}
+			error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
+			//vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+			LOG(LOG_TYPE_DEBUG, "Error Submit:" << error);
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "Error WaitGetPoses:" << error);
+		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();

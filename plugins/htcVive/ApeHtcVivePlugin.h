@@ -79,7 +79,7 @@ namespace Ape
 
 		void* mOpenVrRttTextureIDs[2];
 
-		vr::VRTextureBounds_t mOpenVrTextureBounds;
+		std::array<vr::VRTextureBounds_t, 2> mOpenVrTextureBounds;
 
 		vr::HmdError mOpenVrHmdError;
 

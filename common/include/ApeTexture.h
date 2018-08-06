@@ -37,6 +37,7 @@ namespace Ape
 		{
 			PF_NONE,
 			R8G8B8,
+			R8G8B8A8,
 			A8R8G8B8,
 			PF_INVALID
 		};

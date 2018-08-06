@@ -70,6 +70,9 @@ SOFTWARE.*/
 #include "OgreLodWorkQueueRequest.h"
 #include "OgreLodWorkQueueWorker.h"
 #include "OgreTextureManager.h"
+#include <OgreGLTextureManager.h>
+#include <OgreGLRenderSystem.h>
+#include <OgreGLTexture.h>
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "Hydrax.h"

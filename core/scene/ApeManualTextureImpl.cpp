@@ -38,7 +38,7 @@ Ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
+void Ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;

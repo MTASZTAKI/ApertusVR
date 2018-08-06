@@ -1354,10 +1354,16 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
 					{
 						Ape::ManualTextureParameters parameters = textureManual->getParameters();
-						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ape::ConversionToOgre(parameters.pixelFormat),
+						auto ogreTexture = Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+							Ogre::TEX_TYPE_2D, Ogre::uint(parameters.width), Ogre::uint(parameters.height), 0, Ape::ConversionToOgre(parameters.pixelFormat),
 							Ape::ConversionToOgre(parameters.usage));
-						textureManual->setGraphicsApiID(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer());
+						if (mOgreRenderPluginConfig.renderSystem == "OGL" || mOgreRenderPluginConfig.renderSystem == "")
+						{
+							/*GLuint glid;
+							ogreTexture->getCustomAttribute("GLID", &glid);
+							textureManual->setGraphicsApiID(reinterpret_cast<void*>(glid));*/
+							textureManual->setGraphicsApiID((void*)static_cast<Ogre::GLTexture*>(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer())->getGLID());
+						}
 					}
 					break;
 				case Ape::Event::Type::TEXTURE_MANUAL_BUFFER:
@@ -1937,7 +1943,6 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 		mpHydrax->setSunPosition(mpSkyxSkylight->getPosition());
 		mpHydrax->update(evt.timeSinceLastFrame);
 	}
-	//Ogre::WindowEventUtilities::messagePump();
 	return Ogre::FrameListener::frameRenderingQueued( evt );
 }
 
