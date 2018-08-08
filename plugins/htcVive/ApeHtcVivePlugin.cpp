@@ -50,14 +50,15 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
 	vr::EVRCompositorError error;
 	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
-	LOG(LOG_TYPE_DEBUG, "Error Submit Left:" << error);
+	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+	//LOG(LOG_TYPE_DEBUG, "Error Submit Left:" << error);
 }
 
 void Ape::ApeHtcVivePlugin::submitTextureRightToOpenVR()
 {
 	vr::EVRCompositorError error;
-	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
-	LOG(LOG_TYPE_DEBUG, "Error Submit Right:" << error);
+	//error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+	//LOG(LOG_TYPE_DEBUG, "Error Submit Right:" << error);
 }
 
 Ape::CameraWeakPtr Ape::ApeHtcVivePlugin::createCamera(std::string name)
@@ -274,6 +275,7 @@ void Ape::ApeHtcVivePlugin::Run()
 		{
 			LOG(LOG_TYPE_DEBUG, "Error WaitGetPoses:" << error);
 		}
+		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();

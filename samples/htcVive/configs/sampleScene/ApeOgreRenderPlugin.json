@@ -10,8 +10,8 @@
       "name": "local",
       "monitorIndex": 0,
       "resolution": {
-        "width": 1280,
-        "height": 720,
+        "width": 1512,
+        "height": 1680,
         "fullScreen": false
       },
       "miscParams": {
@@ -26,8 +26,8 @@
           "zOrder": 0,
           "left": 0,
           "top": 0,
-          "width": 1280,
-          "height": 720,
+          "width": 1512,
+          "height": 1680,
           "camera": {
             "nearClip": 1.0,
             "farClip": 10000.0,

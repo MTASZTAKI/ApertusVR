@@ -1396,10 +1396,10 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									if (auto ogreRenderTexture = ogreTexture->getBuffer()->getRenderTarget())
 									{
-										//ogreRenderTexture->setAutoUpdated(true);
+										ogreRenderTexture->setAutoUpdated(true);
 										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
 										{
-											ogreViewport->setClearEveryFrame(true);
+											//ogreViewport->setClearEveryFrame(true);
 											//ogreViewport->setAutoUpdated(true);
 											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 												ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
@@ -1947,6 +1947,11 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 		mpHydrax->setSunPosition(mpSkyxSkylight->getPosition());
 		mpHydrax->update(evt.timeSinceLastFrame);
 	}
+	return Ogre::FrameListener::frameRenderingQueued( evt );
+}
+
+bool Ape::OgreRenderPlugin::frameEnded( const Ogre::FrameEvent& evt )
+{
 	if (mRttList.size())
 	{
 		for (auto it = mRttList.begin(); it != mRttList.end(); ++it)
@@ -1961,11 +1966,6 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 			}
 		}
 	}
-	return Ogre::FrameListener::frameRenderingQueued( evt );
-}
-
-bool Ape::OgreRenderPlugin::frameEnded( const Ogre::FrameEvent& evt )
-{
 	return Ogre::FrameListener::frameEnded( evt );
 }
 
