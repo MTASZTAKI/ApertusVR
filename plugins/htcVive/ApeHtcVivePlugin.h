@@ -73,6 +73,10 @@ namespace Ape
 
 		Ape::ManualMaterialWeakPtr mUserMaterial;
 
+		Ape::ManualTextureWeakPtr mManualTextureRightEye;
+		
+		Ape::ManualTextureWeakPtr mManualTextureLeftEye;
+
 		vr::IVRSystem* mpOpenVrSystem;
 
 		vr::Texture_t mOpenVrTextures[2];
@@ -92,6 +96,10 @@ namespace Ape
 		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
 
 		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
+
+		void submitTextureLeftToOpenVR();
+
+		void submitTextureRightToOpenVR();
 
 	public:
 		ApeHtcVivePlugin();

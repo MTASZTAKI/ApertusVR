@@ -54,6 +54,12 @@ namespace Ape
 
 		const void* getBuffer() override;
 
+		void registerFunction(std::function<void()> callback) override;
+
+		std::vector<std::function<void()>> getFunctionList() override;
+
+		void unRegisterFunction(std::function<void()> callback) override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -74,6 +80,8 @@ namespace Ape
 		const void* mpBuffer;
 
 		void* mpGraphicsApiID;
+
+		std::vector<std::function<void()>> mFunctions;
 	};
 }
 

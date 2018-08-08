@@ -215,6 +215,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mHeadNode;
 
+		std::vector<Ape::ManualTextureWeakPtr> mRttList;
+
 		int mCameraCountFromConfig;
 
 		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;

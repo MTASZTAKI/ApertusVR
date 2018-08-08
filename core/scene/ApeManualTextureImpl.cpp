@@ -91,6 +91,27 @@ const void* Ape::ManualTextureImpl::getBuffer()
 	return mpBuffer;
 }
 
+void Ape::ManualTextureImpl::registerFunction(std::function<void()> callback)
+{
+	mFunctions.push_back(callback);
+}
+
+std::vector<std::function<void()>> Ape::ManualTextureImpl::getFunctionList()
+{
+	return mFunctions;
+}
+
+void Ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
+{
+	for (auto it = mFunctions.begin(); it != mFunctions.end();)
+	{
+		if ((*it).target_type() == callback.target_type())
+			it = mFunctions.erase(it);
+		else
+			++it;
+	}
+}
+
 void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);

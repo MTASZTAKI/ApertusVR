@@ -273,7 +273,6 @@ void Ape::ApeOculusDK2Plugin::Init()
 			texture->setSourceCamera(cameraRight);
 	}
 
-	Ape::CameraWeakPtr cameraExternal;
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
 	{
 		camera->setWindow(Ape::IMainWindow::getSingletonPtr()->getName());
@@ -281,7 +280,6 @@ void Ape::ApeOculusDK2Plugin::Init()
 		camera->setNearClipDistance(0.001);
 		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
 		camera->setOrthoWindowSize(2, 2);
-		cameraExternal = camera;
 	}
 }
 

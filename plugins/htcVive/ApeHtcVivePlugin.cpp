@@ -46,6 +46,20 @@ Ape::Matrix4 Ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMa
 	return matrix4;
 }
 
+void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
+{
+	vr::EVRCompositorError error;
+	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
+	LOG(LOG_TYPE_DEBUG, "Error Submit Left:" << error);
+}
+
+void Ape::ApeHtcVivePlugin::submitTextureRightToOpenVR()
+{
+	vr::EVRCompositorError error;
+	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+	LOG(LOG_TYPE_DEBUG, "Error Submit Right:" << error);
+}
+
 Ape::CameraWeakPtr Ape::ApeHtcVivePlugin::createCamera(std::string name)
 {
 	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
@@ -90,10 +104,12 @@ void Ape::ApeHtcVivePlugin::eventCallBack(const Ape::Event& event)
 			if (event.subjectName == "OpenVrRenderTextureLeft")
 			{
 				mOpenVrRttTextureIDs[0] = textureManual->getGraphicsApiID();
+				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureLeftToOpenVR, this));
 			}
 			else if (event.subjectName == "OpenVrRenderTextureRight")
 			{
 				mOpenVrRttTextureIDs[1] = textureManual->getGraphicsApiID();
+				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureRightToOpenVR, this));
 			}
 		}
 	}
@@ -154,16 +170,15 @@ void Ape::ApeHtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	LOG(LOG_TYPE_DEBUG, "Recomended Render Target Size : " << width << "x" << height);
 
-	Ape::ManualTextureWeakPtr manualTextureRightEye, manualTextureLeftEye;
 	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
-		manualTextureLeftEye = manualTexture;
+		mManualTextureLeftEye = manualTexture;
 	}
 	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
-		manualTextureRightEye = manualTexture;
+		mManualTextureRightEye = manualTexture;
 	}
 	if (auto userNode = mUserNode.lock())
 	{
@@ -183,7 +198,7 @@ void Ape::ApeHtcVivePlugin::Init()
 			conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Left)).makeTransform(scale, rotation, translate);
 			cameraNode->setPosition(translate);
 		}
-		if (auto texture = manualTextureLeftEye.lock())
+		if (auto texture = mManualTextureLeftEye.lock())
 			texture->setSourceCamera(cameraLeft);
 		cameraLeft->setProjection(conversionFromOpenVR(projectionLeft));
 	}
@@ -198,7 +213,7 @@ void Ape::ApeHtcVivePlugin::Init()
 			conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Right)).makeTransform(scale, rotation, translate);
 			cameraNode->setPosition(translate);
 		}
-		if (auto texture = manualTextureRightEye.lock())
+		if (auto texture = mManualTextureRightEye.lock())
 			texture->setSourceCamera(cameraRight);
 		cameraRight->setProjection(conversionFromOpenVR(projectionRight));
 	}
@@ -254,9 +269,6 @@ void Ape::ApeHtcVivePlugin::Run()
 					//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
 				}
 			}
-			error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
-			//vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
-			LOG(LOG_TYPE_DEBUG, "Error Submit:" << error);
 		}
 		else
 		{

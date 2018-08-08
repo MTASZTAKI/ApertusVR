@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
+#include <functional>
 #include "ApeEntity.h"
 #include "ApeICamera.h"
 #include "ApeTexture.h"
@@ -79,6 +80,12 @@ namespace Ape
 		virtual void setBuffer(const void* buffer) = 0;
 
 		virtual const void* getBuffer() = 0;
+
+		virtual void registerFunction(std::function<void()> callback) = 0;
+
+		virtual std::vector<std::function<void()>> getFunctionList() = 0;
+
+		virtual void unRegisterFunction(std::function<void()> callback) = 0;
 	};
 }
 
