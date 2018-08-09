@@ -15,11 +15,11 @@
         "fullScreen": false
       },
       "miscParams": {
-        "vSync": true,
-        "vSyncInterval": 1,
+        "vSync": false,
+        "vSyncInterval": 0,
         "colorDepth": 32,
-        "FSAA": 8,
-        "FSAAHint": "Quality"
+        "FSAA": 0,
+        "FSAAHint": ""
       },
       "viewports": [
         {

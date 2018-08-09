@@ -31,8 +31,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
-	//mUserNodePoses.push_back(UserNodePose(Ape::Vector3(119.989, 1.55319, -248.898), Ape::Quaternion(0.672635, 0.00571758, 0.739926, -0.0062896)));
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(62.3872, 138.513, -227.567), Ape::Quaternion(-0.526266, 0, -0.85032, 0)));
+	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(24.9845, -14.5468, -74.5983), Ape::Quaternion(0.417279, 0.0319843, -0.90556, 0.0694108)));
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
 	LOG_FUNC_LEAVE();

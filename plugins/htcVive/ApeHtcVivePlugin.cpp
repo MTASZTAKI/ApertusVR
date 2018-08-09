@@ -51,6 +51,30 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 	vr::EVRCompositorError error;
 	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
 	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+	error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+	if (!error)
+	{
+		vr::TrackedDevicePose_t hmdPose;
+		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
+		{
+			auto pose = hmdPose.mDeviceToAbsoluteTracking;
+			Ape::Vector3 scale;
+			Ape::Quaternion rotation;
+			Ape::Vector3 translate;
+			Ape::Matrix4 apePose = conversionFromOpenVR(pose);
+			apePose.decomposition(scale, rotation, translate);
+			if (auto headNode = mHeadNode.lock())
+			{
+				headNode->setOrientation(rotation);
+				headNode->setPosition(translate);
+				//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
+			}
+		}
+	}
+	else
+	{
+		LOG(LOG_TYPE_DEBUG, "Error WaitGetPoses:" << error);
+	}
 	//LOG(LOG_TYPE_DEBUG, "Error Submit Left:" << error);
 }
 
@@ -250,32 +274,7 @@ void Ape::ApeHtcVivePlugin::Run()
 	LOG(LOG_TYPE_DEBUG, "mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 	while (true)
 	{
-		vr::EVRCompositorError error;
-		error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-		if (!error)
-		{
-			vr::TrackedDevicePose_t hmdPose;
-			if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
-			{
-				auto pose = hmdPose.mDeviceToAbsoluteTracking;
-				Ape::Vector3 scale;
-				Ape::Quaternion rotation;
-				Ape::Vector3 translate;
-				Ape::Matrix4 apePose = conversionFromOpenVR(pose);
-				apePose.decomposition(scale, rotation, translate);
-				if (auto headNode = mHeadNode.lock())
-				{
-					headNode->setOrientation(rotation);
-					headNode->setPosition(translate);
-					//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
-				}
-			}
-		}
-		else
-		{
-			LOG(LOG_TYPE_DEBUG, "Error WaitGetPoses:" << error);
-		}
-		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
