@@ -57,16 +57,18 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 		vr::TrackedDevicePose_t hmdPose;
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		{
-			auto pose = hmdPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 scale;
-			Ape::Quaternion rotation;
-			Ape::Vector3 translate;
-			Ape::Matrix4 apePose = conversionFromOpenVR(pose);
-			apePose.decomposition(scale, rotation, translate);
+			auto openVRPose = hmdPose.mDeviceToAbsoluteTracking;
+			Ape::Vector3 apeScale;
+			Ape::Quaternion apeRotation;
+			Ape::Vector3 apeTranslate;
+			Ape::Matrix4 apePose = conversionFromOpenVR(openVRPose);
+			apePose.decomposition(apeScale, apeRotation, apeTranslate);
+			apeScale = apeScale * 100;
+			apeTranslate = apeTranslate * 100;
 			if (auto headNode = mHeadNode.lock())
 			{
-				headNode->setOrientation(rotation);
-				headNode->setPosition(translate);
+				headNode->setOrientation(apeRotation);
+				headNode->setPosition(apeTranslate);
 				//LOG(LOG_TYPE_DEBUG, "rotation:" << rotation.toString() << " translate:" << translate.toString());
 			}
 		}
