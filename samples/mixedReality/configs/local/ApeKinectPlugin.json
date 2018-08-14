@@ -1,7 +1,8 @@
 {
-	"sensorPosition": [ -65.0, 80.0, -300.0 ],
-	"sensorOrientation": [ 0.707, 0.0, 0.707, 0.0 ],
+	"sensorPosition": [ 0.0, 0.0, 0.0 ],
+	"sensorOrientation": [ 0.0, 0.0, 1.0, 0.0 ],
 	"showSkeleton": false,
 	"backgroundRemoval": true,
-	"maxFPS": false
+  "maxFPS": false,
+  "3dScan": true
 }

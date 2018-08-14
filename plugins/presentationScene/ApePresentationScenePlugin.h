@@ -112,8 +112,8 @@ namespace Ape
 				int browserWidth = int(),
 				int browserHeight = int(),
 				int browserZoom = 0,
-				int browserResolutionVertical = 1024,
-				int browserResolutionHorizontal = 768
+				int browserResolutionVertical = 1920,
+				int browserResolutionHorizontal = 1080
 			)
 			{
 				this->cameraPosition = cameraPosition;

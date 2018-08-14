@@ -23,5 +23,6 @@
 add_subdirectory (local)
 add_subdirectory (guest)
 add_subdirectory (host)
+add_subdirectory (host_oculusDK2)
 add_subdirectory (guest_cave)
 add_subdirectory (guest_oculusDK2)

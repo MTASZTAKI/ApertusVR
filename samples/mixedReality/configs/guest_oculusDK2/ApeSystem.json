@@ -26,10 +26,10 @@
     }
   },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeOculusDK2Plugin"
-        ]
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeOculusDK2Plugin"
+      ]
     }
 }

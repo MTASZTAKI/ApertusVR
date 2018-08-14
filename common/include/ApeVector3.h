@@ -165,6 +165,20 @@ namespace Ape
 			           z - rkVector.z);
 		}
 
+		void operator += (const Vector3& rkVector)
+		{
+			x += rkVector.x;
+			y += rkVector.y;
+			z += rkVector.z;
+		}
+
+		void operator -= (const Vector3& rkVector)
+		{		
+			x -= rkVector.x;
+			y -= rkVector.y;
+			z -= rkVector.z;
+		}
+
 		bool isNaN() const
 		{
 			return std::isnan(x) && std::isnan(y) && std::isnan(z);

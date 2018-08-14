@@ -26,6 +26,18 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread> 
+#include <fstream>
+#include <strsafe.h>
+#include <sstream>
+#include <string>
+#include <iostream>
+#include "ApeInterpolator.h"
+#include "stdafx.h"
+#include "resource.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/writer.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
@@ -39,8 +51,9 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApeISphereGeometry.h"
 #include "ApeIManualPass.h"
-#include <ApeITubeGeometry.h>
-#include <ApeIPointCloud.h>
+#include "ApeITubeGeometry.h"
+#include "ApeIPointCloud.h"
+#include "ApeIFileGeometry.h"
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
 
@@ -48,10 +61,17 @@ SOFTWARE.*/
 
 namespace Ape
 {
+	enum ScanningState {
+		WAITING,
+		FIRST_DONE,
+		SECOND_DONE
+	};
+
 	class KinectPlugin : public Ape::IPlugin
 	{
 		static const int        cDepthWidth = 512;
 		static const int        cDepthHeight = 424;
+		static const int		cBodyCount = 6;
 
 	public:
 		KinectPlugin();
@@ -70,9 +90,6 @@ namespace Ape
 
 		void Restart() override;
 
-		/// <summary>
-		/// Gets the different frames from the sensor
-		/// </summary>
 		void Update();
 
 		void GetBodyData(IMultiSourceFrame* pframe);
@@ -80,24 +97,20 @@ namespace Ape
 		void GetDepthData(IMultiSourceFrame* pframe);
 		void GetRGBData(IMultiSourceFrame* pframe);
 
-		/// <summary>
-		/// Initializes the default Kinect sensor
-		/// </summary>
-		/// <returns>indicates success or failure</returns>
-		HRESULT Ape::KinectPlugin::InitializeDefaultSensor();
+		HRESULT InitializeDefaultSensor();
 
-		void  Ape::KinectPlugin::GetOperator();
-		void Ape::KinectPlugin::GetOperatorPts(); 
-		void Ape::KinectPlugin::GetOperatorColrs();
-		float  Ape::KinectPlugin::GetDistance(std::vector<float> joint, std::vector<float> point);
+		void GetOperator();
+		void GetOperatorPts(); 
+		void GetOperatorColrs();
+		float GetDistance(std::vector<float> joint, std::vector<float> point);
 
-		/// <summary>
-		/// Handle new body data
-		/// <param name="nTime">timestamp of frame</param>
-		/// <param name="nBodyCount">body data count</param>
-		/// <param name="ppBodies">body data in frame</param>
-		/// </summary>
-		void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies);
+		void ScanOperator();
+		bool CheckAngles(int index);
+		float AngleBetween(Vector3 p1, Vector3 p2);
+		bool CheckDifference(float data, float ref, float perc);
+		bool CheckMaxDifference(float data, float ref, float maxdev);
+
+		void ProcessBody(int nBodyCount, IBody** ppBodies);
 
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
@@ -109,7 +122,7 @@ namespace Ape
 		std::vector<Ape::NodeWeakPtr> _4Body;
 		std::vector<Ape::NodeWeakPtr> _5Body;
 
-		float body[BODY_COUNT][JointType_Count][3];//stores the detected joint coordinates
+		float body[cBodyCount][JointType_Count][3];//stores the detected joint coordinates
 
 		// Current Kinect
 		IKinectSensor*          m_pKinectSensor;
@@ -121,7 +134,7 @@ namespace Ape
 		const int colorheight = 1080;
 
 		const int size = 651264; //number of coordinates in point cloud
-		int CloudSize;
+		unsigned int CloudSize;
 		bool pointsGenerated = false;
 		double pointratio = 1;
 
@@ -130,6 +143,9 @@ namespace Ape
 
 		Ape::PointCloudPoints OperatorPoints;
 		Ape::PointCloudColors OperatorColors;
+
+		Ape::PointCloudPoints ScannedPoints;
+		Ape::PointCloudColors ScannedColors;
 
 		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
 		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
@@ -144,6 +160,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mClothNode;
+
 		void eventCallBack(const Ape::Event& event);
 
 		Ape::PointCloudWeakPtr mPointCloud;
@@ -151,13 +169,25 @@ namespace Ape
 
 		bool _1Detected = false;
 		bool operatorPointsGenerated = false;
+		bool halfscan = false;
 		std::vector<int> indexes;
 
-		int framecount = 0;
+		unsigned int framecount = 0;
+		unsigned int scanframe = 0;
 
 		bool showSkeleton=false;
 		bool backgroundRemoval = false;
 		bool maxFPS = false;
+		bool _3dScan = false;
+
+		ScanningState sstate = WAITING;
+		Degree turnang = 175.0f;
+		Matrix3 turnaraound = Matrix3(cos(turnang.toRadian()), 0.0f, sin(turnang.toRadian()),
+			0.0f, 1.0f, 0.0f,
+			-sin(turnang.toRadian()), 0.0f, cos(turnang.toRadian()));//rotate around Y-axis
+		Vector3 spoint1;
+		Vector3 spoint2;
+		Vector3 anchor;
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()

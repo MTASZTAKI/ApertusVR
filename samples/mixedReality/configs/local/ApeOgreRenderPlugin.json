@@ -1,5 +1,5 @@
 {
-  "renderSystem": "OGL",
+  "renderSystem": "DX9",
   "lodLevels": {
     "autoGenerateAndSave": false,
     "bias": 0.5
