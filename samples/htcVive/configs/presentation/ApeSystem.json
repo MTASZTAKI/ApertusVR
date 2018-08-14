@@ -24,8 +24,7 @@
     "pluginManager": {
         "plugins": [
             "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeHtcVivePlugin",
+            "ApeCefBrowserPlugin",
             "ApePresentationScenePlugin"
         ]
     }

@@ -60,6 +60,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
 	mCameraCountFromConfig = 0;
+	mRttList = std::vector<Ape::ManualTextureWeakPtr>();
 	LOG_FUNC_LEAVE();
 }
 
@@ -1354,9 +1355,16 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				case Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
 					{
 						Ape::ManualTextureParameters parameters = textureManual->getParameters();
-						Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-							Ogre::TEX_TYPE_2D, parameters.width, parameters.height, 0, Ape::ConversionToOgre(parameters.pixelFormat),
-							Ape::ConversionToOgre(parameters.usage));
+						auto ogreTexture = Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+							Ogre::TEX_TYPE_2D, Ogre::uint(parameters.width), Ogre::uint(parameters.height), 0, Ape::ConversionToOgre(parameters.pixelFormat),
+							Ape::ConversionToOgre(parameters.usage), nullptr, true);
+						if (mOgreRenderPluginConfig.renderSystem == "OGL")
+						{
+							/*GLuint glid;
+							ogreTexture->getCustomAttribute("GLID", &glid);
+							textureManual->setGraphicsApiID((void*)glid);*/
+							textureManual->setGraphicsApiID((void*)static_cast<Ogre::GLTexture*>(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer())->getGLID());
+						}
 					}
 					break;
 				case Ape::Event::Type::TEXTURE_MANUAL_BUFFER:
@@ -1388,13 +1396,14 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									if (auto ogreRenderTexture = ogreTexture->getBuffer()->getRenderTarget())
 									{
+										ogreRenderTexture->setAutoUpdated(true);
 										if (auto ogreViewport = ogreRenderTexture->addViewport(ogreCamera))
 										{
-											ogreViewport->setClearEveryFrame(true);
-											//ogreViewport->setBackgroundColour(Ogre::ColourValue::Black);
-											//ogreViewport->setOverlaysEnabled(false);
+											//ogreViewport->setClearEveryFrame(true);
+											//ogreViewport->setAutoUpdated(true);
 											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 												ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+											mRttList.push_back(textureManual);
 										}
 									}
 								}
@@ -1943,6 +1952,20 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameEnded( const Ogre::FrameEvent& evt )
 {
+	if (mRttList.size())
+	{
+		for (auto it = mRttList.begin(); it != mRttList.end(); ++it)
+		{
+			if (auto textureManual = (*it).lock())
+			{
+				auto functionList = textureManual->getFunctionList();
+				for (auto it : functionList)
+				{
+					it();
+				}
+			}
+		}
+	}
 	return Ogre::FrameListener::frameEnded( evt );
 }
 

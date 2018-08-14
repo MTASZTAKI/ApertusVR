@@ -22,7 +22,6 @@
 
 set (CONFIGS
 	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
 	ApeSystem.json
 	)
 
@@ -31,4 +30,4 @@ add_custom_target(
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_htcVive_presentation PROPERTY FOLDER "Samples/htcVive/Configs")
+set_property (TARGET Configs_htcVive_presentation PROPERTY FOLDER "Samples/HtcVive/Configs")

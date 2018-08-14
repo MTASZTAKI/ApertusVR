@@ -252,6 +252,8 @@ namespace Ape
 			return Ogre::PixelFormat::PF_A8R8G8B8;
 		else if (type == Ape::Texture::PixelFormat::R8G8B8)
 			return Ogre::PixelFormat::PF_R8G8B8;
+		else if (type == Ape::Texture::PixelFormat::R8G8B8A8)
+			return Ogre::PixelFormat::PF_R8G8B8A8;
 	}
 
 	inline Ape::Texture::PixelFormat ConversionFromOgre(const Ogre::PixelFormat type)

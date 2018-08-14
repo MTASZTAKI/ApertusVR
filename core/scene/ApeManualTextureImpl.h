@@ -38,7 +38,7 @@ namespace Ape
 
 		~ManualTextureImpl();
 
-		void setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
+		void setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
 
 		Ape::ManualTextureParameters getParameters() override;
 
@@ -46,9 +46,19 @@ namespace Ape
 
 		Ape::CameraWeakPtr getSourceCamera() override;
 
+		void setGraphicsApiID(void* id) override;
+
+		void* getGraphicsApiID() override;
+
 		void setBuffer(const void* buffer) override;
 
 		const void* getBuffer() override;
+
+		void registerFunction(std::function<void()> callback) override;
+
+		std::vector<std::function<void()>> getFunctionList() override;
+
+		void unRegisterFunction(std::function<void()> callback) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -68,6 +78,10 @@ namespace Ape
 		Ape::CameraWeakPtr mCamera;
 
 		const void* mpBuffer;
+
+		void* mpGraphicsApiID;
+
+		std::vector<std::function<void()>> mFunctions;
 	};
 }
 

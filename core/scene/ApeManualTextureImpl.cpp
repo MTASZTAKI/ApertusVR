@@ -30,6 +30,7 @@ Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) 
 	mCameraName = std::string();
 	mCamera = Ape::CameraWeakPtr();
 	mpBuffer = nullptr;
+	mpGraphicsApiID = nullptr;
 }
 
 Ape::ManualTextureImpl::~ManualTextureImpl()
@@ -37,7 +38,7 @@ Ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(float width, float height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
+void Ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;
@@ -68,6 +69,17 @@ Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 	return mCamera;
 }
 
+void Ape::ManualTextureImpl::setGraphicsApiID(void * id)
+{
+	mpGraphicsApiID = id;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID));
+}
+
+void * Ape::ManualTextureImpl::getGraphicsApiID()
+{
+	return mpGraphicsApiID;
+}
+
 void Ape::ManualTextureImpl::setBuffer(const void* buffer)
 {
 	mpBuffer = buffer;
@@ -77,6 +89,27 @@ void Ape::ManualTextureImpl::setBuffer(const void* buffer)
 const void* Ape::ManualTextureImpl::getBuffer()
 {
 	return mpBuffer;
+}
+
+void Ape::ManualTextureImpl::registerFunction(std::function<void()> callback)
+{
+	mFunctions.push_back(callback);
+}
+
+std::vector<std::function<void()>> Ape::ManualTextureImpl::getFunctionList()
+{
+	return mFunctions;
+}
+
+void Ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
+{
+	for (auto it = mFunctions.begin(); it != mFunctions.end();)
+	{
+		if ((*it).target_type() == callback.target_type())
+			it = mFunctions.erase(it);
+		else
+			++it;
+	}
 }
 
 void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
