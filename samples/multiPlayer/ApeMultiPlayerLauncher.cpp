@@ -20,22 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #include <thread>
 #include <chrono>
 #include <string>
-#include <sstream> 
-#include <fstream>
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
-#include "rapidjson/writer.h"
+#include <sstream>
 
 void runHost()
 {
 	std::stringstream exe;
 	//TODO platfrom specific new window command
-	exe << "start " << "ApeMultiPlayer.exe host";
+	exe << "start " << "ApeMultiPlayer.exe -c host";
 	std::system(exe.str().c_str());
 }
 
@@ -43,7 +37,7 @@ void runGuest()
 {
 	std::stringstream exe;
 	//TODO platfrom specific new window command
-	exe << "start " << "ApeMultiPlayer.exe guest";
+	exe << "start " << "ApeMultiPlayer.exe -c guest";
 	std::system(exe.str().c_str());
 }
 

@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_mixedReality_oculusDK2 ALL
+    Configs_mixedReality_guest_oculusDK2 ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_mixedReality_oculusDK2 PROPERTY FOLDER "Samples/MixedReality/Configs")
+set_property (TARGET Configs_mixedReality_guest_oculusDK2 PROPERTY FOLDER "Samples/MixedReality/Configs")

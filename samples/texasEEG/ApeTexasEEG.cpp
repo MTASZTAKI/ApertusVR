@@ -20,30 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <iostream>
 #include <sstream>
 #include "ApeSystem.h"
 #include "ApeFileSystem.h"
 
 int main(int argc, char** argv)
 {
-	int minExtraArgs = 1;
 	std::stringstream configDir;
 	configDir << APE_SOURCE_DIR << "/samples/texasEEG/configs/";
-	auto dirs = Ape::FileSystem::getDirectories(configDir.str());
-	if (argc < minExtraArgs + 1)
-	{
-		std::cout << "Use one of the configurations:" << std::endl;
-		for (auto& dir : dirs.subDirs)
-			std::cout << dir << std::endl;
-		return 1;
-	}
-	else
-	{
-		if (argc > 1)
-			configDir << argv[1];
-		Ape::System::Start(configDir.str().c_str(), true);
-		Ape::System::Stop();
-		return 0;
-	}
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
+	Ape::System::Stop();
+	return 0;
 }

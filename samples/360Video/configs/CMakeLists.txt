@@ -20,5 +20,5 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (monitor)
-add_subdirectory (oculusDK2)
+add_subdirectory (local_monitor)
+add_subdirectory (local_oculusDK2)

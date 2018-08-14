@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_linkageDesignerVRLocal_cave ALL
+    Configs_linkageDesignerVR_local_cave ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_linkageDesignerVRLocal_cave PROPERTY FOLDER "Samples/LinkageDesignerVR/Configs")
+set_property (TARGET Configs_linkageDesignerVR_local_cave PROPERTY FOLDER "Samples/LinkageDesignerVR/Configs")
