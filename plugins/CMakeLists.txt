@@ -144,6 +144,10 @@ if (${APE_PLUGIN_Zed})
 	add_subdirectory (zed)
 endif ()
 
+if (${APE_PLUGIN_PointCloudRecorder})
+ 	add_subdirectory (pointCloudRecorder)
+endif ()
+
 # Industry / IoT / Controllers / Sensors
 
 option(APE_PLUGIN_Industry40 "Use Industry40Plugin?" ON )
