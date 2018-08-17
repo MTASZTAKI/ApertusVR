@@ -1357,7 +1357,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						Ape::ManualTextureParameters parameters = textureManual->getParameters();
 						auto ogreTexture = Ogre::TextureManager::getSingleton().createManual(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 							Ogre::TEX_TYPE_2D, Ogre::uint(parameters.width), Ogre::uint(parameters.height), 0, Ape::ConversionToOgre(parameters.pixelFormat),
-							Ape::ConversionToOgre(parameters.usage), nullptr, true);
+							Ape::ConversionToOgre(parameters.usage), nullptr, true, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].fsaa, mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].fsaaHint);
 						if (mOgreRenderPluginConfig.renderSystem == "OGL")
 						{
 							/*GLuint glid;
