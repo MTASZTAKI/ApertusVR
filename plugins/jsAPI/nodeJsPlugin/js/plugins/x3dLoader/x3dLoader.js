@@ -1,4 +1,4 @@
-﻿/*MIT License
+/*MIT License
 
 Copyright (c) 2017 MTA SZTAKI
 
@@ -23,6 +23,7 @@ SOFTWARE.*/
 var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
 var moduleManager = require('../../modules/module_manager/module_manager.js');
+var logger = require("../../modules/log_manager/log_manager.js");
 var cheerio = moduleManager.requireNodeModule('cheerio');
 var htmlparser = moduleManager.requireNodeModule('htmlparser2');
 var fs = require('fs');
@@ -33,7 +34,7 @@ var self = this;
 var nameCounter = 0;
 
 function log(...args) {
-	// console.log(args);
+	logger.debug(args);
 }
 
 function splitX3DAttr(str) {
@@ -448,7 +449,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		} else if (tagName == 'scene') {
 			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyLoadingFileName);
 			nodeLevel++;
-			if (currentlyLoadingFileName == 'weldingFixture') {
+			nodeObj.setScale(new ape.nbind.Vector3(currentlyLoadingScale[0], currentlyLoadingScale[1], currentlyLoadingScale[2]));
+			nodeObj.setOrientation(new ape.nbind.Quaternion(currentlyLoadingOrientation[0], currentlyLoadingOrientation[1], currentlyLoadingOrientation[2], currentlyLoadingOrientation[3]));
+			nodeObj.setPosition(new ape.nbind.Vector3(currentlyLoadingPosition[0], currentlyLoadingPosition[1], currentlyLoadingPosition[2]));
+			/*if (currentlyLoadingFileName == 'weldingFixture') {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 0, 100000));
@@ -490,12 +494,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
 				nodeObj.setPosition(new ape.nbind.Vector3(0, 15, 50));
 				nodeObj.setOrientation(new ape.nbind.Quaternion(0.270595, -0.270595, 0.653275, 0.653275));
-			}
-			if (currentlyLoadingFileName == 'PersonalComputer') {
-				nodeObj.setScale(new ape.nbind.Vector3(0.1, 0.1, 0.1));
-				nodeObj.setPosition(new ape.nbind.Vector3(-50, 0, 50));
-				nodeObj.setOrientation(new ape.nbind.Quaternion(0.5, -0.5, -0.5, -0.5));
-			}
+			}*/
 			return nodeObj;
 		} else if (tagName == 'worldinfo') {
 			var info = currentItem.attr('info');
@@ -683,6 +682,9 @@ var loopAnimation = false;
 var cycleIntervalAnimation = 1;
 var keyIndex = 0;
 var currentlyLoadingFileName = '';
+var currentlyLoadingPosition = new Array();
+var currentlyLoadingScale = new Array();
+var currentlyLoadingOrientation = new Array();
 var config;
 
 exports.parseTree = function($, parentItem, childItem, parentNodeObj) {
@@ -723,7 +725,7 @@ exports.parseX3DSync = function(x3dFilePath) {
 	self.parseTree($, null, $('X3D'), null);
 }
 
-exports.parseX3DAsync = function(x3dFilePath, callback) {
+exports.parseX3DAsync = function (x3dFilePath, callback) {
 	var source = fs.createReadStream(x3dFilePath);
 
 	var options = {
@@ -791,16 +793,22 @@ exports.loadFiles = function() {
 	log('X3DLoaderPlugin configFolderPath: ' + configFolderPath);
 
 	config = require(configFolderPath + '\\ApeX3DLoaderPlugin.json');
-	log('X3DLoaderPlugin files to load: ', config.files);
-	config.files = config.files.reverse();
 
 	asyncFunctions = new Array();
-	for (var i = 0; i < config.files.length; i++) {
-		var fn = function(callback) {
-			var filePath = moduleManager.sourcePath + config.files.pop();
+	for (var i = 0; i < config.assets.length; i++) {
+		var fn = function (callback) {
+			var asset = config.assets.pop();
+			log('X3DLoaderPlugin asset to load: ', asset.file);
+			var filePath = moduleManager.sourcePath + asset.file;
+			var scale = asset.scale;
+			var position = asset.position;
+			var orientation = asset.orientation;
 			currentlyLoadingFileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+			currentlyLoadingScale = scale;
+			currentlyLoadingPosition = position;
+			currentlyLoadingOrientation = orientation;
 			self.parseX3DAsync(filePath, function() {
-				log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName);
+				log('X3D-parsing done: ' + filePath + ' with name: ' + currentlyLoadingFileName + ' with scale: ' + scale + ' with position: ' + position + ' with orientation: ' + orientation);
 				callback(null);
 			});
 		}
