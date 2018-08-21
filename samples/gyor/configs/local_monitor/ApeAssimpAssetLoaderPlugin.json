@@ -1,0 +1,31 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/assimpAssetLoader/resources/robotFixture.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "regenerateNormals": true,
+      "rootNodeName": "robotFixture"
+    },
+    {
+      "file": "/plugins/assimpAssetLoader/resources/table.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "regenerateNormals": true,
+      "rootNodeName": "table"
+    },
+    {
+      "file": "/plugins/assimpAssetLoader/resources/triangleConsole.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "regenerateNormals": true,
+      "rootNodeName": "triangleConsole"
+    }
+  ]
+}

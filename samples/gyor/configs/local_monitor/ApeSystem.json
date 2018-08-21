@@ -1,0 +1,37 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+  "sceneSession": {
+    "participantType": "Local",
+    "uniqueUserNamePrefix": "Local",
+    "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+    "sessionIP": "192.168.0.130",
+    "sessionPort": "62666",
+    "sessionResourceLocation": [
+      "/plugins/gyor/resources"
+    ],
+    "natPunchThroughServer": {
+      "use": false,
+      "ip": "195.111.2.95",
+      "port": "61666"
+    },
+    "lobbyServer": {
+      "useLobby": false,
+      "ip": "195.111.2.95",
+      "port": "8888",
+      "sessionName": "gyor"
+    }
+  },
+    "pluginManager": {
+      "plugins": [
+        "ApeNodeJsPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeGyorPlugin",
+        "ApeAssimpAssetLoaderPlugin",
+        "ApeKinectPlugin"
+      ]
+    }
+}
