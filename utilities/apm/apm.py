@@ -55,13 +55,31 @@ class ApePackageManager:
         pluginsCMakeListsOptionName = 'APE_PLUGIN_' + capitalize(pluginName)
         pluginsCMakeListsCaptionName = capitalize(pluginName) + 'Plugin'
 
+        pluginHeaderFileName = pluginClassName + '.h'
+        pluginHeaderFilePath = pluginPath + pluginHeaderFileName
+
+        pluginCppFileName = pluginClassName + '.cpp'
+        pluginCppFilePath = pluginPath + pluginCppFileName
+
+        pluginCmakeFilePath = pluginPath + 'CMakeLists.txt'
+
+        print('Creating new plugin with the following properties:')
+        print('  name: ' + pluginName)
+        print('  path: ' + pluginPath)
+        print('  class name: ' + pluginClassName)
+        print('  header name: ' + pluginHeaderName)
+        print('  header file path: ' + pluginHeaderFilePath)
+        print('  cpp file path: ' + pluginCppFilePath)
+
+        if query_yes_no("Do you want to continue?") == False:
+            print('Creating new plugin has aborted.')
+            return
+
         # create plugin folder
         if not os.path.exists(pluginPath):
             os.makedirs(pluginPath)
 
         # open plugin header template file
-        pluginHeaderFileName = pluginClassName + '.h'
-        pluginHeaderFilePath = pluginPath + pluginHeaderFileName
         with open(self.templatesPath + 'plugin_h.template', 'r') as pluginHeaderTemplateFile:
             data = pluginHeaderTemplateFile.read()
 
@@ -75,8 +93,6 @@ class ApePackageManager:
                 pluginHeaderFile.write(res)
 
         # open plugin cpp template file
-        pluginCppFileName = pluginClassName + '.cpp'
-        pluginCppFilePath = pluginPath + pluginCppFileName
         with open(self.templatesPath + 'plugin_cpp.template', 'r') as pluginCppTemplateFile:
             data = pluginCppTemplateFile.read()
 
@@ -90,7 +106,6 @@ class ApePackageManager:
                 pluginCppFile.write(res)
 
         # open plugin cmake template file
-        pluginCmakeFilePath = pluginPath + 'CMakeLists.txt'
         with open(self.templatesPath + 'plugin_cmake.template', 'r') as pluginCmakeTemplateFile:
             data = pluginCmakeTemplateFile.read()
 
@@ -125,13 +140,26 @@ class ApePackageManager:
         sampleClassName = 'Ape' + capitalize(sampleName)
         samplesCMakeListsOptionName = 'APE_SAMPLES_' + capitalize(sampleName)
 
+        sampleCppFileName = sampleClassName + '.cpp'
+        sampleCppFilePath = samplePath + sampleCppFileName
+
+        sampleCmakeFilePath = samplePath + 'CMakeLists.txt'
+
+        print('Creating new sample with the following properties:')
+        print('  name: ' + sampleName)
+        print('  path: ' + samplePath)
+        print('  class name: ' + sampleClassName)
+        print('  cpp file path: ' + sampleCppFilePath)
+
+        if query_yes_no("Do you want to continue?") == False:
+            print('Creating new sample has aborted.')
+            return
+
         # create sample folder
         if not os.path.exists(samplePath):
             os.makedirs(samplePath)
 
         # open sample cpp template file
-        sampleCppFileName = sampleClassName + '.cpp'
-        sampleCppFilePath = samplePath + sampleCppFileName
         with open(self.templatesPath + 'sample_cpp.template', 'r') as sampleCppTemplateFile:
             data = sampleCppTemplateFile.read()
 
@@ -160,7 +188,6 @@ class ApePackageManager:
                 sampleDefaultConfigCmakeFile.write(res)
 
         # open sample cmake template file
-        sampleCmakeFilePath = samplePath + 'CMakeLists.txt'
         with open(self.templatesPath + 'sample_cmake.template', 'r') as sampleCmakeTemplateFile:
             data = sampleCmakeTemplateFile.read()
 
@@ -212,9 +239,4 @@ parser_create_sample.add_argument('name', type=str, default='testSample', help='
 parser_create_sample.set_defaults(func=apm.createSampleTemplate)
 
 args = parser.parse_args()
-
-print("Argument values:")
-print(args)
-print(args.name)
-
 args.func(args)
