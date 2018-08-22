@@ -42,7 +42,7 @@ app.post('/filegeometries/', function(req, res){
     var form = new formidable.IncomingForm();
   
     // specify that we want to allow the user to upload multiple files in a single request
-    form.multiples = true;
+    form.multiples = false;
   
     // store all uploads in the /uploads directory
     form.uploadDir = path.join(moduleManager.configurationPath, 'uploads');
