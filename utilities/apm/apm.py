@@ -197,19 +197,18 @@ subparsers = parser.add_subparsers(help='sub-command help')
 parser_status = subparsers.add_parser('status', help='a help')
 parser_status.add_argument('bar', type=int, help='bar help')
 
-
 # create the parser for 'create' command
-parser_create = subparsers.add_parser('create', help='b help')
+parser_create = subparsers.add_parser('create', help='Creates a new object (plugin or sample)')
 parser_create_subparsers = parser_create.add_subparsers(help='sub-command help')
 
 # parse plugin arguments
-parser_create_plugin = parser_create_subparsers.add_parser('plugin', help='sub-command help')
-parser_create_plugin.add_argument('-n', '--name', type=str, help='An optional string argument')
+parser_create_plugin = parser_create_subparsers.add_parser('plugin', help='Creates a new plugin')
+parser_create_plugin.add_argument('name', type=str, default='testPlugin', help='The name of the plugin to be created')
 parser_create_plugin.set_defaults(func=apm.createPluginTemplate)
 
 # parse plugin arguments
-parser_create_sample = parser_create_subparsers.add_parser('sample', help='sub-command help')
-parser_create_sample.add_argument('-n', '--name', type=str, help='An optional string argument')
+parser_create_sample = parser_create_subparsers.add_parser('sample', help='Creates a new sample')
+parser_create_sample.add_argument('name', type=str, default='testSample', help='The name of the sample to be created')
 parser_create_sample.set_defaults(func=apm.createSampleTemplate)
 
 args = parser.parse_args()
