@@ -31,7 +31,6 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
-	mUserNodePoses.push_back(UserNodePose(Ape::Vector3(25, -100, -50), Ape::Quaternion(0.417279, 0.0319843, -0.90556, 0.0694108)));
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
 	LOG_FUNC_LEAVE();
@@ -133,22 +132,6 @@ void Ape::OISUserInputPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-	{
-		mUserNode = userNode;
-		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
-		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
-		{
-			mHeadNode = headNode;
-			mHeadNodeName = headNode->getName();
-		}
-		if (auto dummyNode = mDummyNode.lock())
-		{
-			toggleUserNodePoses(userNode);
-			toggleUserNodePoses(dummyNode);
-		}
-	}
-
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOisUserInputPlugin.json";
@@ -166,8 +149,31 @@ void Ape::OISUserInputPlugin::Init()
 			{
 				oisWindowConfig.inputs.push_back(input.GetString());
 			}
+			rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
+			for (auto& cameraPose : cameraPoses.GetArray())
+			{
+				Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
+				Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
+				mUserNodePoses.push_back(UserNodePose(position, orientation));
+			}
 		}
 		fclose(apeOisUserInputConfigFile);
+	}
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	{
+		mUserNode = userNode;
+		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
+		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		{
+			mHeadNode = headNode;
+			mHeadNodeName = headNode->getName();
+		}
+		if (auto dummyNode = mDummyNode.lock())
+		{
+			toggleUserNodePoses(userNode);
+			toggleUserNodePoses(dummyNode);
+		}
 	}
 
 	LOG(LOG_TYPE_DEBUG, "OISUserInputPlugin waiting for main window");
@@ -461,15 +467,21 @@ bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 
 void Ape::OISUserInputPlugin::addNodeSelection(std::string nodeName)
 {
-	if (auto nodeSharedPtr = mpScene->getNode(nodeName).lock())
+	LOG_TRACE("nodeName: " << nodeName);
+	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
+	findIt = mSelectedNodes.find(nodeName);
+	if (findIt != mSelectedNodes.end())
 	{
-		Ape::NodeWeakPtrVector childNodes = nodeSharedPtr->getChildNodes();
-		LOG_DEBUG("childNodes size: " << childNodes.size());
-		for (auto childNode : childNodes)
-			if (auto childNodeSP = childNode.lock())
-				LOG_DEBUG("childNode: " << childNodeSP->getName());
-		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(nodeSharedPtr->getName(), nodeSharedPtr));
-		nodeSharedPtr->showBoundingBox(true);
+		if (auto findNode = findIt->second.lock())
+		{
+			Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
+			LOG_DEBUG("childNodes size: " << childNodes.size());
+			for (auto childNode : childNodes)
+				if (auto childNodeSP = childNode.lock())
+					LOG_DEBUG("childNode: " << childNodeSP->getName());
+			mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(findNode->getName(), findNode));
+			findNode->showBoundingBox(true);
+		}
 	}
 }
 
@@ -514,8 +526,9 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 	{
 		std::ofstream userNodePoseFile;
 		userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
-		userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
-			userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
+		userNodePoseFile << "[ " << userNode->getPosition().x << ", " << userNode->getPosition().y << ", " << userNode->getPosition().z << ", " <<
+			userNode->getOrientation().w << ", " << userNode->getOrientation().x << ", " << userNode->getOrientation().y << ", " << userNode->getOrientation().z
+			<< " ]," << std::endl;
 		userNodePoseFile.close();
 	}
 }

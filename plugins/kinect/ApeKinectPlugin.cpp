@@ -71,16 +71,6 @@ void Ape::KinectPlugin::Init()
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	if (auto mClothNode = mpScene->createNode("clothNode").lock())
-	{
-		mClothNode->setScale(Ape::Vector3(1.0, 1.0, 1.2));
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("T-Shirt.3DS.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
-		{
-			meshFile->setFileName("T-Shirt.3DS.mesh");
-			meshFile->setParentNode(mClothNode);
-		}
-	}
-
 	CloudSize = (unsigned int)(size*pointratio);
 	if (CloudSize % 3 != 0)
 	{
@@ -140,6 +130,18 @@ void Ape::KinectPlugin::Init()
 	}
 	else
 		LOG(LOG_TYPE_DEBUG, "Error cannot open config file");
+	if (_3dScan)
+	{
+		if (auto mClothNode = mpScene->createNode("clothNode").lock())
+		{
+			mClothNode->setScale(Ape::Vector3(1.0, 1.0, 1.2));
+			if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity("T-Shirt.3DS.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+			{
+				meshFile->setFileName("T-Shirt.3DS.mesh");
+				meshFile->setParentNode(mClothNode);
+			}
+		}
+	}
 
 	if (auto rootNode = RootNode.lock())
 	{
