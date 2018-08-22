@@ -20,5 +20,5 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (presentation)
-add_subdirectory (sampleScene)
+add_subdirectory (presentation_local_monitor)
+add_subdirectory (lego_local_monitor)

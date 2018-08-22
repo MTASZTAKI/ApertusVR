@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_FILESYSTEM_H
 #define APE_FILESYSTEM_H
 
+#include <algorithm>
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -59,6 +60,63 @@ namespace Ape
 			{
 				std::cout << dir << std::endl;
 			}
+		}
+
+		static std::string getConfigFromCmdArgs(int argc, char** argv, std::string configDirPath)
+		{
+			std::string configDirName = "local_monitor";
+			if (argc > 2)
+			{
+				if (std::string(argv[1]) == "-c")
+				{
+					configDirName = std::string(argv[2]);
+				}
+			}
+			else
+			{
+				auto dirs = Ape::FileSystem::getDirectories(configDirPath);
+				std::cout << "Configurations:" << std::endl;
+				std::map<int, std::string> configMap;
+				int i = 0;
+				for (auto& dir : dirs.subDirs)
+				{
+					configMap.insert(std::pair<int, std::string>(i, dir));
+					std::cout << " (" << i << ") " << dir << std::endl;
+					i++;
+				}
+				std::cout << std::endl;
+				while (true)
+				{
+					std::cout << "Type a number to select a configuration (press enter to default=local_monitor): ";
+					std::string input = "";
+					std::getline(std::cin, input);
+					if (input.length() == 0)
+					{
+						break;
+					}
+					else
+					{
+						if (std::find_if(input.begin(), input.end(), [](char c) { return !isdigit(c); }) == input.end())
+						{
+							int c = stoi(input);
+							if (c < configMap.size())
+							{
+								configDirName = configMap.at(c);
+								break;
+							}
+							else
+							{
+								std::cout << "Number is out of range!" << std::endl;
+							}
+						}
+						else
+						{
+							std::cout << "Please type a number!" << std::endl;
+						}
+					}
+				}
+			}
+			return configDirName;
 		}
 	};
 }

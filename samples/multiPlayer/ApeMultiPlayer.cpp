@@ -20,29 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	if (argc > 1)
-	{
-		std::string participantType = argv[1];
-		if (participantType == "host")
-			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\host";
-		else if (participantType == "guest")
-			configDir << APE_SOURCE_DIR << "\\samples\\multiPlayer\\configs\\guest";
-	}
-	else
-	{
-		std::cout << "usage: host | guest " << std::endl;
-		return 0;
-	}
+	configDir << APE_SOURCE_DIR << "/samples/multiPlayer/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
 	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;

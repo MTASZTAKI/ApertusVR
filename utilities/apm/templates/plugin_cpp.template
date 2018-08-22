@@ -1,0 +1,54 @@
+#include <iostream>
+#include "${pluginClassName}.h"
+
+Ape::${pluginClassName}::${pluginClassName}()
+{
+	LOG_FUNC_ENTER();
+	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&${pluginClassName}::nodeEventCallBack, this, std::placeholders::_1));
+	mpScene = Ape::IScene::getSingletonPtr();
+	LOG_FUNC_LEAVE();
+}
+
+Ape::${pluginClassName}::~${pluginClassName}()
+{
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::${pluginClassName}::nodeEventCallBack(const Ape::Event& event)
+{
+}
+
+void Ape::${pluginClassName}::Init()
+{
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::${pluginClassName}::Run()
+{
+	LOG_FUNC_ENTER();
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&${pluginClassName}::nodeEventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::${pluginClassName}::Step()
+{
+}
+
+void Ape::${pluginClassName}::Stop()
+{
+}
+
+void Ape::${pluginClassName}::Suspend()
+{
+}
+
+void Ape::${pluginClassName}::Restart()
+{
+}

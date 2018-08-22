@@ -20,5 +20,5 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (host)
-add_subdirectory (guest)
+add_subdirectory (host_monitor)
+add_subdirectory (guest_monitor)

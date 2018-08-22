@@ -20,6 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (art)
-add_subdirectory (presentation)
-add_subdirectory (lego)
+add_subdirectory (art_local_cave_3walls)
+add_subdirectory (presentation_local_cave_3walls)
+add_subdirectory (lego_local_cave_3walls)

@@ -22,12 +22,13 @@ SOFTWARE.*/
 
 #include <sstream>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
 int main(int argc, char** argv)
 {
-	int minExtraArgs = 0;
 	std::stringstream configDir;
 	configDir << APE_SOURCE_DIR << "/samples/tester/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
 	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
