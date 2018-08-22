@@ -51,7 +51,7 @@ class ApePackageManager:
         pluginName = uncapitalize(args.name)
         pluginPath = '../../plugins/' + pluginName + '/'
         pluginClassName = 'Ape' + capitalize(pluginName) + 'Plugin'
-        pluginHeaderName = 'APE_' + pluginClassName.upper() + 'PLUGIN_H'
+        pluginHeaderName = 'APE_' + capitalize(pluginName) + 'PLUGIN_H'
         pluginsCMakeListsOptionName = 'APE_PLUGIN_' + capitalize(pluginName)
         pluginsCMakeListsCaptionName = capitalize(pluginName) + 'Plugin'
 
