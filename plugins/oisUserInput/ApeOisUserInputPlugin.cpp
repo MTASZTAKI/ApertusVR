@@ -145,16 +145,22 @@ void Ape::OISUserInputPlugin::Init()
 		if (jsonDocument.IsObject())
 		{
 			rapidjson::Value& inputs = jsonDocument["inputs"];
-			for (auto& input : inputs.GetArray())
+			if (inputs.IsArray())
 			{
-				oisWindowConfig.inputs.push_back(input.GetString());
+				for (auto& input : inputs.GetArray())
+				{
+					oisWindowConfig.inputs.push_back(input.GetString());
+				}
 			}
 			rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
-			for (auto& cameraPose : cameraPoses.GetArray())
+			if (cameraPoses.IsArray())
 			{
-				Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
-				Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
-				mUserNodePoses.push_back(UserNodePose(position, orientation));
+				for (auto& cameraPose : cameraPoses.GetArray())
+				{
+					Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
+					Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
+					mUserNodePoses.push_back(UserNodePose(position, orientation));
+				}
 			}
 		}
 		fclose(apeOisUserInputConfigFile);
@@ -535,12 +541,15 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 
 void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 {
-	userNode->setPosition(mUserNodePoses[mUserNodePosesToggleIndex].position);
-	userNode->setOrientation(mUserNodePoses[mUserNodePosesToggleIndex].orientation);
-	LOG(LOG_TYPE_DEBUG, "Camera position and orientation are toggled: " << userNode->getPosition().toString() << " | " << userNode->getOrientation().toString());
-	mUserNodePosesToggleIndex++;
-	if (mUserNodePoses.size() == mUserNodePosesToggleIndex)
-		mUserNodePosesToggleIndex = 0;
+	if (mUserNodePoses.size() > 0 && mUserNodePosesToggleIndex < mUserNodePoses.size())
+	{
+		userNode->setPosition(mUserNodePoses[mUserNodePosesToggleIndex].position);
+		userNode->setOrientation(mUserNodePoses[mUserNodePosesToggleIndex].orientation);
+		LOG(LOG_TYPE_DEBUG, "Camera position and orientation are toggled: " << userNode->getPosition().toString() << " | " << userNode->getOrientation().toString());
+		mUserNodePosesToggleIndex++;
+		if (mUserNodePoses.size() == mUserNodePosesToggleIndex)
+			mUserNodePosesToggleIndex = 0;
+	}
 }
 
 void Ape::OISUserInputPlugin::moveUserNodeByKeyBoard()
