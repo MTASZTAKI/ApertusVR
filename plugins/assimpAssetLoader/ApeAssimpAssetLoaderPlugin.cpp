@@ -13,9 +13,7 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mAssimpScenes = std::vector<const aiScene*>();
 	mAssimpAssetConfigs = std::vector<AssetConfig>();
 	std::srand(std::time(0));
-	mMergeAndExportMeshes = false;
 	mObjectCount = 0;
-	mRegenerateNormals = false;
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mAssetCount = 0;
 	LOG_FUNC_LEAVE();
@@ -119,16 +117,14 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			mObjectCount++;
 			aiMesh* assimpMesh = mAssimpScenes[assimpSceneID]->mMeshes[assimpNode->mMeshes[i]];
 			//TODO just for own demo, just remove it when it necessary 
-			std::string meshName = assimpMesh->mName.C_Str();
+			/*std::string meshName = assimpMesh->mName.C_Str();
 			int id = atoi(meshName.c_str());
 			if (id > 970 && id < 990 )
 				continue;
 			if (id > 1025 && id < 1027)
 				continue;
 			if (id > 885 && id < 890)
-				continue;
-			//TODO end
-			//TODO get uuid generator
+				continue;*/
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
@@ -139,7 +135,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				{
 					aiVector3D assimpVertex = assimpMesh->mVertices[i];
 					Ape::Vector3 vertexPosition(assimpVertex.x, assimpVertex.y, assimpVertex.z);
-					if (mMergeAndExportMeshes)
+					if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mAssimpAssetConfigs[assimpSceneID].scale; //TODO somehow detect the unit of the scene
 					coordinates.push_back(vertexPosition.x);
 					coordinates.push_back(vertexPosition.y);
@@ -182,7 +178,6 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				//		//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 				//	}
 				//}
-				//TODO end
 				if (!material)
 				{
 					material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
@@ -201,13 +196,12 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					int sceneBlendingType = 0;
 					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
 					//TODO just for own demo, just remove it when it necessary 
-					if (material->getName().find("veg - ") != std::string::npos)
+					/*if (material->getName().find("veg - ") != std::string::npos)
 					{
 						colorDiffuse = aiColor3D(1, 1, 1);
 						colorSpecular = aiColor3D(1, 1, 1);
 						opacity = 0.9f;
-					}
-					//TODO end
+					}*/
 					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
 					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
 					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
@@ -234,7 +228,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
-				if (assimpMesh->HasNormals() && !mRegenerateNormals)
+				if (assimpMesh->HasNormals() && !mAssimpAssetConfigs[assimpSceneID].regenerateNormals)
 				{
 					for (int i = 0; i < assimpMesh->mNumFaces; i++)
 					{
@@ -262,10 +256,10 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					}
 				}
 				std::string groupName = std::string();
-				if (mMergeAndExportMeshes)
+				if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					groupName = mAssimpAssetConfigs[assimpSceneID].file;
-				mesh->setParameters(groupName, coordinates, indices, normals, mRegenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
-				if (!mMergeAndExportMeshes)
+				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
+				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
 				//LOG(LOG_TYPE_DEBUG, "createIndexedFaceSetGeometry: " << mesh->getName());
 			}

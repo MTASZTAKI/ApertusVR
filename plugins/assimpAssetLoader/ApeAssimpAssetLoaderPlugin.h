@@ -99,10 +99,6 @@ namespace Ape
 
 		int mObjectCount;
 
-		bool mMergeAndExportMeshes;
-
-		bool mRegenerateNormals;
-
 		int mAssetCount;
 
 		std::mutex mMutex;
