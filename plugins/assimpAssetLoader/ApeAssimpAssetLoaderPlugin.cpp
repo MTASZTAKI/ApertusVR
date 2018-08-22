@@ -11,14 +11,9 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpAssimpImporter = nullptr;
 	mAssimpScenes = std::vector<const aiScene*>();
-	mAssimpAssetFileNames = std::vector<std::string>();
+	mAssimpAssetConfigs = std::vector<AssetConfig>();
 	std::srand(std::time(0));
-	mMergeAndExportMeshes = false;
 	mObjectCount = 0;
-	mSceneUnitScale = Ape::Vector3();
-	mSceneUnitPosition = Ape::Vector3();
-	mRegenerateNormals = false;
-	mRootNode = Ape::NodeWeakPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mAssetCount = 0;
 	LOG_FUNC_LEAVE();
@@ -122,16 +117,14 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			mObjectCount++;
 			aiMesh* assimpMesh = mAssimpScenes[assimpSceneID]->mMeshes[assimpNode->mMeshes[i]];
 			//TODO just for own demo, just remove it when it necessary 
-			std::string meshName = assimpMesh->mName.C_Str();
+			/*std::string meshName = assimpMesh->mName.C_Str();
 			int id = atoi(meshName.c_str());
 			if (id > 970 && id < 990 )
 				continue;
 			if (id > 1025 && id < 1027)
 				continue;
 			if (id > 885 && id < 890)
-				continue;
-			//TODO end
-			//TODO get uuid generator
+				continue;*/
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
@@ -142,8 +135,8 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				{
 					aiVector3D assimpVertex = assimpMesh->mVertices[i];
 					Ape::Vector3 vertexPosition(assimpVertex.x, assimpVertex.y, assimpVertex.z);
-					if (mMergeAndExportMeshes)
-						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mSceneUnitScale; //TODO somehow detect the unit of the scene
+					if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
+						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mAssimpAssetConfigs[assimpSceneID].scale; //TODO somehow detect the unit of the scene
 					coordinates.push_back(vertexPosition.x);
 					coordinates.push_back(vertexPosition.y);
 					coordinates.push_back(vertexPosition.z);
@@ -160,7 +153,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				aiString materialName;
 				asssimpMaterial->Get(AI_MATKEY_NAME, materialName);
 				std::string modifiedMaterialName = materialName.C_Str();
-				modifiedMaterialName += mAssimpAssetFileNames[assimpSceneID].substr(mAssimpAssetFileNames[assimpSceneID].find_last_of("/\\"));
+				modifiedMaterialName += mAssimpAssetConfigs[assimpSceneID].file.substr(mAssimpAssetConfigs[assimpSceneID].file.find_last_of("/\\"));
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '/'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '/\\'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), ':'), modifiedMaterialName.end());
@@ -185,7 +178,6 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				//		//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
 				//	}
 				//}
-				//TODO end
 				if (!material)
 				{
 					material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
@@ -204,13 +196,12 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					int sceneBlendingType = 0;
 					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
 					//TODO just for own demo, just remove it when it necessary 
-					if (material->getName().find("veg - ") != std::string::npos)
+					/*if (material->getName().find("veg - ") != std::string::npos)
 					{
 						colorDiffuse = aiColor3D(1, 1, 1);
 						colorSpecular = aiColor3D(1, 1, 1);
 						opacity = 0.9f;
-					}
-					//TODO end
+					}*/
 					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
 					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
 					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
@@ -237,7 +228,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
-				if (assimpMesh->HasNormals() && !mRegenerateNormals)
+				if (assimpMesh->HasNormals() && !mAssimpAssetConfigs[assimpSceneID].regenerateNormals)
 				{
 					for (int i = 0; i < assimpMesh->mNumFaces; i++)
 					{
@@ -265,10 +256,10 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					}
 				}
 				std::string groupName = std::string();
-				if (mMergeAndExportMeshes)
-					groupName = mAssimpAssetFileNames[assimpSceneID];
-				mesh->setParameters(groupName, coordinates, indices, normals, mRegenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
-				if (!mMergeAndExportMeshes)
+				if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
+					groupName = mAssimpAssetConfigs[assimpSceneID].file;
+				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
+				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
 				//LOG(LOG_TYPE_DEBUG, "createIndexedFaceSetGeometry: " << mesh->getName());
 			}
@@ -292,54 +283,72 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
-			rapidjson::Value& mergeAndExportMeshes = jsonDocument["mergeAndExportMeshes"];
-			mMergeAndExportMeshes = mergeAndExportMeshes.GetBool();
-			mSceneUnitScale.x = jsonDocument["scale"].GetArray()[0].GetFloat();
-			mSceneUnitScale.y = jsonDocument["scale"].GetArray()[1].GetFloat();
-			mSceneUnitScale.z = jsonDocument["scale"].GetArray()[2].GetFloat();
-			mSceneUnitPosition.x = jsonDocument["position"].GetArray()[0].GetFloat();
-			mSceneUnitPosition.y = jsonDocument["position"].GetArray()[1].GetFloat();
-			mSceneUnitPosition.z = jsonDocument["position"].GetArray()[2].GetFloat();
-			mSceneUnitOrientation.w = jsonDocument["orientation"].GetArray()[0].GetFloat();
-			mSceneUnitOrientation.x = jsonDocument["orientation"].GetArray()[1].GetFloat();
-			mSceneUnitOrientation.y = jsonDocument["orientation"].GetArray()[2].GetFloat();
-			mSceneUnitOrientation.z = jsonDocument["orientation"].GetArray()[3].GetFloat();
-			rapidjson::Value& regenerateNormals = jsonDocument["regenerateNormals"];
-			mRegenerateNormals = regenerateNormals.GetBool();
-			//LOG(LOG_TYPE_DEBUG, "regenerateNormals? " << mRegenerateNormals);
-			rapidjson::Value& rootNodeName = jsonDocument["rootNodeName"];
-			mRootNode = mpScene->createNode(rootNodeName.GetString());
-			//LOG(LOG_TYPE_DEBUG, "mRootNode: " << rootNodeName.GetString());
-
-			rapidjson::Value& assimpAssetFileNames = jsonDocument["assets"];
-			for (auto& assimpAssetFileName : assimpAssetFileNames.GetArray())
+			rapidjson::Value& assets = jsonDocument["assets"];
+			for (auto& asset : assets.GetArray())
 			{
-				std::stringstream assimpAssetFileNamePath;
-				assimpAssetFileNamePath << APE_SOURCE_DIR << assimpAssetFileName.GetString();
-				std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
-				std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
-				//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
-				if (fileExtension == ".mesh")
+				AssetConfig assetConfig;
+				for (rapidjson::Value::MemberIterator assetMemberIterator = asset.MemberBegin(); assetMemberIterator != asset.MemberEnd(); ++assetMemberIterator)
 				{
-					if (auto node = mpScene->createNode("node").lock())
+					if (assetMemberIterator->name == "mergeAndExportMeshes")
+						assetConfig.mergeAndExportMeshes = assetMemberIterator->value.GetBool();
+					if (assetMemberIterator->name == "regenerateNormals")
+						assetConfig.regenerateNormals = assetMemberIterator->value.GetBool();
+					if (assetMemberIterator->name == "rootNodeName")
 					{
-						if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
+						assetConfig.rootNodeName = assetMemberIterator->value.GetString();
+						mpScene->createNode(assetConfig.rootNodeName);
+						LOG(LOG_TYPE_DEBUG, "rootNodeName " << assetConfig.rootNodeName);
+					}
+					if (assetMemberIterator->name == "scale")
+					{
+						rapidjson::Value& scale = assetMemberIterator->value;
+						assetConfig.scale.x = scale.GetArray()[0].GetFloat();
+						assetConfig.scale.y = scale.GetArray()[1].GetFloat();
+						assetConfig.scale.z = scale.GetArray()[2].GetFloat();
+					}
+					if (assetMemberIterator->name == "position")
+					{
+						rapidjson::Value& position = assetMemberIterator->value;
+						assetConfig.position.x = position.GetArray()[0].GetFloat();
+						assetConfig.position.y = position.GetArray()[1].GetFloat();
+						assetConfig.position.z = position.GetArray()[2].GetFloat();
+					}
+					if (assetMemberIterator->name == "orientation")
+					{
+						rapidjson::Value& orientation = assetMemberIterator->value;
+						assetConfig.orientation.w = orientation.GetArray()[0].GetFloat();
+						assetConfig.orientation.x = orientation.GetArray()[1].GetFloat();
+						assetConfig.orientation.y = orientation.GetArray()[2].GetFloat();
+						assetConfig.orientation.z = orientation.GetArray()[3].GetFloat();
+					}
+					if (assetMemberIterator->name == "file")
+					{
+						std::stringstream assimpAssetFileNamePath;
+						assimpAssetFileNamePath << APE_SOURCE_DIR << assetMemberIterator->value.GetString();
+						assetConfig.file = assimpAssetFileNamePath.str();
+						std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
+						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
+						//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
+						if (fileExtension == ".mesh")
 						{
-							meshFile->setFileName(fileName);
-							//meshFile->mergeSubMeshes();
-							//TODO how to use it when static geomtery is created?
-							meshFile->setParentNode(node);
-							//TODO how to export the optimized mesh when static geomtery is created?
-							//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
-							//meshFile->exportMesh();
+							if (auto node = mpScene->createNode("node").lock())
+							{
+								if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
+								{
+									meshFile->setFileName(fileName);
+									//meshFile->mergeSubMeshes();
+									//TODO how to use it when static geomtery is created?
+									meshFile->setParentNode(node);
+									//TODO how to export the optimized mesh when static geomtery is created?
+									//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
+									//meshFile->exportMesh();
+								}
+							}
 						}
 					}
 				}
-				//TODO end
-				else
-				{
-					readFile(assimpAssetFileNamePath.str());
-				}
+				mAssimpAssetConfigs.push_back(assetConfig);
+				readFile(assetConfig.file);
 			}
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
@@ -359,7 +368,6 @@ void Ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
 		else
 		{
 			LOG(LOG_TYPE_DEBUG, "Loading the asset " << fileName << " was started");
-			mAssimpAssetFileNames.push_back(fileName);
 			mAssimpScenes.push_back(assimpScene);
 			loadScene(assimpScene, mAssetCount);
 			mAssetCount++;
@@ -374,28 +382,34 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 	{
 		//LOG(LOG_TYPE_DEBUG, "mNumMeshes: " << assimpScene->mNumMeshes);
 		createNode(ID, assimpScene->mRootNode);
-		if (auto rootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
+		if (auto assimpSceneRootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
 		{
-			//LOG(LOG_TYPE_DEBUG, "rootNode: " << rootNode->getName());
-			if (mMergeAndExportMeshes)
+			LOG(LOG_TYPE_DEBUG, "assimpSceneRootNode: " << assimpSceneRootNode->getName());
+			if (mAssimpAssetConfigs[ID].mergeAndExportMeshes)
 			{
-				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetFileNames[ID], Ape::Entity::GEOMETRY_FILE).lock()))
+				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetConfigs[ID].file, Ape::Entity::GEOMETRY_FILE).lock()))
 				{
 					meshFile->exportMesh();
-					meshFile->setParentNode(rootNode);
-					rootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+					meshFile->setParentNode(assimpSceneRootNode);
+					assimpSceneRootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
+					LOG(LOG_TYPE_DEBUG, "mergeAndExportMeshes: " << mAssimpAssetConfigs[ID].file);
 				}
 			}
 			else
 			{
-				if (auto node = mRootNode.lock())
+				if (auto rootNode = mpScene->getNode(mAssimpAssetConfigs[ID].rootNodeName).lock())
 				{
 					//TODO somehow detect the unit of the scene
-					LOG(LOG_TYPE_DEBUG, "setScale to " << mSceneUnitScale.toString() << " setPosition to " << mSceneUnitPosition.toString() << " setOrientation to " << mSceneUnitOrientation.toString());
-					node->setScale(mSceneUnitScale);
-					node->setOrientation(mSceneUnitOrientation);
-					node->setPosition(mSceneUnitPosition);
-					rootNode->setParentNode(node);
+					LOG(LOG_TYPE_DEBUG, "setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
+						<< " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());
+					rootNode->setScale(mAssimpAssetConfigs[ID].scale);
+					rootNode->setOrientation(mAssimpAssetConfigs[ID].orientation);
+					rootNode->setPosition(mAssimpAssetConfigs[ID].position);
+					assimpSceneRootNode->setParentNode(rootNode);
+				}
+				else
+				{
+					LOG(LOG_TYPE_DEBUG, "rootNode was not found by name: " << mAssimpAssetConfigs[ID].rootNodeName);
 				}
 			}
 		}

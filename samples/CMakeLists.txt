@@ -169,3 +169,8 @@ option(APE_SAMPLES_TexasEEG "APE_SAMPLES_TexasEEG?" ON )
 if (${APE_SAMPLES_TexasEEG})
 	add_subdirectory (texasEEG)
 endif ()
+
+option(APE_SAMPLES_Gyor "APE_SAMPLES_Gyor?" ON )
+if (${APE_SAMPLES_Gyor})
+	add_subdirectory (gyor)
+endif ()

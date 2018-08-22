@@ -50,6 +50,16 @@ SOFTWARE.*/
 
 namespace Ape
 {
+	struct AssetConfig
+	{
+		std::string file;
+		Ape::Vector3 scale;
+		Ape::Vector3 position;
+		Ape::Quaternion orientation;
+		bool mergeAndExportMeshes;
+		bool regenerateNormals;
+		std::string rootNodeName;
+	};
 	class AssimpAssetLoaderPlugin : public Ape::IPlugin
 	{
 	public:
@@ -85,21 +95,9 @@ namespace Ape
 
 		std::vector<const aiScene*> mAssimpScenes;
 
-		std::vector<std::string> mAssimpAssetFileNames;
+		std::vector<AssetConfig> mAssimpAssetConfigs;
 
 		int mObjectCount;
-
-		bool mMergeAndExportMeshes;
-
-		Ape::Vector3 mSceneUnitScale;
-
-		Ape::Vector3 mSceneUnitPosition;
-
-		Ape::Quaternion mSceneUnitOrientation;
-
-		bool mRegenerateNormals;
-
-		Ape::NodeWeakPtr mRootNode;
 
 		int mAssetCount;
 
