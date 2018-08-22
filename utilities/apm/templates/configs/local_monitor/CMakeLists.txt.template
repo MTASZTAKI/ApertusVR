@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_${sampleName}_default ALL
+    Configs_${sampleName}_local_monitor ALL
     SOURCES $${CONFIGS}
 )
 
-set_property (TARGET Configs_${sampleName}_default PROPERTY FOLDER "Samples/${sampleName}/Configs")
+set_property (TARGET Configs_${sampleName}_local_monitor PROPERTY FOLDER "Samples/${sampleName}/Configs")
