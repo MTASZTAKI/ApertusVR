@@ -1,7 +1,7 @@
 from string import Template
 import argparse
 import os
-from shutil import copytree, ignore_patterns
+from shutil import copytree, ignore_patterns, rmtree
 
 uncapitalize = lambda s: s[:1].lower() + s[1:] if s else ''
 capitalize = lambda s: s[:1].upper() + s[1:] if s else ''
@@ -92,7 +92,9 @@ class ApePackageManager:
             with open(sampleCppFilePath, "w") as sampleCppFile:
                 sampleCppFile.write(res)
 
-        copytree(self.templatesPath + 'configs/', samplePath + 'configs/', ignore=ignore_patterns('*.template'))
+        if os.path.exists(configPath):
+            rmtree(configPath)
+        copytree(self.templatesPath + 'configs/', configPath, ignore=ignore_patterns('*.template'))
 
         # open sample config cmake template file
         with open(self.templatesPath + 'configs/local_monitor/CMakeLists.txt.template', 'r') as sampleDefaultConfigCmakeTemplateFile:
