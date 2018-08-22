@@ -1,22 +1,59 @@
 from string import Template
 import argparse
 import os
-from shutil import copytree, ignore_patterns
+import sys
+from shutil import copytree, ignore_patterns, rmtree
 
 uncapitalize = lambda s: s[:1].lower() + s[1:] if s else ''
 capitalize = lambda s: s[:1].upper() + s[1:] if s else ''
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
 
 class ApePackageManager:
     variable = "blah"
 
     def __init__(self):
         self.templatesPath = './templates/'
+        self.samplesCMakeFile = '../../samples/CMakeLists.txt'
+        self.pluginsCMakeFile = '../../plugins/CMakeLists.txt'
 
     def createPluginTemplate(self, args):
         pluginName = uncapitalize(args.name)
         pluginPath = '../../plugins/' + pluginName + '/'
         pluginClassName = 'Ape' + capitalize(pluginName) + 'Plugin'
         pluginHeaderName = 'APE_' + pluginClassName.upper() + 'PLUGIN_H'
+        pluginsCMakeListsOptionName = 'APE_PLUGIN_' + capitalize(pluginName)
+        pluginsCMakeListsCaptionName = capitalize(pluginName) + 'Plugin'
 
         # create plugin folder
         if not os.path.exists(pluginPath):
@@ -68,11 +105,25 @@ class ApePackageManager:
 
         print(pluginClassName + ' has been created.')
 
+        if query_yes_no("Add to plugins/CMakeLists.txt?"):
+            # open pluginsCMakeLists.txt.template file
+            with open(self.templatesPath + 'pluginsCMakeLists.txt.template', 'r') as pluginsCMakeListsTemplateFile:
+                data = pluginsCMakeListsTemplateFile.read()
+
+                # replace variables in pluginsCMakeLists.txt.template string
+                s = Template(data)
+                res = s.substitute(pluginOptionName=pluginsCMakeListsOptionName, pluginName=pluginName, pluginCaptionName=pluginsCMakeListsCaptionName)
+
+                # write plugins CMakeLists.txt file
+                with open(self.pluginsCMakeFile, "a") as pluginsCmakeFile:
+                    pluginsCmakeFile.write(res)
+
     def createSampleTemplate(self, args):
         sampleName = uncapitalize(args.name)
         samplePath = '../../samples/' + sampleName + '/'
         configPath = samplePath + 'configs/'
         sampleClassName = 'Ape' + capitalize(sampleName)
+        samplesCMakeListsOptionName = 'APE_SAMPLES_' + capitalize(sampleName)
 
         # create sample folder
         if not os.path.exists(samplePath):
@@ -92,7 +143,9 @@ class ApePackageManager:
             with open(sampleCppFilePath, "w") as sampleCppFile:
                 sampleCppFile.write(res)
 
-        copytree(self.templatesPath + 'configs/', samplePath + 'configs/', ignore=ignore_patterns('*.template'))
+        if os.path.exists(configPath):
+            rmtree(configPath)
+        copytree(self.templatesPath + 'configs/', configPath, ignore=ignore_patterns('*.template'))
 
         # open sample config cmake template file
         with open(self.templatesPath + 'configs/local_monitor/CMakeLists.txt.template', 'r') as sampleDefaultConfigCmakeTemplateFile:
@@ -120,6 +173,20 @@ class ApePackageManager:
             with open(sampleCmakeFilePath, "w") as sampleCmakeFile:
                 sampleCmakeFile.write(res)
 
+        print(sampleClassName + ' has been created.')
+
+        if query_yes_no("Add to samples/CMakeLists.txt?"):
+            # open samplesCMakeLists.txt.template file
+            with open(self.templatesPath + 'samplesCMakeLists.txt.template', 'r') as samplesCMakeListsTemplateFile:
+                data = samplesCMakeListsTemplateFile.read()
+
+                # replace variables in samplesCMakeLists.txt.template string
+                s = Template(data)
+                res = s.substitute(sampleOptionName=samplesCMakeListsOptionName, sampleName=sampleName)
+
+                # write samples CMakeLists.txt file
+                with open(self.samplesCMakeFile, "a") as samplesCmakeFile:
+                    samplesCmakeFile.write(res)
 
 apm = ApePackageManager()
 
