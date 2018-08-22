@@ -27,10 +27,10 @@ set (SOURCES
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	$${PROJECT_SOURCE_DIR}/common/include
 	)
 
-add_executable (${sampleClassName} ${SOURCES})
+add_executable (${sampleClassName} $${SOURCES})
 target_link_libraries (${sampleClassName} ApeSystem ApePluginManager)
-set_property (TARGET ${sampleClassName} PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ${sampleClassName} PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="$${APE_SOURCE_DIR}")
 set_property (TARGET ${sampleClassName} PROPERTY FOLDER "Samples/${sampleName}")
