@@ -10,13 +10,14 @@ Ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	mPointCloudName = "";
-	mIsRecorder = true;
+	mIsRecorder = false;
 	mIsPlayer = false;
 	mIsLooping = false;
 	mFileName = "";
 	mPointCloudPosition = Ape::Vector3();
 	mPointCloudOrinetation = Ape::Quaternion();
 	mPointCloudNode = Ape::NodeWeakPtr();
+	mPointCloudSize = 0;
 	LOG_FUNC_LEAVE();
 }
 
@@ -34,16 +35,14 @@ void Ape::ApePointCloudRecorderPlugin::readFrame()
 {
 	Ape::PointCloudPoints points;
 	Ape::PointCloudColors colors;
-	long size;
-	mFileStreamIn.read(reinterpret_cast<char*>(&size), sizeof(long));
-	points.resize(size);
-	colors.resize(size);
-	mFileStreamIn.read(reinterpret_cast<char*>(&points[0]), points.size() * sizeof(float));
-	mFileStreamIn.read(reinterpret_cast<char*>(&colors[0]), colors.size() * sizeof(float));
+	points.resize(mPointCloudSize);
+	colors.resize(mPointCloudSize);
+	mFileStreamIn.read(reinterpret_cast<char*>(&points[0]), mPointCloudSize * sizeof(float));
+	mFileStreamIn.read(reinterpret_cast<char*>(&colors[0]), mPointCloudSize * sizeof(float));
 	if (auto pointCloud = mPointCloud.lock())
 	{
-		//pointCloud->updatePoints(points);
-		//pointCloud->updateColors(colors);
+		pointCloud->updatePoints(points);
+		pointCloud->updateColors(colors);
 	}
 }
 
@@ -53,8 +52,6 @@ void Ape::ApePointCloudRecorderPlugin::writeFrame()
 	{
 		auto points = pointCloud->getCurrentPoints();
 		auto colors = pointCloud->getCurrentColors();
-		long size = points.size();
-		mFileStreamOut.write(reinterpret_cast<char*>(&size), sizeof(long));
 		mFileStreamOut.write(reinterpret_cast<char*>(&points[0]), points.size() * sizeof(float));
 		mFileStreamOut.write(reinterpret_cast<char*>(&colors[0]), colors.size() * sizeof(float));
 	}
@@ -74,6 +71,19 @@ void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
 				}
 			}
 		}
+		else if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+		{
+			if (event.subjectName == mPointCloudName)
+			{
+				if (auto pointCloud = mPointCloud.lock())
+				{
+					auto points = pointCloud->getCurrentPoints();
+					long size = points.size();
+					mFileStreamOut.write(reinterpret_cast<char*>(&size), sizeof(long));
+					writeFrame();
+				}
+			}
+		}
 		else if (event.type == Ape::Event::Type::POINT_CLOUD_COLORS)
 		{
 			if (event.subjectName == mPointCloudName)
@@ -90,10 +100,11 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 	mPointCloudName = "pointCloud_Kinect";
 	mIsRecorder = false;
 	mIsPlayer = true;
-	mIsLooping = false;
+	mIsLooping = true;
 	mFileName = "pointCloud.bin";
-	mPointCloudPosition = Ape::Vector3(0, 0, 0);
-	mPointCloudOrinetation = Ape::Quaternion(1, 0, 0, 0);
+	//TODO get the pose information from the file like pointCloudSize
+	mPointCloudPosition = Ape::Vector3(0.0, 170.0, -250.0);
+	mPointCloudOrinetation = Ape::Quaternion(0.707, 0.0, 0.707, 0.0);
 	if (mIsRecorder)
 		mFileStreamOut.open(mFileName, std::ios::out | std::ios::binary);
 	else if (mIsPlayer)
@@ -115,8 +126,15 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 			}
 			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Player", Ape::Entity::POINT_CLOUD).lock()))
 			{
-				//pointCloud->setParameters(Ape::PointCloudPoints(), Ape::PointCloudColors(), 100000);
-				//pointCloud->setParentNode(pointCloudNode);
+				Ape::PointCloudPoints points;
+				Ape::PointCloudColors colors;
+				mFileStreamIn.read(reinterpret_cast<char*>(&mPointCloudSize), sizeof(long));
+				points.resize(mPointCloudSize);
+				colors.resize(mPointCloudSize);
+				mFileStreamIn.read(reinterpret_cast<char*>(&points[0]), mPointCloudSize * sizeof(float));
+				mFileStreamIn.read(reinterpret_cast<char*>(&colors[0]), mPointCloudSize * sizeof(float));
+				pointCloud->setParameters(points, colors, 100000);
+				pointCloud->setParentNode(pointCloudNode);
 				mPointCloud = pointCloud;
 			}
 			mPointCloudNode = pointCloudNode;
@@ -137,7 +155,13 @@ void Ape::ApePointCloudRecorderPlugin::Run()
 		else if (mIsPlayer)
 		{
 			readFrame();
-			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			if (!mFileStreamIn.good() && mIsLooping) 
+			{
+				mFileStreamIn.close();
+				mFileStreamIn.clear();
+				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
