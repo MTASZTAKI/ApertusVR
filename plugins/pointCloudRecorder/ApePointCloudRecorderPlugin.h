@@ -95,6 +95,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mPointCloudNode;
 
+		long mPointCloudSize;
+
 		void readFrame();
 
 		void writeFrame();
