@@ -158,6 +158,7 @@ void Ape::ApePointCloudRecorderPlugin::Run()
 				mFileStreamIn.close();
 				mFileStreamIn.clear();
 				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
+				mFileStreamIn.read(reinterpret_cast<char*>(&mPointCloudSize), sizeof(long));
 			}
 			//TODO maybe timig by reading timestamps from the file?
 			std::this_thread::sleep_for(std::chrono::milliseconds(5));
