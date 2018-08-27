@@ -1,5 +1,5 @@
 {
-    "renderSystem": "OGL",
+    "renderSystem": "DX11",
     "lodLevels": {
         "autoGenerateAndSave": false,
         "bias": 0.5
@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "name": "EPIC",
-            "monitorIndex": 1,
+            "monitorIndex": 0,
             "resolution": {
                 "width": 1920,
                 "height": 1080,
@@ -28,8 +28,8 @@
                 "width": 1920,
                 "height": 1080,
                 "camera": {
-                  "nearClip": 10.0,
-                  "farClip": 100000.0,
+                  "nearClip": 1.0,
+                  "farClip": 10000.0,
                   "fovY": 45.0
                 }
               }
