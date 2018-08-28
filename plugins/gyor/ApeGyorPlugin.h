@@ -68,6 +68,18 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
+		Ape::NodeWeakPtr mGripperLeftRootNode;
+
+		Ape::NodeWeakPtr mGripperLeftMiddleNode;
+
+		Ape::NodeWeakPtr mGripperLeftEndNode;
+
+		Ape::NodeWeakPtr mGripperRightRootNode;
+
+		Ape::NodeWeakPtr mGripperRightEndNode;
+
+		Ape::NodeWeakPtr mGripperRightMiddleNode;
+
 		void eventCallBack(const Ape::Event& event);
 
 	public:

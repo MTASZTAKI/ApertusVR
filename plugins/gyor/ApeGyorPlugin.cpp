@@ -8,6 +8,7 @@ Ape::ApeGyorPlugin::ApeGyorPlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
+	mGripperLeftRootNode = Ape::NodeWeakPtr();
 	LOG_FUNC_LEAVE();
 }
 
@@ -19,7 +20,53 @@ Ape::ApeGyorPlugin::~ApeGyorPlugin()
 
 void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 {
-
+	if (event.type == Ape::Event::Type::NODE_CREATE)
+	{
+		if (event.subjectName == "JOINT(Rotational)(gripR1)12ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperLeftRootNode = node;
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR3)14ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				node->setInheritOrientation(false);
+				mGripperLeftEndNode = node;
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR5)16ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperLeftMiddleNode = node;
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR1)18ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperRightRootNode = node;
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR3)20ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				node->setInheritOrientation(false);
+				mGripperRightEndNode = node;
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR5)22ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperRightMiddleNode = node;
+			}
+		}
+	}
 }
 
 void Ape::ApeGyorPlugin::Init()
@@ -68,6 +115,50 @@ void Ape::ApeGyorPlugin::Run()
 	LOG_FUNC_ENTER();
 	while (true)
 	{
+		if (auto node = mGripperLeftEndNode.lock())
+		{
+			node->rotate(Ape::Degree(-90).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+			node->rotate(Ape::Degree(-20).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			break;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+	while (true)
+	{
+		if (auto node = mGripperRightEndNode.lock())
+		{
+			node->rotate(Ape::Degree(90).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
+			node->rotate(Ape::Degree(-20).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			break;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+	int count = 0;
+	float degree = 0.1f;
+	while (true)
+	{
+		if (auto node = mGripperLeftRootNode.lock())
+		{
+			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+		}
+		if (auto node = mGripperRightRootNode.lock())
+		{
+			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+		}
+		if (auto node = mGripperLeftMiddleNode.lock())
+		{
+			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+		}
+		if (auto node = mGripperRightMiddleNode.lock())
+		{
+			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+		}
+		if (count != 0 && (count % 450) == 0)
+		{
+			degree *= -1;
+			count = 0;
+		}
+		count++;
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
