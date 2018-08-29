@@ -85,6 +85,8 @@ namespace Ape
 		void setInheritOrientation(bool enable) override;
 
 		bool isInheritOrientation() override;
+
+		void setInitalState() override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		

@@ -161,6 +161,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_INHERITORIENTATION:
 							ogreNode->setInheritOrientation(node->isInheritOrientation());
 							break;
+						case Ape::Event::Type::NODE_INITIALSTATE:
+							ogreNode->setInitialState();
+							break;
 						case Ape::Event::Type::NODE_SHOWBOUNDINGBOX:
 							ogreNode->showBoundingBox(true);
 							break;

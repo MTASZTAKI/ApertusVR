@@ -226,6 +226,11 @@ bool Ape::NodeImpl::isInheritOrientation()
 	return mIsInheritOrientation;
 }
 
+void Ape::NodeImpl::setInitalState()
+{
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+}
+
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
 {
 	switch(nodeTransformSpace)
