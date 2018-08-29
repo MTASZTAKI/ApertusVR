@@ -70,7 +70,7 @@ namespace Ape
 
 		Ape::NodeWeakPtr mGripperLeftRootNode;
 
-		Ape::NodeWeakPtr mGripperLeftMiddleNode;
+		Ape::NodeWeakPtr mGripperLeftHelperNode;
 
 		Ape::NodeWeakPtr mGripperLeftEndNode;
 
@@ -78,7 +78,15 @@ namespace Ape
 
 		Ape::NodeWeakPtr mGripperRightEndNode;
 
-		Ape::NodeWeakPtr mGripperRightMiddleNode;
+		Ape::NodeWeakPtr mGripperRightHelperNode;
+
+		Ape::Quaternion mGripperRightHelperNodeInitialOrientation;
+
+		Ape::Quaternion mGripperLeftHelperNodeInitialOrientation;
+
+		Ape::Quaternion mGripperRightRootNodeInitialOrientation;
+
+		Ape::Quaternion mGripperLeftRootNodeInitialOrientation;
 
 		void eventCallBack(const Ape::Event& event);
 

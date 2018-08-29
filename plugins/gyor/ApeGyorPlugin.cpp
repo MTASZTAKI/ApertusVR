@@ -41,7 +41,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 		{
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
-				mGripperLeftMiddleNode = node;
+				mGripperLeftHelperNode = node;
 			}
 		}
 		else if (event.subjectName == "JOINT(Rotational)(gripR1)18ur10Gripper")
@@ -63,7 +63,42 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 		{
 			if (auto node = mpScene->getNode(event.subjectName).lock())
 			{
-				mGripperRightMiddleNode = node;
+				mGripperRightHelperNode = node;
+			}
+		}
+	}
+	else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
+	{
+		if (event.subjectName == "JOINT(Rotational)(gripR5)22ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperRightHelperNodeInitialOrientation = node->getOrientation();
+				//LOG(LOG_TYPE_DEBUG, "mGripperRightHelperNodeInitialOrientation: " << mGripperRightHelperNodeInitialOrientation.toString());
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR5)16ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperLeftHelperNodeInitialOrientation = node->getOrientation();
+				//LOG(LOG_TYPE_DEBUG, "mGripperLeftHelperNodeInitialOrientation: " << mGripperLeftHelperNodeInitialOrientation.toString());
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR1)18ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperRightRootNodeInitialOrientation = node->getOrientation();
+				//LOG(LOG_TYPE_DEBUG, "mGripperRightRootNodeInitialOrientation: " << mGripperRightRootNodeInitialOrientation.toString());
+			}
+		}
+		else if (event.subjectName == "JOINT(Rotational)(gripR1)12ur10Gripper")
+		{
+			if (auto node = mpScene->getNode(event.subjectName).lock())
+			{
+				mGripperLeftRootNodeInitialOrientation = node->getOrientation();
+				//LOG(LOG_TYPE_DEBUG, "mGripperLeftRootNodeInitialOrientation: " << mGripperLeftRootNodeInitialOrientation.toString());
 			}
 		}
 	}
@@ -133,35 +168,45 @@ void Ape::ApeGyorPlugin::Run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-	int count = 0;
-	float degree = 0.1f;
+	while (!(mGripperRightRootNode.lock() && mGripperLeftRootNode.lock() && mGripperLeftHelperNode.lock() && mGripperRightHelperNode.lock()))
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
+	int gripperMaxValue = 255;
+	int gripperMinValue = 0;
+	int gripperCurrentValue = gripperMinValue;
+	float degreeStep = 45.0f / (float)gripperMaxValue; //max degree (the root joint of the gripper) divided by the max value from the gripper
+	Ape::Vector3 axis(0, 0, 1);
 	while (true)
 	{
+		gripperCurrentValue++;
+		LOG(LOG_TYPE_DEBUG, "gripperCurrentValue: " << gripperCurrentValue);
+		Ape::Degree degree = gripperCurrentValue * degreeStep;
+		Ape::Quaternion orientation;
+		orientation.FromAngleAxis(degree, axis);
 		if (auto node = mGripperLeftRootNode.lock())
 		{
-			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			node->setOrientation(mGripperLeftRootNodeInitialOrientation * orientation);
 		}
 		if (auto node = mGripperRightRootNode.lock())
 		{
-			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			node->setOrientation(mGripperRightRootNodeInitialOrientation * orientation);
 		}
-		if (auto node = mGripperLeftMiddleNode.lock())
+		if (auto node = mGripperLeftHelperNode.lock())
 		{
-			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			node->setOrientation(mGripperLeftHelperNodeInitialOrientation * orientation);
 		}
-		if (auto node = mGripperRightMiddleNode.lock())
+		if (auto node = mGripperRightHelperNode.lock())
 		{
-			node->rotate(Ape::Degree(degree).toRadian(), Ape::Vector3(0, 0, 1), Ape::Node::TransformationSpace::LOCAL);
+			node->setOrientation(mGripperRightHelperNodeInitialOrientation * orientation);
 		}
-		if (count != 0 && (count % 450) == 0)
+		if (gripperCurrentValue > gripperMaxValue)
 		{
-			degree *= -1;
-			count = 0;
+			gripperCurrentValue = gripperMinValue;
 		}
-		count++;
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
 }
 
