@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "ApeQuaternion.h"
+#include "ApeRadian.h"
 
 using namespace Ape;
 
@@ -43,15 +44,14 @@ NBIND_CLASS(Quaternion)
 	method(getY);
 	method(getZ);
 
-	// TODO: check/fix
-	//multimethod(FromAngleAxis, args(Radian, Vector3));
-	//multimethod(FromAngleAxis, args(Degree, Vector3));
+	method(FromAngleAxis);
 	method(equals);
 	method(Norm);
 	method(normalise);
 	method(Inverse);
 	method(Dot);
 	method(Slerp);
+	method(product);
 
 	method(toString);
 	method(toJsonString);
