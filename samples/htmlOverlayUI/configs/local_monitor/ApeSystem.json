@@ -22,14 +22,15 @@
         }
     },
     "pluginManager": {
-        "plugins": [
-            "ApeNodeJsPlugin",
-            "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeCefBrowserPlugin",
-            "ApeHtmlOverlayUIPlugin",
-            "ApeAssimpAssetLoaderPlugin",
-            "ApeWebserverPlugin"
-        ]
+      "plugins": [
+        "ApeNodeJsPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeCefBrowserPlugin",
+        "ApeHtmlOverlayUIPlugin",
+        "ApeKinectPlugin",
+        "ApeAssimpAssetLoaderPlugin",
+        "ApeWebserverPlugin"
+      ]
     }
 }
