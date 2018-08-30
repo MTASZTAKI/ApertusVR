@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>RobotCalibration UI</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=0.5">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -41,6 +41,15 @@
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal">About</a>
                     </li>
                 </ul>
+
+				<div class="btn-group">
+					<button type="button" id ="nodesDropDown" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" title="Click here for dropdown actions">
+						Nodes
+					</button>
+					<div class="dropdown-menu" id="nodesDropDownList">
+					</div>
+				</div>
+
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="" id="nodeName" name="nodeName" aria-label="Search">
                     <button class="btn btn-outline-secondary my-2 my-sm-0" onClick="javascript:location.reload(true);" type="submit">
@@ -176,16 +185,27 @@
                     <div id="quatZRange" class="input-range-quat slider info" data-input-handler="quatZ"></div>
                 </div>
             </div>
-            <div class="card m-2">
-                <div class="card-header">
-                    Robot World Trans
-                    <button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('invRotTransMatrix');" data-toggle="tooltip" title="Click here to copy data">
-                        <li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
-                    </button>
-                </div>
+			<div class="card m-2">
 
-                <textarea class="form-control" rows="5" id="invRotTransMatrix" readonly></textarea>
-            </div>
+				<div class="card-header">
+					Transformation
+					<button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('invRotTransMatrix');" data-toggle="tooltip" title="Click here to copy data">
+						<li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
+					</button>
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">NodeName</span>
+					</div>
+					<input id="transNodeName" type="text" class="form-control" placeholder="" aria-label="NodeName" aria-describedby="basic-addon1">
+					<div class="input-group-append">
+						<button class="btn btn-secondary" type="button" id="button-addon2" onclick="calcTransformMatrix()">Ok</button>
+					</div>
+				</div>
+
+				<textarea class="form-control" rows="5" id="invRotTransMatrix" readonly></textarea>
+			</div>
         </div>
 
         <div class="panel-right" id="panel-right">
@@ -302,7 +322,7 @@
 
             <div class="card m-2">
                 <div class="card-header">
-                    World Space Trans
+                    World Transformation
                     <button type="button" class="btn btn-sm float-right" onClick="copyToClipboard('transMatrix');" data-toggle="tooltip" title="Click here to copy data">
                         <li class="ion-ios-copy" data-pack="default" data-tags="refresh" style="display: inline-block; font-size: 1rem;"></li>
                     </button>

@@ -40,11 +40,11 @@ app.get('/nodes', function(req, res) {
 	async.waterfall(
 		[
 			function(callback) {
-				ape.nbind.JsBindManager().getUserNode(function(error, obj) {
+				ape.nbind.JsBindManager().getNodesNames(function(error, arr) {
 					if (error) {
-						callback({ name: 'invalidCast', msg: obj, code: 666 });
+						callback({ name: 'invalidCast', msg: arr, code: 666 });
 					}
-					callback(null, obj.getName());
+					callback(null, arr);
 				});
 			}
 		],
@@ -56,7 +56,10 @@ app.get('/nodes', function(req, res) {
 				return;
 			}
 
-			respObj.addDataItem({ name: results });
+			results.forEach(function (element) {
+				respObj.addDataItem({ name: element });
+			});
+
 			res.send(respObj.toJSonString());
 		}
 	);
@@ -81,6 +84,69 @@ app.post('/nodes', function(req, res) {
 		subjectName: nodeObj.getName()
 	});
 	res.send(respObj.toJSonString());
+});
+
+app.get('/calcTransform/:name1/:name2', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Calculates transformation matrix for node2 in node1 space');
+
+	// handle http param validation errors
+	req.checkParams('name1', 'UrlParam is not presented').notEmpty();
+	req.checkParams('name2', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name1 = req.params.name1;
+	logger.debug('name1: ', name1);
+	var name2 = req.params.name2;
+	logger.debug('name2: ', name2);
+
+	var matrix1;
+	var matrix2;
+
+	async.waterfall(
+		[
+			function (callback) {
+				ape.nbind.JsBindManager().getNode(name1, function (error, obj1) {
+					if (error) {
+						callback({ name: 'invalidCast', msg: obj1, code: 666 });
+					}
+					matrix1 = obj1.getTransformationMatrix();
+					callback(null);
+				});
+			},
+			function (callback) {
+				ape.nbind.JsBindManager().getNode(name2, function (error, obj2) {
+					if (error) {
+						callback({ name: 'invalidCast', msg: obj2, code: 666 });
+					}
+					matrix2 = obj2.getTransformationMatrix();
+					callback(null);
+				});
+			}
+		],
+		function (err, results) {
+			if (err) {
+				logger.error('error: ', err);
+				respObj.addErrorItem(err);
+				res.send(respObj.toJSonString());
+				return;
+			}
+
+			var matrixRes = matrix2.concatenate(matrix1);
+			//respObj.addDataItem(JSON.parse(matrixRes.toJsonString()));
+
+			respObj.addDataItem({
+				transformation: {
+					invRotTransMatrix: JSON.parse(matrixRes.toJsonString())
+				}
+			});
+
+			res.send(respObj.toJSonString());
+		}
+	);
 });
 
 app.get('/nodes/:name', function(req, res) {
