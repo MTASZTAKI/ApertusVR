@@ -115,6 +115,32 @@ public:
 		return NodeJsPtr(mpScene->createNode(name));
 	}
 
+	void getNodes(nbind::cbFunction &done)
+	{
+		LOG_FUNC_ENTER();
+		auto nodes = mpScene->getNodes();
+		std::vector<NodeJsPtr> nodeJsPtrVec;
+		for (auto node : nodes)
+		{
+			nodeJsPtrVec.push_back(NodeJsPtr(node.second));
+		}
+		done(false, nodeJsPtrVec);
+		LOG_FUNC_LEAVE();
+	}
+
+	void getNodesNames(nbind::cbFunction &done)
+	{
+		LOG_FUNC_ENTER();
+		auto nodes = mpScene->getNodes();
+		std::vector<std::string> nodeNameVec;
+		for (auto node : nodes)
+		{
+			nodeNameVec.push_back(node.second.lock()->getName());
+		}
+		done(false, nodeNameVec);
+		LOG_FUNC_LEAVE();
+	}
+
 	bool getNode(std::string name, nbind::cbFunction &done)
 	{
 		LOG_FUNC_ENTER();
@@ -493,6 +519,8 @@ NBIND_CLASS(JsBindManager)
 	method(nodeEventCallBack);
 
 	method(createNode);
+	method(getNodesNames);
+	method(getNodes);
 	method(getNode);
 	method(getUserNode);
 
