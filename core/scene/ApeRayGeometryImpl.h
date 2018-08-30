@@ -40,7 +40,7 @@ namespace Ape
 
 		void setIntersectingEnabled(bool enable) override;
 
-		void setIntersections(std::vector<Ape::GeometryWeakPtr> intersections) override;
+		void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) override;
 
 		void fireIntersectionQuery() override;
 

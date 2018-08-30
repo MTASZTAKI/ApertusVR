@@ -58,7 +58,7 @@ namespace Ape
 
 		bool mIntersectingEnabled;
 
-		std::vector<Ape::GeometryWeakPtr> mIntersections;
+		std::vector<Ape::EntityWeakPtr> mIntersections;
 
 	public:
 		Ape::NodeWeakPtr getParentNode()
@@ -71,7 +71,7 @@ namespace Ape
 			return mIntersectingEnabled;
 		};
 
-		std::vector<Ape::GeometryWeakPtr> getIntersections()
+		std::vector<Ape::EntityWeakPtr> getIntersections()
 		{
 			return mIntersections;
 		};
