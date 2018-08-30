@@ -82,8 +82,10 @@ app.post('/setproperties', function(req, res, next) {
 					return;
 				}
 
-				var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
-				obj.setOrientation(q);
+				if (item.properties.orientation) {
+					var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
+					obj.setOrientation(q);
+				}
 			});
 		}
 	}
