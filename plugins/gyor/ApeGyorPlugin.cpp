@@ -184,7 +184,7 @@ void Ape::ApeGyorPlugin::Run()
 		LOG(LOG_TYPE_DEBUG, "gripperCurrentValue: " << gripperCurrentValue);
 		Ape::Degree degree = gripperCurrentValue * degreeStep;
 		Ape::Quaternion orientation;
-		orientation.FromAngleAxis(degree, axis);
+		orientation.FromAngleAxis(Ape::Radian(degree.toRadian()), axis);
 		if (auto node = mGripperLeftRootNode.lock())
 		{
 			node->setOrientation(mGripperLeftRootNodeInitialOrientation * orientation);
