@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,8 @@ namespace Ape
 
 		Degree fovY;
 
+		std::string parentNodeName;
+
 		OgreCameraConfig()
 		{
 			this->name = std::string();
@@ -54,6 +56,7 @@ namespace Ape
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
+			this->parentNodeName = std::string();
 		}
 
 		OgreCameraConfig(
@@ -62,7 +65,8 @@ namespace Ape
 			Ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
-			Degree fovY)
+			Degree fovY,
+			std::string parentNodeName = "")
 		{
 			this->name = name;
 			this->positionOffset = positionOffset;
@@ -70,6 +74,7 @@ namespace Ape
 			this->nearClip = nearClip;
 			this->farClip = farClip;
 			this->fovY = fovY;
+			this->parentNodeName = parentNodeName;
 		}
 	};
 
@@ -142,7 +147,7 @@ namespace Ape
 		bool enable;
 
 		std::string name;
-		
+
 		int monitorIndex;
 
 		int width;
@@ -218,22 +223,26 @@ namespace Ape
 	{
 		OgreRenderWindowConfigList ogreRenderWindowConfigList;
 		OgreLodLevelsConfig ogreLodLevelsConfig;
+		std::string shading;
 		std::string renderSystem;
 
 		OgreRenderPluginConfig()
 		{
 			this->ogreRenderWindowConfigList = OgreRenderWindowConfigList();
 			this->ogreLodLevelsConfig = OgreLodLevelsConfig();
+			this->shading = std::string();
 			this->renderSystem = std::string();
 		}
 
 		OgreRenderPluginConfig(
 			OgreRenderWindowConfigList ogreRenderWindowConfigList,
 			OgreLodLevelsConfig ogreLodLevelsConfig,
+			std::string shading,
 			std::string renderSystem)
 		{
 			this->ogreRenderWindowConfigList = ogreRenderWindowConfigList;
 			this->ogreLodLevelsConfig = ogreLodLevelsConfig;
+			this->shading = shading;
 			this->renderSystem = renderSystem;
 		}
 	};

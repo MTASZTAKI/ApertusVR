@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ SOFTWARE.*/
 #define APEHTTPMANAGER_H
 
 #include <string>
+#include "ApeILogManager.h"
 
 namespace Ape
 {
@@ -37,9 +38,9 @@ namespace Ape
 	class HttpManager 
 	{
 	private:
+#ifdef HTTPMANAGER_USE_CURL
 		void* mpCurl;
-		
-		CurlData mCurlData;
+#endif
 		
 	public:
 		HttpManager();

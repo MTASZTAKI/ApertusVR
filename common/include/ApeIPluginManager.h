@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,13 @@ SOFTWARE.*/
 #define APE_IPLUGINMANAGER_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_PLUGINMANAGER_DLL
-#define APE_PLUGINMANAGER_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_PLUGINMANAGER_DLL
+		#define APE_PLUGINMANAGER_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_PLUGINMANAGER_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_PLUGINMANAGER_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_PLUGINMANAGER_DLL_EXPORT 
+	#define APE_PLUGINMANAGER_DLL_EXPORT
 #endif
 
 #include "ApeSingleton.h"
@@ -42,9 +42,9 @@ namespace Ape
 	{
 	protected:
 		virtual ~IPluginManager() {};
-	
+
 	public:
-		virtual void LoadPlugin(std::string name) = 0;
+		virtual bool isAllPluginInitialized() = 0;
 	};
 }
 

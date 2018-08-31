@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,31 +40,46 @@ namespace Ape
 		
 		Ape::Vector3 scale;
 
-		float eyeSeparationPerEye;
+		Ape::Vector3 leftEyeOffset;
+
+		Ape::Vector3 rightEyeOffset;
 
 		FobHeadTrackingTrackerConfig()
 		{
 			this->translate = Ape::Vector3();
 			this->rotation = Ape::Quaternion();
 			this->scale = Ape::Vector3();
-			this->eyeSeparationPerEye = 0.0f;
+			this->leftEyeOffset = Ape::Vector3();
+			this->rightEyeOffset = Ape::Vector3();
 		}
 
 		FobHeadTrackingTrackerConfig(
 			Ape::Vector3 translate,
 			Ape::Quaternion rotation,
 			Ape::Vector3 scale,
-			float eyeSeparationPerEye)
+			Ape::Vector3 leftEyeOffset,
+			Ape::Vector3 rightEyeOffset)
 		{
 			this->translate = translate;
 			this->rotation = rotation;
 			this->scale = scale;
-			this->eyeSeparationPerEye = eyeSeparationPerEye;
+			this->leftEyeOffset = leftEyeOffset;
+			this->rightEyeOffset = rightEyeOffset;
 		}
 	};
 
 	struct FobHeadTrackingDisplayConfig
 	{
+		std::string name;
+
+		Ape::CameraWeakPtr cameraLeft;
+
+		Ape::CameraWeakPtr cameraRight;
+
+		std::string cameraLeftName;
+
+		std::string cameraRightName;
+
 		Ape::Vector2 size;
 		
 		Ape::Vector3 position;
@@ -77,6 +92,14 @@ namespace Ape
 
 		Ape::Vector3 topLeftCorner;
 
+		Ape::Vector3 width;
+
+		Ape::Vector3 height;
+
+		Ape::Vector3 normal;
+
+		Ape::Matrix4 transform;
+
 		FobHeadTrackingDisplayConfig()
 		{
 			this->size = Ape::Vector2();
@@ -85,6 +108,10 @@ namespace Ape
 			this->bottomLeftCorner = Ape::Vector3();
 			this->bottomRightCorner = Ape::Vector3();
 			this->topLeftCorner = Ape::Vector3();
+			this->width = Ape::Vector3();
+			this->height = Ape::Vector3();
+			this->normal = Ape::Vector3();
+			this->transform = Ape::Matrix4();
 		}
 
 		FobHeadTrackingDisplayConfig(
@@ -93,7 +120,11 @@ namespace Ape
 			Ape::Quaternion orientation,
 			Ape::Vector3 bottomLeftCorner,
 			Ape::Vector3 bottomRightCorner,
-			Ape::Vector3 topLeftCorner)
+			Ape::Vector3 topLeftCorner,
+			Ape::Vector3 width,
+			Ape::Vector3 height,
+			Ape::Vector3 normal,
+			Ape::Matrix4 transform)
 		{
 			this->size = size;
 			this->position = position;
@@ -101,6 +132,10 @@ namespace Ape
 			this->bottomLeftCorner = bottomLeftCorner;
 			this->bottomRightCorner = bottomRightCorner;
 			this->topLeftCorner = topLeftCorner;
+			this->width = width;
+			this->height = height;
+			this->normal = normal;
+			this->transform = transform;
 		}
 	};
 

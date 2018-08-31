@@ -1,8 +1,9 @@
 #include <iostream>
 #include "ApeLinkageDesignerVRPlugin.h"
 
-ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
+Ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
@@ -10,8 +11,6 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	std::string userNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserName;
-	mUserNode = mpScene->getNode(userNodeName);
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
@@ -19,8 +18,7 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	mRotateSpeedFactor = 1;
 	mSceneToggleIndex = 0;
 	mScenePoses = std::vector<ScenePose>();
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -225, 100060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
-	mScenePoses.push_back(ScenePose(Ape::Vector3(0.0, -285, 200060.0), Ape::Quaternion(0.994803, 0, -0.101823, 0)));
+	mScenePoses.push_back(ScenePose(Ape::Vector3(19.5237, -141.02, 200067), Ape::Quaternion(0.975645, -0.00829328, -0.219197, -0.00186324)));
 	mScenePoses.push_back(ScenePose(Ape::Vector3(-48, -258, -45), Ape::Quaternion(1, 0, 0, 0)));
 	mSwitchNodeVisibilityToggleIndex = 0;
 	/*mSwitchNodeVisibilityNames = std::vector<std::string>();
@@ -44,16 +42,18 @@ ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
 	/*mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");*/
 	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
+	LOG_FUNC_LEAVE();
 }
 
-ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
+Ape::ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 {
-	std::cout << "ApeLinkageDesignerVRPlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
 	delete mpKeyboard;
 	delete mpMouse;
+	LOG_FUNC_LEAVE();
 }
 
-void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
 	{
@@ -74,9 +74,13 @@ void ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::Init()
+void Ape::ApeLinkageDesignerVRPlugin::Init()
 {
-	std::cout << "ApeLinkageDesignerVRPlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
+
+	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+		mUserNode = userNode;
+
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -97,10 +101,10 @@ void ApeLinkageDesignerVRPlugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	std::cout << "ApeLinkageDesignerVRPlugin waiting for main window" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	std::cout << "ApeLinkageDesignerVRPlugin main window was found" << std::endl;
+	LOG(LOG_TYPE_DEBUG, "main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -131,9 +135,10 @@ void ApeLinkageDesignerVRPlugin::Init()
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
 	}
+	LOG_FUNC_LEAVE();
 }
 
-void ApeLinkageDesignerVRPlugin::moveUserNode()
+void Ape::ApeLinkageDesignerVRPlugin::moveUserNode()
 {
 	auto userNode = mUserNode.lock();
 	if (userNode)
@@ -165,7 +170,7 @@ void ApeLinkageDesignerVRPlugin::moveUserNode()
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
+void Ape::ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 {
 	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
 	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
@@ -174,7 +179,7 @@ void ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 		mSceneToggleIndex = 0;
 }
 
-void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
+void Ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 {
 	if (mSwitchNodes.size() > 0)
 	{
@@ -191,7 +196,7 @@ void ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 	}
 }
 
-void ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
+void Ape::ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -201,7 +206,7 @@ void ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 }
 
 
-void ApeLinkageDesignerVRPlugin::Run()
+void Ape::ApeLinkageDesignerVRPlugin::Run()
 {
 	while (true)
 	{
@@ -216,27 +221,27 @@ void ApeLinkageDesignerVRPlugin::Run()
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeLinkageDesignerVRPlugin::Step()
+void Ape::ApeLinkageDesignerVRPlugin::Step()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Stop()
+void Ape::ApeLinkageDesignerVRPlugin::Stop()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Suspend()
+void Ape::ApeLinkageDesignerVRPlugin::Suspend()
 {
 
 }
 
-void ApeLinkageDesignerVRPlugin::Restart()
+void Ape::ApeLinkageDesignerVRPlugin::Restart()
 {
 
 }
 
-bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = true;
 	auto userNode = mUserNode.lock();
@@ -252,23 +257,23 @@ bool ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::keyReleased(const OIS::KeyEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::keyReleased(const OIS::KeyEvent& e)
 {
 	mKeyCodeMap[e.key] = false;
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mouseMoved(const OIS::MouseEvent& e)
+bool Ape::ApeLinkageDesignerVRPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLinkageDesignerVRPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }
 
-bool ApeLinkageDesignerVRPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+bool Ape::ApeLinkageDesignerVRPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
 	return true;
 }

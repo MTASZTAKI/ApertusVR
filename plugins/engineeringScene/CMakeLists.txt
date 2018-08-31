@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeEngineeringScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeEngineeringScenePlugin ApePluginManager ApeScene ApeEventManager)
+target_link_libraries (ApeEngineeringScenePlugin ApePluginManager ApeScene ApeEventManager ApeLogManager)
 
 set_property (TARGET ApeEngineeringScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

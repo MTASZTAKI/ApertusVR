@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,16 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-//#include "ApeIJsEventManager.h"
-
 #include <map>
 #include <vector>
+#include "ApePluginAPI.h"
+#include "ApeIEventManager.h"
+#include "ApeILogManager.h"
+#include "ApeIScene.h"
+#include "ApeINode.h"
 #include "ApeEvent.h"
+
+#define THIS_PLUGINNAME "ApeNodeJsPlugin"
 
 class ApeNodeJsPlugin : public Ape::IPlugin
 {
@@ -43,8 +44,6 @@ private:
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
-
-	//Ape::IJsEventManager* mpJsEventManager;
 
 	Ape::NodeWeakPtr mNodeWeakPtr;
 
@@ -78,13 +77,12 @@ APE_PLUGIN_FUNC void DestroyApeNodeJsPlugin(Ape::IPlugin* ApeNodeJsPlugin)
 	delete ApeNodeJsPlugin;
 }
 
-APE_PLUGIN_DISPLAY_NAME("ApeNodeJsPlugin");
+APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	std::cout << "ApeNodeJsPlugin_CREATE" << std::endl;
-	ApeRegisterPlugin("ApeNodeJsPlugin", CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
-	std::cout << "ApeRegisterPlugin ApeNodeJsPlugin" << std::endl;
+	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
 	return 0;
 }
 

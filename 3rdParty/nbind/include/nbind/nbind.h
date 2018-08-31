@@ -7,8 +7,8 @@
 
 #include "noconflict.h"
 
-#define func NBIND_FUNCTION
-#define multifunc NBIND_MULTIFUNCTION
+#define nfunction NBIND_FUNCTION
+#define multifunction NBIND_MULTIFUNCTION
 #define method(...) NBIND_EXPAND(NBIND_METHOD(__VA_ARGS__))
 #define inherit(...) NBIND_INHERIT(__VA_ARGS__)
 #define args NBIND_ARGS

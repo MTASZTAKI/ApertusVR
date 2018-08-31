@@ -1,0 +1,24 @@
+
+material <IFCDefault>AC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.6 0.6 0.6 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.6 0.6 0.6 1
+		}
+
+	}
+
+}

@@ -25,35 +25,33 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 app.use('*', function(req, res, next) {
-	console.log('all other routes');
-	next({
-		name: 'BadRequest',
-		message: 'Invalid Url!',
-		code: 404
-	});
+	next(errorMap.items.resourceNotFound);
 });
 
 app.use(function(err, req, res, next) {
-	console.log('error handling in server.js');
-	console.log(err);
-	var resObj = new utils.responseObj();
+	logger.debug('fallback catcherror: ', err);
+
 	if (err) {
+		var resObj = new resp(req);
+		resObj.setDescription('Something wrong happened. :( Please check errors object for more info...');
+
 		if (err.hasOwnProperty('name')) {
-			if (err.name === 'UnauthorizedError') {
+			if (errorMap.items.hasOwnProperty(err.name)) {
 				if (!err.hasOwnProperty('message')) {
-					err.message = 'The API request has invalid token!';
-					err.code = 401;
-					res.status(401);
+					err.message = errorMap.items[err.name].message;
 				}
-			} else if (err.name == 'BadRequest') {
-				res.status(404);
+			}
+			if (err.name == 'Error' && err.code == 'ENOENT') {
+				err = errorMap.items.resourceNotFound;
 			}
 		}
-
 		resObj.addErrorItem(err);
+		res.status(resObj.getStatusCode());
 		res.send(resObj.toJSonString());
 	}
 });

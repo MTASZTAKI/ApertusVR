@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,9 +38,9 @@ namespace Ape
 
 		~FileMaterialImpl();
 		
-		void setFileName(std::string fileName);
+		void setFileName(std::string fileName) override;
 
-		std::string getfFileName();
+		std::string getfFileName() override;
 
 		void setAsSkyBox() override;
 

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	configDir << APE_SOURCE_DIR << "\\samples\\tester\\configs";
-	Ape::System::Start(configDir.str(), true);
+	configDir << APE_SOURCE_DIR << "/samples/tester/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

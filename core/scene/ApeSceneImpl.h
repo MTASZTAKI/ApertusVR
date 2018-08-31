@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +35,11 @@ SOFTWARE.*/
 
 #include "ApeIScene.h"
 #include "ApeISystemConfig.h"
+#include "ApeILogManager.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
+
+#define THIS_PLUGINNAME "ApeSceneImpl"
 
 namespace Ape
 {
@@ -66,11 +69,11 @@ namespace Ape
 
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
-		
+
 		Ape::NodeSharedPtrNameMap mNodes;
-		
+
 		Ape::EntitySharedPtrNameMap mEntities;
-		
+
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::SceneSessionImpl* mpSceneSessionImpl;

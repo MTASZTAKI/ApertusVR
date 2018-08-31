@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#define STREAM_PORT 3010
 
 #include "ApeSceneSessionImpl.h"
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
 
-template<> Ape::ISceneSession* Ape::Singleton<Ape::ISceneSession>::msSingleton = 0;
-
 Ape::SceneSessionImpl::SceneSessionImpl()
-	: mpRakPeer(nullptr)
-	, mpNatPunchthroughClient(nullptr)
+	: mpRakReplicaPeer(nullptr)
+	, mpRakStreamPeer(nullptr)
 	, mpReplicaManager3(nullptr)
+	, mpNatPunchthroughClient(nullptr)
 	, mpLobbyManager(nullptr)
 {
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mpPluginManager = Ape::IPluginManager::getSingletonPtr();
+	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&SceneSessionImpl::eventCallBack, this, std::placeholders::_1));
+	mStreamReplicas = std::vector<Ape::Replica*>();
 	mIsConnectedToNATServer = false;
-	mbIsConnectedToSessionServer = false;
+	mIsConnectedToHost = false;
 	mNATServerAddress.FromString("");
 	mParticipantType = mpSystemConfig->getSceneSessionConfig().participantType;
+	mHostGuid = RakNet::RakNetGUID();
+	mHostAddress = RakNet::SystemAddress();
 
 	if (mParticipantType == Ape::SceneSession::HOST || mParticipantType == Ape::SceneSession::GUEST)
 	{
@@ -45,46 +51,90 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	}
 	if (mParticipantType == Ape::SceneSession::HOST)
 	{
-		//if (mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().sessionName, mGuid.ToString()))
-			create();
-		/*else
-			std::cout << "SceneSessionImpl(): lobbyManager->createSession() failed." << std::endl;*/
+		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
+		{
+			bool createSessionResult = mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, mGuid.ToString());
+			LOG(LOG_TYPE_DEBUG, "lobbyManager->createSession(): " << createSessionResult);
+		}
+		create();
 	}
 	else if (mParticipantType == Ape::SceneSession::GUEST)
 	{
-		/*Ape::SceneSessionUniqueID uuid;
-		if (mpLobbyManager->getSessionHostGuid(mpSystemConfig->getSceneSessionConfig().sessionName, uuid))
+		Ape::SceneSessionUniqueID uuid;
+		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
 		{
-			if (!uuid.empty())*/
-			connect(mpSystemConfig->getSceneSessionConfig().sessionGUID);
-			/*else
-				std::cout << "SceneSessionImpl(): lobbyManager->getSessionHostGuid() returned empty uuid." << std::endl;
+			LOG(LOG_TYPE_DEBUG, "use lobbyManager to get scene session guid");
+			std::string name = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName;
+			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
+			LOG(LOG_TYPE_DEBUG, "lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
+			if (getSessionRes && !uuid.empty())
+			{
+				connect(uuid);
+			}
 		}
 		else
 		{
-			std::cout << "SceneSessionImpl(): lobbyManager->getSessionHostGuid() failed." << std::endl;
-		}*/
+			uuid = mpSystemConfig->getSceneSessionConfig().sessionGUID;
+			LOG(LOG_TYPE_DEBUG, "lobbyManager is turned off, use sessionGUID: " << uuid);
+			connect(uuid);
+		}
 	}
 }
 
 Ape::SceneSessionImpl::~SceneSessionImpl()
 {
-	if (mpRakPeer)
+	if (mpRakReplicaPeer)
 	{
-		mpRakPeer->Shutdown(100);
-		RakNet::RakPeerInterface::DestroyInstance(mpRakPeer);
+		mpRakReplicaPeer->Shutdown(100);
+		RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
 	}
 
 	if (mpNatPunchthroughClient)
 		RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
 
-	/*if (mpLobbyManager) {
+	if (mpLobbyManager) {
 		if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
-			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().sessionName);
+			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
 
 		delete mpLobbyManager;
 		mpLobbyManager = nullptr;
-	}*/
+	}
+}
+
+void Ape::SceneSessionImpl::eventCallBack(const Ape::Event & event)
+{
+	if (mParticipantType == Ape::SceneSession::HOST)
+	{
+		if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+		{
+			if (auto entity = mpScene->getEntity(event.subjectName).lock())
+			{
+				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+				{
+					mStreamReplicas.push_back(pointCloud);
+					LOG(LOG_TYPE_DEBUG, "listenStreamPeerSendThread for replica named: " << event.subjectName);
+					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
+					runStreamPeerListenThread.detach();
+				}
+			}
+		}
+	}
+	else if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		if (event.type == Ape::Event::Type::POINT_CLOUD_CREATE)
+		{
+			if (auto entity = mpScene->getEntity(event.subjectName).lock())
+			{
+				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+				{
+					mStreamReplicas.push_back(pointCloud);
+					LOG(LOG_TYPE_DEBUG, "listenStreamPeerReceiveThread for replica named: " << event.subjectName);
+					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
+					runStreamPeerListenThread.detach();
+				}
+			}
+		}
+	}
 }
 
 void Ape::SceneSessionImpl::init()
@@ -94,58 +144,128 @@ void Ape::SceneSessionImpl::init()
 	mNATServerPort = natPunchThroughServerConfig.port;
 
 	Ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
-	mLobbyServerIP = lobbyServerConfig.ip;
-	std::cout << "mLobbyServerIP: " << mLobbyServerIP << std::endl;
-	mLobbyServerPort = lobbyServerConfig.port;
-	std::cout << "mLobbyServerPort: " << mLobbyServerPort << std::endl;
-	//mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort);
 
-	mpRakPeer = RakNet::RakPeerInterface::GetInstance();
+	mLobbyServerIP = lobbyServerConfig.ip;
+	LOG(LOG_TYPE_DEBUG, "mLobbyServerIP: " << mLobbyServerIP);
+	mLobbyServerPort = lobbyServerConfig.port;
+	LOG(LOG_TYPE_DEBUG, "mLobbyServerPort: " << mLobbyServerPort);
+	mLobbyServerSessionName = lobbyServerConfig.sessionName;
+	LOG(LOG_TYPE_DEBUG, "mLobbyServerSessionName: " << mLobbyServerSessionName);
+
+	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
+	mpRakReplicaPeer = RakNet::RakPeerInterface::GetInstance();
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
-	mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
+	if (natPunchThroughServerConfig.use)
+		mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
 	mpReplicaManager3 = std::make_shared<Ape::ReplicaManager>();
-	mpRakPeer->AttachPlugin(mpNatPunchthroughClient);
-	mpRakPeer->AttachPlugin(mpReplicaManager3.get());
+	if (natPunchThroughServerConfig.use)
+		mpRakReplicaPeer->AttachPlugin(mpNatPunchthroughClient);
+	mpRakReplicaPeer->AttachPlugin(mpReplicaManager3.get());
 	mpReplicaManager3->SetNetworkIDManager(mpNetworkIDManager);
 	mpReplicaManager3->SetAutoManageConnections(false,true);
 	RakNet::SocketDescriptor sd;
-	sd.socketFamily = AF_INET; 
-	sd.port = 0;
-	RakNet::StartupResult sr = mpRakPeer->Startup(8, &sd, 1);
-	RakAssert(sr == RakNet::RAKNET_STARTED);
-	mpRakPeer->SetMaximumIncomingConnections(8);
-	mpRakPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-	mGuid = mpRakPeer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-	mAddress = mpRakPeer->GetMyBoundAddress();
-	printf("Our guid is %s\n", mGuid.ToString());
-	printf("Started on %s\n", mAddress.ToString(true));
-	RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(mNATServerIP.c_str(), atoi(mNATServerPort.c_str()), 0, 0);
-	if (car!=RakNet::CONNECTION_ATTEMPT_STARTED)
-		printf("Failed connect call to %s. Code=%i\n", mNATServerIP.c_str(), car);
-	else
+	sd.socketFamily = AF_INET;
+	if (mParticipantType == Ape::SceneSession::HOST)
 	{
-		std::cout << "Try to connect to NAT punchthrough server: " << mNATServerIP << "|" << mNATServerPort << std::endl;
-		while (!mIsConnectedToNATServer)
+		sd.port = atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str());
+	}
+	else if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		sd.port = 0;
+	}
+
+	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
+	LOG(LOG_TYPE_DEBUG, "Raknet StartupResult: " << (int)sr);
+	RakAssert(sr == RakNet::RAKNET_STARTED);
+	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
+	mpRakReplicaPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
+	mGuid = mpRakReplicaPeer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS);
+	mAddress = mpRakReplicaPeer->GetMyBoundAddress();
+	LOG(LOG_TYPE_DEBUG, "Our guid is: " << mGuid.ToString());
+	LOG(LOG_TYPE_DEBUG, "Started on: " << mAddress.ToString(true));
+	if (natPunchThroughServerConfig.use)
+	{
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mNATServerIP.c_str(), atoi(mNATServerPort.c_str()), 0, 0);
+		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		{
-			listen();
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			LOG(LOG_TYPE_DEBUG, "Failed connect call to " << mNATServerIP.c_str() << ". Code=" << car);
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "Try to connect to NAT punchthrough server: " << mNATServerIP << "|" << mNATServerPort);
+			while (!mIsConnectedToNATServer)
+			{
+				listenReplicaPeer();
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
 		}
 	}
-	std::thread runThread((std::bind(&SceneSessionImpl::run, this)));
-	runThread.detach();
+
+	LOG(LOG_TYPE_DEBUG, "runReplicaPeerListenThread");
+	std::thread runReplicaPeerListenThread((std::bind(&SceneSessionImpl::runReplicaPeerListen, this)));
+	runReplicaPeerListenThread.detach();
+
+	mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
+	int socketFamily;
+	socketFamily = AF_INET;
+	if (mParticipantType == Ape::SceneSession::HOST)
+	{
+		mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
+		RakNet::SocketDescriptor socketDescriptor(STREAM_PORT, 0);
+		socketDescriptor.socketFamily = socketFamily;
+		mpRakStreamPeer->SetMaximumIncomingConnections(4);
+		RakNet::StartupResult sr;
+		sr = mpRakStreamPeer->Startup(4, &socketDescriptor, 1);
+		if (sr != RakNet::RAKNET_STARTED)
+		{
+			LOG(LOG_TYPE_DEBUG, "Stream server failed to start. Error=" << sr);
+		}
+		LOG(LOG_TYPE_DEBUG, "Started stream server on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
+	}
+	else if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
+		RakNet::SocketDescriptor socketDescriptor(0, 0);
+		socketDescriptor.socketFamily = socketFamily;
+		RakNet::StartupResult sr;
+		sr = mpRakStreamPeer->Startup(4, &socketDescriptor, 1);
+		if (sr != RakNet::RAKNET_STARTED)
+		{
+			LOG(LOG_TYPE_DEBUG, "Stream client failed to start. Error=" << sr);
+		}
+		LOG(LOG_TYPE_DEBUG, "Started stream client on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
+	}
 }
 
 void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 {
 	mIsHost = false;
-	mParticipantType = Ape::SceneSession::ParticipantType::GUEST;
-	RakNet::RakNetGUID serverGUID;
-	serverGUID.FromString(sceneSessionUniqueID.c_str());
-	std::cout << "Try to NAT punch to: " << serverGUID.ToString() << std::endl;
-	if (mpNatPunchthroughClient->OpenNAT(serverGUID, mNATServerAddress))
-		std::cout << "Wait for server response...." << std::endl;
+	mHostGuid.FromString(sceneSessionUniqueID.c_str());
+	if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+	{
+		LOG(LOG_TYPE_DEBUG, "Try to NAT punch to: " << mHostGuid.ToString());
+		if (mpNatPunchthroughClient->OpenNAT(mHostGuid, mNATServerAddress))
+		{
+			LOG(LOG_TYPE_DEBUG, "Wait for server response....");
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "Failed to connect.......");
+		}
+	}
 	else
-		std::cout << "Failed to connect......." << std::endl;
+	{
+		LOG(LOG_TYPE_DEBUG, "Try to connect to host IP: " << mpSystemConfig->getSceneSessionConfig().sessionIP << " port: " << mpSystemConfig->getSceneSessionConfig().sessionPort);
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSceneSessionConfig().sessionIP.c_str(), atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str()), 0, 0);
+		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
+		{
+			LOG(LOG_TYPE_DEBUG, "Failed connect call to " << mpSystemConfig->getSceneSessionConfig().sessionIP << ". Code=" << car);
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "Connection attempt was successful to remote system " << mpSystemConfig->getSceneSessionConfig().sessionIP);
+		}
+	}
 }
 
 void Ape::SceneSessionImpl::leave()
@@ -161,8 +281,9 @@ void Ape::SceneSessionImpl::create()
 {
 	mIsHost = true;
 	mParticipantType = Ape::SceneSession::ParticipantType::HOST;
-	std::cout << "Listening...." << std::endl;
-	mpNatPunchthroughClient->FindRouterPortStride(mNATServerAddress);
+	LOG(LOG_TYPE_DEBUG, "Listening....");
+	if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+		mpNatPunchthroughClient->FindRouterPortStride(mNATServerAddress);
 }
 
 bool Ape::SceneSessionImpl::isHost()
@@ -180,107 +301,166 @@ std::weak_ptr<RakNet::ReplicaManager3> Ape::SceneSessionImpl::getReplicaManager(
 	return mpReplicaManager3;
 }
 
+void Ape::SceneSessionImpl::setScene(Ape::IScene * scene)
+{
+	mpScene = scene;
+}
+
 Ape::SceneSession::ParticipantType Ape::SceneSessionImpl::getParticipantType()
 {
 	return mParticipantType;
 }
 
 
-void Ape::SceneSessionImpl::run()
+void Ape::SceneSessionImpl::runReplicaPeerListen()
 {
+	if (mParticipantType == Ape::SceneSession::GUEST)
+	{
+		LOG(LOG_TYPE_DEBUG, "thread start waiting for all plugin init");
+		while (!mpPluginManager->isAllPluginInitialized())
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		LOG(LOG_TYPE_DEBUG, "thread start listening after all plugins are inited");
+	}
 	while (true)
 	{
-		listen();
+		listenReplicaPeer();
 		std::this_thread::sleep_for (std::chrono::milliseconds(10));
 	}
 }
 
-void Ape::SceneSessionImpl::listen()
+void Ape::SceneSessionImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
-	for (packet = mpRakPeer->Receive(); packet; mpRakPeer->DeallocatePacket(packet), packet = mpRakPeer->Receive())
+	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
 		switch (packet->data[0])
 		{
-			case ID_DISCONNECTION_NOTIFICATION:
-				printf("ID_DISCONNECTION_NOTIFICATION\n");
-				break;
 			case ID_NEW_INCOMING_CONNECTION:
-				printf("ID_NEW_INCOMING_CONNECTION from %s. guid=%s.\n", packet->systemAddress.ToString(true), packet->guid.ToString());
+			{
+				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION"); 
+				if (mParticipantType == Ape::SceneSession::HOST)
+				{
+					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+					if (mpReplicaManager3->PushConnection(connection))
+					{
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+					}
+					else
+					{
+						mpReplicaManager3->DeallocConnection(connection);
+						LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+					}
+				}
+			}
+				break;
+			case ID_DISCONNECTION_NOTIFICATION:
+				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION");
 				break;
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
-					printf("ID_CONNECTION_REQUEST_ACCEPTED from %s,guid=%s\n", packet->systemAddress.ToString(true), packet->guid.ToString());
-					if (mNATServerIP == packet->systemAddress.ToString(false))
+					LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString(true) << ", guid=" << packet->guid.ToString() << ", participantType=" << mParticipantType);
+					if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
 					{
-						mNATServerAddress = packet->systemAddress;
-						RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(mNATServerAddress);
-						if (cs == RakNet::IS_CONNECTED)
-							mIsConnectedToNATServer = true;
-						else
-							mIsConnectedToNATServer = false;
+						if (mNATServerIP == packet->systemAddress.ToString(false))
+						{
+							mNATServerAddress = packet->systemAddress;
+							RakNet::ConnectionState cs = mpRakReplicaPeer->GetConnectionState(mNATServerAddress);
+							if (cs == RakNet::IS_CONNECTED)
+								mIsConnectedToNATServer = true;
+							else
+								mIsConnectedToNATServer = false;
+						}
+						else if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+						{
+							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+							if (mpReplicaManager3->PushConnection(connection))
+							{
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+							}
+							else
+							{
+								mpReplicaManager3->DeallocConnection(connection);
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+							}
+						}
 					}
-					else if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
 					{
 						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 						if (mpReplicaManager3->PushConnection(connection))
-							std::cout << "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful" << std::endl;
+						{
+							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+						}
 						else
 						{
 							mpReplicaManager3->DeallocConnection(connection);
-							std::cout << "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated" << std::endl;
+							LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 						}
 					}
 				}
 				break;
 			case ID_ALREADY_CONNECTED:
-					printf("ID_ALREADY_CONNECTED with guid %" PRINTF_64_BIT_MODIFIER "u\n", packet->guid);
-				break;
+				{
+					LOG(LOG_TYPE_DEBUG, "ID_ALREADY_CONNECTED with: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString());
+					break;
+				}
 			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-					printf("Failed to connect to %s. Reason %s\n", packet->systemAddress.ToString(true), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
-				break;
+				{
+					LOG(LOG_TYPE_DEBUG, "Failed to connect to: " << packet->systemAddress.ToString() << ". Reason:" << RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+					break;
+				}
 			case ID_NAT_TARGET_NOT_CONNECTED:
 			case ID_NAT_TARGET_UNRESPONSIVE:
 			case ID_NAT_CONNECTION_TO_TARGET_LOST:
 			case ID_NAT_ALREADY_IN_PROGRESS:
 			case ID_NAT_PUNCHTHROUGH_FAILED:
-					printf("NAT punch to %s failed. Reason %s\n", packet->guid.ToString(), RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
-				break;
+				{
+					LOG(LOG_TYPE_DEBUG, "NAT punch to: " << packet->guid.ToString() << " failed. Reason: " << RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
+					break;
+				}
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
 					unsigned char weAreTheSender = packet->data[1];
+					LOG(LOG_TYPE_DEBUG, "ID_NAT_PUNCHTHROUGH_SUCCEEDED: weAreTheSender=" << weAreTheSender);
 					if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
 					{
-						RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
-						RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
+						mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
+						RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 						if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
-							printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
+						{
+							LOG(LOG_TYPE_DEBUG, "Failed connect call to " << packet->systemAddress.ToString(true) << ". Code=" << car);
+						}
 						else
-							printf("NAT punch success from remote system %s.\n", packet->systemAddress.ToString(true));
+						{
+							LOG(LOG_TYPE_DEBUG, "NAT punch success from remote system " << packet->systemAddress.ToString(true));
+						}
 					}
 					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
 					{
 						if (!weAreTheSender)
 						{
-							RakNet::ConnectionState cs = mpRakPeer->GetConnectionState(packet->systemAddress);
-							RakNet::ConnectionAttemptResult car = mpRakPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
+							mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
+							RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
 							if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
-								printf("Failed connect call to %s. Code=%i\n", packet->systemAddress.ToString(true), car);
+							{
+								LOG(LOG_TYPE_DEBUG, "Failed connect call to " << packet->systemAddress.ToString(true) << ". Code=" << car);
+							}
 							else
-								printf("NAT punch success from remote system %s.\n", packet->systemAddress.ToString(true));
+							{
+								LOG(LOG_TYPE_DEBUG, "NAT punch success from remote system " << packet->systemAddress.ToString(true));
+							}
 						}
 						else
 						{
 							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 							if (mpReplicaManager3->PushConnection(connection))
 							{
-								std::cout << "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful" << std::endl;
-								mbIsConnectedToSessionServer = true;
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
 							}
 							else
 							{
 								mpReplicaManager3->DeallocConnection(connection);
-								std::cout << "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated" << std::endl;
+								LOG(LOG_TYPE_DEBUG, "Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 							}
 						}
 					}
@@ -289,18 +469,23 @@ void Ape::SceneSessionImpl::listen()
 			case ID_REPLICA_MANAGER_DOWNLOAD_COMPLETE:
 				{
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
-						printf("Completed all remote downloads\n");
+					{
+						LOG(LOG_TYPE_DEBUG, "Completed all remote downloads");
+						if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+						{
+							//std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+							mIsConnectedToHost = true;
+							mHostAddress = packet->systemAddress;
+							LOG(LOG_TYPE_DEBUG, "Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
+							mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);
+						}
+					}
 					break;
 				}
-			case ID_RAKVOICE_OPEN_CHANNEL_REQUEST:
-			case ID_RAKVOICE_OPEN_CHANNEL_REPLY:
-					printf("Got new channel from %s\n", packet->systemAddress.ToString());
-				break;
-			case ID_RAKVOICE_CLOSE_CHANNEL:
-					printf("ID_RAKVOICE_CLOSE_CHANNEL\n");
-				break;
-			case ID_USER_PACKET_ENUM:
-				break;
+			default:
+			{
+				//LOG(LOG_TYPE_DEBUG, "Unknown message type" << packet->data[0]);
+			}
 		}
 	}
 }

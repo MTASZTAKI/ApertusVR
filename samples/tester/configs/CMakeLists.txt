@@ -20,15 +20,4 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeNodeJsPlugin.json
-	ApeSystem.json
-	)
-
-add_custom_target(
-    Configs_tester ALL
-    SOURCES ${CONFIGS}
-)
-
-set_property (TARGET Configs_tester PROPERTY FOLDER "Samples/Tester/Configs")
+add_subdirectory (local_monitor)

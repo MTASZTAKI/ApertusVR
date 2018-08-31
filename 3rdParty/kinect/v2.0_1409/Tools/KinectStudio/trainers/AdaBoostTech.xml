@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GestureBuilderFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <TrainerDefinition>
+        <Header>
+            <Name>AdaBoostTrigger</Name>
+            <Trainer>AdaBoostTech.dll</Trainer>
+            <Runtime>AdaBoostTech.dll</Runtime>
+            <Date>2012-07-07</Date>
+            <Time>00:00:00.0000000-07:00</Time>
+            <Version>5</Version>
+        </Header>
+        <Attributes>
+            <Items xsi:type="FloatAttribute" Name="Accuracy Level" Value="0.95" MinValue="0" MaxValue="1"/>
+            <Items xsi:type="IntAttribute" Name="Number Weak Classifiers at Runtime" Value="1000" MinValue="0"/>
+            <Items xsi:type="BoolAttribute" Name="Filter Results" Value="true" />
+            <Items xsi:type="BoolAttribute" Name="Auto Find Best Filtering Params" Value="true" />
+            <Items xsi:type="FloatAttribute" Name="Weight Of False Positives During Auto Find" Value="0.5" MinValue="0" MaxValue="1"/>
+            <Items xsi:type="IntAttribute" Name="Manual Filter Params: Num Frames To Filter" Value="5" MinValue="1" MaxValue="10"/>
+            <Items xsi:type="FloatAttribute" Name="Manual Filter Params: Threshold" Value="0.001" MinValue="0" MaxValue="1"/>
+            <Items xsi:type="BoolAttribute" Name="Duplicate And Mirror Data During Training" Value="true" />
+            <Items xsi:type="IntAttribute" Name="% CPU For Training" Value="95" MinValue="1" MaxValue="100"/>
+            <Items xsi:type="BoolAttribute" Name="Use Hands Data" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Left Arm" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Right Arm" Value="false" />
+            <Items xsi:type="BoolAttribute" Name="Ignore Lower Body" Value="false" />
+        </Attributes>
+        <TagTypes>
+            <Items>BOOL</Items>
+        </TagTypes>
+        <DefaultTag xsi:type="BoolAttribute" Name="DefaultTag" Value="false" />
+        <AccompanyOutputs>
+            <Items Type="FLOAT" Name="Confidence" />
+            <Items Type="BOOL" Name="FirstFrameDetected" />
+        </AccompanyOutputs>
+    </TrainerDefinition>
+</GestureBuilderFile>

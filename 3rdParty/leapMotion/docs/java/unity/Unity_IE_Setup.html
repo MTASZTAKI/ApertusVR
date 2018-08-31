@@ -1,0 +1,407 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting up an Interaction Engine Scene &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/unity/Unity_IE_Setup.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity_IE_Setup.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity_IE_Setup.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/unity/Unity_IE_Setup.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity_IE_Setup.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Setting up an Interaction Engine Scene
+</span> -->
+        
+  <div class="section" id="setting-up-an-interaction-engine-scene">
+<h1>Setting up an Interaction Engine Scene<a class="headerlink" href="#setting-up-an-interaction-engine-scene" title="Permalink to this headline">¶</a></h1>
+<p>Start with a basic Leap-enabled scene; you can use Leap_Hands_Demo_VR as a template. Usually you will want one or more game objects to serve as a floor or table so that your interactable objects don&#8217;t fall to infinity or float away, depending on their rigid body settings.</p>
+<p>The simplest Interaction Engine scene requires:</p>
+<ul class="simple">
+<li>A LeapHandController (typically as a part of the LMHeadMountedRig)</li>
+<li>An InteractionManager</li>
+<li>Three layers for use by the Interaction Engine (the InteractionManager can create anonymous layers for you automatically)</li>
+<li>Left and Right BrushHand models added to the hand controller hand pool (graphics hand models are also helpful)</li>
+<li>An interactable object to play with.</li>
+</ul>
+<p><strong>Note:</strong> You can visit the example scene included in the Interaction Engine module package to see what a complete setup looks like.</p>
+<div class="section" id="adding-an-interaction-manager">
+<h2>Adding an Interaction Manager<a class="headerlink" href="#adding-an-interaction-manager" title="Permalink to this headline">¶</a></h2>
+<p>You can add an Interaction Manager to your scene in one of two ways:</p>
+<ol class="arabic simple">
+<li>Either drag the InteractionManager prefab into your hierarchy from the Interaction Engine module&#8217;s prefab folder,</li>
+<li>Or create an empty game object and add the InteractionManager script component to it.</li>
+</ol>
+<img alt="unity/../../../images/unity/IE_SetupManager.png" src="unity/../../../images/unity/IE_SetupManager.png" />
+<p>Make sure to assign the LeapProvider field of the manager to the provider you are using in your scene. Do this by dragging the LeapHandController game object to the LeapProvider property in the Unity Inspector.</p>
+<p>A scene can contain multiple InteractionManager objects so that you can tailor the interaction settings to suit particular types of objects and interactions.</p>
+</div>
+<div class="section" id="adding-brush-hands">
+<h2>Adding brush hands<a class="headerlink" href="#adding-brush-hands" title="Permalink to this headline">¶</a></h2>
+<p>Next, you will want to add the ‘Brush Hands’ to your scene.  These are special physical hand models – invisible to the user, but which influence the motion of objects inside the physics engine – that improve the interaction with physical objects.  You can drag the left and right BrushHand prefabs into the scene as children of the HandModels object under the LMHeadMountedRig.  Make sure to assign and enable them in the HandPool.</p>
+<img alt="unity/../../../images/unity/IE_AddBrushHands.png" src="unity/../../../images/unity/IE_AddBrushHands.png" />
+<p>Assign the InteractionManager object to each of the BrushHand objects.</p>
+<p>Remove the existing physics hands (RigidRoundHand-L and RigidRoundHand-R) from both the hierarchy and the HandPool. The normal physics models are incompatible with the Interaction Engine. (Also make sure to add some sort of graphical hand such as the capsule hand, or else you won’t be able to see your hands at all!)</p>
+<p>The brush hands use a physics material with Bounciness set to zero and Bounce Combine set to Minimum.</p>
+</div>
+<div class="section" id="setting-up-layers">
+<h2>Setting up layers<a class="headerlink" href="#setting-up-layers" title="Permalink to this headline">¶</a></h2>
+<p>You have the option of letting the Interaction Manager set up the layers for you automatically.  This has the benefit of being easier to use, but has some downsides.  When using automatic layer generation, the layers will not be named, and so the interaction objects and hands game objects will look like they are on an empty layer at all times. If you do not otherwise you layer masks in your application, then the automatic setup should work fine; otherwise, you may want to uncheck the InteractionManager <strong>Auto Generate Layers</strong> flag and assign the layers manually as described in <a class="reference internal" href="Unity_IE_Layers.html"><em>Interaction Engine Layers</em></a>.</p>
+<p>When setting up layers automatically, you will need to set the ‘Template Layer’ property to a layer of your choosing. The physics collision settings of thie template layer are copied to the interaction layers.</p>
+</div>
+<div class="section" id="creating-an-interaction-object">
+<h2>Creating an Interaction Object<a class="headerlink" href="#creating-an-interaction-object" title="Permalink to this headline">¶</a></h2>
+<p>Once you have your scene setup and ready, you can start adding interaction objects!  To create an interaction object, just add an InteractionBehaviour component to a gameObject.  There are a couple rules and restrictions for interaction objects:</p>
+<ul class="simple">
+<li>All interaction objects must have rigidbodies.  If you don’t plan on the object using dynamics, just set the rigidbody to be kinematic.</li>
+<li>An interaction object must not be a child or parent of another interaction object.</li>
+<li>Set the Rigidbody interpolation setting to ‘Interpolate’.  This greatly increases perceived fidelity.</li>
+</ul>
+<p>When setting up an Interaction Behaviour component, make sure to link your behaviour to the Interaction Manager. Either the Interaction Manager must provide a default InteractionMaterial, or the InteractionBehavior of an interactable object must provide one. An InteractionMaterial controls many aspects of hand-object interaction. See <a class="reference internal" href="Unity_IE_Materials.html"><em>Interaction Materials and Controllers</em></a> for more information.</p>
+<img alt="unity/../../../images/unity/IE_InteractableObject.png" src="unity/../../../images/unity/IE_InteractableObject.png" />
+</div>
+<div class="section" id="interaction-manager-debug-options">
+<h2>Interaction Manager Debug Options<a class="headerlink" href="#interaction-manager-debug-options" title="Permalink to this headline">¶</a></h2>
+<p>The Interaction Manager component provides a number of debugging aides.</p>
+<img alt="unity/../../../images/unity/IE_Debug_Settings.png" src="unity/../../../images/unity/IE_Debug_Settings.png" />
+<ul>
+<li><p class="first">Automatic Validation &#8211; enables extra checks to validate that interactable objects and other Interaction Engine settings do not violate the requirements of the internal simulation. When such violations occur, warnings are printed to the debug output.</p>
+</li>
+<li><p class="first">Show Debug Lines &#8211; Draws gizmo lines, such as the outlines of interactable objects and finger-to-object contacts. This feature requires a RuntimeGizmoManager in the scene. (You can add a RuntimeGizmoManager to your scene from the Assets/LeapMotion.scripts/Utils/ folder, by assigning the script to an empty game object in the scene.)</p>
+<p>The colors of the lines drawn on interactable objects mean:</p>
+<ul class="simple">
+<li>Green &#8211; the object is currently grasped.</li>
+<li>Grey &#8211; the object is &#8220;asleep,&#8221; that is, the Interaction Engine is not actively simulating physics for that object. Interactable objects &#8220;wake up&#8221; when a hand touches them or pushes another interactable object into them.</li>
+<li>Blue &#8211; the object is &#8220;awake,&#8221; but is not grasped.</li>
+</ul>
+</li>
+<li><p class="first">Show Debug Output &#8211; Prints Interaction Engine debugging text to the Unity Game view. If Debug Text View is assigned, the text is also written to the specified Unity Text object, which makes it possible to view the text while debugging in VR.</p>
+</li>
+<li><p class="first">Debug Text View &#8211; A Unity UI Text component to receive the debug output text. Optional.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

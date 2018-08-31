@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	if (argc > 1)
-	{
-		std::string participantType = argv[1];
-		if (participantType == "host")
-			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\host";
-		else if (participantType == "guest")
-			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\guest";
-		else if (participantType == "local")
-			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\local";
-		else if (participantType == "local_cave")
-			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\local_cave";
-		else if (participantType == "host_cave")
-			configDir << APE_SOURCE_DIR << "\\samples\\linkageDesignerVR\\configs\\host_cave";
-	}
-	else
-	{
-		std::cout << "usage: host | guest | local | local_cave | host_cave " << std::endl;
-		return 0;
-	}
-	Ape::System::Start(configDir.str(), true);
+	configDir << APE_SOURCE_DIR << "/samples/linkageDesignerVR/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

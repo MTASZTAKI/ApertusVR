@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #include "ApeIndexedFaceSetGeometryImpl.h"
 
 Ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool isHostCreated) : Ape::IIndexedFaceSetGeometry(name), Ape::Replica("IndexedFaceSetGeometry", isHostCreated)
@@ -80,41 +81,49 @@ void Ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *
 
 RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.groupName.c_str()));
+	if (serializeParameters->whenLastSerialized == 0)
+	{
+		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+		
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.groupName.c_str()));
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
-	for (auto item : mParameters.coordinates)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
+		for (auto item : mParameters.coordinates)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIndicesSize);
-	for (auto item : mParameters.indices)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIndicesSize);
+		for (auto item : mParameters.indices)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mNormalsSize);
-	for (auto item : mParameters.normals)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mNormalsSize);
+		for (auto item : mParameters.normals)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.generateNormals);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.generateNormals);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColorsSize);
-	for (auto item : mParameters.colors)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColorsSize);
+		for (auto item : mParameters.colors)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTextureCoordinatesSize);
-	for (auto item : mParameters.textureCoordinates)
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTextureCoordinatesSize);
+		for (auto item : mParameters.textureCoordinates)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
 
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.materialName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.materialName.c_str()));
+		
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+		
+		mVariableDeltaSerializer.EndSerialize(&serializationContext);
+		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
+	LOG_FUNC_ENTER();
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString groupName;
@@ -178,11 +187,15 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpScene->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+		if (auto parentNode = mpScene->getNode(parentName.C_String()).lock())
+		{
+			mParentNode = parentNode;
+			mParentNodeName = parentName.C_String();
+			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
+	LOG_FUNC_LEAVE();
 }
 
 

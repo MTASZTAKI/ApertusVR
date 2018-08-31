@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,8 @@ SOFTWARE.*/
 
 #include <algorithm>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
@@ -42,6 +44,7 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 #include "ApeISystemConfig.h"
+#include "ApeILogManager.h"
 
 namespace Ape
 { 
@@ -56,7 +59,21 @@ namespace Ape
 
 		void CreatePlugin(std::string pluginname);
 
+		void InitAndRunPlugin(Ape::IPlugin* plugin);
+
 		Ape::ISystemConfig* mpSystemConfig;
+
+		std::mutex mConstructedPluginMutex;
+
+		std::condition_variable mConstructedPluginCondition;
+
+		unsigned int mInitializedPluginCount;
+
+		unsigned int mPluginCount;
+
+		std::string mUniqueUserNodeName;
+
+		bool mIsAllPluginInitialized;
 
 	public:
 		PluginManagerImpl();
@@ -65,17 +82,13 @@ namespace Ape
 
 		void CreatePlugins();
 
-		void InitPlugins();
-
-		void RunPlugins();
-
-		void DestroyPlugins();
+		void InitAndRunPlugins();
 
 		void joinPluginThreads();
 
 		void detachPluginThreads();
 
-		virtual void LoadPlugin(std::string name) override;
+		virtual bool isAllPluginInitialized() override;
 	};
 }
 #endif

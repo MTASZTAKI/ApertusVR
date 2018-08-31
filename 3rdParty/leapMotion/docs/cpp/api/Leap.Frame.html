@@ -1,0 +1,1186 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LeapFrame &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="LeapHand" href="Leap.Hand.html" />
+    <link rel="prev" title="FingerList" href="Leap.FingerList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/api/Leap.Frame.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Frame.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/api/Leap.Frame.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.FingerList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Hand.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Frame.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Frame.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Frame.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Frame.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Frame.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Frame.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  LeapFrame
+</span> -->
+        
+  <div class="section" id="frame">
+<h1>Frame<a class="headerlink" href="#frame" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1ab71e6ee46f0c2593266f9a62d9c5e029">Frame()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a1547e5c5dc8a0d7f88691a6d53fc214f">currentFramesPerSecond() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1adff8cf1970aee948138c9cd4406025e2">deserialize(const std::string &amp;str)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a">finger(int32_t id) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a9f871d62c006a2426fc2164f91584ec4">fingers() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a138683bff90b364b998c1b508469c308">gesture(int32_t id) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db">gestures() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1ab301585245818511c8a860aae8dc6a03">gestures(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a6251adfa492a6d81efa4ba06b6c60a05">hand(int32_t id) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b">hands() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08">id() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a85588dbb02a8ff793cf2ced9067f8263">images() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1ab407fe57c95dff2a43d4bf53fd780c4e">interactionBox() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1afe9f4538ff2c639bd9ee77677f9d7396">invalid()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aac1b70a2ed67ead038c4d3f5ac4d8a81">isValid() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aedef2de0a3286a8a8695ba609229eafd">operator!=(const Frame &amp;) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1acac49f1bef175836ba4a5de19893e2f6">operator==(const Frame &amp;) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a47b471f61ee1b7514d37747bd7b95e73">pointable(int32_t id) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a9b73aa8053337ed8d142fc912703e43e">pointables() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a6111d1167ae69e1b5358fbe861aafa99">rawImages() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a0cbf95036199c5e627ff43562c8d68ba">rotationAngle(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1acd2e2bc18122afe55573b7615ea13919">rotationAngle(const Frame &amp;sinceFrame, const Vector &amp;axis) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a96f629de9655ab1fca1a153d5dbac99b">rotationAxis(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a305bc1f67a6a8d34d4292c3d2d8ba933">rotationMatrix(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a98ca8e1c8efc5858fe213198012697dc">rotationProbability(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a5c97d459821c0b36fb11c6a2b74f5d4c">scaleFactor(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a424b5e4459b1f2707500ec8d8362fd4d">scaleProbability(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aa163dee25d1f498f7b52279c3eb2c38e">serialize() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a94fc974ee7b1ef76c26c6607efe27d3b">timestamp() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a3f23c97b6c9f2a88e1121d1c633ccafa">toString() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a9dbfeb0a32af8f68e94a5f9f29b08b63">tool(int32_t id) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a05cba9e8a5f3db32fb66f3ba60fb514c">tools() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1aa8ab3b10320b326d3f1b90615da21016">translation(const Frame &amp;sinceFrame) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_frame_1a98e57401c2c211333f94cdb4848daabb">translationProbability(const Frame &amp;sinceFrame) const</a></li>
+</ul>
+</div>
+<div class="line-block" id="cppclass_leap_1_1_frame">
+<div class="line"><em>class</em> <strong>Leap::Frame</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> class represents a set of hand and finger tracking data detected in a single frame. </p>
+<p><p>The Leap Motion software detects hands, fingers and tools within the tracking area, reporting their positions, orientations, gestures, and motions in frames at the Leap Motion frame rate.</p>
+<p>Access <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects through an instance of the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> class:</p>
+<p><pre class="literal-block">
+if( controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a180fa55a4bf36580963bed9e3e09c227"><em>isConnected</em></a>()) //controller is a Controller object
+{
+    <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> frame = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(); //The latest frame
+    <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> previous = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(1); //The previous frame
+}
+</pre>
+</p>
+<p>Implement a <a class="reference internal" href="Leap.Listener.html#cppclass_leap_1_1_listener"><em>Listener</em></a> subclass to receive a callback event when a new <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> is available. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_frame_1a1547e5c5dc8a0d7f88691a6d53fc214f"></span><div class="line-block">
+<div class="line">float <strong>currentFramesPerSecond</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The instantaneous frame rate. </p>
+<p><p>The rate at which the Leap Motion software is providing frames of data (in frames per second). The frame rate can fluctuate depending on available computing resources, activity within the device field of view, software tracking settings, and other factors.</p>
+<p><pre class="literal-block">
+float instantaneousFrameRate = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a1547e5c5dc8a0d7f88691a6d53fc214f"><em>currentFramesPerSecond</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An estimate of frames per second of the Leap Motion <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a>. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1adff8cf1970aee948138c9cd4406025e2"></span><div class="line-block">
+<div class="line">void <strong>deserialize</strong>(const std::string &amp; str)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Decodes a byte string to replace the properties of this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>. </p>
+<p><p>A <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Controller</em></a> object must be instantiated for this function to succeed, but it does not need to be connected. To extract gestures from the deserialized frame, you must enable the appropriate gestures first.</p>
+<p>Any existing data in the frame is destroyed. If you have references to child objects (hands, fingers, etc.), these are preserved as long as the references remain in scope.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Leap::Controller</em></a> controller; //An instance must exist
+std::ifstream inputFile(&quot;frame.data&quot;);
+std::string frameData((std::istreambuf_iterator&lt;char&gt;(inputFile)), std::istreambuf_iterator&lt;char&gt;());
+<a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> reconstructedFrame;
+reconstructedFrame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1adff8cf1970aee948138c9cd4406025e2"><em>deserialize</em></a>(frameData);
+</pre>
+</p>
+<p><strong>Note:</strong> The behavior when calling functions which take another <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object as a parameter is undefined when either frame has been deserialized.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">str</span></tt> - <p>A std:string object containing the serialized bytes of a frame.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> <strong>finger</strong>(int32_t id)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object with the specified ID in this frame. </p>
+<p><p>Use the <a class="reference internal" href="#cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a"><em>Frame::finger()</em></a> function to retrieve the <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object from this frame using an ID value obtained from a previous frame. This function always returns a <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object, but if no finger with the specified ID is present, an invalid <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object is returned.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Leap::Finger</em></a> fingerOfinterest = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a"><em>finger</em></a>(fingerID);
+</pre>
+</p>
+<p>Note that ID values persist across frames, but only until tracking of a particular object is lost. If tracking of a finger is lost and subsequently regained, the new <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object representing that physical finger may have a different ID than that representing the finger in an earlier frame.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object with the matching ID if one exists in this frame; otherwise, an invalid <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">id</span></tt> - <p>The ID value of a <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> object from a previous frame. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a9f871d62c006a2426fc2164f91584ec4"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.FingerList.html#cppclass_leap_1_1_finger_list"><em>FingerList</em></a> <strong>fingers</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> objects detected in this frame, given in arbitrary order. </p>
+<p><p>The list can be empty if no fingers are detected.</p>
+<p>Use <a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list_1ac76c27053c572b30c72063c03093e059"><em>PointableList::extended()</em></a> to remove non-extended fingers from the list.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.FingerList.html#cppclass_leap_1_1_finger_list"><em>Leap::FingerList</em></a> fingersInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a9f871d62c006a2426fc2164f91584ec4"><em>fingers</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.FingerList.html#cppclass_leap_1_1_finger_list"><em>FingerList</em></a> containing all <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> objects detected in this frame. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1ab71e6ee46f0c2593266f9a62d9c5e029"></span><div class="line-block">
+<div class="line"> <strong>Frame</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object. </p>
+<p><p><a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> instances created with this constructor are invalid. Get valid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects by calling the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>Controller::frame()</em></a> function.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> current = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>();
+<a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> previous = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(1);
+</pre>
+</p>
+<p>The only time you should use this constructor is before deserializing serialized frame data. Call <tt class="docutils literal"><span class="pre">Frame::deserialize(string)</span></tt> to recreate a saved <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a138683bff90b364b998c1b508469c308"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> <strong>gesture</strong>(int32_t id)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object with the specified ID in this frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Leap::Gesture</em></a> gestureOfInterest = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a138683bff90b364b998c1b508469c308"><em>gesture</em></a>(gestureID);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object in the frame with the specified ID if one exists; Otherwise, an Invalid <a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">id</span></tt> - <p>The ID of an <a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object from a previous frame. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>GestureList</em></a> <strong>gestures</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The gestures recognized or continuing in this frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> gesturesInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>GestureList</em></a> the list of gestures. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1ab301585245818511c8a860aae8dc6a03"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>GestureList</em></a> <strong>gestures</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a <a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>GestureList</em></a> containing all gestures that have occurred since the specified frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> gesturesSinceFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>(lastProcessedFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>GestureList</em></a> The list of the <a class="reference internal" href="Leap.Gesture.html#cppclass_leap_1_1_gesture"><em>Gesture</em></a> objects that have occurred since the specified frame. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>An earlier <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object. The starting frame must still be in the frame history cache, which has a default length of 60 frames. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a6251adfa492a6d81efa4ba06b6c60a05"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> <strong>hand</strong>(int32_t id)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object with the specified ID in this frame. </p>
+<p><p>Use the <a class="reference internal" href="#cppclass_leap_1_1_frame_1a6251adfa492a6d81efa4ba06b6c60a05"><em>Frame::hand()</em></a> function to retrieve the <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object from this frame using an ID value obtained from a previous frame. This function always returns a <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object, but if no hand with the specified ID is present, an invalid <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object is returned.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Leap::Hand</em></a> handOfInterest = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a6251adfa492a6d81efa4ba06b6c60a05"><em>hand</em></a>(handID);
+</pre>
+</p>
+<p>Note that ID values persist across frames, but only until tracking of a particular object is lost. If tracking of a hand is lost and subsequently regained, the new <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object representing that physical hand may have a different ID than that representing the physical hand in an earlier frame.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object with the matching ID if one exists in this frame; otherwise, an invalid <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">id</span></tt> - <p>The ID value of a <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> object from a previous frame. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>HandList</em></a> <strong>hands</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> objects detected in this frame, given in arbitrary order. </p>
+<p><p>The list can be empty if no hands are detected.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> handsInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a788e21d8ff5d1f54209e75f14a27110b"><em>hands</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>HandList</em></a> containing all <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> objects detected in this frame. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08"></span><div class="line-block">
+<div class="line">int64_t <strong>id</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A unique ID for this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>. </p>
+<p><p>Consecutive frames processed by the Leap Motion software have consecutive increasing values. You can use the frame ID to avoid processing the same <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object twice:</p>
+<p><pre class="literal-block">
+int64_t lastFrameID = 0;
+
+void processFrame( <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> frame )
+{
+    if( frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08"><em>id</em></a>() == lastFrameID ) return;
+    //...
+    lastFrameID = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08"><em>id</em></a>();
+}
+</pre>
+</p>
+<p>As well as to make sure that your application processes every frame:</p>
+<p><pre class="literal-block">
+int64_t lastProcessedFrameID = 0;
+
+void nextFrame( <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Leap::Controller</em></a> controller )
+{
+    int64_t currentID = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>().<a class="reference internal" href="#cppclass_leap_1_1_frame_1aa0ee47d68c234d391656c86468028b08"><em>id</em></a>();
+    for( int history = 0; history &lt; currentID - lastProcessedFrameID; history++)
+    {
+        processNextFrame( controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(history) );
+    }
+    lastProcessedFrameID = currentID;
+}
+
+void processNextFrame( <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> frame )
+{
+    if( frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aac1b70a2ed67ead038c4d3f5ac4d8a81"><em>isValid</em></a>() )
+    {
+        //...
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The frame ID. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a85588dbb02a8ff793cf2ced9067f8263"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> <strong>images</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of IR images from the Leap Motion cameras. </p>
+<p><p>If the system is in Robust mode, these will be slightly post processed</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An <a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> object containing the camera images analyzed to create this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1ab407fe57c95dff2a43d4bf53fd780c4e"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.InteractionBox.html#cppclass_leap_1_1_interaction_box"><em>InteractionBox</em></a> <strong>interactionBox</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The current <a class="reference internal" href="Leap.InteractionBox.html#cppclass_leap_1_1_interaction_box"><em>InteractionBox</em></a> for the frame. </p>
+<p><p>See the <a class="reference internal" href="Leap.InteractionBox.html#cppclass_leap_1_1_interaction_box"><em>InteractionBox</em></a> class documentation for more details on how this class should be used.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.InteractionBox.html#cppclass_leap_1_1_interaction_box"><em>Leap::InteractionBox</em></a> box = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1ab407fe57c95dff2a43d4bf53fd780c4e"><em>interactionBox</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The current <a class="reference internal" href="Leap.InteractionBox.html#cppclass_leap_1_1_interaction_box"><em>InteractionBox</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aac1b70a2ed67ead038c4d3f5ac4d8a81"></span><div class="line-block">
+<div class="line">bool <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> instance is valid. </p>
+<p><p>A valid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> is one generated by the <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller"><em>Leap::Controller</em></a> object that contains tracking data for all detected entities. An invalid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> contains no actual tracking data, but you can call its functions without risk of a null pointer exception. The invalid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> mechanism makes it more convenient to track individual data across the frame history. For example, you can invoke:</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Leap::Finger</em></a> finger = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(n).<a class="reference internal" href="#cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a"><em>finger</em></a>(fingerID);
+</pre>
+</p>
+<p>for an arbitrary <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> history value, &#8220;n&#8221;, without first checking whether frame(n) returned a null object. (You should still check that the returned <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Finger</em></a> instance is valid.)</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if this is a valid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object; false otherwise. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aedef2de0a3286a8a8695ba609229eafd"></span><div class="line-block">
+<div class="line">bool <strong>operator!=</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp;)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object inequality. </p>
+<p><p><pre class="literal-block">
+thisFrame != thatFrame;
+</pre>
+</p>
+<p>Two <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects are equal if and only if both <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects represent the exact same frame of tracking data and both <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects are valid. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1acac49f1bef175836ba4a5de19893e2f6"></span><div class="line-block">
+<div class="line">bool <strong>operator==</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp;)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object equality. </p>
+<p><p><pre class="literal-block">
+thisFrame == thatFrame;
+</pre>
+</p>
+<p>Two <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects are equal if and only if both <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects represent the exact same frame of tracking data and both <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> objects are valid. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a47b471f61ee1b7514d37747bd7b95e73"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> <strong>pointable</strong>(int32_t id)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object with the specified ID in this frame. </p>
+<p><p>Use the <a class="reference internal" href="#cppclass_leap_1_1_frame_1a47b471f61ee1b7514d37747bd7b95e73"><em>Frame::pointable()</em></a> function to retrieve the <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object from this frame using an ID value obtained from a previous frame. This function always returns a <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object, but if no finger or tool with the specified ID is present, an invalid <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object is returned.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Leap::Pointable</em></a> pointableOfInterest = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a47b471f61ee1b7514d37747bd7b95e73"><em>pointable</em></a>(pointableID);
+</pre>
+</p>
+<p>Note that ID values persist across frames, but only until tracking of a particular object is lost. If tracking of a finger or tool is lost and subsequently regained, the new <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object representing that finger or tool may have a different ID than that representing the finger or tool in an earlier frame.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object with the matching ID if one exists in this frame; otherwise, an invalid <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">id</span></tt> - <p>The ID value of a <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> object from a previous frame. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a9b73aa8053337ed8d142fc912703e43e"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>PointableList</em></a> <strong>pointables</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> objects (fingers and tools) detected in this frame, given in arbitrary order. </p>
+<p><p>The list can be empty if no fingers or tools are detected.</p>
+<p>Use <a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list_1ac76c27053c572b30c72063c03093e059"><em>PointableList::extended()</em></a> to remove non-extended fingers from the list.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>Leap::PointableList</em></a> pointablesInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a9b73aa8053337ed8d142fc912703e43e"><em>pointables</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>PointableList</em></a> containing all <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> objects detected in this frame. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a6111d1167ae69e1b5358fbe861aafa99"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> <strong>rawImages</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of Raw images from the Leap Motion cameras. </p>
+<p><p>These will never be postprocessed and closely match the raw sensor output.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An <a class="reference internal" href="Leap.ImageList.html#cppclass_leap_1_1_image_list"><em>ImageList</em></a> object containing the camera images analyzed to create this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.3 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a0cbf95036199c5e627ff43562c8d68ba"></span><div class="line-block">
+<div class="line">float <strong>rotationAngle</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The angle of rotation around the rotation axis derived from the overall rotational motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+float rotationInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a0cbf95036199c5e627ff43562c8d68ba"><em>rotationAngle</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A positive value containing the heuristically determined rotational change between the current frame and that specified in the sinceFrame parameter. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative rotation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1acd2e2bc18122afe55573b7615ea13919"></span><div class="line-block">
+<div class="line">float <strong>rotationAngle</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame, const  <a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Vector</em></a>  &amp; axis)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The angle of rotation around the specified axis derived from the overall rotational motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+float rotationAroundXAxis = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a0cbf95036199c5e627ff43562c8d68ba"><em>rotationAngle</em></a>(startFrame, Leap::Vector::xAxis());
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A value containing the heuristically determined rotational change between the current frame and that specified in the sinceFrame parameter around the given axis. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative rotation. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">axis</span></tt> - <p>The axis to measure rotation around. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a96f629de9655ab1fca1a153d5dbac99b"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Vector</em></a> <strong>rotationAxis</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The axis of rotation derived from the overall rotational motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Leap::Vector</em></a> axisOfRotation = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a96f629de9655ab1fca1a153d5dbac99b"><em>rotationAxis</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A normalized direction <a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Vector</em></a> representing the axis of the heuristically determined rotational change between the current frame and that specified in the sinceFrame parameter. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative rotation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a305bc1f67a6a8d34d4292c3d2d8ba933"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Matrix.html#cppstruct_leap_1_1_matrix"><em>Matrix</em></a> <strong>rotationMatrix</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The transform matrix expressing the rotation derived from the overall rotational motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Matrix.html#cppstruct_leap_1_1_matrix"><em>Leap::Matrix</em></a> rotationTransform = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a305bc1f67a6a8d34d4292c3d2d8ba933"><em>rotationMatrix</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A transformation <a class="reference internal" href="Leap.Matrix.html#cppstruct_leap_1_1_matrix"><em>Matrix</em></a> containing the heuristically determined rotational change between the current frame and that specified in the sinceFrame parameter. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative rotation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a98ca8e1c8efc5858fe213198012697dc"></span><div class="line-block">
+<div class="line">float <strong>rotationProbability</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The estimated probability that the overall motion between the current frame and the specified frame is intended to be a rotating motion. </p>
+<p><p><pre class="literal-block">
+float rotationDominance = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a98ca8e1c8efc5858fe213198012697dc"><em>rotationProbability</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A value between 0 and 1 representing the estimated probability that the overall motion between the current frame and the specified frame is intended to be a rotating motion. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative rotation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a5c97d459821c0b36fb11c6a2b74f5d4c"></span><div class="line-block">
+<div class="line">float <strong>scaleFactor</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The scale factor derived from the overall motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+float zoomFactor = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a5c97d459821c0b36fb11c6a2b74f5d4c"><em>scaleFactor</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A positive value representing the heuristically determined scaling change ratio between the current frame and that specified in the sinceFrame parameter. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative scaling. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a424b5e4459b1f2707500ec8d8362fd4d"></span><div class="line-block">
+<div class="line">float <strong>scaleProbability</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The estimated probability that the overall motion between the current frame and the specified frame is intended to be a scaling motion. </p>
+<p><p><pre class="literal-block">
+float scaleDominance = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a424b5e4459b1f2707500ec8d8362fd4d"><em>scaleProbability</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A value between 0 and 1 representing the estimated probability that the overall motion between the current frame and the specified frame is intended to be a scaling motion. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative scaling. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aa163dee25d1f498f7b52279c3eb2c38e"></span><div class="line-block">
+<div class="line">std::string <strong>serialize</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Encodes this <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object as a byte string. </p>
+<p><p><pre class="literal-block">
+std::ofstream outputFile(&quot;frame.data&quot;);
+const std::string serializedFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aa163dee25d1f498f7b52279c3eb2c38e"><em>serialize</em></a>();
+outputFile &lt;&lt; serializedFrame;
+outputFile.close();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The serialized string encoding the data for this frame. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a94fc974ee7b1ef76c26c6607efe27d3b"></span><div class="line-block">
+<div class="line">int64_t <strong>timestamp</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The frame capture time in microseconds elapsed since an arbitrary point in time in the past. </p>
+<p><p>Use <a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a629420c35d3c1192bc44e61f64d1e461"><em>Controller::now()</em></a> to calculate the age of the frame.</p>
+<p><pre class="literal-block">
+float framePeriod = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a94fc974ee7b1ef76c26c6607efe27d3b"><em>timestamp</em></a>() - controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(1).<a class="reference internal" href="#cppclass_leap_1_1_frame_1a94fc974ee7b1ef76c26c6607efe27d3b"><em>timestamp</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The timestamp in microseconds. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a9dbfeb0a32af8f68e94a5f9f29b08b63"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> <strong>tool</strong>(int32_t id)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> object with the specified ID in this frame. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> object with the matching ID if one exists in this frame; otherwise, an invalid <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> object is returned. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">id</span></tt> - <p>The ID value of a <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> object from a previous frame. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a05cba9e8a5f3db32fb66f3ba60fb514c"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.ToolList.html#cppclass_leap_1_1_tool_list"><em>ToolList</em></a> <strong>tools</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> objects detected in this frame, given in arbitrary order. </p>
+<p><p>The list can be empty if no tools are detected.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.ToolList.html#cppclass_leap_1_1_tool_list"><em>Leap::ToolList</em></a> toolsInFrame = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a05cba9e8a5f3db32fb66f3ba60fb514c"><em>tools</em></a>();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="Leap.ToolList.html#cppclass_leap_1_1_tool_list"><em>ToolList</em></a> containing all <a class="reference internal" href="Leap.Tool.html#cppclass_leap_1_1_tool"><em>Tool</em></a> objects detected in this frame. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a3f23c97b6c9f2a88e1121d1c633ccafa"></span><div class="line-block">
+<div class="line">std::string <strong>toString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human readable description of the <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A description of the <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> as a string. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1aa8ab3b10320b326d3f1b90615da21016"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Vector</em></a> <strong>translation</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The change of position derived from the overall linear motion between the current frame and the specified frame. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Leap::Vector</em></a> linearMovement = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1aa8ab3b10320b326d3f1b90615da21016"><em>translation</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Vector</em></a> representing the heuristically determined change in position of all objects between the current frame and that specified in the sinceFrame parameter. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the relative translation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_frame_1a98e57401c2c211333f94cdb4848daabb"></span><div class="line-block">
+<div class="line">float <strong>translationProbability</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; sinceFrame)</div>
+</div>
+</p>
+<blockquote>
+<div><p>The estimated probability that the overall motion between the current frame and the specified frame is intended to be a translating motion. </p>
+<p><p><pre class="literal-block">
+float translationDominance = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a98e57401c2c211333f94cdb4848daabb"><em>translationProbability</em></a>(startFrame);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A value between 0 and 1 representing the estimated probability that the overall motion between the current frame and the specified frame is intended to be a translating motion. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">sinceFrame</span></tt> - <p>The starting frame for computing the translation. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_frame_1afe9f4538ff2c639bd9ee77677f9d7396"></span><div class="line-block">
+<div class="line">const  <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a>  &amp; <strong>invalid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns an invalid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> object. </p>
+<p><p>You can use the instance returned by this function in comparisons testing whether a given <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> instance is valid or invalid. (You can also use the <a class="reference internal" href="#cppclass_leap_1_1_frame_1aac1b70a2ed67ead038c4d3f5ac4d8a81"><em>Frame::isValid()</em></a> function.)</p>
+<p><pre class="literal-block">
+//Average a finger position for the last 10 frames
+int count = 0;
+<a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Leap::Vector</em></a> average = <a class="reference internal" href="Leap.Vector.html#cppstruct_leap_1_1_vector"><em>Leap::Vector</em></a>();
+<a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Leap::Finger</em></a> fingerToAverage = frame.<a class="reference internal" href="#cppclass_leap_1_1_frame_1a9f871d62c006a2426fc2164f91584ec4"><em>fingers</em></a>()[0];
+for( int i = 0; i &lt; 10; i++ )
+{
+    <a class="reference internal" href="Leap.Finger.html#cppclass_leap_1_1_finger"><em>Leap::Finger</em></a> fingerFromFrame = controller.<a class="reference internal" href="Leap.Controller.html#cppclass_leap_1_1_controller_1a1a25f3894cf82667f423dad20d7d6b62"><em>frame</em></a>(i).<a class="reference internal" href="#cppclass_leap_1_1_frame_1a6b5532f1b733e6f5b42ef0133dd69f2a"><em>finger</em></a>(fingerToAverage.<a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable_1a87daef5bdd8501be1f113684cfc61074"><em>id</em></a>());
+    if( fingerFromFrame.<a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable_1aac1b70a2ed67ead038c4d3f5ac4d8a81"><em>isValid</em></a>() )
+    {
+        average += fingerFromFrame.<a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable_1a495779027d8771a7980b3ca08335f017"><em>tipPosition</em></a>();
+        count++;
+    }
+}
+average /= count;
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The invalid <a class="reference internal" href="#cppclass_leap_1_1_frame"><em>Frame</em></a> instance. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frame">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#hand">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

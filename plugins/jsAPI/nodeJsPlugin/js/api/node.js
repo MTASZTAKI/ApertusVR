@@ -25,47 +25,54 @@ var ape = require('../ape.js');
 var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
+var async = moduleManager.requireNodeModule('async');
 var utils = require('../modules/utils/utils.js');
-var logger = require("../modules/logger/logger.js");
+var logger = require("../modules/log_manager/log_manager.js");
+var resp = require('../modules/response_manager/response_manager.js');
+var errorMap = require('../modules/utils/errors.js');
 
 exports.moduleTag = 'ApeHTTPApiNode';
 
-app.get('/nodes/usernode/name', function(req, res) {
-	console.log('ape.httpApi.nodes.usernode.name()');
-	var respObj = new utils.responseObj();
-	ape.nbind.JsBindManager().getUserNode(function(error, obj) {
-		console.log('ape.nbind.JsBindManager().getUserNode() callback');
-		if (error) {
-			respObj.addErrorItem({
-				name: 'invalidCast',
-				msg: obj,
-				code: 666
-			});
-			res.status(400).send(respObj.toJSonString());
-			return;
-		}
+app.get('/nodes', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets all node and their properties in the scene.');
 
-		respObj.addDataItem({
-			name: obj.getName()
-		});
-		console.log('ape.nbind.JsBindManager().getUserNode() callback respObj:', respObj);
-		res.send(respObj.toJSonString());
-	});
+	async.waterfall(
+		[
+			function(callback) {
+				ape.nbind.JsBindManager().getUserNode(function(error, obj) {
+					if (error) {
+						callback({ name: 'invalidCast', msg: obj, code: 666 });
+					}
+					callback(null, obj.getName());
+				});
+			}
+		],
+		function(err, results) {
+			if (err) {
+				logger.error('error: ', err);
+				respObj.addErrorItem(err);
+				res.send(respObj.toJSonString());
+				return;
+			}
+
+			respObj.addDataItem({ name: results });
+			res.send(respObj.toJSonString());
+		}
+	);
 });
 
 app.post('/nodes', function(req, res) {
-	console.log('ape.httpApi.nodes.create()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Creates a new node with the specified name.');
 
 	// handle http param validation errors
 	req.checkBody('name', 'BodyParam is not presented').notEmpty()
-	req.checkBody('name', 'BodyParam must be a string').isAlpha();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
 	}
 
-	// get name from url
 	var name = req.body.name;
 	var nodeObj = ape.nbind.JsBindManager().createNode(name);
 	respObj.addEvent({
@@ -76,21 +83,104 @@ app.post('/nodes', function(req, res) {
 	res.send(respObj.toJSonString());
 });
 
-app.get('/nodes/:name/position', function(req, res) {
-	console.log('ape.httpApi.nodes.getPosition()');
-	var respObj = new utils.responseObj();
+app.get('/nodes/:name', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets all properties of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkParams('name', 'UrlParam must be a string').isAlpha();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
 	}
 
-	// get name from url
 	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
 
+		logger.debug(utils.convertToJsObj(obj));
+
+		var matrix = obj.getTransformationMatrix();
+		var rotMatrix = new ape.nbind.Matrix4(-1, 0, 0, 0,
+											  0, -1, 0, 0,
+											  0, 0, 1, 0,
+											  0, 0, 0, 1);
+		var invRotTransMatrix = matrix.inverse().concatenate(rotMatrix);
+
+		respObj.addDataItem({
+			name: name,
+			scale: JSON.parse(obj.getScale().toJsonString()),
+			position: JSON.parse(obj.getPosition().toJsonString()),
+			orientation: JSON.parse(obj.getOrientation().toJsonString()),
+			euler: JSON.parse(obj.getEuler().toJsonString()),
+			transformation: {
+				transformationmatrix: JSON.parse(matrix.toJsonString()),
+				invRotTransMatrix: JSON.parse(invRotTransMatrix.toJsonString())
+			}
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.get('/nodes/:name/transformationmatrix', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the homogen transformation matrix of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		logger.debug(utils.convertToJsObj(obj));
+		var matrix = obj.getTransformationMatrix();
+		var rotMatrix = new ape.nbind.Matrix4(-1, 0, 0, 0,
+											  0, -1, 0, 0,
+											  0, 0, 1, 0,
+											  0, 0, 0, 1);
+		var invRotTransMatrix = matrix.inverse().concatenate(rotMatrix);
+
+		respObj.addDataItem({
+			transformationmatrix: matrix.toString(),
+			invRotTransMatrix: invRotTransMatrix.toString()
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.get('/nodes/:name/scale', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the scale of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
 	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
 		if (error) {
 			respObj.addErrorItem({
@@ -103,19 +193,18 @@ app.get('/nodes/:name/position', function(req, res) {
 		}
 
 		respObj.addDataItem({
-			position: utils.convertToJsObj(obj.getPosition())
+			scale: JSON.parse(obj.getScale().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
 });
 
-app.post('/nodes/:name/position', function(req, res) {
-	console.log('ape.httpApi.nodes.setPosition()');
-	var respObj = new utils.responseObj();
+app.post('/nodes/:name/scale', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the scale of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkParams('name', 'UrlParam must be a string').isAlpha();
 	req.checkBody('x', 'BodyParam is not presented').notEmpty();
 	req.checkBody('y', 'BodyParam is not presented').notEmpty();
 	req.checkBody('z', 'BodyParam is not presented').notEmpty();
@@ -124,9 +213,7 @@ app.post('/nodes/:name/position', function(req, res) {
 		return;
 	}
 
-	// get node name from urlParam
 	var name = req.params.name;
-
 	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
 		if (error) {
 			respObj.addErrorItem({
@@ -138,37 +225,96 @@ app.post('/nodes/:name/position', function(req, res) {
 			return;
 		}
 
-		var newPos = new ape.nbind.Vector3(Number(req.body.x), Number(req.body.y), Number(req.body.z));
-		// if (newPos.notEqualTo(obj.getPosition())) {
-		//   respObj.addEvent({
-		//     group: 'NODE',
-		//     type: 'NODE_POSITION',
-		//     subjectName: obj.getName()
-		//   });
-		// }
+		var newScale = new ape.nbind.Vector3(Number(req.body.x),
+										     Number(req.body.y),
+										     Number(req.body.z));
+		obj.setScale(newScale);
+		respObj.addDataItem({
+			scale: JSON.parse(obj.getScale().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.get('/nodes/:name/position', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the position of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		respObj.addDataItem({
+			position: JSON.parse(obj.getPosition().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.post('/nodes/:name/position', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the position of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkBody('x', 'BodyParam is not presented').notEmpty();
+	req.checkBody('y', 'BodyParam is not presented').notEmpty();
+	req.checkBody('z', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		var newPos = new ape.nbind.Vector3(Number(req.body.x),
+										   Number(req.body.y),
+										   Number(req.body.z));
 		obj.setPosition(newPos);
 		respObj.addDataItem({
-			position: utils.convertToJsObj(obj.getPosition())
+			position: JSON.parse(obj.getPosition().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
 });
 
 app.get('/nodes/:name/orientation', function(req, res) {
-	console.log('ape.httpApi.nodes.getOrientation()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the orientation of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkParams('name', 'UrlParam must be a string').isAlpha();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
 	}
 
-	// get name from url
 	var name = req.params.name;
-
 	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
 		if (error) {
 			respObj.addErrorItem({
@@ -181,19 +327,18 @@ app.get('/nodes/:name/orientation', function(req, res) {
 		}
 
 		respObj.addDataItem({
-			orientation: utils.convertToJsObj(obj.getOrientation())
+			orientation: JSON.parse(obj.getOrientation().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});
 });
 
 app.post('/nodes/:name/orientation', function(req, res) {
-	console.log('ape.httpApi.nodes.setOrientation()');
-	var respObj = new utils.responseObj();
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the orientation of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkParams('name', 'UrlParam must be a string').isAlpha();
 	req.checkBody('w', 'BodyParam is not presented').notEmpty();
 	req.checkBody('x', 'BodyParam is not presented').notEmpty();
 	req.checkBody('y', 'BodyParam is not presented').notEmpty();
@@ -203,9 +348,7 @@ app.post('/nodes/:name/orientation', function(req, res) {
 		return;
 	}
 
-	// get node name from urlParam
 	var name = req.params.name;
-
 	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
 		if (error) {
 			respObj.addErrorItem({
@@ -217,17 +360,84 @@ app.post('/nodes/:name/orientation', function(req, res) {
 			return;
 		}
 
-		var newOrt = new ape.nbind.Quaternion(Number(req.body.w), Number(req.body.x), Number(req.body.y), Number(req.body.z));
-		// if (newOrt.notEqualTo(obj.getOrientation())) {
-		//   respObj.addEvent({
-		//     group: 'NODE',
-		//     type: 'NODE_ORIENTATION',
-		//     subjectName: obj.getName()
-		//   });
-		// }
+		var newOrt = new ape.nbind.Quaternion(Number(req.body.w),
+											  Number(req.body.x),
+											  Number(req.body.y),
+											  Number(req.body.z));
 		obj.setOrientation(newOrt);
 		respObj.addDataItem({
-			orientation: utils.convertToJsObj(obj.getOrientation())
+			orientation: JSON.parse(obj.getOrientation().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.get('/nodes/:name/euler', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the Euler (yaw, pitch, roll) of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		respObj.addDataItem({
+			euler: JSON.parse(obj.getEuler().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+app.post('/nodes/:name/euler', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the Euler (yaw, pitch, roll) of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkBody('y', 'BodyParam yaw is not presented').notEmpty();
+	req.checkBody('p', 'BodyParam pitch is not presented').notEmpty();
+	req.checkBody('r', 'BodyParam roll is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function(error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		var newEuler = {
+			y: Number(ape.nbind.Degree(Number(req.body.y)).toRadian()),
+			p: Number(ape.nbind.Degree(Number(req.body.p)).toRadian()),
+			r: Number(ape.nbind.Degree(Number(req.body.r)).toRadian())
+		}
+		obj.setEuler(ape.nbind.Euler(ape.nbind.Radian(ape.nbind.Degree(Number(req.body.y)).toRadian()),
+									 ape.nbind.Radian(ape.nbind.Degree(Number(req.body.p)).toRadian()),
+									 ape.nbind.Radian(ape.nbind.Degree(Number(req.body.r)).toRadian())));
+		respObj.addDataItem({
+			euler: JSON.parse(obj.getEuler().toJsonString())
 		});
 		res.send(respObj.toJSonString());
 	});

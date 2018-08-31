@@ -1,0 +1,24 @@
+
+material Colour(RGB)(25500)Dds_BardNa.Ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 1 0 0 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 1 0 0 1
+		}
+
+	}
+
+}

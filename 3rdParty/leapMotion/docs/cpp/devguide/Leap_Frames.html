@@ -1,0 +1,463 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Frames &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Hands" href="Leap_Hand.html" />
+    <link rel="prev" title="Tracking Model" href="Leap_Tracking.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/devguide/Leap_Frames.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Frames.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Frames.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/devguide/Leap_Frames.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Tracking.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Hand.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_Frames.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Frames.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Frames.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Frames.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Frames
+</span> -->
+        
+  <div class="section" id="frames">
+<h1>Frames<a class="headerlink" href="#frames" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion API presents motion tracking data to your application as a series of snapshots called <em>frames</em>. Each frame of tracking data contains the measured positions and other information about each entity detected in that snapshot. This article discusses the details of getting <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects from the Leap Motion controller.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Each <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object contains an instantaneous snapshot of the scene recorded by the Leap Motion controller. Hands, fingers, and tools are the basic physical entities tracked by the Leap Motion system.</p>
+<p>Get a <tt class="docutils literal"><span class="pre">Frame</span></tt> object containing tracking data from a connected <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object. You can get a frame whenever your application is ready to process it using the <cite>frame()</cite> method of the <tt class="docutils literal"><span class="pre">Controller</span></tt> class:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span> <span class="n">controller</span><span class="p">.</span><span class="n">isConnected</span><span class="p">())</span> <span class="c1">//controller is a Controller object</span>
+<span class="p">{</span>
+    <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">();</span> <span class="c1">//The latest frame</span>
+    <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">previous</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//The previous frame</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">frame()</span></tt> function takes a <tt class="docutils literal"><span class="pre">history</span></tt> parameter that indicates how many frames back to retrieve. The last 60 frames are maintained in the history buffer (but don&#8217;t rely on this exact value, it could change in the future).</p>
+<p><strong>Note:</strong> Ordinarily consecutive frames have consecutively increasing ID values. However, in some cases, frame IDs are skipped. On resource-constrained computers, the Leap Motion software can drop frames. In addition, when the software enters robust mode to compensate for bright IR lighting conditions, two sensor frames are analyzed for each <tt class="docutils literal"><span class="pre">Frame</span></tt> object produced and the IDs for consecutive Frame objects increase by two. Finally, if you are using a <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> callback to get frames, the callback function is not invoked a second time until the first invocation returns. Thus, your application will miss frames if the callback function takes too long to process a frame. In this case, the missed frame is inserted in a history buffer.</p>
+</div>
+<div class="section" id="getting-data-from-a-frame">
+<h2>Getting Data from a Frame<a class="headerlink" href="#getting-data-from-a-frame" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> class defines several functions that provide access to the data in the frame. For example, the following code illustrates how to get the basic objects tracked by the Leap Motion system:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Leap</span><span class="o">::</span><span class="n">Controller</span> <span class="n">controller</span><span class="p">;</span>
+<span class="c1">// wait until Controller.isConnected() evaluates to true</span>
+<span class="c1">//...</span>
+
+<span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">HandList</span> <span class="n">hands</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">hands</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">PointableList</span> <span class="n">pointables</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">pointables</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">FingerList</span> <span class="n">fingers</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">fingers</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">ToolList</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">tools</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The objects returned by the <tt class="docutils literal"><span class="pre">Frame</span></tt> object are all read-only. You can safely store them and use them in the future. They are thread-safe. Internally, the objects use the <a class="reference external" href="http://www.boost.org/doc/libs/1_51_0/libs/smart_ptr/shared_ptr.htm#ThreadSafety">C++ Boost library shared pointer class</a>.</p>
+</div>
+<div class="section" id="getting-frames-by-polling">
+<h2>Getting Frames by Polling<a class="headerlink" href="#getting-frames-by-polling" title="Permalink to this headline">¶</a></h2>
+<p>Polling the <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object for frames is the simplest and often best strategy when your application has a natural frame rate. You just call the <tt class="docutils literal"><span class="pre">Controller</span></tt> <tt class="docutils literal"><span class="pre">frame()</span></tt> function when your application is ready to process a frame of data.</p>
+<p>When you use polling, there is a chance that you will get the same frame twice in a row (if the application frame rate exceeds the Leap frame rate) or skip a frame (if the Leap frame rate exceeds the application frame rate). In many cases, missed or duplicated frames are not important. For example, if you are moving an object on the screen in response to hand movement, the movement should still be smooth (assuming the overall frame rate of your application is high enough). In those cases where it does matter, you can use the <tt class="docutils literal"><span class="pre">history</span></tt> parameter of the <tt class="docutils literal"><span class="pre">frame()</span></tt> function.</p>
+<p>To detect whether you have already processed a frame, save the ID value assigned to the last frame processed and compare it to the current frame:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int64_t</span> <span class="n">lastFrameID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">processFrame</span><span class="p">(</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">frame</span><span class="p">.</span><span class="n">id</span><span class="p">()</span> <span class="o">==</span> <span class="n">lastFrameID</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="c1">//...</span>
+    <span class="n">lastFrameID</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">id</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If your application has skipped frames, use the <cite>history</cite> parameter of the <cite>frame()</cite> function to access the skipped frames (as long as the <tt class="docutils literal"><span class="pre">Frame</span></tt> object is still in the history buffer):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int64_t</span> <span class="n">lastProcessedFrameID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">nextFrame</span><span class="p">(</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Controller</span> <span class="n">controller</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int64_t</span> <span class="n">currentID</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">().</span><span class="n">id</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">history</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">history</span> <span class="o">&lt;</span> <span class="n">currentID</span> <span class="o">-</span> <span class="n">lastProcessedFrameID</span><span class="p">;</span> <span class="n">history</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">processNextFrame</span><span class="p">(</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">lastProcessedFrameID</span> <span class="o">=</span> <span class="n">currentID</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">processNextFrame</span><span class="p">(</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">frame</span><span class="p">.</span><span class="n">isValid</span><span class="p">()</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-frames-with-callbacks">
+<h2>Getting Frames with Callbacks<a class="headerlink" href="#getting-frames-with-callbacks" title="Permalink to this headline">¶</a></h2>
+<p>Alternatively, you can use a <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> object to get frames at the Leap Motion controller&#8217;s frame rate. The <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object calls the listener&#8217;s <tt class="docutils literal"><span class="pre">onFrame()</span></tt> function when a new frame is available. In the <tt class="docutils literal"><span class="pre">onFrame</span></tt> handler, you can call the <tt class="docutils literal"><span class="pre">Controller</span></tt> <tt class="docutils literal"><span class="pre">frame()</span></tt> function to get the <tt class="docutils literal"><span class="pre">Frame</span></tt> object itself.</p>
+<p>Using listener callbacks is more complex because the callbacks are multi-threaded; each callback is invoked on an independent thread. You must ensure that any application data accessed by multiple threads is handled in a thread-safe manner. Even though the tracking data objects you get from the API are thread safe, other parts of your application may not be. A common problem is updating objects owned by a GUI layer that can only be modified by a specific thread. In such cases you must arrange to update the non-thread safe portions of your application from the appropriate thread rather than from the callback thread.</p>
+<p>The following example defines a minimal Listener subclass that handles new frames of data:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FrameListener</span> <span class="o">:</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Listener</span>
+<span class="p">{</span>
+    <span class="kt">void</span> <span class="n">onFrame</span><span class="p">(</span><span class="n">Leap</span><span class="o">::</span><span class="n">Controller</span> <span class="o">&amp;</span><span class="n">controller</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">();</span> <span class="c1">//The latest frame</span>
+        <span class="n">Leap</span><span class="o">::</span><span class="n">Frame</span> <span class="n">previous</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//The previous frame</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>As you can see, getting the tracking data through a <tt class="docutils literal"><span class="pre">Listener</span></tt> object is otherwise the same as polling the controller.</p>
+<p>Note that it is possible to skip a frame even when using <tt class="docutils literal"><span class="pre">Listener</span></tt> callbacks. If your onFrame callback function takes too long to complete, then the next frame is added to the history, but the onFrame callback is skipped. Less commonly, if the Leap software itself cannot finish processing a frame in time, that frame can be abandoned and not added to the history. This problem can occur when a computer is bogged down with too many other computing tasks.</p>
+</div>
+<div class="section" id="following-entities-across-frames">
+<h2>Following entities across frames<a class="headerlink" href="#following-entities-across-frames" title="Permalink to this headline">¶</a></h2>
+<p>If you have an ID of an entity from a different frame, you can get the object representing that entity in the current frame. Pass the ID to the <tt class="docutils literal"><span class="pre">Frame</span></tt> object function of the appropriate type:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Leap</span><span class="o">::</span><span class="n">Hand</span> <span class="n">hand</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">hand</span><span class="p">(</span><span class="n">handID</span><span class="p">);</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Pointable</span> <span class="n">pointable</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">pointable</span><span class="p">(</span><span class="n">pointableID</span><span class="p">);</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Finger</span> <span class="n">finger</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">finger</span><span class="p">(</span><span class="n">fingerID</span><span class="p">);</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Tool</span> <span class="n">tool</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">tool</span><span class="p">(</span><span class="n">toolID</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If an object with the same ID cannot be found &#8211; perhaps a hand moved out of the field of view &#8211; then a special, invalid object is returned instead. Invalid objects are instances of the appropriate class, but all their members return 0 values, zero vectors, or other invalid objects. This technique makes it more convenient to chain method calls together. For example, the following code snippet averages finger tip positions over several frames:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//Average a finger position for the last 10 frames</span>
+<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span> <span class="n">average</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span><span class="p">();</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Finger</span> <span class="n">fingerToAverage</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">fingers</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+<span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Leap</span><span class="o">::</span><span class="n">Finger</span> <span class="n">fingerFromFrame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">finger</span><span class="p">(</span><span class="n">fingerToAverage</span><span class="p">.</span><span class="n">id</span><span class="p">());</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fingerFromFrame</span><span class="p">.</span><span class="n">isValid</span><span class="p">()</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">average</span> <span class="o">+=</span> <span class="n">fingerFromFrame</span><span class="p">.</span><span class="n">tipPosition</span><span class="p">();</span>
+        <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">average</span> <span class="o">/=</span> <span class="n">count</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Without invalid objects, this code would have to check each <tt class="docutils literal"><span class="pre">Frame</span></tt> object before checking the returned Finger objects. Invalid objects reduce the amount of null checking you have to do when accessing Leap Motion tracking data.</p>
+</div>
+<div class="section" id="serialization">
+<h2>Serialization<a class="headerlink" href="#serialization" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">Frame</span></tt> class provides <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1aa163dee25d1f498f7b52279c3eb2c38e">serialize()</a> and <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1adff8cf1970aee948138c9cd4406025e2">deserialize()</a> functions that allow you to store the data from a frame and later reconstruct it as a valid <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object. See <a class="reference internal" href="Leap_Serialization.html"><em>Serializing Tracking Data</em></a></p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Controllers.html">Connecting to the Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Frames</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-data-from-a-frame">Getting Data from a Frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames-by-polling">Getting Frames by Polling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames-with-callbacks">Getting Frames with Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#following-entities-across-frames">Following entities across frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serialization">Serialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

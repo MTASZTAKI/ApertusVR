@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,11 +37,11 @@ namespace Ape
 
 		~IndexedLineSetGeometryImpl();
 
-		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color);
+		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) override;
 
-		Ape::GeometryIndexedLineSetParameters getParameters();
+		Ape::GeometryIndexedLineSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

@@ -10,6 +10,14 @@ Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port)
 	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
 }
 
+Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName)
+{
+	mIp = ip;
+	mPort = port;
+	mSessionName = sessionName;
+	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
+}
+
 Ape::LobbyManager::~LobbyManager()
 {
 	
@@ -17,6 +25,9 @@ Ape::LobbyManager::~LobbyManager()
 
 bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResponse& resp)
 {
+	if (httpResponse.empty())
+		return false;
+
 	rapidjson::StringStream in(httpResponse.c_str());
 	rapidjson::Document jsonDocument;
 	jsonDocument.ParseStream(in);
@@ -29,7 +40,7 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 
 	rapidjson::Value& result = jsonDocument["result"];
 	if (result.IsString())
-		resp.success = (std::strcmp(result.GetString(), "success") == 0);
+		resp.success = std::string(result.GetString()) == "success";
 
 	rapidjson::Value& errors = jsonDocument["errors"];
 	if (errors.HasMember("items"))
@@ -43,19 +54,19 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 
 				if (item.HasMember("code"))
 				{
-					std::cout << "errorCode:" << item["code"].GetInt() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorCode:" << item["code"].GetInt());
 					errItem.code = item["code"].GetInt();
 				}
 
 				if (item.HasMember("name"))
 				{
-					std::cout << "errorName:" << item["name"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorName:" << item["name"].GetString());
 					errItem.name = item["name"].GetString();
 				}
 
 				if (item.HasMember("message"))
 				{
-					std::cout << "errorMessage:" << item["message"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "errorMessage:" << item["message"].GetString());
 					errItem.message = item["message"].GetString();
 				}
 
@@ -74,13 +85,13 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 			{
 				if (item.HasMember("host_guid"))
 				{
-					std::cout << "sessionGuid: " << item["host_guid"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "sessionGuid: " << item["host_guid"].GetString());
 					resp.data.guid = item["host_guid"].GetString();
 				}
 
 				if (item.HasMember("session_name"))
 				{
-					std::cout << "sessionName: " << item["session_name"].GetString() << std::endl;
+					LOG(LOG_TYPE_DEBUG, "sessionName: " << item["session_name"].GetString());
 					resp.data.name = item["session_name"].GetString();
 				}
 			}
@@ -95,29 +106,29 @@ bool Ape::LobbyManager::createSession(const std::string& sessionName, SceneSessi
 	std::string response;
 	LobbyResponse resp;
 	std::string data = "{ \"sessionName\": \"" + sessionName + "\", \"sessionGuid\": \"" + guid + "\" }";
-	std::cout << "createSession(): " << "Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data);
 
 	try
 	{
 		response = mHttpManager.post(mApiEndPointUrl, data);
-		std::cout << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				std::cout << "createSession succeeded" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: succeeded");
 				return true;
 			}
 			else
 			{
-				std::cout << "createSession failed" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;
@@ -128,29 +139,29 @@ bool Ape::LobbyManager::removeSession(const std::string& sessionName)
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	std::cout << "removeSession(): " << "Sending HTTP POST request to: " << mApiEndPointUrl << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl);
 
 	try
 	{
 		response = mHttpManager.del(mApiEndPointUrl, "");
-		std::cout << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				std::cout << "removeSession succeeded" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: succeeded");
 				return true;
 			}
 			else
 			{
-				std::cout << "removeSession failed" << std::endl;
+				LOG(LOG_TYPE_DEBUG, "result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;
@@ -161,30 +172,27 @@ bool Ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessio
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	std::cout << "getSessionHostGuid(): " << "Sending HTTP GET request to: " << url << std::endl;
+	LOG(LOG_TYPE_DEBUG, "Sending HTTP GET request to: " << url);
 
 	try
 	{
 		response = mHttpManager.download(url);
-		std::cout << response << std::endl;
+		LOG(LOG_TYPE_DEBUG, "response: " << response);
 
-		if (parseResponse(response, resp))
+		if (parseResponse(response, resp) && resp.success)
 		{
-			if (resp.success)
-			{
-				guid = resp.data.guid;
-				std::cout << "getSessionHostGuid succeeded" << std::endl;
-				return true;
-			}
-			else
-			{
-				std::cout << "getSessionHostGuid failed" << std::endl;
-			}
+			guid = resp.data.guid;
+			LOG(LOG_TYPE_DEBUG, "result: succeeded");
+			return true;
+		}
+		else
+		{
+			LOG(LOG_TYPE_DEBUG, "result: failed");
 		}
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "Got an exception: " << e.what() << std::endl;
+		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
 	}
 
 	return false;

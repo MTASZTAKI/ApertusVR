@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_PASS_H
 #define APE_PASS_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
+#include "ApeColor.h"
 #include "ApeEntity.h"
 #include "ApeTexture.h"
-#include "ApeColor.h"
 #include "ApeTexture.h"
 #include "ApeVector3.h"
 
@@ -57,9 +56,17 @@ namespace Ape
 
 	class Pass : public Entity
 	{
+	public:
+		enum SceneBlendingType
+		{
+			ADD,
+			TRANSPARENT_ALPHA,
+			REPLACE,
+			INVALID
+		};
 	protected:
 		Pass(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
-		
+
 		virtual ~Pass() {};
 
 		Ape::Color mDiffuseColor;
@@ -78,6 +85,8 @@ namespace Ape
 
 		Ape::PassGpuParameters mPassGpuParameters;
 
+		Ape::Pass::SceneBlendingType mSceneBlendingType;
+
 	public:
 		Ape::Color getDiffuseColor() { return mDiffuseColor; };
 
@@ -88,6 +97,8 @@ namespace Ape
 		Ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
+
+		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 
 		Ape::TextureWeakPtr getTexture() { return mTexture; };
 

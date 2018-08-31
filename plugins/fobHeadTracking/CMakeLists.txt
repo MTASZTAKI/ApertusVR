@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ include_directories(
 add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow ApeFobHeadTrackingLib)
+target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow ApeFobHeadTrackingLib)
 
 set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,29 @@ namespace Ape
 	{
 		float x, y;
 
-		Vector2() : 
+		Vector2() :
 			x(0.0f), y(0.0f)
 		{}
 
 		Vector2(float _x, float _y) :
 			x(_x), y(_y)
 		{}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y };
+			return vec;
+		}
 	};
 }
 

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ApeGeometry.h"
+#include "ApeINode.h"
 #include "ApeVector2.h"
 #include "ApeVector3.h"
-#include "ApeINode.h"
 
 namespace Ape
-{	
+{
 	struct GeometryTorusParameters
 	{
 		float radius;
@@ -57,12 +57,12 @@ namespace Ape
 	{
 	protected:
 		ITorusGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_TORUS) {}
-		
+
 		virtual ~ITorusGeometry() {};
-		
+
 	public:
 		virtual void setParameters(float radius, float sectionRadius, Ape::Vector2 tile) = 0;
-		
+
 		virtual Ape::GeometryTorusParameters getParameters() = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;

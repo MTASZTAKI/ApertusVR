@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +26,17 @@ SOFTWARE.*/
 #include "ApeMaterial.h"
 
 namespace Ape
-{	
+{
 	class IFileMaterial : public Material
 	{
 	protected:
-	    IFileMaterial(std::string name) : Material(name, Entity::MATERIAL_FILE) {}
-		
+		IFileMaterial(std::string name) : Material(name, Entity::MATERIAL_FILE) {}
+
 		virtual ~IFileMaterial() {};
-		
+
 	public:
 		virtual void setFileName (std::string fileName) = 0;
-		
+
 		virtual std::string getfFileName () = 0;
 
 		virtual void setAsSkyBox() = 0;
@@ -49,7 +49,7 @@ namespace Ape
 
 		virtual Ape::PassGpuParameters getPassGpuParameters() = 0;
 	};
-	
+
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;
 }
 

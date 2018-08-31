@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("No
 	mOrientation = Ape::Quaternion();
 	mChildrenVisibility = true;
 	mIsFixedYaw = false;
+	mIsInheritOrientation = true;
 }
 
 Ape::NodeImpl::~NodeImpl()
@@ -95,12 +96,17 @@ bool Ape::NodeImpl::isFixedYaw()
 	return mIsFixedYaw;
 }
 
-void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr newParentNode)
 {
-	if (auto parentNodeSP = parentNode.lock())
+	if (auto parentNodeSP = mpScene->getNode(mParentNodeName).lock())
 	{
-		mParentNode = parentNode;
-		mParentNodeName = parentNodeSP->getName();
+		((Ape::NodeImpl*)parentNodeSP.get())->removeChildNode(mpScene->getNode(mName));
+	}
+	if (auto newParentNodeSP = newParentNode.lock())
+	{
+		mParentNode = newParentNode;
+		mParentNodeName = newParentNodeSP->getName();
+		((Ape::NodeImpl*)newParentNodeSP.get())->addChildNode(mpScene->getNode(mName));
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	else
@@ -110,6 +116,64 @@ void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr parentNode)
 Ape::NodeWeakPtr Ape::NodeImpl::getParentNode()
 {
 	return mParentNode;
+}
+
+void Ape::NodeImpl::addChildNode(Ape::NodeWeakPtr node)
+{
+	mChildNodes.push_back(node);
+}
+
+std::vector<Ape::NodeWeakPtr> Ape::NodeImpl::getChildNodes()
+{
+	return mChildNodes;
+}
+
+bool Ape::NodeImpl::hasChildNode()
+{
+	return mChildNodes.size() > 0;
+}
+
+bool Ape::NodeImpl::isChildNode(Ape::NodeWeakPtr childNode)
+{
+	if (auto childNodeSP = childNode.lock())
+	{
+		for (std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin(); it != mChildNodes.end(); ++it)
+		{
+			if (auto itemSP = it->lock())
+			{
+				if (itemSP->getName() == childNodeSP->getName())
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void Ape::NodeImpl::removeChildNode(Ape::NodeWeakPtr childNode)
+{
+	if (auto childNodeSP = childNode.lock())
+	{
+		std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin();
+		for (; it != mChildNodes.end(); ++it)
+		{
+			if (auto itemSP = it->lock())
+			{
+				if (itemSP->getName() == childNodeSP->getName())
+				{
+					break;
+				}
+			}
+		}
+		if (it != mChildNodes.end())
+		{
+			if (auto itemSP = it->lock())
+			{
+				mChildNodes.erase(it);
+			}
+		}
+	}
 }
 
 void Ape::NodeImpl::setPosition( Vector3 position )
@@ -140,6 +204,26 @@ void Ape::NodeImpl::setFixedYaw(bool fix)
 {
 	mIsFixedYaw = fix;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
+}
+
+void Ape::NodeImpl::showBoundingBox(bool show)
+{
+	mIsBoundingBoxVisible = show;
+	if (show)
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SHOWBOUNDINGBOX));
+	else
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_HIDEBOUNDINGBOX));
+}
+
+void Ape::NodeImpl::setInheritOrientation(bool enable)
+{
+	mIsInheritOrientation = enable;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+}
+
+bool Ape::NodeImpl::isInheritOrientation()
+{
+	return mIsInheritOrientation;
 }
 
 void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
@@ -207,8 +291,9 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
@@ -224,6 +309,10 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpScene->getNode(mParentNodeName);
+		if (auto parentNode = mParentNode.lock())
+		{
+			((Ape::NodeImpl*)parentNode.get())->addChildNode(mpScene->getNode(mName));
+		}
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
@@ -232,5 +321,7 @@ void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))
 		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsInheritOrientation))
+		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

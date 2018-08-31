@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,6 @@ SOFTWARE.*/
 
 
 #include "ApeEventManagerImpl.h"
-
-template<> Ape::IEventManager* Ape::Singleton<Ape::IEventManager>::msSingleton = 0;
 
 Ape::EventManagerImpl::EventManagerImpl()
 {

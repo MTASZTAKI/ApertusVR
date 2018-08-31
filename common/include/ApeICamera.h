@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,15 @@ SOFTWARE.*/
 
 #include <string>
 #include "ApeEntity.h"
-#include "ApeVector2.h"
-#include "ApeVector3.h"
-#include "ApeQuaternion.h"
-#include "ApeRadian.h"
 #include "ApeINode.h"
 #include "ApeMatrix4.h"
+#include "ApeQuaternion.h"
+#include "ApeRadian.h"
+#include "ApeVector2.h"
+#include "ApeVector3.h"
 
 namespace Ape
-{	
+{
 	namespace Camera
 	{
 		enum ProjectionType
@@ -47,7 +47,7 @@ namespace Ape
 	class ICamera : public Entity
 	{
 	protected:
-		ICamera(std::string name) : Entity(name, Entity::CAMERA) {}
+		ICamera(std::string name) : Entity(name, Ape::Entity::CAMERA) {}
 
 		virtual ~ICamera() {};
 
@@ -76,18 +76,14 @@ namespace Ape
 		virtual float getAspectRatio() = 0;
 
 		virtual void setAspectRatio(float aspectRatio) = 0;
-		
+
+		virtual void setAutoAspectRatio(bool enable) = 0;
+
+		virtual bool isAutoAspectRatio() = 0;
+
 		virtual Ape::Matrix4 getProjection() = 0;
 
 		virtual void setProjection(Ape::Matrix4 projection) = 0;
-
-		virtual Ape::Vector3 getPosition() = 0;
-
-		virtual void setPosition(Ape::Vector3 positionOffset) = 0;
-
-		virtual Ape::Quaternion getOrientation() = 0;
-
-		virtual void setOrientation(Ape::Quaternion orientation) = 0;
 
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
 

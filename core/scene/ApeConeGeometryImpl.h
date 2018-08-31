@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,15 +37,15 @@ namespace Ape
 
 		~ConeGeometryImpl();
 
-		void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg);
+		void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg) override;
 
-		Ape::GeometryConeParameters getParameters();
+		Ape::GeometryConeParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

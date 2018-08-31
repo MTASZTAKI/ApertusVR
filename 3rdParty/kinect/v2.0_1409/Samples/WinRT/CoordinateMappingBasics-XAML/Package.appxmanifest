@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+
+  <Identity Name="7bf9076d-cab3-4048-b4c9-1e4ddabb3b51" 
+			Publisher="CN=Kinect for Windows Samples" 
+			Version="1.0.0.0" />
+			
+  <Properties>  
+    <DisplayName>CoordinateMappingBasics-XAML</DisplayName>
+    <PublisherDisplayName>Kinect for Windows Samples</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  
+  <Prerequisites>
+    <OSMinVersion>6.2.1</OSMinVersion>
+    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+  </Prerequisites>
+  
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="CoordinateMappingBasics_XAML.App">
+        <VisualElements
+            DisplayName="CoordinateMappingBasics-XAML"
+            Logo="Assets\Logo.png"
+            SmallLogo="Assets\SmallLogo.png"
+            Description="CoordinateMappingBasics-XAML"
+            ForegroundText="light"
+            BackgroundColor="#464646">
+            <DefaultTile ShowName="allLogos" />
+            <SplashScreen Image="Assets\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="webcam" />
+  </Capabilities>
+</Package>

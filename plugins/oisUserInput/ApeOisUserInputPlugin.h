@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +35,15 @@ SOFTWARE.*/
 #include "ApeIScene.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeICamera.h"
 #include "ApeITextGeometry.h"
+#include "ApeInterpolator.h"
+#include "ApeIBrowser.h"
+#include "ApeIUnitTexture.h"
+#include "ApeIRayGeometry.h"
+
+#define THIS_PLUGINNAME "ApeOisUserInputPlugin"
 
 namespace Ape
 {
@@ -69,7 +76,29 @@ namespace Ape
 
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
+		bool isNodeSelected(std::string nodeName);
+
+		void addNodeSelection(std::string nodeName);
+
+		bool removeNodeSelection(std::string nodeName);
+
+		void clearNodeSelection();
+
 	private:
+		struct MouseState
+		{
+			OIS::MouseState posStart;
+			OIS::MouseState posEnd;
+			OIS::MouseState posPrevious;
+			OIS::MouseState posCurrent;
+			std::map<OIS::MouseButtonID, bool> buttonDownMap;
+			bool isDragModeLeft = false;
+			bool isDragModeMiddle = false;
+			bool isDragModeRight = false;
+			bool isMouseMoved = false;
+			int scrollVelocity = 0;
+		};
+
 		struct UserNodePose
 		{
 			Ape::Vector3 position;
@@ -83,6 +112,7 @@ namespace Ape
 				this->orientation = orientation;
 			}
 		};
+
 		OIS::Keyboard* mpKeyboard; 
 
 		OIS::Mouse* mpMouse;
@@ -97,21 +127,53 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mNodeToMove;
+
+		Ape::NodeWeakPtr mHeadNode;
+
+		std::string mHeadNodeName;
+
+		Ape::NodeWeakPtr mDummyNode;
+
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+
+		MouseState mMouseState;
 
 		std::vector<UserNodePose> mUserNodePoses;
 
+		Ape::BrowserWeakPtr mOverlayBrowser;
+
+		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+		Ape::RayGeometryWeakPtr mRayGeometry;
+
+		Ape::NodeWeakPtr mRayOverlayNode;
+
+		std::map<std::string, Ape::NodeWeakPtr> mSelectedNodes;
+
+		bool mEnableOverlayBrowserKeyEvents;
+
+		bool mIsNewKeyEvent;
+
 		int mUserNodePosesToggleIndex;
 
-		int mTranslateSpeedFactor;
+		float mTranslateSpeedFactorKeyboard;
 
-		int mRotateSpeedFactor;
+		float mRotateSpeedFactorKeyboard;
+
+		float mTranslateSpeedFactorMouse;
+
+		float mRotateSpeedFactorMouse;
+
+		float mGeneralSpeedFactor;
 
 		bool mIsKeyPressed;
 
-		void moveUserNode();
+		void moveUserNodeByKeyBoard();
 
-		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+		void moveUserNodeByMouse();
+
+		void saveUserNodePose();
 
 		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 
@@ -120,20 +182,20 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOISUserInputPlugin()
 	{
-		return new OISUserInputPlugin;
+		return new Ape::OISUserInputPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(Ape::IPlugin *plugin)
 	{
-		delete (OISUserInputPlugin*)plugin;
+		delete (Ape::OISUserInputPlugin*)plugin;
 	}
 
-	APE_PLUGIN_DISPLAY_NAME("ApeOisUserInputPlugin");
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << "ApeOisUserInputPlugin_CREATE" << std::endl;
-		ApeRegisterPlugin("ApeOisUserInputPlugin", CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
 		return 0;
 	}
 }

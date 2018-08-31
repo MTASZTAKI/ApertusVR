@@ -1,0 +1,846 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="ImageList" href="Leap.ImageList.html" />
+    <link rel="prev" title="HandList" href="Leap.HandList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/api/Leap.Image.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Image.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Image.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/api/Leap.Image.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.HandList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.ImageList.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Image.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Image.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Image.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Image.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Image.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Image
+</span> -->
+        
+  <div class="section" id="image">
+<h1>Image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h1>
+</div>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb">Image()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a3cc5fc9cad5e43a1af5d3339388af1ce">bytesPerPixel()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a9d2e0a8966aca24486cbfc185aea2d28">data()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1aa3c96352380419facc0b966a2f17addb">distortion()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a5535f8e9e8ed06926cf4ad79e7be71de">distortionHeight()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1afd274661b3ae1c89ee6eedd47f45ac5a">distortionWidth()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a057d563b7b695b7ced1d78ed2cd78b94">equals(Image arg0)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a67e804b03a95e1d69828d05ed59987c4">format()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a822ae85493a742654ba563619492b26a">height()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a4a716406d3d9d4fdbbe46f100e648f3b">id()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a847c67004ebeb03f513eb887e4f64e82">invalid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a487d5f454cff4db530ed7b5b690ec71d">isValid()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac532c26a03240d2600499a3d0010d2f5">rayOffsetX()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad48d53fbbce0eab90c77cabcffa9c195">rayOffsetY()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad7327961e794c1f5a396e0b072643554">rayScaleX()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1aed2b6d58912ab04a7ad58212a7130b8d">rayScaleY()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac02d2a0f5064b32a3f9bbb7b4c76c4da">rectify(Vector uv)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a97d8932c298db8ec8699aa3747c829ef">sequenceId()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a895b3ad631f74f2a2b449c1e64b91610">timestamp()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad146fa8579a5f8a876c4688cc5a68520">toString()</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102">warp(Vector xy)</a></li>
+<li><a class="reference external" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a3eeed61a3424d2f907c8a1e420fddf6d">width()</a></li>
+</ul>
+</div>
+<div class="line-block" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image">
+<div class="line"><em>class</em> <strong>com::leapmotion::leap::Image</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> class represents a single image from one of the Leap Motion cameras. </p>
+<p><p>In addition to image data, the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> object provides a distortion map for correcting lens distortion.</p>
+<p><pre class="literal-block">
+ Frame frame = controller.frame();
+ if(frame.isValid()){
+   ImageList images = frame.images();
+   for(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb"><em>Image</em></a> image : images)
+   {
+     //Processing PImage class
+     PImage camera = cameras[image.id()];
+     camera = createImage(image.width(), image.height(), RGB);
+     camera.loadPixels();
+     
+     //Get byte array containing the image data from Image object
+     byte[] imageData = image.data();
+
+     //Copy image data into display object, in this case PImage defined in Processing
+     for(int i = 0; i &lt; image.width() * image.height(); i++){
+       r = (imageData[i] &amp; 0xFF) &lt;&lt; 16; //convert to unsigned and shift into place
+       g = (imageData[i] &amp; 0xFF) &lt;&lt; 8;
+       b = imageData[i] &amp; 0xFF;
+       camera.pixels[i] =  r | g | b; 
+     }
+     
+     //Show the image
+     camera.updatePixels();
+     image(camera, 640 * image.id(), 0);  
+   }
+} 
+</pre>
+</p>
+<p>Note that <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> objects can be invalid, which means that they do not contain valid image data. Get valid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> objects from Frame::frames(). Test for validity with the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a487d5f454cff4db530ed7b5b690ec71d"><em>Image::isValid()</em></a> function. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a3cc5fc9cad5e43a1af5d3339388af1ce"></span><div class="line-block">
+<div class="line">int <strong>bytesPerPixel</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The number of bytes per pixel. </p>
+<p><p>Use this value along with <tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a3eeed61a3424d2f907c8a1e420fddf6d"><em><span class="pre">Image::width()</span></em></a></tt> and <tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em><span class="pre">Image</span></em></a><span class="pre">:::height()</span></tt> to calculate the size of the data buffer.</p>
+<p><pre class="literal-block">
+int bufferSize = image.bytesPerPixel() * image.width() * image.height();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a9d2e0a8966aca24486cbfc185aea2d28"></span><div class="line-block">
+<div class="line">byte[] <strong>data</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image data. </p>
+<p><p>The image data is a set of 8-bit intensity values. The buffer is <tt class="docutils literal"><span class="pre">image.width()</span> <span class="pre">*</span> <span class="pre">image.height()</span> <span class="pre">*</span> <span class="pre">image.bytesPerPixel()</span></tt> bytes long.</p>
+<p><pre class="literal-block">
+byte[] image_buffer = image.data();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1aa3c96352380419facc0b966a2f17addb"></span><div class="line-block">
+<div class="line">float[] <strong>distortion</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The distortion calibration map for this image. </p>
+<p><p>The calibration map is a 64x64 grid of points. Each point is defined by a pair of 32-bit floating point values. Each point in the map represents a ray projected into the camera. The value of a grid point defines the pixel in the image data containing the brightness value produced by the light entering along the corresponding ray. By interpolating between grid data points, you can find the brightness value for any projected ray. Grid values that fall outside the range [0..1] do not correspond to a value in the image data and those points should be ignored.</p>
+<p><pre class="literal-block">
+float[] distortion_buffer = image.distortion();
+</pre>
+</p>
+<p>The calibration map can be used to render an undistorted image as well as to find the true angle from the camera to a feature in the raw image. The distortion map itself is designed to be used with GLSL shader programs. In other contexts, it may be more convenient to use the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac02d2a0f5064b32a3f9bbb7b4c76c4da"><em>rectify()</em></a> and <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102"><em>warp()</em></a> functions.</p>
+<p>Distortion is caused by the lens geometry as well as imperfections in the lens and sensor window. The calibration map is created by the calibration process run for each device at the factory (and which can be rerun by the user).</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The float array containing the camera lens calibration map. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a5535f8e9e8ed06926cf4ad79e7be71de"></span><div class="line-block">
+<div class="line">int <strong>distortionHeight</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The distortion map height. </p>
+<p><p>Currently fixed at 64.</p>
+<p><pre class="literal-block">
+int correctionGridHeight = image.distortionHeight();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1afd274661b3ae1c89ee6eedd47f45ac5a"></span><div class="line-block">
+<div class="line">int <strong>distortionWidth</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The stride of the distortion map. </p>
+<p><p>Since each point on the 64x64 element distortion map has two values in the buffer, the stride is 2 times the size of the grid. (Stride is currently fixed at 2 * 64 = 128).</p>
+<p><pre class="literal-block">
+int correctionGridWidth = image.distortionWidth();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a057d563b7b695b7ced1d78ed2cd78b94"></span><div class="line-block">
+<div class="line">boolean <strong>equals</strong>(<a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> arg0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> object equality. </p>
+<p>Two <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> objects are equal if and only if both <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> objects represent the exact same <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> and both Images are valid. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a67e804b03a95e1d69828d05ed59987c4"></span><div class="line-block">
+<div class="line">Image.FormatType <strong>format</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image format. </p>
+<p><p><pre class="literal-block">
+if(image.format() == <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb"><em>Image</em></a>.FormatType.INFRARED){
+    String openGL_format = &quot;GL_RED&quot;;
+    String openGL_type = &quot;GL_UNSIGNED_BYTE&quot;;
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a822ae85493a742654ba563619492b26a"></span><div class="line-block">
+<div class="line">int <strong>height</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image height. </p>
+<p><p><pre class="literal-block">
+int <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a822ae85493a742654ba563619492b26a"><em>height</em></a> = image.height();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a4a716406d3d9d4fdbbe46f100e648f3b"></span><div class="line-block">
+<div class="line">int <strong>id</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image ID. </p>
+<p><p>Images with ID of 0 are from the left camera; those with an ID of 1 are from the right camera (with the device in its standard operating position with the green LED facing the operator).</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a66d0d6da3b89580352c28d37b57df5bb"></span><div class="line-block">
+<div class="line"> <strong>Image</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> object. </p>
+<p><p>An uninitialized image is considered invalid. Get valid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> objects from a <a class="reference internal" href="Leap.ImageList.html#javaclasscom_1_1leapmotion_1_1leap_1_1_image_list"><em>ImageList</em></a> object obtained from the <a class="reference internal" href="Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame_1a8e938145723e4bf003333106474ac59e"><em>Frame::images()</em></a> method.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a487d5f454cff4db530ed7b5b690ec71d"></span><div class="line-block">
+<div class="line">boolean <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> instance contains valid data. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true, if and only if the image is valid. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac532c26a03240d2600499a3d0010d2f5"></span><div class="line-block">
+<div class="line">float <strong>rayOffsetX</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The horizontal ray offset. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector raySlopes = new Vector(-3.28f, 1.76f, 0.0f);
+Vector normRay =
+      new Vector(raySlopes.getX() * image.rayScaleX() + image.rayOffsetX(),
+                 raySlopes.getY() * image.rayScaleY() + image.rayOffsetY(), 0);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad48d53fbbce0eab90c77cabcffa9c195"></span><div class="line-block">
+<div class="line">float <strong>rayOffsetY</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The vertical ray offset. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector normSlopes = new Vector(.09f, .72f, 0.0f);
+Vector slope = new Vector((normSlopes.getX() - image.rayOffsetX())/image.rayScaleX(),
+                          (normSlopes.getY() - image.rayOffsetY())/image.rayScaleY(), 0);
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad7327961e794c1f5a396e0b072643554"></span><div class="line-block">
+<div class="line">float <strong>rayScaleX</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The horizontal ray scale factor. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector raySlopes = new Vector(-3.28f, 1.76f, 0.0f);
+Vector normRay =
+      new Vector(raySlopes.getX() * image.rayScaleX() + image.rayOffsetX(),
+                 raySlopes.getY() * image.rayScaleY() + image.rayOffsetY(), 0);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1aed2b6d58912ab04a7ad58212a7130b8d"></span><div class="line-block">
+<div class="line">float <strong>rayScaleY</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The vertical ray scale factor. </p>
+<p><p>Used to convert between normalized coordinates in the range [0..1] and the ray slope range [-4..4].</p>
+<p><pre class="literal-block">
+Vector normSlopes = new Vector(.09f, .72f, 0.0f);
+Vector slope = new Vector((normSlopes.getX() - image.rayOffsetX())/image.rayScaleX(),
+                          (normSlopes.getY() - image.rayOffsetY())/image.rayScaleY(), 0);
+
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac02d2a0f5064b32a3f9bbb7b4c76c4da"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>rectify</strong>(<a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> uv)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Provides the corrected camera ray intercepting the specified point on the image. </p>
+<p><p>Given a point on the image, <tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ac02d2a0f5064b32a3f9bbb7b4c76c4da"><em><span class="pre">rectify()</span></em></a></tt> corrects for camera distortion and returns the true direction from the camera to the source of that image point within the Leap Motion field of view.</p>
+<p>This direction vector has an x and y component [x, y, 0], with the third element always zero. Note that this vector uses the 2D camera coordinate system where the x-axis parallels the longer (typically horizontal) dimension and the y-axis parallels the shorter (vertical) dimension. The camera coordinate system does not correlate to the 3D Leap Motion coordinate system.</p>
+<p><pre class="literal-block">
+Vector feature = new Vector(127, 68, 0);
+Vector slopes = image.rectify(feature);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the ray direction (the z-component of the vector is always 0). </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">uv</span></tt> - <p>A <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the position of a pixel in the image. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a97d8932c298db8ec8699aa3747c829ef"></span><div class="line-block">
+<div class="line">long <strong>sequenceId</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image sequence ID. </p>
+<p><p><pre class="literal-block">
+long imageSequence = image.sequenceId();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.1 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a895b3ad631f74f2a2b449c1e64b91610"></span><div class="line-block">
+<div class="line">long <strong>timestamp</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a timestamp indicating when this frame began being captured on the device. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.7 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1ad146fa8579a5f8a876c4688cc5a68520"></span><div class="line-block">
+<div class="line">String <strong>toString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human readable description of the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> object. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A description of the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> as a string. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> <strong>warp</strong>(<a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> xy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Provides the point in the image corresponding to a ray projecting from the camera. </p>
+<p><p>Given a ray projected from the camera in the specified direction, <tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102"><em><span class="pre">warp()</span></em></a></tt> corrects for camera distortion and returns the corresponding pixel coordinates in the image.</p>
+<p>The ray direction is specified in relationship to the camera. The first vector element corresponds to the &#8220;horizontal&#8221; view angle; the second corresponds to the &#8220;vertical&#8221; view angle.</p>
+<p><pre class="literal-block">
+float horizontal_slope = (float)Math.tan(65 * Math.PI/180);
+float vertical_slope = (float)Math.tan(15 * Math.PI/180);
+Vector pixel = image.warp(new Vector(horizontal_slope, vertical_slope, 0));
+if(pixel.getX() &gt;= 0 &amp;&amp; pixel.getY() &gt;= 0 &amp;&amp; pixel.getX() &lt;= image.width() &amp;&amp; pixel.getY() &lt;= image.height()){
+    int data_index = (int)pixel.getY() * image.width() + (int)pixel.getX();
+    byte brightness = image.data()[data_index];
+}
+</pre>
+</p>
+<p>The <tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102"><em><span class="pre">warp()</span></em></a></tt> function returns pixel coordinates outside of the image bounds if you project a ray toward a point for which there is no recorded data.</p>
+<p><tt class="docutils literal"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a218770a1e138af61aa96bff3906d8102"><em><span class="pre">warp()</span></em></a></tt> is typically not fast enough for realtime distortion correction. For better performance, use a shader program executed on a GPU.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the pixel coordinates [x, y, 0] (with z always zero). </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">xy</span></tt> - <p>A <a class="reference internal" href="Leap.Vector.html#javaclasscom_1_1leapmotion_1_1leap_1_1_vector"><em>Vector</em></a> containing the ray direction. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a3eeed61a3424d2f907c8a1e420fddf6d"></span><div class="line-block">
+<div class="line">int <strong>width</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The image width. </p>
+<p><p><pre class="literal-block">
+int width = image.width();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a847c67004ebeb03f513eb887e4f64e82"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> <strong>invalid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns an invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> object. </p>
+<p><p>You can use the instance returned by this function in comparisons testing whether a given <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> instance is valid or invalid. (You can also use the <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a487d5f454cff4db530ed7b5b690ec71d"><em>Image::isValid()</em></a> function.)</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The invalid <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image"><em>Image</em></a> instance. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<p><p id="javaenumcom_1_1leapmotion_1_1leap_1_1_image_1_1_format_type"><em>class</em> <strong>FormatType</strong></p>
+<blockquote>
+<div><p>Enumerates the possible image formats. </p>
+<p>The <a class="reference internal" href="#javaclasscom_1_1leapmotion_1_1leap_1_1_image_1a67e804b03a95e1d69828d05ed59987c4"><em>Image::format()</em></a> function returns an item from the <a class="reference internal" href="#javaenumcom_1_1leapmotion_1_1leap_1_1_image_1_1_format_type"><em>FormatType</em></a> enumeration. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</p>
+</div></blockquote>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id12">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id14">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id5">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id12">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id3">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id3">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id15">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id12">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id24">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id5">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

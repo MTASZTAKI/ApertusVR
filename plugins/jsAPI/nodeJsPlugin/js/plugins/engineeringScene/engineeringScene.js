@@ -20,12 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-var utils = require('../../utils.js');
+var utils = require('../../modules/utils/utils.js');
 var ape = require('../../ape.js');
+var logger = require("../../modules/log_manager/log_manager.js");
 
 exports.init = function() {
-	// if demoObjectNode found, attach a textGeometry and set caption
-	ape.nbind.JsBindManager().getNode('demoObjectNode', function(error, obj) {
+	logger.debug('engineeringScene::init()');
+	ape.nbind.JsBindManager().getNode('mDemoObjectNode', function(error, obj) {
 		if (error) {
 			console.log('error: ' + error);
 			return;

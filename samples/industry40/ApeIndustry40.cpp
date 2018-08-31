@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	if (argc > 1)
-	{
-		std::string participantType = argv[1];
-		if (participantType == "guest_monitor")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_monitor";
-		else if (participantType == "local_monitor")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\local_monitor";
-		else if (participantType == "host_monitor")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_monitor";
-		else if (participantType == "guest_oculusDK2")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_oculusDK2";
-		else if (participantType == "local_oculusDK2")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\local_oculusDK2";
-		else if (participantType == "host_cave_2walls")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_cave_2walls";
-		else if (participantType == "host_cave_3walls")
-			configDir << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_cave_3walls";
-	}
-	else
-	{
-		std::cout << "usage: local_monitor | guest_monitor | host_monitor | local_oculusDK2 | guest_oculusDK2 | host_cave_2walls | host_cave_3walls" << std::endl;
-		return 0;
-	}
-	Ape::System::Start(configDir.str(), true);
+	configDir << APE_SOURCE_DIR << "/samples/industry40/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

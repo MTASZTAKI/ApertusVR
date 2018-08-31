@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -143,7 +143,7 @@ RakNet::RM3SerializationResult Ape::LightImpl::Serialize(RakNet::SerializeParame
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightDirection);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::LightImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

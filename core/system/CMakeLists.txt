@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,9 @@ set (SOURCES
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/core/pluginManager 
-	${PROJECT_SOURCE_DIR}/core/eventManager 
+	${PROJECT_SOURCE_DIR}/core/pluginManager
+	${PROJECT_SOURCE_DIR}/core/eventManager
+	${PROJECT_SOURCE_DIR}/core/logManager
 	${PROJECT_SOURCE_DIR}/core/systemConfig
 	${PROJECT_SOURCE_DIR}/core/mainWindow
 	${PROJECT_SOURCE_DIR}/core/scene
@@ -38,7 +39,14 @@ include_directories(
 add_library (ApeSystem SHARED ${SOURCES} )
 
 # Link with dependency libraries
-target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeScene ApeSystemConfig ApeMainWindow RAKNET ws2_32)
+if(WIN32)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeScene ApeSystemConfig ApeMainWindow RAKNET ws2_32)
+endif()
+
+if(APPLE)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeScene ApeSystemConfig ApeMainWindow RAKNET)
+endif()
+
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET ApeSystem PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEM_DLL)

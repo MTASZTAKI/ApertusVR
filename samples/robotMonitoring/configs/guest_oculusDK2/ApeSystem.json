@@ -1,0 +1,35 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+  "sceneSession": {
+    "participantType": "Guest",
+    "uniqueUserNamePrefix": "Guest",
+    "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+    "sessionIP": "192.168.1.101",
+    "sessionPort": "62666",
+    "sessionResourceLocation": [
+      "/plugins/robotMonitoring/resources",
+      "/plugins/oculusDK2/resources"
+    ],
+    "natPunchThroughServer": {
+      "use": true,
+      "ip": "195.111.2.95",
+      "port": "61666"
+    },
+    "lobbyServer": {
+      "useLobby": true,
+      "ip": "195.111.2.95",
+      "port": "8888",
+      "sessionName": "robotMonitoring"
+    }
+  },
+    "pluginManager": {
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeOculusDK2Plugin"
+      ]
+    }
+}

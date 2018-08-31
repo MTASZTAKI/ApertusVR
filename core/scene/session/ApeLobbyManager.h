@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ SOFTWARE.*/
 #define APE_LOBBYMANAGER_H
 
 #include "ApeISceneSession.h"
+#include "ApeILogManager.h"
 #include "ApeHttpManager.h"
 #include <vector>
 #include <string>
@@ -56,15 +57,18 @@ namespace Ape
 	{
 	private:
 		HttpManager mHttpManager;
-		
+
 		std::string mIp;
 		
 		std::string mPort;
+
+		std::string mSessionName;
 		
 		std::string mApiEndPointUrl;
 		
 	public:
 		LobbyManager(const std::string& ip, const std::string& port);
+		LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName);
 		
 		~LobbyManager();
 

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_TESTERPLUGIN_H
 #define APE_TESTERPLUGIN_H
 
@@ -32,8 +31,10 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <list>
+#include <random>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
@@ -52,61 +53,70 @@ SOFTWARE.*/
 #include "ApeIManualPass.h"
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
-
+#include "ApeIManualTexture.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIBrowser.h"
+#include "ApeIPointCloud.h"
 
 #define THIS_PLUGINNAME "ApeTesterPlugin"
 
-class ApeTesterPlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeTesterPlugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
-	
-	void eventCallBack(const Ape::Event& event);
-	
-	Ape::NodeWeakPtr mDemoObjectNode;
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 
-	
-public:
-	ApeTesterPlugin();
+		void eventCallBack(const Ape::Event& event);
 
-	~ApeTesterPlugin();
-	
-	void Init() override;
+		Ape::NodeWeakPtr mDemoObjectNode;
 
-	void Run() override;
+		Ape::PointCloudWeakPtr mPointCloud;
 
-	void Step() override;
+		int mPointCloudSize;
 
-	void Stop() override;
+	public:
+		ApeTesterPlugin();
 
-	void Suspend() override;
+		~ApeTesterPlugin();
 
-	void Restart() override;
-};
+		void Init() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTesterPlugin()
-{
-	return new ApeTesterPlugin;
-}
+		void Run() override;
 
-APE_PLUGIN_FUNC void DestroyApeTesterPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeTesterPlugin*)plugin;
-}
+		void Step() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Stop() override;
 
-APE_PLUGIN_ALLOC()
-{
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTesterPlugin, DestroyApeTesterPlugin);
-	return 0;
+		void Suspend() override;
+
+		void Restart() override;
+	};
+
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTesterPlugin()
+	{
+		return new Ape::ApeTesterPlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeTesterPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeTesterPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTesterPlugin, DestroyApeTesterPlugin);
+		return 0;
+	}
 }
 
 #endif

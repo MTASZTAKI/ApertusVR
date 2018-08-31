@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -62,13 +62,19 @@ SOFTWARE.*/
 #include "ApeISceneSession.h"
 #include "ApeISystemConfig.h"
 #include "ApeLobbyManager.h"
+#include "ApeIPluginManager.h"
+#include "ApeIEventManager.h"
+#include "ApePointCloudImpl.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
 	class APE_SCENE_DLL_EXPORT SceneSessionImpl : public Ape::ISceneSession
 	{
 	private:
-		RakNet::RakPeerInterface* mpRakPeer;
+		RakNet::RakPeerInterface* mpRakReplicaPeer;
+
+		RakNet::RakPeerInterface* mpRakStreamPeer;
 		
 		std::shared_ptr<RakNet::ReplicaManager3> mpReplicaManager3;
 		
@@ -80,6 +86,10 @@ namespace Ape
 
 		RakNet::SystemAddress mAddress;
 
+		RakNet::RakNetGUID mHostGuid;
+
+		RakNet::SystemAddress mHostAddress;
+
 		std::string mNATServerIP;
 
 		std::string mNATServerPort;
@@ -90,6 +100,8 @@ namespace Ape
 
 		std::string mLobbyServerPort;
 
+		std::string mLobbyServerSessionName;
+
 		Ape::SceneSession::ParticipantType mParticipantType;
 
 		bool mIsConnectedToNATServer;
@@ -98,15 +110,25 @@ namespace Ape
 		
 		Ape::ISystemConfig* mpSystemConfig;
 
-		bool mbIsConnectedToSessionServer;
+		Ape::IPluginManager* mpPluginManager;
+
+		Ape::IEventManager* mpEventManager;
+
+		Ape::IScene* mpScene;
+
+		std::vector<Ape::Replica*> mStreamReplicas;
+
+		void eventCallBack(const Ape::Event& event);
+
+		bool mIsConnectedToHost;
 
 		LobbyManager* mpLobbyManager;
 
 		void init();
 
-		void run();
+		void runReplicaPeerListen();
 
-		void listen();
+		void listenReplicaPeer();
 
 	public:
 		SceneSessionImpl();
@@ -128,6 +150,8 @@ namespace Ape
 		bool isHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
+
+		void setScene(Ape::IScene* scene);
 	};
 }
 

@@ -1,0 +1,399 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using the Diagnostic Visualizer &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Appendices" href="Leap_Supplements.html" />
+    <link rel="next" title="WebSocket Communication" href="Leap_JSON.html" />
+    <link rel="prev" title="Using the Leap Motion Control Panel" href="Leap_Application.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unreal = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/supplements/Leap_Visualizer.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/supplements/Leap_Visualizer.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/supplements/Leap_Visualizer.html";
+            } else {
+                    redirectedLocation ="Leap_Supplements.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/supplements/Leap_Visualizer.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Application.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_JSON.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/supplements/Leap_Visualizer.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/supplements/Leap_Visualizer.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/supplements/Leap_Visualizer.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/supplements/Leap_Visualizer.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/supplements/Leap_Visualizer.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/supplements/Leap_Visualizer.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/supplements/Leap_Visualizer.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Supplements.html" accesskey="U">Appendices</a>&raquo;
+  Using the Diagnostic Visualizer
+</span> -->
+        
+  <div class="section" id="using-the-diagnostic-visualizer">
+<h1>Using the Diagnostic Visualizer<a class="headerlink" href="#using-the-diagnostic-visualizer" title="Permalink to this headline">¶</a></h1>
+<p>This article describes the Leap Motion Diagnostic Visualizer tool that lets you view motion tracking data generated by the Leap Motion Controller. This article does <em>not</em> describe the consumer-facing visualizer.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The Visualizer application displays a variety of tracking data provided by the Leap Motion API and is a good way to get a feel for the data produced by the Leap. Start the Visualizer from the Troubleshooting page of the <a class="reference external" href="Leap_Application.html">Leap Motion Settings</a> dialog by clicking the <em>Diagnostic Visualizer</em> button.</p>
+<p>Now move your hands in the Leap Motion controller&#8217;s field of view. You should see your fingers represented as colored arrows with trails following your finger tip locations.</p>
+</div>
+<div class="section" id="general-controls">
+<h2>General controls<a class="headerlink" href="#general-controls" title="Permalink to this headline">¶</a></h2>
+<p>You can control the Visualizer with key commands. Press <tt class="docutils literal"><span class="pre">H</span></tt> twice to display the available commands.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Esc</span></tt> — Quit the Visualizer.</li>
+<li><tt class="docutils literal"><span class="pre">H</span></tt> — Display the Visualizer framerate, Leap Motion framerate, and key commands.</li>
+<li><tt class="docutils literal"><span class="pre">S</span></tt> — Switch between windowed mode and fullscreen.</li>
+<li><tt class="docutils literal"><span class="pre">Z</span></tt> — Flip the positive and negative directions of the z-axis.</li>
+<li><tt class="docutils literal"><span class="pre">G</span></tt> — Toggle the coordinate grid.</li>
+<li><tt class="docutils literal"><span class="pre">J</span></tt> — Switch between black and blue or white and gray (<em>Jony mode</em>).</li>
+<li><tt class="docutils literal"><span class="pre">I</span></tt> — Toggle interpolation of finger tip trails.</li>
+<li><tt class="docutils literal"><span class="pre">Y</span></tt> — Toggle artistic drawing of finger tip trails.</li>
+<li><tt class="docutils literal"><span class="pre">L</span></tt> — Display tracking info, including labeled axes, field of view, finger tip coordinates, and processing latency.</li>
+<li><tt class="docutils literal"><span class="pre">T</span></tt> — Toggles the display of fingers between lines and cylinders.</li>
+<li><tt class="docutils literal"><span class="pre">N</span></tt> — Cycles the display of palm tracking data between fingers only, palm plane, and hand ball modes.</li>
+<li><tt class="docutils literal"><span class="pre">F</span></tt> — Toggles the display of raw stereo images.</li>
+<li><tt class="docutils literal"><span class="pre">P</span></tt> — Pauses and unpauses the visualization display.</li>
+<li><tt class="docutils literal"><span class="pre">B</span></tt> — Displays screen location visuals. Note that the Screen feature is not currently supported in the API.</li>
+<li><tt class="docutils literal"><span class="pre">.</span></tt> — Mirrors the screen contents in the visualizer window (screen location visuals must also be displayed for the mirrored monitor to be shown).</li>
+<li><tt class="docutils literal"><span class="pre">D</span></tt> — Toggles the touch emulation drawing mode.</li>
+<li><tt class="docutils literal"><span class="pre">Space</span></tt> - Clear the any drawing currently on screen.</li>
+</ul>
+</div>
+<div class="section" id="camera-controls">
+<h2>Camera controls<a class="headerlink" href="#camera-controls" title="Permalink to this headline">¶</a></h2>
+<p>The Visualizer displays finger tip trails in 3D space. You can control the camera with the following keys:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">=</span></tt> — Zoom the camera in.</li>
+<li><tt class="docutils literal"><span class="pre">-</span></tt> — Zoom the camera out.</li>
+<li><tt class="docutils literal"><span class="pre">V</span></tt> — Cycle the camera between the view modes.</li>
+<li><tt class="docutils literal"><span class="pre">A</span></tt> — Automatically pan the camera to keep tracked fingers in view when they move near the edges.</li>
+<li><tt class="docutils literal"><span class="pre">C</span></tt> — Recenter the camera to place tracked fingers in the center of the view.</li>
+<li><cite>Left and right arrows</cite> — Start and stop view rotation in orthographic view.</li>
+<li><cite>Mouse click and drag</cite> — Rotate the camera in orthographic view.</li>
+<li><cite>Mouse right-click and drag</cite> — Pan the camera.</li>
+</ul>
+</div>
+<div class="section" id="tracking-information">
+<h2>Tracking information<a class="headerlink" href="#tracking-information" title="Permalink to this headline">¶</a></h2>
+<p>You can view additional information about the tracking data by pressing the <tt class="docutils literal"><span class="pre">L</span></tt> key.</p>
+<div class="figure">
+<img alt="supplements/../../../images/Leap_Visualizer.png" src="supplements/../../../images/Leap_Visualizer.png" />
+<p class="caption">The Leap Motion Visualizer showing additional tracking data.</p>
+</div>
+<p>In this mode:</p>
+<ul class="simple">
+<li>Labeled axes are added to the grid, with scale measured in millimeters.</li>
+<li>An inverted pyramid indicates the approximate field of view of the Leap Motion Controller.</li>
+<li>The x, y, z coordinates of each detected finger tip&#8217;s position are shown, in millimeters.</li>
+<li>A graph shows the amount of processing latency experienced over time, in milliseconds.</li>
+</ul>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Supplements.html">Appendices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Application.html">Using the Leap Motion Control Panel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Using the Diagnostic Visualizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-controls">General controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#camera-controls">Camera controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-information">Tracking information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_JSON.html">WebSocket Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SDK_Release_Notes.html">Leap Motion Release Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Acknowledgements.html">Acknowledgements</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

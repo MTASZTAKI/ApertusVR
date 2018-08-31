@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -80,6 +80,16 @@ RakNet::RM3QuerySerializationResult Ape::Replica::QuerySerialization( RakNet::Co
 	return QuerySerialization_ClientSerializable(destinationConnection, mIsHostCreated);
 }
 
+void Ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
+{
+
+}
+
+void Ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
+{
+
+}
+
 void Ape::Replica::OnUserReplicaPreSerializeTick()
 {
 	mVariableDeltaSerializer.OnPreSerializeTick();
@@ -100,5 +110,5 @@ void Ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )
 	if (bs->GetNumberOfBitsUsed() == 0) return;
 	RakNet::RakString rakString;
 	bs->Read(rakString);
-	printf("Receive: %s\n", rakString.C_String());
+	LOG(LOG_TYPE_DEBUG, "Receive: " << rakString.C_String());
 }

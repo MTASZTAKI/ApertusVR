@@ -1,28 +1,31 @@
 #include <iostream>
 #include "ApeEngineeringScenePlugin.h"
 
-ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
+Ape::ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
 {
+	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
+	LOG_FUNC_LEAVE();
 }
 
-ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
+Ape::ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
 {
-	std::cout << "ApeEngineeringScenePlugin dtor" << std::endl;
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
 
-void ApeEngineeringScenePlugin::Init()
+void Ape::ApeEngineeringScenePlugin::Init()
 {
-	std::cout << "ApeEngineeringScenePlugin::init" << std::endl;
+	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
@@ -36,37 +39,22 @@ void ApeEngineeringScenePlugin::Init()
 		light->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.3f));
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
-	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("SystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowXMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowXMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			coordinateSystemArrowXMaterialManualPass->setShininess(15.0f);
-			coordinateSystemArrowXMaterialManualPass->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterialManualPass->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
-			coordinateSystemArrowXMaterial->setPass(coordinateSystemArrowXMaterialManualPass);
-		}
+		coordinateSystemArrowXMaterial->setDiffuseColor(Ape::Color(1.0f, 0.0f, 0.0f));
+		coordinateSystemArrowXMaterial->setSpecularColor(Ape::Color(1.0f, 0.0f, 0.0f));
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowYMaterial;
 	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowYMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowYMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowYMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			coordinateSystemArrowYMaterialManualPass->setShininess(15.0f);
-			coordinateSystemArrowYMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
-			coordinateSystemArrowYMaterial->setPass(coordinateSystemArrowYMaterialManualPass);
-		}
+		coordinateSystemArrowYMaterial->setDiffuseColor(Ape::Color(0.0f, 1.0f, 0.0f));
+		coordinateSystemArrowYMaterial->setSpecularColor(Ape::Color(0.0f, 1.0f, 0.0f));
 	}
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowZMaterial;
 	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowZMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		if (auto coordinateSystemArrowZMaterialManualPass = std::static_pointer_cast<Ape::IManualPass>(mpScene->createEntity("coordinateSystemArrowZMaterialManualPass", Ape::Entity::PASS_MANUAL).lock()))
-		{
-			coordinateSystemArrowZMaterialManualPass->setShininess(15.0f);
-			coordinateSystemArrowZMaterialManualPass->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterialManualPass->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
-			coordinateSystemArrowZMaterial->setPass(coordinateSystemArrowZMaterialManualPass);
-		}
+		coordinateSystemArrowZMaterial->setDiffuseColor(Ape::Color(0.0f, 0.0f, 1.0f));
+		coordinateSystemArrowZMaterial->setSpecularColor(Ape::Color(0.0f, 0.0f, 1.0f));
 	}
 	if (auto coordinateSystemNode = mpScene->createNode("coordinateSystemNode").lock())
 	{
@@ -90,13 +78,17 @@ void ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowXCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowXCone->setParentNode(coordinateSystemArrowXConeNode);
 					coordinateSystemArrowXCone->setMaterial(coordinateSystemArrowXMaterial);
-					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemXText_Node").lock())
 					{
-						coordinateSystemXText->setCaption("X");
-						coordinateSystemXText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemXText->setParentNode(coordinateSystemArrowXConeNode);
+						textNode->setParentNode(coordinateSystemArrowXConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("X");
+							text->setParentNode(textNode);
+						}
 					}
-					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					/*if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
 						Ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -105,7 +97,7 @@ void ApeEngineeringScenePlugin::Init()
 						Ape::Color color(1, 0, 0);
 						coordinateSystemArrowXExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowXExtension->setParentNode(coordinateSystemArrowXConeNode);
-					}
+					}*/
 				}
 			}
 		}
@@ -128,13 +120,17 @@ void ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowYCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowYCone->setParentNode(coordinateSystemArrowYConeNode);
 					coordinateSystemArrowYCone->setMaterial(coordinateSystemArrowYMaterial);
-					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemYText_Node").lock())
 					{
-						coordinateSystemYText->setCaption("Y");
-						coordinateSystemYText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemYText->setParentNode(coordinateSystemArrowYConeNode);
+						textNode->setParentNode(coordinateSystemArrowYConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("Y");
+							text->setParentNode(textNode);
+						}
 					}
-					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					/*if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
 						Ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -143,7 +139,7 @@ void ApeEngineeringScenePlugin::Init()
 						Ape::Color color(0, 1, 0);
 						coordinateSystemArrowYExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowYExtension->setParentNode(coordinateSystemArrowYConeNode);
-					}
+					}*/
 				}
 			}
 		}
@@ -167,13 +163,17 @@ void ApeEngineeringScenePlugin::Init()
 					coordinateSystemArrowZCone->setParameters(2.5f, 2.5f, 1.0f, Ape::Vector2(1, 1));
 					coordinateSystemArrowZCone->setParentNode(coordinateSystemArrowZConeNode);
 					coordinateSystemArrowZCone->setMaterial(coordinateSystemArrowZMaterial);
-					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto textNode = mpScene->createNode("coordinateSystemZText_Node").lock())
 					{
-						coordinateSystemZText->setCaption("Z");
-						coordinateSystemZText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-						coordinateSystemZText->setParentNode(coordinateSystemArrowZConeNode);
+						textNode->setParentNode(coordinateSystemArrowZConeNode);
+						textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
+						if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
+						{
+							text->setCaption("Z");
+							text->setParentNode(textNode);
+						}
 					}
-					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					/*if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
 					{
 						Ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -182,38 +182,41 @@ void ApeEngineeringScenePlugin::Init()
 						Ape::Color color(0, 0, 1);
 						coordinateSystemArrowZExtension->setParameters(coordinates, indices, color);
 						coordinateSystemArrowZExtension->setParentNode(coordinateSystemArrowZConeNode);
-					}
+					}*/
 				}
 			}
 		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::Run()
+void Ape::ApeEngineeringScenePlugin::Run()
 {
+	LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	LOG_FUNC_LEAVE();
 }
 
-void ApeEngineeringScenePlugin::Step()
+void Ape::ApeEngineeringScenePlugin::Step()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Stop()
+void Ape::ApeEngineeringScenePlugin::Stop()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Suspend()
+void Ape::ApeEngineeringScenePlugin::Suspend()
 {
 
 }
 
-void ApeEngineeringScenePlugin::Restart()
+void Ape::ApeEngineeringScenePlugin::Restart()
 {
 
 }

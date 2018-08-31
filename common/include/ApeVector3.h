@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_VECTOR3_H
 #define APE_VECTOR3_H
 
+#include <cmath>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <cmath>
 
 namespace Ape
 {
@@ -47,17 +46,27 @@ namespace Ape
 			x(_d), y(_d), z(_d)
 		{}
 
-		float squaredLength () const
+		float squaredLength() const
 		{
 			return x * x + y * y + z * z;
 		}
 
-		Vector3 crossProduct( const Vector3& rkVector ) const
+		float length() const
+		{
+			return std::sqrt(x * x + y * y + z * z);
+		}
+
+		float distance(const Vector3& rkVector) const
+		{
+			return (*this - rkVector).length();
+		}
+
+		Vector3 crossProduct(const Vector3& rkVector) const
 		{
 			return Vector3(
-			y * rkVector.z - z * rkVector.y,
-			z * rkVector.x - x * rkVector.z,
-			x * rkVector.y - y * rkVector.x);
+			           y * rkVector.z - z * rkVector.y,
+			           z * rkVector.x - x * rkVector.z,
+			           x * rkVector.y - y * rkVector.x);
 		}
 
 		float dotProduct(const Vector3& vec) const
@@ -65,24 +74,25 @@ namespace Ape
 			return x * vec.x + y * vec.y + z * vec.z;
 		}
 
-		Vector3& operator = ( const Vector3& rkVector )
+		Vector3& operator = (const Vector3& rkVector)
 		{
-		     x = rkVector.x;
-		     y = rkVector.y;
-		     z = rkVector.z;
+			x = rkVector.x;
+			y = rkVector.y;
+			z = rkVector.z;
 
-		     return *this;
+			return *this;
 		}
 
-		Vector3& operator = ( const float fScaler )
+		Vector3& operator = (const float fScaler)
 		{
-		     x = fScaler;
-		     y = fScaler;
-		     z = fScaler;
+			x = fScaler;
+			y = fScaler;
+			z = fScaler;
 
-		      return *this;
+			return *this;
 		}
-		bool operator == ( const Vector3& rkVector ) const
+
+		bool operator == (const Vector3& rkVector) const
 		{
 			return equalTo(rkVector);
 		}
@@ -97,7 +107,7 @@ namespace Ape
 			return (x > rkVector.x && y > rkVector.y && z > rkVector.z);
 		}
 
-		bool operator != ( const Vector3& rkVector ) const
+		bool operator != (const Vector3& rkVector) const
 		{
 			return !equalTo(rkVector);
 		}
@@ -107,52 +117,66 @@ namespace Ape
 			return (x == rkVector.x && y == rkVector.y && z == rkVector.z);
 		}
 
-		Vector3 operator * ( const float fScalar ) const
+		Vector3 operator * (const float fScalar) const
 		{
 			return Vector3(
-			x * fScalar,
-			y * fScalar,
-			z * fScalar);
+			           x * fScalar,
+			           y * fScalar,
+			           z * fScalar);
 		}
 
-		Vector3 operator / ( const float fScalar ) const
+		Vector3 operator / (const float fScalar) const
 		{
 			return Vector3(
-				x / fScalar,
-				y / fScalar,
-				z / fScalar);
+			           x / fScalar,
+			           y / fScalar,
+			           z / fScalar);
 		}
 
-		Vector3 operator / ( const Vector3& rhs) const
+		Vector3 operator / (const Vector3& rhs) const
 		{
 			return Vector3(
-				x / rhs.x,
-				y / rhs.y,
-				z / rhs.z);
+			           x / rhs.x,
+			           y / rhs.y,
+			           z / rhs.z);
 		}
 
-		Vector3 operator * ( const Vector3& rhs) const
+		Vector3 operator * (const Vector3& rhs) const
 		{
 			return Vector3(
-			x * rhs.x,
-			y * rhs.y,
-			z * rhs.z);
+			           x * rhs.x,
+			           y * rhs.y,
+			           z * rhs.z);
 		}
 
-		Vector3 operator + ( const Vector3& rkVector ) const
+		Vector3 operator + (const Vector3& rkVector) const
 		{
 			return Vector3(
-			x + rkVector.x,
-			y + rkVector.y,
-			z + rkVector.z);
+			           x + rkVector.x,
+			           y + rkVector.y,
+			           z + rkVector.z);
 		}
 
-		Vector3 operator - ( const Vector3& rkVector ) const
+		Vector3 operator - (const Vector3& rkVector) const
 		{
 			return Vector3(
-			x - rkVector.x,
-			y - rkVector.y,
-			z - rkVector.z);
+			           x - rkVector.x,
+			           y - rkVector.y,
+			           z - rkVector.z);
+		}
+
+		void operator += (const Vector3& rkVector)
+		{
+			x += rkVector.x;
+			y += rkVector.y;
+			z += rkVector.z;
+		}
+
+		void operator -= (const Vector3& rkVector)
+		{		
+			x -= rkVector.x;
+			y -= rkVector.y;
+			z -= rkVector.z;
 		}
 
 		bool isNaN() const
@@ -160,17 +184,10 @@ namespace Ape
 			return std::isnan(x) && std::isnan(y) && std::isnan(z);
 		}
 
-		std::string toString() const
-		{
-			std::ostringstream buff;
-			buff << "Vector3(" << x << ", " << y << ", " << z << ")";
-			return buff.str();
-		}
-
 		float normalise()
 		{
-			float fLength = sqrt( x * x + y * y + z * z );
-			if ( fLength > 1e-08 )
+			float fLength = sqrt(x * x + y * y + z * z);
+			if (fLength > 1e-08)
 			{
 				float fInvLength = 1.0f / fLength;
 				x *= fInvLength;
@@ -180,9 +197,44 @@ namespace Ape
 			return fLength;
 		}
 
-		float getX() { return x; }
-		float getY() { return y; }
-		float getZ() { return z; }
+		float getX()
+		{
+			return x;
+		}
+
+		float getY()
+		{
+			return y;
+		}
+
+		float getZ()
+		{
+			return z;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << x << ", " << y << ", " << z;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y << ", ";
+			buff << "\"z\": " << z;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y, z };
+			return vec;
+		}
 	};
 }
 

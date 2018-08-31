@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_LEGOPLUGIN_H
 #define APE_LEGOPLUGIN_H
 
@@ -33,6 +32,7 @@ SOFTWARE.*/
 #include <list>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
@@ -53,96 +53,98 @@ SOFTWARE.*/
 #include "ApeIMainWindow.h"
 #include "OIS.h"
 
-
 #define THIS_PLUGINNAME "ApeLegoPlugin"
 
-class ApeLegoPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+namespace Ape
 {
-private:
+	class ApeLegoPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	{
+	private:
 
-	Ape::IEventManager* mpEventManager;
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	int mInterpolatorsToggleIndex;
+		int mInterpolatorsToggleIndex;
 
-	int mInterpolatorCount;
+		int mInterpolatorCount;
 
-	std::vector<std::string> mMeshNames;
+		std::vector<std::string> mMeshNames;
 
-	std::vector<Ape::NodeWeakPtr> mAnimationNodes;
-	
-	void eventCallBack(const Ape::Event& event);
+		std::vector<Ape::NodeWeakPtr> mAnimationNodes;
 
-	std::map<OIS::KeyCode, bool> mKeyCodeMap;
+		void eventCallBack(const Ape::Event& event);
 
-	Ape::NodeWeakPtr mUserNode;
+		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
-	Ape::IMainWindow* mpMainWindow;
+		Ape::NodeWeakPtr mUserNode;
 
-	OIS::Keyboard* mpKeyboard;
+		Ape::IMainWindow* mpMainWindow;
 
-	OIS::Mouse* mpMouse;
+		OIS::Keyboard* mpKeyboard;
 
-	float mTranslateSpeedFactor;
+		OIS::Mouse* mpMouse;
 
-	float mRotateSpeedFactor;
+		float mTranslateSpeedFactor;
 
-	void moveUserNode();
+		float mRotateSpeedFactor;
 
-	void toggleInterpolators();
+		void moveUserNode();
 
-	void interpolate(int interpolatorIndex);
+		void toggleInterpolators();
 
-	void blowModel();
-	
-public:
-	ApeLegoPlugin();
+		void interpolate(int interpolatorIndex);
 
-	~ApeLegoPlugin();
-	
-	void Init() override;
+		void blowModel();
 
-	void Run() override;
+	public:
+		ApeLegoPlugin();
 
-	void Step() override;
+		~ApeLegoPlugin();
 
-	void Stop() override;
+		void Init() override;
 
-	void Suspend() override;
+		void Run() override;
 
-	void Restart() override;
+		void Step() override;
 
-	bool keyPressed(const OIS::KeyEvent& e) override;
+		void Stop() override;
 
-	bool keyReleased(const OIS::KeyEvent& e) override;
+		void Suspend() override;
 
-	bool mouseMoved(const OIS::MouseEvent& e) override;
+		void Restart() override;
 
-	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+		bool keyPressed(const OIS::KeyEvent& e) override;
 
-	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-};
+		bool keyReleased(const OIS::KeyEvent& e) override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLegoPlugin()
-{
-	return new ApeLegoPlugin;
-}
+		bool mouseMoved(const OIS::MouseEvent& e) override;
 
-APE_PLUGIN_FUNC void DestroyApeLegoPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeLegoPlugin*)plugin;
-}
+		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
+	};
 
-APE_PLUGIN_ALLOC()
-{
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeLegoPlugin, DestroyApeLegoPlugin);
-	return 0;
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLegoPlugin()
+	{
+		return new Ape::ApeLegoPlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeLegoPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeLegoPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeLegoPlugin, DestroyApeLegoPlugin);
+		return 0;
+	}
 }
 
 #endif

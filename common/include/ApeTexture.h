@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_TEXTURE_H
 #define APE_TEXTURE_H
 
@@ -30,14 +29,48 @@ SOFTWARE.*/
 #include "ApePass.h"
 
 namespace Ape
-{		
+{
 	class Texture : public Entity
 	{
+	public:
+		enum PixelFormat
+		{
+			PF_NONE,
+			R8G8B8,
+			R8G8B8A8,
+			A8R8G8B8,
+			PF_INVALID
+		};
+		enum Usage
+		{
+			U_NONE,
+			RENDERTARGET,
+			DYNAMIC_WRITE_ONLY,
+			U_INVALID
+		};
+		enum AddressingMode
+		{
+			AM_NONE,
+			WRAP,
+			MIRROR,
+			CLAMP,
+			BORDER,
+			AM_INVALID
+		};
+		enum Filtering
+		{
+			F_NONE,
+			POINT,
+			LINEAR,
+			ANISOTROPIC,
+			F_INVALID
+		};
+
 	protected:
 		Texture(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 
 		virtual ~Texture() {};
-		
+
 	};
 }
 

@@ -1,0 +1,20 @@
+material sphere_img_4
+{
+	technique sphere_img_4
+	{
+		pass sphere_img_4
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit sphere_img_4
+			{
+				texture img4.jpg
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +20,83 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <chrono>
+#include <random>
+#include "ApePlatform.h"
 #include "ApeSystem.h"
 #include "ApeSystemConfigImpl.h"
 #include "ApeMainWindowImpl.h"
 #include "ApePluginManagerImpl.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeLogManagerImpl.h"
 #include "ApeSceneImpl.h"
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIManualPass.h"
+#include "ApeISphereGeometry.h"
+#include "ApeIConeGeometry.h"
+#include "ApeIPlaneGeometry.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
+Ape::LogManagerImpl* gpLogManagerImpl;
 Ape::SceneImpl* gpSceneImpl;
 Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
 
-void Ape::System::Start(std::string configFolderPath, bool isBlockingMode)
+void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
-	gpSystemConfigImpl = new SystemConfigImpl(configFolderPath);
+	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
+	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
+
+	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
+	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
+	std::string delimiter = "-";
+	auto tp = std::chrono::system_clock::now();
+	auto dur = tp.time_since_epoch();
+	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
+	std::stringstream uniqueUserNodeName;
+	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << nanoseconds;
+	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
+
 	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
+	gpLogManagerImpl = new LogManagerImpl();
+	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneImpl = new SceneImpl();
-
-	std::stringstream generatedUniqueUserName;
-	generatedUniqueUserName << gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix << "_" << gpSceneSessionImpl->getGUID();
-	gpSystemConfigImpl->setGeneratedUniqueUserName(generatedUniqueUserName.str());
-	gpSystemConfigImpl->writeSessionGUID(gpSceneSessionImpl->getGUID());
-
-	gpSceneImpl->createNode(generatedUniqueUserName.str());
+	gpSceneSessionImpl->setScene(gpSceneImpl);
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
-		; //TODO open a paltform specific window
+		; //TODO open a platform specific window if needed
 
-	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();
+
+	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
+	if (auto userNode = gpSceneImpl->createNode(uniqueUserNodeName.str()).lock())
+	{
+		if (auto headNode = gpSceneImpl->createNode(uniqueUserNodeName.str() + "_HeadNode").lock())
+		{
+			headNode->setParentNode(userNode);
+			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneImpl->createEntity(uniqueUserNodeName.str() + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+			{
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+				std::vector<double> randomColors;
+				for (int i = 0; i < 3; i++)
+					randomColors.push_back(distDouble(gen));
+				userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+				userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+			}
+		}
+	}
+
+	gpPluginManagerImpl->InitAndRunPlugins();
+
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

@@ -20,16 +20,4 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeFobHeadTrackingPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeSystem.json
-	)
-
-add_custom_target(
-    Configs_fobHeadTracking ALL
-    SOURCES ${CONFIGS}
-)
-
-set_property (TARGET Configs_fobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking/Configs")
+add_subdirectory (local_cave)

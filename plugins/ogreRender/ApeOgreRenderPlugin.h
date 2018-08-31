@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <fstream>
 #include "OgreSceneManager.h"
 #include "OgreRoot.h"
 #include "OgreConfigFile.h"
@@ -69,8 +70,20 @@ SOFTWARE.*/
 #include "OgreLodWorkQueueRequest.h"
 #include "OgreLodWorkQueueWorker.h"
 #include "OgreTextureManager.h"
+#include <OgreGLTextureManager.h>
+#include <OgreGLRenderSystem.h>
+#include <OgreGLTexture.h>
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
+#include "Hydrax.h"
+#ifdef HYDRAX_NEW
+	#include "Noise/Perlin/HydraxPerlin.h"
+	#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#else
+	#include "Noise/Perlin/Perlin.h"
+	#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#endif
+#include "SkyX.h"
 #include "ApeIFileMaterial.h"
 #include "ApeITextGeometry.h"
 #include "ApeILight.h"
@@ -80,6 +93,7 @@ SOFTWARE.*/
 #include "ApeICylinderGeometry.h"
 #include "ApeITorusGeometry.h"
 #include "ApeITubeGeometry.h"
+#include "ApeIRayGeometry.h"
 #include "ApeISphereGeometry.h"
 #include "ApeIConeGeometry.h"
 #include "ApeIIndexedFaceSetGeometry.h"
@@ -89,18 +103,24 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeIScene.h"
 #include "ApeICamera.h"
+#include "ApeIPointCloud.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "ApeDoubleQueue.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeOgreMovableText.h"
+#include "ApeOgrePointCloud.h"
 #include "ApeOgreConversions.h"
 #include "ApeOgreRenderPluginConfigs.h"
 #include "ApeISystemConfig.h"
 #include "ApeIMainWindow.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIUnitTexture.h"
 #include "ApeIPbsPass.h"
 #include "ApeIManualPass.h"
 #include "ApeIManualTexture.h"
+#include "ApeISky.h"
+#include "ApeIWater.h"
 #include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
@@ -147,16 +167,6 @@ namespace Ape
 
 		Ogre::OverlayManager* mpOverlayMgr;
 
-		Ogre::Overlay* mpOverlay;
-
-		Ogre::OverlayContainer* mpOverlayContainer;
-
-		Ogre::TextAreaOverlayElement* mpOverlayTextArea;
-
-		Ogre::FontManager* mpOverlayFontManager;
-
-		Ogre::Font* mpOverlayFont;
-
 		Ogre::LodConfig mCurrentlyLoadingMeshEntityLodConfig;
 		
 		Ogre::Entity* mpCurrentlyLoadingMeshEntity;
@@ -172,6 +182,20 @@ namespace Ape
 		Ogre::HlmsManager* mpHlmsPbsManager;
 
 		Ogre::MeshLodGenerator* mpMeshLodGenerator;
+
+		Ogre::MeshSerializer mMeshSerializer;
+
+		Ogre::MaterialSerializer mMaterialSerializer;
+
+		Hydrax::Hydrax *mpHydrax;
+
+		SkyX::SkyX* mpSkyx;
+
+		Ogre::Light* mpSkyxSunlight;
+
+		Ogre::Light* mpSkyxSkylight;
+
+		SkyX::BasicController* mpSkyxBasicController;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
@@ -189,6 +213,14 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mHeadNode;
+
+		std::vector<Ape::ManualTextureWeakPtr> mRttList;
+
+		int mCameraCountFromConfig;
+
+		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;
+
 		void processEventDoubleQueue();
 
 		void eventCallBack(const Ape::Event& event);
@@ -198,19 +230,19 @@ namespace Ape
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOgreRenderPlugin()
 	{
-		return new OgreRenderPlugin;
+		return new Ape::OgreRenderPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyOgreRenderPlugin(Ape::IPlugin *plugin)
 	{
-		delete (OgreRenderPlugin*)plugin;
+		delete (Ape::OgreRenderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
 		return 0;
 	}

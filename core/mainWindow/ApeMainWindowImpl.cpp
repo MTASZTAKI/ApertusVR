@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include "ApeMainWindowImpl.h"
-
-template<> Ape::IMainWindow* Ape::Singleton<Ape::IMainWindow>::msSingleton = 0;
 
 Ape::MainWindowImpl::MainWindowImpl()
 {

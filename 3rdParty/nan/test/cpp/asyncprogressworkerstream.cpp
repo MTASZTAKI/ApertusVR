@@ -1,16 +1,14 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
 
-#ifndef _WIN32
-#include <unistd.h>
-#define Sleep(x) usleep((x)*1000)
-#endif
 #include <nan.h>
+
+#include "sleep.h"  // NOLINT(build/include)
 
 using namespace Nan;  // NOLINT(build/namespaces)
 
@@ -32,7 +30,10 @@ class ProgressWorker : public AsyncProgressWorkerBase<T> {
     , int iters)
     : AsyncProgressWorkerBase<T>(callback), progress(progress)
     , milliseconds(milliseconds), iters(iters) {}
-  ~ProgressWorker() {}
+
+  ~ProgressWorker() {
+    delete progress;
+  }
 
   void Execute (
     const typename AsyncProgressWorkerBase<T>::ExecutionProgress& progress) {
@@ -40,12 +41,12 @@ class ProgressWorker : public AsyncProgressWorkerBase<T> {
     for (int i = 0; i < iters; ++i) {
       data.index = i;
       data.data = i * 2;
-      progress.Send(&data, sizeof( data ));
+      progress.Send(&data, 1);
       Sleep(milliseconds);
     }
   }
 
-  void HandleProgressCallback(const T *data, size_t size) {
+  void HandleProgressCallback(const T *data, size_t count) {
     HandleScope scope;
     v8::Local<v8::Object> obj = Nan::New<v8::Object>();
     Nan::Set(
@@ -58,7 +59,7 @@ class ProgressWorker : public AsyncProgressWorkerBase<T> {
       New<v8::Integer>(data->data));
 
     v8::Local<v8::Value> argv[] = { obj };
-    progress->Call(1, argv);
+    progress->Call(1, argv, this->async_resource);
   }
 
  private:
@@ -68,8 +69,8 @@ class ProgressWorker : public AsyncProgressWorkerBase<T> {
 };
 
 NAN_METHOD(DoProgress) {
-  Callback *progress = new Callback(info[2].As<v8::Function>());
-  Callback *callback = new Callback(info[3].As<v8::Function>());
+  Callback *progress = new Callback(To<v8::Function>(info[2]).ToLocalChecked());
+  Callback *callback = new Callback(To<v8::Function>(info[3]).ToLocalChecked());
   AsyncQueueWorker(new ProgressWorker<data_t>(
       callback
     , progress

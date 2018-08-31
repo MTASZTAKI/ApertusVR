@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "ApeIManualMaterial.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeReplica.h"
@@ -42,7 +43,33 @@ namespace Ape
 
 		void setSpecularColor(Ape::Color specular) override;
 
+		void setPassTexture(Ape::TextureWeakPtr texture) override;
+
+		void setAmbientColor(Color ambient) override;
+
+		void setEmissiveColor(Color emissive) override;
+
+		Ape::TextureWeakPtr getPassTexture() override;
+
 		void setPass(Ape::PassWeakPtr pass) override;
+
+		void setCullingMode(Ape::Material::CullingMode cullingMode) override;
+
+		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
+
+		void setDepthWriteEnabled(bool enable) override;
+
+		void setDepthCheckEnabled(bool enable) override;
+
+		void setLightingEnabled(bool enable) override;
+
+		void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) override;
+
+		void setDepthBias(float constantBias, float slopeScaleBias) override;
+
+		void showOnOverlay(bool enable, int zOrder) override;
+
+		int getZOrder() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,6 +81,12 @@ namespace Ape
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		Ape::IScene* mpScene;
+
+		Ape::TextureWeakPtr mTexture;
+
+		std::string mTextureName;
+
+		int mZOrder;
 	};
 }
 

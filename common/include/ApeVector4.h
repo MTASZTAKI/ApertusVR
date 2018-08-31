@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,58 @@ namespace Ape
 	{
 		float x, y, z, w;
 
-		Vector4() : 
+		Vector4() :
 			x(0.0f), y(0.0f), z(0.0f), w(0.0f)
 		{}
 
-		Vector4(float _x, float _y, float _z, float _w) : 
+		Vector4(float _x, float _y, float _z, float _w) :
 			x(_x), y(_y), z(_z), w(_w)
 		{}
+
+		float getX()
+		{
+			return x;
+		}
+
+		float getY()
+		{
+			return y;
+		}
+
+		float getZ()
+		{
+			return z;
+		}
+
+		float getW()
+		{
+			return w;
+		}
+
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << x << ", " << y << ", " << z << std::endl;
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"x\": " << x << ", ";
+			buff << "\"y\": " << y << ", ";
+			buff << "\"z\": " << z << ", ";
+			buff << "\"w\": " << w;
+			buff << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ x, y, z, w};
+			return vec;
+		}
 	};
 }
 

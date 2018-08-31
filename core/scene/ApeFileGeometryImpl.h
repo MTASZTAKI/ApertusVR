@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,15 +38,23 @@ namespace Ape
 
 		~FileGeometryImpl();
 		
-		void setFileName(std::string fileName);
+		void setFileName(std::string fileName) override;
 
-		std::string getfFileName();
+		std::string getFileName() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
+
+		void exportMesh() override;
+
+		bool isExportMesh() override;
+
+		void mergeSubMeshes() override;
+
+		bool isMergeSubMeshes() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -64,6 +72,10 @@ namespace Ape
 		Ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
+
+		bool mIsExportMesh;
+
+		bool mIsSubMeshesMerged;
 	};
 }
 

@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -42,16 +42,16 @@ if (NOT OIS_READY)
 #build ois
 	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 		message (STATUS "Configuring ois for ${CONF}, please wait.....")
-		execute_process ( 
-				COMMAND ${CMAKE_COMMAND} 
-				-G ${CMAKE_GENERATOR} 
+		execute_process (
+				COMMAND ${CMAKE_COMMAND}
+				-G ${CMAKE_GENERATOR}
 				.
 				WORKING_DIRECTORY ${OIS_HOME}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
-				)		
+				)
 		reportError (output if error)
 		message (STATUS "Building ois for ${CONF}, please wait.....")
-		execute_process ( 
+		execute_process (
 			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target ALL_BUILD
 			WORKING_DIRECTORY ${OIS_HOME}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
@@ -75,16 +75,16 @@ set (SOURCES
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
 	${OIS_HOME}/includes
 	)
 
 add_library (ApeIndustry40Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeIndustry40Plugin ApePluginManager ApeScene ApeEventManager ApeMainWindow MY_OIS)
+target_link_libraries (ApeIndustry40Plugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow MY_OIS)
 if (WIN32)
-	# we have to link to some DirectX libraries 
+	# we have to link to some DirectX libraries
 	target_link_libraries (ApeIndustry40Plugin dinput8 dxguid)
 endif ()
 

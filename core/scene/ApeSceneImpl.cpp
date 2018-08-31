@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,16 @@ SOFTWARE.*/
 #include "ApePbsPassImpl.h"
 #include "ApeManualPassImpl.h"
 #include "ApeManualTextureImpl.h"
-
-template<> Ape::IScene* Ape::Singleton<Ape::IScene>::msSingleton = 0;
+#include "ApeBrowserImpl.h"
+#include "ApeUnitTextureImpl.h"
+#include "ApeRayGeometryImpl.h"
+#include "ApeSkyImpl.h"
+#include "ApeWaterImpl.h"
+#include "ApePointCloudImpl.h"
 
 Ape::SceneImpl::SceneImpl()
 {
+	LOG_FUNC_ENTER();
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpSceneSessionImpl = ((Ape::SceneSessionImpl*)Ape::ISceneSession::getSingletonPtr());
 	mReplicaManager = mpSceneSessionImpl->getReplicaManager();
@@ -53,6 +58,7 @@ Ape::SceneImpl::SceneImpl()
 	mEntities = Ape::EntitySharedPtrNameMap();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	msSingleton = this;
+	LOG_FUNC_LEAVE();
 }
 
 Ape::SceneImpl::~SceneImpl()
@@ -79,11 +85,14 @@ Ape::NodeWeakPtr Ape::SceneImpl::getNode(std::string name)
 
 Ape::NodeWeakPtr Ape::SceneImpl::createNode(std::string name)
 {
+	//LOG_FUNC_ENTER();
 	auto node = std::make_shared<Ape::NodeImpl>(name, mpSceneSessionImpl->isHost());
 	mNodes.insert(std::make_pair(name, node));
 	mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::NODE_CREATE));
 	if (auto replicaManager = mReplicaManager.lock())
 		replicaManager->Reference(node.get());
+
+	//LOG_FUNC_LEAVE();
 	return node;
 }
 
@@ -111,10 +120,12 @@ Ape::EntityWeakPtr Ape::SceneImpl::getEntity(std::string name)
 
 Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::Type type)
 {
+	LOG_FUNC_ENTER();
 	switch (type) 
 	{
 		case Ape::Entity::LIGHT:
 		{
+			LOG_TRACE("type: LIGHT");
 			auto entity = std::make_shared<Ape::LightImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::LIGHT_CREATE));
@@ -124,6 +135,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_TEXT:
 		{
+			LOG_TRACE("type: GEOMETRY_TEXT");
 			auto entity = std::make_shared<Ape::TextGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_TEXT_CREATE));
@@ -133,6 +145,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_FILE:
 		{
+			LOG_TRACE("type: GEOMETRY_FILE");
 			auto entity = std::make_shared<Ape::FileGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_FILE_CREATE));
@@ -142,6 +155,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_PLANE:
 		{
+			LOG_TRACE("type: GEOMETRY_PLANE");
 			auto entity = std::make_shared<Ape::PlaneGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_PLANE_CREATE));
@@ -151,6 +165,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_BOX:
 		{
+			LOG_TRACE("type: GEOMETRY_BOX");
 			auto entity = std::make_shared<Ape::BoxGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_BOX_CREATE));
@@ -160,6 +175,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_CONE:
 		{
+			LOG_TRACE("type: GEOMETRY_CONE");
 			auto entity = std::make_shared<Ape::ConeGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_CONE_CREATE));
@@ -169,6 +185,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_CYLINDER:
 		{
+			LOG_TRACE("type: GEOMETRY_CYLINDER");
 			auto entity = std::make_shared<Ape::CylinderGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_CYLINDER_CREATE));
@@ -178,6 +195,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_SPHERE:
 		{
+			LOG_TRACE("type: GEOMETRY_SPHERE");
 			auto entity = std::make_shared<Ape::SphereGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_SPHERE_CREATE));
@@ -187,6 +205,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_TORUS:
 		{
+			LOG_TRACE("type: GEOMETRY_TORUS");
 			auto entity = std::make_shared<Ape::TorusGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_TORUS_CREATE));
@@ -196,6 +215,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_TUBE:
 		{
+			LOG_TRACE("type: GEOMETRY_TUBE");
 			auto entity = std::make_shared<Ape::TubeGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_TUBE_CREATE));
@@ -205,6 +225,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_INDEXEDFACESET:
 		{
+			LOG_TRACE("type: GEOMETRY_INDEXEDFACESET");
 			auto entity = std::make_shared<Ape::IndexedFaceSetGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_CREATE));
@@ -214,6 +235,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::GEOMETRY_INDEXEDLINESET:
 		{
+			LOG_TRACE("type: GEOMETRY_INDEXEDLINESET");
 			auto entity = std::make_shared<Ape::IndexedLineSetGeometryImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_CREATE));
@@ -223,6 +245,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::MATERIAL_FILE:
 		{
+			LOG_TRACE("type: MATERIAL_FILE");
 			auto entity = std::make_shared<Ape::FileMaterialImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_FILE_CREATE));
@@ -232,6 +255,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::MATERIAL_MANUAL:
 		{
+			LOG_TRACE("type: MATERIAL_MANUAL");
 			auto entity = std::make_shared<Ape::ManualMaterialImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::MATERIAL_MANUAL_CREATE));
@@ -241,6 +265,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::PASS_PBS:
 		{
+			LOG_TRACE("type: PASS_PBS");
 			auto entity = std::make_shared<Ape::PbsPassImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_PBS_CREATE));
@@ -250,6 +275,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::PASS_MANUAL:
 		{
+			LOG_TRACE("type: PASS_MANUAL");
 			auto entity = std::make_shared<Ape::ManualPassImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::PASS_MANUAL_CREATE));
@@ -259,6 +285,7 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 		}
 		case Ape::Entity::TEXTURE_MANUAL:
 		{
+			LOG_TRACE("type: TEXTURE_MANUAL");
 			auto entity = std::make_shared<Ape::ManualTextureImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_MANUAL_CREATE));
@@ -266,18 +293,76 @@ Ape::EntityWeakPtr Ape::SceneImpl::createEntity(std::string name, Ape::Entity::T
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
+		case Ape::Entity::POINT_CLOUD:
+		{
+			LOG_TRACE("type: POINT_CLOUD");
+			auto entity = std::make_shared<Ape::PointCloudImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::POINT_CLOUD_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
 		case Ape::Entity::CAMERA:
 		{
+			LOG_TRACE("type: CAMERA");
 			auto entity = std::make_shared<Ape::CameraImpl>(name);
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_CREATE));
 			return entity;
 		}
+		case Ape::Entity::BROWSER:
+		{
+			LOG_TRACE("type: BROWSER");
+			auto entity = std::make_shared<Ape::BrowserImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::BROWSER_CREATE));
+			return entity;
+		}
+		case Ape::Entity::TEXTURE_UNIT:
+		{
+			LOG_TRACE("type: TEXTURE_UNIT");
+			auto entity = std::make_shared<Ape::UnitTextureImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_CREATE));
+			return entity;
+		}
+		case Ape::Entity::GEOMETRY_RAY:
+		{
+			LOG_TRACE("type: GEOMETRY_RAY");
+			auto entity = std::make_shared<Ape::RayGeometryImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_CREATE));
+			return entity;
+		}
+		case Ape::Entity::SKY:
+		{
+			LOG_TRACE("type: SKY");
+			auto entity = std::make_shared<Ape::SkyImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::SKY_CREATE));
+			return entity;
+		}
+		case Ape::Entity::WATER:
+		{
+			LOG_TRACE("type: WATER");
+			auto entity = std::make_shared<Ape::WaterImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_CREATE));
+			return entity;
+		}
 		case Ape::Entity::INVALID:
+		{
+			LOG_TRACE("type: INVALID");
 			return Ape::EntityWeakPtr();
+		}
 		default:
+		{
+			LOG_TRACE("type: default");
 			return Ape::EntityWeakPtr();
+		}
 	}
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::SceneImpl::deleteEntity(std::string name)
@@ -336,6 +421,24 @@ void Ape::SceneImpl::deleteEntity(std::string name)
 			break;
 		case Ape::Entity::TEXTURE_MANUAL:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_MANUAL_DELETE));
+			break;
+		case Ape::Entity::BROWSER:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::BROWSER_DELETE));
+			break;
+		case Ape::Entity::TEXTURE_UNIT:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_UNIT_DELETE));
+			break;
+		case Ape::Entity::GEOMETRY_RAY:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::GEOMETRY_RAY_DELETE));
+			break;
+		case Ape::Entity::SKY:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::SKY_DELETE));
+			break;
+		case Ape::Entity::WATER:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::WATER_DELETE));
+			break;
+		case Ape::Entity::POINT_CLOUD:
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::POINT_CLOUD_DELETE));
 			break;
 		case Ape::Entity::CAMERA:
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::CAMERA_DELETE));

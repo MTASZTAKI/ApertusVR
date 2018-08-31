@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ set (HEADERS
 	ApeITextGeometry.h
 	ApeICamera.h
 	ApeILight.h
+	ApeILogManager.h
 	ApeMaterial.h
 	ApePass.h
 	ApeIPbsPass.h
@@ -65,12 +66,21 @@ set (HEADERS
 	ApeDegree.h
 	ApeRadian.h
 	ApeEuler.h
+	ApeMatrix3.h
 	ApeMatrix4.h
 	ApeSystem.h
 	ApeISystemConfig.h
 	ApeDoubleQueue.h
 	ApeIMainWindow.h
 	ApeInterpolator.h
+	ApeIBrowser.h
+	ApeIUnitTexture.h
+	ApeIRayGeometry.h
+	ApeISky.h
+	ApeIWater.h
+	ApeIPointCloud.h
+	ApeFileSystem.h
+	ApePlatform.h
 	)
 
 add_custom_target(

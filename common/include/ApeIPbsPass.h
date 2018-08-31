@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_IPBSPASS_H
 #define APE_IPBSPASS_H
 
 #include <string>
 #include <vector>
 #include "Ape.h"
-#include "ApePass.h"
-#include "ApeEntity.h"
-#include "ApeTexture.h"
 #include "ApeColor.h"
+#include "ApeEntity.h"
+#include "ApePass.h"
+#include "ApeTexture.h"
 
 namespace Ape
-{	
+{
 	class IPbsPass : public Pass
 	{
 	protected:
 		IPbsPass(std::string name) : Pass(name, Entity::PASS_PBS) {}
-		
+
 		virtual ~IPbsPass() {};
 
 	public:
@@ -71,4 +70,3 @@ namespace Ape
 }
 
 #endif
-

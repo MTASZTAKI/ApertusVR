@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,13 +38,27 @@ namespace Ape
 
 		~ManualTextureImpl();
 
-		void setParameters(float width, float height) override;
+		void setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
 
 		Ape::ManualTextureParameters getParameters() override;
 
 		void setSourceCamera(Ape::CameraWeakPtr camera) override;
 
 		Ape::CameraWeakPtr getSourceCamera() override;
+
+		void setGraphicsApiID(void* id) override;
+
+		void* getGraphicsApiID() override;
+
+		void setBuffer(const void* buffer) override;
+
+		const void* getBuffer() override;
+
+		void registerFunction(std::function<void()> callback) override;
+
+		std::vector<std::function<void()>> getFunctionList() override;
+
+		void unRegisterFunction(std::function<void()> callback) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -62,6 +76,12 @@ namespace Ape
 		std::string mCameraName;
 
 		Ape::CameraWeakPtr mCamera;
+
+		const void* mpBuffer;
+
+		void* mpGraphicsApiID;
+
+		std::vector<std::function<void()>> mFunctions;
 	};
 }
 

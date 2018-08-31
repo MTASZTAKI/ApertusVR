@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ add_library (ApeOculusDK2Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if (WIN32)
-target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeScene ApeEventManager ApeMainWindow OCULUS_LIB winmm.lib)
+target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow OCULUS_LIB winmm.lib)
 endif ()
 
 set_property (TARGET ApeOculusDK2Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")

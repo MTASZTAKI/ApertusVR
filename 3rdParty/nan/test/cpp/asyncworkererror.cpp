@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -21,7 +21,7 @@ class ErrorWorker : public AsyncWorker {
 };
 
 NAN_METHOD(Work) {
-  Callback *callback = new Callback(info[0].As<v8::Function>());
+  Callback *callback = new Callback(To<v8::Function>(info[0]).ToLocalChecked());
   AsyncQueueWorker(new ErrorWorker(callback));
   info.GetReturnValue().SetUndefined();
 }

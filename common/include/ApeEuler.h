@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,63 +29,68 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	class Euler
+	struct Euler
 	{
-	private:
 		Ape::Radian m_yaw;
-		
-		Ape::Radian m_pitch; 
-		
-		Ape::Radian m_roll;  
-		
-		Ape::Quaternion m_cachedQuaternion; 
-		
-		bool m_changed; 
-		
-	public:
-		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)):m_yaw(y),m_pitch(p),m_roll(r),m_changed(true) 
+
+		Ape::Radian m_pitch;
+
+		Ape::Radian m_roll;
+
+		Ape::Quaternion m_cachedQuaternion;
+
+		bool m_changed;
+
+		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)): m_yaw(y), m_pitch(p), m_roll(r), m_changed(true)
 		{
 		}
 
-		inline Ape::Radian getYaw() 
+		Euler(Ape::Quaternion q)
+		{
+			m_yaw = std::atan2(2.0 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+			m_pitch = std::asin(-2.0 * (q.x * q.z - q.w * q.y));
+			m_roll = std::atan2(2.0 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
+		}
+
+		Ape::Radian getYaw()
 		{
 			return m_yaw;
 		}
 
-		inline Ape::Radian getPitch() 
+		Ape::Radian getPitch()
 		{
 			return m_pitch;
 		}
 
-		inline Ape::Radian getRoll() 
+		Ape::Radian getRoll()
 		{
 			return m_roll;
 		}
 
-		inline Euler &setYaw(Ape::Radian y) 
+		Euler& setYaw(Ape::Radian y)
 		{
-			m_yaw = y; 
-			m_changed = true; 
+			m_yaw = y;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Euler &setPitch(Ape::Radian p) 
+		Euler& setPitch(Ape::Radian p)
 		{
-			m_pitch = p; 
-			m_changed = true; 
+			m_pitch = p;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Euler &setRoll(Ape::Radian r) 
+		Euler& setRoll(Ape::Radian r)
 		{
-			m_roll = r; 
-			m_changed = true; 
+			m_roll = r;
+			m_changed = true;
 			return *this;
 		}
 
-		inline Ape::Quaternion toQuaternion() 
+		Ape::Quaternion toQuaternion()
 		{
-			if(m_changed) 
+			if (m_changed)
 			{
 				double c1 = std::cos(m_yaw.radian / 2.0f);
 				double s1 = std::sin(m_yaw.radian / 2.0f);
@@ -99,22 +104,42 @@ namespace Ape
 				double x = c1c2 * s3 + s1s2 * c3;
 				double y = s1 * c2 * c3 + c1 * s2 * s3;
 				double z = c1 * s2 * c3 - s1 * c2 * s3;
-				m_cachedQuaternion = Ape::Quaternion((float) w, (float) x, (float) y, (float) z); 
+				m_cachedQuaternion = Ape::Quaternion((float) w, (float) y, (float) z, (float) x);
 				m_changed = false;
 			}
 			return m_cachedQuaternion;
 		}
 
-		inline operator Ape::Quaternion()
+		operator Ape::Quaternion()
 		{
 			return toQuaternion();
 		}
 
-		inline friend std::ostream &operator<<(std::ostream &o, const Euler &e)
+		std::string toString() const
 		{
-			o << "<Y:" << e.m_yaw.toDegree() << "�, P:" << e.m_pitch.toDegree() << "�, R:" << e.m_roll.toDegree() << "�>";
+			std::ostringstream buff;
+			buff << "y: " << m_yaw.toDegree() << ", p: " << m_pitch.toDegree() << ", r: " << m_roll.toDegree();
+			return buff.str();
+		}
+
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ \"y\": " << m_yaw.toDegree() << ", \"p\": " << m_pitch.toDegree() << ", \"r\": " << m_roll.toDegree() << " }";
+			return buff.str();
+		}
+
+		std::vector<float> toVector() const
+		{
+			std::vector<float> vec{ m_yaw.toDegree(), m_pitch.toDegree(), m_roll.toDegree() };
+			return vec;
+		}
+
+		friend std::ostream& operator<<(std::ostream& o, const Euler& e)
+		{
+			o << e.toString();
 			return o;
-		}       
+		}
 	};
 }
 

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "ApeNodeImpl.h"
+#include "ApeEuler.h"
+#include "ApeMatrix4.h"
 
 #ifdef NBIND_CLASS
 
@@ -74,6 +76,31 @@ public:
 		mPtr.lock()->setParentNode(parentNode.getNodeWeakPtr());
 	}
 
+	// ChildNodes
+
+	std::vector<NodeJsPtr> getChildNodes()
+	{
+		std::vector<NodeJsPtr> vec;
+		if (auto nodeSharedPtr = mPtr.lock())
+		{
+			for (auto nodeWeakPtr : nodeSharedPtr->getChildNodes())
+			{
+				vec.push_back(NodeJsPtr(nodeWeakPtr));
+			}
+		}
+		return vec;
+	}
+
+	bool hasChildNode()
+	{
+		return mPtr.lock()->hasChildNode();
+	}
+
+	bool isChildNode(NodeJsPtr childNode)
+	{
+		return mPtr.lock()->isChildNode(childNode.getNodeWeakPtr());
+	}
+
 	// INode
 
 	const std::string getName()
@@ -106,6 +133,26 @@ public:
 		mPtr.lock()->setOrientation(orientation);
 	}
 
+	const Ape::Euler getEuler()
+	{
+		Ape::Quaternion q = mPtr.lock()->getOrientation();
+		return Ape::Euler(q);
+	}
+
+	void setEuler(Ape::Euler euler)
+	{
+		mPtr.lock()->setOrientation(euler.toQuaternion());
+	}
+
+	const Ape::Matrix4 getTransformationMatrix()
+	{
+		Ape::Matrix4 m;
+		m.makeTransform(mPtr.lock()->getScale(),
+						mPtr.lock()->getOrientation(),
+						mPtr.lock()->getPosition());
+		return m;
+	}
+
 	const Ape::Quaternion getDerivedOrientation()
 	{
 		return mPtr.lock()->getDerivedOrientation();
@@ -134,6 +181,11 @@ public:
 	void rotate(Ape::Radian angle, Ape::Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace)
 	{
 		mPtr.lock()->rotate(angle, axis, nodeTransformSpace);
+	}
+
+	void showBoundingBox(bool show)
+	{
+		mPtr.lock()->showBoundingBox(show);
 	}
 };
 
@@ -165,6 +217,11 @@ NBIND_CLASS(NodeJsPtr)
 
 	method(getOrientation);
 	method(setOrientation);
+
+	method(getEuler);
+	method(setEuler);
+
+	method(getTransformationMatrix);
 
 	method(getDerivedOrientation);
 

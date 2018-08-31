@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -16,7 +16,7 @@ NAN_METHOD(ReturnAValue) {
   const FunctionCallbackInfo<v8::Value> &cbinfo = info;
   ReturnValue<v8::Value> ret = cbinfo.GetReturnValue();
   if (cbinfo.Length() == 1) {
-    ret.Set(info[0].As<v8::String>());
+    ret.Set(To<v8::String>(info[0]).ToLocalChecked());
   } else {
     ret.Set(New("default").ToLocalChecked());
   }

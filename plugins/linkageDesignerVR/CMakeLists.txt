@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -82,7 +82,7 @@ include_directories(
 add_library (ApeLinkageDesignerVRPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeScene ApeEventManager ApeMainWindow MY_OIS)
+target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow MY_OIS)
 if (WIN32)
 	# we have to link to some DirectX libraries 
 	target_link_libraries (ApeLinkageDesignerVRPlugin dinput8 dxguid)

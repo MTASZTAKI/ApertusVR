@@ -1,7 +1,7 @@
 /*********************************************************************
  * NAN - Native Abstractions for Node.js
  *
- * Copyright (c) 2017 NAN contributors
+ * Copyright (c) 2018 NAN contributors
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
@@ -11,6 +11,7 @@ const test     = require('tap').test
     , bindings = require('bindings')({ module_root: testRoot, bindings: 'asyncprogressworker' });
 
 test('asyncprogressworker', function (t) {
+  // test with 100 ms sleep
   var worker = bindings.a
     , progressed = 0
   worker(100, 5, function(i) {

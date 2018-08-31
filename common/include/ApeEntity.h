@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,15 @@ SOFTWARE.*/
 #ifndef APE_ENTITY_H
 #define APE_ENTITY_H
 
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
 
 namespace Ape
 {
 	class Entity
-	{ 
+	{
 	public:
 		enum Type
 		{
@@ -48,27 +48,39 @@ namespace Ape
 			GEOMETRY_SPHERE,
 			GEOMETRY_TORUS,
 			GEOMETRY_CONE,
+			GEOMETRY_RAY,
 			MATERIAL_MANUAL,
 			MATERIAL_FILE,
 			PASS_PBS,
 			PASS_MANUAL,
 			TEXTURE_MANUAL,
+			TEXTURE_UNIT,
+			BROWSER,
+			WATER,
+			SKY,
+			POINT_CLOUD,
 			INVALID
 		};
-		
+
 	protected:
 		Entity(std::string name, Type type) : mName(name), mType(type) {};
-		
-		virtual ~Entity() {};
-		
-		std::string mName;
-		
-		Type mType;
-		
-	public:
-		std::string getName() { return mName; };
 
-		Type getType() { return mType; };
+		virtual ~Entity() {};
+
+		std::string mName;
+
+		Type mType;
+
+	public:
+		std::string getName()
+		{
+			return mName;
+		};
+
+		Type getType()
+		{
+			return mType;
+		};
 	};
 }
 

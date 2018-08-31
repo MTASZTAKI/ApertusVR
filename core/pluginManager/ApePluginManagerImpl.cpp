@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,16 @@ SOFTWARE.*/
 #include "rapidjson/filereadstream.h"
 #include "ApePluginManagerImpl.h"
 
-template<> Ape::IPluginManager* Ape::Singleton<Ape::IPluginManager>::msSingleton = 0;
-
 Ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mUniqueUserNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<Ape::IPlugin*>();
+	mInitializedPluginCount = 0;
+	mPluginCount = 0;
+	mIsAllPluginInitialized = false;
 }
 
 Ape::PluginManagerImpl::~PluginManagerImpl()
@@ -41,10 +43,7 @@ Ape::PluginManagerImpl::~PluginManagerImpl()
 
 void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
-	Ape::IPlugin* plugin = Ape::PluginFactory::CreatePlugin(pluginname);
-	plugin->Init();
-	plugin->Run();
-	Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+	mPluginVector.push_back(Ape::PluginFactory::CreatePlugin(pluginname));
 }
 
 void Ape::PluginManagerImpl::CreatePlugins()
@@ -52,10 +51,39 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
 	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
 	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
+	mPluginCount = pluginManagerConfig.pluginnames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
-			mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::CreatePlugin, this, (*it)));
+		{
+			CreatePlugin(*it);
+			LOG(LOG_TYPE_INFO, "Plugin loaded: " << *it);
+		}
+		else
+		{
+			mPluginCount--;
+			LOG(LOG_TYPE_ERROR, "Can not load plugin: " << *it);
+		}
+	}
+}
+
+void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
+{
+	plugin->Init();
+	mInitializedPluginCount++;
+	while (mInitializedPluginCount < mPluginCount)
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	mIsAllPluginInitialized = true;
+	plugin->Run();
+	//TODO name
+	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+}
+
+void Ape::PluginManagerImpl::InitAndRunPlugins()
+{
+	for (std::vector<Ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
+	{
+		mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
 	}
 }
 
@@ -69,8 +97,8 @@ void Ape::PluginManagerImpl::detachPluginThreads()
 	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
 }
 
-void Ape::PluginManagerImpl::LoadPlugin(std::string name)
+bool Ape::PluginManagerImpl::isAllPluginInitialized()
 {
-	//TODO;
+	return mIsAllPluginInitialized;
 }
 

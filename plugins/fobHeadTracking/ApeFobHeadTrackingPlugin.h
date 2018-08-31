@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_FOBHEADTRACKINGPLUGIN_H
 #define APE_FOBHEADTRACKINGPLUGIN_H
 
@@ -35,6 +34,7 @@ SOFTWARE.*/
 #include <iterator>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeICamera.h"
@@ -45,82 +45,101 @@ SOFTWARE.*/
 #include "ApeDoubleQueue.h"
 #include "ApeFobHeadTrackingPluginConfigs.h"
 #include "ApeMatrix4.h"
+#include "ApeIConeGeometry.h"
+#include "ApeIManualMaterial.h"
+#include "ApeITextGeometry.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
-class ApeFobHeadTrackingPlugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeFobHeadTrackingPlugin : public Ape::IPlugin
+	{
+	private:
+		int mCameraCount;
 
-	Ape::IScene* mpScene;
+		Ape::IEventManager* mpEventManager;
 
-	Ape::NodeWeakPtr mUserNode;
+		Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mCamerasNode;
+		Ape::NodeWeakPtr mUserNode;
 
-	Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
+		Ape::NodeWeakPtr mHeadNode;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ManualMaterialWeakPtr mUserMaterial;
 
-	Ape::IMainWindow* mpMainWindow;
+		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
-	Ape::FobHeadTrackingTrackerConfig mTrackerConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	Ape::FobHeadTrackingDisplayConfigList mDisplayConfigList;
+		Ape::IMainWindow* mpMainWindow;
 
-	std::vector<Ape::CameraWeakPtr> mCameras;
+		Ape::FobHeadTrackingTrackerConfig mTrackerConfig;
 
-	Ape::Vector3 mTrackedViewerPosition;
+		Ape::FobHeadTrackingDisplayConfigList mDisplayConfigList;
 
-	Ape::Quaternion mTrackedViewerOrientation;
+		Ape::Vector3 mTrackedViewerPosition;
 
-	Ape::Euler mTrackedViewerOrientationYPR;
+		Ape::Vector3 mTrackedPrevViewerPosition;
 
-	void* mpFobTracker;
-	
-	void eventCallBack(const Ape::Event& event);
+		Ape::Quaternion mTrackedViewerOrientation;
 
-	Ape::Matrix4 calculateCameraProjection(Ape::Vector3 displayBottomLeftCorner, Ape::Vector3 displayBottomRightCorner, Ape::Vector3 displayTopLeftCorner,
-		Ape::Vector3 trackedViewerPosition, float cameraNearClip, float cameraFarClip);
+		Ape::Euler mTrackedViewerOrientationYPR;
 
-	Ape::Matrix4 perspectiveOffCenter(float displayDistanceLeft, float displayDistanceRight, float displayDistanceBottom, float displayDistanceTop, float cameraNearClip, float cameraFarClip);
-	
-public:
-	ApeFobHeadTrackingPlugin();
+		float mNearClip;
 
-	~ApeFobHeadTrackingPlugin();
-	
-	void Init() override;
+		float mFarClip;
 
-	void Run() override;
+		float mC;
 
-	void Step() override;
+		float mD;
 
-	void Stop() override;
+		void* mpFobTracker;
 
-	void Suspend() override;
+		void eventCallBack(const Ape::Event& event);
 
-	void Restart() override;
-};
+		void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
-{
-	return new ApeFobHeadTrackingPlugin;
-}
+		Ape::Matrix4 calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition);
 
-APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
-{
-	delete (ApeFobHeadTrackingPlugin*)plugin;
-}
+		Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+	public:
+		ApeFobHeadTrackingPlugin();
 
-APE_PLUGIN_ALLOC()
-{
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
-	return 0;
+		~ApeFobHeadTrackingPlugin();
+
+		void Init() override;
+
+		void Run() override;
+
+		void Step() override;
+
+		void Stop() override;
+
+		void Suspend() override;
+
+		void Restart() override;
+	};
+
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
+	{
+		return new Ape::ApeFobHeadTrackingPlugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeFobHeadTrackingPlugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
+		return 0;
+	}
 }
 
 #endif

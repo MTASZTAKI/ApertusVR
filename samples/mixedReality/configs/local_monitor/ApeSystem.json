@@ -1,0 +1,33 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "Local",
+        "sessionGUID": "1013311130628945935",
+      "sessionResourceLocation": [
+        "/plugins/industry40/resources",
+        "/plugins/assimpAssetLoader/resources"
+      ],
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "useLobby": false,
+            "ip": "195.111.2.95",
+            "port": "8888",
+            "sessionName": "k508"
+        }
+    },
+    "pluginManager": {
+      "plugins": [
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeIndustry40Plugin",
+        "ApeKinectPlugin"
+      ]
+    }
+}

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,15 +37,15 @@ namespace Ape
 
 		~TorusGeometryImpl();
 
-		void setParameters(float radius, float sectionRadius, Ape::Vector2 tile);
+		void setParameters(float radius, float sectionRadius, Ape::Vector2 tile) override;
 
-		Ape::GeometryTorusParameters getParameters();
+		Ape::GeometryTorusParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

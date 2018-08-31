@@ -110,8 +110,10 @@ proc_label:BEGIN
 
 	# check if already exist
 	IF is_session_exists(pSessionName) THEN
-		SELECT raise_error(0200, "Session already exists with this name and/or UUID.");
-        LEAVE proc_label;
+		UPDATE sessions
+			SET host_guid = pSessionHostGuid
+			WHERE session_name = pSessionName;
+		LEAVE proc_label;
 	END IF;
 
 	# insert data

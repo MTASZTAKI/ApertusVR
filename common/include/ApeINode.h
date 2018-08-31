@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,16 @@ SOFTWARE.*/
 #ifndef APE_INODE_H
 #define APE_INODE_H
 
-#include <vector>
-#include <string>
-#include <memory>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
 #include "Ape.h"
-#include "ApeVector3.h"
 #include "ApeQuaternion.h"
+#include "ApeVector3.h"
 
 namespace Ape
-{	
+{
 	namespace Node
 	{
 		enum TransformationSpace
@@ -48,7 +48,7 @@ namespace Ape
 	{
 	protected:
 		virtual ~INode() {};
-		
+
 	public:
 		virtual std::string getName() const = 0;
 
@@ -72,6 +72,12 @@ namespace Ape
 
 		virtual Ape::NodeWeakPtr getParentNode() = 0;
 
+		virtual std::vector<Ape::NodeWeakPtr> getChildNodes() = 0;
+
+		virtual bool hasChildNode() = 0;
+
+		virtual bool isChildNode(Ape::NodeWeakPtr childNode) = 0;
+
 		virtual void setPosition(Vector3 position) = 0;
 
 		virtual void setOrientation(Quaternion orientation) = 0;
@@ -85,6 +91,12 @@ namespace Ape
 		virtual void setChildrenVisibility(bool visible) = 0;
 
 		virtual void setFixedYaw(bool fix) = 0;
+
+		virtual void showBoundingBox(bool show) = 0;
+
+		virtual void setInheritOrientation(bool enable) = 0;
+
+		virtual bool isInheritOrientation() = 0;
 	};
 }
 

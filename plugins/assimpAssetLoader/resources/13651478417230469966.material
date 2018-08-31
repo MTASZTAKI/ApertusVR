@@ -1,0 +1,24 @@
+
+material ErdeAC14-FZK-Haus.ifc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.572549 0.501961 0.454902 1
+		}
+
+	}
+
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.572549 0.501961 0.454902 1
+		}
+
+	}
+
+}

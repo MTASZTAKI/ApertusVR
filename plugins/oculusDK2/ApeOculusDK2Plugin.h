@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_OCULUSDK2PLUGIN_H
 #define APE_OCULUSDK2PLUGIN_H
 
@@ -31,10 +30,12 @@ SOFTWARE.*/
 #include "OVR.h"
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
+#include "ApeIConeGeometry.h"
 #include "ApeIFileMaterial.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIManualPass.h"
@@ -43,71 +44,78 @@ SOFTWARE.*/
 #include "ApeICamera.h"
 #include "ApeMatrix4.h"
 #include "ApeIMainWindow.h"
+#include "ApeIManualMaterial.h"
 #include "ApeISystemConfig.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
-class ApeOculusDK2Plugin : public Ape::IPlugin
+namespace Ape
 {
-private:
-	Ape::IEventManager* mpEventManager;
+	class ApeOculusDK2Plugin : public Ape::IPlugin
+	{
+	private:
+		Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+		Ape::IScene* mpScene;
 
-	Ape::ISystemConfig* mpSystemConfig;
+		Ape::ISystemConfig* mpSystemConfig;
 
-	ovrHmd mpHMD;
+		ovrHmd mpHMD;
 
-	ovrFrameTiming mHMDFrameTiming;
+		ovrFrameTiming mHMDFrameTiming;
 
-	Ape::CameraWeakPtr mCameraLeft;
+		Ape::CameraWeakPtr mCameraLeft;
 
-	Ape::CameraWeakPtr mCameraRight;
+		Ape::CameraWeakPtr mCameraRight;
 
-	Ape::NodeWeakPtr mHeadNode;
+		Ape::NodeWeakPtr mHeadNode;
 
-	Ape::NodeWeakPtr mUserNode;
-	
-	void eventCallBack(const Ape::Event& event);
+		Ape::NodeWeakPtr mUserNode;
 
-	Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
-	
-public:
-	ApeOculusDK2Plugin();
+		Ape::ManualMaterialWeakPtr mUserMaterial;
 
-	~ApeOculusDK2Plugin();
-	
-	void Init() override;
+		void eventCallBack(const Ape::Event& event);
 
-	void Run() override;
+		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 
-	void Step() override;
+		Ape::CameraWeakPtr createCamera(std::string name);
 
-	void Stop() override;
+	public:
+		ApeOculusDK2Plugin();
 
-	void Suspend() override;
+		~ApeOculusDK2Plugin();
 
-	void Restart() override;
-};
+		void Init() override;
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
-{
+		void Run() override;
 
-	return new ApeOculusDK2Plugin;
-}
+		void Step() override;
 
-APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
-{
-	delete (ApeOculusDK2Plugin*)plugin;
-}
+		void Stop() override;
 
-APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+		void Suspend() override;
 
-APE_PLUGIN_ALLOC()
-{
-	std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
-	return 0;
+		void Restart() override;
+	};
+
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
+	{
+		return new Ape::ApeOculusDK2Plugin;
+	}
+
+	APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
+	{
+		delete (Ape::ApeOculusDK2Plugin*)plugin;
+	}
+
+	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
+
+	APE_PLUGIN_ALLOC()
+	{
+		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
+		return 0;
+	}
 }
 
 #endif

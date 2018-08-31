@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,11 @@
 #SOFTWARE.
 
 # Add all header and cpp files in the directory to the project
-set (HEADERS
+
+set(HEADERS
 	ApeTextGeometryImpl.h
 	ApeLightImpl.h
+	ApeBrowserImpl.h
 	ApeNodeImpl.h
 	ApeCameraImpl.h
 	ApeSceneImpl.h
@@ -42,6 +44,11 @@ set (HEADERS
 	ApeManualPassImpl.h
 	ApeManualMaterialImpl.h
 	ApeManualTextureImpl.h
+	ApeUnitTextureImpl.h
+	ApeRayGeometryImpl.h
+	ApeWaterImpl.h
+	ApeSkyImpl.h
+	ApePointCloudImpl.h
 	session/ApeReplica.h
 	session/ApeSceneSessionImpl.h
 	session/ApeReplicaManagerConnection.h
@@ -50,9 +57,10 @@ set (HEADERS
 	session/ApeHttpManager.h
 	)
 
-set (SOURCES 
+set(SOURCES
 	ApeTextGeometryImpl.cpp
 	ApeLightImpl.cpp
+	ApeBrowserImpl.cpp
 	ApeNodeImpl.cpp
 	ApeCameraImpl.cpp
 	ApeSceneImpl.cpp
@@ -71,6 +79,11 @@ set (SOURCES
 	ApeManualPassImpl.cpp
 	ApeManualMaterialImpl.cpp
 	ApeManualTextureImpl.cpp
+	ApeUnitTextureImpl.cpp
+	ApeRayGeometryImpl.cpp
+	ApeWaterImpl.cpp
+	ApeSkyImpl.cpp
+	ApePointCloudImpl.cpp
 	session/ApeReplica.cpp
 	session/ApeSceneSessionImpl.cpp
 	session/ApeReplicaManagerConnection.cpp
@@ -78,26 +91,45 @@ set (SOURCES
 	session/ApeLobbyManager.cpp
 	session/ApeHttpManager.cpp
 	)
-	
+
 include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
 	${PROJECT_SOURCE_DIR}/core/scene
 	${PROJECT_SOURCE_DIR}/core/scene/session
 	${PROJECT_SOURCE_DIR}/core/eventManager
+	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAKNET_INCLUDE_DIR}
-	${CURL_INCLUDE_DIR}
+	${CURL_INCLUDE_DIRS}
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeScene SHARED ${SOURCES} ${HEADERS})
+add_library(ApeScene SHARED ${SOURCES} ${HEADERS})
 
-# Link with dependency libraries
-if(WIN32)
-	target_link_libraries (ApeScene ApeSystemConfig ApeEventManager RAKNET MY_CURL ws2_32)
-endif()
+# Link with dependency libraries and add preprocessor definitions with lists
+set(APE_LINK_LIBS_SCENE
+	ApeSystemConfig
+	ApeEventManager
+	ApePluginManager
+	ApeLogManager
+	RAKNET
+	)
 
-# Add preprocessor definitions
-set_property (TARGET ApeScene PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENE_DLL)
+set(APE_PREPROC_DEF_SCENE
+	BUILDING_APE_SCENE_DLL
+	)
+
+if (${CURL_READY})
+	list(APPEND APE_LINK_LIBS_SCENE MY_CURL)
+	list(APPEND APE_PREPROC_DEF_SCENE HTTPMANAGER_USE_CURL)
+endif ()
+
+if (WIN32)
+	list(APPEND APE_LINK_LIBS_SCENE ws2_32)
+endif ()
+
+target_link_libraries(ApeScene ${APE_LINK_LIBS_SCENE})
+set_property(TARGET ApeScene PROPERTY COMPILE_DEFINITIONS ${APE_PREPROC_DEF_SCENE})
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeScene PROPERTY FOLDER "Core")
+set_property(TARGET ApeScene PROPERTY FOLDER "Core")

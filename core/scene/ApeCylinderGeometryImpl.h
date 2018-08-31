@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,15 +37,15 @@ namespace Ape
 
 		~CylinderGeometryImpl();
 
-		void setParameters(float radius, float height, float tile);
+		void setParameters(float radius, float height, float tile) override;
 
-		Ape::GeometryCylinderParameters getParameters();
+		Ape::GeometryCylinderParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material);
+		void setMaterial(Ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial();
+		Ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

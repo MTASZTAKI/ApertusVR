@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@ Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) 
 	mParameters = Ape::ManualTextureParameters();
 	mCameraName = std::string();
 	mCamera = Ape::CameraWeakPtr();
+	mpBuffer = nullptr;
+	mpGraphicsApiID = nullptr;
 }
 
 Ape::ManualTextureImpl::~ManualTextureImpl()
@@ -36,10 +38,12 @@ Ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(float width, float height)
+void Ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;
+	mParameters.pixelFormat = pixelFormat;
+	mParameters.usage = usage;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
@@ -65,6 +69,49 @@ Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
 	return mCamera;
 }
 
+void Ape::ManualTextureImpl::setGraphicsApiID(void * id)
+{
+	mpGraphicsApiID = id;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID));
+}
+
+void * Ape::ManualTextureImpl::getGraphicsApiID()
+{
+	return mpGraphicsApiID;
+}
+
+void Ape::ManualTextureImpl::setBuffer(const void* buffer)
+{
+	mpBuffer = buffer;
+	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
+}
+
+const void* Ape::ManualTextureImpl::getBuffer()
+{
+	return mpBuffer;
+}
+
+void Ape::ManualTextureImpl::registerFunction(std::function<void()> callback)
+{
+	mFunctions.push_back(callback);
+}
+
+std::vector<std::function<void()>> Ape::ManualTextureImpl::getFunctionList()
+{
+	return mFunctions;
+}
+
+void Ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
+{
+	for (auto it = mFunctions.begin(); it != mFunctions.end();)
+	{
+		if ((*it).target_type() == callback.target_type())
+			it = mFunctions.erase(it);
+		else
+			++it;
+	}
+}
+
 void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -79,7 +126,7 @@ RakNet::RM3SerializationResult Ape::ManualTextureImpl::Serialize(RakNet::Seriali
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_SERIALIZED_ALWAYS;
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void Ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)

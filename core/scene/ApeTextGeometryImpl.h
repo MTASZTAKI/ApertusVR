@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,14 +41,16 @@ namespace Ape
 		std::string getCaption() override;
 		
 		void setCaption(std::string caption) override;
-		
+
+		void clearCaption() override;
+
 		bool isVisible() override;
 		
 		void setVisible(bool enabled) override;
-		
-		Vector3 getOffset() override;
-		
-		void setOffset(Vector3 position) override;
+	
+		void showOnTop(bool show) override;
+
+		bool isShownOnTop() override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
@@ -67,7 +69,7 @@ namespace Ape
 
 		bool mVisibility;
 
-		Vector3 mOffset;
+		bool mShowOnTop;
 	};
 }
 

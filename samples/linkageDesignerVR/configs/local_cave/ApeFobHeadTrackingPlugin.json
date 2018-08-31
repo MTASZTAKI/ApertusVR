@@ -1,25 +1,31 @@
 {
-    "tracker": {
-        "rotation": {
-            "angle": 0,
-            "x": 0,
-            "y": 1,
-            "z": 0
-        },
-        "translate": {
-            "x": 0,
-            "y": -15,
-            "z": 0
-        },
-        "scale": {
-            "x": 30.48,
-            "y": 30.48,
-            "z": 30.48
-        },
-        "eyeSeparation": 8
+  "tracker": {
+    "rotation": {
+      "angle": 0,
+      "x": 0,
+      "y": 1,
+      "z": 0
     },
+    "translate": {
+      "x": 0,
+      "y": -15,
+      "z": 0
+    },
+    "scale": {
+      "x": 30.48,
+      "y": 30.48,
+      "z": 30.48
+    },
+    "leftEyeOffset": 4.0,
+    "rightEyeOffset": 12.0
+  },
     "displays": [
         {
+            "name": "frontDisplay",
+            "cameras": {
+                "left": "camera0",
+                "right": "camera1"
+            },
             "size": {
                 "width": 300,
                 "height": 225
@@ -56,6 +62,11 @@
             ]
         },
         {
+            "name": "rightDisplay",
+            "cameras": {
+                "left": "camera2",
+                "right": "camera3"
+            },
             "size": {
                 "width": 300,
                 "height": 225
@@ -73,7 +84,7 @@
             },
             "corners": [
                 {
-					"bottomLeftCorner": {
+                    "bottomLeftCorner": {
                         "x": 150,
                         "y": 0,
                         "z": -150
@@ -92,6 +103,11 @@
             ]
         },
         {
+            "name": "leftDisplay",
+            "cameras": {
+                "left": "camera4",
+                "right": "camera5"
+            },
             "size": {
                 "width": 300,
                 "height": 225

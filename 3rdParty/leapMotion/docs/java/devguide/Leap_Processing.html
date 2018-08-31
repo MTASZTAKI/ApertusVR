@@ -1,0 +1,454 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using Processing &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="System Architecture" href="Leap_Architecture.html" />
+    <link rel="prev" title="Setting Up a Project" href="Project_Setup.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.java = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/devguide/Leap_Processing.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Processing.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Processing.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/devguide/Leap_Processing.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Project_Setup.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Architecture.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Using Processing
+</span> -->
+        
+  <div class="section" id="using-processing">
+<h1>Using Processing<a class="headerlink" href="#using-processing" title="Permalink to this headline">¶</a></h1>
+<p>You can use the Leap Motion Java libraries in a Processing Sketch (in Java mode). This involves adding the Leap Motion files to the Processing libraries folder and importing the Leap Motion classes into the Sketch.</p>
+<div class="section" id="setting-up-the-leap-motion-libraries">
+<h2>Setting Up the Leap Motion Libraries<a class="headerlink" href="#setting-up-the-leap-motion-libraries" title="Permalink to this headline">¶</a></h2>
+<p>To put the Leap Motion Java libraries in the Processing <tt class="docutils literal"><span class="pre">libraries</span></tt> folder, do the following:</p>
+<ol class="arabic simple">
+<li>Locate and open your Sketchbook folder. (The path do this folder is listed in the Processing Preferences dialog.)</li>
+<li>Find the folder named <tt class="docutils literal"><span class="pre">libraries</span></tt> in the Sketchbook folder, if it exists. Create the folder, if necessary.</li>
+<li>Inside <tt class="docutils literal"><span class="pre">libraries</span></tt>, create a folder named, <tt class="docutils literal"><span class="pre">LeapJava</span></tt>.</li>
+<li>Inside <tt class="docutils literal"><span class="pre">LeapJava</span></tt>, create a folder named, <tt class="docutils literal"><span class="pre">library</span></tt>.</li>
+</ol>
+<p>5. Find your LeapSDK folder (wherever you copied it after downloading).
+5. Copy the following 3 library files from <tt class="docutils literal"><span class="pre">LeapSDK/lib</span></tt> to <tt class="docutils literal"><span class="pre">LeapJava/library</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="20%" />
+<col width="29%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">OS</th>
+<th class="head">&nbsp;</th>
+<th class="head">Libraries</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Linux 32bit</td>
+<td>LeapJava.jar</td>
+<td>x86/libLeapJava.so</td>
+<td>x86/libLeap.so</td>
+</tr>
+<tr class="row-odd"><td>Linux 64bit</td>
+<td>LeapJava.jar</td>
+<td>x64/libLeapJava.so</td>
+<td>x64/libLeap.so</td>
+</tr>
+<tr class="row-even"><td>Mac OS X</td>
+<td>LeapJava.jar</td>
+<td>libLeapJava.dylib</td>
+<td>libLeap.dylib</td>
+</tr>
+<tr class="row-odd"><td>Windows 32bit</td>
+<td>LeapJava.jar</td>
+<td>x86/LeapJava.dll</td>
+<td>x86/Leap.dll</td>
+</tr>
+<tr class="row-even"><td>WIndows 64bit</td>
+<td>LeapJava.jar</td>
+<td>x86/LeapJava.dll</td>
+<td>x86/Leap.dll</td>
+</tr>
+</tbody>
+</table>
+<p>On Linux and Windows, you must make sure that you use the 32bit versions of the libraries with the 32bit versions of Python and the 64bit libraries with 64bit Processing.</p>
+<div class="figure">
+<img alt="devguide/../../../images/ProcessingLibraries.png" src="devguide/../../../images/ProcessingLibraries.png" />
+<p class="caption">The Sketchbook file structure on the Mac. (Linux and Windows are similar, but use different library file names.)</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="creating-a-simple-sketch">
+<h2>Creating a Simple Sketch<a class="headerlink" href="#creating-a-simple-sketch" title="Permalink to this headline">¶</a></h2>
+<p>Now create a simple sketch using the Leap Motion libraries to make sure things are set up properly.</p>
+<ol class="arabic">
+<li><p class="first">Create a new Sketch.</p>
+</li>
+<li><p class="first">In the Processing menu, choose Sketch&gt;Import Library&gt;LeapJava</p>
+<img alt="devguide/../../../images/ProcessingAddLibrary.png" src="devguide/../../../images/ProcessingAddLibrary.png" />
+<p>Processing adds the Leap library import statement to your sketch:</p>
+<div class="highlight-python"><div class="highlight"><pre>import com.leapmotion.leap.*;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add code to create a <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object:</p>
+<div class="highlight-python"><div class="highlight"><pre>Controller controller = new Controller();
+</pre></div>
+</div>
+<p>The Leap Motion <tt class="docutils literal"><span class="pre">Controller</span></tt> object is the source of tracking data (in the form of <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects).</p>
+</li>
+<li><p class="first">In your sketch <tt class="docutils literal"><span class="pre">draw()</span></tt> function, get a <tt class="docutils literal"><span class="pre">Frame</span></tt> of tracking data from the controller:</p>
+<div class="highlight-python"><div class="highlight"><pre>Frame frame = controller.frame();
+</pre></div>
+</div>
+<p>Since this is in the <tt class="docutils literal"><span class="pre">draw()</span></tt> function, the frame containing the tracking data is updated at the frame rate of the sketch.</p>
+</li>
+<li><p class="first">Finally, display the number of hands and fingers in view by adding the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">text</span><span class="p">(</span> <span class="n">frame</span><span class="o">.</span><span class="n">hands</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; Hands&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span> <span class="p">);</span>
+<span class="n">text</span><span class="p">(</span> <span class="n">frame</span><span class="o">.</span><span class="n">fingers</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; Fingers&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object contains lists of both hands and fingers. (You can also get fingers from each visible hand.)</p>
+</li>
+</ol>
+<p>All together, your sketch should look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>import com.leapmotion.leap.*;
+
+Controller controller = new Controller();
+
+void setup(){
+  size( 200, 200 );
+}
+
+void draw(){
+  background(0);
+  Frame frame = controller.frame();
+  text( frame.hands().count() + &quot; Hands&quot;, 50, 50 );
+  text( frame.fingers().count() + &quot; Fingers&quot;, 50, 100 );
+}
+</pre></div>
+</div>
+<p>Plug in your Leap Motion device and run the script. The results should look like this:</p>
+<img alt="devguide/../../../images/ProcessingHello.png" src="devguide/../../../images/ProcessingHello.png" />
+<p>And that’s all there is to it. You can now use the full Leap Motion Java API.</p>
+</div>
+<div class="section" id="exporting-a-sketch-as-an-application">
+<h2>Exporting a Sketch as an Application<a class="headerlink" href="#exporting-a-sketch-as-an-application" title="Permalink to this headline">¶</a></h2>
+<p>The standard Processing Export Application command works for the current platform &#8211; in other words, you can build an application package for the Mac if you are currently programming on a Mac. However, since the Leap Motion Java API calls native libraries, you must copy the correct libraries into the versions for each Operating System and Platform that you export (see the table above). Note that the Leap Motion SDK download only includes the libraries for a single operating system. You must download SDKs for the other operating systems separately.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_Tutorial.html#id17">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Project_Setup.html#id11">Setting up a project</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Using Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-leap-motion-libraries">Setting Up the Leap Motion Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-simple-sketch">Creating a Simple Sketch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exporting-a-sketch-as-an-application">Exporting a Sketch as an Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Configuration.html">Runtime Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

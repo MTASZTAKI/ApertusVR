@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -37,16 +37,18 @@ set (SOURCES
 	)
 	
 include_directories(
+	${PROJECT_SOURCE_DIR}/common/include
+	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dynamic library target to the project
 add_library (ApePluginManager SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApePluginManager ApeSystemConfig)
+target_link_libraries (ApePluginManager ApeSystemConfig ApeLogManager)
 # Link with dependency libraries
 if (NOT WIN32)
-	target_link_libraries (ApePluginManager ApeSystemConfig dl pthread)
+	target_link_libraries (ApePluginManager ApeSystemConfig ApeLogManager dl pthread)
 endif ()
 
 # Add preprocessor definitions

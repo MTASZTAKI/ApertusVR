@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "ApeIManualPass.h"
 #include "ApeEventManagerImpl.h"
+#include "ApeILogManager.h"
 #include "ApeIScene.h"
 #include "ApeINode.h"
 #include "ApeReplica.h"
@@ -51,6 +52,8 @@ namespace Ape
 		void setTexture(Ape::TextureWeakPtr texture) override;
 
 		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
+
+		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 

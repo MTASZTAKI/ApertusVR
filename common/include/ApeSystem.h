@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,17 @@ SOFTWARE.*/
 #define APE_SYSTEM_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SYSTEM_DLL
-#define APE_SYSTEM_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_SYSTEM_DLL
+		#define APE_SYSTEM_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_SYSTEM_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_SYSTEM_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_SYSTEM_DLL_EXPORT 
+	#define APE_SYSTEM_DLL_EXPORT
 #endif
 
+
+#ifdef __cplusplus
 #include <string>
 #include "ApeSingleton.h"
 #include "ApeISceneSession.h"
@@ -41,10 +43,11 @@ namespace Ape
 {
 	namespace System
 	{
-		APE_SYSTEM_DLL_EXPORT void Start(std::string configFolderPath, bool isBlockingMode);
-
-		APE_SYSTEM_DLL_EXPORT void Stop();
+		extern "C" APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, int isBlockingMode);
+		extern "C" APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }
+
+#endif
 
 #endif

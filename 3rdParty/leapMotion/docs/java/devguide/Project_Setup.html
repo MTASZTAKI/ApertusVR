@@ -1,0 +1,459 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting Up a Project &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Application Development" href="Leap_Guides.html" />
+    <link rel="next" title="Using Processing" href="Leap_Processing.html" />
+    <link rel="prev" title="Hello World" href="Sample_Tutorial.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/devguide/Project_Setup.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Project_Setup.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Project_Setup.html";
+            } else {
+                    redirectedLocation ="Leap_Guides.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/devguide/Project_Setup.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Sample_Tutorial.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Processing.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/devguide/Project_Setup.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/Project_Setup.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Project_Setup.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Project_Setup.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Project_Setup.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides.html" accesskey="U">Application Development</a>&raquo;
+  Setting Up a Project
+</span> -->
+        
+  <div class="section" id="id11">
+<h1>Setting up a project<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion Java SDK uses a standard Jar file for Leap Motion API class definitions and a set of native libraries that allow your Leap-enabled Java programs to exchange data with the Leap. Setting up a Java project typically involves adding the LeapJava.jar file to your application&#8217;s classpath and setting the JVM library path parameter so that your JVM can find the native libraries.</p>
+<div class="section" id="leap-motion-java-libraries">
+<h2>Leap Motion Java libraries<a class="headerlink" href="#leap-motion-java-libraries" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion Jar file is cross-platform, but the native libraries must match the platform and architecture of the  JVM used to run the program.</p>
+<p>To use the Leap Motion SDK in a Java program, you must add the LeapJava.jar file to the classpath and set the java.library.path to the location of the Leap Motion native libraries.</p>
+<p>Use the following Java and native libraries with the Leap Motion Java SDK:</p>
+<ul class="simple">
+<li>32-bit Windows:<ul>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/LeapJava.jar</span></tt> — Leap Motion Java API class definitions</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/x86/LeapJava.dll</span></tt> — 32-bit Leap Motion Java library for Windows</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/x86/Leap.dll</span></tt> — 32-bit Leap Motion library for Windows</li>
+</ul>
+</li>
+<li>64-bit Windows:<ul>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/LeapJava.jar</span></tt> — Leap Motion Java API class definitions</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/x64/LeapJava.dll</span></tt> — 64-bit Leap Motion Java library for Windows</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/x64/Leap.dll</span></tt> — 64-bit Leap Motion library for Windows</li>
+</ul>
+</li>
+<li>32- or 64-bit Mac OS:<ul>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/LeapJava.jar</span></tt> — Leap Motion Java API class definitions</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/libLeapJava.dylib</span></tt> — Leap Motion Java library for Mac</li>
+<li><tt class="docutils literal"><span class="pre">LeapSDK/lib/libLeap.dylib</span></tt> — Leap Motion library for Mac</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="compile-from-the-command-line">
+<h2>Compile from the command line<a class="headerlink" href="#compile-from-the-command-line" title="Permalink to this headline">¶</a></h2>
+<p>Use the Java compiler, <tt class="docutils literal"><span class="pre">javac</span></tt> to compile, setting the classpath option to specify the LeapJar file. For example, to compile the Sample.java program included in the Leap Motion SDK, you could use the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>javac -classpath &lt;LeapSDK&gt;/lib/LeapJava.jar Sample.java
+</pre></div>
+</div>
+<p>(where <tt class="docutils literal"><span class="pre">&lt;LeapSDK&gt;</span></tt> is the location of your Leap Motion SDK folder.)</p>
+</div>
+<div class="section" id="run-from-the-command-line">
+<h2>Run from the command line<a class="headerlink" href="#run-from-the-command-line" title="Permalink to this headline">¶</a></h2>
+<p>To launch a Leap-enabled program, Java needs to find the Leap Motion native libraries at runtime. LeapJava.jar must also be on the classpath. You can set Java&#8217;s <tt class="docutils literal"><span class="pre">java.library.path</span></tt> parameter to identify the native library. The command line syntax is slightly different between Mac and Windows. More importantly, on Windows, you have to specify either the 32-bit or the 64-bit libraries to match the architecture of the JVM you are using.</p>
+<p>On Mac, you could run the Sample program using the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>java -classpath &quot;.:&lt;LeapSDK&gt;/lib/LeapJava.jar&quot; -Djava.library.path=&lt;LeapSDK&gt;/lib Sample
+</pre></div>
+</div>
+<p>On Windows, you could run the Sample program using a 64-bit JVM with the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>java -classpath &quot;.;&lt;LeapSDK&gt;/lib/LeapJava.jar&quot; -Djava.library.path=&lt;LeapSDK&gt;/lib/x64 Sample
+</pre></div>
+</div>
+</div>
+<div class="section" id="eclipse">
+<h2>Eclipse<a class="headerlink" href="#eclipse" title="Permalink to this headline">¶</a></h2>
+<p>In the Eclipse IDE, you add the LeapJava.jar file to a project as an external Jar and then set the path to the appropriate native Leap Motion libraries as a property of the Jar file.</p>
+<ol class="arabic simple">
+<li>Select <em>New &gt; Java Project</em> from the Eclipse File menu.</li>
+<li>Assign a name to the project on the Create Java Project page and set other properties as desired. (The Leap Motion SDK supports Java 6 and 7.)</li>
+<li>Click <em>Next</em> to advance to the Java Settings page.</li>
+<li>Select the <em>Libraries</em> tab.</li>
+<li>Click the <em>Add External Jars...</em> button.</li>
+<li>Navigate to the LeapJava.jar file.</li>
+<li>Click <em>Open</em> to add LeapJava.jar to the project.</li>
+<li>Next, click the small triangle in front of the LeapJava.jar entry in the library list to reveal the library properties.</li>
+</ol>
+<div class="figure">
+<img alt="devguide/../../../images/Setup_Eclipse_Jar_Properties.png" src="devguide/../../../images/Setup_Eclipse_Jar_Properties.png" />
+</div>
+<ol class="arabic simple" start="9">
+<li>Select the <em>Native library location</em> item.</li>
+<li>Click the <em>Edit</em> button.</li>
+<li>Navigate to the folder containing the Leap Motion native libraries.</li>
+</ol>
+<blockquote>
+<div>On Windows, be sure to select the folder containing the correct libraries for your target architecture. If you are targeting a 32-bit JVM, use the Leap Motion libraries in the x86 folder of the SDK. If you are targeting a 64-bit JVM, use the libraries in the x64 folder. On Mac, each Leap Motion library file supports both architectures.</div></blockquote>
+<ol class="arabic simple" start="12">
+<li>Click <em>Ok</em> to set the path.</li>
+</ol>
+<p><em>Note: you can also add the Leap Motion libraries to an existing project from the Project Properties dialog.</em></p>
+</div>
+<div class="section" id="intellij">
+<h2>IntelliJ<a class="headerlink" href="#intellij" title="Permalink to this headline">¶</a></h2>
+<p>In the IntelliJ IDE, you add the LeapJava.jar file to a project as a library. You separately set the path to the Leap Motion native libraries using the JVM parameter, <tt class="docutils literal"><span class="pre">java.library.path</span></tt>. The JVM parameters can be set using an IntelliJ Run/Debug configuration.</p>
+<p>To add LeapJava.jar to the project:</p>
+<ol class="arabic simple">
+<li>After creating a project in the usual way, select the <em>File &gt; Project Structure</em> menu command to open the settings dialog.</li>
+<li>Click <em>Libraries</em> under project settings.</li>
+<li>Click the small <tt class="docutils literal"><span class="pre">+</span></tt> button at the top of the library list to open the <em>Select Library Files</em> dialog.</li>
+<li>Add <tt class="docutils literal"><span class="pre">LeapJava.jar</span></tt> from your Leap Motion SDK.</li>
+</ol>
+<p>To set the path to the native Leap Motion libraries by creating a <em>Run/Debug configuration</em>:</p>
+<ol class="arabic simple">
+<li>Select the <em>Run &gt; Edit Configurations…</em> menu command.</li>
+<li>Click the small <tt class="docutils literal"><span class="pre">+</span></tt> button above the Configuration list.</li>
+<li>Choose Application to create a new application configuration.</li>
+<li>Assign a name.</li>
+<li>Set the VM Options field to set the <tt class="docutils literal"><span class="pre">-Djava.library.path</span></tt> parameter to the path to the proper folder containing the Leap Motion native libraries.</li>
+<li>Click Ok.</li>
+</ol>
+<div class="figure">
+<img alt="devguide/../../../images/Setup_IntelliJ_Properties.png" src="devguide/../../../images/Setup_IntelliJ_Properties.png" />
+<p class="caption">On Windows, be sure to select the folder containing the correct libraries for your target architecture. If you are targeting a 32-bit JVM, use the Leap Motion libraries in the x86 folder of the SDK. If you are targeting a 64-bit JVM, use the libraries in the x64 folder. On Mac, each Leap Motion library file supports both architectures.</p>
+</div>
+</div>
+<div class="section" id="netbeans">
+<h2>NetBeans<a class="headerlink" href="#netbeans" title="Permalink to this headline">¶</a></h2>
+<p>In the NetBeans IDE, you add the LeapJava.jar file to a project as a library. You separately set the path to the Leap Motion native libraries using the JVM parameter, <tt class="docutils literal"><span class="pre">java.library.path</span></tt>. The JVM parameters can be set using a NetBeans Run configuration.</p>
+<p>To add the LeapJava.jar to a project and set the path to the native libraries:</p>
+<ol class="arabic simple">
+<li>After creating a project in the usual way, select the <em>File &gt; Project Properties</em> menu command to open the Project Properties dialog.</li>
+<li>Click the <em>Libraries</em> item.</li>
+<li>Click <em>Add Jar/Folder</em> button.</li>
+<li>Find the <tt class="docutils literal"><span class="pre">LeapJava.jar</span></tt> file in your Leap Motion SDK.</li>
+<li>Click <em>Ok</em> to add the Jar file to your project.</li>
+<li>Next, click the <em>Run</em> item in the Project properties list</li>
+<li>Set the VM Options field to set the <tt class="docutils literal"><span class="pre">-Djava.library.path</span></tt> parameter to the path to the proper folder containing the Leap Motion native libraries.</li>
+</ol>
+<div class="figure">
+<img alt="devguide/../../../images/Setup_Netbeans_Properties.png" src="devguide/../../../images/Setup_Netbeans_Properties.png" />
+<p class="caption">On Windows, be sure to select the folder containing the correct libraries for your target architecture. If you are targeting a 32-bit JVM, use the Leap Motion libraries in the x86 folder of the SDK. If you are targeting a 64-bit JVM, use the libraries in the x64 folder. On Mac, each Leap Motion library file supports both architectures.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap_SDK_Overview.html">SDK Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_Tutorial.html#id17">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">Setting up a project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#leap-motion-java-libraries">Leap Motion Java libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compile-from-the-command-line">Compile from the command line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-from-the-command-line">Run from the command line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eclipse">Eclipse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#intellij">IntelliJ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#netbeans">NetBeans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Processing.html">Using Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Architecture.html">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Configuration.html">Runtime Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

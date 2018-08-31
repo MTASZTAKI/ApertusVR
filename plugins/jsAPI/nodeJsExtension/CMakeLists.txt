@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -34,12 +34,14 @@ set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
 set (HEADERS
 	wrappers/ApeJsBindColor.h
 	wrappers/ApeJsBindDegree.h
+	wrappers/ApeJsBindEuler.h
 	wrappers/ApeJsBindIndexedFaceSetGeometryImpl.h
 	wrappers/ApeJsBindLightImpl.h
 	wrappers/ApeJsBindManager.h
 	wrappers/ApeJsBindNodeImpl.h
 	wrappers/ApeJsBindQuaternion.h
 	wrappers/ApeJsBindRadian.h
+	wrappers/ApeJsBindMatrix4.h
 	wrappers/ApeJsBindTextGeometryImpl.h
 	wrappers/ApeJsBindVector3.h
 	wrappers/ApeManualMaterialJsBind.h
@@ -93,7 +95,7 @@ endif ()
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
+	target_link_libraries( ${MY_TARGET_NAME} ApeSystem ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
 endif()
 
 # Set target library's name

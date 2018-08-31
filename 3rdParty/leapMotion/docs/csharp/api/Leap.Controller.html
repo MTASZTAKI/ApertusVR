@@ -1,0 +1,1009 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Controller &mdash; Leap Motion C# SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C# SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="Device" href="Leap.Device.html" />
+    <link rel="prev" title="Convenience Constants" href="Leap.Constants.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'csharp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'csharp/api/Leap.Controller.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Controller.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Controller.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'csharp/api/Leap.Controller.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.Constants.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Device.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Controller.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Controller.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      C#
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Controller.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Controller.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Controller.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Controller.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  Controller
+</span> -->
+        
+  <div class="section" id="id2">
+<h1>Controller<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Properties:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aa25654c273bfdf043f2fc0025a758c9a">Config</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a675be79e051b7c1ed989dc613d01b040">ConfigChange</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a163421909b2b2b8eddf4593bea71866a">Connect</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1ab3ad806648363b310d9d0b74af6939d7">Device</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a4f5d0b2131012f7d3ac75f02d7353135">DeviceFailure</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1ac0772bf49bdc6767b353dd35256007e2">DeviceLost</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a2faca2fee18184d9f5d52aead8137582">Devices</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a6019609208c9995446b78549f4bc2010">Disconnect</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1ac77e2acc150b4945ffcbf65d5ee6b0ba">DistortionChange</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1ae552a5583435347fed6a470c98f67910">EventContext</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a88f41f2915e9e177c7f64d9838e8ec1b">FrameReady</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a458e26e0c2093228010697d8994f1360">ImageReady</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aefe32feb9d2a0e1034c8a8bdfe078f4d">ImageRequestFailed</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a7f2c36965f2e3599d1bbd53dd9d45790">Init</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aa986c3fb794e47a1fb58302404491171">InternalFrameReady</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1abac0113ff571c017320394966a1ae6d5">IsConnected</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aae24ea271671c687e739be862b828bd3">IsServiceConnected</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1afe50f5b89faf5440423b5762226415d1">LogMessage</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aec503b4736b2d3b9dab5d767fa3071fe">PolicyChange</a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aea1846249fa667f170c3f039555d724d">ClearPolicy(Controller.PolicyFlag policy)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf">Controller()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a97e3a206121dfc8fe376d0a89b0e4f62">Controller(int connectionKey)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a6bea28c96b773a6e2aebead28a0468b0">FailedDevices()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a8c8b46780daec303084314bf1c014faa">Frame(int history)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1ab0d1474081bfc32f10b41a4d2b654a50">Frame(Frame toFill, int history)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a171f655731b63057650636f81785dc45">Frame()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a0671d56b98fc6259798291f55b8fb533">Frame(Frame toFill)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a89221b68beb51657497839c4e9a82643">FrameTimestamp(int history=0)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a24a431a416586a800fe35c9a1f7a2972">GetInterpolatedFrame(Int64 time)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a954b358d916661f603bc1132346bd34e">GetTransformedFrame(LeapTransform trs, int history=0)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a4ce79b47f428830b67e974da58737129">IsPolicySet(Controller.PolicyFlag policy)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a4423035353a65eb4e50e88c2499daf3d">Now()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1afdb796154983bf7c52371c63709ce859">RequestImages(Int64 frameId, Image.ImageType type)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a6b3fac11519336d568fb9225f9fa0732">RequestImages(Int64 frameId, Image.ImageType type, byte[] imageBuffer)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a2e9e33b47c2b764f92304fc758b8cde4">SetPolicy(Controller.PolicyFlag policy)</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1a5978c730a5b470628b8da9bed39cace8">StartConnection()</a></li>
+<li><a class="reference external" href="#csharpclass_leap_1_1_controller_1acc6a0e55d9f9461a54a4ddea682e24de">StopConnection()</a></li>
+</ul>
+</div>
+<div class="line-block" id="csharpclass_leap_1_1_controller">
+<div class="line"><em>class</em> <strong>Leap::Controller</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> class is your main interface to the Leap Motion <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a>. </p>
+<p><p>Create an instance of this <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> class to access frames of tracking data and configuration information. <a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> data can be polled at any time using the Controller::frame() function. Call frame() or frame(0) to get the most recent frame. Set the history parameter to a positive integer to access previous frames. A controller stores up to 60 frames in its frame history.</p>
+<p>Polling is an appropriate strategy for applications which already have an intrinsic update loop, such as a game. You can also subscribe to the FrameReady event to get tracking frames through an event delegate.</p>
+<p>If the current thread implements a SynchronizationContext that contains a message loop, events are posted to that threads message loop. Otherwise, events are called on an independent thread and applications must perform any needed synchronization or marshalling of data between threads. Note that Unity3D does not create an appropriate SynchronizationContext object. Typically, event handlers cannot access any Unity objects.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"></span><strong>PolicyFlag enum</strong></p>
+<blockquote>
+<div><p>The supported controller policies. </p>
+<p><p>The supported policy flags are:</p>
+<p><strong>POLICY_BACKGROUND_FRAMES</strong>  requests that your application receives frames when it is not the foreground application for user input.</p>
+<p>The background frames policy determines whether an application receives frames of tracking data while in the background. By default, the Leap Motion software only sends tracking data to the foreground application. Only applications that need this ability should request the background frames policy. The &#8220;Allow Background Apps&#8221; checkbox must be enabled in the Leap Motion Control Panel or this policy will be denied.</p>
+<p><strong>POLICY_OPTIMIZE_HMD</strong>  request that the tracking be optimized for head-mounted tracking.</p>
+<p>The optimize HMD policy improves tracking in situations where the Leap Motion hardware is attached to a head-mounted display. This policy is not granted for devices that cannot be mounted to an HMD, such as Leap Motion controllers embedded in a laptop or keyboard.</p>
+<p>Some policies can be denied if the user has disabled the feature on their Leap Motion control panel.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">POLICY_DEFAULT</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">0</span></tt> - <p>The default policy. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_BACKGROUND_FRAMES</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">0)</span></tt> - <p>Receive background frames. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>1.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_OPTIMIZE_HMD</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">2)</span></tt> - <p>Optimize the tracking for head-mounted device. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>2.1.2 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">POLICY_ALLOW_PAUSE_RESUME</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">3)</span></tt> - <p>Allow pausing and unpausing of the Leap Motion service. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd><p class="first last"><p>3.0 </p>
+</p>
+</dd>
+</dl>
+</p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_controller_1aea1846249fa667f170c3f039555d724d"></span><div class="line-block">
+<div class="line">void <strong>ClearPolicy</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"><em>Controller.PolicyFlag</em></a> policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests clearing a policy. </p>
+<p><p>Policy changes are completed asynchronously and, because they are subject to user approval or system compatibility checks, may not complete successfully. Call Controller::isPolicySet() after a suitable interval to test whether the change was accepted.</p>
+<p><pre class="literal-block">
+controller.ClearPolicy (Controller.PolicyFlag.POLICY_OPTIMIZE_HMD);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">flags</span></tt> - <p>A PolicyFlag value indicating the policy to request. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1aeee02f1e6f84f42452208c1bf0bb62cf"></span><div class="line-block">
+<div class="line"> <strong>Controller</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> object. </p>
+<p><p>The default constructor uses a connection key of 0.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a97e3a206121dfc8fe376d0a89b0e4f62"></span><div class="line-block">
+<div class="line"> <strong>Controller</strong>(int connectionKey)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> object using the specified connection key. </p>
+<p><p>All controller instances using the same key will use the same connection to the serivce. In general, an application should not use more than one connection for all its controllers. Each connection keeps its own cache of frames and images.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">connectionKey</span></tt> - <p>An identifier specifying the connection to use. If a connection with the specified key already exists, that connection is used. Otherwise, a new connection is created. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a6bea28c96b773a6e2aebead28a0468b0"></span><div class="line-block">
+<div class="line">FailedDeviceList <strong>FailedDevices</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A list of any Leap Motion hardware devices that are physically connected to the client computer, but are not functioning correctly. </p>
+<p><p>The list contains <a class="reference internal" href="Leap.FailedDevice.html#csharpclass_leap_1_1_failed_device"><em>FailedDevice</em></a> objects containing the pnpID and the reason for failure. No other device information is available.</p>
+<p><pre class="literal-block">
+FailedDeviceList badDevices = controller.FailedDevices();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a8c8b46780daec303084314bf1c014faa"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> <strong>Frame</strong>(int history)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a frame of tracking data from the Leap Motion software. </p>
+<p><p>Use the optional history parameter to specify which frame to retrieve. Call frame() or frame(0) to access the most recent frame; call frame(1) to access the previous frame, and so on. If you use a history value greater than the number of stored frames, then the controller returns an empty frame.</p>
+<p><pre class="literal-block">
+if (controller.IsConnected) { //controller is a Controller object
+    <a class="reference internal" href="#csharpclass_leap_1_1_controller_1a171f655731b63057650636f81785dc45"><em>Frame</em></a> frame = controller.<a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame_1ab71e6ee46f0c2593266f9a62d9c5e029"><em>Frame</em></a> (); //The latest frame
+    <a class="reference internal" href="#csharpclass_leap_1_1_controller_1a171f655731b63057650636f81785dc45"><em>Frame</em></a> previous = controller.<a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame_1ab71e6ee46f0c2593266f9a62d9c5e029"><em>Frame</em></a> (1); //The previous frame
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The specified frame; or, if no history parameter is specified, the newest frame. If a frame is not available at the specified history position, an invalid <a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">history</span></tt> - <p>The age of the frame to return, counting backwards from the most recent frame (0) into the past and up to the maximum age (59). </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1ab0d1474081bfc32f10b41a4d2b654a50"></span><div class="line-block">
+<div class="line">void <strong>Frame</strong>(<a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> toFill, int history)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Identical to Frame(history) but instead of constructing a new frame and returning it, the user provides a frame object to be filled with data instead. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">toFill</span></tt> - <p>The frame object to fill with tracking data. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">history</span></tt> - <p>The age of the frame to return. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a171f655731b63057650636f81785dc45"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> <strong>Frame</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns the most recent frame of tracking data. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a0671d56b98fc6259798291f55b8fb533"></span><div class="line-block">
+<div class="line">void <strong>Frame</strong>(<a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> toFill)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Fills a frame object with the most recent tracking data. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">toFill</span></tt> - <p>The frame object to fill with tracking data. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a89221b68beb51657497839c4e9a82643"></span><div class="line-block">
+<div class="line">long <strong>FrameTimestamp</strong>(int history = 0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns the timestamp of a recent tracking frame. </p>
+<p><p>Use the optional history parameter to specify how many frames in the past to retrieve the timestamp. Leave the history parameter as it&#8217;s default value to return the timestamp of the most recent tracked frame.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">history</span></tt> - <p>the age of the timestamp to return, </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a24a431a416586a800fe35c9a1f7a2972"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> <strong>GetInterpolatedFrame</strong>(Int64 time)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns the <a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> at the specified time, interpolating the data between existing frames, if necessary. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a954b358d916661f603bc1132346bd34e"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#csharpclass_leap_1_1_frame"><em>Frame</em></a> <strong>GetTransformedFrame</strong>(<a class="reference internal" href="Leap.LeapTransform.html#csharpstruct_leap_1_1_leap_transform"><em>LeapTransform</em></a> trs, int history = 0)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns the frame object with all hands transformed by the specified transform matrix. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">trs</span></tt> - <p>a <a class="reference internal" href="Leap.LeapTransform.html#csharpstruct_leap_1_1_leap_transform"><em>LeapTransform</em></a> containing translation, rotation, and scale. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">history</span></tt> - <p>The age of the frame to return, counting backwards from the most recent frame (0) into the past and up to the maximum age (59). </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a4ce79b47f428830b67e974da58737129"></span><div class="line-block">
+<div class="line">bool <strong>IsPolicySet</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"><em>Controller.PolicyFlag</em></a> policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Gets the active setting for a specific policy. </p>
+<p><p>Keep in mind that setting a policy flag is asynchronous, so changes are not effective immediately after calling setPolicyFlag(). In addition, a policy request can be declined by the user. You should always set the policy flags required by your application at startup and check that the policy change request was successful after an appropriate interval.</p>
+<p>If the controller object is not connected to the Leap Motion software, then the default state for the selected policy is returned.</p>
+<p><pre class="literal-block">
+bool isImagePolicySet = controller.IsPolicySet (Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A boolean indicating whether the specified policy has been set. </dd>
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">flags</span></tt> - <p>A PolicyFlag value indicating the policy to query. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a4423035353a65eb4e50e88c2499daf3d"></span><div class="line-block">
+<div class="line">long <strong>Now</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns a timestamp value as close as possible to the current time. </p>
+<p><p>Values are in microseconds, as with all the other timestamp values.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.2.7 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1afdb796154983bf7c52371c63709ce859"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> <strong>RequestImages</strong>(Int64 frameId, Image.ImageType type)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests an image pair from the service. </p>
+<p><p><a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> data is stacked in a single byte array, with the left camera image first, followed by the right camera image. Two types of image are supported. ImageType.TYPE_DEFAULT is the normal, IR format image. ImageType.RAW is the unmodified, raw sensor pixels. The format of this image type depends on the device. For the publically available Leap Motion devices, the raw image type is also IR and is identical to the default image type except when in robust mode. In robust mode, the default image type is processed to subtract the unilluminated background; the raw image is not.</p>
+<p>Images are not sent automatically. You must request each image. This function returns an <a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> object. However, that object does not contain image data until its IsComplete property becomes true.</p>
+<p><a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> requests will fail if the request is made after the image has been disposed by the service. The service only keeps images for a few frames, so applications that use images must make the image request as soon as possible after a tracking frame is received.</p>
+<p>The controller dispatches an ImageReady event when a requested image is recevied from the service and is ready for use. The controller dispatches an ImageRequestFailed event if the request does not succeed.</p>
+<p><a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> requests can fail for the following reasons:</p>
+<p></p>
+<p>In addition, if the returned image is invalid, then the request call itself failed. Typically this will occur when the connection itself is not running. Such errors are reported in a LogEvent event.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An incomplete <a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> object that will contain the image data when the request is fulfilled. If the request call itself fails, an invalid image is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">frameId</span></tt> - <p>The Id value of the tracking frame. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">type</span></tt> - <p>The type of image desired. A member of the Image.ImageType enumeration. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a6b3fac11519336d568fb9225f9fa0732"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> <strong>RequestImages</strong>(Int64 frameId, Image.ImageType type, byte[] imageBuffer)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests an image from the service. </p>
+<p><p>The pixels of the image are written to the specified byte array.</p>
+<p>If the specified byte array is too small, an ImageRequestFailed event is dispatched. The arguments of this event include the required buffer size. For the publically available Leap device, the buffer size must be: width * height * bytes-per-pixel * #cameras, i.e: 640 * 240 * 1 * 2 = 307,200 bytes.</p>
+<p>The <a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> object returned by this function contains a reference to the supplied buffer. When the service sets the IsComplete property to true when the buffer is filled in. An ImageReady event is also dispatched.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An incomplete <a class="reference internal" href="Leap.Image.html#csharpclass_leap_1_1_image"><em>Image</em></a> object that will contain the image data when the request is fulfilled. If the request call itself fails, an invalid image is returned. </dd>
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">frameId</span></tt> - <p>The Id value of the tracking frame. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">type</span></tt> - <p>The type of image desired. A member of the Image.ImageType enumeration. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">imageBuffer</span></tt> - <p>A byte array large enough to hold the requested image pair. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a2e9e33b47c2b764f92304fc758b8cde4"></span><div class="line-block">
+<div class="line">void <strong>SetPolicy</strong>(<a class="reference internal" href="#csharpclass_leap_1_1_controller_1aef594fa2a5136b5264e9c0682f08daa3"><em>Controller.PolicyFlag</em></a> policy)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Requests setting a policy. </p>
+<p><p>A request to change a policy is subject to user approval and a policy can be changed by the user at any time (using the Leap Motion settings dialog). The desired policy flags must be set every time an application runs.</p>
+<p>Policy changes are completed asynchronously and, because they are subject to user approval or system compatibility checks, may not complete successfully. Call Controller::isPolicySet() after a suitable interval to test whether the change was accepted.</p>
+<p><pre class="literal-block">
+controller.SetPolicy (Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
+controller.SetPolicy (Controller.PolicyFlag.POLICY_OPTIMIZE_HMD);
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>2.1.6 </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><tt class="first docutils literal"><span class="pre">policy</span></tt> - <p>A PolicyFlag value indicating the policy to request. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a5978c730a5b470628b8da9bed39cace8"></span><div class="line-block">
+<div class="line">void <strong>StartConnection</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Starts the connection. </p>
+<p><p>A connection starts automatically when created, but you can use this function to restart the connection after stopping it.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1acc6a0e55d9f9461a54a4ddea682e24de"></span><div class="line-block">
+<div class="line">void <strong>StopConnection</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Stops the connection. </p>
+<p><p>No more frames or other events are received from a stopped connection. You can restart with <a class="reference internal" href="#csharpclass_leap_1_1_controller_1a5978c730a5b470628b8da9bed39cace8"><em>StartConnection()</em></a>.</p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Property</em><blockquote>
+<div><p><span class="target" id="csharpclass_leap_1_1_controller_1aa25654c273bfdf043f2fc0025a758c9a"></span><a class="reference internal" href="Leap.Config.html#csharpclass_leap_1_1_config"><em>Config</em></a> <strong>Config</strong></p>
+<blockquote>
+<div><p>Returns a <a class="reference internal" href="Leap.Config.html#csharpclass_leap_1_1_config"><em>Config</em></a> object, which you can use to query the Leap Motion system for configuration information. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a>&#8216;s <a class="reference internal" href="Leap.Config.html#csharpclass_leap_1_1_config"><em>Config</em></a> object. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a675be79e051b7c1ed989dc613d01b040"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_config_change_event_args"><em>ConfigChangeEventArgs</em></a>  &gt; <strong>ConfigChange</strong></p>
+<blockquote>
+<div><p>Dispatched when a configuration seting changes. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a163421909b2b2b8eddf4593bea71866a"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_connection_event_args"><em>ConnectionEventArgs</em></a>  &gt; <strong>Connect</strong></p>
+<blockquote>
+<div><p>Dispatched when the connection to the service is established. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1ab3ad806648363b310d9d0b74af6939d7"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_device_event_args"><em>DeviceEventArgs</em></a>  &gt; <strong>Device</strong></p>
+<blockquote>
+<div><p>Dispatched when a Leap Motion device is connected. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a4f5d0b2131012f7d3ac75f02d7353135"></span>EventHandler&lt;  DeviceFailureEventArgs  &gt; <strong>DeviceFailure</strong></p>
+<blockquote>
+<div><p>Dispatched when a Leap device fails to initialize. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1ac0772bf49bdc6767b353dd35256007e2"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_device_event_args"><em>DeviceEventArgs</em></a>  &gt; <strong>DeviceLost</strong></p>
+<blockquote>
+<div><p>Dispatched when when a Leap Motion device is disconnected. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a2faca2fee18184d9f5d52aead8137582"></span>DeviceList <strong>Devices</strong></p>
+<blockquote>
+<div><p>The list of currently attached and recognized Leap Motion controller devices. </p>
+<p><p>The <a class="reference internal" href="Leap.Device.html#csharpclass_leap_1_1_device"><em>Device</em></a> objects in the list describe information such as the range and tracking volume.</p>
+<p><pre class="literal-block">
+DeviceList connectedLeaps = controller.Devices;
+</pre>
+</p>
+<p>Currently, the Leap Motion <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> only allows a single active device at a time, however there may be multiple devices physically attached and listed here. Any active device(s) are guaranteed to be listed first, however order is not determined beyond that.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The list of Leap Motion controllers. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a6019609208c9995446b78549f4bc2010"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_connection_lost_event_args"><em>ConnectionLostEventArgs</em></a>  &gt; <strong>Disconnect</strong></p>
+<blockquote>
+<div><p>Dispatched if the connection to the service is lost. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1ac77e2acc150b4945ffcbf65d5ee6b0ba"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_distortion_event_args"><em>DistortionEventArgs</em></a>  &gt; <strong>DistortionChange</strong></p>
+<blockquote>
+<div><p>Dispatched when the image distortion map changes. </p>
+<p>The distortion map can change when the Leap device switches orientation, or a new device becomes active. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1ae552a5583435347fed6a470c98f67910"></span>SynchronizationContext <strong>EventContext</strong></p>
+<blockquote>
+<div><p>The SynchronizationContext used for dispatching events. </p>
+<p>By default the synchronization context of the thread creating the controller instance is used. You can change the context if desired. </p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a88f41f2915e9e177c7f64d9838e8ec1b"></span>EventHandler&lt;  FrameEventArgs  &gt; <strong>FrameReady</strong></p>
+<blockquote>
+<div><p>Dispatched when a tracking frame is ready. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a458e26e0c2093228010697d8994f1360"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_image_event_args"><em>ImageEventArgs</em></a>  &gt; <strong>ImageReady</strong></p>
+<blockquote>
+<div><p>Dispatched when an image is ready. </p>
+<p>Call Controller.RequestImage() to request that an image be sent to your application. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1aefe32feb9d2a0e1034c8a8bdfe078f4d"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_image_request_failed_event_args"><em>ImageRequestFailedEventArgs</em></a>  &gt; <strong>ImageRequestFailed</strong></p>
+<blockquote>
+<div><p>Dispatched when a requested image cannot be sent. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1a7f2c36965f2e3599d1bbd53dd9d45790"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_leap_event_args"><em>LeapEventArgs</em></a>  &gt; <strong>Init</strong></p>
+<blockquote>
+<div><p>Dispatched when the connection is initialized (but not necessarily connected). </p>
+<p>Can be dispatched more than once, if connection is restarted. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1aa986c3fb794e47a1fb58302404491171"></span>EventHandler&lt; InternalFrameEventArgs &gt; <strong>InternalFrameReady</strong></p>
+<blockquote>
+<div><p>Dispatched when an internal tracking frame is ready. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1abac0113ff571c017320394966a1ae6d5"></span>bool <strong>IsConnected</strong></p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> is connected to the Leap Motion service and the Leap Motion hardware is plugged in. </p>
+<p><p>When you first create a <a class="reference internal" href="#csharpclass_leap_1_1_controller"><em>Controller</em></a> object, isConnected() returns false. After the controller finishes initializing and connects to the Leap Motion software and if the Leap Motion hardware is plugged in, isConnected() returns true.</p>
+<p>You can either handle the onConnect event using a Listener instance or poll the isConnected() function if you need to wait for your application to be connected to the Leap Motion software before performing some other operation.</p>
+<p> <pre class="literal-block">
+if (controller.IsConnected) {
+    //perform action that requires a connected controller
+}
+</pre>
+<dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>True, if connected; false otherwise. </dd>
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1aae24ea271671c687e739be862b828bd3"></span>bool <strong>IsServiceConnected</strong></p>
+<blockquote>
+<div><p>Reports whether your application has a connection to the Leap Motion daemon/service. </p>
+<p>Can be true even if the Leap Motion hardware is not available. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.2 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1afe50f5b89faf5440423b5762226415d1"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_log_event_args"><em>LogEventArgs</em></a>  &gt; <strong>LogMessage</strong></p>
+<blockquote>
+<div><p>Dispatched when the system generates a loggable event. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="csharpclass_leap_1_1_controller_1aec503b4736b2d3b9dab5d767fa3071fe"></span>EventHandler&lt;  <a class="reference internal" href="Leap.Events.html#csharpclass_leap_1_1_policy_event_args"><em>PolicyEventArgs</em></a>  &gt; <strong>PolicyChange</strong></p>
+<blockquote>
+<div><p>Dispatched when a policy changes. </p>
+<p><dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>3.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C# Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id3">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id3">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ClockCorrelator.html">ClockCorrelator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id2">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Constants.html">Convenience Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Events.html">Controller Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id2">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id2">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Frame.html#id3">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id3">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.LeapTransform.html">LeapTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.LeapQuaternion.html">LeapQuaternion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C# and Unity</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

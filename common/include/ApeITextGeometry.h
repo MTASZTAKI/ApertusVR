@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,28 +30,30 @@ SOFTWARE.*/
 #include "ApeVector3.h"
 
 namespace Ape
-{	
+{
 	class ITextGeometry : public Geometry
 	{
 	protected:
 		ITextGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_TEXT) {}
-		
+
 		virtual ~ITextGeometry() {};
-		
+
 	public:
 		virtual std::string getCaption() = 0;
 
 		virtual void setCaption(std::string caption) = 0;
 
+		virtual void clearCaption() = 0;
+
 		virtual bool isVisible() = 0;
 
 		virtual void setVisible(bool enabled) = 0;
 
-		virtual Vector3 getOffset() = 0;
-
-		virtual void setOffset(Vector3 position) = 0;
-
 		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+
+		virtual void showOnTop(bool show) = 0;
+
+		virtual bool isShownOnTop() = 0;
 	};
 }
 

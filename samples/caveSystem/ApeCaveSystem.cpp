@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <map>
 #include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	std::stringstream configDir;
-	if (argc > 1)
-	{
-		std::string participantType = argv[1];
-		if (participantType == "art")
-			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\art";
-		else if (participantType == "presentation")
-			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\presentation";
-		else if (participantType == "lego")
-			configDir << APE_SOURCE_DIR << "\\samples\\caveSystem\\configs\\lego";
-	}
-	else
-	{
-		std::cout << "usage: art | presentation | lego" << std::endl;
-		return 0;
-	}
-
-	
-	Ape::System::Start(configDir.str(), true);
+	configDir << APE_SOURCE_DIR << "/samples/caveSystem/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
 	Ape::System::Stop();
 	return 0;
 }

@@ -1,0 +1,29 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": [
+        ],
+        "natPunchThroughServer": {
+            "ip": "",
+            "port": ""
+        },
+        "lobbyServer": {
+            "useLobby": false,
+            "ip": "",
+            "port": "",
+            "sessionName": ""
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeOgreRenderPlugin",
+            "ApeOisUserInputPlugin"
+        ]
+    }
+}

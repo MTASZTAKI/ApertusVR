@@ -1,0 +1,491 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial: Using the Leap Motion API in Code &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.unreal = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/unreal/Leap_Unreal_Cpp_Tutorial.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unreal/Leap_Unreal_Cpp_Tutorial.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/unreal/Leap_Unreal_Cpp_Tutorial.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/index.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/unreal/Leap_Unreal_Cpp_Tutorial.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Tutorial: Using the Leap Motion API in Code
+</span> -->
+        
+  <div class="section" id="tutorial-using-the-leap-motion-api-in-code">
+<h1>Tutorial: Using the Leap Motion API in Code<a class="headerlink" href="#tutorial-using-the-leap-motion-api-in-code" title="Permalink to this headline">¶</a></h1>
+<div class="sidebar">
+<p class="first sidebar-title">Before you start</p>
+<p class="last">The plugin is included with Unreal Engine 4.9. In addition, to see hands in a level, you must have the Leap Motion service software installed and a Leap Motion hardware device plugged in.</p>
+</div>
+<p>In this tutorial, we will walk through the steps necessary to directly access the Leap Motion API in C++ code.</p>
+<p>You can use both the plugin classes and the full Leap Motion API in a code project. The difference is that the plugin classes transform the tracking data into the Unreal Engine coordinate system for you. Data directly from the API is in the <a class="reference external" href="https://developer.leapmotion.com/documentation/cpp/devguide/Leap_Overview.html?proglang=cpp#coordinate-system">Leap Motion frame of reference</a> (right-handed, y=up axis) and units (mm).</p>
+<p>The code in this tutorial is based on the LeapCodeExample project in the Leap Motion <a class="reference external" href="https://developer.leapmotion.com/gallery/unreal-4-7-demo-pack">Unreal 4.7 Demo Pack</a></p>
+<p>To get started, create a new code project:</p>
+<img alt="unreal/../../../images/unreal/TutCode_NewProject.png" src="unreal/../../../images/unreal/TutCode_NewProject.png" />
+<ol class="arabic">
+<li><p class="first">In the Unreal Editor Project Browser, click the C++ tab of the New Project page.</p>
+</li>
+<li><p class="first">Choose the Basic Code template.</p>
+</li>
+<li><p class="first">Name the project and set other project properties however you like.</p>
+</li>
+<li><p class="first">Click Create Project</p>
+<blockquote>
+<div><p>Visual Studio opens.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Edit the project build script to declare dependencies on the Leap Motion plugin and API:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Find your project build script (i.e. <em>GamesProjectNameSourceProjectName.Build.cs</em>).</li>
+<li>Add &#8220;LeapMotionController&#8221; and &#8220;Leap&#8221; to the PublicDependencyModuleNames list. The statement should look like this when you are done:</li>
+</ol>
+<div class="code cpp highlight-python"><div class="highlight"><pre>PublicDependencyModuleNames.AddRange(new string[] { &quot;Core&quot;, &quot;CoreUObject&quot;, &quot;Engine&quot;, &quot;InputCore&quot; , &quot;LeapMotionController&quot; , &quot;Leap&quot; });
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Build the project (Ctrl-Shift-B).</p>
+</li>
+<li><p class="first">Open the project in Unreal Editor.</p>
+</li>
+<li><p class="first">Enable the Leap Motion plugin in the Pugins browser (under Input Devices) and restart the editor.</p>
+</li>
+</ol>
+<p>All the work in this example is performed in the LeapMotionDebugInfo class. This class extends the Unreal Actor class, primarily so that it has a <tt class="docutils literal"><span class="pre">Tick()</span></tt> function which is called every Unreal Engine update tick. To add the Debug Info Actor class:</p>
+<ol class="arabic">
+<li><p class="first">In Unreal Editor, select the File &gt; Add Code to Project... menu command.</p>
+<blockquote>
+<div><p>The Add Code dialog opens.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Choose Actor as the parent class.</p>
+</li>
+<li><p class="first">Click Next.</p>
+</li>
+<li><p class="first">Set the name to LeapMotionDebugInfo.</p>
+</li>
+<li><p class="first">Click Create Class.</p>
+</li>
+</ol>
+<p>Now we will override the <tt class="docutils literal"><span class="pre">Tick()</span></tt> function so that it prints the Leap frame number and hand and finger positions to the screen.</p>
+<p>In Visual Studio, edit LeapMotionDebugInfo.cpp and add the necessary Leap Motion headers:</p>
+<pre class="code cpp literal-block">
+<span class="comment preproc">#include &quot;LeapMotionControllerPlugin.h&quot;
+#include &quot;LeapMotionDevice.h&quot;
+#include &quot;Leap.h&quot;
+#include &quot;LeapMotionTypes.h&quot;
+</span>
+</pre>
+<p>Next, in the <tt class="docutils literal"><span class="pre">Tick()</span></tt> function, get a pointer to the plugin LeapMotionDevice object, which you can use to access the Leap Motion tracking data:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>   void ALeapMotionDebugInfo ::Tick( float DeltaTime )
+   {
+       Super::Tick( DeltaTime );
+       FLeapMotionDevice* Device = FLeapMotionControllerPlugin::GetLeapDeviceSafe();
+   }
+
+Before using the Device instance, we will check that the plugin has been able to connect to the Leap Motion service and hardware device using the ``IsConnected()`` function:
+</pre></div>
+</div>
+<div class="code cpp highlight-python"><div class="highlight"><pre>if (Device &amp;&amp; Device-&gt;IsConnected())
+{
+     //...
+}
+else{
+     GEngine-&gt;AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, FString(TEXT(&quot;LeapController - No Data&quot;)));
+}
+</pre></div>
+</div>
+<p>This <tt class="docutils literal"><span class="pre">if</span></tt> statement can fail in the following conditions:</p>
+<ul class="simple">
+<li>There is no device object &#8211; the plugin isn&#8217;t present or isn&#8217;t enabled.</li>
+<li>The plugin cannot connect to the Leap Motion service &#8211; the service isn&#8217;t running or some other error has prevented the connection.</li>
+<li>A Leap Motion hardware device is not plugged in.</li>
+</ul>
+<p>Now lets get the Leap Motion tracking data. First we need a Leap::Frame object:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>Device-&gt;SetReferenceFrameOncePerTick();
+Leap::Frame frame = Device-&gt;Frame();
+</pre></div>
+</div>
+<p>The first statement here makes sure that the plugin updates the cached frame object for this tick. The Leap Motion software can produce data at a rate exceeding 100 frames-per-second. Calling <tt class="docutils literal"><span class="pre">SetReferenceFrameOncePerTick()</span></tt> ensures that every time you access the Leap data in your application you get the same data during the same Unreal Engine tick. The function has no affect after the first time it is called in the same Unreal tick, but you should always call it to make sure the cached frame is updated when appropriate. The second statement gets the actual cached frame.</p>
+<p>To demonstrate the most basic access to the Leap Motion data, we will just print the frame sequence ID to the screen using Unreal&#8217;s <tt class="docutils literal"><span class="pre">Engine::AddOnScreenDebugMessage()</span></tt> function. So far your function should look like the following:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>void ALeapMotionDebugInfo::Tick( float DeltaTime )
+{
+    Super::Tick( DeltaTime );
+    FLeapMotionDevice* Device = FLeapMotionControllerPlugin::GetLeapDeviceSafe();
+    GEngine-&gt;ClearOnScreenDebugMessages();
+
+    if (Device &amp;&amp; Device-&gt;IsConnected())
+    {
+        Device-&gt;SetReferenceFrameOncePerTick();
+        Leap::Frame frame = Device-&gt;Frame();
+
+        FString leapLabel = FString::Printf( TEXT( &quot;LeapController - Frame: %u&quot;), frame.id());
+        GEngine-&gt;AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, leapLabel);
+    }
+    else{
+        GEngine-&gt;AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, FString(TEXT (&quot;LeapController - No Data&quot; )));
+    }
+}
+</pre></div>
+</div>
+<p>Before running this code, we need to set the Actor object to start with tick enabled so that our <tt class="docutils literal"><span class="pre">Tick()</span></tt> function will get called. It is easiest to do this in the constructor:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>ALeapMotionDebugInfo::ALeapMotionDebugInfo()
+{
+    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bStartWithTickEnabled = true;
+}
+</pre></div>
+</div>
+<p>Finally, build the project and switch back to the Unreal Editor. Add your new LeapMotionDebugInfo class to a level and play. You should see a list of frame IDs printed to the screen:</p>
+<img alt="unreal/../../../images/unreal/TutCode_InAction.png" src="unreal/../../../images/unreal/TutCode_InAction.png" />
+<p>Note that the frames are not consecutive. In this case the example is running on an older computer, so the Unreal Engine is running at a faster frame rate than the Leap Motion service. Hence, frequently two Unreal frames use the same Leap Motion frame.</p>
+<p>To complete the function, we will just loop through the hands and fingers and print out the palm and finger tip positions. To do this, add the following code immediately before the statement which prints the frame IDs:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>for (Leap::Hand hand : frame.hands())
+{
+    for (Leap::Finger finger : hand.fingers()){
+        FString fingerLabel = FString::Printf(TEXT( &quot;        Finger %u: &quot;), finger.id());
+        fingerLabel += finger.tipPosition().toString().c_str();
+        GEngine-&gt;AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, fingerLabel);
+    }
+
+    FString handLabel = FString::Printf(TEXT( &quot;    Hand %u: &quot;), hand.id());
+    handLabel += hand.palmPosition().toString().c_str();
+    GEngine-&gt;AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, handLabel);
+}
+</pre></div>
+</div>
+<p>When you build and run this example now, note the hand and finger positions. Especially note that the coordinates are given in the Leap coordinate system, not the Unreal coordinate system. You can use the <tt class="docutils literal"><span class="pre">LEAPVECTOR_TO_FVECTOR()</span></tt> function to perform the translation on position coordinates (and the <tt class="docutils literal"><span class="pre">LEAPVECTOR_TO_FVECTOR_DIRECTION()</span></tt> for direction vectors). For example, we can add the Unreal coordinates for the finger tip positions to the string we print to the screen with the following code:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>FString fingerLabel = FString::Printf( TEXT( &quot;        Finger %u: &quot;), finger.id());
+fingerLabel += finger.tipPosition().toString().c_str();
+fingerLabel += &quot; (&quot; + LEAPVECTOR_TO_FVECTOR(finger.tipPosition()).ToString() + &quot;)&quot; ;
+</pre></div>
+</div>
+<p>Note that if you need the post-transformed data from the Leap Motion, it is probably easier to start with the LeapMotionHandActor class and get the positions and orientations of the parts of a tracked hand from the child LeapMotionBoneActor instances.</p>
+<p>For more information on the C++ classes in the API, see our <a class="reference external" href="https://developer.leapmotion.com/documentation/cpp/index.html?proglang=cpp">C++ Language Reference and Programming guides</a>.</p>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,12 @@ SOFTWARE.*/
 #include "ApeManualMaterialImpl.h"
 #include "ApePbsPassImpl.h"
 #include "ApeManualPassImpl.h"
+#include "ApeBrowserImpl.h"
+#include "ApeUnitTextureImpl.h"
+#include "ApeRayGeometryImpl.h"
+#include "ApeSkyImpl.h"
+#include "ApeWaterImpl.h"
+#include "ApePointCloudImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -52,13 +58,15 @@ Ape::ReplicaManagerConnection::~ReplicaManagerConnection()
 
 RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3)
 {
+	//TODO how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
 	RakNet::RakString objectType;
 	allocationIdBitstream->Read(objectType);
-	std::cout << "Received: " << objectType << std::endl;
+	//LOG(LOG_TYPE_DEBUG, "Received: " << objectType);
 	if (objectType == "Node")
 	{
 		RakNet::RakString nodeName;
 		allocationIdBitstream->Read(nodeName);
+		//LOG(LOG_TYPE_DEBUG, "Received name: " << nodeName.C_String() << std::endl;
 		if (auto node = mpSceneImpl->createNode(nodeName.C_String()).lock())
 			return ((Ape::NodeImpl*)node.get());
 	}
@@ -66,6 +74,7 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 	{
 		RakNet::RakString entityName;
 		allocationIdBitstream->Read(entityName);
+		//LOG(LOG_TYPE_DEBUG, "Received name: " << entityName.C_String());
 		if (objectType == "FileGeometry")
 		{
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())
@@ -145,6 +154,31 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::PASS_MANUAL).lock())
 				return ((Ape::ManualPassImpl*)entity.get());
+		}
+		else if (objectType == "Browser")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::BROWSER).lock())
+				return ((Ape::BrowserImpl*)entity.get());
+		}
+		else if (objectType == "UnitTexture")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_UNIT).lock())
+				return ((Ape::UnitTextureImpl*)entity.get());
+		}
+		else if (objectType == "Sky")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::SKY).lock())
+				return ((Ape::SkyImpl*)entity.get());
+		}
+		else if (objectType == "Water")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::WATER).lock())
+				return ((Ape::WaterImpl*)entity.get());
+		}
+		else if (objectType == "PointCloud")
+		{
+			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::POINT_CLOUD).lock())
+				return ((Ape::PointCloudImpl*)entity.get());
 		}
 	}
 	

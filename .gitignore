@@ -10,7 +10,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 build/
+
+# IDE settings
 .vs/
+.vscode/
 
 # Generated Files
 *.exe
@@ -30,6 +33,9 @@ build/
 *.user
 *.userosscache
 *.sln.docstates
+
+# Xcode
+*.pbxproj
 
 # CMake files
 CMakeCache.txt
@@ -56,6 +62,13 @@ Makefile.inc.cmake
 3rdParty/ogre_procedural/version.txt
 3rdParty/ogre_procedural/CPackConfig.cmake
 3rdParty/ogre_procedural/CPackSourceConfig.cmake
+3rdParty/ogre/pkgconfig/*
+3rdParty/ogre/**/*.d
+3rdParty/ogre/**/*.data
+3rdParty/ogre/**/*.dia
+3rdParty/ogre/**/*.pch
+3rdParty/ogre/**/*.hash-criteria
+3rdParty/ogre/EnabledFeatures.txt
 
 # RakNet
 3rdParty/raknet/include
@@ -63,17 +76,36 @@ Makefile.inc.cmake
 # Curl
 3rdParty/curl/DartConfiguration.tcl
 
+# CEF
+3rdParty/cef_binary_3.3071.1643.ga83b8e9_windows64/
+3rdParty/cef_binary_3.3113.1650.g6da2bbf_windows64/
+3rdParty/cef_ffmpeg/
+3rdParty/cef_binary_**
+
 # NodeJs
+node_modules/
 3rdParty/nodejs/**/source/config.mk
 3rdParty/nodejs/**/source/config.gypi
 3rdParty/nodejs/**/source/icu_config.gypi
-3rdParty/nodejs/**/nodedownload.pyc
-3rdParty/nodejs/**/getmoduleversion.pyc
+3rdParty/nodejs/**/source/deps/openssl/openssl.props
+3rdParty/nodejs/**/source/deps/openssl/openssl.targets
+3rdParty/nodejs/**/source/deps/openssl/openssl.xml
+3rdParty/nodejs/**/*.pyc
 3rdParty/nodejs/**/genfiles/
 3rdParty/nodejs/**/Debug/
 3rdParty/nodejs/**/Release/
 
+# LeapMotion
+!3rdParty/leapMotion/lib/x64/*
+!3rdParty/leapMotion/lib/x86/*
+
+# openvr
+!3rdParty/openvr/*
+
+# Boost
+3rdParty/boost/**/project-config.jam
+3rdParty/boost/**/bin.v2/*
+
 # Exclude thirdparties
 !3rdParty/oculus/LibOVR/Lib/*
 !3rdParty/oculusRT/*
-

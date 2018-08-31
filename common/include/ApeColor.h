@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_COLOR_H
 #define APE_COLOR_H
 
-#include <vector>
 #include <sstream>
+#include <vector>
 
 namespace Ape
 {
@@ -32,11 +32,11 @@ namespace Ape
 	{
 		float r, g, b, a;
 
-		Color() : 
+		Color() :
 			r(0.0f), g(0.0f), b(0.0f), a(1.0f)
 		{}
 
-		Color(float _r, float _g, float _b, float _a = 1.0f) : 
+		Color(float _r, float _g, float _b, float _a = 1.0f) :
 			r(_r), g(_g), b(_b), a(_a)
 		{}
 
@@ -47,10 +47,25 @@ namespace Ape
 			return buff.str();
 		}
 
-		float getR() { return r; }
-		float getG() { return g; }
-		float getB() { return b; }
-		float getA() { return a; }
+		float getR()
+		{
+			return r;
+		}
+
+		float getG()
+		{
+			return g;
+		}
+
+		float getB()
+		{
+			return b;
+		}
+
+		float getA()
+		{
+			return a;
+		}
 	};
 
 	typedef std::vector < Ape::Color > ColorVector;

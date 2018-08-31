@@ -1,0 +1,405 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transition Prefab &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/unity/Unity.Prefab.Transition.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity.Prefab.Transition.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity.Prefab.Transition.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/unity/Unity.Prefab.Transition.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity.Prefab.Transition.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/index.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Transition Prefab
+</span> -->
+        
+  <div class="section" id="transition-prefab">
+<h1>Transition Prefab<a class="headerlink" href="#transition-prefab" title="Permalink to this headline">¶</a></h1>
+<p>Transitions modify the position, rotation, scale, and color of child objects when the attachment turns on and off. The Transition prefab is a simple game object that contains the Transition component.</p>
+<div class="section" id="using-the-transition-prefab">
+<h2>Using the Transition Prefab<a class="headerlink" href="#using-the-transition-prefab" title="Permalink to this headline">¶</a></h2>
+<p>
+1. Drag a Transition prefab to an Attachment game object on a HandAttachments prefab.
+2. Select the parent Attachment game object in the hierarchy panel so that you can see the AttachmentController component in the Unity Inspector. Then drag your Transition game object to the Transition slot of the AttachmentController.
+3. Add the desired child game objects and components as children of the Transition object.
+4. Set the transition properties:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p class="first">Enable the &#8220;Animate...&#8221; checkboxes for the properties that you want to animate during the transition.</p>
+</li>
+<li><p class="first">Set the Simulate slider to 0.</p>
+</li>
+<li><p class="first">Adjust the &#8220;on&#8221; properties to the values you want when the attched objects are fully on.</p>
+</li>
+<li><p class="first">Set the Simulate slider to -1.</p>
+</li>
+<li><p class="first">Adjust the &#8220;off&#8221; properties to the values you want when the attched objects are fully off.</p>
+</li>
+<li><p class="first">Adjust the easing curves, if desired. The part of the curve from -1 to 0 is used when transitioning from off to on; the part of the curve from 0 to +1 is used when transitioning from on to off.</p>
+<p><strong>Note:</strong> you can move the <strong>Simulate</strong> slider back and forth to observe the transition in action.</p>
+<p><strong>Note:</strong> the &#8220;on&#8221; color of a child object is taken from its material. This color is blended with the <strong>Transition Color</strong> using the Unity Color.Lerp() function.</p>
+</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li>Add code to call the AttachmentController Activate() and Deactivate() functions. These functions initiate the transitions. You can use detectors to call these functions. For example, for an Arm HUD, you could use a combination of ExtendedFingerDetector and the PalmDirectionDetector to turn on the attachment whenever the open hand faced the camera.</li>
+</ol>
+</div>
+<div class="section" id="key-components">
+<h2>Key Components<a class="headerlink" href="#key-components" title="Permalink to this headline">¶</a></h2>
+<p>The key components in the Hand Attachments prefab include:</p>
+<div class="section" id="transition-script">
+<h3>Transition (Script)<a class="headerlink" href="#transition-script" title="Permalink to this headline">¶</a></h3>
+<p>A transition operates on a Unity transform to animate position, rotation, and scale. Any child objects to be animated must be children of the transition&#8217;s root transform. Color can be animated when supported by the shaders used in the materials of the child objects. Color changes are applied directly to any child objects.</p>
+<p>Each animation type has an easing curve defined by a Unity AnimationCurve property. The domain of this curve is -1 to +1, with 0 being the fully on point along the curve. When a transition is played, the portion of the curve from -1 to 0 is used during the transition from off to on and the portion from 0 to +1 is used for the transition from on to off. The range of the curve is 0 to 1. At 0, the &#8220;on&#8221; property is fully in effect; at 1, the &#8220;off&#8221; property is fully in effect.</p>
+<p>You can view the current transition is the editor by using the Simulate slider. When the slider is set to 0, the transition is shown in the fully on state; when the slider is -1 or +1, the transition is shown in its fully off state.</p>
+<ul class="simple">
+<li>Root Transform &#8211; the transform that is animated.</li>
+<li>Animate Position &#8211; enables animation of position.</li>
+<li>On Position &#8211; the position of the root transform when the attachment is in its on state.</li>
+<li>Off Position &#8211; the position of the root transform when the attachment is in its off state.</li>
+<li>Position Curve &#8211; the easing curve for the position animation.</li>
+<li>Animate Rotation &#8211; enables animation of rotation.</li>
+<li>On Rotation &#8211; the rotation of the root transform when the attachment is in its on state.</li>
+<li>Off Rotation &#8211; the rotation of the root transform when the attachment is in its off state.</li>
+<li>Rotation Curve &#8211; the easing curve for the rotation animation.</li>
+<li>Animate Scale &#8211; enables animation of scale.</li>
+<li>On Scale &#8211; the scale of the root transform when the attachment is in its on state.</li>
+<li>Off Scale &#8211; the scale of the root transform when the attachment is in its off state.</li>
+<li>Scale Curve &#8211; the easing curve for the scale animation.</li>
+<li>Animate Color &#8211; enables animation of color.</li>
+<li>Color Shader Property Name &#8211; the name of the shader property controlling color.</li>
+<li>Transition Color &#8211; the color of the child objects when the attachment is in its off state. (Child objects retain their original colors when the attachment is in its on state.)</li>
+<li>Color Curve &#8211; the easing curve for the position animation.</li>
+<li>Duration &#8211; the time it takes to animate the transition in seconds.</li>
+<li>Simulate &#8211; updates the transition in the editor.</li>
+<li>On Start event &#8211; dispatched when a trasition begins.</li>
+<li>On Animation Step event &#8211; dispatched at each update. You can use this event to drive more complex animations.</li>
+<li>On Complete event &#8211; dispatched when a transitions ends.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

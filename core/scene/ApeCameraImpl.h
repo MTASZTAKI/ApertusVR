@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,18 +59,14 @@ namespace Ape
 		float getAspectRatio() override;
 
 		void setAspectRatio(float aspectRatio) override;
+
+		void setAutoAspectRatio(bool enable) override;
+
+		bool isAutoAspectRatio() override;
 		
 		Ape::Matrix4 getProjection() override;
 
 		void setProjection(Ape::Matrix4 projection) override;
-
-		Ape::Vector3 getPosition() override;
-
-		void setPosition(Ape::Vector3 positionOffset) override;
-
-		Ape::Quaternion getOrientation() override;
-
-		void setOrientation(Ape::Quaternion orientationOffset) override;
 
 		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
@@ -104,12 +100,10 @@ namespace Ape
 		float mFarClipDistance;
 
 		float mAspectRatio;
+
+		bool mIsAutoAspectRatio;
 		
 		Ape::Matrix4 mProjection;
-
-		Ape::Quaternion mOrientationOffset;
-
-		Ape::Vector3 mPositionOffset;
 
 		NodeWeakPtr mParentNode;
 

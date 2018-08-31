@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-
 #ifndef APE_IMANUALTEXTURE_H
 #define APE_IMANUALTEXTURE_H
 
 #include <string>
 #include <vector>
+#include <functional>
 #include "ApeEntity.h"
+#include "ApeICamera.h"
 #include "ApeTexture.h"
 #include "ApeVector2.h"
-#include "ApeICamera.h"
 
 namespace Ape
-{	
+{
 	struct ManualTextureParameters
 	{
-		float height;
-		float width;
+		unsigned int height;
+		unsigned int width;
+		Ape::Texture::PixelFormat pixelFormat;
+		Ape::Texture::Usage usage;
 
 		ManualTextureParameters()
 		{
-			this->height = 0.0f;
-			this->width = 0.0f;
+			this->height = 0;
+			this->width = 0;
+			pixelFormat = Ape::Texture::PixelFormat::PF_INVALID;
+			usage = Ape::Texture::Usage::U_INVALID;
 		}
 
-		ManualTextureParameters(float height, float width)
+		ManualTextureParameters(unsigned int height, unsigned int width, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
 		{
 			this->height = height;
 			this->width = width;
+			this->pixelFormat = pixelFormat;
+			this->usage = usage;
 		}
 	};
 
@@ -59,13 +65,27 @@ namespace Ape
 		virtual ~IManualTexture() {};
 
 	public:
-		virtual void setParameters(float width, float height) = 0;
+		virtual void setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) = 0;
 
 		virtual Ape::ManualTextureParameters getParameters() = 0;
 
 		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
 
 		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
+
+		virtual void setGraphicsApiID(void* id) = 0;
+
+		virtual void* getGraphicsApiID() = 0;
+
+		virtual void setBuffer(const void* buffer) = 0;
+
+		virtual const void* getBuffer() = 0;
+
+		virtual void registerFunction(std::function<void()> callback) = 0;
+
+		virtual std::vector<std::function<void()>> getFunctionList() = 0;
+
+		virtual void unRegisterFunction(std::function<void()> callback) = 0;
 	};
 }
 

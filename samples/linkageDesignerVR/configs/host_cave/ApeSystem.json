@@ -1,6 +1,6 @@
 {
     "mainWindow": {
-        "name": "Ape",
+        "name": "window0",
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
@@ -15,15 +15,17 @@
             "port": "61666"
         },
         "lobbyServer": {
+            "useLobby": false,
             "ip": "195.111.2.95",
-            "port": "8888"
+            "port": "8888",
+            "sessionName": "test"
         }
     },
     "pluginManager": {
         "plugins": [
             "ApeNodeJsPlugin",
             "ApeOgreRenderPlugin",
-			"ApeFobHeadTrackingPlugin",
+            "ApeFobHeadTrackingPlugin",
             "ApeLinkageDesignerVRPlugin"
         ]
     }

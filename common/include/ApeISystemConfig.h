@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +25,19 @@ SOFTWARE.*/
 #define APE_ISYSTEMCONFIG_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SYSTEMCONFIG_DLL
-#define APE_SYSTEMCONFIG_DLL_EXPORT __declspec(dllexport)
+	#ifdef BUILDING_APE_SYSTEMCONFIG_DLL
+		#define APE_SYSTEMCONFIG_DLL_EXPORT __declspec(dllexport)
+	#else
+		#define APE_SYSTEMCONFIG_DLL_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define APE_SYSTEMCONFIG_DLL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define APE_SYSTEMCONFIG_DLL_EXPORT 
+	#define APE_SYSTEMCONFIG_DLL_EXPORT
 #endif
 
 #include <string>
 #include <vector>
-#include "ApeSingleton.h"
 #include "ApeISceneSession.h"
+#include "ApeSingleton.h"
 
 namespace Ape
 {
@@ -53,9 +53,9 @@ namespace Ape
 		}
 
 		PluginManagerConfig(
-			std::vector<std::string> pluginnames,
-			std::vector<std::string> jsPluginNames
-			)
+		    std::vector<std::string> pluginnames,
+		    std::vector<std::string> jsPluginNames
+		)
 		{
 			this->pluginnames = pluginnames;
 			this->jsPluginNames = jsPluginNames;
@@ -66,21 +66,26 @@ namespace Ape
 	{
 		struct NatPunchThroughServerConfig
 		{
+			bool use;
+
 			std::string ip;
 
 			std::string port;
 
 			NatPunchThroughServerConfig()
 			{
+				this->use = true;
 				this->ip = std::string();
 				this->port = std::string();
 			}
 
 			NatPunchThroughServerConfig(
-				std::string ip,
-				std::string port
-				)
+				bool use,
+			    std::string ip,
+			    std::string port
+			)
 			{
+				this->use = use;
 				this->ip = ip;
 				this->port = port;
 			}
@@ -89,25 +94,32 @@ namespace Ape
 		struct LobbyServerConfig
 		{
 			std::string ip;
-
 			std::string port;
+			std::string sessionName;
+			bool useLobby;
 
 			LobbyServerConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
+				this->sessionName = std::string();
+				this->useLobby = false;
 			}
 
 			LobbyServerConfig(
-				std::string ip,
-				std::string port
-				)
+			    std::string ip,
+			    std::string port,
+			    std::string sessionName = "",
+			    bool useLobby = false
+			)
 			{
 				this->ip = ip;
 				this->port = port;
+				this->sessionName = sessionName;
+				this->useLobby = useLobby;
 			}
 		};
-		
+
 		SceneSession::ParticipantType participantType;
 
 		NatPunchThroughServerConfig natPunchThroughServerConfig;
@@ -116,11 +128,15 @@ namespace Ape
 
 		std::string uniqueUserNamePrefix;
 
-		std::string generatedUniqueUserName;
+		std::string generatedUniqueUserNodeName;
 
 		std::vector<std::string> sessionResourceLocation;
 
 		std::string sessionGUID;
+
+		std::string sessionIP;
+
+		std::string sessionPort;
 
 		SceneSessionConfig()
 		{
@@ -128,27 +144,33 @@ namespace Ape
 			this->lobbyServerConfig = LobbyServerConfig();
 			this->participantType = SceneSession::ParticipantType::INVALID;
 			this->sessionGUID = std::string();
+			this->sessionIP = std::string();
+			this->sessionPort = std::string();
 			this->uniqueUserNamePrefix = std::string();
-			this->generatedUniqueUserName = std::string();
+			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
 		}
 
 		SceneSessionConfig(
-			NatPunchThroughServerConfig natPunchThroughServerConfig,
-			LobbyServerConfig lobbyServerConfig,
-			SceneSession::ParticipantType participantType,
-			std::string sessionName,
-			std::string uniqueUserNamePrefix,
-			std::string generatedUniqueUserName,
-			std::vector<std::string> sessionResourceLocation
-			)
+		    NatPunchThroughServerConfig natPunchThroughServerConfig,
+		    LobbyServerConfig lobbyServerConfig,
+		    SceneSession::ParticipantType participantType,
+		    std::string sessionName,
+		    std::string uniqueUserNamePrefix,
+		    std::string generatedUniqueUserName,
+		    std::vector<std::string> sessionResourceLocation,
+			std::string sessionIP,
+			std::string sessionPort
+		)
 		{
 			this->natPunchThroughServerConfig = natPunchThroughServerConfig;
 			this->lobbyServerConfig = lobbyServerConfig;
 			this->participantType = participantType;
 			this->sessionGUID = sessionName;
+			this->sessionIP = sessionIP;
+			this->sessionPort = sessionPort;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
-			this->generatedUniqueUserName = generatedUniqueUserName;
+			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;
 		}
 	};
@@ -166,9 +188,9 @@ namespace Ape
 		}
 
 		MainWindowConfig(
-			std::string name,
-			std::string creator
-			)
+		    std::string name,
+		    std::string creator
+		)
 		{
 			this->name = name;
 			this->creator = creator;
@@ -182,7 +204,7 @@ namespace Ape
 
 	public:
 		virtual PluginManagerConfig getPluginManagerConfig() = 0;
-		
+
 		virtual SceneSessionConfig getSceneSessionConfig() = 0;
 
 		virtual MainWindowConfig getMainWindowConfig() = 0;

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include "ApeHttpManager.h"
 #include <sstream>
 #include <iostream>
-#include <curl/curl.h>
-#include <curl/easy.h>
-#include "ApeHttpManager.h"
+#ifdef HTTPMANAGER_USE_CURL
+	#include <curl/curl.h>
+	#include <curl/easy.h>
+#endif
 
 size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
@@ -35,17 +37,22 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 
 Ape::HttpManager::HttpManager()
 {
+#ifdef HTTPMANAGER_USE_CURL
     mpCurl = curl_easy_init();
+#endif
 }
 
 Ape::HttpManager::~HttpManager()
 {
+#ifdef HTTPMANAGER_USE_CURL
     curl_easy_cleanup(mpCurl);
+#endif
 }
 
 std::string Ape::HttpManager::download(const std::string& url)
 {
 	std::stringstream out;
+#ifdef HTTPMANAGER_USE_CURL
     curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(mpCurl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(mpCurl, CURLOPT_NOSIGNAL, 1); 
@@ -58,15 +65,16 @@ std::string Ape::HttpManager::download(const std::string& url)
 
     if (res != CURLE_OK)
 	{
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
+        LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
+	}
+#endif
     return out.str();
 }
 
 std::string Ape::HttpManager::post(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
+#ifdef HTTPMANAGER_USE_CURL
 	struct curl_slist *headers;
 
 	headers = NULL;
@@ -93,15 +101,16 @@ std::string Ape::HttpManager::post(const std::string& url, const std::string& da
 
 	if (res != CURLE_OK) 
 	{
-		fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			curl_easy_strerror(res));
+		LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
 	}
+#endif
 	return out.str();
 }
 
 std::string Ape::HttpManager::del(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
+#ifdef HTTPMANAGER_USE_CURL
 	struct curl_slist *headers;
 
 	headers = NULL;
@@ -130,8 +139,8 @@ std::string Ape::HttpManager::del(const std::string& url, const std::string& dat
 
 	if (res != CURLE_OK)
 	{
-		fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			curl_easy_strerror(res));
+		LOG(LOG_TYPE_ERROR, "curl_easy_perform() failed: " << curl_easy_strerror(res));
 	}
+#endif
 	return out.str();
 }

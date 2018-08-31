@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,10 +56,20 @@ namespace Ape
 
 		bool isFixedYaw() override;
 		
-		void setParentNode(Ape::NodeWeakPtr parentNode);
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode();
-		
+		Ape::NodeWeakPtr getParentNode() override;
+
+		void addChildNode(Ape::NodeWeakPtr node);
+
+		void removeChildNode(Ape::NodeWeakPtr childNode);
+
+		std::vector<Ape::NodeWeakPtr> getChildNodes() override;
+
+		bool hasChildNode() override;
+
+		bool isChildNode(Ape::NodeWeakPtr childNode) override;
+
 		void setPosition(Vector3 position) override;
 		
 		void setOrientation(Quaternion orientation) override;
@@ -69,6 +79,12 @@ namespace Ape
 		void setChildrenVisibility(bool visible) override;
 
 		void setFixedYaw(bool fix) override;
+
+		void showBoundingBox(bool show) override;
+
+		void setInheritOrientation(bool enable) override;
+
+		bool isInheritOrientation() override;
 		
 		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -81,6 +97,7 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
+
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
 		Ape::IScene* mpScene;
@@ -88,6 +105,8 @@ namespace Ape
 		std::string mName;
 
 		Ape::NodeWeakPtr mParentNode;
+
+		std::vector<Ape::NodeWeakPtr> mChildNodes;
 
 		std::string mParentNodeName;
 
@@ -100,6 +119,10 @@ namespace Ape
 		bool mChildrenVisibility;
 
 		bool mIsFixedYaw;
+
+		bool mIsBoundingBoxVisible;
+
+		bool mIsInheritOrientation;
 	};
 }
 

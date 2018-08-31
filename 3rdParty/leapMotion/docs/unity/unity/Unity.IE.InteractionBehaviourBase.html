@@ -1,0 +1,495 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>InteractionBehaviourBase &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Interaction Engine Classes" href="Unity_IE_Classes.html" />
+    <link rel="next" title="IControllerBase" href="Unity.IE.IControllerBase.html" />
+    <link rel="prev" title="IInteractionBehaviour" href="Unity.IE.IInteractionBehaviour.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/unity/Unity.IE.InteractionBehaviourBase.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity.IE.InteractionBehaviourBase.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity.IE.InteractionBehaviourBase.html";
+            } else {
+                    redirectedLocation ="Unity_Interaction_Engine.html";
+                    redirectedLocation ="Unity_IE_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/unity/Unity.IE.InteractionBehaviourBase.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Unity.IE.IInteractionBehaviour.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Unity.IE.IControllerBase.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Interaction_Engine.html?proglang=currentUnity_IE_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Unity_Interaction_Engine.html" accesskey="U">Interaction Engine</a>&raquo;
+    <a href="Unity_IE_Classes.html" accesskey="U">Interaction Engine Classes</a>&raquo;
+  InteractionBehaviourBase
+</span> -->
+        
+  <div class="section" id="interactionbehaviourbase">
+<h1>InteractionBehaviourBase<a class="headerlink" href="#interactionbehaviourbase" title="Permalink to this headline">¶</a></h1>
+<div class="line-block" id="unitycorea00153">
+<div class="line"><em>class</em> <strong>Leap::Unity::Interaction::InteractionBehaviourBase</strong></div>
+</div>
+<blockquote>
+<div><p><a class="reference internal" href="#unitycorea00153"><em>InteractionBehaviourBase</em></a> is a utility class that implements the <a class="reference internal" href="Unity.IE.IInteractionBehaviour.html#unitycorea00130"><em>IInteractionBehaviour</em></a> interface. </p>
+<p><p>This class aims to provide the minimum set of behaviours that can be generalized to most interaction objects, and no more. The aim is to provide a class that takes care of the &#8216;bookkeeping&#8217; needed to properly interface with the <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> component, so that implementing different types of InteractionBehaviours becomes easier. </p>
+<p>This behaviour has the following features:</p>
+<p>This behaviour has the following requirements:</p>
+</p>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="unitycorea00153_1a2f479f7f318370cf68f97eefb7bff94b"></span><div class="line-block">
+<div class="line">override bool <strong>IsBeingGraspedByHand</strong>(int handId)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns whether or not a hand with the given ID is currently grasping this object. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a0ab660e203ea3cb2ca6af09381d8be36"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandGrasped</strong>(Hand hand)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when a Hand begins grasping this object. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1ae9afec1b4e63129690ddec591598f1bb"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandLostTracking</strong>(Hand oldHand, out float maxSuspensionTime)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when a Hand that was grasping becomes untracked. </p>
+<p>The Hand is not yet considered ungrasped, and OnHandRegainedTracking might be called in the future if the Hand becomes tracked again. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1afb4f27d21aaaaa50181a98d4e868f88d"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandRegainedTracking</strong>(Hand newHand, int oldId)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when a grasping Hand that had previously been untracked has regained tracking. </p>
+<p>The new hand is provided, as well as the id of the previously tracked hand. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1ae5c932ef0e00254b29d401673be1bddd"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandReleased</strong>(Hand hand)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when a Hand stops grasping this object. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a9b6b9678d096d8b652c16673bce4ca3c"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandsHoldGraphics</strong>(ReadonlyList &lt; Hand &gt; hands)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> every frame that a Hand continues to grasp this object. </p>
+<p>This callback is invoked both in LateUpdate. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a556894d8fffab71988cf0f5d1f06c051"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandsHoldPhysics</strong>(ReadonlyList &lt; Hand &gt; hands)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> every frame that a Hand continues to grasp this object. </p>
+<p>This callback is invoked both in FixedUpdate. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a44d4d1a3c9990bdfb6574cf2fdddc5f3"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyHandTimeout</strong>(Hand oldHand)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when an untracked grasping Hand has remained ungrasped for too long. </p>
+<p>The hand is no longer considered to be grasping the object. </p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a36eaccddfde4e713564c74b64e74e870"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyInteractionShapeCreated</strong>(INTERACTION_SHAPE_INSTANCE_HANDLE instanceHandle)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when the interaction shape associated with this <a class="reference internal" href="Unity.IE.InteractionBehavior.html#unitycorea00152"><em>InteractionBehaviour</em></a> is created and added to the interaction scene. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a8dd2d9419ea2e909c73f2b1d6ccb3503"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyInteractionShapeDestroyed</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when the interaction shape associated with this <a class="reference internal" href="Unity.IE.InteractionBehavior.html#unitycorea00152"><em>InteractionBehaviour</em></a> is destroyed and removed from the interaction scene. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a25cf6084e10a2067a1791cf148e12ac6"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyPostSolve</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> after all solving is performed. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a04d096abe6c4418ee7110c5e0ba3eecf"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyPreSolve</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> before any solving is performed. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a97827cf9e9da9a9e6b6ff0b85c512c52"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyRecievedSimulationResults</strong>(INTERACTION_SHAPE_INSTANCE_RESULTS results)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when simulation results are available for this object. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1a368cba4964d14ae469fd5c558fafe09f"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyRegistered</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when the behaviour is successfully registered with the manager. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1aa671cc869224740e8d4b3cf3ec265fa6"></span><div class="line-block">
+<div class="line">override sealed void <strong>NotifyUnregistered</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called by <a class="reference internal" href="Unity.IE.InteractionManager.html#unitycorea00165"><em>InteractionManager</em></a> when the behaviour is unregistered with the manager. </p>
+<p></p>
+</div></blockquote>
+<p><span class="target" id="unitycorea00153_1ab5c469106dd9ebe90ca8a86f1d7dc449"></span><div class="line-block">
+<div class="line">override void <strong>Validate</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Called to validate the state of the object. </p>
+<p></p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Attachments.html">Attachments Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Unity_Interaction_Engine.html">Interaction Engine</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Unity_IE_Setup.html">Setting up an Interaction Engine Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity_IE_Materials.html">Interaction Materials and Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity_IE_Layers.html">Interaction Engine Layers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Unity_IE_Classes.html">Interaction Engine Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionManager.html">InteractionManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionMaterial.html">InteractionMaterial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionBehavior.html">InteractionBehaviour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionBrushBone.html">InteractionBrushBone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionBrushHand.html">InteractionBrushHand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionGraspEvents.html">InteractionGraspEvents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.InteractionHandEvents.html">InteractionHandEvents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.HoldingPoseControllerKabsch.html">HoldingPoseControllerKabsch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.MoveToControllerKinematic.html">MoveToControllerKinematic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.MoveToControllerVelocity.html">MoveToControllerVelocity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.SuspensionControllerDefault.html">SuspensionControllerDefault</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.ThrowingControllerPalmVelocity.html">ThrowingControllerPalmVelocity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.ThrowingControllerSlidingWindow.html">ThrowingControllerSlidingWindow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.LayerControllerCustom.html">LayerControllerCustom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.IInteractionBehaviour.html">IInteractionBehaviour</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">InteractionBehaviourBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.IControllerBase.html">IControllerBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.IHoldingPoseController.html">IHoldingPoseController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.IMoveToController.html">IMoveToController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.ISuspensionController.html">ISuspensionController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.IThrowingController.html">IThrowingController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Unity.IE.ILayerController.html">ILayerController</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>
