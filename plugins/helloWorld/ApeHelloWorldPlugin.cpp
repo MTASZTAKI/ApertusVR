@@ -64,6 +64,8 @@ void Ape::ApeHelloWorldPlugin::Run()
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		if (auto planetNode = mPlanetNode.lock())
+			planetNode->rotate(0.0017f, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
