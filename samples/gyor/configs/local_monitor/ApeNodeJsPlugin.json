@@ -1,4 +1,7 @@
 {
+    "httpServer": {
+        "port":  3001
+    },
     "pluginManager": {
         "plugins": [
             {

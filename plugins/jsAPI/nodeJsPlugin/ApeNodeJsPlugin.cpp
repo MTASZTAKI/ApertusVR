@@ -22,12 +22,16 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "ApeNodeJsPlugin.h"
 #include "node.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
 
 ApeNodeJsPlugin::ApeNodeJsPlugin()
 {
 	LOG_FUNC_ENTER();
+	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
@@ -41,26 +45,57 @@ ApeNodeJsPlugin::~ApeNodeJsPlugin()
 
 void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 {
-	//LOG(LOG_TYPE_DEBUG, "event.subjectName: " << event.subjectName);
-	//LOG(LOG_TYPE_DEBUG, "event.group: " << event.group);
+
+}
+
+void ApeNodeJsPlugin::parseNodeJsConfig()
+{
+	LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
+	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (configFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(configFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& httpServer = jsonDocument["httpServer"];
+			if (httpServer.IsObject())
+			{
+				rapidjson::Value& port = httpServer["port"];
+				if (port.IsNumber())
+				{
+					mNodeJsPluginConfig.serverPort = port.GetInt();
+				}
+			}
+		}
+		fclose(configFile);
+	}
+	LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Init()
 {
 	LOG_FUNC_ENTER();
+	parseNodeJsConfig();
 	LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Run()
 {
 	LOG_FUNC_ENTER();
-	char *args[] = { "", "server.js" };
+	std::stringstream port;
+	port << mNodeJsPluginConfig.serverPort;
+	char *args[] = { "", "server.js", (char*)port.str().c_str() };
 	LOG(LOG_TYPE_DEBUG, "Initializing Node...");
 
 	int res = -1;
 	try
 	{
-		res = node::Start(2, args);
+		res = node::Start(3, args);
 	}
 	catch (...)
 	{

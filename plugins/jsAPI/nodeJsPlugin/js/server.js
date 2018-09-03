@@ -42,7 +42,7 @@ var logger = require(config.sourcePathJs + "/modules/log_manager/log_manager.js"
 logger.debug('config:', config);
 
 var host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
-var port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
+var port = process.argv[2] || process.env.VCAP_APP_PORT || process.env.PORT || 3000;
 
 var app = express();
 app.use(bodyParser.json());
