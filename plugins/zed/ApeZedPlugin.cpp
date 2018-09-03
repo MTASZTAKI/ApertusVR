@@ -108,9 +108,9 @@ void Ape::ZedPlugin::Run()
 					mApePointCloudPoints.push_back(point_cloud_value.z);
 					dataUnionBytesFloat myUnion;
 					myUnion.f = point_cloud_value.w;
-					mApePointCloudColors.push_back(255 - myUnion.fBuff[0]);
-					mApePointCloudColors.push_back(255 - myUnion.fBuff[1]);
-					mApePointCloudColors.push_back(255 - myUnion.fBuff[2]);
+					mApePointCloudColors.push_back(myUnion.fBuff[0] / 255.0f);
+					mApePointCloudColors.push_back(myUnion.fBuff[1] / 255.0f);
+					mApePointCloudColors.push_back(myUnion.fBuff[2] / 255.0f);
 				}
 			}
 			if (auto apePointCloud = mApePointCloud.lock())
