@@ -25,7 +25,6 @@ set (CONFIGS
 	ApeNodeJsPlugin.json
 	ApeX3DLoaderPlugin.json
 	ApeOisUserInputPlugin.json
-	ApeAssimpAssetLoaderPlugin.json
 	ApeSystem.json
 	)
 

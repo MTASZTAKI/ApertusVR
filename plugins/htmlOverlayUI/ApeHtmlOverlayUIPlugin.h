@@ -66,13 +66,23 @@ namespace Ape
 	class ApeHtmlOverlayUIPlugin : public Ape::IPlugin
 	{
 	private:
+		struct NodeJsPluginConfig
+		{
+			int serverPort;
+
+			NodeJsPluginConfig(int serverPort = 3000)
+			{
+				this->serverPort = serverPort;
+			}
+		};
+
 		Ape::IEventManager* mpEventManager;
 
 		Ape::IScene* mpScene;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
+		NodeJsPluginConfig mNodeJsPluginConfig;
 
 		void eventCallBack(const Ape::Event& event);
 
@@ -81,6 +91,10 @@ namespace Ape
 		int mPointCloudSize;
 
 		Ape::NodeWeakPtr mUserNode;
+
+		void parseNodeJsConfig();
+
+		void createOverlayBrowser();
 
 	public:
 		ApeHtmlOverlayUIPlugin();

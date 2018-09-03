@@ -55,6 +55,7 @@ void Ape::ApeRobotCalibrationPlugin::parseNodeJsConfig()
 void Ape::ApeRobotCalibrationPlugin::createOverlayBrowser()
 {
 	LOG_FUNC_ENTER();
+	parseNodeJsConfig();
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
 		browser->setResoultion(1280, 720);
@@ -308,7 +309,6 @@ void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeRobotCalibrationPlugin::Init()
 {
 	LOG_FUNC_ENTER();
-	parseNodeJsConfig();
 	createOverlayBrowser();
 	createSkyBox();
 	createLights();

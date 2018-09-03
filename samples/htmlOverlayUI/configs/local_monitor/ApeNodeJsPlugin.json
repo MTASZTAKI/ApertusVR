@@ -5,11 +5,8 @@
     "pluginManager": {
         "plugins": [
             {
-                "file": "robotCalibration/robotCalibration.js",
-                "public": "robotCalibration/public"
-            },
-            {
-                "file": "x3dLoader/x3dLoader.js"
+                "file": "htmlOverlayUI/htmlOverlayUI.js",
+                "public": "htmlOverlayUI/public"
             }
         ]
     }
