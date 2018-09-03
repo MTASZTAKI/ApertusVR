@@ -1,11 +1,14 @@
 {
+    "httpServer": {
+        "port":  3000
+    },
     "pluginManager": {
         "plugins": [
             {
                 "file": "httpSimulator/httpSimulator.js",
                 "args": {
                     "fileName": "httpSimulator/apertusvr.log",
-                    "delay":  20
+                    "delay": 20
                 }
             },
             {
