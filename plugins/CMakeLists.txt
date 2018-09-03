@@ -204,6 +204,11 @@ if (${APE_PLUGIN_TexasEEGPlugin})
 	add_subdirectory (texasEEG)
 endif ()
 
+option(APE_PLUGIN_RobotCalibration "Use RobotCalibrationPlugin?" ON )
+if (${APE_PLUGIN_RobotCalibration})
+	add_subdirectory (robotCalibration)
+endif ()
+
 option(APE_PLUGIN_GyorPlugin "Use GyorPlugin?" ON )
 if (${APE_PLUGIN_GyorPlugin})
 	add_subdirectory (gyor)
