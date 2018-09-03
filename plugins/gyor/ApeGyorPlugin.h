@@ -88,6 +88,10 @@ namespace Ape
 
 		Ape::Quaternion mGripperLeftRootNodeInitialOrientation;
 
+		Ape::Quaternion mGripperRightEndNodeInitialOrientation;
+
+		Ape::Quaternion mGripperLeftEndNodeInitialOrientation;
+
 		void eventCallBack(const Ape::Event& event);
 
 	public:
