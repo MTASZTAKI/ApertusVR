@@ -33,4 +33,4 @@ include_directories(
 add_executable (ApeRobotCalibration ${SOURCES})
 target_link_libraries (ApeRobotCalibration ApeSystem ApePluginManager)
 set_property (TARGET ApeRobotCalibration PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeRobotCalibration PROPERTY FOLDER "Samples/robotCalibration")
+set_property (TARGET ApeRobotCalibration PROPERTY FOLDER "Samples/RobotCalibration")
