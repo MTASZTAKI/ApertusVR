@@ -170,22 +170,28 @@ void Ape::OISUserInputPlugin::Init()
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
-			rapidjson::Value& inputs = jsonDocument["inputs"];
-			if (inputs.IsArray())
+			if (jsonDocument.HasMember("inputs"))
 			{
-				for (auto& input : inputs.GetArray())
+				rapidjson::Value& inputs = jsonDocument["inputs"];
+				if (inputs.IsArray())
 				{
-					oisWindowConfig.inputs.push_back(input.GetString());
+					for (auto& input : inputs.GetArray())
+					{
+						oisWindowConfig.inputs.push_back(input.GetString());
+					}
 				}
 			}
-			rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
-			if (cameraPoses.IsArray())
+			if (jsonDocument.HasMember("cameraPoses"))
 			{
-				for (auto& cameraPose : cameraPoses.GetArray())
+				rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
+				if (cameraPoses.IsArray())
 				{
-					Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
-					Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
-					mUserNodePoses.push_back(UserNodePose(position, orientation));
+					for (auto& cameraPose : cameraPoses.GetArray())
+					{
+						Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
+						Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
+						mUserNodePoses.push_back(UserNodePose(position, orientation));
+					}
 				}
 			}
 		}
