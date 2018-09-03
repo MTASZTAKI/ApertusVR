@@ -174,3 +174,8 @@ option(APE_SAMPLES_Gyor "APE_SAMPLES_Gyor?" ON )
 if (${APE_SAMPLES_Gyor})
 	add_subdirectory (gyor)
 endif ()
+
+option(APE_SAMPLES_RobotCalibration "APE_SAMPLES_RobotCalibration?" ON )
+if (${APE_SAMPLES_RobotCalibration})
+	add_subdirectory (robotCalibration)
+endif ()

@@ -1,10 +1,34 @@
-var apiEndPoint = 'http://localhost:3000/api/v1/';
+var apiEndPoint = 'http://localhost:3001/api/v1/';
 var apiEndPointNode = apiEndPoint + 'nodes/';
 var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
-var nodeName = 'STL_BINARY_1';
+var apiEndPointCalcTrans = apiEndPoint + 'calcTransform/';
+var nodeName = 'ur10Gripper';
+
+function genNodeItem(name) {
+	console.log('genNodeItem(): ', name);
+	var r = $('<a class="dropdown-item" href="#" onClick="getNodeLocalTrans(\'' + name + '\')">' + name + '</a>');
+	$("#nodesDropDownList").append(r);
+	$('#nodesDropDown').dropdown();
+}
+
+function getNodeLocalTrans(nodeName) {
+	console.log('getNodeLocalTrans(): ', nodeName);
+}
 
 function enableEditor(val) {
     //$("body *").attr("disabled", !val);
+}
+
+function getNodesNames() {
+	console.log('getNodesNames()');
+	doGetRequest(apiEndPointNode, function (res) {
+		var nodeNames = res.data.items;
+		console.log('getNodesNames(): res: ', nodeNames);
+
+		nodeNames.forEach(function (element) {
+			genNodeItem(element.name);
+		});
+	});
 }
 
 function getNodePosition(nodeName) {
@@ -98,14 +122,26 @@ function setNodeEuler(nodeName) {
 }
 
 function getTransformationMatrix(nodeName) {
-    console.log('getTransformationMatrix(): ', nodeName);
-    doGetRequest(apiEndPointNode + nodeName + '/transformationmatrix', function(res){
-        var matrix = res.data.items[0].transformationmatrix;
-        var invRotMatrix = res.data.items[0].invRotTransMatrix;
+	console.log('getTransformationMatrix(): ', nodeName);
+	doGetRequest(apiEndPointNode + nodeName + '/transformationmatrix', function (res) {
+
+		var matrix = res.data.items[0].transformationmatrix;
+		var invRotMatrix = res.data.items[0].invRotTransMatrix;
+
         console.log('getTransformationMatrix(): res: ', matrix);
         $('#transMatrix').val(matrix);
-        $('#invRotTransMatrix').val(invRotMatrix);
+		//$('#invRotTransMatrix').val(invRotMatrix);
     });
+}
+
+function calcTransformMatrix() {
+	if ($('#transNodeName').val().length > 0) {
+		doGetRequest(apiEndPointCalcTrans + nodeName + '/' + $('#transNodeName').val(), function (res2) {
+			var matrix2 = res2.data.items[0].transformation.invRotTransMatrix;
+			console.log(matrix2);
+			$('#invRotTransMatrix').val(matrix2);
+		});
+	}
 }
 
 function getNodeScale(nodeName) {
@@ -373,4 +409,6 @@ $(document).ready(function(){
     enableEditor(false);
 
     updateProperties();
+
+    getNodesNames();
 });

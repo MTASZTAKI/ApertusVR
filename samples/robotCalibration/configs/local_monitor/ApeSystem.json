@@ -1,6 +1,6 @@
 {
     "mainWindow": {
-        "name": "Ape",
+        "name": "ApeRobotCalibration",
         "creator": "ApeOgreRenderPlugin"
     },
     "sceneSession": {
@@ -8,7 +8,7 @@
         "uniqueUserNamePrefix": "",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/htmlOverlayUI/resources"
+            "/plugins/robotCalibration/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
@@ -27,7 +27,7 @@
         "ApeOgreRenderPlugin",
         "ApeOisUserInputPlugin",
         "ApeCefBrowserPlugin",
-        "ApeHtmlOverlayUIPlugin",
+        "ApeRobotCalibrationPlugin",
         "ApeKinectPlugin",
         "ApeAssimpAssetLoaderPlugin",
         "ApeWebserverPlugin"

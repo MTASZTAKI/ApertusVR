@@ -25,6 +25,7 @@ var moduleManager = require('../modules/module_manager/module_manager.js');
 var express = moduleManager.requireNodeModule('express');
 var app = express();
 var utils = require('../modules/utils/utils.js');
+var async = moduleManager.requireNodeModule('async');
 var logger = require("../modules/log_manager/log_manager.js");
 var resp = require('../modules/response_manager/response_manager.js');
 var errorMap = require('../modules/utils/errors.js');
@@ -82,9 +83,81 @@ app.post('/setproperties', function(req, res, next) {
 					return;
 				}
 
-				var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
-				obj.setOrientation(q);
+				if (item.properties.orientation) {
+					var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
+					obj.setOrientation(q);
+				}
 			});
+		}
+		else if (item.type == "gripper") {
+			console.log('gripper', item.properties)
+
+			var mGripperLeftRootNodeInitialOrientation = ape.nbind.Quaternion(-0.99863, 0, 0, 0.0523337);
+			var mGripperRightRootNodeInitialOrientation = ape.nbind.Quaternion(-0.99863, 0, 0, 0.0523337);
+			var mGripperLeftHelperNodeInitialOrientation = ape.nbind.Quaternion(-0.418964, 0, 0, 0.908003);
+			var mGripperRightHelperNodeInitialOrientation = ape.nbind.Quaternion(-0.418964, 0, 0, 0.908003);
+
+			var gripperMaxValue = 255;
+			var gripperMinValue = 0;
+			var gripperCurrentValue = item.properties.value;
+			var degreeStep = 45.0 / gripperMaxValue;
+			var axis = ape.nbind.Vector3(0, 0, 1);
+			var degree = ape.nbind.Degree(gripperCurrentValue * degreeStep)
+			var orientation = ape.nbind.Quaternion();
+			orientation.FromAngleAxis(ape.nbind.Radian(degree.toRadian()), axis);
+
+			async.waterfall(
+				[
+					function (callback) {
+						ape.nbind.JsBindManager().getNode('JOINT(Rotational)(gripR1)12ur10Gripper', function (error, obj) {
+							if (error) {
+								callback({ name: 'invalidCast', msg: obj1, code: 666 });
+							}
+							obj.setOrientation(mGripperLeftRootNodeInitialOrientation.product(orientation));
+							callback(null);
+						});
+					},
+					function (callback) {
+						ape.nbind.JsBindManager().getNode('JOINT(Rotational)(gripR1)18ur10Gripper', function (error, obj) {
+							if (error) {
+								callback({ name: 'invalidCast', msg: obj1, code: 666 });
+							}
+							obj.setOrientation(mGripperRightRootNodeInitialOrientation.product(orientation));
+							callback(null);
+						});
+					},
+					function (callback) {
+						ape.nbind.JsBindManager().getNode('JOINT(Rotational)(gripR5)16ur10Gripper', function (error, obj) {
+							if (error) {
+								callback({ name: 'invalidCast', msg: obj1, code: 666 });
+							}
+							obj.setOrientation(mGripperLeftHelperNodeInitialOrientation.product(orientation));
+							callback(null);
+						});
+					},
+					function (callback) {
+						ape.nbind.JsBindManager().getNode('JOINT(Rotational)(gripR5)22ur10Gripper', function (error, obj) {
+							if (error) {
+								callback({ name: 'invalidCast', msg: obj1, code: 666 });
+							}
+							obj.setOrientation(mGripperRightHelperNodeInitialOrientation.product(orientation));
+							callback(null);
+						});
+					}
+				],
+				function (err, results) {
+					//if (err) {
+					//	logger.error('error: ', err);
+					//	respObj.addErrorItem(err);
+					//	res.send(respObj.toJSonString());
+					//	return;
+					//}
+					//res.send(respObj.toJSonString());
+				}
+			);
+		}
+		else if (item.type == "text") {
+
 		}
 	}
 

@@ -97,6 +97,8 @@ namespace Ape
 		virtual void setInheritOrientation(bool enable) = 0;
 
 		virtual bool isInheritOrientation() = 0;
+
+		virtual void setInitalState() = 0;
 	};
 }
 

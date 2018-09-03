@@ -20,22 +20,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_GYORPLUGIN_H
-#define APE_GYORPLUGIN_H
+#ifndef APE_ROBOTCALIBRATIONPLUGIN_H
+#define APE_ROBOTCALIBRATIONPLUGIN_H
 
 #include <iostream>
 #include <thread>
-#include <random>
 #include <chrono>
+#include <ctime>
 #include <memory>
 #include <mutex>
 #include <vector>
 #include <list>
+#include <random>
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
 #include "ApeIScene.h"
-#include "ApeISceneSession.h"
 #include "ApeINode.h"
 #include "ApeILight.h"
 #include "ApeICamera.h"
@@ -50,16 +50,21 @@ SOFTWARE.*/
 #include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
 #include "ApeIPbsPass.h"
+#include "ApeIManualPass.h"
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
-#include "ApeIMainWindow.h"
+#include "ApeIManualTexture.h"
+#include "ApeIManualMaterial.h"
+#include "ApeIBrowser.h"
 #include "ApeIPointCloud.h"
+#include "ApeIUnitTexture.h"
+#include "ApeRobotCalibrationPluginConfigs.h"
 
-#define THIS_PLUGINNAME "ApeGyorPlugin"
+#define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
 namespace Ape
 {
-	class ApeGyorPlugin : public Ape::IPlugin
+	class ApeRobotCalibrationPlugin : public Ape::IPlugin
 	{
 	private:
 		Ape::IEventManager* mpEventManager;
@@ -68,32 +73,32 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mGripperLeftRootNode;
+		Ape::NodeJsPluginConfig mNodeJsPluginConfig;
 
-		Ape::NodeWeakPtr mGripperLeftHelperNode;
-
-		Ape::NodeWeakPtr mGripperLeftEndNode;
-
-		Ape::NodeWeakPtr mGripperRightRootNode;
-
-		Ape::NodeWeakPtr mGripperRightEndNode;
-
-		Ape::NodeWeakPtr mGripperRightHelperNode;
-
-		Ape::Quaternion mGripperRightHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperRightRootNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftRootNodeInitialOrientation;
+		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 
 		void eventCallBack(const Ape::Event& event);
 
-	public:
-		ApeGyorPlugin();
+		Ape::PointCloudWeakPtr mPointCloud;
 
-		~ApeGyorPlugin();
+		int mPointCloudSize;
+
+		Ape::NodeWeakPtr mUserNode;
+
+		void createLights();
+
+		void createSkyBox();
+
+		void createCoordinateSystem();
+
+		void parseNodeJsConfig();
+
+		void createOverlayBrowser();
+
+	public:
+		ApeRobotCalibrationPlugin();
+
+		~ApeRobotCalibrationPlugin();
 
 		void Init() override;
 
@@ -108,14 +113,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGyorPlugin()
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotCalibrationPlugin()
 	{
-		return new Ape::ApeGyorPlugin;
+		return new Ape::ApeRobotCalibrationPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeGyorPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeRobotCalibrationPlugin(Ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeGyorPlugin*)plugin;
+		delete (Ape::ApeRobotCalibrationPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -123,7 +128,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeGyorPlugin, DestroyApeGyorPlugin);
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeRobotCalibrationPlugin, DestroyApeRobotCalibrationPlugin);
 		return 0;
 	}
 }

@@ -39,7 +39,7 @@ namespace Ape
 			degree(_degree)
 		{}
 
-		float toRadian()
+		float toRadian() const
 		{
 			return float(degree * ape_PI / 180);
 		};

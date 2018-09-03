@@ -97,27 +97,53 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 			auto intersections = rayGeometry->getIntersections();
 			for (auto intersection : intersections)
 			{
-				if (auto geometry = intersection.lock())
+				if (auto entity = intersection.lock())
 				{
-					std::size_t found = geometry->getName().find(mUserNode.lock()->getName()); 
-					std::size_t foundCoord = geometry->getName().find("coord");
+					std::string entityName = entity->getName();
+					Ape::Entity::Type entityType = entity->getType();
+					std::size_t found = entity->getName().find(mUserNode.lock()->getName());
+					std::size_t foundCoord = entity->getName().find("coord");
 					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
 					{
-						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: geometry: " << geometry->getName() << " type: " << geometry->getType());
-						if (auto selectedParentNode = geometry->getParentNode().lock())
+						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: entiy: " << entityName << " type: " << entityType);
+						if (entityType >= Ape::Entity::Type::GEOMETRY_FILE && entityType <= Ape::Entity::Type::GEOMETRY_RAY)
 						{
-							LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-							if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+							auto geometry = std::static_pointer_cast<Ape::Geometry>(entity);
+							if (auto selectedParentNode = geometry->getParentNode().lock())
 							{
-								clearNodeSelection();
-								addNodeSelection(selectedParentNode->getName());
-							}
-							else
-							{
-								if (isNodeSelected(selectedParentNode->getName()))
-									removeNodeSelection(selectedParentNode->getName());
-								else
+								LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+								if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+								{
+									clearNodeSelection();
 									addNodeSelection(selectedParentNode->getName());
+								}
+								else
+								{
+									if (isNodeSelected(selectedParentNode->getName()))
+										removeNodeSelection(selectedParentNode->getName());
+									else
+										addNodeSelection(selectedParentNode->getName());
+								}
+							}
+						}
+						else if (entityType == Ape::Entity::Type::POINT_CLOUD)
+						{
+							auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(entity);
+							if (auto selectedParentNode = pointCloud->getParentNode().lock())
+							{
+								LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+								if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+								{
+									clearNodeSelection();
+									addNodeSelection(selectedParentNode->getName());
+								}
+								else
+								{
+									if (isNodeSelected(selectedParentNode->getName()))
+										removeNodeSelection(selectedParentNode->getName());
+									else
+										addNodeSelection(selectedParentNode->getName());
+								}
 							}
 						}
 						break;
@@ -474,20 +500,15 @@ bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 void Ape::OISUserInputPlugin::addNodeSelection(std::string nodeName)
 {
 	LOG_TRACE("nodeName: " << nodeName);
-	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
-	findIt = mSelectedNodes.find(nodeName);
-	if (findIt != mSelectedNodes.end())
+	if (auto findNode = mpScene->getNode(nodeName).lock())
 	{
-		if (auto findNode = findIt->second.lock())
-		{
-			Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
-			LOG_DEBUG("childNodes size: " << childNodes.size());
-			for (auto childNode : childNodes)
-				if (auto childNodeSP = childNode.lock())
-					LOG_DEBUG("childNode: " << childNodeSP->getName());
-			mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(findNode->getName(), findNode));
-			findNode->showBoundingBox(true);
-		}
+		Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
+		LOG_DEBUG("childNodes size: " << childNodes.size());
+		for (auto childNode : childNodes)
+			if (auto childNodeSP = childNode.lock())
+				LOG_DEBUG("childNode: " << childNodeSP->getName());
+		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(findNode->getName(), findNode));
+		findNode->showBoundingBox(true);
 	}
 }
 

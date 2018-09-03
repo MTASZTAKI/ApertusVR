@@ -1,12 +1,15 @@
 #include <iostream>
-#include "ApeHtmlOverlayUIPlugin.h"
+#include <fstream>
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "ApeRobotCalibrationPlugin.h"
 
-Ape::ApeHtmlOverlayUIPlugin::ApeHtmlOverlayUIPlugin()
+Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 {
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mPointCloud = Ape::PointCloudWeakPtr();
@@ -14,24 +17,74 @@ Ape::ApeHtmlOverlayUIPlugin::ApeHtmlOverlayUIPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-Ape::ApeHtmlOverlayUIPlugin::~ApeHtmlOverlayUIPlugin()
+Ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::eventCallBack(const Ape::Event& event)
+void Ape::ApeRobotCalibrationPlugin::parseNodeJsConfig()
 {
-
+	LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
+	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (configFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(configFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& httpServer = jsonDocument["httpServer"];
+			if (httpServer.IsObject())
+			{
+				rapidjson::Value& port = httpServer["port"];
+				if (port.IsNumber())
+				{
+					mNodeJsPluginConfig.serverPort = port.GetInt();
+				}
+			}
+		}
+		fclose(configFile);
+	}
+	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Init()
+void Ape::ApeRobotCalibrationPlugin::createOverlayBrowser()
+{
+	LOG_FUNC_ENTER();
+	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	{
+		browser->setResoultion(1280, 720);
+		std::stringstream url;
+		url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/robotCalibration/public/";
+		browser->setURL(url.str());
+		browser->showOnOverlay(true, 0);
+		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			//mouseMaterial->setLightingEnabled(false); crash in OpenGL
+			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+			{
+				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+			}
+			mouseMaterial->showOnOverlay(true, 1);
+		}
+	}
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::ApeRobotCalibrationPlugin::createLights()
 {
 	LOG_FUNC_ENTER();
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		mUserNode = userNode;
-
 		if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 		{
 			light->setLightType(Ape::Light::Type::POINT);
@@ -40,11 +93,6 @@ void Ape::ApeHtmlOverlayUIPlugin::Init()
 			light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 			light->setParentNode(userNode);
 		}
-	}
-	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
-	{
-		skyBoxMaterial->setFileName("skyBox.material");
-		skyBoxMaterial->setAsSkyBox();
 	}
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
@@ -67,7 +115,23 @@ void Ape::ApeHtmlOverlayUIPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
+	LOG_FUNC_LEAVE();
+}
 
+void Ape::ApeRobotCalibrationPlugin::createSkyBox()
+{
+	LOG_FUNC_ENTER();
+	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	{
+		skyBoxMaterial->setFileName("skyBox.material");
+		skyBoxMaterial->setAsSkyBox();
+	}
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::ApeRobotCalibrationPlugin::createCoordinateSystem()
+{
+	LOG_FUNC_ENTER();
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -233,31 +297,26 @@ void Ape::ApeHtmlOverlayUIPlugin::Init()
 			}
 		}
 	}
-
-	/*overlay begin*/
-	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
-	{
-		browser->setResoultion(1280, 720);
-		browser->setURL("http://localhost:3001/robotCalibration/public/");
-		browser->showOnOverlay(true, 0);
-		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
-		{
-			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-			//mouseMaterial->setLightingEnabled(false); crash in OpenGL
-			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
-			{
-				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
-				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
-				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
-			}
-			mouseMaterial->showOnOverlay(true, 1);
-		}
-	}
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Run()
+void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
+{
+
+}
+
+void Ape::ApeRobotCalibrationPlugin::Init()
+{
+	LOG_FUNC_ENTER();
+	parseNodeJsConfig();
+	createOverlayBrowser();
+	createSkyBox();
+	createLights();
+	createCoordinateSystem();
+	LOG_FUNC_LEAVE();
+}
+
+void Ape::ApeRobotCalibrationPlugin::Run()
 {
 	LOG_FUNC_ENTER();
 	double duration = 0;
@@ -265,29 +324,29 @@ void Ape::ApeHtmlOverlayUIPlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Step()
+void Ape::ApeRobotCalibrationPlugin::Step()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Stop()
+void Ape::ApeRobotCalibrationPlugin::Stop()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Suspend()
+void Ape::ApeRobotCalibrationPlugin::Suspend()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtmlOverlayUIPlugin::Restart()
+void Ape::ApeRobotCalibrationPlugin::Restart()
 {
 	LOG_FUNC_ENTER();
 	LOG_FUNC_LEAVE();

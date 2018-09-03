@@ -20,43 +20,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_RAYGEOMETRYIMPL_H
-#define APE_RAYGEOMETRYIMPL_H
+#include <iostream>
+#include <sstream>
+#include "ApeSystem.h"
+#include "ApeFileSystem.h"
 
-#include "ApeIRayGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeReplica.h"
-
-namespace Ape
+int main(int argc, char** argv)
 {
-	class RayGeometryImpl : public Ape::IRayGeometry, public Ape::Replica
-	{
-	public:
-		RayGeometryImpl(std::string name, bool isHostCreated);
-
-		~RayGeometryImpl();
-
-		void setIntersectingEnabled(bool enable) override;
-
-		void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) override;
-
-		void fireIntersectionQuery() override;
-
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
-
-	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
-
-		Ape::IScene* mpScene;
-	};
+	std::stringstream configDir;
+	configDir << APE_SOURCE_DIR << "/samples/robotCalibration/configs/";
+	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	Ape::System::Start(configDir.str().c_str(), true);
+	Ape::System::Stop();
+	return 0;
 }
-
-#endif

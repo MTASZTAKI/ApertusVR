@@ -39,7 +39,7 @@ namespace Ape
 	public:
 		virtual void setIntersectingEnabled(bool enable) = 0;
 
-		virtual void setIntersections(std::vector<Ape::GeometryWeakPtr> intersections) = 0;
+		virtual void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) = 0;
 
 		virtual void fireIntersectionQuery() = 0;
 

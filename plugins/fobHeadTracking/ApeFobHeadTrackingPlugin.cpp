@@ -126,7 +126,7 @@ void Ape::ApeFobHeadTrackingPlugin::Init()
 						else if (rotationMemberIterator->name == "z")
 							axis.z = rotationMemberIterator->value.GetFloat();
 					}
-					mTrackerConfig.rotation.FromAngleAxis(angle, axis);
+					mTrackerConfig.rotation.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
 				}
 				else if (trackerMemberIterator->name == "translate")
 				{
@@ -237,7 +237,7 @@ void Ape::ApeFobHeadTrackingPlugin::Init()
 							else if (orientationMemberIterator->name == "z")
 								axis.z = orientationMemberIterator->value.GetFloat();
 						}
-						fobHeadTrackingDisplayConfig.orientation.FromAngleAxis(angle, axis);
+						fobHeadTrackingDisplayConfig.orientation.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
 					}
 					else if (displayMemberIterator->name == "corners")
 					{

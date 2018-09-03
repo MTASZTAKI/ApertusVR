@@ -42,6 +42,7 @@ SOFTWARE.*/
 #include "ApeIBrowser.h"
 #include "ApeIUnitTexture.h"
 #include "ApeIRayGeometry.h"
+#include "ApeIPointCloud.h"
 
 #define THIS_PLUGINNAME "ApeOisUserInputPlugin"
 

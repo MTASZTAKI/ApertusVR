@@ -28,7 +28,7 @@ Ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHostCreated) : Ap
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
 	mpScene = Ape::IScene::getSingletonPtr();
 	mIntersectingEnabled = false;
-	mIntersections = std::vector<Ape::GeometryWeakPtr>();
+	mIntersections = std::vector<Ape::EntityWeakPtr>();
 	mParentNode = Ape::NodeWeakPtr();
 }
 
@@ -43,7 +43,7 @@ void Ape::RayGeometryImpl::setIntersectingEnabled(bool enable)
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
 }
 
-void Ape::RayGeometryImpl::setIntersections(std::vector<Ape::GeometryWeakPtr> intersections)
+void Ape::RayGeometryImpl::setIntersections(std::vector<Ape::EntityWeakPtr> intersections)
 {
 	mIntersections = intersections;
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTION));

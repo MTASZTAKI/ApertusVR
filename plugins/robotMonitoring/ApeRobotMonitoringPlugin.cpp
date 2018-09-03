@@ -107,7 +107,7 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		Ape::Degree angle(8);
 		Ape::Vector3 axis(0, 0, 1);
 		Ape::Quaternion rot2;
-		rot2.FromAngleAxis(angle, axis);
+		rot2.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
 		Ape::Quaternion rot3;
 		rot3 = rot1 * rot2;
 		environmentNode->setOrientation(rot3);
@@ -123,7 +123,7 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 		Ape::Degree angle(90);
 		Ape::Vector3 axis(1, 0, 0);
 		Ape::Quaternion orientation;
-		orientation.FromAngleAxis(angle, axis);
+		orientation.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
 		glassWallNode->setOrientation(orientation);
 		if (auto glassWallGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("glassWallGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{

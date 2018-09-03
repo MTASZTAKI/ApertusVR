@@ -1,9 +1,10 @@
 {
-    "renderSystem": "OGL",
+    "renderSystem": "DX9",
     "lodLevels": {
         "autoGenerateAndSave": false,
         "bias": 0.5
     },
+    "shading": "perPixel",
     "renderWindows": [
         {
             "name": "EPIC",
@@ -21,18 +22,18 @@
                 "FSAAHint": "Quality"
             },
             "viewports": [
-              {
-                "zOrder": 0,
-                "left": 0,
-                "top": 0,
-                "width": 1920,
-                "height": 1080,
-                "camera": {
-                  "nearClip": 10.0,
-                  "farClip": 100000.0,
-                  "fovY": 45.0
+                {
+                    "zOrder": 0,
+                    "left": 0,
+                    "top": 0,
+                    "width": 1920,
+                    "height": 1080,
+                    "camera": {
+                        "nearClip": 1.0,
+                        "farClip": 10000.0,
+                        "fovY": 45.0
+                    }
                 }
-              }
             ]
         }
     ]

@@ -47,7 +47,7 @@ namespace Ape
 
 		Quaternion(const Ape::Degree& _degRot, const Ape::Vector3& _axRot)
 		{
-			FromAngleAxis(_degRot, _axRot);
+			FromAngleAxis(Ape::Radian(_degRot.toRadian()), _axRot);
 		}
 
 		Quaternion(const Ape::Radian& _radRot, const Ape::Vector3& _axRot)
@@ -105,13 +105,18 @@ namespace Ape
 			return (w > rkQ.w  && x > rkQ.x && y > rkQ.y && z > rkQ.z);
 		}
 
-		Quaternion operator* (const Quaternion& rkQ) const
+		Quaternion product(const Quaternion& rkQ) const
 		{
 			return Quaternion(
-			           w * rkQ.w - x * rkQ.x - y * rkQ.y - z * rkQ.z,
-			           w * rkQ.x + x * rkQ.w + y * rkQ.z - z * rkQ.y,
-			           w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
-			           w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x);
+				w * rkQ.w - x * rkQ.x - y * rkQ.y - z * rkQ.z,
+				w * rkQ.x + x * rkQ.w + y * rkQ.z - z * rkQ.y,
+				w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
+				w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x);
+		}
+
+		Quaternion operator* (const Quaternion& rkQ) const
+		{
+			return product(rkQ);
 		}
 
 		void FromAngleAxis(Ape::Radian _angleRadian, const Ape::Vector3& _axis)
@@ -122,11 +127,6 @@ namespace Ape
 			x = fSin * _axis.x;
 			y = fSin * _axis.y;
 			z = fSin * _axis.z;
-		}
-
-		void FromAngleAxis(Ape::Degree _angleDegree, const Ape::Vector3& _axis)
-		{
-			FromAngleAxis(Ape::Radian(_angleDegree.toRadian()), _axis);
 		}
 
 		void FromRotationMatrix(const Ape::Matrix3& kRot)

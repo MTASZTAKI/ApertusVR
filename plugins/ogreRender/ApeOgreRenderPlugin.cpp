@@ -161,6 +161,9 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						case Ape::Event::Type::NODE_INHERITORIENTATION:
 							ogreNode->setInheritOrientation(node->isInheritOrientation());
 							break;
+						case Ape::Event::Type::NODE_INITIALSTATE:
+							ogreNode->setInitialState();
+							break;
 						case Ape::Event::Type::NODE_SHOWBOUNDINGBOX:
 							ogreNode->showBoundingBox(true);
 							break;
@@ -1494,11 +1497,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									raySceneQuery->setSortByDistance(true);
 									raySceneQuery->execute();
 									Ogre::RaySceneQueryResult query_result = raySceneQuery->getLastResults();
-									std::vector<Ape::GeometryWeakPtr> intersections;
+									std::vector<Ape::EntityWeakPtr> intersections;
 									for (size_t i = 0, size = query_result.size(); i < size; ++i)
 									{
-										if (auto geometry = std::dynamic_pointer_cast<Ape::Geometry>(mpScene->getEntity(query_result[i].movable->getName()).lock()))
-											intersections.push_back(geometry);
+										if (auto entiy = mpScene->getEntity(query_result[i].movable->getName()).lock())
+											intersections.push_back(entiy);
 									}
 									if (intersections.size())
 										geometryRay->setIntersections(intersections);
