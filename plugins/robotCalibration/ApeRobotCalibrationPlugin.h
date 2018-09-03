@@ -58,7 +58,6 @@ SOFTWARE.*/
 #include "ApeIBrowser.h"
 #include "ApeIPointCloud.h"
 #include "ApeIUnitTexture.h"
-#include "ApeRobotCalibrationPluginConfigs.h"
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
@@ -67,13 +66,23 @@ namespace Ape
 	class ApeRobotCalibrationPlugin : public Ape::IPlugin
 	{
 	private:
+		struct NodeJsPluginConfig
+		{
+			int serverPort;
+
+			NodeJsPluginConfig(int serverPort = 3000)
+			{
+				this->serverPort = serverPort;
+			}
+		};
+
 		Ape::IEventManager* mpEventManager;
 
 		Ape::IScene* mpScene;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeJsPluginConfig mNodeJsPluginConfig;
+		NodeJsPluginConfig mNodeJsPluginConfig;
 
 		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
 

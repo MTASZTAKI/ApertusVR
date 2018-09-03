@@ -23,7 +23,6 @@
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	ApeRobotCalibrationPlugin.h
-	ApeRobotCalibrationPluginConfigs.h
 	)
 
 set (SOURCES 
