@@ -42,6 +42,7 @@ set (SOURCES
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
 	${JS_API_COMMON_DIR}
+	${RAPIDJSON_INCLUDE_DIR}
 	${NODE_SOURCE_DIR}/src
 	${NODE_SOURCE_DIR}/deps/uv/include
 	${NODE_SOURCE_DIR}/deps/v8/include
@@ -64,7 +65,7 @@ endif ()
 # TODO: MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries(${MY_TARGET_NAME} ApeScene ApePluginManager ApeEventManager ApeLogManager MY_NODEJS_LIB)
+target_link_libraries(${MY_TARGET_NAME} ApeScene ApePluginManager ApeEventManager ApeLogManager ApeSystemConfig MY_NODEJS_LIB)
 
 # Add preprocessor definitions
 set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)

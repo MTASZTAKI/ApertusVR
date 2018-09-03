@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include <map>
 #include <vector>
 #include "ApePluginAPI.h"
+#include "ApeISystemConfig.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
 #include "ApeIScene.h"
@@ -41,13 +42,27 @@ SOFTWARE.*/
 class ApeNodeJsPlugin : public Ape::IPlugin
 {
 private:
+	struct NodeJsPluginConfig
+	{
+		int serverPort;
+
+		NodeJsPluginConfig(int serverPort = 3000)
+		{
+			this->serverPort = serverPort;
+		}
+	};
+
 	Ape::IEventManager* mpEventManager;
 
 	Ape::IScene* mpScene;
 
-	Ape::NodeWeakPtr mNodeWeakPtr;
+	Ape::ISystemConfig* mpSystemConfig;
+
+	NodeJsPluginConfig mNodeJsPluginConfig;
 
 	void nodeEventCallBack(const Ape::Event& event);
+
+	void parseNodeJsConfig();
 
 public:
 	ApeNodeJsPlugin();
