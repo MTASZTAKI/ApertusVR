@@ -63,11 +63,25 @@ void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 	parseNodeJsConfig();
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
-		browser->setResoultion(1280, 720);
+		browser->setResoultion(1920, 1080);
 		std::stringstream url;
 		url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/htmlOverlayUI/public/";
 		browser->setURL(url.str());
 		browser->showOnOverlay(true, 0);
+
+		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
+			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			//mouseMaterial->setLightingEnabled(false); crash in OpenGL
+			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+			{
+				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
+				mouseTexture->setTextureFiltering(Ape::Texture::Filtering::POINT, Ape::Texture::Filtering::LINEAR, Ape::Texture::Filtering::F_NONE);
+			}
+			mouseMaterial->showOnOverlay(true, 1);
+		}
 	}
 	LOG_FUNC_LEAVE();
 }

@@ -1,8 +1,138 @@
 <html>
+
 <head>
 	<title>ApeHtmlOverlayUI</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+	<style>
+		.mdl-layout__drawer-button .material-icons {
+			padding-top: 12px !important;
+		}
+
+		.demo-card-square.mdl-card {
+			min-height: 150px;
+		}
+	</style>
 </head>
+
 <body>
-	<h1>Hello from HTML!</h1>
+	<!-- Always shows a header, even in smaller screens. -->
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+		<header class="mdl-layout__header">
+			<div class="mdl-layout__header-row">
+				<!-- Title -->
+				<span class="mdl-layout-title">ApeHtmlOverlayUI</span>
+				<!-- Add spacer, to align navigation to the right -->
+				<div class="mdl-layout-spacer"></div>
+				<!-- Navigation. We hide it in small screens. -->
+				<nav class="mdl-navigation mdl-layout--large-screen-only">
+					<a class="mdl-navigation__link" href="http://apertusvr.org/">Home</a>
+					<a class="mdl-navigation__link" href="">Link</a>
+					<a class="mdl-navigation__link" href="">Link</a>
+					<a class="mdl-navigation__link" href="">Link</a>
+				</nav>
+			</div>
+		</header>
+		<div class="mdl-layout__drawer">
+			<span class="mdl-layout-title">Menu</span>
+			<nav class="mdl-navigation">
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+			</nav>
+		</div>
+		<main class="mdl-layout__content">
+			<div class="page-content">
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Radio buttons</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+									<input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
+									<span class="mdl-radio__label">First</span>
+								</label>
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+									<input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
+									<span class="mdl-radio__label">Second</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Checkboxes</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+									<input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked>
+									<span class="mdl-checkbox__label">Checkbox</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Switch</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
+									<input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+									<span class="mdl-switch__label"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Fab button</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+									Button
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Fab button</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+									<i class="material-icons">add</i>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-cell mdl-cell--4-col">
+						<div class="demo-card-square mdl-card mdl-shadow--2dp">
+							<div class="mdl-card__title">
+								<h2 class="mdl-card__title-text">Icon toggle</h2>
+							</div>
+							<div class="mdl-card__supporting-text">
+								<label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
+									<input type="checkbox" id="icon-toggle-1" class="mdl-icon-toggle__input" checked>
+									<i class="mdl-icon-toggle__label material-icons">format_bold</i>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
 </body>
+
 </html>
