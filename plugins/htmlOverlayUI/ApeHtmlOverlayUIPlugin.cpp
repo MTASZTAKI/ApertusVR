@@ -63,7 +63,7 @@ void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 	parseNodeJsConfig();
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
-		browser->setResoultion(1280, 720);
+		browser->setResoultion(1920, 1080);
 		std::stringstream url;
 		url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/htmlOverlayUI/public/";
 		browser->setURL(url.str());
