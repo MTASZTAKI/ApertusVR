@@ -55,8 +55,6 @@ SOFTWARE.*/
 #include "ApeIFileGeometry.h"
 #include "ApeIManualTexture.h"
 #include "ApeIManualMaterial.h"
-#include "ApeIBrowser.h"
-#include "ApeIPointCloud.h"
 
 #define THIS_PLUGINNAME "ApeTesterPlugin"
 
@@ -77,9 +75,17 @@ namespace Ape
 
 		Ape::NodeWeakPtr mDemoObjectNode;
 
-		Ape::PointCloudWeakPtr mPointCloud;
+		void createSkyBox();
 
-		int mPointCloudSize;
+		void createLight();
+
+		void createPlane();
+
+		void createDemoObj();
+
+		void createDemoObjAnim();
+
+		void createCoordinateSystem();
 
 	public:
 		ApeTesterPlugin();

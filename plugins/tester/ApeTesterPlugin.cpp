@@ -10,7 +10,6 @@ Ape::ApeTesterPlugin::ApeTesterPlugin()
 	mpScene = Ape::IScene::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mDemoObjectNode = Ape::NodeWeakPtr();
-	mPointCloud = Ape::PointCloudWeakPtr();
 	LOG_FUNC_LEAVE();
 }
 
@@ -25,14 +24,17 @@ void Ape::ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 	
 }
 
-void Ape::ApeTesterPlugin::Init()
+void Ape::ApeTesterPlugin::createSkyBox()
 {
-	LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
+}
+
+void Ape::ApeTesterPlugin::createLight()
+{
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -62,6 +64,10 @@ void Ape::ApeTesterPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
+}
+
+void Ape::ApeTesterPlugin::createPlane()
+{
 	if (auto planeNode = mpScene->createNode("planeNode").lock())
 	{
 		planeNode->setPosition(Ape::Vector3(0, -10, 0));
@@ -82,6 +88,10 @@ void Ape::ApeTesterPlugin::Init()
 			}
 		}
 	}
+}
+
+void Ape::ApeTesterPlugin::createDemoObj()
+{
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -93,23 +103,23 @@ void Ape::ApeTesterPlugin::Init()
 			demoObjectMaterial->setPass(demoObjectMaterialManualPass);
 		}
 	}
-	mDemoObjectNode = mpScene->createNode("mDemoObjectNode").lock();
+	mDemoObjectNode = mpScene->createNode("mDemoObjectNode");
 	if (auto demoObjectNode = mDemoObjectNode.lock())
 	{
 		demoObjectNode->setPosition(Ape::Vector3(10, 10, 10));
 		if (auto demoBox = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity("demoBox", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 		{
 			Ape::GeometryCoordinates coordinates = {
-				 10,  10, -10,
-				 10, -10, -10,
+				10,  10, -10,
+				10, -10, -10,
 				-10, -10, -10,
 				-10,  10, -10,
-				 10,  10,  10,
-				 10, -10,  10,
+				10,  10,  10,
+				10, -10,  10,
 				-10, -10,  10,
 				-10,  10,  10
 			};
-			Ape::GeometryIndices indices = { 
+			Ape::GeometryIndices indices = {
 				0, 1, 2, 3, -1,
 				4, 7, 6, 5, -1,
 				0, 4, 5, 1, -1,
@@ -169,6 +179,63 @@ void Ape::ApeTesterPlugin::Init()
 			demoLine->setParentNode(mDemoObjectNode);
 		}
 	}
+}
+
+void Ape::ApeTesterPlugin::createDemoObjAnim()
+{
+	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 0),
+		Ape::Vector3(10, 10, 100),
+		10.0,
+		[&](Ape::Vector3 pos) {
+			if (auto demoObjectNode = mDemoObjectNode.lock())
+			{
+				demoObjectNode->setPosition(pos);
+			}
+		}
+	);
+	moveInterpolator->addSection(
+		Ape::Vector3(10, 10, 100),
+		Ape::Vector3(10, 10, 0),
+		10.0,
+		[&](Ape::Vector3 pos) {
+			if (auto demoObjectNode = mDemoObjectNode.lock())
+			{
+				demoObjectNode->setPosition(pos);
+			}
+		}
+	);
+	mInterpolators.push_back(std::move(moveInterpolator));
+
+	auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(1, 0, 0, 0),
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		10.0,
+		[&](Ape::Quaternion ori) {
+			if (auto demoObjectNode = mDemoObjectNode.lock())
+			{
+				demoObjectNode->setOrientation(ori);
+			}
+		}
+	);
+	rotateInterpolator->addSection(
+		Ape::Quaternion(0.7071, 0, 0.7071, 0),
+		Ape::Quaternion(1, 0, 0, 0),
+		10.0,
+		[&](Ape::Quaternion ori) {
+			if (auto demoObjectNode = mDemoObjectNode.lock())
+			{
+				demoObjectNode->setOrientation(ori);
+			}
+		}
+	);
+	mInterpolators.push_back(std::move(rotateInterpolator));
+}
+
+void Ape::ApeTesterPlugin::createCoordinateSystem()
+{
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -227,7 +294,6 @@ void Ape::ApeTesterPlugin::Init()
 					if (auto coordinateSystemXText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemXText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemXText->setCaption("X");
-						//coordinateSystemXText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemXText->setParentNode(coordinateSystemArrowXConeNode);
 					}
 					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowXExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -265,7 +331,6 @@ void Ape::ApeTesterPlugin::Init()
 					if (auto coordinateSystemYText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemYText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemYText->setCaption("Y");
-						//coordinateSystemYText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemYText->setParentNode(coordinateSystemArrowYConeNode);
 					}
 					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowYExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -304,7 +369,6 @@ void Ape::ApeTesterPlugin::Init()
 					if (auto coordinateSystemZText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("coordinateSystemZText", Ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						coordinateSystemZText->setCaption("Z");
-						//coordinateSystemZText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
 						coordinateSystemZText->setParentNode(coordinateSystemArrowZConeNode);
 					}
 					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mpScene->createEntity("coordinateSystemArrowZExtension", Ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
@@ -321,100 +385,25 @@ void Ape::ApeTesterPlugin::Init()
 			}
 		}
 	}
-	//if (auto pointCloudNode = mpScene->createNode("pointCloudNode2").lock())
-	//{
-	//	//pointCloudNode->setPosition(Ape::Vector3(0, 500, 0));
-	//	/*if (auto pointCloudNodeText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText", Ape::Entity::GEOMETRY_TEXT).lock()))
-	//	{
-	//		pointCloudNodeText->setCaption("Point");
-	//		pointCloudNodeText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
-	//		pointCloudNodeText->setParentNode(pointCloudNode);
-	//	}*/
-	//	if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud2", Ape::Entity::POINT_CLOUD).lock()))
-	//	{
-	//		mPointCloudSize = 307200;
-	//		Ape::PointCloudPoints points;
-	//		points.resize(mPointCloudSize);
-	//		Ape::PointCloudColors colors;
-	//		colors.resize(mPointCloudSize);
-	//		std::random_device rd;
-	//		std::mt19937 gen(rd());
-	//		std::uniform_int_distribution<> distInt(0, 1000);
-	//		std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-	//		for (int i = 0; i < mPointCloudSize; i++)
-	//		{
-	//			points[i] = distInt(gen);
-	//			colors[i] = distDouble(gen);
-	//		}
-	//		/*Ape::PointCloudPoints points = {
-	//			-5, 0, 0,
-	//			-4, 0, 0,
-	//			-3, 0, 0,
-	//			-2, 0, 0,
-	//			-1, 0, 0,
-	//			 0, 0, 0,
-	//			 1, 0, 0,
-	//			 2, 0, 0,
-	//			 3, 0, 0
-	//		};
-	//		Ape::PointCloudColors colors = {
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0,
-	//			(float)0.9, 0, 0
-	//		};*/
-	//		pointCloud->setParameters(points, colors, 100000.0f);
-	//		pointCloud->setParentNode(pointCloudNode);
-	//		mPointCloud = pointCloud;
-	//	}
-	//}
-	/*if (auto demoObjectNode = mDemoObjectNode.lock())
-	{
-		auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
-		moveInterpolator->addSection(
-			Ape::Vector3(10, 10, 0),
-			Ape::Vector3(10, 10, 100),
-			10.0,
-			[&](Ape::Vector3 pos) { demoObjectNode->setPosition(pos); }
-		);
-		moveInterpolator->addSection(
-			Ape::Vector3(10, 10, 100),
-			Ape::Vector3(10, 10, 0),
-			10.0,
-			[&](Ape::Vector3 pos) { demoObjectNode->setPosition(pos); }
-		);
-		mInterpolators.push_back(std::move(moveInterpolator));
+}
 
-		auto rotateInterpolator = std::make_unique<Ape::Interpolator>(true);
-		rotateInterpolator->addSection(
-			Ape::Quaternion(1, 0, 0, 0),
-			Ape::Quaternion(0.7071, 0, 0.7071, 0),
-			10.0,
-			[&](Ape::Quaternion ori) { demoObjectNode->setOrientation(ori); }
-		);
-		rotateInterpolator->addSection(
-			Ape::Quaternion(0.7071, 0, 0.7071, 0),
-			Ape::Quaternion(1, 0, 0, 0),
-			10.0,
-			[&](Ape::Quaternion ori) { demoObjectNode->setOrientation(ori); }
-		);
-		mInterpolators.push_back(std::move(rotateInterpolator));
-	}*/
+void Ape::ApeTesterPlugin::Init()
+{
+	LOG_FUNC_ENTER();
+	createSkyBox();
+	createLight();
+	createPlane();
+	createDemoObj();
+	createDemoObjAnim();
+	createCoordinateSystem();
 	LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Run()
 {
 	LOG_FUNC_ENTER();
-	double duration = 0;
 	while (true)
-	{
-		/*auto start = std::chrono::high_resolution_clock::now();
+	{	
 		if (!mInterpolators.empty())
 		{
 			for (std::vector<std::unique_ptr<Ape::Interpolator>>::iterator it = mInterpolators.begin(); it != mInterpolators.end();)
@@ -426,70 +415,6 @@ void Ape::ApeTesterPlugin::Run()
 					it++;
 			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-		if (duration > 5000)
-		{
-			if (auto demoObjectNode = mDemoObjectNode.lock())
-			{
-				if (!demoObjectNode->getChildrenVisibility())
-					demoObjectNode->setChildrenVisibility(true);
-				else
-					demoObjectNode->setChildrenVisibility(false);
-			}
-			duration = 0;
-		}
-		duration = duration + std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();*/
-
-		if (auto pointCloud = mPointCloud.lock())
-		{
-			/*std::random_device rd; 
-			std::mt19937 gen(rd()); 
-			std::uniform_int_distribution<> distInt(-5, 3);
-			std::vector<double> randomPoints;
-			for (int i = 0; i < 9; i++)
-				randomPoints.push_back(distInt(gen));
-			Ape::PointCloudPoints points = {
-				(float)randomPoints[0], 0, 0,
-				(float)randomPoints[1], 0, 0,
-				(float)randomPoints[2], 0, 0,
-				(float)randomPoints[3], 0, 0,
-				(float)randomPoints[4], 0, 0,
-				(float)randomPoints[5], 0, 0,
-				(float)randomPoints[6], 0, 0,
-				(float)randomPoints[7], 0, 0,
-				(float)randomPoints[8], 0, 0
-			};
-			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-			std::vector<double> randomRedColors;
-			for (int i = 0; i < 9; i++)
-				randomRedColors.push_back(distDouble(gen));
-			Ape::PointCloudColors colors = {
-				(float)randomRedColors[0], 0, 0,
-				(float)randomRedColors[1], 0, 0,
-				(float)randomRedColors[2], 0, 0,
-				(float)randomRedColors[3], 0, 0,
-				(float)randomRedColors[4], 0, 0,
-				(float)randomRedColors[5], 0, 0,
-				(float)randomRedColors[6], 0, 0,
-				(float)randomRedColors[7], 0, 0,
-				(float)randomRedColors[8], 0, 0
-			};*/
-			Ape::PointCloudPoints points;
-			points.resize(mPointCloudSize);
-			Ape::PointCloudColors colors;
-			colors.resize(mPointCloudSize);
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			std::uniform_int_distribution<> distInt(0, 1000);
-			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-			for (int i = 0; i < mPointCloudSize; i++)
-			{
-				points[i] = distInt(gen);
-				colors[i] = distDouble(gen);
-			}
-			pointCloud->updatePoints(points);
-			pointCloud->updateColors(colors);
-		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
@@ -498,20 +423,24 @@ void Ape::ApeTesterPlugin::Run()
 
 void Ape::ApeTesterPlugin::Step()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Stop()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Suspend()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Restart()
 {
-
+	LOG_FUNC_ENTER();
+	LOG_FUNC_LEAVE();
 }

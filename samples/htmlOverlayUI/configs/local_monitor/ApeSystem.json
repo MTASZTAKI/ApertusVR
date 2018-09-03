@@ -24,13 +24,12 @@
     "pluginManager": {
       "plugins": [
         "ApeNodeJsPlugin",
+        "ApeWebserverPlugin",
         "ApeOgreRenderPlugin",
         "ApeOisUserInputPlugin",
         "ApeCefBrowserPlugin",
-        "ApeHtmlOverlayUIPlugin",
-        "ApeKinectPlugin",
-        "ApeAssimpAssetLoaderPlugin",
-        "ApeWebserverPlugin"
+        "ApeTesterPlugin",
+        "ApeHtmlOverlayUIPlugin"
       ]
     }
 }
