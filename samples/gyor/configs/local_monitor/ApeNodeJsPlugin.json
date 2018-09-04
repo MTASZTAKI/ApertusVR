@@ -6,6 +6,13 @@
         "plugins": [
             {
                 "file": "x3dLoader/x3dLoader.js"
+            },
+            {
+                "file": "httpSimulator/httpSimulator.js",
+                "args": {
+                    "fileName": "httpSimulator/gripper.jsonlist",
+                    "delay": 20
+                }
             }
         ]
     }
