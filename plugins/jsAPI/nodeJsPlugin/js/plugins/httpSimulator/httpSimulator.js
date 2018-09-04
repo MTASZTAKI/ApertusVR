@@ -32,6 +32,12 @@ exports.init = function(args) {
 	var lr = new LineByLineReader(fileName);
 	var lineNumber = 0;
 
+	var options = {
+		uri: moduleManager.httpServer.address + '/api/v1/setproperties',
+		method: 'POST',
+		json: {}
+	};
+
 	lr.on('error', function (err) {
 		console.log('line-reader: error: ', err);
 	});
@@ -39,16 +45,9 @@ exports.init = function(args) {
 	lr.on('line', function (line) {
 		lr.pause();
 
-		var dataObj = JSON.parse(line);
+		options.json = JSON.parse(line);
 		lineNumber++;
-		// console.log('line-reader: ', lineNumber, '> ', JSON.stringify(dataObj));
 		console.log('line-reader: line> ', lineNumber);
-
-		var options = {
-			uri: 'http://localhost:3000/api/v1/setproperties',
-			method: 'POST',
-			json: dataObj
-		};
 
 		request.post(options, function (error, response, body) {
 				if (error) {
