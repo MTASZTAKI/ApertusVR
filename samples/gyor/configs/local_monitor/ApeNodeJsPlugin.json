@@ -10,7 +10,14 @@
             {
                 "file": "httpSimulator/httpSimulator.js",
                 "args": {
-                    "fileName": "httpSimulator/gripper.jsonlist",
+                    "fileName": "httpSimulator/ur10.jsonlist",
+                    "delay": 20
+                }
+            },
+            {
+                "file": "httpSimulator/httpSimulator.js",
+                "args": {
+                    "fileName": "httpSimulator/ur10Gripper.jsonlist",
                     "delay": 20
                 }
             }
