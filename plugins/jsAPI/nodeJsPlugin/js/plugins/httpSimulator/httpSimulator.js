@@ -24,54 +24,61 @@ var utils = require('../../modules/utils/utils.js');
 var moduleManager = require('../../modules/module_manager/module_manager.js');
 var request = moduleManager.requireNodeModule('request');
 var LineByLineReader = moduleManager.requireNodeModule('line-by-line');
-var self = this;
 
-exports.init = function(args) {
-	var fileName = moduleManager.pluginPath + args.fileName || moduleManager.pluginPath + 'apertusvr.log';
-	var delay = args.delay || 20;
-	var lr = new LineByLineReader(fileName);
-	var lineNumber = 0;
-
-	lr.on('error', function (err) {
-		console.log('line-reader: error: ', err);
-	});
-
-	lr.on('line', function (line) {
-		lr.pause();
-
-		var dataObj = JSON.parse(line);
-		lineNumber++;
-		// console.log('line-reader: ', lineNumber, '> ', JSON.stringify(dataObj));
-		console.log('line-reader: line> ', lineNumber);
-
-		var options = {
-			uri: 'http://localhost:3000/api/v1/setproperties',
+class HttpSimulator {
+	constructor(options) {
+		this.options = {
+			uri: moduleManager.httpServer.address + '/api/v1/setproperties',
 			method: 'POST',
-			json: dataObj
+			json: {}
 		};
+		// var lineNumber = 0;
+		this.delay = 0;
+		this.lr = {};
+		this.self = this;
+		this.fileName = '';
+	}
 
-		request.post(options, function (error, response, body) {
-				if (error) {
-					console.log('Error: ', error);
+	init(args) {
+		var self = this;
+
+		this.fileName = moduleManager.pluginPath + args.fileName || moduleManager.pluginPath + 'apertusvr.log';
+		this.delay = args.delay || 20;
+		this.lr = new LineByLineReader(this.fileName);
+
+		this.lr.on('error', function (err) {
+			console.log('line-reader: error: ', err);
+		});
+
+		this.lr.on('line', function (line) {
+			self.lr.pause();
+			self.options.json = JSON.parse(line);
+			// this.lineNumber++;
+			// console.log('line-reader: line> ', this.lineNumber);
+			request.post(self.options, function (error, response, body) {
+					if (error) {
+						console.log('http post error: ', error);
+					}
+					// console.log(JSON.stringify(body));
+					setTimeout(function(){
+						self.lr.resume();
+					}, self.delay);
 				}
-				// console.log();
-				// console.log('request: body: ', body);
-				setTimeout(function(){
-					lr.resume();
-				}, delay);
-			}
-		);
-	});
+			);
+		});
 
-	lr.on('end', function () {
-		console.log('line-reader: all lines are read.');
-		self.done(args);
-	});
-};
+		this.lr.on('end', function () {
+			// console.log('line-reader: all lines are read.');
+			self.lr = {};
+			self.done(args);
+		});
+	}
 
-exports.done = function(args) {
-	console.log('plugin finished');
-	if (args) {
-		self.init(args);
+	done(args) {
+		if (args) {
+			this.init(args);
+		}
 	}
 }
+
+module.exports = HttpSimulator;

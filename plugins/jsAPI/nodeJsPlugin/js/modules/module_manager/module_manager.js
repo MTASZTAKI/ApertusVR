@@ -29,6 +29,11 @@ exports.sourcePath = config.source.apePath + config.source.jsApiPath;
 exports.pluginPath = this.sourcePath + 'plugins/';
 exports.nodeModulesPath = config.build.binPath + this.configType + config.build.nodeModulesPath;
 exports.apertusModulePath = this.nodeModulesPath + config.build.apertusModulePath;
+exports.httpServer = {
+	host: "",
+	port: 0,
+	address: ""
+};
 
 exports.requireNodeModule = function(moduleName) {
 	if (!fs.existsSync(this.nodeModulesPath + moduleName)) {
