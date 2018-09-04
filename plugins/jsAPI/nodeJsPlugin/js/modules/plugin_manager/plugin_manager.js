@@ -55,7 +55,13 @@ exports.loadPlugins = function(app, express) {
 				logger.debug('Express: route ' + plugin.public + ' registered to folder ' + pluginPublicPath);
 			}
 
-			var pluginInstance = require(pluginFilePath);
+			var pluginClass = require(pluginFilePath);
+			var pluginInstance = {};
+			try {
+				 pluginInstance = new pluginClass();
+			} catch(err) {
+				pluginInstance = require(pluginFilePath);
+			}
 			pluginInstance.init(plugin.args);
 
 			callback();
