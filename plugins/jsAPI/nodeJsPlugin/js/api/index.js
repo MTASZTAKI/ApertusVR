@@ -79,19 +79,16 @@ app.post('/setproperties', function(req, res, next) {
 						msg: obj,
 						code: 666
 					});
-					res.status(400).send(respObj.toJSonString());
-					return;
 				}
-
-				if (item.properties.orientation) {
-					var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
-					obj.setOrientation(q);
+				else {
+					if (item.properties.orientation) {
+						var q = utils.quaternionFromAngleAxis(item.properties.orientation.angle, item.properties.orientation.axis);
+						obj.setOrientation(q);
+					}
 				}
 			});
 		}
 		else if (item.type === "gripper") {
-			console.log('gripper', item.properties)
-
 			var mGripperLeftRootNodeInitialOrientation = ape.nbind.Quaternion(-0.99863, 0, 0, 0.0523337);
 			var mGripperRightRootNodeInitialOrientation = ape.nbind.Quaternion(-0.99863, 0, 0, 0.0523337);
 			var mGripperLeftHelperNodeInitialOrientation = ape.nbind.Quaternion(-0.418964, 0, 0, 0.908003);
@@ -118,9 +115,11 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							mGripperLeftRootOrientation = mGripperLeftRootNodeInitialOrientation.product(orientation);
-							obj.setOrientation(mGripperLeftRootOrientation);
-							callback(null);
+							else {
+								mGripperLeftRootOrientation = mGripperLeftRootNodeInitialOrientation.product(orientation);
+								obj.setOrientation(mGripperLeftRootOrientation);
+								callback(null);
+							}
 						});
 					},
 					function (callback) {
@@ -128,9 +127,11 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							mGripperRightRootOrientation = mGripperRightRootNodeInitialOrientation.product(orientation);
-							obj.setOrientation(mGripperRightRootOrientation);
-							callback(null);
+							else {
+								mGripperRightRootOrientation = mGripperRightRootNodeInitialOrientation.product(orientation);
+								obj.setOrientation(mGripperRightRootOrientation);
+								callback(null);
+							}
 						});
 					},
 					function (callback) {
@@ -138,8 +139,10 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							obj.setOrientation(mGripperLeftHelperNodeInitialOrientation.product(orientation));
-							callback(null);
+							else {
+								obj.setOrientation(mGripperLeftHelperNodeInitialOrientation.product(orientation));
+								callback(null);
+							}
 						});
 					},
 					function (callback) {
@@ -147,8 +150,10 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							obj.setOrientation(mGripperRightHelperNodeInitialOrientation.product(orientation));
-							callback(null);
+							else {
+								obj.setOrientation(mGripperRightHelperNodeInitialOrientation.product(orientation));
+								callback(null);
+							}
 						});
 					},
 					function (callback) {
@@ -156,8 +161,10 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							obj.setOrientation(mGripperLeftEndNodeInitialOrientation.product(mGripperLeftRootOrientation.Inverse()));
-							callback(null);
+							else {
+								obj.setOrientation(mGripperLeftEndNodeInitialOrientation.product(mGripperLeftRootOrientation.Inverse()));
+								callback(null);
+							}
 						});
 					},
 					function (callback) {
@@ -165,8 +172,10 @@ app.post('/setproperties', function(req, res, next) {
 							if (error) {
 								callback({ name: 'invalidCast', msg: obj, code: 666 });
 							}
-							obj.setOrientation(mGripperRightEndNodeInitialOrientation.product(mGripperRightRootOrientation.Inverse()));
-							callback(null);
+							else {
+								obj.setOrientation(mGripperRightEndNodeInitialOrientation.product(mGripperRightRootOrientation.Inverse()));
+								callback(null);
+							}
 						});
 					}
 				],
@@ -174,15 +183,12 @@ app.post('/setproperties', function(req, res, next) {
 					if (err) {
 						logger.error('error: ', err);
 						respObj.addErrorItem(err);
-						//res.send(respObj.toJSonString());
-						//return;
 					}
-					//res.send(respObj.toJSonString());
 				}
 			);
 		}
 		else if (item.type == "text") {
-
+			// TODO
 		}
 	}
 
