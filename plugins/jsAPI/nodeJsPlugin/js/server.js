@@ -41,7 +41,7 @@ logger.debug('config:', config);
 // set host and port
 moduleManager.httpServer.host = "0.0.0.0" || process.env.VCAP_APP_HOST || process.env.HOST || 'localhost';
 moduleManager.httpServer.port = process.argv[2] || process.env.VCAP_APP_PORT || process.env.PORT || 3000;
-moduleManager.httpServer.address = moduleManager.httpServer.host + ":" + moduleManager.httpServer.port;
+moduleManager.httpServer.address = "http://" + moduleManager.httpServer.host + ":" + moduleManager.httpServer.port;
 
 var app = express();
 app.use(bodyParser.json());
