@@ -75,7 +75,7 @@ namespace Ape
 
 		Ape::PointCloudWeakPtr mPointCloud;
 
-		std::string mPointCloudName;
+		std::string mRecordedPointCloudName;
 
 		bool mIsRecorder;
 
@@ -94,6 +94,12 @@ namespace Ape
 		Ape::Quaternion mPointCloudOrinetation;
 
 		Ape::NodeWeakPtr mPointCloudNode;
+
+		long mPointCloudSize;
+
+		Ape::PointCloudPoints mCurrentPoints;
+
+		Ape::PointCloudColors mCurrentColors;
 
 		void readFrame();
 

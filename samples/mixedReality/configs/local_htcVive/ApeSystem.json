@@ -25,12 +25,13 @@
     }
   },
     "pluginManager": {
-        "plugins": [
-          "ApeNodeJsPlugin",
-          "ApeOgreRenderPlugin",
-	  "ApeOisUserInputPlugin",
-	  "ApeIndustry40Plugin",
-          "ApePointCloudRecorderPlugin"
-        ]
+      "plugins": [
+        "ApeNodeJsPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeIndustry40Plugin",
+        "ApeHtcVivePlugin",
+        "ApePointCloudRecorderPlugin"
+      ]
     }
 }
