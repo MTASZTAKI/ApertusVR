@@ -47,6 +47,18 @@ namespace Ape
 			return buff.str();
 		}
 
+		std::string toJsonString() const
+		{
+			std::ostringstream buff;
+			buff << "{ ";
+			buff << "\"r\": " << r << ", ";
+			buff << "\"g\": " << g << ", ";
+			buff << "\"b\": " << b << ", ";
+			buff << "\"a\": " << a;
+			buff << " }";
+			return buff.str();
+		}
+
 		float getR()
 		{
 			return r;
