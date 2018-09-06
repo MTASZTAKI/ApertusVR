@@ -20,6 +20,7 @@ Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 Ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
 {
 	LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
 }
 
@@ -319,12 +320,6 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 void Ape::ApeRobotCalibrationPlugin::Run()
 {
 	LOG_FUNC_ENTER();
-	double duration = 0;
-	while (true)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	LOG_FUNC_LEAVE();
 }
 
