@@ -20,48 +20,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ISCENESESSION_H
-#define APE_ISCENESESSION_H
 
-#ifdef _WIN32
-	#ifdef BUILDING_APE_SCENEMANAGER_DLL
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
-	#else
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define APE_SCENEMANAGER_DLL_EXPORT
-#endif
+#ifndef APE_REPLICAMANAGERCONNECTION_H
+#define APE_REPLICAMANAGERCONNECTION_H
 
-#include <functional>
-#include <map>
-#include <vector>
-#include "ApeSingleton.h"
-#include "ApeSystem.h"
+#include "RakNetTypes.h"
+#include "ReplicaManager3.h"
+#include "ApeSceneManagerImpl.h"
 
 namespace Ape
 {
-	typedef std::string SceneSessionUniqueID;
-
-	namespace SceneSession
+	class ReplicaManagerConnection : public RakNet::Connection_RM3
 	{
-		enum ParticipantType
-		{
-			HOST,
-			GUEST,
-			LOCAL,
-			INVALID
-		};
-	}
-
-	class APE_SCENEMANAGER_DLL_EXPORT ISceneSession : public Singleton<ISceneSession>
-	{
-	protected:
-		virtual ~ISceneSession() {};
-
+	private:
+		Ape::SceneManagerImpl* mpSceneManagerImpl;
+		
 	public:
-		virtual Ape::SceneSession::ParticipantType getParticipantType() = 0;
+		ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid);
+
+		~ReplicaManagerConnection();
+
+		RakNet::Replica3 *AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3);
 	};
 }
 
 #endif
+

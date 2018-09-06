@@ -29,7 +29,7 @@ SOFTWARE.*/
 #include "ApePluginManagerImpl.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeLogManagerImpl.h"
-#include "ApeSceneImpl.h"
+#include "ApeSceneManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
@@ -42,7 +42,7 @@ SOFTWARE.*/
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;
 Ape::LogManagerImpl* gpLogManagerImpl;
-Ape::SceneImpl* gpSceneImpl;
+Ape::SceneManagerImpl* gpSceneManagerImpl;
 Ape::SceneSessionImpl* gpSceneSessionImpl;
 Ape::SystemConfigImpl* gpSystemConfigImpl;
 Ape::MainWindowImpl* gpMainWindowImpl;
@@ -67,8 +67,8 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 	gpLogManagerImpl = new LogManagerImpl();
 	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneSessionImpl = new SceneSessionImpl();
-	gpSceneImpl = new SceneImpl();
-	gpSceneSessionImpl->setScene(gpSceneImpl);
+	gpSceneManagerImpl = new SceneManagerImpl();
+	gpSceneSessionImpl->setScene(gpSceneManagerImpl);
 	
 	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
 		; //TODO open a platform specific window if needed
@@ -76,12 +76,12 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 	gpPluginManagerImpl->CreatePlugins();
 
 	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
-	if (auto userNode = gpSceneImpl->createNode(uniqueUserNodeName.str()).lock())
+	if (auto userNode = gpSceneManagerImpl->createNode(uniqueUserNodeName.str()).lock())
 	{
-		if (auto headNode = gpSceneImpl->createNode(uniqueUserNodeName.str() + "_HeadNode").lock())
+		if (auto headNode = gpSceneManagerImpl->createNode(uniqueUserNodeName.str() + "_HeadNode").lock())
 		{
 			headNode->setParentNode(userNode);
-			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneImpl->createEntity(uniqueUserNodeName.str() + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneManagerImpl->createEntity(uniqueUserNodeName.str() + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
 			{
 				std::random_device rd;
 				std::mt19937 gen(rd());
@@ -106,7 +106,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 void Ape::System::Stop()
 {
 	delete gpEventManagerImpl;
-	delete gpSceneImpl;
+	delete gpSceneManagerImpl;
 	delete gpSceneSessionImpl;
 	delete gpPluginManagerImpl;
 	delete gpSystemConfigImpl;

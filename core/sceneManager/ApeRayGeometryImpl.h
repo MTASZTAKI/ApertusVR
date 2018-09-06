@@ -20,47 +20,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ISCENESESSION_H
-#define APE_ISCENESESSION_H
+#ifndef APE_RAYGEOMETRYIMPL_H
+#define APE_RAYGEOMETRYIMPL_H
 
-#ifdef _WIN32
-	#ifdef BUILDING_APE_SCENEMANAGER_DLL
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
-	#else
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define APE_SCENEMANAGER_DLL_EXPORT
-#endif
-
-#include <functional>
-#include <map>
-#include <vector>
-#include "ApeSingleton.h"
-#include "ApeSystem.h"
+#include "ApeIRayGeometry.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeISceneManager.h"
+#include "ApeINode.h"
+#include "ApeReplica.h"
 
 namespace Ape
 {
-	typedef std::string SceneSessionUniqueID;
-
-	namespace SceneSession
+	class RayGeometryImpl : public Ape::IRayGeometry, public Ape::Replica
 	{
-		enum ParticipantType
-		{
-			HOST,
-			GUEST,
-			LOCAL,
-			INVALID
-		};
-	}
-
-	class APE_SCENEMANAGER_DLL_EXPORT ISceneSession : public Singleton<ISceneSession>
-	{
-	protected:
-		virtual ~ISceneSession() {};
-
 	public:
-		virtual Ape::SceneSession::ParticipantType getParticipantType() = 0;
+		RayGeometryImpl(std::string name, bool isHostCreated);
+
+		~RayGeometryImpl();
+
+		void setIntersectingEnabled(bool enable) override;
+
+		void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) override;
+
+		void fireIntersectionQuery() override;
+
+		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::ISceneManager* mpSceneManager;
 	};
 }
 

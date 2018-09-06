@@ -20,47 +20,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ISCENESESSION_H
-#define APE_ISCENESESSION_H
+#ifndef APE_WATERIMPL_H
+#define APE_WATERIMPL_H
 
-#ifdef _WIN32
-	#ifdef BUILDING_APE_SCENEMANAGER_DLL
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
-	#else
-		#define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define APE_SCENEMANAGER_DLL_EXPORT
-#endif
-
-#include <functional>
-#include <map>
-#include <vector>
-#include "ApeSingleton.h"
-#include "ApeSystem.h"
+#include "ApeIWater.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeReplica.h"
+#include "ApeISceneManager.h"
 
 namespace Ape
 {
-	typedef std::string SceneSessionUniqueID;
-
-	namespace SceneSession
+	class WaterImpl : public IWater, public Ape::Replica
 	{
-		enum ParticipantType
-		{
-			HOST,
-			GUEST,
-			LOCAL,
-			INVALID
-		};
-	}
-
-	class APE_SCENEMANAGER_DLL_EXPORT ISceneSession : public Singleton<ISceneSession>
-	{
-	protected:
-		virtual ~ISceneSession() {};
-
 	public:
-		virtual Ape::SceneSession::ParticipantType getParticipantType() = 0;
+
+		WaterImpl(std::string name, bool isHostCreated);
+
+		~WaterImpl();
+
+		void setSky(Ape::SkyWeakPtr sky) override;
+
+		Ape::SkyWeakPtr getSky() override;
+
+		void setCameras(std::vector<Ape::CameraWeakPtr> cameras) override;
+
+		std::vector<Ape::CameraWeakPtr> getCameras() override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::ISceneManager* mpSceneManager;
+
+		Ape::SkyWeakPtr mSky;
+
+		std::string mSkyName;
+
+		std::vector<Ape::CameraWeakPtr> mCameras;
+
+		std::vector<std::string> mCamerasName;
 	};
 }
 

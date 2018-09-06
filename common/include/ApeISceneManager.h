@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ISCENESESSION_H
-#define APE_ISCENESESSION_H
+#ifndef APE_ISCENEMANAGER_H
+#define APE_ISCENEMANAGER_H
 
 #ifdef _WIN32
 	#ifdef BUILDING_APE_SCENEMANAGER_DLL
@@ -33,34 +33,33 @@ SOFTWARE.*/
 	#define APE_SCENEMANAGER_DLL_EXPORT
 #endif
 
-#include <functional>
-#include <map>
-#include <vector>
 #include "ApeSingleton.h"
-#include "ApeSystem.h"
+#include "ApeINode.h"
+#include "ApeEntity.h"
 
 namespace Ape
 {
-	typedef std::string SceneSessionUniqueID;
-
-	namespace SceneSession
-	{
-		enum ParticipantType
-		{
-			HOST,
-			GUEST,
-			LOCAL,
-			INVALID
-		};
-	}
-
-	class APE_SCENEMANAGER_DLL_EXPORT ISceneSession : public Singleton<ISceneSession>
+	class APE_SCENEMANAGER_DLL_EXPORT ISceneManager : public Singleton<ISceneManager>
 	{
 	protected:
-		virtual ~ISceneSession() {};
+		virtual ~ISceneManager() {};
 
 	public:
-		virtual Ape::SceneSession::ParticipantType getParticipantType() = 0;
+		virtual Ape::NodeWeakPtrNameMap getNodes() = 0;
+
+		virtual Ape::NodeWeakPtr getNode(std::string name) = 0;
+
+		virtual Ape::NodeWeakPtr createNode(std::string name) = 0;
+
+		virtual Ape::EntityWeakPtrNameMap getEntities() = 0;
+
+		virtual Ape::EntityWeakPtr getEntity(std::string name) = 0;
+
+		virtual Ape::EntityWeakPtr createEntity(std::string name, Ape::Entity::Type type) = 0;
+
+		virtual void deleteNode(std::string name) = 0;
+
+		virtual void deleteEntity(std::string name) = 0;
 	};
 }
 

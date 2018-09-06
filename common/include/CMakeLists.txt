@@ -42,7 +42,7 @@ set (HEADERS
 	ApePluginAPI.h
 	ApePluginDefines.h
 	ApeQuaternion.h
-	ApeIScene.h
+	ApeISceneManager.h
 	ApeTexture.h
 	ApeIManualTexture.h
 	ApeVector2.h
