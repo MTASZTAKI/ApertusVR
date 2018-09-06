@@ -10,7 +10,7 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
@@ -89,27 +89,27 @@ void Ape::ApeHtcVivePlugin::submitTextureRightToOpenVR()
 
 Ape::CameraWeakPtr Ape::ApeHtcVivePlugin::createCamera(std::string name)
 {
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
 	{
-		if (auto cameraNode = mpScene->createNode(name + "_Node").lock())
+		if (auto cameraNode = mpSceneManager->createNode(name + "_Node").lock())
 		{
 			cameraNode->setParentNode(mHeadNode);
-			if (auto cameraConeNode = mpScene->createNode(name + "_ConeNode").lock())
+			if (auto cameraConeNode = mpSceneManager->createNode(name + "_ConeNode").lock())
 			{
 				cameraConeNode->setParentNode(cameraNode);
 				cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-				if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpScene->createEntity(name + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+				if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpSceneManager->createEntity(name + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
 				{
 					cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
 					cameraCone->setParentNode(cameraConeNode);
 					cameraCone->setMaterial(mUserMaterial);
 				}
 			}
-			if (auto userNameTextNode = mpScene->createNode(name + "_TextNode").lock())
+			if (auto userNameTextNode = mpSceneManager->createNode(name + "_TextNode").lock())
 			{
 				userNameTextNode->setParentNode(cameraNode);
 				userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(name + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity(name + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					userNameText->setCaption(name);
 					userNameText->setParentNode(userNameTextNode);
@@ -126,7 +126,7 @@ void Ape::ApeHtcVivePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
 	{
-		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			if (event.subjectName == "OpenVrRenderTextureLeft")
 			{
@@ -146,15 +146,15 @@ void Ape::ApeHtcVivePlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		userNode->setFixedYaw(true);
 		mUserNode = userNode;
-		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
 		}
-		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(userNode->getName() + "_Material").lock()))
+		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(userNode->getName() + "_Material").lock()))
 		{
 			mUserMaterial = userMaterial;
 		}
@@ -197,12 +197,12 @@ void Ape::ApeHtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	LOG(LOG_TYPE_DEBUG, "Recomended Render Target Size : " << width << "x" << height);
 
-	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
 		mManualTextureLeftEye = manualTexture;
 	}
-	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity("OpenVrRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
 		mManualTextureRightEye = manualTexture;

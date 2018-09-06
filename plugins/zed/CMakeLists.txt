@@ -50,7 +50,7 @@ link_directories(${CUDA_LIBRARY_DIRS})
 add_library (ApeZedPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeZedPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow ${SPECIAL_OS_LIBS}
+target_link_libraries (ApeZedPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow ${SPECIAL_OS_LIBS}
                         ${ZED_LIBRARIES}
                         ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_NPP_LIBRARIES_ZED})
 	

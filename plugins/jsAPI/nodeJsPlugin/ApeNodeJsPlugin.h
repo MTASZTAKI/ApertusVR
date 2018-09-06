@@ -33,7 +33,7 @@ SOFTWARE.*/
 #include "ApeISystemConfig.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeINode.h"
 #include "ApeEvent.h"
 
@@ -54,7 +54,7 @@ private:
 
 	Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+	Ape::ISceneManager* mpSceneManager;
 
 	Ape::ISystemConfig* mpSystemConfig;
 

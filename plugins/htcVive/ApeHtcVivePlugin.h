@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "ApePluginAPI.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeINode.h"
 #include "ApeITextGeometry.h"
 #include "ApeIFileGeometry.h"
@@ -57,7 +57,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::IMainWindow* mpMainWindow;
 

@@ -3,7 +3,7 @@
 Ape::CefBrowserPlugin::CefBrowserPlugin()
 {
 	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -35,7 +35,7 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 {
 	if (event.group == Ape::Event::Group::BROWSER)
 	{
-		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			switch (event.type)
 			{
@@ -109,7 +109,7 @@ void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
 	}
 	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_PARENTNODE)
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			mRayOverlayNode = rayGeometry->getParentNode();
 	}
 	/*else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
@@ -140,10 +140,10 @@ void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 {
 	std::string browserName = browser->getName();
-	if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+	if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
 		browserMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-		if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
+		if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 			browserMaterial->setPassTexture(browserTexture);

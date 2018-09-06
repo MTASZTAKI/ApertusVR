@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "ApeOisUserInputPluginConfigs.h"
 #include "ApeISystemConfig.h"
 #include "ApeINode.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
@@ -118,7 +118,7 @@ namespace Ape
 
 		OIS::Mouse* mpMouse;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 

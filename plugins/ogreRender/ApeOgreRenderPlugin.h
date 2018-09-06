@@ -101,7 +101,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeICamera.h"
 #include "ApeIPointCloud.h"
 #define APE_DOUBLEQUEUE_UNIQUE
@@ -159,7 +159,7 @@ namespace Ape
 	private:
 		Ogre::Root* mpRoot;
 
-		Ogre::SceneManager* mpSceneMgr;
+		Ogre::SceneManager* mpOgreSceneManager;
 
 		std::vector<Ogre::Camera*> mOgreCameras;
 
@@ -199,7 +199,7 @@ namespace Ape
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::IEventManager* mpEventManager;
 

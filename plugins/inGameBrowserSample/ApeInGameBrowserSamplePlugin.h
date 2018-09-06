@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include <chrono>
 #include <memory>
 #include "ApePluginAPI.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeINode.h"
 #include "ApeIPlaneGeometry.h"
 #include "ApeIFileMaterial.h"
@@ -42,7 +42,7 @@ namespace Ape
 	class ApeInGameBrowserSamplePlugin : public Ape::IPlugin
 	{
 	private:
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 	public:
 		ApeInGameBrowserSamplePlugin();

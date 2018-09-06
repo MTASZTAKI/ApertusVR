@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include <chrono>
 #include <memory>
 #include "ApePluginAPI.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeINode.h"
 #include "ApeIFileGeometry.h"
 #include "ApeIFileMaterial.h"
@@ -41,7 +41,7 @@ namespace Ape
 	class Ape360ImagePlugin : public Ape::IPlugin
 	{
 	private:
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 	public:
 		Ape360ImagePlugin();

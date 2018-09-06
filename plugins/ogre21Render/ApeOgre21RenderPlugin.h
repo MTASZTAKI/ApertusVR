@@ -69,7 +69,7 @@ SOFTWARE.*/
 #include "ApeIManualMaterial.h"
 #include "ApePluginAPI.h"
 #include "ApeIPlugin.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeICamera.h"
 #include "ApeIPointCloud.h"
 #define APE_DOUBLEQUEUE_UNIQUE
@@ -139,7 +139,7 @@ namespace Ape
 
 		
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::IEventManager* mpEventManager;
 

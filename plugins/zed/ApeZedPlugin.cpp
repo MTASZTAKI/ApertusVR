@@ -12,7 +12,7 @@
 Ape::ZedPlugin::ZedPlugin()
 {
 	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -66,15 +66,15 @@ void Ape::ZedPlugin::Init()
 	mApePointCloudPoints.resize(mPointCloudSize * 3);
 	mApePointCloudColors.resize(mPointCloudSize * 3);
 	LOG(LOG_TYPE_DEBUG, "Zed init was successful, point cloud size: " << mPointCloudSize);
-	if (auto apePointCloudNode = mpScene->createNode("ZedPointCloudNode").lock())
+	if (auto apePointCloudNode = mpSceneManager->createNode("ZedPointCloudNode").lock())
 	{
-		if (auto apePointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("ZedPointCloud", Ape::Entity::Type::POINT_CLOUD).lock()))
+		if (auto apePointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("ZedPointCloud", Ape::Entity::Type::POINT_CLOUD).lock()))
 		{
 			apePointCloud->setParameters(mApePointCloudPoints, mApePointCloudColors, mPointCloudBoundingSphereRadius);
 			apePointCloud->setParentNode(apePointCloudNode);
 			mApePointCloud = apePointCloud;
 		}
-		if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("ZedText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("ZedText", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
 			text->showOnTop(true);
 			text->setCaption("ZedMini");

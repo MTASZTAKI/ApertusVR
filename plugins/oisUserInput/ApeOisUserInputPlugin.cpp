@@ -8,7 +8,7 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -50,7 +50,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (event.subjectName == "robotRootNode")
 		{
-			mNodeToMove = mpScene->getNode(event.subjectName);
+			mNodeToMove = mpSceneManager->getNode(event.subjectName);
 		}
 	}
 	/*else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
@@ -68,12 +68,12 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 	}*/
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
-		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
+		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock());
 		LOG(LOG_TYPE_DEBUG, "overlayBrowser catched");
 	}
 	else if (event.type == Ape::Event::Type::TEXTURE_UNIT_CREATE)
 	{
-		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->getEntity(event.subjectName).lock());
+		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->getEntity(event.subjectName).lock());
 		LOG(LOG_TYPE_DEBUG, "overlayMouseTexture catched");
 	}
 	else if (event.type == Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
@@ -81,7 +81,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 		LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
 		if (auto overlayBrowser = mOverlayBrowser.lock())
 		{
-			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
+			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
 				LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
@@ -198,11 +198,11 @@ void Ape::OISUserInputPlugin::Init()
 		fclose(apeOisUserInputConfigFile);
 	}
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		mUserNode = userNode;
-		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
-		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		mDummyNode = mpSceneManager->createNode(userNode->getName() + "_DummyNode");
+		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
 			mHeadNodeName = headNode->getName();
@@ -255,9 +255,9 @@ void Ape::OISUserInputPlugin::Init()
 		}
 	}
 
-	if (auto rayNode = mpScene->createNode("rayNode" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto rayNode = mpSceneManager->createNode("rayNode" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -506,7 +506,7 @@ bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 void Ape::OISUserInputPlugin::addNodeSelection(std::string nodeName)
 {
 	LOG_TRACE("nodeName: " << nodeName);
-	if (auto findNode = mpScene->getNode(nodeName).lock())
+	if (auto findNode = mpSceneManager->getNode(nodeName).lock())
 	{
 		Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
 		LOG_DEBUG("childNodes size: " << childNodes.size());

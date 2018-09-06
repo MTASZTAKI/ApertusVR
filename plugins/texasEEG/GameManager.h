@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include <thread>
 #include <mutex>
 #include "Ape.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeISystemConfig.h"
 #include "ApeILogManager.h"
 #include "ApeIPlaneGeometry.h"
@@ -38,7 +38,7 @@ namespace TexasEEG
 	class GameManager
 	{
 	private:
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		std::thread* mGameThread;
 

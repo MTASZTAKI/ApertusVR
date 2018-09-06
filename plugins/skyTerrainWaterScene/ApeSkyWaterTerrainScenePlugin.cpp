@@ -8,7 +8,7 @@ Ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mWater = Ape::WaterWeakPtr();
 	mSky = Ape::SkyWeakPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -30,7 +30,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
 	{
-		if (auto texture = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto texture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			if (auto camera = texture->getSourceCamera().lock())
 				mCameras.push_back(camera);
@@ -40,7 +40,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 	}
 	else if (event.type == Ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera")  //Monitor
 	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
 			mCameras.push_back(camera);
 		mExpectedCameraCount = 1;
 	}
@@ -48,16 +48,16 @@ void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
 {
-	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpScene->createEntity("sky", Ape::Entity::SKY).lock()))
+	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpSceneManager->createEntity("sky", Ape::Entity::SKY).lock()))
 	{
 		sky->setSize(9500);
 		sky->setTime(6.00, 4.00, 22.00);
-		if (auto skyLight = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("skylight", Ape::Entity::Type::LIGHT).lock()))
+		if (auto skyLight = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("skylight", Ape::Entity::Type::LIGHT).lock()))
 		{
 			sky->setSkyLight(skyLight);
 			mSkyLight = skyLight;
 		}
-		if (auto sunLight = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("sunlight", Ape::Entity::Type::LIGHT).lock()))
+		if (auto sunLight = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("sunlight", Ape::Entity::Type::LIGHT).lock()))
 		{
 			sunLight->setLightType(Ape::Light::Type::DIRECTIONAL);
 			sky->setSunLight(sunLight);
@@ -69,7 +69,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
 
 void Ape::ApeSkyWaterTerrainScenePlugin::createWater()
 {
-	if (auto water = std::static_pointer_cast<Ape::IWater>(mpScene->createEntity("water", Ape::Entity::WATER).lock()))
+	if (auto water = std::static_pointer_cast<Ape::IWater>(mpSceneManager->createEntity("water", Ape::Entity::WATER).lock()))
 	{
 		water->setCameras(mCameras);
 		if (auto sky = mSky.lock())

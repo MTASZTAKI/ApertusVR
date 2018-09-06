@@ -4,7 +4,7 @@
 Ape::LeapMotionPlugin::LeapMotionPlugin()
 {
 	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -28,16 +28,16 @@ void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
 {
 	/*TODO must create at init not here or think about that (Is this the responsibility of a plugin or a system?)*/
 	/*if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
-		mRightHandNode = mpScene->getNode(event.subjectName);
+		mRightHandNode = mpSceneManager->getNode(event.subjectName);
 	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
-		mLeftHandNode = mpScene->getNode(event.subjectName);*/
+		mLeftHandNode = mpSceneManager->getNode(event.subjectName);*/
 }
 
 void Ape::LeapMotionPlugin::Init()
 {
 	LOG_FUNC_ENTER();
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
 	LOG(LOG_TYPE_DEBUG, "waiting for main window");

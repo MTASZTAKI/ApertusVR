@@ -37,7 +37,7 @@ include_directories(
 add_library (ApeHtmlOverlayUIPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeHtmlOverlayUIPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig)
+target_link_libraries (ApeHtmlOverlayUIPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig)
 
 set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY FOLDER "Plugins")

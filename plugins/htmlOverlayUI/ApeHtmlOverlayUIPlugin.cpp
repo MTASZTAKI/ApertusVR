@@ -10,7 +10,7 @@ Ape::ApeHtmlOverlayUIPlugin::ApeHtmlOverlayUIPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	mUserNode = Ape::NodeWeakPtr();
 	LOG_FUNC_LEAVE();
@@ -61,7 +61,7 @@ void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 {
 	LOG_FUNC_ENTER();
 	parseNodeJsConfig();
-	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
 		browser->setResoultion(1920, 1080);
 		std::stringstream url;
@@ -69,12 +69,12 @@ void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 		browser->setURL(url.str());
 		browser->showOnOverlay(true, 0);
 
-		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
 			mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			//mouseMaterial->setLightingEnabled(false); crash in OpenGL
-			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+			if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
 			{
 				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 				mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);

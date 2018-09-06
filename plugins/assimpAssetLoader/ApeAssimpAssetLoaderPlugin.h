@@ -36,7 +36,7 @@ SOFTWARE.*/
 #include "ApeIPlugin.h"
 #include "ApeISystemConfig.h"
 #include "ApeINode.h"
-#include "ApeIScene.h"
+#include "ApeISceneManager.h"
 #include "ApeIMainWindow.h"
 #include "ApeIEventManager.h"
 #include "ApeILogManager.h"
@@ -81,7 +81,7 @@ namespace Ape
 
 	private:
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 

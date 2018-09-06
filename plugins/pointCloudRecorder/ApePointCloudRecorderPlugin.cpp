@@ -7,7 +7,7 @@ Ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	mPointCloudName = "";
 	mIsRecorder = true;
@@ -68,7 +68,7 @@ void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
 		{
 			if (event.subjectName == mPointCloudName)
 			{
-				if (auto entity = mpScene->getEntity(event.subjectName).lock())
+				if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 				{
 					mPointCloud = std::static_pointer_cast<Ape::IPointCloud>(entity);
 				}
@@ -99,21 +99,21 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 	else if (mIsPlayer)
 	{
 		mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
-		if (auto pointCloudNode = mpScene->createNode("pointCloudNode_Player").lock())
+		if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_Player").lock())
 		{
 			pointCloudNode->setPosition(mPointCloudPosition);
 			pointCloudNode->setOrientation(mPointCloudOrinetation);
-			if (auto textNode = mpScene->createNode("pointCloudNode_Player_Text_Node").lock())
+			if (auto textNode = mpSceneManager->createNode("pointCloudNode_Player_Text_Node").lock())
 			{
 				textNode->setParentNode(pointCloudNode);
 				textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("pointCloudNode_Player_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNode_Player_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					text->setCaption("Player");
 					text->setParentNode(textNode);
 				}
 			}
-			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("pointCloud_Player", Ape::Entity::POINT_CLOUD).lock()))
+			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Player", Ape::Entity::POINT_CLOUD).lock()))
 			{
 				//pointCloud->setParameters(Ape::PointCloudPoints(), Ape::PointCloudColors(), 100000);
 				//pointCloud->setParentNode(pointCloudNode);
