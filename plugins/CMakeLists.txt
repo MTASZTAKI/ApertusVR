@@ -32,6 +32,11 @@ if (${APE_PLUGIN_Tester})
 	add_subdirectory (tester)
 endif ()
 
+option(APE_PLUGIN_SceneRecorder "Use SceneRecorderPlugin?" ON )
+if (${APE_PLUGIN_SceneRecorder})
+	add_subdirectory (sceneRecorder)
+endif ()
+
 option(APE_PLUGIN_CefBrowser "Use CefBrowserPlugin?" ON )
 if (${APE_PLUGIN_CefBrowser})
 	add_subdirectory (cefBrowser)
