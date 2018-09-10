@@ -23,17 +23,17 @@ SOFTWARE.*/
 #ifndef APE_INGAMEBROWSERLUGIN_H
 #define APE_INGAMEBROWSERLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIBrowser.h"
-#include "ApeILogManager.h"
+#include <thread>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIBrowser.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
 
 #define THIS_PLUGINNAME "ApeInGameBrowserSamplePlugin"
 
@@ -76,7 +76,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeInGameBrowserSamplePlugin, DestroyApeInGameBrowserSamplePlugin);
 		return 0;
 	}

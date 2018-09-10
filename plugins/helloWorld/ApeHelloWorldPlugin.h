@@ -23,19 +23,19 @@ SOFTWARE.*/
 #ifndef APE_HELLOWORLDPLUGIN_H
 #define APE_HELLOWORLDPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
+#include <thread>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeITextGeometry.h"
 
 #define THIS_PLUGINNAME "ApeHelloWorldPlugin"
 
@@ -85,7 +85,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHelloWorldPlugin, DestroyApeHelloWorldPlugin);
 		return 0;
 	}

@@ -11,19 +11,19 @@ TexasEEG::Bubble::Bubble(Ape::Vector3 pos, int maxCount)
 	mIsTimedOut = false;
 	geometryCount++;
 	id = geometryCount;
-	LOG_TRACE("Bubbl" << " id: " << id << " pos: " << pos.toString() << " maxCount: " << maxCount);
+	APE_LOG_TRACE("Bubbl" << " id: " << id << " pos: " << pos.toString() << " maxCount: " << maxCount);
 }
 
 TexasEEG::Bubble::~Bubble()
 {
-	LOG_TRACE("");
+	APE_LOG_TRACE("");
 	finish();
 }
 
 void TexasEEG::Bubble::init()
 {
 	std::string indexStr = std::to_string(id);
-	LOG_TRACE("geometryCount: " << indexStr);
+	APE_LOG_TRACE("geometryCount: " << indexStr);
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 
 	mBubbleNode = mpSceneManager->createNode("bubbleNode" + indexStr);

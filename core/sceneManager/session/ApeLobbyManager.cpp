@@ -54,19 +54,19 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 
 				if (item.HasMember("code"))
 				{
-					LOG(LOG_TYPE_DEBUG, "errorCode:" << item["code"].GetInt());
+					APE_LOG_DEBUG("errorCode:" << item["code"].GetInt());
 					errItem.code = item["code"].GetInt();
 				}
 
 				if (item.HasMember("name"))
 				{
-					LOG(LOG_TYPE_DEBUG, "errorName:" << item["name"].GetString());
+					APE_LOG_DEBUG("errorName:" << item["name"].GetString());
 					errItem.name = item["name"].GetString();
 				}
 
 				if (item.HasMember("message"))
 				{
-					LOG(LOG_TYPE_DEBUG, "errorMessage:" << item["message"].GetString());
+					APE_LOG_DEBUG("errorMessage:" << item["message"].GetString());
 					errItem.message = item["message"].GetString();
 				}
 
@@ -85,13 +85,13 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 			{
 				if (item.HasMember("host_guid"))
 				{
-					LOG(LOG_TYPE_DEBUG, "sessionGuid: " << item["host_guid"].GetString());
+					APE_LOG_DEBUG("sessionGuid: " << item["host_guid"].GetString());
 					resp.data.guid = item["host_guid"].GetString();
 				}
 
 				if (item.HasMember("session_name"))
 				{
-					LOG(LOG_TYPE_DEBUG, "sessionName: " << item["session_name"].GetString());
+					APE_LOG_DEBUG("sessionName: " << item["session_name"].GetString());
 					resp.data.name = item["session_name"].GetString();
 				}
 			}
@@ -106,29 +106,29 @@ bool Ape::LobbyManager::createSession(const std::string& sessionName, SceneSessi
 	std::string response;
 	LobbyResponse resp;
 	std::string data = "{ \"sessionName\": \"" + sessionName + "\", \"sessionGuid\": \"" + guid + "\" }";
-	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data);
+	APE_LOG_DEBUG("Sending HTTP POST request to: " << mApiEndPointUrl << " with data: " << data);
 
 	try
 	{
 		response = mHttpManager.post(mApiEndPointUrl, data);
-		LOG(LOG_TYPE_DEBUG, "response: " << response);
+		APE_LOG_DEBUG("response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				LOG(LOG_TYPE_DEBUG, "result: succeeded");
+				APE_LOG_DEBUG("result: succeeded");
 				return true;
 			}
 			else
 			{
-				LOG(LOG_TYPE_DEBUG, "result: failed");
+				APE_LOG_DEBUG("result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
+		APE_LOG_ERROR("exception: " << e.what());
 	}
 
 	return false;
@@ -139,29 +139,29 @@ bool Ape::LobbyManager::removeSession(const std::string& sessionName)
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	LOG(LOG_TYPE_DEBUG, "Sending HTTP POST request to: " << mApiEndPointUrl);
+	APE_LOG_DEBUG("Sending HTTP POST request to: " << mApiEndPointUrl);
 
 	try
 	{
 		response = mHttpManager.del(mApiEndPointUrl, "");
-		LOG(LOG_TYPE_DEBUG, "response: " << response);
+		APE_LOG_DEBUG("response: " << response);
 
 		if (parseResponse(response, resp))
 		{
 			if (resp.success)
 			{
-				LOG(LOG_TYPE_DEBUG, "result: succeeded");
+				APE_LOG_DEBUG("result: succeeded");
 				return true;
 			}
 			else
 			{
-				LOG(LOG_TYPE_DEBUG, "result: failed");
+				APE_LOG_DEBUG("result: failed");
 			}
 		}
 	}
 	catch (std::exception &e)
 	{
-		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
+		APE_LOG_ERROR("exception: " << e.what());
 	}
 
 	return false;
@@ -172,27 +172,27 @@ bool Ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessio
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	LOG(LOG_TYPE_DEBUG, "Sending HTTP GET request to: " << url);
+	APE_LOG_DEBUG("Sending HTTP GET request to: " << url);
 
 	try
 	{
 		response = mHttpManager.download(url);
-		LOG(LOG_TYPE_DEBUG, "response: " << response);
+		APE_LOG_DEBUG("response: " << response);
 
 		if (parseResponse(response, resp) && resp.success)
 		{
 			guid = resp.data.guid;
-			LOG(LOG_TYPE_DEBUG, "result: succeeded");
+			APE_LOG_DEBUG("result: succeeded");
 			return true;
 		}
 		else
 		{
-			LOG(LOG_TYPE_DEBUG, "result: failed");
+			APE_LOG_DEBUG("result: failed");
 		}
 	}
 	catch (std::exception &e)
 	{
-		LOG(LOG_TYPE_ERROR, "exception: " << e.what());
+		APE_LOG_ERROR("exception: " << e.what());
 	}
 
 	return false;

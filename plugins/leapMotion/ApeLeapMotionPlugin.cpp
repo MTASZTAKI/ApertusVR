@@ -3,7 +3,7 @@
 
 Ape::LeapMotionPlugin::LeapMotionPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -15,13 +15,13 @@ Ape::LeapMotionPlugin::LeapMotionPlugin()
 	mStateNames = {"STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END"};
 	mPreviousFramePitch = mPreviousFrameYaw = mPreviousFrameRoll = 0;
 	mHandOrientationFlag = false;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::LeapMotionPlugin::~LeapMotionPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
@@ -35,24 +35,24 @@ void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::LeapMotionPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
+	APE_LOG_DEBUG("main window was found");
 	mLeapController.addListener(*this);
 	mLeapController.setPolicyFlags(Leap::Controller::POLICY_BACKGROUND_FRAMES);
 	onFrame(mLeapController);
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		Leap::Frame frame;
@@ -62,7 +62,7 @@ void Ape::LeapMotionPlugin::Run()
 		{
 			rightHandNode->setPosition(Ape::Vector3(rightMost.palmPosition().x / 10, rightMost.palmPosition().z / 10, -rightMost.palmPosition().y / 10));
 			//rightHandNode->setPosition(Ape::Vector3(0, 0, -100));
-			//LOG(LOG_TYPE_DEBUG, rightHandNode->getPosition().toString());
+			//APE_LOG_DEBUG(rightHandNode->getPosition().toString());
 		}
 		mPreviousFramePitch = rightMost.direction().pitch() * Leap::RAD_TO_DEG;
 		mPreviousFrameYaw = rightMost.direction().yaw() * Leap::RAD_TO_DEG;
@@ -104,7 +104,7 @@ void Ape::LeapMotionPlugin::Run()
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::Step()
@@ -129,60 +129,60 @@ void Ape::LeapMotionPlugin::Restart()
 
 void Ape::LeapMotionPlugin::onInit(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onConnect(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	controller.enableGesture(Leap::Gesture::TYPE_CIRCLE);
 	controller.enableGesture(Leap::Gesture::TYPE_KEY_TAP);
 	controller.enableGesture(Leap::Gesture::TYPE_SCREEN_TAP);
 	controller.enableGesture(Leap::Gesture::TYPE_SWIPE);
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onDisconnect(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onExit(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
 {
-	//LOG(LOG_TYPE_DEBUG, "LeapMotionPlugin::onFrame");
+	//APE_LOG_DEBUG("LeapMotionPlugin::onFrame");
 	const Leap::Frame frame = controller.frame();
-	/*LOG(LOG_TYPE_DEBUG, "Frame id: " << frame.id() << ", timestamp: " << frame.timestamp() << ", hands: " << frame.hands().count() << ", fingers: " << frame.fingers().count()
+	/*APE_LOG_DEBUG("Frame id: " << frame.id() << ", timestamp: " << frame.timestamp() << ", hands: " << frame.hands().count() << ", fingers: " << frame.fingers().count()
 		<< ", tools: " << frame.tools().count()	<< ", gestures: " << frame.gestures().count());*/
 	Leap::HandList hands = frame.hands();
 	for (Leap::HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl)
 	{
 		const Leap::Hand hand = *hl;
 		std::string handType = hand.isLeft() ? "Left hand" : "Right hand";
-		/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << handType << ", id: " << hand.id() << ", palm position: " << hand.palmPosition());*/
+		/*APE_LOG_DEBUG(std::string(2, ' ') << handType << ", id: " << hand.id() << ", palm position: " << hand.palmPosition());*/
 		const Leap::Vector normal = hand.palmNormal();
 		const Leap::Vector direction = hand.direction();
-		/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "pitch: " << direction.pitch() * Leap::RAD_TO_DEG << " degrees, " << "roll: " << normal.roll() * Leap::RAD_TO_DEG << " degrees, "
+		/*APE_LOG_DEBUG(std::string(2, ' ') << "pitch: " << direction.pitch() * Leap::RAD_TO_DEG << " degrees, " << "roll: " << normal.roll() * Leap::RAD_TO_DEG << " degrees, "
 			<< "yaw: " << direction.yaw() * Leap::RAD_TO_DEG << " degrees");*/
 		Leap::Arm arm = hand.arm();
-		/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Arm direction: " << arm.direction() << " wrist position: " << arm.wristPosition() << " elbow position: " << arm.elbowPosition());*/
+		/*APE_LOG_DEBUG(std::string(2, ' ') << "Arm direction: " << arm.direction() << " wrist position: " << arm.wristPosition() << " elbow position: " << arm.elbowPosition());*/
 		const Leap::FingerList fingers = hand.fingers();
 		for (Leap::FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl)
 		{
 			const Leap::Finger finger = *fl;
-			/*LOG(LOG_TYPE_DEBUG, std::string(4, ' ') << mFingerNames[finger.type()] << " finger, id: " << finger.id() << ", length: " << finger.length() << "mm, width: " << finger.width());*/
+			/*APE_LOG_DEBUG(std::string(4, ' ') << mFingerNames[finger.type()] << " finger, id: " << finger.id() << ", length: " << finger.length() << "mm, width: " << finger.width());*/
 			for (int b = 0; b < 4; ++b) 
 			{
 				Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(b);
 				Leap::Bone bone = finger.bone(boneType);
-				/*LOG(LOG_TYPE_DEBUG, std::string(6, ' ') << mBoneNames[boneType] << " bone, start: " << bone.prevJoint() << ", end: " << bone.nextJoint() << ", direction: " << bone.direction());*/
+				/*APE_LOG_DEBUG(std::string(6, ' ') << mBoneNames[boneType] << " bone, start: " << bone.prevJoint() << ", end: " << bone.nextJoint() << ", direction: " << bone.direction());*/
 			}
 		}
 	}
@@ -190,7 +190,7 @@ void Ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
 	for (Leap::ToolList::const_iterator tl = tools.begin(); tl != tools.end(); ++tl)
 	{
 		const Leap::Tool tool = *tl;
-		/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Tool, id: " << tool.id() << ", position: " << tool.tipPosition() << ", direction: " << tool.direction() <<);*/
+		/*APE_LOG_DEBUG(std::string(2, ' ') << "Tool, id: " << tool.id() << ", position: " << tool.tipPosition() << ", direction: " << tool.direction() <<);*/
 	}
 	const Leap::GestureList gestures = frame.gestures();
 	for (int g = 0; g < gestures.count(); ++g) 
@@ -211,74 +211,74 @@ void Ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
 				Leap::CircleGesture previousUpdate = Leap::CircleGesture(controller.frame(1).gesture(circle.id()));
 				sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * Leap::PI;
 			}
-			/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Circle id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", progress: " << circle.progress()
+			/*APE_LOG_DEBUG(std::string(2, ' ') << "Circle id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", progress: " << circle.progress()
 				<< ", radius: " << circle.radius() << ", angle " << sweptAngle * Leap::RAD_TO_DEG << ", " << clockwiseness);*/
 			break;
 		}
 		case Leap::Gesture::TYPE_SWIPE:
 		{
 			Leap::SwipeGesture swipe = gesture;
-			/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Swipe id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", direction: " << swipe.direction()
+			/*APE_LOG_DEBUG(std::string(2, ' ') << "Swipe id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", direction: " << swipe.direction()
 				<< ", speed: " << swipe.speed());*/
 			break;
 		}
 		case Leap::Gesture::TYPE_KEY_TAP:
 		{
 			Leap::KeyTapGesture tap = gesture;
-			/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Key Tap id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", position: " << tap.position()
+			/*APE_LOG_DEBUG(std::string(2, ' ') << "Key Tap id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", position: " << tap.position()
 				<< ", direction: " << tap.direction());*/
 			break;
 		}
 		case Leap::Gesture::TYPE_SCREEN_TAP:
 		{
 			Leap::ScreenTapGesture screentap = gesture;
-			/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Screen Tap id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", position: " << screentap.position()
+			/*APE_LOG_DEBUG(std::string(2, ' ') << "Screen Tap id: " << gesture.id() << ", state: " << mStateNames[gesture.state()] << ", position: " << screentap.position()
 				<< ", direction: " << screentap.direction());*/
 			break;
 		}
 		default:
-			/*LOG(LOG_TYPE_DEBUG, std::string(2, ' ') << "Unknown gesture type.");*/
+			/*APE_LOG_DEBUG(std::string(2, ' ') << "Unknown gesture type.");*/
 			break;
 		}
 	}
 	//if (!frame.hands().isEmpty() || !gestures.isEmpty())
 	//{
-		//LOG(LOG_TYPE_DEBUG, "");
+		//APE_LOG_DEBUG("");
 	//}
 }
 
 void Ape::LeapMotionPlugin::onFocusGained(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onFocusLost(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onDeviceChange(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	const Leap::DeviceList devices = controller.devices();
 	for (int i = 0; i < devices.count(); ++i) 
 	{
-		LOG(LOG_TYPE_DEBUG, "id: " << devices[i].toString());
-		LOG(LOG_TYPE_DEBUG, "  isStreaming: " << (devices[i].isStreaming() ? "true" : "false"));
+		APE_LOG_DEBUG("id: " << devices[i].toString());
+		APE_LOG_DEBUG("  isStreaming: " << (devices[i].isStreaming() ? "true" : "false"));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onServiceConnect(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onServiceDisconnect(const Leap::Controller& controller)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

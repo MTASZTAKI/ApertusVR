@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_PLUGININSTANCE_H
 #define APE_PLUGININSTANCE_H
 
-#include "ApePluginDefines.h"
-#include "ApeIPlugin.h"
 #include <string>
 #include <vector>
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginDefines.h"
 
 namespace Ape
 {

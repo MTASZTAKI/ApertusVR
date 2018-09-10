@@ -1,9 +1,8 @@
-#include <iostream>
 #include "ApeLegoPlugin.h"
 
 Ape::ApeLegoPlugin::ApeLegoPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
@@ -75,15 +74,15 @@ Ape::ApeLegoPlugin::ApeLegoPlugin()
 	mMeshNames.push_back("Lego-2x2_Pl_4.mesh");
 	mMeshNames.push_back("Lego-Wheel.mesh");
 	mMeshNames.push_back("Lego-Wheel_2.mesh");
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeLegoPlugin::~ApeLegoPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	delete mpKeyboard;
 	delete mpMouse;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::eventCallBack(const Ape::Event& event)
@@ -97,7 +96,7 @@ void Ape::ApeLegoPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeLegoPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -122,10 +121,10 @@ void Ape::ApeLegoPlugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
+	APE_LOG_DEBUG("main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -179,7 +178,7 @@ void Ape::ApeLegoPlugin::Init()
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::blowModel()

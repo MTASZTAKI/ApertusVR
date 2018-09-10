@@ -1,22 +1,23 @@
-#include <iostream>
 #include "ApeRobotMonitoringPlugin.h"
 
 Ape::ApeRobotMonitoringPlugin::ApeRobotMonitoringPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeRobotMonitoringPlugin::~ApeRobotMonitoringPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
@@ -26,7 +27,7 @@ void Ape::ApeRobotMonitoringPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeRobotMonitoringPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	Ape::Color lightColor(0.4f, 0.4f, 0.44f);
 	Ape::ManualMaterialSharedPtr glassMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("glassMaterial", Ape::Entity::MATERIAL_MANUAL).lock());
 	if (glassMaterial)
@@ -173,36 +174,39 @@ void Ape::ApeRobotMonitoringPlugin::Init()
 			entranceWallGeometry->setParentNode(entranceWallNode);
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::Run()
 {
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotMonitoringPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotMonitoringPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
-

@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_INDEXEDFACESETGEOMETRYIMPL_H
 #define APE_INDEXEDFACESETGEOMETRYIMPL_H
 
-#include "ApeIIndexedFaceSetGeometry.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
 #include "ApeReplica.h"
 
 namespace Ape

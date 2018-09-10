@@ -152,7 +152,7 @@ void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 {
 	int streamPacketSizeInBytes = (mCurrentPointsSize * sizeof(short)) + (mCurrentColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
-	//LOG(LOG_TYPE_DEBUG, "Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+	//APE_LOG_DEBUG("Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
 	//" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 	streamPacket[0] = (unsigned char)255;
 
@@ -193,7 +193,7 @@ void Ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * stream
 {
 	int streamPacketSizeInBytes = (mPointsSize * sizeof(short)) + (mColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
-	LOG(LOG_TYPE_DEBUG, "Try for sending init stream packet " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
+	APE_LOG_DEBUG("Try for sending init stream packet " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
 		" mPointsSize " << mPointsSize << " mColorsSize " << mColorsSize);
 	streamPacket[0] = (unsigned char)254;
 
@@ -239,29 +239,29 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 		{
 			if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
 				sendInitStreamPacket(streamPeer, packet);
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_SND_RECEIPT_ACKED)
 			{
-				//LOG(LOG_TYPE_DEBUG, "ID_SND_RECEIPT_ACKED from " << packet->systemAddress.ToString());
+				//APE_LOG_DEBUG("ID_SND_RECEIPT_ACKED from " << packet->systemAddress.ToString());
 				sendStreamPacket(streamPeer, packet);
 			}
 			else
 			{
-				//LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+				//APE_LOG_DEBUG("UNKNOWN MSG " << packet->data[0]);
 			}
 		}
 		//std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -308,7 +308,7 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					mParameters.colors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
-				LOG(LOG_TYPE_DEBUG, "Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
+				APE_LOG_DEBUG("Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
 			}
@@ -346,32 +346,32 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
-				//LOG(LOG_TYPE_DEBUG, "Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
+				//APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_CONNECTION_LOST from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_DISCONNECTION_NOTIFICATION)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_NEW_INCOMING_CONNECTION)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_CONNECTION_REQUEST_ACCEPTED)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString());
 			}
 			else if (packet->data[0] == ID_CONNECTION_ATTEMPT_FAILED)
 			{
-				LOG(LOG_TYPE_DEBUG, "ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
+				APE_LOG_DEBUG("ID_CONNECTION_ATTEMPT_FAILED from " << packet->systemAddress.ToString());
 			}
 			else
 			{
-				//LOG(LOG_TYPE_DEBUG, "UNKNOWN MSG " << packet->data[0]);
+				//APE_LOG_DEBUG("UNKNOWN MSG " << packet->data[0]);
 			}
 		}
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1));

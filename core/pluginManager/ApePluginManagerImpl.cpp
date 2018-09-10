@@ -20,9 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include "ApePluginManagerImpl.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "ApePluginManagerImpl.h"
 
 Ape::PluginManagerImpl::PluginManagerImpl()
 {
@@ -57,12 +57,12 @@ void Ape::PluginManagerImpl::CreatePlugins()
 		if (mpInternalPluginManager->Load((*it)))
 		{
 			CreatePlugin(*it);
-			LOG(LOG_TYPE_INFO, "Plugin loaded: " << *it);
+			APE_LOG_INFO("Plugin loaded: " << *it);
 		}
 		else
 		{
 			mPluginCount--;
-			LOG(LOG_TYPE_ERROR, "Can not load plugin: " << *it);
+			APE_LOG_ERROR("Can not load plugin: " << *it);
 		}
 	}
 }

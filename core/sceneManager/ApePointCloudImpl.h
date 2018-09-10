@@ -23,12 +23,12 @@ SOFTWARE.*/
 #ifndef APE_POINTCLOUDIMPL_H
 #define APE_POINTCLOUDIMPL_H
 
-#include "MessageIdentifiers.h"
-#include "RakPeerInterface.h"
-#include "ApeIPointCloud.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIPointCloud.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
-#include "ApeISceneManager.h"
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
 
 union dataUnionBytesFloat {
 	float f;

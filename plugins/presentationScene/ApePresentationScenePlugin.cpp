@@ -1,9 +1,8 @@
-#include <iostream>
 #include "ApePresentationScenePlugin.h"
 
 Ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -49,13 +48,13 @@ Ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mHumanXoffset = 0.0f;
 	mHumanZoffset = 160.0f;
 	mContext = Context::UNKOWN;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApePresentationScenePlugin::~ApePresentationScenePlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
@@ -87,15 +86,15 @@ void Ape::ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApePresentationScenePlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
+	APE_LOG_DEBUG("main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -626,7 +625,7 @@ bool Ape::ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		mContext = Context::BROWSER;
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
 		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-		//LOG(LOG_TYPE_DEBUG, "keyAsString:" << keyAsString);
+		//APE_LOG_DEBUG("keyAsString:" << keyAsString);
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -747,8 +746,8 @@ bool Ape::ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * activeBrowser->getResoultion().y;
 			activeBrowser->mouseMoved(cursorBrowserPosition);
 			activeBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
-			//LOG(LOG_TYPE_DEBUG, "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
-			//LOG(LOG_TYPE_DEBUG, "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
+			//APE_LOG_DEBUG("cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
+			//APE_LOG_DEBUG("cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
 		}
 	}
 	return true;

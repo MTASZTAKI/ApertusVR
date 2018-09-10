@@ -25,34 +25,34 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <string>
-#include <thread> 
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeGeometry.h"
+#include "sceneelements/ApeIBrowser.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeIRayGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "utils/ApeDoubleQueue.h"
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_render_handler.h"
 #include "views/cef_browser_view.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeISceneManager.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIBrowser.h"
-#include "ApeGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIManualTexture.h"
-#include "ApeIManualPass.h"
 #include "ApeCefRenderHandlerImpl.h"
 #include "ApeCefLifeSpanHandlerImpl.h"
 #include "ApeCefKeyboardHandlerImpl.h"
 #include "ApeCefClientImpl.h"
-#include "ApeDoubleQueue.h"
-#include "ApeIRayGeometry.h"
 
 #define THIS_PLUGINNAME "ApeCefBrowserPlugin"
 
@@ -130,7 +130,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateCefBrowserPlugin, DestroyCefBrowserPlugin);
 		return 0;
 	}

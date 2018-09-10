@@ -110,5 +110,5 @@ void Ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )
 	if (bs->GetNumberOfBitsUsed() == 0) return;
 	RakNet::RakString rakString;
 	bs->Read(rakString);
-	LOG(LOG_TYPE_DEBUG, "Receive: " << rakString.C_String());
+	APE_LOG_DEBUG("Receive: " << rakString.C_String());
 }

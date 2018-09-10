@@ -1,9 +1,8 @@
-#include <iostream>
 #include "ApeLinkageDesignerVRPlugin.h"
 
 Ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
@@ -42,15 +41,15 @@ Ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	//mSwitchNodeVisibilityNames.push_back("WeldingFixture@WorkbenchSwitch");
 	/*mSwitchNodeVisibilityNames.push_back("Bounding@BoxSwitch");*/
 	mSwitchNodes = std::vector<Ape::NodeWeakPtr>();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	delete mpKeyboard;
 	delete mpMouse;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
@@ -76,7 +75,7 @@ void Ape::ApeLinkageDesignerVRPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeLinkageDesignerVRPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -101,10 +100,10 @@ void Ape::ApeLinkageDesignerVRPlugin::Init()
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
 
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
+	APE_LOG_DEBUG("main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -135,7 +134,7 @@ void Ape::ApeLinkageDesignerVRPlugin::Init()
 		ms.width = mpMainWindow->getWidth();
 		ms.height = mpMainWindow->getHeight();
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::moveUserNode()

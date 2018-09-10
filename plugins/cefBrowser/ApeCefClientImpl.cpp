@@ -53,6 +53,6 @@ CefRefPtr<CefKeyboardHandler> Ape::CefClientImpl::GetKeyboardHandler()
 bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
 	const std::string& message_name = message->GetName();
-	LOG(LOG_TYPE_DEBUG, "message name: " << message_name);
+	APE_LOG_DEBUG("message name: " << message_name);
 	return true;
 }

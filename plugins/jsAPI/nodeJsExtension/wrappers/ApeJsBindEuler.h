@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_EULER_H
 #define APE_JSBIND_EULER_H
 
+#include "datatypes/ApeEuler.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeEuler.h"
 
 using namespace Ape;
 

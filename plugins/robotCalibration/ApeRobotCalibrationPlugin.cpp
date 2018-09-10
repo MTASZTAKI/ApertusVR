@@ -1,12 +1,11 @@
-#include <iostream>
 #include <fstream>
+#include "ApeRobotCalibrationPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "ApeRobotCalibrationPlugin.h"
 
 Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
@@ -14,19 +13,19 @@ Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	mUserNode = Ape::NodeWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::parseNodeJsConfig()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
 	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -50,12 +49,12 @@ void Ape::ApeRobotCalibrationPlugin::parseNodeJsConfig()
 		}
 		fclose(configFile);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::createOverlayBrowser()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	parseNodeJsConfig();
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
@@ -78,12 +77,12 @@ void Ape::ApeRobotCalibrationPlugin::createOverlayBrowser()
 			mouseMaterial->showOnOverlay(true, 1);
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::createLights()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		mUserNode = userNode;
@@ -117,23 +116,23 @@ void Ape::ApeRobotCalibrationPlugin::createLights()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::createSkyBox()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::createCoordinateSystem()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -299,7 +298,7 @@ void Ape::ApeRobotCalibrationPlugin::createCoordinateSystem()
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
@@ -309,40 +308,40 @@ void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeRobotCalibrationPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	createOverlayBrowser();
 	createSkyBox();
 	createLights();
 	createCoordinateSystem();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::Run()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::Step()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::Stop()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::Suspend()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeRobotCalibrationPlugin::Restart()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

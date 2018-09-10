@@ -1,36 +1,35 @@
-#include <iostream>
 #include <fstream>
+#include "ApeHtmlOverlayUIPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "ApeHtmlOverlayUIPlugin.h"
 
 Ape::ApeHtmlOverlayUIPlugin::ApeHtmlOverlayUIPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mPointCloud = Ape::PointCloudWeakPtr();
 	mUserNode = Ape::NodeWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeHtmlOverlayUIPlugin::~ApeHtmlOverlayUIPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::eventCallBack(const Ape::Event& event)
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::parseNodeJsConfig()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
 	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -54,12 +53,12 @@ void Ape::ApeHtmlOverlayUIPlugin::parseNodeJsConfig()
 		}
 		fclose(configFile);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	parseNodeJsConfig();
 	if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	{
@@ -83,48 +82,48 @@ void Ape::ApeHtmlOverlayUIPlugin::createOverlayBrowser()
 			mouseMaterial->showOnOverlay(true, 1);
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	createOverlayBrowser();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	double duration = 0;
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Step()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Stop()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Suspend()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHtmlOverlayUIPlugin::Restart()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

@@ -2,7 +2,7 @@
 
 Ape::CefBrowserPlugin::CefBrowserPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
@@ -19,16 +19,16 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
 	mBrowserIDNames = std::map<std::string, int>();
 	mRayOverlayNode = Ape::NodeWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mApeCefClientImpl = nullptr;
 	delete mpApeCefRenderHandlerImpl;
 	delete mpApeCefLifeSpanHandlerImpl;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
@@ -177,7 +177,7 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 
 void Ape::CefBrowserPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	CefSettings settings;
 	settings.ignore_certificate_errors = true;
 	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
@@ -192,12 +192,12 @@ void Ape::CefBrowserPlugin::Init()
 		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl, mpApeCefLifeSpanHandlerImpl, mpApeCefKeyboardHandlerImpl);
 		mCefIsInintialzed = true;
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::CefBrowserPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (mCefIsInintialzed)
 	{
 		processEventDoubleQueue();
@@ -205,7 +205,7 @@ void Ape::CefBrowserPlugin::Run()
 		CefShutdown();
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::CefBrowserPlugin::Step()

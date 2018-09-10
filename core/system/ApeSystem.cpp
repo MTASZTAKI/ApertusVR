@@ -22,22 +22,22 @@ SOFTWARE.*/
 
 #include <chrono>
 #include <random>
-#include "ApePlatform.h"
-#include "ApeSystem.h"
-#include "ApeSystemConfigImpl.h"
-#include "ApeMainWindowImpl.h"
-#include "ApePluginManagerImpl.h"
+#include "system/ApePlatform.h"
+#include "system/ApeSystem.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeLogManagerImpl.h"
+#include "ApeMainWindowImpl.h"
+#include "ApePluginManagerImpl.h"
 #include "ApeSceneManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
-#include "ApeINode.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIManualPass.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeIPlaneGeometry.h"
+#include "ApeSystemConfigImpl.h"
 
 Ape::PluginManagerImpl* gpPluginManagerImpl;
 Ape::EventManagerImpl* gpEventManagerImpl;

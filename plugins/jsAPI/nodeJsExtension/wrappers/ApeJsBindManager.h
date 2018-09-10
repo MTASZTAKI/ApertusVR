@@ -23,31 +23,31 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_MANAGER_H
 #define APE_JSBIND_MANAGER_H
 
-#include <string>
-#include <map>
 #include <iostream>
-#include "nbind/nbind.h"
-#include "nbind/api.h"
+#include <map>
+#include <string>
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "ApeBoxGeometryJsBind.h"
+#include "ApeFileGeometryJsBind.h"
+#include "ApeIndexedLineSetGeometryJsBind.h"
 #include "ApeJsBindColor.h"
 #include "ApeJsBindDegree.h"
 #include "ApeJsBindEuler.h"
+#include "ApeJsBindIndexedFaceSetGeometryImpl.h"
+#include "ApeJsBindLightImpl.h"
+#include "ApeJsBindMatrix4.h"
+#include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindQuaternion.h"
 #include "ApeJsBindRadian.h"
-#include "ApeJsBindVector3.h"
-#include "ApeJsBindMatrix4.h"
-#include "ApeISceneManager.h"
-#include "ApeISystemConfig.h"
-#include "ApeIEventManager.h"
-#include "ApeJsBindIndexedFaceSetGeometryImpl.h"
-#include "ApeIndexedLineSetGeometryJsBind.h"
-#include "ApeBoxGeometryJsBind.h"
-#include "ApeFileGeometryJsBind.h"
-#include "ApeJsBindLightImpl.h"
-#include "ApeJsBindNodeImpl.h"
 #include "ApeJsBindTextGeometryImpl.h"
+#include "ApeJsBindVector3.h"
 #include "ApeManualMaterialJsBind.h"
-#include "ApePbsPassJsBind.h"
 #include "ApeManualPassJsBind.h"
+#include "ApePbsPassJsBind.h"
+#include "nbind/nbind.h"
+#include "nbind/api.h"
 
 #ifdef NBIND_CLASS
 
@@ -64,26 +64,26 @@ class JsBindManager
 public:
 	JsBindManager()
 	{
-		LOG_FUNC_ENTER()
+		APE_LOG_FUNC_ENTER();
 		mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 		mpEventManager = Ape::IEventManager::getSingletonPtr();
 		//mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&JsBindManager::nodeEventCallBack, this, std::placeholders::_1));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	void nodeEventCallBack(const Ape::Event& ev)
 	{
-		//LOG(LOG_TYPE_DEBUG, "ev.group: " << ev.group << " ev.subjectName: " << ev.subjectName);
+		//APE_LOG_DEBUG("ev.group: " << ev.group << " ev.subjectName: " << ev.subjectName);
 		//std::map<int, nbind::cbFunction*>::iterator it;
 		//it = mEventMap.find(ev.group);
 		//if (it != mEventMap.end())
 		//{
 		//	v8::Local<v8::Value> argv[1];
 		//	argv[0] = Nan::Null();
-		//	LOG(LOG_TYPE_DEBUG, "calling callback function...");
+		//	APE_LOG_DEBUG("calling callback function...");
 		//	(*it->second)("test");
 		//}
 	}
@@ -92,32 +92,32 @@ public:
 	{
 		/*nbind::cbFunction* persistentCallback = new nbind::cbFunction(cb);
 		mEventMap.insert(std::pair<int, nbind::cbFunction*>(group, persistentCallback));
-		LOG(LOG_TYPE_DEBUG, "function inserted to map. group: " << group);*/
+		APE_LOG_DEBUG("function inserted to map. group: " << group);*/
 	}
 
 	void start(std::string configFolderPath)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		Ape::System::Start(configFolderPath.c_str(), true);
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	void stop()
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		Ape::System::Stop();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	NodeJsPtr createNode(std::string name)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		return NodeJsPtr(mpSceneManager->createNode(name));
 	}
 
 	void getNodes(nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		auto nodes = mpSceneManager->getNodes();
 		std::vector<NodeJsPtr> nodeJsPtrVec;
 		for (auto node : nodes)
@@ -125,12 +125,12 @@ public:
 			nodeJsPtrVec.push_back(NodeJsPtr(node.second));
 		}
 		done(false, nodeJsPtrVec);
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	void getNodesNames(nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		auto nodes = mpSceneManager->getNodes();
 		std::vector<std::string> nodeNameVec;
 		for (auto node : nodes)
@@ -138,12 +138,12 @@ public:
 			nodeNameVec.push_back(node.second.lock()->getName());
 		}
 		done(false, nodeNameVec);
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	bool getNode(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getNode(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -164,13 +164,13 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	bool getUserNode(nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto nodeWeakPtr = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName);
 		if (auto node = nodeWeakPtr.lock())
@@ -183,20 +183,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	LightJsPtr createLight(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return LightJsPtr(mpSceneManager->createEntity(name, Ape::Entity::LIGHT));
 	}
 
 	bool getLight(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -217,20 +217,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	TextJsPtr createText(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return TextJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_TEXT));
 	}
 
 	bool getText(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -251,20 +251,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDFACESET));
 	}
 
 	bool getIndexedFaceSet(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -285,20 +285,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	IndexedLineSetJsPtr createIndexedLineSet(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return IndexedLineSetJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDLINESET));
 	}
 
 	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -319,20 +319,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	BoxJsPtr createBox(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return BoxJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_BOX));
 	}
 
 	bool getBox(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -353,20 +353,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	FileGeometryJsPtr createFileGeometry(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return FileGeometryJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_FILE));
 	}
 
 	bool getFileGeometry(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -387,20 +387,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	ManualMaterialJsPtr createManualMaterial(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return ManualMaterialJsPtr(mpSceneManager->createEntity(name, Ape::Entity::MATERIAL_MANUAL));
 	}
 
 	bool getManualMaterial(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -421,20 +421,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	PbsPassJsPtr createPbsPass(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return PbsPassJsPtr(mpSceneManager->createEntity(name, Ape::Entity::PASS_PBS));
 	}
 
 	bool getPbsPass(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -455,20 +455,20 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	ManualPassJsPtr createManualPass(std::string name)
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return ManualPassJsPtr(mpSceneManager->createEntity(name, Ape::Entity::PASS_MANUAL));
 	}
 
 	bool getManualPass(std::string name, nbind::cbFunction &done)
 	{
-		LOG_FUNC_ENTER();
+		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
@@ -489,14 +489,14 @@ public:
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_LEAVE();
 		return success;
 	}
 
 	std::string getFolderPath()
 	{
-		LOG_FUNC_ENTER();
-		LOG_FUNC_LEAVE();
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
 		return mpSystemConfig->getFolderPath();
 	}
 

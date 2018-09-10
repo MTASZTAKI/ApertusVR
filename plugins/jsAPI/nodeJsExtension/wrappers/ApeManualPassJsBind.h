@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_MANUALPASSJSBIND_H
 #define APE_MANUALPASSJSBIND_H
 
+#include "Ape.h"
+#include "datatypes/ApeColor.h"
+#include "sceneelements/ApeIManualPass.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "Ape.h"
-#include "ApeColor.h"
-#include "ApeIManualPass.h"
 
 #ifdef NBIND_CLASS
 

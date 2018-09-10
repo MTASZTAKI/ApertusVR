@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_CYLINDERGEOMETRYIMPL_H
 #define APE_CYLINDERGEOMETRYIMPL_H
 
-#include "ApeICylinderGeometry.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeICylinderGeometry.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
 #include "ApeReplica.h"
 
 namespace Ape

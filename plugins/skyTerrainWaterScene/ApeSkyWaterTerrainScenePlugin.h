@@ -23,23 +23,23 @@ SOFTWARE.*/
 #ifndef APE_SKYWATERTERRAINLUGIN_H
 #define APE_SKYWATERTERRAINLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeISky.h"
-#include "ApeIWater.h"
-#include "ApeIManualTexture.h"
-#include "ApeIMainWindow.h"
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeISky.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIWater.h"
 
 #define THIS_PLUGINNAME "ApeSkyWaterTerrainScenePlugin"
 
@@ -106,7 +106,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSkyWaterTerrainScenePlugin, DestroyApeSkyWaterTerrainScenePlugin);
 		return 0;
 	}

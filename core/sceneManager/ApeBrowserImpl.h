@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_BROWSERIMPL_H
 #define APE_BROWSERIMPL_H
 
-#include "ApeIBrowser.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIBrowser.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
-#include "ApeISceneManager.h"
 
 namespace Ape
 {

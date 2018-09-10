@@ -23,23 +23,24 @@ SOFTWARE.*/
 #ifndef APE_TEXASEEPGLUGIN_H
 #define APE_TEXASEEPGLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
-#include <memory>
 #include <deque>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeISystemConfig.h"
-#include "ApeICamera.h"
-#include "ApeEuler.h"
+#include <iostream>
+#include <math.h>
+#include <memory>
+#include <thread>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeEuler.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeITextGeometry.h"
 #include "GameManager.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
@@ -105,7 +106,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTexasEEGPlugin, DestroyApeTexasEEGPlugin);
 		return 0;
 	}

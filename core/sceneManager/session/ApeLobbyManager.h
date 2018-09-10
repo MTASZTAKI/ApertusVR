@@ -24,12 +24,12 @@ SOFTWARE.*/
 #ifndef APE_LOBBYMANAGER_H
 #define APE_LOBBYMANAGER_H
 
-#include "ApeISceneSession.h"
-#include "ApeILogManager.h"
-#include "ApeHttpManager.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include "managers/ApeISceneSession.h"
+#include "managers/ApeILogManager.h"
+#include "ApeHttpManager.h"
 
 namespace Ape
 {

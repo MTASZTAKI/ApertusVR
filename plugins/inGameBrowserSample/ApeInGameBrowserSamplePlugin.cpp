@@ -1,22 +1,21 @@
-#include <iostream>
 #include "ApeInGameBrowserSamplePlugin.h"
 
 Ape::ApeInGameBrowserSamplePlugin::ApeInGameBrowserSamplePlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeInGameBrowserSamplePlugin::~ApeInGameBrowserSamplePlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
 	{
 		browserNode->setPosition(Ape::Vector3(0, 0, -150));
@@ -41,7 +40,7 @@ void Ape::ApeInGameBrowserSamplePlugin::Init()
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Run()

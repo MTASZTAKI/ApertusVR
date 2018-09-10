@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_PBSPASSIMPL_H
 #define APE_PBSPASSIMPL_H
 
-#include "ApeIPbsPass.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPbsPass.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
 #include "ApeReplica.h"
 
 namespace Ape

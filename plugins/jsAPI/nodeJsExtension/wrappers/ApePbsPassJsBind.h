@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_PBSPASSJSBIND_H
 #define APE_PBSPASSJSBIND_H
 
+#include "Ape.h"
+#include "datatypes/ApeColor.h"
+#include "sceneelements/ApeIPbsPass.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "Ape.h"
-#include "ApeColor.h"
-#include "ApeIPbsPass.h"
 
 #ifdef NBIND_CLASS
 

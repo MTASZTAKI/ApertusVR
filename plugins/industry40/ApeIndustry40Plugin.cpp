@@ -1,9 +1,8 @@
-#include <iostream>
 #include "ApeIndustry40Plugin.h"
 
 Ape::ApeIndustry40Plugin::ApeIndustry40Plugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
@@ -11,13 +10,13 @@ Ape::ApeIndustry40Plugin::ApeIndustry40Plugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();	
 	mPointCloud = Ape::PointCloudWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
@@ -27,7 +26,7 @@ void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeIndustry40Plugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -97,12 +96,12 @@ void Ape::ApeIndustry40Plugin::Init()
 			mPointCloud = pointCloud;
 		}
 	}*/
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeIndustry40Plugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		/*if (auto pointCloud = mPointCloud.lock())
@@ -146,7 +145,7 @@ void Ape::ApeIndustry40Plugin::Run()
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeIndustry40Plugin::Step()

@@ -38,6 +38,13 @@ SOFTWARE.*/
 #include <thread>
 #include <memory>
 #include <chrono>
+#include "managers/ApeISceneSession.h"
+#include "managers/ApeISystemConfig.h"
+#include "managers/ApeIPluginManager.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeISceneManager.h"
+#include "ApeLobbyManager.h"
+#include "ApePointCloudImpl.h"
 #include "GetTime.h"
 #include "Rand.h"
 #include "RakPeerInterface.h"
@@ -59,13 +66,6 @@ SOFTWARE.*/
 #include "RPC4Plugin.h"
 #include "HTTPConnection2.h"
 #include "DS_List.h"
-#include "ApeISceneSession.h"
-#include "ApeISystemConfig.h"
-#include "ApeLobbyManager.h"
-#include "ApeIPluginManager.h"
-#include "ApeIEventManager.h"
-#include "ApePointCloudImpl.h"
-#include "ApeISceneManager.h"
 
 namespace Ape
 {

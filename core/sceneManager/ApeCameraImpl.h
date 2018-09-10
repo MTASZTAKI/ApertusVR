@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_CAMERAIMPL_H
 #define APE_CAMERAIMPL_H
 
-#include "ApeICamera.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeICamera.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
 
 namespace Ape
 {

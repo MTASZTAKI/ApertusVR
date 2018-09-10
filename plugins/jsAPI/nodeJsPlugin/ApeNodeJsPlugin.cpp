@@ -20,8 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <iostream>
-#include <string>
 #include <fstream>
 #include "ApeNodeJsPlugin.h"
 #include "node.h"
@@ -30,12 +28,12 @@ SOFTWARE.*/
 
 ApeNodeJsPlugin::ApeNodeJsPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 ApeNodeJsPlugin::~ApeNodeJsPlugin()
@@ -50,7 +48,7 @@ void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
 
 void ApeNodeJsPlugin::parseNodeJsConfig()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
 	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -74,23 +72,23 @@ void ApeNodeJsPlugin::parseNodeJsConfig()
 		}
 		fclose(configFile);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	parseNodeJsConfig();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	std::stringstream port;
 	port << mNodeJsPluginConfig.serverPort;
 	char *args[] = { "", "server.js", (char*)port.str().c_str() };
-	LOG(LOG_TYPE_DEBUG, "Initializing Node...");
+	APE_LOG_DEBUG("Initializing Node...");
 
 	int res = -1;
 	try
@@ -99,12 +97,12 @@ void ApeNodeJsPlugin::Run()
 	}
 	catch (...)
 	{
-		LOG(LOG_TYPE_ERROR, "Exception catched from NodeJS");
+		APE_LOG_ERROR("Exception catched from NodeJS");
 	}
 
-	LOG(LOG_TYPE_DEBUG, "Node server exited with code " << res);
+	APE_LOG_DEBUG("Node server exited with code " << res);
 	std::getchar();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Step()

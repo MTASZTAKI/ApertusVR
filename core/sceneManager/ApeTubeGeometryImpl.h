@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_TUBEGEOMETRYIMPL_H
 #define APE_TUBEGEOMETRYIMPL_H
 
-#include "ApeITubeGeometry.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeITubeGeometry.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
 #include "ApeReplica.h"
 
 namespace Ape

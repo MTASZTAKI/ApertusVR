@@ -24,12 +24,12 @@ SOFTWARE.*/
 #ifndef APE_INTERNALPLUGINMANAGER_H
 #define APE_INTERNALPLUGINMANAGER_H
 
-#include "ApePluginDefines.h"
-#include "ApeIPlugin.h"
-#include "ApePluginInstance.h"
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginDefines.h"
+#include "ApePluginInstance.h"
 
 namespace Ape
 {

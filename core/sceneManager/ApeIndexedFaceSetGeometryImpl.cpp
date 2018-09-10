@@ -123,7 +123,7 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 
 void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString groupName;
@@ -195,7 +195,7 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 

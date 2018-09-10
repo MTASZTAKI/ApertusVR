@@ -34,7 +34,7 @@ SOFTWARE.*/
 #define APE_SYSTEMCONFIG_DLL_EXPORT 
 #endif
 
-#include "ApeISystemConfig.h"
+#include "managers/ApeISystemConfig.h"
 
 namespace Ape
 { 

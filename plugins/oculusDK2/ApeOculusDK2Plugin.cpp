@@ -1,9 +1,8 @@
-#include <iostream>
 #include "ApeOculusDK2Plugin.h"
 
 Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
@@ -14,13 +13,13 @@ Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mCameraRight = Ape::CameraWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
 	mUserMaterial = Ape::ManualMaterialWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
@@ -75,7 +74,7 @@ void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeOculusDK2Plugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
@@ -91,35 +90,35 @@ void Ape::ApeOculusDK2Plugin::Init()
 		}
 	}
 
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (Ape::IMainWindow::getSingletonPtr()->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
+	APE_LOG_DEBUG("main window was found");
 	ovr_Initialize();
 	mpHMD = ovrHmd_Create(0);
 	if (!mpHMD)
 	{
 		mpHMD = ovrHmd_CreateDebug(ovrHmdType::ovrHmd_DK2);
-		LOG(LOG_TYPE_DEBUG, "Virtual OVR device created.");
+		APE_LOG_DEBUG("Virtual OVR device created.");
 	}
-	LOG(LOG_TYPE_DEBUG, "OVR device found.");
-	LOG(LOG_TYPE_DEBUG, "Product Name: " << mpHMD->ProductName);
-	LOG(LOG_TYPE_DEBUG, "Product ID: " << mpHMD->ProductId);
-	LOG(LOG_TYPE_DEBUG, "Firmware: " << mpHMD->FirmwareMajor << "." << mpHMD->FirmwareMinor);
-	LOG(LOG_TYPE_DEBUG, "Display Resolution: " << mpHMD->Resolution.w << "x" << mpHMD->Resolution.h);
-	LOG(LOG_TYPE_DEBUG, "Monitor Index: " << mpHMD->DisplayId);
+	APE_LOG_DEBUG("OVR device found.");
+	APE_LOG_DEBUG("Product Name: " << mpHMD->ProductName);
+	APE_LOG_DEBUG("Product ID: " << mpHMD->ProductId);
+	APE_LOG_DEBUG("Firmware: " << mpHMD->FirmwareMajor << "." << mpHMD->FirmwareMinor);
+	APE_LOG_DEBUG("Display Resolution: " << mpHMD->Resolution.w << "x" << mpHMD->Resolution.h);
+	APE_LOG_DEBUG("Monitor Index: " << mpHMD->DisplayId);
 	if (!ovrHmd_ConfigureTracking(mpHMD, ovrTrackingCap_Orientation | ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position, 0))
 	{
 		ovrHmd_Destroy(mpHMD);
-		LOG(LOG_TYPE_ERROR, "This OVR device does not support all of the necessary features");
+		APE_LOG_ERROR("This OVR device does not support all of the necessary features");
 		std::terminate();
 	}
 
 	OVR::Sizei recommendedTex0Size = ovrHmd_GetFovTextureSize(mpHMD, ovrEye_Left, mpHMD->DefaultEyeFov[0], 1.0f);
 	OVR::Sizei recommendedTex1Size = ovrHmd_GetFovTextureSize(mpHMD, ovrEye_Right, mpHMD->DefaultEyeFov[1], 1.0f);
-	LOG(LOG_TYPE_DEBUG, "Rendering resolution:");
-	LOG(LOG_TYPE_DEBUG, "Left eye: " << recommendedTex0Size.w << "x" << recommendedTex0Size.h);
-	LOG(LOG_TYPE_DEBUG, "Right eye: " << recommendedTex1Size.w << "x" << recommendedTex1Size.h);
+	APE_LOG_DEBUG("Rendering resolution:");
+	APE_LOG_DEBUG("Left eye: " << recommendedTex0Size.w << "x" << recommendedTex0Size.h);
+	APE_LOG_DEBUG("Right eye: " << recommendedTex1Size.w << "x" << recommendedTex1Size.h);
 
 	Ape::FileMaterialWeakPtr fileMaterialRightEye, fileMaterialLeftEye;
 	Ape::ManualTextureWeakPtr manualTextureRightEye, manualTextureLeftEye;
@@ -147,8 +146,8 @@ void Ape::ApeOculusDK2Plugin::Init()
 	ovrEyeRenderDesc eyeRenderDesc[2];
 	eyeRenderDesc[0] = ovrHmd_GetRenderDesc(mpHMD, ovrEye_Left, mpHMD->DefaultEyeFov[0]);
 	eyeRenderDesc[1] = ovrHmd_GetRenderDesc(mpHMD, ovrEye_Right, mpHMD->DefaultEyeFov[1]);
-	LOG(LOG_TYPE_DEBUG, "FOV " << eyeRenderDesc[0].Fov.DownTan);
-	LOG(LOG_TYPE_DEBUG, "eye " << eyeRenderDesc[0].Eye);
+	APE_LOG_DEBUG("FOV " << eyeRenderDesc[0].Fov.DownTan);
+	APE_LOG_DEBUG("eye " << eyeRenderDesc[0].Eye);
 	ovrVector2f UVScaleOffset[2];
 	ovrRecti viewports[2];
 	viewports[0].Pos.x = 0;
@@ -188,8 +187,8 @@ void Ape::ApeOculusDK2Plugin::Init()
 			if (auto fileMaterial = fileMaterialRightEye.lock())
 				fileMaterial->setPassGpuParameters(params);
 		}
-		LOG(LOG_TYPE_DEBUG, "UVScaleOffset[0]: " << UVScaleOffset[0].x << ", " << UVScaleOffset[0].y);
-		LOG(LOG_TYPE_DEBUG, "UVScaleOffset[1]: " << UVScaleOffset[1].x << ", " << UVScaleOffset[1].y);
+		APE_LOG_DEBUG("UVScaleOffset[0]: " << UVScaleOffset[0].x << ", " << UVScaleOffset[0].y);
+		APE_LOG_DEBUG("UVScaleOffset[1]: " << UVScaleOffset[1].x << ", " << UVScaleOffset[1].y);
 		Ape::GeometryCoordinates coordinates;
 		Ape::GeometryIndices indices;
 		Ape::GeometryColors colors;
@@ -285,7 +284,7 @@ void Ape::ApeOculusDK2Plugin::Init()
 
 void Ape::ApeOculusDK2Plugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (mpHMD)
 	{
 		ovrTrackingState ts = ovrHmd_GetTrackingState(mpHMD, 0);
@@ -305,7 +304,7 @@ void Ape::ApeOculusDK2Plugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeOculusDK2Plugin::Step()

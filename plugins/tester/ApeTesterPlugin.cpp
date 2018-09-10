@@ -1,40 +1,43 @@
-#include <iostream>
 #include "ApeTesterPlugin.h"
 
 Ape::ApeTesterPlugin::ApeTesterPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mInterpolators = std::vector<std::unique_ptr<Ape::Interpolator>>();
 	mDemoObjectNode = Ape::NodeWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeTesterPlugin::~ApeTesterPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::eventCallBack(const Ape::Event& event)
 {
-	
+
 }
 
 void Ape::ApeTesterPlugin::createSkyBox()
 {
+	APE_LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::createLight()
 {
+	APE_LOG_FUNC_ENTER();
 	if (auto light = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
@@ -64,10 +67,12 @@ void Ape::ApeTesterPlugin::createLight()
 		light->setDiffuseColor(Ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(Ape::Color(0.35f, 0.35f, 0.35f));
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::createPlane()
 {
+	APE_LOG_FUNC_ENTER();
 	if (auto planeNode = mpSceneManager->createNode("planeNode").lock())
 	{
 		planeNode->setPosition(Ape::Vector3(0, -10, 0));
@@ -88,10 +93,12 @@ void Ape::ApeTesterPlugin::createPlane()
 			}
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::createDemoObj()
 {
+	APE_LOG_FUNC_ENTER();
 	std::shared_ptr<Ape::IManualMaterial> demoObjectMaterial;
 	if (demoObjectMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("demoObjectMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -179,10 +186,12 @@ void Ape::ApeTesterPlugin::createDemoObj()
 			demoLine->setParentNode(mDemoObjectNode);
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::createDemoObjAnim()
 {
+	APE_LOG_FUNC_ENTER();
 	auto moveInterpolator = std::make_unique<Ape::Interpolator>(true);
 	moveInterpolator->addSection(
 		Ape::Vector3(10, 10, 0),
@@ -232,10 +241,12 @@ void Ape::ApeTesterPlugin::createDemoObjAnim()
 		}
 	);
 	mInterpolators.push_back(std::move(rotateInterpolator));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::createCoordinateSystem()
 {
+	APE_LOG_FUNC_ENTER();
 	std::shared_ptr<Ape::IManualMaterial> coordinateSystemArrowXMaterial;
 	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowXMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	{
@@ -385,23 +396,24 @@ void Ape::ApeTesterPlugin::createCoordinateSystem()
 			}
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	createSkyBox();
 	createLight();
 	createPlane();
 	createDemoObj();
 	createDemoObjAnim();
 	createCoordinateSystem();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{	
 		if (!mInterpolators.empty())
@@ -417,30 +429,29 @@ void Ape::ApeTesterPlugin::Run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Step()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Stop()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Suspend()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeTesterPlugin::Restart()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

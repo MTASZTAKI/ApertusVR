@@ -17,7 +17,7 @@ TexasEEG::GameManager::~GameManager()
 
 void TexasEEG::GameManager::Init()
 {
-	LOG_TRACE("timeText create");
+	APE_LOG_TRACE("timeText create");
 	if (auto timerNode = mpSceneManager->createNode("timerNode").lock())
 	{
 		timerNode->setParentNode(mUserNode);
@@ -29,11 +29,11 @@ void TexasEEG::GameManager::Init()
 			timeText->setCaption(std::to_string(mTime));
 			timeText->showOnTop(true);
 			timeText->setParentNode(timerNode);
-			LOG_TRACE("timeText create ok");
+			APE_LOG_TRACE("timeText create ok");
 		}
 	}
 
-	LOG_TRACE("scoreText create");
+	APE_LOG_TRACE("scoreText create");
 	if (auto scoreNode = mpSceneManager->createNode("scoreNode").lock())
 	{
 		scoreNode->setParentNode(mUserNode);
@@ -45,7 +45,7 @@ void TexasEEG::GameManager::Init()
 			scoreText->setCaption(std::to_string(mScore));
 			scoreText->showOnTop(true);
 			scoreText->setParentNode(scoreNode);
-			LOG_TRACE("scoreText ok");
+			APE_LOG_TRACE("scoreText ok");
 		}
 	}
 
@@ -91,7 +91,7 @@ void TexasEEG::GameManager::Run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	LOG_TRACE("gameOver");
+	APE_LOG_TRACE("gameOver");
 }
 
 void TexasEEG::GameManager::Start()

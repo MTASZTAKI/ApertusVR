@@ -24,11 +24,10 @@ SOFTWARE.*/
 #ifndef APE_PLUGINFACTORY_H
 #define APE_PLUGINFACTORY_H
 
-#include "ApePluginDefines.h"
-#include "ApeIPlugin.h"
-
 #include <string>
 #include <map>
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginDefines.h"
 
 namespace Ape
 {

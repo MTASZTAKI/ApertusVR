@@ -25,24 +25,24 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <string>
-#include <thread> 
-#include "OIS.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeIBrowser.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeIRayGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIUnitTexture.h"
+#include "utils/ApeInterpolator.h"
 #include "ApeOisUserInputPluginConfigs.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeISceneManager.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
-#include "ApeInterpolator.h"
-#include "ApeIBrowser.h"
-#include "ApeIUnitTexture.h"
-#include "ApeIRayGeometry.h"
-#include "ApeIPointCloud.h"
+#include "OIS.h"
 
 #define THIS_PLUGINNAME "ApeOisUserInputPlugin"
 
@@ -195,7 +195,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
 		return 0;
 	}

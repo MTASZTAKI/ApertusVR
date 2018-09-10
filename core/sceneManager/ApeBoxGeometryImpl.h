@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_BOXGEOMETRYIMPL_H
 #define APE_BOXGEOMETRYIMPL_H
 
-#include "ApeIBoxGeometry.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIBoxGeometry.h"
 #include "ApeEventManagerImpl.h"
-#include "ApeISceneManager.h"
 #include "ApeReplica.h"
 
 namespace Ape

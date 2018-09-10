@@ -1,22 +1,21 @@
-#include <iostream>
 #include "Ape360VideoPlugin.h"
 
 Ape::Ape360VideoPlugin::Ape360VideoPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::Ape360VideoPlugin::~Ape360VideoPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::Ape360VideoPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
 	{
 		//browserNode->setScale(Ape::Vector3(10, 10, 10));
@@ -33,7 +32,7 @@ void Ape::Ape360VideoPlugin::Init()
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::Ape360VideoPlugin::Run()

@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_REPLICA_H
 #define APE_REPLICA_H
 
+#include "managers/ApeILogManager.h"
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"
-#include "ApeILogManager.h"
 
 namespace Ape
 {

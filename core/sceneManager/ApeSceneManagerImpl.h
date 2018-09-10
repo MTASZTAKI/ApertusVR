@@ -33,9 +33,9 @@ SOFTWARE.*/
 #define APE_SCENEMANAGER_DLL_EXPORT 
 #endif
 
-#include "ApeISceneManager.h"
-#include "ApeISystemConfig.h"
-#include "ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "managers/ApeILogManager.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
 

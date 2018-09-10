@@ -33,16 +33,16 @@ SOFTWARE.*/
 #define APE_LOGMANAGER_DLL_EXPORT
 #endif
 
-#include <map>
-#include <vector>
-#include <string>
-#include <ostream>
-#include <iostream>
-#include <sstream>
 #include <fstream>
+#include <iostream>
+#include <map>
 #include <mutex>
-#include "ApeILogManager.h"
-#include "ApePlatform.h"
+#include <ostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include "system/ApePlatform.h"
+#include "managers/ApeILogManager.h"
 
 namespace Ape
 {
@@ -51,7 +51,7 @@ namespace Ape
 	private:
 		std::mutex g_pages_mutex;
 
-		int mLevel = LOG_TYPE_DEBUG;
+		int mLevel = APE_LOG_TYPE_DEBUG;
 
 		std::ostream* mStream;
 
@@ -68,7 +68,7 @@ namespace Ape
 
 		void registerStream(std::ostream& stream);
 
-		void log(std::stringstream& ss, int level = LOG_TYPE_DEBUG);
+		void log(std::stringstream& ss, int level = APE_LOG_TYPE_DEBUG);
 	};
 }
 

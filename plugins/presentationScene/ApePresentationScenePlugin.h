@@ -23,40 +23,41 @@ SOFTWARE.*/
 #ifndef APE_PRESENATITONSCENEPLUGIN_H
 #define APE_PRESENATITONSCENEPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <fstream>
+#include <iostream>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
-#include <fstream>
 #include "Ape.h"
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeISceneManager.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIPbsPass.h"
-#include "ApeIMainWindow.h"
-#include "ApeIBrowser.h"
-#include "ApeIUnitTexture.h"
-#include "ApeInterpolator.h"
-#include "ApeEuler.h"
-#include "ApeIManualPass.h"
-#include "ApeIRayGeometry.h"
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeEuler.h"
+#include "sceneelements/ApeIBrowser.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeIRayGeometry.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIUnitTexture.h"
+#include "utils/ApeInterpolator.h"
+#include "sceneelements/ApeIRayGeometry.h"
 #include "OIS.h"
 
 #define THIS_PLUGINNAME "ApePresentationScenePlugin"
@@ -255,7 +256,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApePresentationScenePlugin, DestroyApePresentationScenePlugin);
 		return 0;
 	}
