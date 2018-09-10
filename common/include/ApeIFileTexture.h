@@ -20,68 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_IFILETEXTURE_H
+#define APE_IFILETEXTURE_H
 
-#include <map>
-#include <memory>
 #include <string>
 #include <vector>
+#include "ApeGeometry.h"
 
 namespace Ape
 {
-	class Entity
+	class IFileTexture : public Texture
 	{
 	public:
-		enum Type
+		enum MapType
 		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_FILE,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID
+			PF_NONE,
+			DIFFUSE,
+			SPECULAR,
+			NORMAL,
+			BUMP,
+			PF_INVALID
 		};
 
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-
-		virtual ~Entity() {};
-
-		std::string mName;
-
-		Type mType;
+		IFileTexture(std::string name) : Texture(name, Entity::TEXTURE_FILE) {}
+		virtual ~IFileTexture() {};
 
 	public:
-		std::string getName()
-		{
-			return mName;
-		};
+		virtual void setFileName (std::string fileName) = 0;
 
-		Type getType()
-		{
-			return mType;
-		};
+		virtual std::string getFileName () = 0;
+		
+		virtual void setMapType (MapType mapType) = 0;
+
+		virtual MapType getMapType () = 0;
 	};
 }
 

@@ -20,68 +20,46 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_FILETEXTUREIMPL_H
+#define APE_FILETEXTUREIMPL_H
 
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
+#include "ApeIFileTexture.h"
+#include "ApeEventManagerImpl.h"
+#include "ApeReplica.h"
+#include "ApeIScene.h"
 
 namespace Ape
 {
-	class Entity
+
+	class FileTextureImpl : public Ape::IFileTexture, public Ape::Replica
 	{
 	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_FILE,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID
-		};
+		FileTextureImpl(std::string name, bool isHostCreated);
 
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+		~FileTextureImpl();
+		
+		void setFileName(std::string fileName) override;
 
-		virtual ~Entity() {};
+		std::string getFileName() override;
 
-		std::string mName;
+		void setMapType(MapType mapType) override;
 
-		Type mType;
+		MapType getMapType() override;
 
-	public:
-		std::string getName()
-		{
-			return mName;
-		};
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
-		Type getType()
-		{
-			return mType;
-		};
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
+
+	private:
+		Ape::EventManagerImpl* mpEventManagerImpl;
+
+		Ape::IScene* mpScene;
+
+		std::string mFileName;
+
+		Ape::IFileTexture::MapType mMapType;
 	};
 }
 

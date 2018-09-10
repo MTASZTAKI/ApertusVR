@@ -33,6 +33,7 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::SKY, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -917,10 +918,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									}
 									if (parameters.textureCoordinates.size() > 0)
 									{
-										int textCoordIndex = (i / 3) * 6;
+										int textCoordIndex = (i / 3) * 2;
 										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex], parameters.textureCoordinates[textCoordIndex + 1]);
-										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 2], parameters.textureCoordinates[textCoordIndex + 3]);
-										ogreManual->textureCoord(parameters.textureCoordinates[textCoordIndex + 4], parameters.textureCoordinates[textCoordIndex + 5]);
 									}
 									if (parameters.colors.size() > 0)
 									{
@@ -1343,6 +1342,26 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 						;
 						break;
 					}
+				}
+			}
+		}
+		else if (event.group == Ape::Event::Group::TEXTURE_FILE)
+		{
+			if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+			{
+				std::string textureManualName = textureManual->getName();
+				switch (event.type)
+				{
+				case Ape::Event::Type::TEXTURE_FILE_CREATE:
+					break;
+				case Ape::Event::Type::TEXTURE_FILE_FILENAME:
+				{
+					auto ogreTexture = Ogre::TextureManager::getSingleton().createOrRetrieve(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				}
+				break;
+				case Ape::Event::Type::TEXTURE_FILE_DELETE:
+					;
+					break;
 				}
 			}
 		}
