@@ -178,6 +178,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				//		//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
 				//	}
 				//}
+				std::string diffuseTextureFileName = std::string();
 				if (!material)
 				{
 					material = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
@@ -195,13 +196,12 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					asssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, colorTransparent);
 					int sceneBlendingType = 0;
 					asssimpMaterial->Get(AI_MATKEY_BLEND_FUNC, sceneBlendingType);
-					//TODO just for own demo, just remove it when it necessary 
-					/*if (material->getName().find("veg - ") != std::string::npos)
+					if (asssimpMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) 
 					{
-						colorDiffuse = aiColor3D(1, 1, 1);
-						colorSpecular = aiColor3D(1, 1, 1);
-						opacity = 0.9f;
-					}*/
+						aiString path;
+						asssimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+						diffuseTextureFileName = path.data;
+					}
 					material->setDiffuseColor(Ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
 					material->setSpecularColor(Ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
 					material->setAmbientColor(Ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
@@ -255,10 +255,30 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						//APE_LOG_DEBUG("hasVertexColors: " << assimpMesh->mName.C_Str());
 					}
 				}
+				Ape::GeometryTextureCoordinates textureCoordinates = Ape::GeometryTextureCoordinates();
+				for (int textureCoordinatesSetIndex = 0; textureCoordinatesSetIndex < AI_MAX_NUMBER_OF_TEXTURECOORDS; textureCoordinatesSetIndex++)
+				{
+					if (assimpMesh->HasTextureCoords(textureCoordinatesSetIndex))
+					{
+						for (int textureCoordinatesIndex = 0; textureCoordinatesIndex < assimpMesh->mNumVertices; textureCoordinatesIndex++)
+						{
+							aiVector3D assimpTerxtureCoordinates = assimpMesh->mTextureCoords[textureCoordinatesSetIndex][textureCoordinatesIndex];
+							textureCoordinates.push_back(assimpTerxtureCoordinates.x);
+							textureCoordinates.push_back(1.0f - assimpTerxtureCoordinates.y);
+						}
+						//LOG(LOG_TYPE_DEBUG, "HasTextureCoords: " << assimpMesh->mName.C_Str());
+					}
+				}
 				std::string groupName = std::string();
 				if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					groupName = mAssimpAssetConfigs[assimpSceneID].file;
-				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
+				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, textureCoordinates, material);
+				if (textureCoordinates.size() && diffuseTextureFileName.length())
+				{
+					auto fileTexture = std::static_pointer_cast<Ape::IFileTexture>(mpScene->createEntity(diffuseTextureFileName, Ape::Entity::Type::TEXTURE_FILE).lock());
+					fileTexture->setFileName(diffuseTextureFileName);
+					material->setPassTexture(fileTexture);
+				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
 				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
