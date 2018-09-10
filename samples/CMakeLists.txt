@@ -175,6 +175,11 @@ if (${APE_SAMPLES_Gyor})
 	add_subdirectory (gyor)
 endif ()
 
+option(APE_SAMPLES_Audi "APE_SAMPLES_Audi?" ON )
+if (${APE_SAMPLES_Audi})
+	add_subdirectory (audi)
+endif ()
+
 option(APE_SAMPLES_RobotCalibration "APE_SAMPLES_RobotCalibration?" ON )
 if (${APE_SAMPLES_RobotCalibration})
 	add_subdirectory (robotCalibration)
