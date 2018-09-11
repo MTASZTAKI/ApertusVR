@@ -35,10 +35,10 @@ void Ape::ApeRobotCalibrationPlugin::parseNodeJsConfig()
 		rapidjson::FileReadStream jsonFileReaderStream(configFile, readBuffer, sizeof(readBuffer));
 		rapidjson::Document jsonDocument;
 		jsonDocument.ParseStream(jsonFileReaderStream);
-		if (jsonDocument.IsObject())
+		if (jsonDocument.IsObject() && jsonDocument.HasMember("httpServer"))
 		{
 			rapidjson::Value& httpServer = jsonDocument["httpServer"];
-			if (httpServer.IsObject())
+			if (httpServer.IsObject() && httpServer.HasMember("port"))
 			{
 				rapidjson::Value& port = httpServer["port"];
 				if (port.IsNumber())
