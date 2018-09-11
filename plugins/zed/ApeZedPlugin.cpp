@@ -111,7 +111,6 @@ void Ape::ZedPlugin::Run()
 				apePointCloud->updateColors(mApePointCloudColors);
 			}
 		}
-		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
