@@ -39,10 +39,6 @@ void Ape::ZedPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ZedPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
 	APE_LOG_DEBUG("try to init Zed");
 	sl::InitParameters initParameters;
 	initParameters.camera_resolution = sl::RESOLUTION_HD1080;

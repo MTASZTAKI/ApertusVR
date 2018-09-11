@@ -28,10 +28,6 @@ Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
 void Ape::AssimpAssetLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("AssimpAssetLoaderPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("AssimpAssetLoaderPlugin main window was found");
 	mpAssimpImporter = new Assimp::Importer();
 	APE_LOG_FUNC_LEAVE();
 }

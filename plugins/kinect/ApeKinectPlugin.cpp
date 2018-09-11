@@ -62,10 +62,7 @@ void Ape::KinectPlugin::eventCallBack(const Ape::Event& event)
 void Ape::KinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("KinectPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("KinectPlugin main window was found");
+
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
 
