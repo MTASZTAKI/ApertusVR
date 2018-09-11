@@ -38,8 +38,9 @@ ApeNodeJsPlugin::ApeNodeJsPlugin()
 
 ApeNodeJsPlugin::~ApeNodeJsPlugin()
 {
-
+	APE_LOG_FUNC_ENTER();
 	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::eventCallBack(const Ape::Event& event)
@@ -108,20 +109,24 @@ void ApeNodeJsPlugin::Run()
 
 void ApeNodeJsPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ApeNodeJsPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

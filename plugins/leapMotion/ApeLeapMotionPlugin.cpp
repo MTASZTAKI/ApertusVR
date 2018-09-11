@@ -109,22 +109,26 @@ void Ape::LeapMotionPlugin::Run()
 
 void Ape::LeapMotionPlugin::Step()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::Stop()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::Suspend()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::Restart()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::LeapMotionPlugin::onInit(const Leap::Controller& controller)

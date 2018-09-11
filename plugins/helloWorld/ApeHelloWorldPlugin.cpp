@@ -72,16 +72,24 @@ void Ape::ApeHelloWorldPlugin::Run()
 
 void Ape::ApeHelloWorldPlugin::Step()
 {
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHelloWorldPlugin::Stop()
 {
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHelloWorldPlugin::Suspend()
 {
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeHelloWorldPlugin::Restart()
 {
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

@@ -46,22 +46,26 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 
 void Ape::AssimpAssetLoaderPlugin::Step()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Stop()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Suspend()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Restart()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
@@ -268,6 +272,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 
 void Ape::AssimpAssetLoaderPlugin::loadConfig()
 {
+	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
 	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -349,10 +354,12 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
 {
+	APE_LOG_FUNC_ENTER();
 	std::lock_guard<std::mutex> guard(mMutex);
 	if (mpAssimpImporter)
 	{
@@ -369,6 +376,7 @@ void Ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
 			mAssetCount++;
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)

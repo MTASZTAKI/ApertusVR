@@ -173,15 +173,18 @@ void Ape::ApeLinkageDesignerVRPlugin::moveUserNode()
 
 void Ape::ApeLinkageDesignerVRPlugin::toggleScenePoses(Ape::NodeSharedPtr userNode)
 {
+	APE_LOG_FUNC_ENTER();
 	userNode->setPosition(mScenePoses[mSceneToggleIndex].position);
 	userNode->setOrientation(mScenePoses[mSceneToggleIndex].orientation);
 	mSceneToggleIndex++;
 	if (mScenePoses.size() == mSceneToggleIndex)
 		mSceneToggleIndex = 0;
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 {
+	APE_LOG_FUNC_ENTER();
 	if (mSwitchNodes.size() > 0)
 	{
 		if (auto switchNode = mSwitchNodes[mSwitchNodeVisibilityToggleIndex].lock())
@@ -195,20 +198,24 @@ void Ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 		if (mSwitchNodes.size() == mSwitchNodeVisibilityToggleIndex)
 			mSwitchNodeVisibilityToggleIndex = 0;
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::saveUserNodePose(Ape::NodeSharedPtr userNode)
 {
+	APE_LOG_FUNC_ENTER();
 	std::ofstream userNodePoseFile;
 	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
 	userNodePoseFile << userNode->getPosition().x << "," << userNode->getPosition().y << "," << userNode->getPosition().z << " : " <<
 		userNode->getOrientation().w << "," << userNode->getOrientation().x << "," << userNode->getOrientation().y << "," << userNode->getOrientation().z << std::endl;
 	userNodePoseFile.close();
+	APE_LOG_FUNC_LEAVE();
 }
 
 
 void Ape::ApeLinkageDesignerVRPlugin::Run()
 {
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mpKeyboard)
@@ -218,26 +225,31 @@ void Ape::ApeLinkageDesignerVRPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 bool Ape::ApeLinkageDesignerVRPlugin::keyPressed(const OIS::KeyEvent& e)

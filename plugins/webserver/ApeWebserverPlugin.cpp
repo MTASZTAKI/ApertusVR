@@ -78,7 +78,6 @@ void Ape::ApeWebserverPlugin::Run()
 		auto page = crow::mustache::load("ws.html");
 		return page.render(x);
 	});
-
 	app.loglevel(crow::LogLevel::Warning).port(40080).multithreaded().run();
 
 	APE_LOG_FUNC_LEAVE();
@@ -86,20 +85,24 @@ void Ape::ApeWebserverPlugin::Run()
 
 void Ape::ApeWebserverPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

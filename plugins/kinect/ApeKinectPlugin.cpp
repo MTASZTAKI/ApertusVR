@@ -1095,8 +1095,6 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 	SafeRelease(pColorFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//APE_LOG_DEBUG("rgb got");
-		
 		// Get data from frame
 		pColorFrame->CopyConvertedFrameDataToArray(colorwidth*colorheight * 4, rgbimage, ColorImageFormat_Rgba);
 
@@ -1124,32 +1122,34 @@ void Ape::KinectPlugin::GetRGBData(IMultiSourceFrame* pframe)
 
 void Ape::KinectPlugin::GetBodyIndexes(IMultiSourceFrame* pframe)
 {
-	//APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	IBodyIndexFrame* pIndexFrame = NULL;
 	IBodyIndexFrameReference* pIndexFrameRef = NULL;
 	HRESULT hr = pframe->get_BodyIndexFrameReference(&pIndexFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//APE_LOG_DEBUG("ref found");
+		APE_LOG_TRACE("ref found");
 		hr = pIndexFrameRef->AcquireFrame(&pIndexFrame);
 	}
-	//APE_LOG_DEBUG("ref found gd");
+	APE_LOG_TRACE("ref found gd");
 	SafeRelease(pIndexFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//APE_LOG_DEBUG("idx got");
+		APE_LOG_TRACE("idx got");
 		hr = pIndexFrame->CopyFrameDataToArray(width*height, bodyIdx);
 		if (SUCCEEDED(hr))
 		{
-			//APE_LOG_DEBUG("success");
+			APE_LOG_TRACE("success");
 			GetOperator();
 		}
 	}
 	SafeRelease(pIndexFrame);
+	APE_LOG_FUNC_LEAVE();
 }
 
 void  Ape::KinectPlugin::GetOperator()
 {
+	APE_LOG_FUNC_ENTER();
 	Ape::PointCloudPoints OPoint;
 	Ape::PointCloudColors OColor;
 
@@ -1182,11 +1182,12 @@ void  Ape::KinectPlugin::GetOperator()
 
 	OperatorPoints = OPoint;
 	OperatorColors = OColor;
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 {
-	//APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	IDepthFrame* pDepthframe = NULL;
 	IDepthFrameReference* pDepthFrameRef = NULL;
 	HRESULT hr = pframe->get_DepthFrameReference(&pDepthFrameRef);
@@ -1197,8 +1198,6 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 	SafeRelease(pDepthFrameRef);
 	if (SUCCEEDED(hr))
 	{
-		//APE_LOG_DEBUG("depth got");
-
 		// Get data from frame
 		unsigned int bsize;
 		unsigned short* buf;
@@ -1218,6 +1217,7 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 		m_pCoordinateMapper->MapDepthFrameToColorSpace(width*height, buf, width*height, depth2rgb);
 	}
 	SafeRelease(pDepthframe);
+	APE_LOG_FUNC_LEAVE();
 }
 
 ///<summary>
@@ -1225,7 +1225,7 @@ void Ape::KinectPlugin::GetDepthData(IMultiSourceFrame* pframe)
 ///</summary>
 void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 {
-	//APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	IBodyFrame* pBodyFrame = NULL;
 	IBodyFrameReference* pBodyFrameRef = NULL;
 	HRESULT hr = pframe->get_BodyFrameReference(&pBodyFrameRef);
@@ -1237,7 +1237,7 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 
 	if (SUCCEEDED(hr))
 	{
-		//APE_LOG_DEBUG("body got");
+		APE_LOG_TRACE("body got");
 		IBody* ppBodies[cBodyCount] = { 0 };
 		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
 		if (SUCCEEDED(hr))
@@ -1250,6 +1250,7 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 		}
 	}
 	SafeRelease(pBodyFrame);
+	APE_LOG_FUNC_LEAVE();
 }
 
 /// <summary>
@@ -1260,6 +1261,7 @@ void Ape::KinectPlugin::GetBodyData(IMultiSourceFrame* pframe)
 /// </summary>
 void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 {
+	APE_LOG_FUNC_ENTER();
 	HRESULT hr;
 	if (m_pCoordinateMapper)
 	{
@@ -1313,4 +1315,5 @@ void Ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 			}
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }

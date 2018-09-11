@@ -185,6 +185,7 @@ void Ape::ApeLegoPlugin::Init()
 
 void Ape::ApeLegoPlugin::blowModel()
 {
+	APE_LOG_FUNC_ENTER();
 	for (auto meshName : mMeshNames)
 	{
 		if (auto node = mpSceneManager->getNode(meshName).lock())
@@ -197,10 +198,12 @@ void Ape::ApeLegoPlugin::blowModel()
 		}
 	}
 	mInterpolatorsToggleIndex = 0;
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::toggleInterpolators()
 {
+	APE_LOG_FUNC_ENTER();
 	auto animationThread = std::thread(&ApeLegoPlugin::interpolate, this, mInterpolatorsToggleIndex);
 	animationThread.detach();
 	mInterpolatorsToggleIndex++;
@@ -208,10 +211,12 @@ void Ape::ApeLegoPlugin::toggleInterpolators()
 	{
 		mInterpolatorsToggleIndex = 0;
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::interpolate(int interpolatorIndex)
 {
+	APE_LOG_FUNC_ENTER();
 	if (interpolatorIndex == 0)
 	{
 		if (auto node = mpSceneManager->getNode("Lego-Wheel.mesh").lock())
@@ -1212,6 +1217,7 @@ void Ape::ApeLegoPlugin::interpolate(int interpolatorIndex)
 			}
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::moveUserNode()
@@ -1248,6 +1254,7 @@ void Ape::ApeLegoPlugin::moveUserNode()
 
 void Ape::ApeLegoPlugin::Run()
 {
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mpKeyboard)
@@ -1257,26 +1264,31 @@ void Ape::ApeLegoPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeLegoPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 bool Ape::ApeLegoPlugin::keyPressed(const OIS::KeyEvent& e)
