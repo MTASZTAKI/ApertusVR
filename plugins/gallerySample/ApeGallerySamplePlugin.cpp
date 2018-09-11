@@ -16,11 +16,11 @@ Ape::ApeGallerySamplePlugin::~ApeGallerySamplePlugin()
 void Ape::ApeGallerySamplePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
+	if (auto universeSkyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("universe", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
 		universeSkyBoxMaterial->setAsSkyBox();
-	}*/
+	}
 	if (auto meshNode = mpSceneManager->createNode("meshNode").lock())
 	{
 		meshNode->setPosition(Ape::Vector3(-1050, -450, -150));
