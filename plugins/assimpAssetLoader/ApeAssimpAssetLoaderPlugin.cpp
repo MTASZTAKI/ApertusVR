@@ -22,6 +22,7 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -40,7 +41,6 @@ void Ape::AssimpAssetLoaderPlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

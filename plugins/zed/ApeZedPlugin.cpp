@@ -26,6 +26,7 @@ Ape::ZedPlugin::ZedPlugin()
 Ape::ZedPlugin::~ZedPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
 	mZedPointCloud.free(sl::MEM_CPU);
 	mZed.close();
 	APE_LOG_FUNC_LEAVE();
@@ -112,7 +113,6 @@ void Ape::ZedPlugin::Run()
 		}
 		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

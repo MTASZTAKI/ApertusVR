@@ -13,6 +13,7 @@ Ape::ApeGyorPlugin::ApeGyorPlugin()
 Ape::ApeGyorPlugin::~ApeGyorPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

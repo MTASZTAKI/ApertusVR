@@ -61,7 +61,7 @@ private:
 
 	NodeJsPluginConfig mNodeJsPluginConfig;
 
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 
 	void parseNodeJsConfig();
 

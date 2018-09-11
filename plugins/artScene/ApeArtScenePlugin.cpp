@@ -13,6 +13,7 @@ Ape::ApeArtScenePlugin::ApeArtScenePlugin()
 Ape::ApeArtScenePlugin::~ApeArtScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -374,7 +375,6 @@ void Ape::ApeArtScenePlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

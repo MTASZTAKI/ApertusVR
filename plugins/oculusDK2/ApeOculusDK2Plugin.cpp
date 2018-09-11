@@ -19,6 +19,7 @@ Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 Ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -303,7 +304,6 @@ void Ape::ApeOculusDK2Plugin::Run()
 			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));*/
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

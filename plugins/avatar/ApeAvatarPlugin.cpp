@@ -13,6 +13,7 @@ Ape::ApeAvatarPlugin::ApeAvatarPlugin()
 Ape::ApeAvatarPlugin::~ApeAvatarPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -60,7 +61,6 @@ void Ape::ApeAvatarPlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}*/
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

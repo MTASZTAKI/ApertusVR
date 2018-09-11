@@ -22,6 +22,7 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 Ape::ApeHtcVivePlugin::~ApeHtcVivePlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -277,7 +278,6 @@ void Ape::ApeHtcVivePlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

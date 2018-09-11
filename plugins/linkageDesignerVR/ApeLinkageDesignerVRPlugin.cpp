@@ -47,6 +47,8 @@ Ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 Ape::ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	delete mpKeyboard;
 	delete mpMouse;
 	APE_LOG_FUNC_LEAVE();
@@ -216,8 +218,6 @@ void Ape::ApeLinkageDesignerVRPlugin::Run()
 		moveUserNode();
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
 void Ape::ApeLinkageDesignerVRPlugin::Step()

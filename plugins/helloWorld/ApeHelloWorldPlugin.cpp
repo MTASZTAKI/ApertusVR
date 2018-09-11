@@ -4,7 +4,7 @@ Ape::ApeHelloWorldPlugin::ApeHelloWorldPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -12,10 +12,11 @@ Ape::ApeHelloWorldPlugin::ApeHelloWorldPlugin()
 Ape::ApeHelloWorldPlugin::~ApeHelloWorldPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHelloWorldPlugin::nodeEventCallBack(const Ape::Event& event)
+void Ape::ApeHelloWorldPlugin::eventCallBack(const Ape::Event& event)
 {
 }
 
@@ -66,7 +67,6 @@ void Ape::ApeHelloWorldPlugin::Run()
 		if (auto planetNode = mPlanetNode.lock())
 			planetNode->rotate(0.0017f, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::LOCAL);
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::nodeEventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

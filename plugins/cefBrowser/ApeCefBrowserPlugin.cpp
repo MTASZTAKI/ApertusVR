@@ -25,6 +25,7 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 Ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	mApeCefClientImpl = nullptr;
 	delete mpApeCefRenderHandlerImpl;
 	delete mpApeCefLifeSpanHandlerImpl;
@@ -204,7 +205,6 @@ void Ape::CefBrowserPlugin::Run()
 		CefRunMessageLoop();
 		CefShutdown();
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

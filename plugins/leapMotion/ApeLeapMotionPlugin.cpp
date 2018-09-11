@@ -21,6 +21,7 @@ Ape::LeapMotionPlugin::LeapMotionPlugin()
 Ape::LeapMotionPlugin::~LeapMotionPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -103,7 +104,6 @@ void Ape::LeapMotionPlugin::Run()
 		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

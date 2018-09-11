@@ -51,7 +51,7 @@ namespace Ape
 
 		Ape::NodeWeakPtr mPlanetNode;
 
-		void nodeEventCallBack(const Ape::Event& event);
+		void eventCallBack(const Ape::Event& event);
 
 	public:
 		ApeHelloWorldPlugin();

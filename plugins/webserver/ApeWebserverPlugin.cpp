@@ -13,6 +13,7 @@ Ape::ApeWebserverPlugin::ApeWebserverPlugin()
 Ape::ApeWebserverPlugin::~ApeWebserverPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -80,7 +81,6 @@ void Ape::ApeWebserverPlugin::Run()
 
 	app.loglevel(crow::LogLevel::Warning).port(40080).multithreaded().run();
 
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 

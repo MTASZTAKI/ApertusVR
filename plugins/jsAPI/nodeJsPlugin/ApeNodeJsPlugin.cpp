@@ -31,7 +31,7 @@ ApeNodeJsPlugin::ApeNodeJsPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::nodeEventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -39,9 +39,10 @@ ApeNodeJsPlugin::ApeNodeJsPlugin()
 ApeNodeJsPlugin::~ApeNodeJsPlugin()
 {
 
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
 }
 
-void ApeNodeJsPlugin::nodeEventCallBack(const Ape::Event& event)
+void ApeNodeJsPlugin::eventCallBack(const Ape::Event& event)
 {
 
 }
