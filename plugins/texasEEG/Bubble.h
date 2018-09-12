@@ -24,11 +24,11 @@ SOFTWARE.*/
 #define APE_BUBBLE_H
 
 #include "Ape.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
 
 namespace TexasEEG
 {
@@ -37,7 +37,7 @@ namespace TexasEEG
 	private:
 		std::thread* mTimerThread;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::NodeWeakPtr mBubbleNode;
 

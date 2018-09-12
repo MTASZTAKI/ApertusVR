@@ -23,16 +23,16 @@ SOFTWARE.*/
 #ifndef APE_360IMAGEPLUGIN_H
 #define APE_360IMAGEPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeILogManager.h"
+#include <thread>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeINode.h"
 
 #define THIS_PLUGINNAME "Ape360ImagePlugin"
 
@@ -41,7 +41,7 @@ namespace Ape
 	class Ape360ImagePlugin : public Ape::IPlugin
 	{
 	private:
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 	public:
 		Ape360ImagePlugin();
@@ -75,7 +75,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
 		return 0;
 	}

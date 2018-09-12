@@ -23,28 +23,29 @@ SOFTWARE.*/
 #ifndef APE_ASSIMPASSETLOADERPLUGIN_H
 #define APE_ASSIMPASSETLOADERPLUGIN_H
 
+#include <ctime>
+#include <functional>
 #include <iostream>
 #include <mutex>
 #include <string>
-#include <thread> 
-#include <functional>
-#include <ctime>
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeITextGeometry.h"
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeIScene.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIManualMaterial.h"
+#include <assimp/scene.h>
 
 #define THIS_PLUGINNAME "ApeAssimpAssetLoaderPlugin"
 
@@ -81,7 +82,7 @@ namespace Ape
 
 	private:
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -128,7 +129,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateAssimpAssetLoaderPlugin, DestroyAssimpAssetLoaderPlugin);
 		return 0;
 	}

@@ -42,7 +42,7 @@ include_directories(
 add_library (ApeTexasEEGPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig)
+target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig)
 
 if (WIN32)
 	# we have to link to some DirectX libraries 

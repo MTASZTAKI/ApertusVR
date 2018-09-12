@@ -23,10 +23,10 @@
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	ApeLogManagerImpl.h
-	)
+)
 set (SOURCES
 	ApeLogManagerImpl.cpp
-	)
+)
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include

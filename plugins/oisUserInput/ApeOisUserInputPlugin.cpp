@@ -1,15 +1,19 @@
 #include <fstream>
+#include "ApeOisUserInputPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "ApeOisUserInputPlugin.h"
 
 Ape::OISUserInputPlugin::OISUserInputPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
@@ -24,24 +28,26 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mRayOverlayNode = Ape::NodeWeakPtr();
 	mHeadNode = Ape::NodeWeakPtr();
 	mDummyNode = Ape::NodeWeakPtr();
+	mCursorNode = Ape::NodeWeakPtr();
+	mCursorText = Ape::TextGeometryWeakPtr();
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mUserNodePoses = std::vector<UserNodePose>();
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::OISUserInputPlugin::~OISUserInputPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	delete mpKeyboard;
 	delete mpMouse;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
@@ -50,7 +56,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (event.subjectName == "robotRootNode")
 		{
-			mNodeToMove = mpScene->getNode(event.subjectName);
+			mNodeToMove = mpSceneManager->getNode(event.subjectName);
 		}
 	}
 	/*else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
@@ -68,61 +74,110 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 	}*/
 	else if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
 	{
-		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock());
-		LOG(LOG_TYPE_DEBUG, "overlayBrowser catched");
+		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock());
+		APE_LOG_DEBUG("overlayBrowser catched");
 	}
 	else if (event.type == Ape::Event::Type::TEXTURE_UNIT_CREATE)
 	{
-		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->getEntity(event.subjectName).lock());
-		LOG(LOG_TYPE_DEBUG, "overlayMouseTexture catched");
+		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->getEntity(event.subjectName).lock());
+		APE_LOG_DEBUG("overlayMouseTexture catched");
 	}
 	else if (event.type == Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
-		LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
+		APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
 		if (auto overlayBrowser = mOverlayBrowser.lock())
 		{
-			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(event.subjectName).lock()))
+			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
-				LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
+				APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
 				mIsNewKeyEvent = true;
 			}
 		}
 	}
+	else if (event.type == Ape::Event::Type::BROWSER_MOUSE_CLICK)
+	{
+		/*APE_LOG_DEBUG("BROWSER_MOUSE_CLICK");
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
+		}*/
+	}
+	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_CREATE)
+	{
+		APE_LOG_DEBUG("GEOMETRY_RAY_CREATE");
+	}
 	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
-		LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
+		APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
 		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
-			for (auto intersection : intersections)
+			std::list<Ape::EntityWeakPtr> intersectionList;
+			std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
+			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size: " << intersectionList.size());
+			bool removeItem = false;
+			std::list<Ape::EntityWeakPtr>::iterator i = intersectionList.begin();
+			while (i != intersectionList.end())
 			{
-				if (auto entity = intersection.lock())
+				removeItem = false;
+				if (auto entity = i->lock())
 				{
 					std::string entityName = entity->getName();
 					Ape::Entity::Type entityType = entity->getType();
-					std::size_t found = entity->getName().find(mUserNode.lock()->getName());
-					std::size_t foundCoord = entity->getName().find("coord");
-					if (found == std::string::npos && foundCoord == std::string::npos) //Ignore our avatar and coordinatesystems
+					//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
+					if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
+						removeItem = true;
+					else if (entityName.find("coord") != std::string::npos)
+						removeItem = true;
+					else if (entityName.find("cursor") != std::string::npos)
+						removeItem = true;
+				}
+				if (removeItem)
+					i = intersectionList.erase(i);
+				else
+					i++;
+			}
+			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size after erase: " << intersectionList.size());
+
+			bool intersectionHandled = false;
+			if (intersectionList.empty())
+			{
+				if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+				{
+					clearNodeSelection();
+					intersectionHandled = true;
+				}
+			}
+			else
+			{
+				APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: -------------------------------------");
+				for (auto intersection : intersectionList)
+				{
+					if (auto entity = intersection.lock())
 					{
-						LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: entiy: " << entityName << " type: " << entityType);
+						std::string entityName = entity->getName();
+						Ape::Entity::Type entityType = entity->getType();
+						APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
+
 						if (entityType >= Ape::Entity::Type::GEOMETRY_FILE && entityType <= Ape::Entity::Type::GEOMETRY_RAY)
 						{
 							auto geometry = std::static_pointer_cast<Ape::Geometry>(entity);
 							if (auto selectedParentNode = geometry->getParentNode().lock())
 							{
-								LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-								if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
+								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+								if (auto cursorText = mCursorText.lock())
 								{
-									clearNodeSelection();
-									addNodeSelection(selectedParentNode->getName());
+									cursorText->setCaption(entityName);
 								}
-								else
+								if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 								{
 									if (isNodeSelected(selectedParentNode->getName()))
 										removeNodeSelection(selectedParentNode->getName());
 									else
 										addNodeSelection(selectedParentNode->getName());
+									intersectionHandled = true;
+									break;
 								}
 							}
 						}
@@ -131,32 +186,29 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 							auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(entity);
 							if (auto selectedParentNode = pointCloud->getParentNode().lock())
 							{
-								LOG(LOG_TYPE_DEBUG, "GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-								if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
-								{
-									clearNodeSelection();
-									addNodeSelection(selectedParentNode->getName());
-								}
-								else
+								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+								if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 								{
 									if (isNodeSelected(selectedParentNode->getName()))
 										removeNodeSelection(selectedParentNode->getName());
 									else
 										addNodeSelection(selectedParentNode->getName());
+									intersectionHandled = true;
+									break;
 								}
 							}
 						}
-						break;
 					}
 				}
 			}
+			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections handled: " << intersectionHandled);
 		}
 	}
 }
 
 void Ape::OISUserInputPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	Ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
@@ -198,11 +250,11 @@ void Ape::OISUserInputPlugin::Init()
 		fclose(apeOisUserInputConfigFile);
 	}
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		mUserNode = userNode;
-		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
-		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		mDummyNode = mpSceneManager->createNode(userNode->getName() + "_DummyNode");
+		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
 			mHeadNodeName = headNode->getName();
@@ -212,12 +264,39 @@ void Ape::OISUserInputPlugin::Init()
 			toggleUserNodePoses(userNode);
 			toggleUserNodePoses(dummyNode);
 		}
+
+
+		/*if (auto cursorNode = mpSceneManager->createNode("cursorNode").lock())
+		{
+			if (auto cursorGeometry = std::static_pointer_cast<Ape::ITorusGeometry>(mpSceneManager->createEntity("cursor", Ape::Entity::GEOMETRY_TORUS).lock()))
+			{
+				cursorGeometry->setParameters(0.1f, 0.05f, Ape::Vector2(100, 100));
+				cursorGeometry->setParentNode(cursorNode);
+				cursorNode->setParentNode(userNode);
+				cursorNode->setPosition(Ape::Vector3(0, 0, -10));
+				cursorNode->setOrientation(Ape::Quaternion(0.5, -0.5, -0.5, 0.5));
+				mCursorNode = cursorNode;
+			}
+
+			if (auto textNode = mpSceneManager->createNode("cursorTextNode").lock())
+			{
+				if (auto cursorText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("cursorText", Ape::Entity::GEOMETRY_TEXT).lock()))
+				{
+					cursorText->setParentNode(textNode);
+					cursorText->setCaption("hello");
+					cursorText->showOnTop(true);
+					mCursorText = cursorText;
+				}
+				textNode->setParentNode(userNode);
+				textNode->setPosition(Ape::Vector3(7, -1, -100));
+			}
+		}*/
 	}
 
-	LOG(LOG_TYPE_DEBUG, "OISUserInputPlugin waiting for main window");
+	APE_LOG_DEBUG("OISUserInputPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "OisUserInputPlugin main window was found");
+	APE_LOG_DEBUG("OisUserInputPlugin main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -255,9 +334,9 @@ void Ape::OISUserInputPlugin::Init()
 		}
 	}
 
-	if (auto rayNode = mpScene->createNode("rayNode" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto rayNode = mpSceneManager->createNode("rayNode" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -267,14 +346,14 @@ void Ape::OISUserInputPlugin::Init()
 		mRayOverlayNode = rayNode;
 	}
 
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
-	LOG_TRACE("-------------------------------------------------------");
-	LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
-	LOG_TRACE("OIS::KeyCode: " << (OIS::KeyCode)e.key);
+	APE_LOG_TRACE("-------------------------------------------------------");
+	APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
+	APE_LOG_TRACE("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 
 	mKeyCodeMap[e.key] = true;
 
@@ -294,7 +373,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 		if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 			std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
 
-		LOG_TRACE("keyAsString:" << keyAsString);
+		APE_LOG_TRACE("keyAsString:" << keyAsString);
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -344,13 +423,13 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 
-		LOG_TRACE("Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent);
+		APE_LOG_TRACE("Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent);
 		while (!mIsNewKeyEvent)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 		mIsNewKeyEvent = false;
-		LOG_TRACE("After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
+		APE_LOG_TRACE("After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
 	}
 
 	return true;
@@ -378,25 +457,25 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			{
 				if (mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] || mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 				{
-					LOG_TRACE("X velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
+					APE_LOG_TRACE("X velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
 					mMouseState.isDragModeLeft = true;
 					selectedNodeInMap->translate(Ape::Vector3((mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs), 0, 0), Ape::Node::TransformationSpace::WORLD);
 				}
 				if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 				{
-					LOG_TRACE("Y velocity: " << mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs);
+					APE_LOG_TRACE("Y velocity: " << mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs);
 					mMouseState.isDragModeLeft = true;
 					selectedNodeInMap->translate(Ape::Vector3(0, -(mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs), 0), Ape::Node::TransformationSpace::WORLD);
 				}
 				if (mKeyCodeMap[OIS::KeyCode::KC_LMENU] || mKeyCodeMap[OIS::KeyCode::KC_RMENU])
 				{
-					LOG_TRACE("Z velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
+					APE_LOG_TRACE("Z velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
 					mMouseState.isDragModeLeft = true;
 					selectedNodeInMap->translate(Ape::Vector3(0, 0, -(mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs)), Ape::Node::TransformationSpace::WORLD);
 				}
 				if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 				{
-					LOG_TRACE("Z velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
+					APE_LOG_TRACE("Z velocity: " << mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs);
 					mMouseState.isDragModeLeft = true;
 					selectedNodeInMap->rotate(Ape::Degree(mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs).toRadian(), Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 				}
@@ -427,16 +506,17 @@ bool Ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * overlayBrowser->getResoultion().y;
 			overlayBrowser->mouseMoved(cursorBrowserPosition);
 			overlayBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
-			//LOG(LOG_TYPE_DEBUG, "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
-			//LOG(LOG_TYPE_DEBUG, "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
+			//APE_LOG_DEBUG("cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
+			//APE_LOG_DEBUG("cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
 		}
 	}
+
 	return true;
 }
 
 bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
-	LOG_TRACE("-------------------------------------------------------");
+	APE_LOG_TRACE("-------------------------------------------------------");
 	mMouseState.buttonDownMap[id] = true;
 	mMouseState.posStart = e.state;
 
@@ -444,7 +524,7 @@ bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseB
 	{
 		if (auto overlayBrowser = mOverlayBrowser.lock())
 		{
-			LOG_TRACE("overlayBrowser->mouseClick");
+			APE_LOG_TRACE("overlayBrowser->mouseClick");
 			overlayBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, true);
 		}
 	}
@@ -453,9 +533,9 @@ bool Ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseB
 
 bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
-	LOG_TRACE("mMouseState.isDragModeLeft: " << mMouseState.isDragModeLeft);
-	LOG_TRACE("mMouseState.isDragModeMiddle: " << mMouseState.isDragModeMiddle);
-	LOG_TRACE("mMouseState.isDragModeRight: " << mMouseState.isDragModeRight);
+	APE_LOG_TRACE("mMouseState.isDragModeLeft: " << mMouseState.isDragModeLeft);
+	APE_LOG_TRACE("mMouseState.isDragModeMiddle: " << mMouseState.isDragModeMiddle);
+	APE_LOG_TRACE("mMouseState.isDragModeRight: " << mMouseState.isDragModeRight);
 	mMouseState.buttonDownMap[id] = false;
 	mMouseState.posEnd = e.state;
 
@@ -464,19 +544,13 @@ bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 		if (auto overlayBrowser = mOverlayBrowser.lock())
 		{
 			overlayBrowser->mouseClick(Ape::Browser::MouseClick::LEFT, false);
-			LOG_TRACE("overlayBrowser->mouseClick");
+			APE_LOG_TRACE("overlayBrowser->mouseClick");
 		}
 
 		if (!mMouseState.isDragModeLeft)
 		{
-			/*if (!mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] && !mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
-			{
-				clearNodeSelection();
-			}*/
-
 			if (auto rayOverlayNode = mRayOverlayNode.lock())
 			{
-				LOG_TRACE("rayGeomtery->fireIntersectionQuery x: " << e.state.X.abs << " y: " << e.state.Y.abs);
 				rayOverlayNode->setPosition(Ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
 				if (auto rayGeomtery = mRayGeometry.lock())
 					rayGeomtery->fireIntersectionQuery();
@@ -497,7 +571,7 @@ bool Ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 
 bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 {
-	LOG_TRACE("nodeName: " << nodeName);
+	APE_LOG_TRACE("nodeName: " << nodeName);
 	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
 	findIt = mSelectedNodes.find(nodeName);
 	return (findIt != mSelectedNodes.end());
@@ -505,22 +579,24 @@ bool Ape::OISUserInputPlugin::isNodeSelected(std::string nodeName)
 
 void Ape::OISUserInputPlugin::addNodeSelection(std::string nodeName)
 {
-	LOG_TRACE("nodeName: " << nodeName);
-	if (auto findNode = mpScene->getNode(nodeName).lock())
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_TRACE("nodeName: " << nodeName);
+	if (auto findNode = mpSceneManager->getNode(nodeName).lock())
 	{
 		Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
-		LOG_DEBUG("childNodes size: " << childNodes.size());
+		APE_LOG_DEBUG("childNodes size: " << childNodes.size());
 		for (auto childNode : childNodes)
 			if (auto childNodeSP = childNode.lock())
-				LOG_DEBUG("childNode: " << childNodeSP->getName());
+				APE_LOG_DEBUG("childNode: " << childNodeSP->getName());
 		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(findNode->getName(), findNode));
 		findNode->showBoundingBox(true);
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 bool Ape::OISUserInputPlugin::removeNodeSelection(std::string nodeName)
 {
-	LOG_TRACE("nodeName: " << nodeName);
+	APE_LOG_TRACE("nodeName: " << nodeName);
 	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
 	findIt = mSelectedNodes.find(nodeName);
 	if (findIt != mSelectedNodes.end())
@@ -537,7 +613,7 @@ bool Ape::OISUserInputPlugin::removeNodeSelection(std::string nodeName)
 
 void Ape::OISUserInputPlugin::clearNodeSelection()
 {
-	LOG_TRACE("");
+	APE_LOG_FUNC_ENTER();
 	auto nodeIt = mSelectedNodes.begin();
 	while (nodeIt != mSelectedNodes.end())
 	{
@@ -551,10 +627,12 @@ void Ape::OISUserInputPlugin::clearNodeSelection()
 			++nodeIt;
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::saveUserNodePose()
 {
+	APE_LOG_FUNC_ENTER();
 	if (auto userNode = mUserNode.lock())
 	{
 		std::ofstream userNodePoseFile;
@@ -564,6 +642,7 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 			<< " ]," << std::endl;
 		userNodePoseFile.close();
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
@@ -572,7 +651,7 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 	{
 		userNode->setPosition(mUserNodePoses[mUserNodePosesToggleIndex].position);
 		userNode->setOrientation(mUserNodePoses[mUserNodePosesToggleIndex].orientation);
-		LOG(LOG_TYPE_DEBUG, "Camera position and orientation are toggled: " << userNode->getPosition().toString() << " | " << userNode->getOrientation().toString());
+		APE_LOG_DEBUG("Camera position and orientation are toggled: " << userNode->getPosition().toString() << " | " << userNode->getOrientation().toString());
 		mUserNodePosesToggleIndex++;
 		if (mUserNodePoses.size() == mUserNodePosesToggleIndex)
 			mUserNodePosesToggleIndex = 0;
@@ -677,7 +756,7 @@ void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 				}
 				if (mMouseState.scrollVelocity != 0)
 				{
-					LOG_TRACE("z: " << mMouseState.scrollVelocity);
+					APE_LOG_TRACE("z: " << mMouseState.scrollVelocity);
 					int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
 					if (transScalar < 0)
 						transScalar -= mGeneralSpeedFactor;
@@ -694,6 +773,7 @@ void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 
 void Ape::OISUserInputPlugin::Run()
 {
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mpKeyboard)
@@ -707,25 +787,29 @@ void Ape::OISUserInputPlugin::Run()
 		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::Step()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::Stop()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::Suspend()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::OISUserInputPlugin::Restart()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

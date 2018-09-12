@@ -82,7 +82,7 @@ include_directories(
 add_library (ApeLinkageDesignerVRPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow MY_OIS)
+target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow MY_OIS)
 if (WIN32)
 	# we have to link to some DirectX libraries 
 	target_link_libraries (ApeLinkageDesignerVRPlugin dinput8 dxguid)

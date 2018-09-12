@@ -23,42 +23,42 @@ SOFTWARE.*/
 #ifndef APE_WEBSERVERPLUGIN_H
 #define APE_WEBSERVERPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
 #include <ctime>
+#include <iostream>
+#include <list>
 #include <memory>
 #include <mutex>
-#include <vector>
-#include <list>
 #include <random>
+#include <thread>
 #include <unordered_set>
+#include <vector>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeIBrowser.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "utils/ApeInterpolator.h"
 #include "crow.h"
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIPbsPass.h"
-#include "ApeIManualPass.h"
-#include "ApeInterpolator.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIManualTexture.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIBrowser.h"
-#include "ApeIPointCloud.h"
 
 #define THIS_PLUGINNAME "ApeWebserverPlugin"
 
@@ -69,7 +69,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -109,7 +109,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeWebserverPlugin, DestroyApeWebserverPlugin);
 		return 0;
 	}

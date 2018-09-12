@@ -27,7 +27,7 @@ Ape::LogManagerImpl::LogManagerImpl()
 {
 	msSingleton = this;
 
-#if defined(LOG_ENABLE_COLORIZE) && defined(APE_PLATFORM_WIN)
+#if defined(APE_LOG_ENABLE_COLORIZE) && defined(APE_PLATFORM_WIN)
 	system("color 0F");
 #endif
 	mOutFileStream = std::ofstream("ApertusVR.log");
@@ -68,39 +68,39 @@ void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
 
 	switch (levelToCheck)
 	{
-	case LOG_TYPE_INFO:
-#ifdef LOG_ENABLE_COLORIZE
-		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << LOG_DELIMITER << " ";
+	case APE_LOG_TYPE_INFO:
+#ifdef APE_LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_GREEN << "INFO" << COLOR_TERM << APE_LOG_DELIMITER << " ";
 #else
-		ssOut << "INFO" << LOG_DELIMITER << " ";
+		ssOut << "INFO" << APE_LOG_DELIMITER << " ";
 #endif
 		break;
-	case LOG_TYPE_DEBUG:
-#ifdef LOG_ENABLE_COLORIZE
-		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << LOG_DELIMITER;
+	case APE_LOG_TYPE_DEBUG:
+#ifdef APE_LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_BLUE << "DEBUG" << COLOR_TERM << APE_LOG_DELIMITER;
 #else
-		ssOut << "DEBUG" << LOG_DELIMITER;
+		ssOut << "DEBUG" << APE_LOG_DELIMITER;
 #endif
 		break;
-	case LOG_TYPE_TRACE:
-#ifdef LOG_ENABLE_COLORIZE
-		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << LOG_DELIMITER;
+	case APE_LOG_TYPE_TRACE:
+#ifdef APE_LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_CYAN << "TRACE" << COLOR_TERM << APE_LOG_DELIMITER;
 #else
-		ssOut << "TRACE" << LOG_DELIMITER;
+		ssOut << "TRACE" << APE_LOG_DELIMITER;
 #endif
 		break;
-	case LOG_TYPE_WARNING:
-#ifdef LOG_ENABLE_COLORIZE
-		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << LOG_DELIMITER << " ";
+	case APE_LOG_TYPE_WARNING:
+#ifdef APE_LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_YELLOW << "WARNING" << COLOR_TERM << APE_LOG_DELIMITER << " ";
 #else
-		ssOut << "WARN" << LOG_DELIMITER << " ";
+		ssOut << "WARN" << APE_LOG_DELIMITER << " ";
 #endif
 		break;
-	case LOG_TYPE_ERROR:
-#ifdef LOG_ENABLE_COLORIZE
-		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << LOG_DELIMITER;
+	case APE_LOG_TYPE_ERROR:
+#ifdef APE_LOG_ENABLE_COLORIZE
+		ssOut << COLOR_LIGHT_RED << "ERROR" << COLOR_TERM << APE_LOG_DELIMITER;
 #else
-		ssOut << "ERROR" << LOG_DELIMITER;
+		ssOut << "ERROR" << APE_LOG_DELIMITER;
 #endif
 		break;
 	}

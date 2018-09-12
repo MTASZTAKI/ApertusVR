@@ -31,8 +31,8 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/logManager
 	${PROJECT_SOURCE_DIR}/core/systemConfig
 	${PROJECT_SOURCE_DIR}/core/mainWindow
-	${PROJECT_SOURCE_DIR}/core/scene
-	${PROJECT_SOURCE_DIR}/core/scene/session
+	${PROJECT_SOURCE_DIR}/core/sceneManager
+	${PROJECT_SOURCE_DIR}/core/sceneManager/session
 	${RAKNET_INCLUDE_DIR}	
 	)
 
@@ -40,11 +40,11 @@ add_library (ApeSystem SHARED ${SOURCES} )
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeScene ApeSystemConfig ApeMainWindow RAKNET ws2_32)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig ApeMainWindow RAKNET ws2_32)
 endif()
 
 if(APPLE)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeScene ApeSystemConfig ApeMainWindow RAKNET)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig ApeMainWindow RAKNET)
 endif()
 
 

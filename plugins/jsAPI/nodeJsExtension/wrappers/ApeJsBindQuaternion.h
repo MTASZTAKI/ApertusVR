@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_QUATERNION_H
 #define APE_JSBIND_QUATERNION_H
 
+#include "datatypes/ApeQuaternion.h"
+#include "datatypes/ApeRadian.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeQuaternion.h"
-#include "ApeRadian.h"
 
 using namespace Ape;
 

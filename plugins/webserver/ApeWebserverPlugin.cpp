@@ -1,20 +1,20 @@
-#include <iostream>
 #include "ApeWebserverPlugin.h"
 
 Ape::ApeWebserverPlugin::ApeWebserverPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeWebserverPlugin::~ApeWebserverPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::eventCallBack(const Ape::Event& ev)
@@ -31,13 +31,13 @@ void Ape::ApeWebserverPlugin::eventCallBack(const Ape::Event& ev)
 
 void Ape::ApeWebserverPlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	crow::SimpleApp app;
 	std::mutex mtx;;
@@ -46,13 +46,13 @@ void Ape::ApeWebserverPlugin::Run()
 	.websocket()
 	.onopen([&](crow::websocket::connection& conn)
 	{
-		LOG(LOG_TYPE_DEBUG, "new websocket connection");
+		APE_LOG_DEBUG("new websocket connection");
 		std::lock_guard<std::mutex> _(mtx);
 		mWebSocketUsers.insert(&conn);
 	})
 	.onclose([&](crow::websocket::connection& conn, const std::string& reason)
 	{
-		LOG(LOG_TYPE_DEBUG, "websocket connection closed: " << reason);
+		APE_LOG_DEBUG("websocket connection closed: " << reason);
 		std::lock_guard<std::mutex> _(mtx);
 		mWebSocketUsers.erase(&conn);
 	})
@@ -78,29 +78,31 @@ void Ape::ApeWebserverPlugin::Run()
 		auto page = crow::mustache::load("ws.html");
 		return page.render(x);
 	});
-
 	app.loglevel(crow::LogLevel::Warning).port(40080).multithreaded().run();
 
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeWebserverPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

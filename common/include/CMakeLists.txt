@@ -20,72 +20,20 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Add all header and cpp files in the directory to the project
 set (HEADERS
     Ape.h
-	ApeColor.h
-	ApeEntity.h
-	ApeEvent.h
-	ApeITextGeometry.h
-	ApeICamera.h
-	ApeILight.h
-	ApeILogManager.h
-	ApeMaterial.h
-	ApePass.h
-	ApeIPbsPass.h
-	ApeIManualPass.h
-	ApeIManualMaterial.h
-	ApeIFileMaterial.h
-	ApeINode.h
-	ApeIPluginManager.h
-	ApeIPlugin.h
-	ApePluginAPI.h
-	ApePluginDefines.h
-	ApeQuaternion.h
-	ApeIScene.h
-	ApeTexture.h
-	ApeIManualTexture.h
-	ApeVector2.h
-	ApeVector3.h
-	ApeVector4.h
-	ApeGeometry.h
-	ApeSubGeometry.h
-	ApeIIndexedFaceSetGeometry.h
-	ApeIIndexedLineSetGeometry.h
-	ApeIFileGeometry.h
-	ApeIPlaneGeometry.h
-	ApeITorusGeometry.h
-	ApeIConeGeometry.h
-	ApeITubeGeometry.h
-	ApeIBoxGeometry.h
-	ApeISphereGeometry.h
-	ApeICylinderGeometry.h
-	ApeSingleton.h
-	ApeIEventManager.h
-	ApeISceneSession.h
-	ApeDegree.h
-	ApeRadian.h
-	ApeEuler.h
-	ApeMatrix3.h
-	ApeMatrix4.h
-	ApeSystem.h
-	ApeISystemConfig.h
-	ApeDoubleQueue.h
-	ApeIMainWindow.h
-	ApeInterpolator.h
-	ApeIBrowser.h
-	ApeIUnitTexture.h
-	ApeIRayGeometry.h
-	ApeISky.h
-	ApeIWater.h
-	ApeIPointCloud.h
-	ApeFileSystem.h
-	ApePlatform.h
 	)
 
 add_custom_target(
-    Include ALL
+    Base ALL
     SOURCES ${HEADERS}
 )
 
-set_property (TARGET Include PROPERTY FOLDER "Common")
+set_property (TARGET Base PROPERTY FOLDER "Common")
+
+add_subdirectory (datatypes)
+add_subdirectory (managers)
+add_subdirectory (plugin)
+add_subdirectory (sceneelements)
+add_subdirectory (system)
+add_subdirectory (utils)

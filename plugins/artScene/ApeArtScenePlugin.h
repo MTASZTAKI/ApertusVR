@@ -23,31 +23,31 @@ SOFTWARE.*/
 #ifndef APE_ARTSCENEPLUGIN_H
 #define APE_ARTSCENEPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIPbsPass.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
 
 #define THIS_PLUGINNAME "ApeArtScenePlugin"
 
@@ -58,7 +58,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -96,7 +96,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeArtScenePlugin, DestroyApeArtScenePlugin);
 		return 0;
 	}

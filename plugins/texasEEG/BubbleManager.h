@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <thread>
 #include <mutex>
 #include "Ape.h"
-#include "ApeILogManager.h"
+#include "managers/ApeILogManager.h"
 #include "Bubble.h"
 
 namespace TexasEEG

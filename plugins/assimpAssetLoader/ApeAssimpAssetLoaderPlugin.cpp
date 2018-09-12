@@ -1,11 +1,11 @@
+#include "ApeAssimpAssetLoaderPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "ApeAssimpAssetLoaderPlugin.h"
 
 Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 {
-	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
+	APE_LOG_FUNC_ENTER();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -16,66 +16,66 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mObjectCount = 0;
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mAssetCount = 0;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	LOG(LOG_TYPE_DEBUG, "AssimpAssetLoaderPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "AssimpAssetLoaderPlugin main window was found");
+	APE_LOG_FUNC_ENTER();
 	mpAssimpImporter = new Assimp::Importer();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	loadConfig();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&AssimpAssetLoaderPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Step()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Stop()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Suspend()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::Restart()
 {
-	
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
 {
 	if (event.type == Ape::Event::Type::GEOMETRY_FILE_FILENAME)
 	{
-		if (auto fileGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		if (auto fileGeometry = std::static_pointer_cast<Ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			//LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-			//LOG(LOG_TYPE_DEBUG, "GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+			//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+			//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
 
 			readFile(fileGeometry->getFileName());
 		}
@@ -84,7 +84,7 @@ void Ape::AssimpAssetLoaderPlugin::eventCallBack(const Ape::Event & event)
 
 void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpNode)
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mObjectCount++;
 	aiMatrix4x4 nodeTransformation = assimpNode->mTransformation;
 	aiVector3t<float> scaling;
@@ -99,19 +99,19 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '<'), escapedNodeName.end());
 	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '>'), escapedNodeName.end());
 	assimpNode->mName = escapedNodeName;
-	if (auto node = mpScene->createNode(escapedNodeName).lock())
+	if (auto node = mpSceneManager->createNode(escapedNodeName).lock())
 	{
 		auto parentNode = Ape::NodeWeakPtr();
 		if (assimpNode->mParent)
 		{
-			parentNode = mpScene->getNode(assimpNode->mParent->mName.C_Str());
+			parentNode = mpSceneManager->getNode(assimpNode->mParent->mName.C_Str());
 			if (parentNode.lock())
 				node->setParentNode(parentNode);
 		}
 		node->setPosition(Ape::Vector3(position.x, position.y, position.z));
 		node->setOrientation(Ape::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
 		node->setScale(Ape::Vector3(scaling.x, scaling.y, scaling.z));
-		//LOG(LOG_TYPE_DEBUG, "nodeName: " << node->getName());
+		//APE_LOG_DEBUG("nodeName: " << node->getName());
 		for (int i = 0; i < assimpNode->mNumMeshes; i++)
 		{
 			mObjectCount++;
@@ -128,7 +128,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
-			if (auto mesh = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpScene->createEntity(meshUniqueName.str(), Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			if (auto mesh = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(meshUniqueName.str(), Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
 				Ape::GeometryCoordinates coordinates = Ape::GeometryCoordinates();
 				for (int i = 0; i < assimpMesh->mNumVertices; i++)
@@ -161,7 +161,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '<'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '>'), modifiedMaterialName.end());
 
-				auto material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
+				auto material = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(modifiedMaterialName).lock());
 				//TODO just a hotfix for window mesh where no transparent material is created
 				//if (meshUniqueName.str().find("window") != std::string::npos || meshUniqueName.str().find("Window") != std::string::npos)
 				//{
@@ -175,12 +175,12 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				//		material->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
 				//		material->setAmbientColor(Ape::Color(0, 0, 0));
 				//		material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-				//		//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+				//		//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
 				//	}
 				//}
 				if (!material)
 				{
-					material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
+					material = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
 					aiColor3D colorDiffuse(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorDiffuse);
 					float opacity = 1.0f;
@@ -210,22 +210,22 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					if (sceneBlendingType == aiBlendMode_Additive)
 					{
 						material->setSceneBlending(Ape::Pass::SceneBlendingType::ADD);
-						//LOG(LOG_TYPE_DEBUG, "blending ADD: " << opacity);
+						//APE_LOG_DEBUG("blending ADD: " << opacity);
 					}
 					else if (sceneBlendingType == aiBlendMode_Default)
 					{
 						if (opacity < 0.99)
 						{
 							material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-							//LOG(LOG_TYPE_DEBUG, "blending TRANSPARENT_ALPHA: " << opacity);
+							//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
 						}
 						else
 						{
 							material->setSceneBlending(Ape::Pass::SceneBlendingType::REPLACE);
-							//LOG(LOG_TYPE_DEBUG, "blending REPLACE: " << opacity);
+							//APE_LOG_DEBUG("blending REPLACE: " << opacity);
 						}
 					}
-					//LOG(LOG_TYPE_DEBUG, "createManualMaterial: " << material->getName());
+					//APE_LOG_DEBUG("createManualMaterial: " << material->getName());
 				}
 				Ape::GeometryNormals normals = Ape::GeometryNormals();
 				if (assimpMesh->HasNormals() && !mAssimpAssetConfigs[assimpSceneID].regenerateNormals)
@@ -237,7 +237,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						normals.push_back(assimpNormal.y);
 						normals.push_back(assimpNormal.z);
 					}
-					//LOG(LOG_TYPE_DEBUG, "hasNormal: " << assimpMesh->mName.C_Str());
+					//APE_LOG_DEBUG("hasNormal: " << assimpMesh->mName.C_Str());
 				}
 				Ape::GeometryColors colors = Ape::GeometryColors();
 				for (int colorSetIndex = 0; colorSetIndex < AI_MAX_NUMBER_OF_COLOR_SETS; colorSetIndex++)
@@ -252,7 +252,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							colors.push_back(assimpColor.b);
 							colors.push_back(assimpColor.a);
 						}
-						//LOG(LOG_TYPE_DEBUG, "hasVertexColors: " << assimpMesh->mName.C_Str());
+						//APE_LOG_DEBUG("hasVertexColors: " << assimpMesh->mName.C_Str());
 					}
 				}
 				std::string groupName = std::string();
@@ -261,17 +261,18 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, Ape::GeometryTextureCoordinates(), material);
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
-				//LOG(LOG_TYPE_DEBUG, "createIndexedFaceSetGeometry: " << mesh->getName());
+				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
 			}
 		}
 	}
 	for (int i = 0; i < assimpNode->mNumChildren; i++)
 		createNode(assimpSceneID, assimpNode->mChildren[i]);
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::loadConfig()
 {
+	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
 	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -296,8 +297,8 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 					if (assetMemberIterator->name == "rootNodeName")
 					{
 						assetConfig.rootNodeName = assetMemberIterator->value.GetString();
-						mpScene->createNode(assetConfig.rootNodeName);
-						LOG(LOG_TYPE_DEBUG, "rootNodeName " << assetConfig.rootNodeName);
+						mpSceneManager->createNode(assetConfig.rootNodeName);
+						APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
 					}
 					if (assetMemberIterator->name == "scale")
 					{
@@ -331,9 +332,9 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 						//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
 						if (fileExtension == ".mesh")
 						{
-							if (auto node = mpScene->createNode("node").lock())
+							if (auto node = mpSceneManager->createNode("node").lock())
 							{
-								if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
+								if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpSceneManager->createEntity(fileName, Ape::Entity::GEOMETRY_FILE).lock()))
 								{
 									meshFile->setFileName(fileName);
 									//meshFile->mergeSubMeshes();
@@ -353,54 +354,57 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 		}
 		fclose(apeAssimpAssetLoaderConfigFile);
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
 {
+	APE_LOG_FUNC_ENTER();
 	std::lock_guard<std::mutex> guard(mMutex);
 	if (mpAssimpImporter)
 	{
 		const aiScene* assimpScene = mpAssimpImporter->ReadFile(fileName, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 		if (!assimpScene)
 		{
-			LOG(LOG_TYPE_ERROR, "Loading the asset " << fileName << " was failed due to: " << mpAssimpImporter->GetErrorString());
+			APE_LOG_ERROR("Loading the asset " << fileName << " was failed due to: " << mpAssimpImporter->GetErrorString());
 		}
 		else
 		{
-			LOG(LOG_TYPE_DEBUG, "Loading the asset " << fileName << " was started");
+			APE_LOG_DEBUG("Loading the asset " << fileName << " was started");
 			mAssimpScenes.push_back(assimpScene);
 			loadScene(assimpScene, mAssetCount);
 			mAssetCount++;
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (assimpScene->mRootNode)
 	{
-		//LOG(LOG_TYPE_DEBUG, "mNumMeshes: " << assimpScene->mNumMeshes);
+		//APE_LOG_DEBUG("mNumMeshes: " << assimpScene->mNumMeshes);
 		createNode(ID, assimpScene->mRootNode);
-		if (auto assimpSceneRootNode = mpScene->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
+		if (auto assimpSceneRootNode = mpSceneManager->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
 		{
-			LOG(LOG_TYPE_DEBUG, "assimpSceneRootNode: " << assimpSceneRootNode->getName());
+			APE_LOG_DEBUG("assimpSceneRootNode: " << assimpSceneRootNode->getName());
 			if (mAssimpAssetConfigs[ID].mergeAndExportMeshes)
 			{
-				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(mAssimpAssetConfigs[ID].file, Ape::Entity::GEOMETRY_FILE).lock()))
+				if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpSceneManager->createEntity(mAssimpAssetConfigs[ID].file, Ape::Entity::GEOMETRY_FILE).lock()))
 				{
 					meshFile->exportMesh();
 					meshFile->setParentNode(assimpSceneRootNode);
 					assimpSceneRootNode->setOrientation(Ape::Quaternion(1, 0, 0, 0));
-					LOG(LOG_TYPE_DEBUG, "mergeAndExportMeshes: " << mAssimpAssetConfigs[ID].file);
+					APE_LOG_DEBUG("mergeAndExportMeshes: " << mAssimpAssetConfigs[ID].file);
 				}
 			}
 			else
 			{
-				if (auto rootNode = mpScene->getNode(mAssimpAssetConfigs[ID].rootNodeName).lock())
+				if (auto rootNode = mpSceneManager->getNode(mAssimpAssetConfigs[ID].rootNodeName).lock())
 				{
 					//TODO somehow detect the unit of the scene
-					LOG(LOG_TYPE_DEBUG, "setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
+					APE_LOG_DEBUG("setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
 						<< " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());
 					rootNode->setScale(mAssimpAssetConfigs[ID].scale);
 					rootNode->setOrientation(mAssimpAssetConfigs[ID].orientation);
@@ -409,10 +413,10 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 				}
 				else
 				{
-					LOG(LOG_TYPE_DEBUG, "rootNode was not found by name: " << mAssimpAssetConfigs[ID].rootNodeName);
+					APE_LOG_DEBUG("rootNode was not found by name: " << mAssimpAssetConfigs[ID].rootNodeName);
 				}
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }

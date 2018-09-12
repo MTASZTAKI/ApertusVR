@@ -31,7 +31,7 @@ SOFTWARE.*/
 
 Ape::Ogre21RenderPlugin::Ogre21RenderPlugin( ) //constructor
 {
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mEventDoubleQueue = Ape::DoubleQueue<Event>();
@@ -184,14 +184,14 @@ void Ape::Ogre21RenderPlugin::Step()
 
 void Ape::Ogre21RenderPlugin::Init()
 {
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
 	if (mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::HOST || mpSystemConfig->getSceneSessionConfig().participantType == Ape::SceneSession::ParticipantType::GUEST)
 	{
 		if (auto userNode = mUserNode.lock())
 		{
-			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(userNode->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
+			if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity(userNode->getName(), Ape::Entity::GEOMETRY_TEXT).lock()))
 			{
 				userNameText->setCaption(userNode->getName());
 				userNameText->setOffset(Ape::Vector3(0.0f, 1.0f, 0.0f));
@@ -464,7 +464,7 @@ void Ape::Ogre21RenderPlugin::Init()
 					mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
 					for (int j=0; j<mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 					{
-						auto camera = std::static_pointer_cast<Ape::ICamera>(mpScene->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name, Ape::Entity::Type::CAMERA).lock());
+						auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera.name, Ape::Entity::Type::CAMERA).lock());
 						if (camera)
 						{
 							//TODO why it is not ok

@@ -62,8 +62,8 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/core/scene
-	${PROJECT_SOURCE_DIR}/core/scene/session
+	${PROJECT_SOURCE_DIR}/core/sceneManager
+	${PROJECT_SOURCE_DIR}/core/sceneManager/session
 	${PROJECT_SOURCE_DIR}/core/system
 	${PROJECT_SOURCE_DIR}/core/systemConfig
 	${PROJECT_SOURCE_DIR}/core/eventManager
@@ -95,7 +95,7 @@ endif ()
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} ApeSystem ApePluginManager ApeEventManager ApeScene ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
+	target_link_libraries( ${MY_TARGET_NAME} ApeSystem ApePluginManager ApeEventManager ApeSceneManager ApeSystemConfig RAKNET MY_NODEJS_LIB ws2_32)
 endif()
 
 # Set target library's name

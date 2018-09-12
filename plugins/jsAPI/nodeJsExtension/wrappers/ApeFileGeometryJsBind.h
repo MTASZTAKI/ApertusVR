@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "Ape.h"
-#include "ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
 #include "ApeJsBindNodeImpl.h"
 #include "ApeManualMaterialJsBind.h"
 

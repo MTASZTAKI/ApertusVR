@@ -23,24 +23,24 @@ SOFTWARE.*/
 #ifndef APE_AVATARPLUGIN_H
 #define APE_AVATARPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeISystemConfig.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIManualPass.h"
-#include "ApeInterpolator.h"
-#include "ApeIManualTexture.h"
-#include "ApeIManualMaterial.h"
+#include <thread>
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "utils/ApeInterpolator.h"
 
 #define THIS_PLUGINNAME "ApeAvatarPlugin"
 
@@ -51,7 +51,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		void eventCallBack(const Ape::Event& event);
 
@@ -93,7 +93,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAvatarPlugin, DestroyApeAvatarPlugin);
 		return 0;
 	}

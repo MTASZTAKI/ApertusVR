@@ -23,34 +23,34 @@ SOFTWARE.*/
 #ifndef APE_ENGINEERINGSCENEPLUGIN_H
 #define APE_ENGINEERINGSCENEPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
+#include <list>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
-#include <list>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIPbsPass.h"
-#include "ApeIManualPass.h"
-#include "ApeInterpolator.h"
-#include "ApeIFileGeometry.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "utils/ApeInterpolator.h"
 
 #define THIS_PLUGINNAME "ApeEngineeringScenePlugin"
 
@@ -61,7 +61,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -101,7 +101,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeEngineeringScenePlugin, DestroyApeEngineeringScenePlugin);
 		return 0;
 	}

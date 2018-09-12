@@ -1,20 +1,20 @@
-#include <iostream>
 #include "ApeGyorPlugin.h"
 
 Ape::ApeGyorPlugin::ApeGyorPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeGyorPlugin::~ApeGyorPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
@@ -71,7 +71,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperRightHelperNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperRightHelperNodeInitialOrientation: " << mGripperRightHelperNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperRightHelperNodeInitialOrientation: " << mGripperRightHelperNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//	else if (event.subjectName == "JOINT(Rotational)(gripR5)16ur10Gripper")
@@ -79,7 +79,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperLeftHelperNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperLeftHelperNodeInitialOrientation: " << mGripperLeftHelperNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperLeftHelperNodeInitialOrientation: " << mGripperLeftHelperNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//	else if (event.subjectName == "JOINT(Rotational)(gripR1)18ur10Gripper")
@@ -87,7 +87,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperRightRootNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperRightRootNodeInitialOrientation: " << mGripperRightRootNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperRightRootNodeInitialOrientation: " << mGripperRightRootNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//	else if (event.subjectName == "JOINT(Rotational)(gripR1)12ur10Gripper")
@@ -95,7 +95,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperLeftRootNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperLeftRootNodeInitialOrientation: " << mGripperLeftRootNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperLeftRootNodeInitialOrientation: " << mGripperLeftRootNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//	else if (event.subjectName == "JOINT(Rotational)(gripR3)14ur10Gripper")
@@ -103,7 +103,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperLeftEndNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperLeftEndNodeInitialOrientation: " << mGripperLeftEndNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperLeftEndNodeInitialOrientation: " << mGripperLeftEndNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//	else if (event.subjectName == "JOINT(Rotational)(gripR3)20ur10Gripper")
@@ -111,7 +111,7 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 	//		if (auto node = mpScene->getNode(event.subjectName).lock())
 	//		{
 	//			mGripperRightEndNodeInitialOrientation = node->getOrientation();
-	//			//LOG(LOG_TYPE_DEBUG, "mGripperRightEndNodeInitialOrientation: " << mGripperRightEndNodeInitialOrientation.toString());
+	//			//APE_LOG_DEBUG("mGripperRightEndNodeInitialOrientation: " << mGripperRightEndNodeInitialOrientation.toString());
 	//		}
 	//	}
 	//}
@@ -119,21 +119,21 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeGyorPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
-	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpScene->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
+	if (auto skyBoxMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", Ape::Entity::MATERIAL_FILE).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox.material");
 		skyBoxMaterial->setAsSkyBox();
 	}
-	if (auto planeNode = mpScene->createNode("planeNode").lock())
+	if (auto planeNode = mpSceneManager->createNode("planeNode").lock())
 	{
 		planeNode->setPosition(Ape::Vector3(0, -20, 0));
-		if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+		if (auto planeMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("planeMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(Ape::Color(0.1f, 0.1f, 0.1f));
 			planeMaterial->setSpecularColor(Ape::Color(0.3f, 0.3f, 0.2f));
-			if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
+			if (auto plane = std::static_pointer_cast<Ape::IPlaneGeometry>(mpSceneManager->createEntity("plane", Ape::Entity::GEOMETRY_PLANE).lock()))
 			{
 				plane->setParameters(Ape::Vector2(1, 1), Ape::Vector2(1000, 1000), Ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
@@ -141,26 +141,26 @@ void Ape::ApeGyorPlugin::Init()
 			}
 		}
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light", Ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("light", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(1, -1, 0));
 		light->setDiffuseColor(Ape::Color(0.5f, 0.5f, 0.6f));
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.7f));
 	}
-	if (auto light = std::static_pointer_cast<Ape::ILight>(mpScene->createEntity("light2", Ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("light2", Ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(Ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(Ape::Vector3(0, -1, -1));
 		light->setDiffuseColor(Ape::Color(0.5f, 0.5f, 0.6f));
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.7f));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	//while (!(mGripperRightRootNode.lock() && mGripperLeftRootNode.lock() && mGripperLeftHelperNode.lock() && mGripperRightHelperNode.lock()
 	//	&& mGripperRightEndNode.lock() && mGripperLeftEndNode.lock()))
 	//{
@@ -184,7 +184,7 @@ void Ape::ApeGyorPlugin::Run()
 
 	while (true)
 	{
-		//LOG(LOG_TYPE_DEBUG, "gripperCurrentValue: " << gripperCurrentValue);
+		//APE_LOG_DEBUG("gripperCurrentValue: " << gripperCurrentValue);
 		/*Ape::Degree degree = gripperCurrentValue * degreeStep;
 		Ape::Quaternion orientation;
 		orientation.FromAngleAxis(Ape::Radian(degree.toRadian()), axis);
@@ -222,25 +222,29 @@ void Ape::ApeGyorPlugin::Run()
 		}*/
 		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

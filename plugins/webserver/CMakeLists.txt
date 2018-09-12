@@ -123,7 +123,7 @@ add_library (ApeWebserverPlugin SHARED ${SOURCES} ${HEADERS})
 #	include_directories(${Boost_INCLUDE_DIR})
 #	link_directories(${Boost_LIBRARY_DIRS})
 	# Link with dependency libraries
-	#target_link_libraries (ApeWebserverPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager Boost::system Boost::date_time Boost::regex)
+	#target_link_libraries (ApeWebserverPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager Boost::system Boost::date_time Boost::regex)
 #else ()
 	#message(FATAL_ERROR "Boost: missing libraries.")
 #endif()
@@ -146,7 +146,7 @@ if (WIN32)
 	set_property(TARGET MY_BOOST_REGEX PROPERTY IMPORTED_LOCATION_RELEASE ${BOOST_LIB_REGEX})
 endif ()
 
-target_link_libraries (ApeWebserverPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager MY_BOOST_SYSTEM MY_BOOST_DATETIME MY_BOOST_REGEX)
+target_link_libraries (ApeWebserverPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager MY_BOOST_SYSTEM MY_BOOST_DATETIME MY_BOOST_REGEX)
 
 set_property (TARGET ApeWebserverPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

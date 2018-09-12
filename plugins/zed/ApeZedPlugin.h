@@ -23,24 +23,26 @@ SOFTWARE.*/
 #ifndef APE_ZEDPLUGIN_H
 #define APE_ZEDPLUGIN_H
 
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <thread> 
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeIScene.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIManualPass.h"
-#include <ApeITubeGeometry.h>
-#include <ApeIPointCloud.h>
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
 #include <sl/Camera.hpp>
 
 #define THIS_PLUGINNAME "ApeZedPlugin"
@@ -72,7 +74,7 @@ namespace Ape
 		void Restart() override;
 
 	private:
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -121,7 +123,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateZedPlugin, DestroyZedPlugin);
 		return 0;
 	}

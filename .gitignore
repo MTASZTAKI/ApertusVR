@@ -106,6 +106,9 @@ node_modules/
 3rdParty/boost/**/project-config.jam
 3rdParty/boost/**/bin.v2/*
 
+# Leap Motion
+3rdParty/leapMotion/*
+
 # Exclude thirdparties
 !3rdParty/oculus/LibOVR/Lib/*
 !3rdParty/oculusRT/*

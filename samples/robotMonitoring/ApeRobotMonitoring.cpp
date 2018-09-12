@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <sstream>
-#include "ApeSystem.h"
-#include "ApeFileSystem.h"
+#include "system/ApeSystem.h"
+#include "system/ApeFileSystem.h"
 
 int main(int argc, char** argv)
 {

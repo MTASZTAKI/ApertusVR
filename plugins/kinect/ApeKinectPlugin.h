@@ -23,37 +23,35 @@ SOFTWARE.*/
 #ifndef APE_KINECTPLUGIN_H
 #define APE_KINECTPLUGIN_H
 
-#include <iostream>
-#include <string>
-#include <thread> 
 #include <fstream>
-#include <strsafe.h>
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <iostream>
-#include "ApeInterpolator.h"
+#include <strsafe.h>
+#include <thread>
 #include "stdafx.h"
 #include "resource.h"
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "utils/ApeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeIScene.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIManualPass.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIPointCloud.h"
-#include "ApeIFileGeometry.h"
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
 
@@ -150,7 +148,7 @@ namespace Ape
 		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
 		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -204,7 +202,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateKinectPlugin, DestroyKinectPlugin);
 		return 0;
 	}

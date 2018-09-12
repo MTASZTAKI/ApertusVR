@@ -11,34 +11,34 @@ TexasEEG::Bubble::Bubble(Ape::Vector3 pos, int maxCount)
 	mIsTimedOut = false;
 	geometryCount++;
 	id = geometryCount;
-	LOG_TRACE("Bubbl" << " id: " << id << " pos: " << pos.toString() << " maxCount: " << maxCount);
+	APE_LOG_TRACE("Bubbl" << " id: " << id << " pos: " << pos.toString() << " maxCount: " << maxCount);
 }
 
 TexasEEG::Bubble::~Bubble()
 {
-	LOG_TRACE("");
+	APE_LOG_TRACE("");
 	finish();
 }
 
 void TexasEEG::Bubble::init()
 {
 	std::string indexStr = std::to_string(id);
-	LOG_TRACE("geometryCount: " << indexStr);
-	mpScene = Ape::IScene::getSingletonPtr();
+	APE_LOG_TRACE("geometryCount: " << indexStr);
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 
-	mBubbleNode = mpScene->createNode("bubbleNode" + indexStr);
+	mBubbleNode = mpSceneManager->createNode("bubbleNode" + indexStr);
 	if (auto bubbleNode = mBubbleNode.lock())
 	{
 		bubbleNode->setPosition(mPosition);
 		bubbleNode->setScale(Ape::Vector3(0.1, 0.1, 0.1));
 
-		mGeometry = mpScene->createEntity("bubbleGeometry" + indexStr, Ape::Entity::GEOMETRY_SPHERE);
+		mGeometry = mpSceneManager->createEntity("bubbleGeometry" + indexStr, Ape::Entity::GEOMETRY_SPHERE);
 		if (auto bubbleGeometry = std::static_pointer_cast<Ape::ISphereGeometry>(mGeometry.lock()))
 		{
 			bubbleGeometry->setParameters(200.0f, Ape::Vector2(1, 1));
 			bubbleGeometry->setParentNode(bubbleNode);
 
-			mMaterial = mpScene->createEntity("bubbleMaterial" + indexStr, Ape::Entity::MATERIAL_MANUAL);
+			mMaterial = mpSceneManager->createEntity("bubbleMaterial" + indexStr, Ape::Entity::MATERIAL_MANUAL);
 			if (auto material = std::static_pointer_cast<Ape::IManualMaterial>(mMaterial.lock()))
 			{
 				float opacity = 0.12f;
@@ -49,7 +49,7 @@ void TexasEEG::Bubble::init()
 			}
 		}
 
-		mCounterText = mpScene->createEntity("bubbleText" + indexStr, Ape::Entity::GEOMETRY_TEXT);
+		mCounterText = mpSceneManager->createEntity("bubbleText" + indexStr, Ape::Entity::GEOMETRY_TEXT);
 		if (auto counterText = std::static_pointer_cast<Ape::ITextGeometry>(mCounterText.lock()))
 		{
 			counterText->setCaption(std::to_string(mTimerCount));

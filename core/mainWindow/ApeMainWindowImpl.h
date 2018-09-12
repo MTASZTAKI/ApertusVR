@@ -33,7 +33,7 @@ SOFTWARE.*/
 #define APE_MAINWINDOW_DLL_EXPORT 
 #endif
 
-#include "ApeIMainWindow.h"
+#include "system/ApeIMainWindow.h"
 
 namespace Ape
 { 

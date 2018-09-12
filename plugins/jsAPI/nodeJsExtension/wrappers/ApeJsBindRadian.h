@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_RADIAN_H
 #define APE_JSBIND_RADIAN_H
 
+#include "datatypes/ApeRadian.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeRadian.h"
 
 using namespace Ape;
 

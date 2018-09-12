@@ -34,17 +34,17 @@ SOFTWARE.*/
 #endif
 
 #include <algorithm>
-#include <thread>
-#include <mutex>
 #include <condition_variable>
-#include <string>
 #include <cstdio>
 #include <cstdlib>
-#include "ApeIPluginManager.h"
+#include <mutex>
+#include <string>
+#include <thread>
+#include "managers/ApeILogManager.h"
+#include "managers/ApeIPluginManager.h"
+#include "managers/ApeISystemConfig.h"
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
-#include "ApeISystemConfig.h"
-#include "ApeILogManager.h"
 
 namespace Ape
 { 

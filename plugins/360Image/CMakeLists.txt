@@ -36,7 +36,7 @@ include_directories(
 add_library (Ape360ImagePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (Ape360ImagePlugin ApePluginManager ApeScene ApeEventManager ApeLogManager)
+target_link_libraries (Ape360ImagePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
 
 set_property (TARGET Ape360ImagePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

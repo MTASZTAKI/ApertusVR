@@ -21,9 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #if _WIN32
-#include <windows.h>
+	#include <windows.h>
 #else
-#include <dlfcn.h>
+	#include <dlfcn.h>
 #endif
 #include "ApePluginInstance.h"
 

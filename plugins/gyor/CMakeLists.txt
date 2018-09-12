@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeGyorPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeGyorPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow )
+target_link_libraries (ApeGyorPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow )
 
 set_property (TARGET ApeGyorPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -23,29 +23,29 @@ SOFTWARE.*/
 #ifndef APE_OCULUSDK2PLUGIN_H
 #define APE_OCULUSDK2PLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <memory>
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeMatrix4.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeITextGeometry.h"
 #include "OVR.h"
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIManualPass.h"
-#include "ApeIManualTexture.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeICamera.h"
-#include "ApeMatrix4.h"
-#include "ApeIMainWindow.h"
-#include "ApeIManualMaterial.h"
-#include "ApeISystemConfig.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
@@ -56,7 +56,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -112,7 +112,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
 		return 0;
 	}

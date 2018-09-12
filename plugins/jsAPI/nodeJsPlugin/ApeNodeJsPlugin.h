@@ -23,19 +23,20 @@ SOFTWARE.*/
 #ifndef APE_NODEJSPLUGIN_H
 #define APE_NODEJSPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
-#include <memory>
+#include <iostream>
 #include <map>
+#include <memory>
+#include <string>
+#include <thread>
 #include <vector>
-#include "ApePluginAPI.h"
-#include "ApeISystemConfig.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeEvent.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeEvent.h"
+#include "sceneelements/ApeINode.h"
 
 #define THIS_PLUGINNAME "ApeNodeJsPlugin"
 
@@ -54,13 +55,13 @@ private:
 
 	Ape::IEventManager* mpEventManager;
 
-	Ape::IScene* mpScene;
+	Ape::ISceneManager* mpSceneManager;
 
 	Ape::ISystemConfig* mpSystemConfig;
 
 	NodeJsPluginConfig mNodeJsPluginConfig;
 
-	void nodeEventCallBack(const Ape::Event& event);
+	void eventCallBack(const Ape::Event& event);
 
 	void parseNodeJsConfig();
 
@@ -96,7 +97,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 APE_PLUGIN_ALLOC()
 {
-	LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+	APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
 	return 0;
 }

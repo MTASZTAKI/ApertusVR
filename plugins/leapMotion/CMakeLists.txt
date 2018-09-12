@@ -81,7 +81,7 @@ include_directories(
 add_library (ApeLeapMotionPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLeapMotionPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_LEAP)
+target_link_libraries (ApeLeapMotionPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_LEAP)
 	
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET ApeLeapMotionPlugin PROPERTY FOLDER "Plugins")

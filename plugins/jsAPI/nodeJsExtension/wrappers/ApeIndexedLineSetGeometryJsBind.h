@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "Ape.h"
-#include "ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
 #include "ApeJsBindNodeImpl.h"
 
 #ifdef NBIND_CLASS

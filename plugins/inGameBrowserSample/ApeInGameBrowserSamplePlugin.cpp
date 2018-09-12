@@ -1,23 +1,22 @@
-#include <iostream>
 #include "ApeInGameBrowserSamplePlugin.h"
 
 Ape::ApeInGameBrowserSamplePlugin::ApeInGameBrowserSamplePlugin()
 {
-	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeInGameBrowserSamplePlugin::~ApeInGameBrowserSamplePlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	if (auto browserNode = mpScene->createNode("browserNode").lock())
+	APE_LOG_FUNC_ENTER();
+	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
 	{
 		browserNode->setPosition(Ape::Vector3(0, 0, -150));
 		Ape::Radian angle(1.57f);
@@ -29,11 +28,11 @@ void Ape::ApeInGameBrowserSamplePlugin::Init()
 		Ape::Quaternion orientation2;
 		orientation2.FromAngleAxis(angle2, axis2);
 		browserNode->setOrientation(orientation * orientation2);
-		if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity("browserGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+		if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpSceneManager->createEntity("browserGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 		{
 			browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(102.4, 76.8), Ape::Vector2(1, 1));
 			browserGeometry->setParentNode(browserNode);
-			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("browser", Ape::Entity::BROWSER).lock()))
+			if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity("browser", Ape::Entity::BROWSER).lock()))
 			{
 				browser->setResoultion(1024, 768);
 				browser->setURL("https://www.google.com");
@@ -41,30 +40,35 @@ void Ape::ApeInGameBrowserSamplePlugin::Init()
 			}
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Run()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeInGameBrowserSamplePlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

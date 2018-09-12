@@ -1,9 +1,4 @@
-#include <fstream>
 #include "ApeZedPlugin.h"
-#include <sstream>
-#include <string>
-#include <iostream>
-#include <fstream>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
@@ -11,8 +6,8 @@
 
 Ape::ZedPlugin::ZedPlugin()
 {
-	LOG_FUNC_ENTER();
-	mpScene = Ape::IScene::getSingletonPtr();
+	APE_LOG_FUNC_ENTER();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
@@ -25,15 +20,16 @@ Ape::ZedPlugin::ZedPlugin()
 	mApePointCloudColors = Ape::PointCloudColors();
 	mApePointCloudNode = Ape::NodeWeakPtr();
 	mApePointCloud = Ape::PointCloudWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ZedPlugin::~ZedPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
 	mZedPointCloud.free(sl::MEM_CPU);
 	mZed.close();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::eventCallBack(const Ape::Event& event)
@@ -43,12 +39,8 @@ void Ape::ZedPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ZedPlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
-	LOG(LOG_TYPE_DEBUG, "try to init Zed");
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("try to init Zed");
 	sl::InitParameters initParameters;
 	initParameters.camera_resolution = sl::RESOLUTION_HD1080;
 	initParameters.depth_mode = sl::DEPTH_MODE_ULTRA;
@@ -56,7 +48,7 @@ void Ape::ZedPlugin::Init()
 	initParameters.coordinate_units = sl::UNIT_CENTIMETER;
 	sl::ERROR_CODE err = mZed.open(initParameters);
 	if (err != sl::SUCCESS) {
-		LOG(LOG_TYPE_DEBUG, "Zed error: " << sl::toString(err));
+		APE_LOG_DEBUG("Zed error: " << sl::toString(err));
 		mZed.close();
 	}
 	mZed.setConfidenceThreshold(95);
@@ -65,16 +57,16 @@ void Ape::ZedPlugin::Init()
 	mPointCloudSize = mZedResolutionWidth * mZedResolutionHeight;
 	mApePointCloudPoints.resize(mPointCloudSize * 3);
 	mApePointCloudColors.resize(mPointCloudSize * 3);
-	LOG(LOG_TYPE_DEBUG, "Zed init was successful, point cloud size: " << mPointCloudSize);
-	if (auto apePointCloudNode = mpScene->createNode("ZedPointCloudNode").lock())
+	APE_LOG_DEBUG("Zed init was successful, point cloud size: " << mPointCloudSize);
+	if (auto apePointCloudNode = mpSceneManager->createNode("ZedPointCloudNode").lock())
 	{
-		if (auto apePointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("ZedPointCloud", Ape::Entity::Type::POINT_CLOUD).lock()))
+		if (auto apePointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("ZedPointCloud", Ape::Entity::Type::POINT_CLOUD).lock()))
 		{
 			apePointCloud->setParameters(mApePointCloudPoints, mApePointCloudColors, mPointCloudBoundingSphereRadius);
 			apePointCloud->setParentNode(apePointCloudNode);
 			mApePointCloud = apePointCloud;
 		}
-		if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity("ZedText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("ZedText", Ape::Entity::GEOMETRY_TEXT).lock()))
 		{
 			text->showOnTop(true);
 			text->setCaption("ZedMini");
@@ -82,12 +74,12 @@ void Ape::ZedPlugin::Init()
 		}
 		mApePointCloudNode = apePointCloudNode;
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	sl::RuntimeParameters runtime_parameters;
 	runtime_parameters.sensing_mode = sl::SENSING_MODE_STANDARD;
 	while (true)
@@ -119,28 +111,30 @@ void Ape::ZedPlugin::Run()
 				apePointCloud->updateColors(mApePointCloudColors);
 			}
 		}
-		//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ZedPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ZedPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

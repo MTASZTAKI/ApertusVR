@@ -1,15 +1,14 @@
-#include <iostream>
 #include "ApePresentationScenePlugin.h"
 
 Ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpKeyboard = NULL;
 	mpMouse = NULL;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
@@ -49,19 +48,19 @@ Ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
 	mHumanXoffset = 0.0f;
 	mHumanZoffset = 160.0f;
 	mContext = Context::UNKOWN;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApePresentationScenePlugin::~ApePresentationScenePlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::CAMERA_CREATE)
-		mCamera = std::static_pointer_cast<Ape::ICamera>(mpScene->getEntity(event.subjectName).lock());
+		mCamera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock());
 	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
 		if (auto rayGeometry = mRayGeometry.lock())
@@ -87,15 +86,10 @@ void Ape::ApePresentationScenePlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApePresentationScenePlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
-
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "main window was found");
 
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpMainWindow->getHandle();
@@ -127,9 +121,9 @@ void Ape::ApePresentationScenePlugin::Init()
 		ms.height = mpMainWindow->getHeight();
 	}
 	/*rayGeomtery for rayquery*/
-	if (auto rayNode = mpScene->createNode("rayNode").lock())
+	if (auto rayNode = mpSceneManager->createNode("rayNode").lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->createEntity("rayQuery", Ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery", Ape::Entity::GEOMETRY_RAY).lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -437,7 +431,7 @@ void Ape::ApePresentationScenePlugin::Init()
 		Ape::Quaternion(0.195, 0, -0.981, 0) *  mOldXMLFormatRotationQuaternion, 77, 46));
 
 	//Overlay																																																																   //}	/*overlay begin*/
-	//if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
+	//if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", Ape::Entity::BROWSER).lock()))
 	//{
 	//	browser->setResoultion(2048, 1024);
 	//	browser->setURL("http://srv.mvv.sztaki.hu/temp/indigo/bg/index.html");
@@ -445,12 +439,12 @@ void Ape::ApePresentationScenePlugin::Init()
 	//	mOverlayBrowser = browser;
 	//	mActiveBrowser = browser;
 	//	/*mouse begin*/
-	//	if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+	//	if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 	//	{
 	//		mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
 	//		mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 	//		mouseMaterial->setLightingEnabled(false);
-	//		if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+	//		if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
 	//		{
 	//			mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 	//			mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
@@ -506,37 +500,37 @@ void Ape::ApePresentationScenePlugin::jumpToStoryElement(Ape::NodeSharedPtr user
 
 void Ape::ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 {
-	if (!mpScene->getNode(storyElement.browserName).lock())
+	if (!mpSceneManager->getNode(storyElement.browserName).lock())
 	{
-		if (auto browserNode = mpScene->createNode(storyElement.browserName).lock())
+		if (auto browserNode = mpSceneManager->createNode(storyElement.browserName).lock())
 		{
 			browserNode->setPosition(storyElement.browserPosition);
 			browserNode->setOrientation(storyElement.browserOrientation);
-			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(storyElement.browserName + "geometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+			if (auto browserGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpSceneManager->createEntity(storyElement.browserName + "geometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 			{
 				browserGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(storyElement.browserWidth, storyElement.browserHeight), Ape::Vector2(1, 1));
 				browserGeometry->setParentNode(browserNode);
-				if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->createEntity(storyElement.browserName + "browser", Ape::Entity::BROWSER).lock()))
+				if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->createEntity(storyElement.browserName + "browser", Ape::Entity::BROWSER).lock()))
 				{
 					browser->setResoultion(storyElement.browserResolutionVertical, storyElement.browserResolutionHorizontal);
 					browser->setURL(storyElement.browserURL);
 					browser->setGeometry(browserGeometry);
 					mBrowsers[storyElement.browserName] = browser;
-					if (auto browserMouseNode = mpScene->createNode(storyElement.browserName + "mouse").lock())
+					if (auto browserMouseNode = mpSceneManager->createNode(storyElement.browserName + "mouse").lock())
 					{
 						browserMouseNode->setParentNode(browserNode);
 						browserMouseNode->setPosition(Ape::Vector3(0, -1, 0));
-						if (auto mouseGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpScene->createEntity(storyElement.browserName + "mouseGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
+						if (auto mouseGeometry = std::static_pointer_cast<Ape::IPlaneGeometry>(mpSceneManager->createEntity(storyElement.browserName + "mouseGeometry", Ape::Entity::GEOMETRY_PLANE).lock()))
 						{
 							mouseGeometry->setParameters(Ape::Vector2(1, 1), Ape::Vector2(storyElement.browserWidth, storyElement.browserHeight), Ape::Vector2(1, 1));
 							mouseGeometry->setParentNode(browserMouseNode);
-							if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
+							if (auto mouseMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(storyElement.browserName + "mouseMaterial", Ape::Entity::MATERIAL_MANUAL).lock()))
 							{
 								mouseMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
 								mouseMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 								mouseMaterial->setLightingEnabled(false);
 								mouseMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
-								if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpScene->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
+								if (auto mouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->createEntity(storyElement.browserName + "mouseTexture", Ape::Entity::TEXTURE_UNIT).lock()))
 								{
 									mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 									mouseTexture->setTextureAddressingMode(Ape::Texture::AddressingMode::CLAMP);
@@ -554,7 +548,7 @@ void Ape::ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 	}
 	else
 	{
-		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpScene->getEntity(storyElement.browserName + "browser").lock()))
+		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(storyElement.browserName + "browser").lock()))
 		{
 			browser->setURL(storyElement.browserURL);
 		}
@@ -563,11 +557,11 @@ void Ape::ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 
 void Ape::ApePresentationScenePlugin::createMesh(std::string name, Ape::Vector3 position, Ape::Quaternion orientation)
 {
-	if (auto node = mpScene->createNode(name).lock())
+	if (auto node = mpSceneManager->createNode(name).lock())
 	{
 		node->setPosition(position);
 		node->setOrientation(orientation);
-		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpScene->createEntity(name + ".mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		if (auto meshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpSceneManager->createEntity(name + ".mesh", Ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			meshFile->setFileName(name + ".mesh");
 			meshFile->setParentNode(node);
@@ -626,7 +620,7 @@ bool Ape::ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 		mContext = Context::BROWSER;
 		std::string keyAsString = mpKeyboard->getAsString(e.key);
 		std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-		//LOG(LOG_TYPE_DEBUG, "keyAsString:" << keyAsString);
+		//APE_LOG_DEBUG("keyAsString:" << keyAsString);
 		std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 		if (e.key == OIS::KeyCode::KC_BACK)
 			keyAsWString = 8;
@@ -747,8 +741,8 @@ bool Ape::ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 			cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight()) * activeBrowser->getResoultion().y;
 			activeBrowser->mouseMoved(cursorBrowserPosition);
 			activeBrowser->mouseScroll(Ape::Vector2(0, e.state.Z.rel));
-			//LOG(LOG_TYPE_DEBUG, "cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
-			//LOG(LOG_TYPE_DEBUG, "cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
+			//APE_LOG_DEBUG("cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
+			//APE_LOG_DEBUG("cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
 		}
 	}
 	return true;
@@ -854,20 +848,24 @@ void Ape::ApePresentationScenePlugin::Run()
 
 void Ape::ApePresentationScenePlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePresentationScenePlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePresentationScenePlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePresentationScenePlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }

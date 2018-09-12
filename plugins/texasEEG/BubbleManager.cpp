@@ -3,20 +3,20 @@
 
 TexasEEG::BubbleManager::BubbleManager(Ape::NodeWeakPtr userNode)
 {
-	LOG_TRACE("");
+	APE_LOG_TRACE("");
 	mUserNode = userNode;
 }
 
 TexasEEG::BubbleManager::~BubbleManager()
 {
-	LOG_TRACE("");
+	APE_LOG_TRACE("");
 }
 
 void TexasEEG::BubbleManager::Run()
 {
 	while (isGameOver() == false)
 	{
-		LOG_TRACE("mGameOver: " << (mGameOver ? "true" : "false"));
+		APE_LOG_TRACE("mGameOver: " << (mGameOver ? "true" : "false"));
 		UpdateTimers();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
@@ -49,16 +49,16 @@ void TexasEEG::BubbleManager::UpdateTimers()
 	if (mActivatedBubbleQueue.size() == 0)
 	{
 		mGameOver = true;
-		LOG_TRACE("gameOver");
+		APE_LOG_TRACE("gameOver");
 	}
-	LOG_TRACE("sumCount: " << sumCount);
+	APE_LOG_TRACE("sumCount: " << sumCount);
 }
 
 void TexasEEG::BubbleManager::CreateBubbles(int num)
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		LOG_TRACE("userNode.Orientation: " << userNode->getOrientation().toString());
+		APE_LOG_TRACE("userNode.Orientation: " << userNode->getOrientation().toString());
 
 		int newXDist = 0;
 		int newYDist = 0;
@@ -66,7 +66,7 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 		int radius = 200;
 		for (int i = 0; i < num; i++)
 		{
-			LOG_TRACE("i: " << i);
+			APE_LOG_TRACE("i: " << i);
 
 			newXDist = userNode->getPosition().x + ((std::rand() % 100) - 100);
 			newYDist = ((std::rand() % 100) - 100);
@@ -81,11 +81,11 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 			}
 
 			Ape::Vector3 newPos = Ape::Vector3(newXDist, newYDist, newZDist);
-			LOG_TRACE("mBubbleQueue.push_back(): " << newPos.toString());
+			APE_LOG_TRACE("mBubbleQueue.push_back(): " << newPos.toString());
 			mBubbleQueue.push_back(new TexasEEG::Bubble(newPos));
 		}
 	}
-	LOG_TRACE("mBubbleQueue.size: " << mBubbleQueue.size());
+	APE_LOG_TRACE("mBubbleQueue.size: " << mBubbleQueue.size());
 }
 
 void TexasEEG::BubbleManager::RemoveBubbles(int num)
@@ -105,14 +105,14 @@ void TexasEEG::BubbleManager::StartBubbles(int num)
 {
 	int i = 0;
 	num = std::min((int)mBubbleQueue.size(), num);
-	LOG_TRACE("num: " << num);
+	APE_LOG_TRACE("num: " << num);
 	while (i < num)
 	{
 		mActivatedBubbleQueue.push_back(mBubbleQueue.front());
 		mBubbleQueue.pop_front();
 
 		int randTime = (std::rand() % 15) + 5;
-		LOG_TRACE("mActivatedBubbleQueue[" << i << "]: " << mActivatedBubbleQueue.at(i)->getName() << " time: " << randTime);
+		APE_LOG_TRACE("mActivatedBubbleQueue[" << i << "]: " << mActivatedBubbleQueue.at(i)->getName() << " time: " << randTime);
 		i++;
 		mActivatedBubbleQueue.back()->start(randTime);
 	}

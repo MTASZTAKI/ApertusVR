@@ -66,7 +66,7 @@ void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
-		//LOG(LOG_TYPE_DEBUG, "browser id: " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url)
+		//APE_LOG_DEBUG("browser id: " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url)
 	}
 }
 
@@ -78,7 +78,7 @@ void Ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefB
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseClickEvent(cefMouseEvent, mouseButtonType, !isClickDown, 1);
-		//LOG(LOG_TYPE_DEBUG, "type:" << mouseButtonType << " isDown: " << isClickDown);
+		//APE_LOG_DEBUG("type:" << mouseButtonType << " isDown: " << isClickDown);
 	}
 }
 
@@ -90,7 +90,7 @@ void Ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int delta
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseWheelEvent(cefMouseEvent, deltaX, deltaY);
-		//LOG(LOG_TYPE_DEBUG, "x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y << " deltaY: " << deltaY);
+		//APE_LOG_DEBUG("x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y << " deltaY: " << deltaY);
 	}
 }
 
@@ -104,7 +104,7 @@ void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
 		cefMouseEvent.x = mMouseCurrentPosition.x;
 		cefMouseEvent.y = mMouseCurrentPosition.y;
 		mBrowsers[browserID]->GetHost()->SendMouseMoveEvent(cefMouseEvent, false);
-		//LOG(LOG_TYPE_DEBUG, "x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y);
+		//APE_LOG_DEBUG("x: " << cefMouseEvent.x << " y: " << cefMouseEvent.y);
 	}
 }
 
@@ -141,6 +141,6 @@ void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 		cefKeyEvent.type = cef_key_event_type_t::KEYEVENT_KEYUP;
 		mBrowsers[browserID]->GetHost()->SendKeyEvent(cefKeyEvent);
 
-		LOG_TRACE("windows_key_code: " << cefKeyEvent.windows_key_code << " keyASCIIValue: " << keyASCIIValue);
+		APE_LOG_TRACE("windows_key_code: " << cefKeyEvent.windows_key_code << " keyASCIIValue: " << keyASCIIValue);
 	}
 }

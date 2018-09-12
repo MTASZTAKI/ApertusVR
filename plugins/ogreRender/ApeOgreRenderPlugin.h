@@ -23,11 +23,49 @@ SOFTWARE.*/
 #ifndef APE_OGRERENDERPLUGIN_H
 #define APE_OGRERENDERPLUGIN_H
 
-#include <iostream>
-#include <thread>
 #include <chrono>
-#include <memory>
 #include <fstream>
+#include <iostream>
+#include <memory>
+#include <thread>
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeIBoxGeometry.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeICylinderGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeIManualTexture.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeIRayGeometry.h"
+#include "sceneelements/ApeISky.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITorusGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIUnitTexture.h"
+#include "sceneelements/ApeIWater.h"
+#define APE_DOUBLEQUEUE_UNIQUE
+#include "utils/ApeDoubleQueue.h"
+#include "ApeOgreShaderGeneratorResolver.h"
+#include "ApeOgreMovableText.h"
+#include "ApeOgrePointCloud.h"
+#include "ApeOgreConversions.h"
+#include "ApeOgreRenderPluginConfigs.h"
 #include "OgreSceneManager.h"
 #include "OgreRoot.h"
 #include "OgreConfigFile.h"
@@ -77,51 +115,13 @@ SOFTWARE.*/
 #include "Procedural.h"
 #include "Hydrax.h"
 #ifdef HYDRAX_NEW
-	#include "Noise/Perlin/HydraxPerlin.h"
-	#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
+#include "Noise/Perlin/HydraxPerlin.h"
+#include "Modules/ProjectedGrid/HydraxProjectedGrid.h"
 #else
-	#include "Noise/Perlin/Perlin.h"
-	#include "Modules/ProjectedGrid/ProjectedGrid.h"
+#include "Noise/Perlin/Perlin.h"
+#include "Modules/ProjectedGrid/ProjectedGrid.h"
 #endif
 #include "SkyX.h"
-#include "ApeIFileMaterial.h"
-#include "ApeITextGeometry.h"
-#include "ApeILight.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeIBoxGeometry.h"
-#include "ApeICylinderGeometry.h"
-#include "ApeITorusGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIRayGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeIScene.h"
-#include "ApeICamera.h"
-#include "ApeIPointCloud.h"
-#define APE_DOUBLEQUEUE_UNIQUE
-#include "ApeDoubleQueue.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeOgreMovableText.h"
-#include "ApeOgrePointCloud.h"
-#include "ApeOgreConversions.h"
-#include "ApeOgreRenderPluginConfigs.h"
-#include "ApeISystemConfig.h"
-#include "ApeIMainWindow.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIUnitTexture.h"
-#include "ApeIPbsPass.h"
-#include "ApeIManualPass.h"
-#include "ApeIManualTexture.h"
-#include "ApeISky.h"
-#include "ApeIWater.h"
-#include "ApeOgreShaderGeneratorResolver.h"
 
 #define THIS_PLUGINNAME "ApeOgreRenderPlugin"
 
@@ -159,7 +159,7 @@ namespace Ape
 	private:
 		Ogre::Root* mpRoot;
 
-		Ogre::SceneManager* mpSceneMgr;
+		Ogre::SceneManager* mpOgreSceneManager;
 
 		std::vector<Ogre::Camera*> mOgreCameras;
 
@@ -199,7 +199,7 @@ namespace Ape
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::IEventManager* mpEventManager;
 
@@ -242,7 +242,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
 		return 0;
 	}

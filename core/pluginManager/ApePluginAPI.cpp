@@ -20,9 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include "plugin/ApeIPlugin.h"
+#include "plugin/ApePluginAPI.h"
 #include "ApePluginFactory.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
 
 void ApeRegisterPlugin(const char *type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb)
 {

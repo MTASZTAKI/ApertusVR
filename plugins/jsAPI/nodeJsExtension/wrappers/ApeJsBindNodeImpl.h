@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_NODEIMPL_H
 #define APE_JSBIND_NODEIMPL_H
 
+#include "datatypes/ApeEuler.h"
+#include "datatypes/ApeMatrix4.h"
+#include "ApeNodeImpl.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeNodeImpl.h"
-#include "ApeEuler.h"
-#include "ApeMatrix4.h"
 
 #ifdef NBIND_CLASS
 

@@ -23,31 +23,31 @@ SOFTWARE.*/
 #ifndef APE_FOBHEADTRACKINGPLUGIN_H
 #define APE_FOBHEADTRACKINGPLUGIN_H
 
-#include <iostream>
-#include <thread>
+#include <algorithm>
 #include <chrono>
+#include <iostream>
+#include <iterator>
+#include <map>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
-#include <map>
-#include <algorithm>
-#include <iterator>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIMainWindow.h"
+#include "system/ApeIMainWindow.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISystemConfig.h"
+#include "datatypes/ApeMatrix4.h"
+#include "datatypes/ApeEuler.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "utils/ApeDoubleQueue.h"
 #include "ApeFobHeadTracking.h"
-#include "ApeEuler.h"
-#include "ApeDoubleQueue.h"
 #include "ApeFobHeadTrackingPluginConfigs.h"
-#include "ApeMatrix4.h"
-#include "ApeIConeGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeITextGeometry.h"
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
@@ -60,7 +60,7 @@ namespace Ape
 
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::NodeWeakPtr mUserNode;
 
@@ -136,7 +136,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
 		return 0;
 	}
