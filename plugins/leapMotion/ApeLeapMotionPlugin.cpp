@@ -41,13 +41,10 @@ void Ape::LeapMotionPlugin::Init()
 	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
-	APE_LOG_DEBUG("waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
 	mLeapController.addListener(*this);
 	mLeapController.setPolicyFlags(Leap::Controller::POLICY_BACKGROUND_FRAMES);
 	onFrame(mLeapController);
+
 	APE_LOG_FUNC_LEAVE();
 }
 
