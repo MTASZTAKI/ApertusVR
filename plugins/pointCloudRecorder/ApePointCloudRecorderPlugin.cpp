@@ -3,7 +3,7 @@
 
 Ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -20,17 +20,17 @@ Ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 	mPointCloudSize = 0;
 	mCurrentPoints = Ape::PointCloudPoints();
 	mCurrentColors = Ape::PointCloudColors();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (mFileStreamOut.is_open())
 	{
 		mFileStreamOut.close();
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::readFrame()
@@ -92,7 +92,7 @@ void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApePointCloudRecorderPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mRecordedPointCloudName = "pointCloud_Kinect";
 	mIsRecorder = false;
 	mIsPlayer = true;
@@ -133,12 +133,12 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 			mPointCloudNode = pointCloudNode;
 		}
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mIsRecorder)
@@ -165,25 +165,29 @@ void Ape::ApePointCloudRecorderPlugin::Run()
 		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::Step()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::Stop()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::Suspend()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePointCloudRecorderPlugin::Restart()
 {
-
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
