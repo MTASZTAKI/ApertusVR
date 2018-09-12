@@ -24,6 +24,7 @@ SOFTWARE.*/
 #define APE_OISUSERINPUTPLUGIN_H
 
 #include <iostream>
+#include <list>
 #include <string>
 #include <thread>
 #include "system/ApeIMainWindow.h"
@@ -40,6 +41,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeIRayGeometry.h"
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeIUnitTexture.h"
+#include "sceneelements/ApeITorusGeometry.h"
 #include "utils/ApeInterpolator.h"
 #include "ApeOisUserInputPluginConfigs.h"
 #include "OIS.h"
@@ -135,6 +137,10 @@ namespace Ape
 		std::string mHeadNodeName;
 
 		Ape::NodeWeakPtr mDummyNode;
+
+		Ape::NodeWeakPtr mCursorNode;
+
+		Ape::TextGeometryWeakPtr mCursorText;
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 

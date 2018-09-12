@@ -1501,10 +1501,11 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 									for (size_t i = 0, size = query_result.size(); i < size; ++i)
 									{
 										if (auto entiy = mpSceneManager->getEntity(query_result[i].movable->getName()).lock())
+										{
 											intersections.push_back(entiy);
+										}
 									}
-									if (intersections.size())
-										geometryRay->setIntersections(intersections);
+									geometryRay->setIntersections(intersections);
 								}
 							}
 						}
