@@ -27,10 +27,11 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <vector>
+#include "ApeDataType.h"
 
 namespace Ape
 {
-	struct Vector3
+	struct Vector3 : public DataType
 	{
 		float x, y, z;
 
@@ -45,6 +46,20 @@ namespace Ape
 		Vector3(float _d) :
 			x(_d), y(_d), z(_d)
 		{}
+
+		void write(std::ofstream& fileStreamOut) override
+		{
+			fileStreamOut.write(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&z), sizeof(float));
+		}
+
+		void read(std::ifstream& fileStreamIn) override
+		{
+			fileStreamIn.read(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&z), sizeof(float));
+		}
 
 		float squaredLength() const
 		{

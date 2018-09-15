@@ -25,7 +25,8 @@
         "plugins": [
             "ApeOgreRenderPlugin",
             "ApeOisUserInputPlugin",
-            "ApeTesterPlugin"
+          "ApeTesterPlugin",
+          "ApeSceneRecorderPlugin"
         ]
     }
 }

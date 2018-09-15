@@ -85,9 +85,9 @@ namespace Ape
 
 		std::ifstream mFileStreamIn;
 
-		void readFrame();
+		Ape::Event readEvent();
 
-		void writeFrame();
+		void writeEvent(Ape::Event event);
 
 	public:
 		ApeSceneRecorderPlugin();

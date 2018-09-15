@@ -6,6 +6,30 @@ Ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 	LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::LIGHT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TEXT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_PLANE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_BOX, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_CONE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TUBE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_SPHERE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_TORUS, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::MATERIAL_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::PASS_PBS, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::PASS_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::SKY, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(Ape::Event::Group::WATER, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = Ape::IScene::getSingletonPtr();
 	mIsRecorder = false;
@@ -25,34 +49,49 @@ Ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSceneRecorderPlugin::readFrame()
+Ape::Event Ape::ApeSceneRecorderPlugin::readEvent()
 {
-	/*mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
-	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));*/
+	Ape::Event event;
+	long subjectNameSize;
+	char* subjectName;
+	mFileStreamIn.read(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
+	mFileStreamIn.read(subjectName, subjectNameSize);
+	event.subjectName = subjectName;
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
+	return event;
 }
 
-void Ape::ApeSceneRecorderPlugin::writeFrame()
+void Ape::ApeSceneRecorderPlugin::writeEvent(Ape::Event event)
 {
 	//TODO maybe write timestamp for timing?
-	//mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
-	//mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
+	long subjectNameSize = event.subjectName.size();
+	mFileStreamOut.write(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
+	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
+	mFileStreamOut.write(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
+	mFileStreamOut.write(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
+	if (event.dataCallback != nullptr)
+	{
+		auto data = event.dataCallback();
+		data.write(mFileStreamOut);
+	}
 }
 
 void Ape::ApeSceneRecorderPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (mIsRecorder)
 	{
-		
+		writeEvent(event);
 	}
 }
 
 void Ape::ApeSceneRecorderPlugin::Init()
 {
 	LOG_FUNC_ENTER();
-	mIsRecorder = false;
-	mIsPlayer = true;
-	mIsLooping = true;
-	mFileName = "pointCloud.bin";
+	mIsRecorder = true;
+	mIsPlayer = false;
+	mIsLooping = false;
+	mFileName = "scene.bin";
 	if (mIsRecorder)
 		mFileStreamOut.open(mFileName, std::ios::out | std::ios::binary);
 	else if (mIsPlayer)
@@ -69,11 +108,11 @@ void Ape::ApeSceneRecorderPlugin::Run()
 	{
 		if (mIsRecorder)
 		{
-			//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 		else if (mIsPlayer)
 		{
-			readFrame();
+			auto event = readEvent();
 			if (!mFileStreamIn.good() && mIsLooping) 
 			{
 				mFileStreamIn.close();
