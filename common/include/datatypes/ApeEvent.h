@@ -25,7 +25,6 @@ SOFTWARE.*/
 
 #include <string>
 #include <map>
-#include "ApeDataType.h"
 
 namespace Ape
 {
@@ -259,22 +258,18 @@ namespace Ape
 
 		Event::Group group;
 
-		std::function<DataType()> dataCallback;
-
 		Event()
 		{
 			subjectName = "NONE";
 			type = Event::Type::ET_INVALID;
 			group = Event::Group::EG_INVALID;
-			dataCallback = nullptr;
 		}
 
-		Event(std::string subjectName, Event::Type type, std::function<DataType()> dataCallback = nullptr)
+		Event(std::string subjectName, Event::Type type)
 		{
 			this->subjectName = subjectName;
 			this->type = type;
 			this->group = ((Event::Group)((this->type & 0xFF00) >> 8));
-			this->dataCallback = dataCallback;
 		}
 
 		bool operator ==(const Event& other) const

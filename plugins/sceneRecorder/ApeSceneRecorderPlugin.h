@@ -85,7 +85,7 @@ namespace Ape
 
 		std::ifstream mFileStreamIn;
 
-		Ape::Event readEvent();
+		void readEvent();
 
 		void writeEvent(Ape::Event event);
 

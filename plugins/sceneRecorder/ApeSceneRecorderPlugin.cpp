@@ -49,17 +49,42 @@ Ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-Ape::Event Ape::ApeSceneRecorderPlugin::readEvent()
+void Ape::ApeSceneRecorderPlugin::readEvent()
 {
 	Ape::Event event;
 	long subjectNameSize;
-	char* subjectName;
 	mFileStreamIn.read(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
-	mFileStreamIn.read(subjectName, subjectNameSize);
-	event.subjectName = subjectName;
+	event.subjectName.resize(subjectNameSize);
+	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	return event;
+	LOG(LOG_TYPE_DEBUG, " name:" << event.subjectName << " type:" << event.type);
+	if (event.group == Ape::Event::Group::NODE)
+	{
+		if (event.type == Ape::Event::Type::NODE_CREATE)
+		{
+			mpScene->createNode(event.subjectName);
+		}
+		else if (auto node = mpScene->getNode(event.subjectName).lock())
+		{
+			if (event.type == Ape::Event::Type::NODE_POSITION)
+			{
+				Ape::Vector3 position;
+				position.read(mFileStreamIn);
+				node->setPosition(position);
+			}
+			else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
+			{
+				//Ape::Quaternion data;
+				//data.read(mFileStreamIn);
+				//node->setOrientation(data);
+			}
+		}
+	}
+	else if (event.group == Ape::Event::Group::POINT_CLOUD)
+	{
+
+	}
 }
 
 void Ape::ApeSceneRecorderPlugin::writeEvent(Ape::Event event)
@@ -70,10 +95,24 @@ void Ape::ApeSceneRecorderPlugin::writeEvent(Ape::Event event)
 	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
 	mFileStreamOut.write(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamOut.write(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	if (event.dataCallback != nullptr)
+	if (event.group == Ape::Event::Group::NODE)
 	{
-		auto data = event.dataCallback();
-		data.write(mFileStreamOut);
+		if (auto node = mpScene->getNode(event.subjectName).lock())
+		{
+			if (event.type == Ape::Event::Type::NODE_POSITION)
+			{
+				Ape::Vector3 position = node->getPosition();
+				position.write(mFileStreamOut);
+			}
+			else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
+			{
+
+			}
+		}
+	}
+	else if (event.group == Ape::Event::Group::POINT_CLOUD)
+	{
+
 	}
 }
 
@@ -88,8 +127,8 @@ void Ape::ApeSceneRecorderPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeSceneRecorderPlugin::Init()
 {
 	LOG_FUNC_ENTER();
-	mIsRecorder = true;
-	mIsPlayer = false;
+	mIsRecorder = false;
+	mIsPlayer = true;
 	mIsLooping = false;
 	mFileName = "scene.bin";
 	if (mIsRecorder)
@@ -112,15 +151,19 @@ void Ape::ApeSceneRecorderPlugin::Run()
 		}
 		else if (mIsPlayer)
 		{
-			auto event = readEvent();
+			readEvent();
 			if (!mFileStreamIn.good() && mIsLooping) 
 			{
 				mFileStreamIn.close();
 				mFileStreamIn.clear();
 				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
 			}
+			else if (mFileStreamIn.eof())
+			{
+				mIsPlayer = false;
+			}
 			//TODO maybe timig by reading timestamps from the file?
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
