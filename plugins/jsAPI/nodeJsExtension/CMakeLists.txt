@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 # Set target properties
-set(MY_TARGET_NAME ApeNodeJsExtrension)
+set(MY_TARGET_NAME ApeNodeJsExtension)
 set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
 set(BUILD_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
