@@ -68,31 +68,9 @@ public:
 		mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 		mpEventManager = Ape::IEventManager::getSingletonPtr();
-		//mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&JsBindManager::nodeEventCallBack, this, std::placeholders::_1));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
 		APE_LOG_FUNC_LEAVE();
-	}
-
-	void nodeEventCallBack(const Ape::Event& ev)
-	{
-		//APE_LOG_DEBUG("ev.group: " << ev.group << " ev.subjectName: " << ev.subjectName);
-		//std::map<int, nbind::cbFunction*>::iterator it;
-		//it = mEventMap.find(ev.group);
-		//if (it != mEventMap.end())
-		//{
-		//	v8::Local<v8::Value> argv[1];
-		//	argv[0] = Nan::Null();
-		//	APE_LOG_DEBUG("calling callback function...");
-		//	(*it->second)("test");
-		//}
-	}
-
-	void connectEvent(int group, nbind::cbFunction& cb)
-	{
-		/*nbind::cbFunction* persistentCallback = new nbind::cbFunction(cb);
-		mEventMap.insert(std::pair<int, nbind::cbFunction*>(group, persistentCallback));
-		APE_LOG_DEBUG("function inserted to map. group: " << group);*/
 	}
 
 	void start(std::string configFolderPath)
@@ -514,9 +492,6 @@ NBIND_CLASS(JsBindManager)
 
 	method(start);
 	method(stop);
-
-	method(connectEvent);
-	method(nodeEventCallBack);
 
 	method(createNode);
 	method(getNodesNames);
