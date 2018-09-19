@@ -53,6 +53,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeISphereGeometry.h"
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIRayGeometry.h"
 #include "utils/ApeInterpolator.h"
 
 #define THIS_PLUGINNAME "ApeGyorPlugin"
