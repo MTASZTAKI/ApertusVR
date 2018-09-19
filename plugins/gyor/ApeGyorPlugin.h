@@ -92,7 +92,19 @@ namespace Ape
 
 		Ape::Quaternion mGripperLeftEndNodeInitialOrientation;
 
+		Ape::EntityWeakPtr mStateText;
+
+		Ape::NodeWeakPtr mUserNode;
+
 		void eventCallBack(const Ape::Event& event);
+
+		void createSkyBox();
+
+		void createPlane();
+
+		void createLights();
+
+		void createTexts();
 
 	public:
 		ApeGyorPlugin();

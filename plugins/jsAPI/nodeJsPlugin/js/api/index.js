@@ -188,7 +188,20 @@ app.post('/setproperties', function(req, res, next) {
 			);
 		}
 		else if (item.type == "text") {
-			// TODO
+			ape.nbind.JsBindManager().getText(item.name, function (error, obj) {
+				if (error) {
+					respObj.addErrorItem({
+						name: 'invalidCast',
+						msg: obj,
+						code: 666
+					});
+				}
+				else {
+					if (item.properties && item.properties.caption) {
+						obj.setCaption(item.properties.caption);
+					}
+				}
+			});
 		}
 	}
 

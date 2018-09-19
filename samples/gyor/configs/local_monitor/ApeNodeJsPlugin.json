@@ -6,20 +6,6 @@
         "plugins": [
             {
                 "file": "x3dLoader/x3dLoader.js"
-            },
-            {
-                "file": "httpSimulator/httpSimulator.js",
-                "args": {
-                    "fileName": "httpSimulator/ur10.jsonlist",
-                    "delay": 20
-                }
-            },
-            {
-                "file": "httpSimulator/httpSimulator.js",
-                "args": {
-                    "fileName": "httpSimulator/ur10Gripper.jsonlist",
-                    "delay": 20
-                }
             }
         ]
     }
