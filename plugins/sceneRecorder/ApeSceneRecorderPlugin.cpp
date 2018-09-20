@@ -36,6 +36,7 @@ Ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 	mIsPlayer = false;
 	mIsLooping = false;
 	mFileName = "";
+	mLastEventTimeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	LOG_FUNC_LEAVE();
 }
 
@@ -49,16 +50,10 @@ Ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
 	LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSceneRecorderPlugin::readEvent()
+void Ape::ApeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, Ape::Event event)
 {
-	Ape::Event event;
-	long subjectNameSize;
-	mFileStreamIn.read(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
-	event.subjectName.resize(subjectNameSize);
-	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
-	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
-	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	LOG(LOG_TYPE_DEBUG, " name:" << event.subjectName << " type:" << event.type);
+	if (milliseconds)
+		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 	if (event.group == Ape::Event::Group::NODE)
 	{
 		if (event.type == Ape::Event::Type::NODE_CREATE)
@@ -75,9 +70,7 @@ void Ape::ApeSceneRecorderPlugin::readEvent()
 			}
 			else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
 			{
-				//Ape::Quaternion data;
-				//data.read(mFileStreamIn);
-				//node->setOrientation(data);
+
 			}
 		}
 	}
@@ -87,9 +80,29 @@ void Ape::ApeSceneRecorderPlugin::readEvent()
 	}
 }
 
+void Ape::ApeSceneRecorderPlugin::readEvent()
+{
+	Ape::Event event;
+	unsigned int timeToCallEventInMilliseconds;
+	mFileStreamIn.read(reinterpret_cast<char*>(&timeToCallEventInMilliseconds), sizeof(unsigned int));
+	long subjectNameSize;
+	mFileStreamIn.read(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
+	event.subjectName.resize(subjectNameSize);
+	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
+	LOG(LOG_TYPE_DEBUG, "timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
+	//auto eventCallbackThread = std::thread(&ApeSceneRecorderPlugin::fireEvent, this, timeToCallEventInMilliseconds, event);
+	//eventCallbackThread.detach();
+	fireEvent(timeToCallEventInMilliseconds, event);
+}
+
 void Ape::ApeSceneRecorderPlugin::writeEvent(Ape::Event event)
 {
-	//TODO maybe write timestamp for timing?
+	auto timeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	unsigned int timeToCallEventInMilliseconds = timeStamp - mLastEventTimeStamp;
+	mLastEventTimeStamp = timeStamp;
+	mFileStreamOut.write(reinterpret_cast<char*>(&timeToCallEventInMilliseconds), sizeof(unsigned int));
 	long subjectNameSize = event.subjectName.size();
 	mFileStreamOut.write(reinterpret_cast<char*>(&subjectNameSize), sizeof(long));
 	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
@@ -152,7 +165,7 @@ void Ape::ApeSceneRecorderPlugin::Run()
 		else if (mIsPlayer)
 		{
 			readEvent();
-			if (!mFileStreamIn.good() && mIsLooping) 
+			if (!mFileStreamIn.good() && mIsLooping)
 			{
 				mFileStreamIn.close();
 				mFileStreamIn.clear();
@@ -162,8 +175,6 @@ void Ape::ApeSceneRecorderPlugin::Run()
 			{
 				mIsPlayer = false;
 			}
-			//TODO maybe timig by reading timestamps from the file?
-			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -189,3 +200,4 @@ void Ape::ApeSceneRecorderPlugin::Restart()
 {
 
 }
+

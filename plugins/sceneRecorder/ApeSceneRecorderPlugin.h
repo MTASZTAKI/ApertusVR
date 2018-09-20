@@ -26,7 +26,9 @@ SOFTWARE.*/
 #include <iostream>
 #include <thread>
 #include <random>
+#include <functional>
 #include <chrono>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -85,9 +87,13 @@ namespace Ape
 
 		std::ifstream mFileStreamIn;
 
+		__time64_t mLastEventTimeStamp;
+
 		void readEvent();
 
 		void writeEvent(Ape::Event event);
+
+		void fireEvent(unsigned int millisceonds, Ape::Event event);
 
 	public:
 		ApeSceneRecorderPlugin();
