@@ -63,17 +63,9 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		std::mutex mConstructedPluginMutex;
-
-		std::condition_variable mConstructedPluginCondition;
-
-		unsigned int mInitializedPluginCount;
-
 		unsigned int mPluginCount;
 
 		std::string mUniqueUserNodeName;
-
-		bool mIsAllPluginInitialized;
 
 	public:
 		PluginManagerImpl();
@@ -87,8 +79,6 @@ namespace Ape
 		void joinPluginThreads();
 
 		void detachPluginThreads();
-
-		virtual bool isAllPluginInitialized() override;
 	};
 }
 #endif

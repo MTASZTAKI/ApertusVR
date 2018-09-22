@@ -31,9 +31,7 @@ Ape::PluginManagerImpl::PluginManagerImpl()
 	mUniqueUserNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<Ape::IPlugin*>();
-	mInitializedPluginCount = 0;
 	mPluginCount = 0;
-	mIsAllPluginInitialized = false;
 }
 
 Ape::PluginManagerImpl::~PluginManagerImpl()
@@ -57,7 +55,7 @@ void Ape::PluginManagerImpl::CreatePlugins()
 		if (mpInternalPluginManager->Load((*it)))
 		{
 			CreatePlugin(*it);
-			APE_LOG_INFO("Plugin loaded: " << *it);
+			LOG(LOG_TYPE_DEBUG, "Plugin loaded: " << *it);
 		}
 		else
 		{
@@ -70,10 +68,6 @@ void Ape::PluginManagerImpl::CreatePlugins()
 void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
 {
 	plugin->Init();
-	mInitializedPluginCount++;
-	while (mInitializedPluginCount < mPluginCount)
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	mIsAllPluginInitialized = true;
 	plugin->Run();
 	//TODO name
 	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
@@ -97,8 +91,4 @@ void Ape::PluginManagerImpl::detachPluginThreads()
 	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
 }
 
-bool Ape::PluginManagerImpl::isAllPluginInitialized()
-{
-	return mIsAllPluginInitialized;
-}
 

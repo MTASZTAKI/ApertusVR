@@ -42,9 +42,6 @@ namespace Ape
 	{
 	protected:
 		virtual ~IPluginManager() {};
-
-	public:
-		virtual bool isAllPluginInitialized() = 0;
 	};
 }
 
