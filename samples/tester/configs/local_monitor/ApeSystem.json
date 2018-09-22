@@ -22,10 +22,10 @@
         }
     },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-          "ApeOisUserInputPlugin",
-          "ApeSceneRecorderPlugin"
-        ]
+      "plugins": [
+        "ApeSceneRecorderPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin"
+      ]
     }
 }

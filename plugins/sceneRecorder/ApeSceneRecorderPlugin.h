@@ -87,7 +87,9 @@ namespace Ape
 
 		std::ifstream mFileStreamIn;
 
-		__time64_t mLastEventTimeStamp;
+		std::chrono::milliseconds mLastEventTimeStamp;
+
+		float fck;
 
 		void readEvent();
 
