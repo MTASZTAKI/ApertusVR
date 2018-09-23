@@ -5,7 +5,7 @@
     },
     "sceneSession": {
         "participantType": "Local",
-        "uniqueUserNamePrefix": "",
+        "uniqueUserNamePrefix": "Local",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/tester/resources"
