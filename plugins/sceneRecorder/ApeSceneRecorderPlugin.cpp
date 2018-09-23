@@ -97,7 +97,7 @@ void Ape::ApeSceneRecorderPlugin::readEvent()
 	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	//LOG(LOG_TYPE_DEBUG, "subjectNameSize: " << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
+	LOG(LOG_TYPE_DEBUG, "subjectNameSize: " << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
 	//auto eventCallbackThread = std::thread(&ApeSceneRecorderPlugin::fireEvent, this, timeToCallEventInMilliseconds, event);
 	//eventCallbackThread.detach();
 	fireEvent(timeToCallEventInMilliseconds, event);
@@ -141,7 +141,9 @@ void Ape::ApeSceneRecorderPlugin::eventCallBack(const Ape::Event& event)
 	if (mIsRecorder)
 	{
 		//LOG(LOG_TYPE_DEBUG," name:" << event.subjectName << " type:" << event.type);
-		writeEvent(event);
+		//writeEvent(event);
+		auto writeEventThread = std::thread(&ApeSceneRecorderPlugin::writeEvent, this, event);
+		writeEventThread.detach();
 	}
 }
 
