@@ -369,6 +369,18 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	{
 		saveUserNodePose();
 	}
+	if (e.key == OIS::KeyCode::KC_V)
+	{
+		LOG(LOG_TYPE_DEBUG, "Key pressed V");
+		if (auto userNode = mUserNode.lock())
+		{
+			toggleUserNodePoses(userNode);
+			if (auto dummyNode = mDummyNode.lock())
+			{
+				toggleUserNodePoses(dummyNode);
+			}
+		}
+	}
 	if (e.key == OIS::KeyCode::KC_SPACE)
 	{
 		mGeneralSpeedFactor = 2;
@@ -409,24 +421,6 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 			keyAsWString = 46;
 		else if (e.key == OIS::KeyCode::KC_PERIOD)
 			keyAsWString = 1046;
-		else if (e.key == OIS::KeyCode::KC_C)
-		{
-			if (auto userNode = mUserNode.lock())
-			{
-				saveUserNodePose();
-			}
-		}
-		else if (e.key == OIS::KeyCode::KC_V)
-		{
-			if (auto userNode = mUserNode.lock())
-			{
-				if (auto dummyNode = mDummyNode.lock())
-				{
-					toggleUserNodePoses(userNode);
-					toggleUserNodePoses(dummyNode);
-				}
-			}
-		}
 
 		mIsNewKeyEvent = false;
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
