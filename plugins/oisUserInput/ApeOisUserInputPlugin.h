@@ -182,7 +182,7 @@ namespace Ape
 
 		void saveUserNodePose();
 
-		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
+		void toggleUserNodePoses();
 
 		void eventCallBack(const Ape::Event& event);
 	};

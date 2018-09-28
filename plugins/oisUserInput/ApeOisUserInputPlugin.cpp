@@ -372,14 +372,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	if (e.key == OIS::KeyCode::KC_V)
 	{
 		LOG(LOG_TYPE_DEBUG, "Key pressed V");
-		if (auto userNode = mUserNode.lock())
-		{
-			toggleUserNodePoses(userNode);
-			if (auto dummyNode = mDummyNode.lock())
-			{
-				toggleUserNodePoses(dummyNode);
-			}
-		}
+		toggleUserNodePoses();
 	}
 	if (e.key == OIS::KeyCode::KC_SPACE)
 	{
@@ -647,7 +640,7 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
+void Ape::OISUserInputPlugin::toggleUserNodePoses()
 {
 	if (mUserNodePoses.size() > 0 && mUserNodePosesToggleIndex < mUserNodePoses.size())
 	{
