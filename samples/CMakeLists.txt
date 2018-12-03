@@ -184,3 +184,8 @@ option(APE_SAMPLES_RobotCalibration "APE_SAMPLES_RobotCalibration?" ON )
 if (${APE_SAMPLES_RobotCalibration})
 	add_subdirectory (robotCalibration)
 endif ()
+
+option(APE_SAMPLES_Polimi "APE_SAMPLES_Polimi?" ON )
+if (${APE_SAMPLES_Polimi})
+	add_subdirectory (polimi)
+endif ()

@@ -1,0 +1,49 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/polimi/resources/robotFixture.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 70, 0 ],
+      "orientation": [ 0.683013, -0.683013, -0.183013, -0.183013 ],
+      "regenerateNormals": true,
+      "rootNodeName": "robotFixture"
+    },
+    {
+      "file": "/plugins/polimi/resources/table.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ -42, 70, 73 ],
+      "orientation": [ 0.612372, -0.612372, 0.353553, 0.353553 ],
+      "regenerateNormals": true,
+      "rootNodeName": "table"
+    },
+    {
+      "file": "/plugins/polimi/resources/table2.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 85, 70, 0 ],
+      "orientation": [ 0, 0, 0.707, 0.707 ],
+      "regenerateNormals": true,
+      "rootNodeName": "table2"
+    },
+    {
+      "file": "/plugins/polimi/resources/table3.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 65, 70, -90 ],
+      "orientation": [ 0.5, -0.5, -0.5, -0.5 ],
+      "regenerateNormals": true,
+      "rootNodeName": "table3"
+    },
+    {
+      "file": "/plugins/polimi/resources/triangleConsole.stl",
+      "mergeAndExportMeshes": false,
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 0, 0, 0.707, 0.707 ],
+      "regenerateNormals": true,
+      "rootNodeName": "triangleConsole"
+    }
+  ]
+}

@@ -224,3 +224,8 @@ option(APE_PLUGIN_AudiPlugin "Use AudiPlugin?" ON )
 if (${APE_PLUGIN_AudiPlugin})
 	add_subdirectory (audi)
 endif ()
+
+option(APE_PLUGIN_PolimiPlugin "Use PolimiPlugin?" ON )
+if (${APE_PLUGIN_PolimiPlugin})
+	add_subdirectory (polimi)
+endif ()
