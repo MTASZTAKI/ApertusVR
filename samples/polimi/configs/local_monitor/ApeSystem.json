@@ -12,7 +12,18 @@
     "sessionResourceLocation": [
         "/plugins/polimi/resources/sky",
         "/plugins/polimi/resources/buildings/buildingA",
-        "/plugins/polimi/resources/buildings/buildingA/elements/pallet"
+        "/plugins/polimi/resources/elements/pallet",
+        "/plugins/polimi/resources/elements/workerMale",
+        "/plugins/polimi/resources/machines/tc52",
+        "/plugins/polimi/resources/elements/table",
+        "/plugins/polimi/resources/elements/acdc",
+        "/plugins/polimi/resources/elements/barrel",
+        "/plugins/polimi/resources/elements/barrel2",
+        "/plugins/polimi/resources/elements/trolley",
+        "/plugins/polimi/resources/machines/tc108",
+        "/plugins/polimi/resources/machines/tc67h",
+        "/plugins/polimi/resources/machines/vc1020",
+        "/plugins/polimi/resources/machines/wm2"
     ],
     "natPunchThroughServer": {
       "use": false,

@@ -275,9 +275,11 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, textureCoordinates, material);
 				if (textureCoordinates.size() && diffuseTextureFileName.length())
 				{
-					auto fileTexture = std::static_pointer_cast<Ape::IFileTexture>(mpScene->createEntity(diffuseTextureFileName, Ape::Entity::Type::TEXTURE_FILE).lock());
-					fileTexture->setFileName(diffuseTextureFileName);
-					material->setPassTexture(fileTexture);
+					if (auto fileTexture = std::static_pointer_cast<Ape::IFileTexture>(mpScene->createEntity(diffuseTextureFileName, Ape::Entity::Type::TEXTURE_FILE).lock()))
+					{
+						fileTexture->setFileName(diffuseTextureFileName);
+						material->setPassTexture(fileTexture);
+					}
 				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);

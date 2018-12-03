@@ -1,13 +1,166 @@
 {
-  "assets": [
-    {
-        "file": "/plugins/polimi/resources/buildings/buildingA/buildingA.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.1, 0.1, 0.1 ],
-        "position": [ 0, 0, 0 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "rootNodeName": "buildingA"
-    }
-  ]
+    "assets": [
+        {
+            "file": "/plugins/polimi/resources/buildings/buildingA/buildingA.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 0, 0, 0 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "buildingA"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/pallet/pallet.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 4279, 1, -3355 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "pallet_1"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/pallet/pallet.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 5225, 1, -3353 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "pallet_2"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/pallet/pallet.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 3476, 1, -3334 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "pallet_3"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/pallet/pallet.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 2656, 1, -3355 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "pallet_4"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/TC52/tc52.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 2213, 0, -4359 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "tc52_1"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/TC52/tc52.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 3108, 0, -3327 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "tc52_2"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/workerMale/male_worker.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 1931, 0, -3476 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "male_worker"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/table/table.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 2804, 0, -4281 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "table_1"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/table/table.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 2993, 0, -3500 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "table_2"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/acdc/acdc.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.5, 0.5, 0.5 ],
+            "position": [ 2089, 0, -3655 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "acdc"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/barrel/barrel.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.1, 0.1, 0.1 ],
+            "position": [ 1980, 0, -3657 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "barrel"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/barrel2/barrel2.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 0.1, 0.1, 0.1 ],
+            "position": [ 1913, 0, -3663 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "barrel2"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/TC108/tc108.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 2181, 0, -3279 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "tc108"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/VC1020/VC1020.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 4792, 0, -3406 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "vc1020"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/wm2/wm2.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 5538, 0, -3341 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "wm2"
+        },
+        {
+            "file": "/plugins/polimi/resources/elements/trolley/trolley.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 2438, 0, -4290 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "trolley"
+        },
+        {
+            "file": "/plugins/polimi/resources/machines/TC67H/tc67h.3DS",
+            "mergeAndExportMeshes": false,
+            "scale": [ 1, 1, 1 ],
+            "position": [ 3887, 0, -3362 ],
+            "orientation": [ 1, 0, 0, 0 ],
+            "regenerateNormals": false,
+            "rootNodeName": "tc67h"
+        }
+    ]
 }

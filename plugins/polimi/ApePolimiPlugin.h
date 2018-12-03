@@ -49,6 +49,7 @@ SOFTWARE.*/
 #include "ApeIIndexedFaceSetGeometry.h"
 #include "ApeIIndexedLineSetGeometry.h"
 #include "ApeIManualMaterial.h"
+#include "ApeIManualPass.h"
 #include "ApeIPbsPass.h"
 #include "ApeInterpolator.h"
 #include "ApeIFileGeometry.h"
@@ -77,6 +78,8 @@ namespace Ape
 		ApePolimiPlugin();
 
 		~ApePolimiPlugin();
+
+		void createCoordinateSystem();
 
 		void Init() override;
 
