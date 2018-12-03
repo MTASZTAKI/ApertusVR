@@ -10,7 +10,9 @@
     "sessionIP": "192.168.0.130",
     "sessionPort": "62666",
     "sessionResourceLocation": [
-      "/plugins/gyor/resources"
+        "/plugins/polimi/resources/sky",
+        "/plugins/polimi/resources/buildings/buildingA",
+        "/plugins/polimi/resources/buildings/buildingA/elements/pallet"
     ],
     "natPunchThroughServer": {
       "use": false,
@@ -21,17 +23,15 @@
       "useLobby": false,
       "ip": "195.111.2.95",
       "port": "8888",
-      "sessionName": "gyor"
+      "sessionName": "polimi"
     }
   },
     "pluginManager": {
       "plugins": [
-        "ApeNodeJsPlugin",
         "ApeOgreRenderPlugin",
         "ApeOisUserInputPlugin",
-        "ApeGyorPlugin",
-        "ApeAssimpAssetLoaderPlugin",
-        "ApeKinectPlugin"
+        "ApePolimiPlugin",
+        "ApeAssimpAssetLoaderPlugin"
       ]
     }
 }

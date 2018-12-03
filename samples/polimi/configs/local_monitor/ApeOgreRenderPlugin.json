@@ -7,8 +7,8 @@
     "shading": "perPixel",
     "renderWindows": [
         {
-            "name": "EPIC",
-            "monitorIndex": 1,
+            "name": "POLIMI",
+            "monitorIndex": 0,
             "resolution": {
                 "width": 1920,
                 "height": 1080,

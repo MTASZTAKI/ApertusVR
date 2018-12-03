@@ -1960,10 +1960,10 @@ bool Ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	//if (mRenderWindows.size() > 0)
-	//{
-		//APE_LOG_DEBUG("FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
-	//}
+	/*if (mRenderWindows.size() > 0)
+	{
+		LOG(LOG_TYPE_DEBUG, "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
+	}*/
 	processEventDoubleQueue();
 	if (mpHydrax && mpSkyxSkylight)
 	{
