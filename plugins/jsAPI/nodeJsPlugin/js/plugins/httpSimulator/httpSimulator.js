@@ -45,7 +45,7 @@ class HttpSimulator {
 		this.fileName = moduleManager.pluginPath + args.fileName || moduleManager.pluginPath + 'apertusvr.log';
 		this.delay = args.delay || 20;
 		this.lr = new LineByLineReader(this.fileName);
-
+		
 		this.lr.on('error', function (err) {
 			console.log('line-reader: error: ', err);
 		});

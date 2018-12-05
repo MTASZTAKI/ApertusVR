@@ -31,7 +31,7 @@
         "ApeOisUserInputPlugin",
         "ApeIndustry40Plugin",
         "ApeHtcVivePlugin",
-        "ApePointCloudRecorderPlugin"
+        "ApeKinectPlugin"
       ]
     }
 }

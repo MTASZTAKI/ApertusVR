@@ -374,6 +374,33 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 		LOG(LOG_TYPE_DEBUG, "Key pressed V");
 		toggleUserNodePoses();
 	}
+	if (e.key == OIS::KeyCode::KC_B)
+	{
+		if (auto userNode = mUserNode.lock())
+		{
+			auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
+			moveInterpolator->addSection(
+				userNode->getPosition(),
+				Ape::Vector3(459.301, 205.316, -75.8723),
+				5.0,
+				[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+			);
+			auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
+			rotateInterpolator->addSection(
+				userNode->getOrientation(),
+				Ape::Quaternion(-0.593951, 0.0556969, -0.799066, -0.0749312),
+				5.0,
+				[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+			);
+			while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
+			{
+				if (!moveInterpolator->isQueueEmpty())
+					moveInterpolator->iterateTopSection();
+				if (!rotateInterpolator->isQueueEmpty())
+					rotateInterpolator->iterateTopSection();
+			}
+		}
+	}
 	if (e.key == OIS::KeyCode::KC_SPACE)
 	{
 		mGeneralSpeedFactor = 2;
@@ -740,8 +767,8 @@ void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 			{
 				if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isDragModeRight)
 				{
-					userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-					userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
+					//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+					//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 				}
 				if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle] && mMouseState.isDragModeMiddle)
 				{
