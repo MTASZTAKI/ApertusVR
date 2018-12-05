@@ -390,7 +390,7 @@ void Ape::KinectPlugin::Run()
 						}
 						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
 						{
-							pointCloud->setParameters(KPts, KCol, 10);
+							pointCloud->setParameters(KPts, KCol, 10000);
 							pointCloud->setParentNode(pointCloudNode);
 							mPointCloud = pointCloud;
 						}
