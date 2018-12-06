@@ -1,0 +1,98 @@
+var request = {};
+var req = 
+{
+	data: {
+		items: [
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ1)6TwoUR5",
+				properties: {
+					orientation: {
+					    angle: msg.payload[0],
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			},
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ2)7TwoUR5",
+				properties: {
+					orientation: {
+					    angle: (msg.payload[1]+Math.PI/2),
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			},
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ3)8TwoUR5",
+				properties: {
+					orientation: {
+					    angle: msg.payload[2],
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			},
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ4)9TwoUR5",
+				properties: {
+					orientation: {
+					    angle: (msg.payload[3]+Math.PI/2),
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			},
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ5)10TwoUR5",
+				properties: {
+					orientation: {
+					    angle: msg.payload[4],
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			},
+			{
+			    type: "node",
+				name: "JOINT(Rotational)(θ6)11TwoUR5",
+				properties: {
+					orientation: {
+					    angle: msg.payload[5],
+					    axis: {
+					        x: 0,
+					        y: 0,
+					        z: 1
+					    }
+					}
+				}
+			}
+		]
+	}
+};
+request.headers = {};
+request.headers["Content-Type"] ="application/json";
+request.payload = JSON.stringify(req);
+return request;
+
+
