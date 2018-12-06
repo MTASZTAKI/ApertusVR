@@ -146,7 +146,9 @@ namespace Ape
 
 		MouseState mMouseState;
 
-		std::vector<UserNodePose> mUserNodePoses;
+		std::vector<UserNodePose> mUserNodeTogglePoses;
+
+		std::vector<UserNodePose> mUserNodeAnimatePoses;
 
 		Ape::BrowserWeakPtr mOverlayBrowser;
 
@@ -176,6 +178,8 @@ namespace Ape
 
 		bool mIsKeyPressed;
 
+		bool mIsUserNodeAnimated;
+
 		void moveUserNodeByKeyBoard();
 
 		void moveUserNodeByMouse();
@@ -185,6 +189,10 @@ namespace Ape
 		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
 
 		void eventCallBack(const Ape::Event& event);
+
+		void animateUserNode(Ape::NodeSharedPtr userNode);
+
+		void fillUserNodeAnimatePoses();
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOISUserInputPlugin()
