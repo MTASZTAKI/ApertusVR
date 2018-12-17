@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2018 MTA SZTAKI
+#Copyright (c) 2016 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cmake_minimum_required(VERSION 3.5)
-project(ApertusVR)
+# Basic
 
-include("cmake/functions.cmake")
-
-include("cmake/prepare_cxx.cmake")
-include("cmake/prepare_cmake.cmake")
-
-include("cmake/prepare_ape.cmake")
-include("cmake/prepare_curl.cmake")
-include("cmake/prepare_raknet.cmake")
-include("cmake/prepare_rapidjson.cmake")
-
-include_directories("common/include")
-
-add_subdirectory(common)
-add_subdirectory(core)
-if (WIN32)
-	add_subdirectory(plugins)
-	add_subdirectory(samples)
-	add_subdirectory(servers)
-	add_subdirectory(macros)
+option(APE_MACRO_UserInput "Use UserInputMacro?" ON )
+if (${APE_MACRO_UserInput})
+	add_subdirectory (userInput)
 endif ()
+
+

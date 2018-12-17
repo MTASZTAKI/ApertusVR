@@ -20,26 +20,24 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cmake_minimum_required(VERSION 3.5)
-project(ApertusVR)
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	ApeUserInputMacro.h
+	)
 
-include("cmake/functions.cmake")
+set (SOURCES 
+	ApeUserInputMacro.cpp
+	)
 
-include("cmake/prepare_cxx.cmake")
-include("cmake/prepare_cmake.cmake")
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
 
-include("cmake/prepare_ape.cmake")
-include("cmake/prepare_curl.cmake")
-include("cmake/prepare_raknet.cmake")
-include("cmake/prepare_rapidjson.cmake")
+add_library (ApeUserInputMacro STATIC ${SOURCES} ${HEADERS})
 
-include_directories("common/include")
+# Link with dependency libraries
+target_link_libraries (ApeUserInputMacro ApeScene ApeEventManager ApeLogManager)
 
-add_subdirectory(common)
-add_subdirectory(core)
-if (WIN32)
-	add_subdirectory(plugins)
-	add_subdirectory(samples)
-	add_subdirectory(servers)
-	add_subdirectory(macros)
-endif ()
+set_property (TARGET ApeUserInputMacro PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET ApeUserInputMacro PROPERTY FOLDER "Macros")
