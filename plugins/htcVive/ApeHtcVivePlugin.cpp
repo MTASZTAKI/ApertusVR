@@ -159,8 +159,8 @@ void Ape::ApeHtcVivePlugin::Init()
 			mUserMaterial = userMaterial;
 		}
 	}
-
-	APE_LOG_DEBUG("waiting for main window");
+	mpApeUserInputMacro = new Ape::UserInputMacro();
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("main window was found");
@@ -276,162 +276,38 @@ void Ape::ApeHtcVivePlugin::Run()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 	while (true)
 	{
-		vr::VREvent_t openVrEvent;
-		if (mpOpenVrSystem->PollNextEvent(&openVrEvent, sizeof(openVrEvent)))
+		vr::VRControllerState_t controllerState;
+		if (mpOpenVrSystem->GetControllerState(4, &controllerState, sizeof controllerState)) //4 = last activated controller
 		{
-			switch (openVrEvent.eventType)
-			{
-			case vr::VREvent_TrackedDeviceActivated:
-			{
-				vr::ETrackedDeviceClass trackedDeviceClass = mpOpenVrSystem->GetTrackedDeviceClass(openVrEvent.trackedDeviceIndex);
-				if (trackedDeviceClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller)
-				{
-					LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) Device Activated ID: " << openVrEvent.trackedDeviceIndex);
-					break;
-				}
-			}
-			case vr::VREvent_ButtonPress:
-			{
-				if (openVrEvent.trackedDeviceIndex == 3) //left
-				{
-					LOG(LOG_TYPE_DEBUG, "TrackedController is left handed" << openVrEvent.trackedDeviceIndex);
-					switch (openVrEvent.data.controller.button)
-					{
-					case vr::k_EButton_Grip:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_SteamVR_Trigger:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_SteamVR_Touchpad:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							LOG(LOG_TYPE_DEBUG, "TrackedController is left handed and VREvent_ButtonPress" << openVrEvent.trackedDeviceIndex);
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-
-						case vr::VREvent_ButtonTouch:
-							break;
-
-						case vr::VREvent_ButtonUntouch:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_ApplicationMenu:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-					case vr::k_EButton_DPad_Up:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-					}
-				}
-				else if (openVrEvent.trackedDeviceIndex == 4) //right
-				{
-					LOG(LOG_TYPE_DEBUG, "TrackedController is right handed" << openVrEvent.trackedDeviceIndex);
-					switch (openVrEvent.data.controller.button)
-					{
-					case vr::k_EButton_Grip:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_SteamVR_Trigger:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_SteamVR_Touchpad:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							LOG(LOG_TYPE_DEBUG, "TrackedController is right handed and VREvent_ButtonPress" << openVrEvent.trackedDeviceIndex);
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-
-						case vr::VREvent_ButtonTouch:
-							break;
-
-						case vr::VREvent_ButtonUntouch:
-							break;
-						}
-						break;
-
-					case vr::k_EButton_ApplicationMenu:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-					case vr::k_EButton_DPad_Up:
-						switch (openVrEvent.eventType)
-						{
-						case vr::VREvent_ButtonPress:
-							break;
-
-						case vr::VREvent_ButtonUnpress:
-							break;
-						}
-						break;
-					}
-				}
-			}
-			//default:
-				//LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) type: " << openVrEvent.eventType);
-			}
+			auto touchpadXNormalizedValue = controllerState.rAxis[0].x;
+			auto touchpadYNormalizedValue = controllerState.rAxis[0].y;
+			auto triggerNormalizedValue = controllerState.rAxis[1].x;
+			mpApeUserInputMacro->translateUserNode(Ape::Vector3(0, 0, -touchpadYNormalizedValue), Ape::Node::TransformationSpace::LOCAL);
+			//LOG(LOG_TYPE_DEBUG, "touchpadXNormalizedValue: " << touchpadXNormalizedValue);
+			//LOG(LOG_TYPE_DEBUG, "touchpadYNormalizedValue: " << touchpadYNormalizedValue);
+			//LOG(LOG_TYPE_DEBUG, "triggerNormalizedValue: " << triggerNormalizedValue);
 		}
-		//std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		//vr::VREvent_t openVrEvent;
+		//if (mpOpenVrSystem->PollNextEvent(&openVrEvent, sizeof(openVrEvent)))
+		//{
+		//	switch (openVrEvent.eventType)
+		//	{
+		//	case vr::VREvent_TrackedDeviceActivated:
+		//	{
+		//		vr::ETrackedDeviceClass trackedDeviceClass = mpOpenVrSystem->GetTrackedDeviceClass(openVrEvent.trackedDeviceIndex);
+		//		if (trackedDeviceClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller)
+		//		{
+		//			//LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) Device Activated ID: " << openVrEvent.trackedDeviceIndex);
+		//			break;
+		//		}
+		//	}
+		//	default:
+		//		LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) type: " << openVrEvent.eventType);
+		//		LOG(LOG_TYPE_DEBUG, "openVrEvent.data.touchPadMove.fValueXRaw: " << openVrEvent.data.touchPadMove.fValueXRaw);
+		//		LOG(LOG_TYPE_DEBUG, "openVrEvent.data.touchPadMove.fValueYRaw: " << openVrEvent.data.touchPadMove.fValueYRaw);
+		//	}
+		//}
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	APE_LOG_FUNC_LEAVE();
 }

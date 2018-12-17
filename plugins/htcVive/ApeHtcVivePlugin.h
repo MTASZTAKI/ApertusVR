@@ -45,8 +45,10 @@ SOFTWARE.*/
 #include "sceneelements/ApeIManualTexture.h"
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeITextGeometry.h"
+#include "ApeUserInputMacro.h"
 #include "openvr.h"
 #include "openvr_capi.h"
+
 
 #define THIS_PLUGINNAME "ApeHtcVivePlugin"
 
@@ -100,6 +102,8 @@ namespace Ape
 		void submitTextureLeftToOpenVR();
 
 		void submitTextureRightToOpenVR();
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
 
 	public:
 		ApeHtcVivePlugin();

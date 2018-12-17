@@ -28,7 +28,6 @@
       "plugins": [
         "ApeNodeJsPlugin",
         "ApeOgreRenderPlugin",
-        "ApeOisUserInputPlugin",
         "ApeIndustry40Plugin",
         "ApeHtcVivePlugin",
         "ApeKinectPlugin"

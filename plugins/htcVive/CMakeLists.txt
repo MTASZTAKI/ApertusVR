@@ -37,13 +37,14 @@ if (WIN32)
 endif ()	
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
+    ${PROJECT_SOURCE_DIR}/macros/userInput 	
 	${OPENVR_HOME}/headers
 	)
 
 add_library (ApeHtcVivePlugin SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApeHtcVivePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow OPENVR_LIB)
+target_link_libraries (ApeHtcVivePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro OPENVR_LIB)
 
 set_property (TARGET ApeHtcVivePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
