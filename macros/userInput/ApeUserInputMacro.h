@@ -58,10 +58,6 @@ namespace Ape
 
 		Ape::NodeWeakPtr mDummyNode;
 
-		float mTranslateSpeedFactor;
-
-		float mRotateSpeedFactor;
-
 		void eventCallBack(const Ape::Event& event);
 
 	public:
@@ -70,6 +66,8 @@ namespace Ape
 		~UserInputMacro();
 
 		void translateUserNode(Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace);
+
+		void rotateUserNode(Ape::Degree angle, Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace);
     };
 }
 

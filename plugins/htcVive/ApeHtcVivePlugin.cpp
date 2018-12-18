@@ -276,37 +276,16 @@ void Ape::ApeHtcVivePlugin::Run()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 	while (true)
 	{
-		vr::VRControllerState_t controllerState;
-		if (mpOpenVrSystem->GetControllerState(4, &controllerState, sizeof controllerState)) //4 = last activated controller
+		vr::VRControllerState_t controllerState3;
+		if (mpOpenVrSystem->GetControllerState(3, &controllerState3, sizeof controllerState3))
 		{
-			auto touchpadXNormalizedValue = controllerState.rAxis[0].x;
-			auto touchpadYNormalizedValue = controllerState.rAxis[0].y;
-			auto triggerNormalizedValue = controllerState.rAxis[1].x;
-			mpApeUserInputMacro->translateUserNode(Ape::Vector3(0, 0, -touchpadYNormalizedValue), Ape::Node::TransformationSpace::LOCAL);
-			//LOG(LOG_TYPE_DEBUG, "touchpadXNormalizedValue: " << touchpadXNormalizedValue);
-			//LOG(LOG_TYPE_DEBUG, "touchpadYNormalizedValue: " << touchpadYNormalizedValue);
-			//LOG(LOG_TYPE_DEBUG, "triggerNormalizedValue: " << triggerNormalizedValue);
+			mpApeUserInputMacro->rotateUserNode(1, Ape::Vector3(0, -controllerState3.rAxis[0].x, 0), Ape::Node::TransformationSpace::WORLD);
 		}
-		//vr::VREvent_t openVrEvent;
-		//if (mpOpenVrSystem->PollNextEvent(&openVrEvent, sizeof(openVrEvent)))
-		//{
-		//	switch (openVrEvent.eventType)
-		//	{
-		//	case vr::VREvent_TrackedDeviceActivated:
-		//	{
-		//		vr::ETrackedDeviceClass trackedDeviceClass = mpOpenVrSystem->GetTrackedDeviceClass(openVrEvent.trackedDeviceIndex);
-		//		if (trackedDeviceClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller)
-		//		{
-		//			//LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) Device Activated ID: " << openVrEvent.trackedDeviceIndex);
-		//			break;
-		//		}
-		//	}
-		//	default:
-		//		LOG(LOG_TYPE_DEBUG, "EVENT (OpenVR) type: " << openVrEvent.eventType);
-		//		LOG(LOG_TYPE_DEBUG, "openVrEvent.data.touchPadMove.fValueXRaw: " << openVrEvent.data.touchPadMove.fValueXRaw);
-		//		LOG(LOG_TYPE_DEBUG, "openVrEvent.data.touchPadMove.fValueYRaw: " << openVrEvent.data.touchPadMove.fValueYRaw);
-		//	}
-		//}
+		vr::VRControllerState_t controllerState4;
+		if (mpOpenVrSystem->GetControllerState(4, &controllerState4, sizeof controllerState4))
+		{
+			mpApeUserInputMacro->translateUserNode(Ape::Vector3(0, 0, -controllerState4.rAxis[0].y), Ape::Node::TransformationSpace::LOCAL);
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	APE_LOG_FUNC_LEAVE();

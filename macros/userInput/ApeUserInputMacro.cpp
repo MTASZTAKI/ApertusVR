@@ -17,7 +17,6 @@ Ape::UserInputMacro::UserInputMacro()
 			mHeadNode = headNode;
 		}
 	}
-	mTranslateSpeedFactor = 3;
 	LOG_FUNC_LEAVE();
 }
 
@@ -40,10 +39,17 @@ void Ape::UserInputMacro::translateUserNode(Ape::Vector3 axis, Ape::Node::Transf
 					dummyNode->setOrientation(headNode->getDerivedOrientation());
 				}
 			}
-			//LOG(LOG_TYPE_DEBUG, "translateUserNode");
 			dummyNode->translate(axis, transformationSpace);
 			userNode->setPosition(dummyNode->getPosition());
 		}
+	}
+}
+
+void Ape::UserInputMacro::rotateUserNode(Ape::Degree angle, Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace)
+{
+	if (auto userNode = mUserNode.lock())
+	{
+		userNode->rotate(angle.toRadian(), axis, Ape::Node::TransformationSpace::WORLD);
 	}
 }
 
