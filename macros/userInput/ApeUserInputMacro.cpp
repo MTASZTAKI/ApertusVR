@@ -15,7 +15,9 @@ Ape::UserInputMacro::UserInputMacro()
 		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
+			headNode->setParentNode(Ape::NodeWeakPtr());
 		}
+		//userNode->setParentNode(mDummyNode);
 	}
 	LOG_FUNC_LEAVE();
 }

@@ -73,6 +73,12 @@ namespace Ape
 
 		Ape::NodeWeakPtr mUserNode;
 
+		Ape::NodeWeakPtr mDummyNode;
+
+		Ape::Vector3 mTranslate;
+
+		Ape::Quaternion mRotate;
+
 		Ape::ManualMaterialWeakPtr mUserMaterial;
 
 		Ape::ManualTextureWeakPtr mManualTextureRightEye;
