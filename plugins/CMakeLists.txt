@@ -144,6 +144,11 @@ if (${APE_PLUGIN_Kinect})
 	add_subdirectory (kinect)
 endif ()
 
+option(APE_PLUGIN_MultiKinect "Use MultiKinectPlugin?" ON )
+if (${APE_PLUGIN_MultiKinect})
+	add_subdirectory (multikinect)
+endif ()
+
 option(APE_PLUGIN_Zed "Use ZedPlugin?" ON )
 if (${APE_PLUGIN_Zed})
 	add_subdirectory (zed)
