@@ -32,7 +32,7 @@ ENDIF()
 FIND_PATH(LibUSB_INCLUDE_DIRS
   NAMES libusb.h
   PATHS
-    "${DEPENDS_DIR}/libusb"
+    "${DEPENDS_DIR}/libusb_src/libusb"
     "${DEPENDS_DIR}/libusbx"
     ENV LibUSB_ROOT
   PATH_SUFFIXES
