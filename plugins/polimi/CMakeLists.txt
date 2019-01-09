@@ -36,7 +36,7 @@ include_directories(
 add_library (ApePolimiPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApePolimiPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow )
+target_link_libraries (ApePolimiPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow )
 
 set_property (TARGET ApePolimiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

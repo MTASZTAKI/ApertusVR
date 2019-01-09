@@ -25,7 +25,7 @@ SOFTWARE.*/
 Ape::FileTextureImpl::FileTextureImpl(std::string name, bool isHostCreated) : Ape::IFileTexture(name), Ape::Replica("FileTexture", isHostCreated)
 {
 	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpScene = Ape::ISceneManager::getSingletonPtr();
 	mFileName = std::string();
 }
 

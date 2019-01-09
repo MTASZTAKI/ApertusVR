@@ -3,7 +3,7 @@
 
 Ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -31,7 +31,7 @@ Ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 	mpEventManager->connectEvent(Ape::Event::Group::SKY, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::WATER, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpScene = Ape::ISceneManager::getSingletonPtr();
 	mLastEventTimeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 	mIsRecorder = false;
 	mIsPlayer = true;
@@ -43,17 +43,17 @@ Ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 	{
 		mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	if (mFileStreamOut.is_open())
 	{
 		mFileStreamOut.close();
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, Ape::Event event)
@@ -97,7 +97,7 @@ void Ape::ApeSceneRecorderPlugin::readEvent()
 	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	LOG(LOG_TYPE_DEBUG, "subjectNameSize: " << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
+	APE_LOG_DEBUG("subjectNameSize: " << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
 	//auto eventCallbackThread = std::thread(&ApeSceneRecorderPlugin::fireEvent, this, timeToCallEventInMilliseconds, event);
 	//eventCallbackThread.detach();
 	fireEvent(timeToCallEventInMilliseconds, event);
@@ -114,7 +114,7 @@ void Ape::ApeSceneRecorderPlugin::writeEvent(Ape::Event event)
 	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
 	mFileStreamOut.write(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamOut.write(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	//LOG(LOG_TYPE_DEBUG, "subjectNameSize" << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
+	//APE_LOG_DEBUG("subjectNameSize" << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
 	if (event.group == Ape::Event::Group::NODE)
 	{
 		if (auto node = mpScene->getNode(event.subjectName).lock())
@@ -149,13 +149,13 @@ void Ape::ApeSceneRecorderPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApeSceneRecorderPlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeSceneRecorderPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (mIsPlayer)
@@ -166,17 +166,17 @@ void Ape::ApeSceneRecorderPlugin::Run()
 				mFileStreamIn.close();
 				mFileStreamIn.clear();
 				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
-				LOG(LOG_TYPE_DEBUG, "looping the file");
+				APE_LOG_DEBUG("looping the file");
 			}
 			else if (mFileStreamIn.eof())
 			{
 				mIsPlayer = false;
-				LOG(LOG_TYPE_DEBUG, "end of the file");
+				APE_LOG_DEBUG("end of the file");
 			}
 		}
 	}
 	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeSceneRecorderPlugin::Step()

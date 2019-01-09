@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "ApeGeometry.h"
+#include "datatypes/ApeGeometry.h"
 
 namespace Ape
 {

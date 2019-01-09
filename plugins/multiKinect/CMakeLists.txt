@@ -99,7 +99,7 @@ include_directories(
 add_library (ApeMultiKinectPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeMultiKinectPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_MULTI_KINECT)
+target_link_libraries (ApeMultiKinectPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_MULTI_KINECT)
 	
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET ApeMultiKinectPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")

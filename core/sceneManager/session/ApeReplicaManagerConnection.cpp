@@ -168,7 +168,7 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		}
 		else if (objectType == "FileTexture")
 		{
-			if (auto entity = mpSceneImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_FILE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_FILE).lock())
 				return ((Ape::FileTextureImpl*)entity.get());
 		}
 		else if (objectType == "Sky")

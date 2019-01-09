@@ -9,7 +9,7 @@ size_t framecount = 0;
 
 Ape::MultiKinectPlugin::MultiKinectPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	freenect2;
 	device1 = 0;
@@ -18,24 +18,24 @@ Ape::MultiKinectPlugin::MultiKinectPlugin()
 
 	serial = "";
 
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpScene = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&MultiKinectPlugin::eventCallBack, this, std::placeholders::_1));
 	RootNode = mpScene->createNode("KinectRootNode").lock();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::MultiKinectPlugin::~MultiKinectPlugin()
 {
-	LOG_FUNC_ENTER();	
+	APE_LOG_FUNC_ENTER();
 	device1->stop();
 	if (sensorNum == 2) device2->stop();
 	device1->close();
 	if (sensorNum == 2) device2->close();
 	delete registration;
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::MultiKinectPlugin::eventCallBack(const Ape::Event& event)
@@ -45,15 +45,15 @@ void Ape::MultiKinectPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::MultiKinectPlugin::Init()
 {
-	LOG_FUNC_ENTER();
-	LOG(LOG_TYPE_DEBUG, "MultiKinectPlugin waiting for main window");
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("MultiKinectPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	LOG(LOG_TYPE_DEBUG, "MultiKinectPlugin main window was found");
+	APE_LOG_DEBUG("MultiKinectPlugin main window was found");
 
 	std::stringstream MultiKinectPluginConfigFilePath;
 	MultiKinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeMultiKinectPlugin.json";
-	LOG(LOG_TYPE_DEBUG, "MultiKinectPluginConfigFilePath: " << MultiKinectPluginConfigFilePath.str());
+	APE_LOG_DEBUG("MultiKinectPluginConfigFilePath: " << MultiKinectPluginConfigFilePath.str());
 	FILE* MultiKinectPluginConfigFile;
 	if (errno_t err = fopen_s(&MultiKinectPluginConfigFile, MultiKinectPluginConfigFilePath.str().c_str(), "r") == 0)
 	{
@@ -67,45 +67,45 @@ void Ape::MultiKinectPlugin::Init()
 			{
 				rapidjson::Value& sNum = jsonDocument["sensorNumber"];
 				sensorNum = jsonDocument["sensorNumber"].GetInt();
-				LOG(LOG_TYPE_DEBUG, "sensorNumber: " << std::to_string(sensorNum));
+				APE_LOG_DEBUG("sensorNumber: " << std::to_string(sensorNum));
 
 				rapidjson::Value& KPosition = jsonDocument["sensorPosition"];
 				for (int i = 0; i < 3; i++)
 				{
 					KPos[i] = jsonDocument["sensorPosition"].GetArray()[i].GetFloat();
-					LOG(LOG_TYPE_DEBUG, "sensorPosition: " << std::to_string(KPos[i]));
+					APE_LOG_DEBUG("sensorPosition: " << std::to_string(KPos[i]));
 				}
 
 				rapidjson::Value& KPosition2 = jsonDocument["sensorPosition2"];
 				for (int i = 0; i < 3; i++)
 				{
 					KPos2[i] = jsonDocument["sensorPosition2"].GetArray()[i].GetFloat();
-					LOG(LOG_TYPE_DEBUG, "sensorPosition2: " << std::to_string(KPos2[i]));
+					APE_LOG_DEBUG("sensorPosition2: " << std::to_string(KPos2[i]));
 				}
 
 				rapidjson::Value& KOrientation = jsonDocument["sensorOrientation"];
 				for (int i = 0; i < 4; i++)
 				{
 					KRot[i] = jsonDocument["sensorOrientation"].GetArray()[i].GetFloat();
-					LOG(LOG_TYPE_DEBUG, "sensorOrientation: " << std::to_string(KRot[i]));
+					APE_LOG_DEBUG("sensorOrientation: " << std::to_string(KRot[i]));
 				}
 
 				rapidjson::Value& KOrientation2 = jsonDocument["sensorOrientation2"];
 				for (int i = 0; i < 4; i++)
 				{
 					KRot2[i] = jsonDocument["sensorOrientation2"].GetArray()[i].GetFloat();
-					LOG(LOG_TYPE_DEBUG, "sensorOrientation2: " << std::to_string(KRot2[i]));
+					APE_LOG_DEBUG("sensorOrientation2: " << std::to_string(KRot2[i]));
 				}
 			}
 			fclose(MultiKinectPluginConfigFile);
 		}
 	}
 	else
-		LOG(LOG_TYPE_DEBUG, "Error cannot open config file");
+		APE_LOG_DEBUG("Error cannot open config file");
 
 	if (freenect2.enumerateDevices() == 0)
 	{
-		LOG(LOG_TYPE_ERROR, "Connecting to Kinect failed");
+		APE_LOG_ERROR("Connecting to Kinect failed");
 	}
 
 	if (serial == "")
@@ -119,12 +119,12 @@ void Ape::MultiKinectPlugin::Init()
 
 	if (device1 == 0)
 	{
-		LOG(LOG_TYPE_ERROR, "Opening Kinect 0 failed");
+		APE_LOG_ERROR("Opening Kinect 0 failed");
 	}
 
 	if (device2 == 0 && sensorNum == 2)
 	{
-		LOG(LOG_TYPE_ERROR, "Opening Kinect 1 failed");
+		APE_LOG_ERROR("Opening Kinect 1 failed");
 	}
 
 	device1->setColorFrameListener(&listener);
@@ -139,8 +139,8 @@ void Ape::MultiKinectPlugin::Init()
 	device1->start();
 	if (sensorNum == 2) device2->start();
 
-	LOG(LOG_TYPE_DEBUG, "device serial: " + device1->getSerialNumber());
-	LOG(LOG_TYPE_DEBUG, "device firmware: " + device1->getFirmwareVersion());
+	APE_LOG_DEBUG("device serial: " + device1->getSerialNumber());
+	APE_LOG_DEBUG("device firmware: " + device1->getFirmwareVersion());
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -159,13 +159,13 @@ void Ape::MultiKinectPlugin::Init()
 		KPts2.resize(3 * width * height);
 		KCol2.resize(3 * width * height);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 	
 
 void Ape::MultiKinectPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	registration = new libfreenect2::Registration(device1->getIrCameraParams(), device1->getColorCameraParams());
 	libfreenect2::Frame undistorted(width, height, 4), registered(width, height, 4);
 
@@ -173,7 +173,7 @@ void Ape::MultiKinectPlugin::Run()
 	{
 		if (!listener.waitForNewFrame(frames, 10 * 1000)) // 10 sconds
 		{
-			LOG(LOG_TYPE_ERROR, "Kinect timeout");
+			APE_LOG_ERROR("Kinect timeout");
 		}
 
 		libfreenect2::Frame *rgb = frames[libfreenect2::Frame::Color];
@@ -199,7 +199,7 @@ void Ape::MultiKinectPlugin::Run()
 		{
 			if (!listener2.waitForNewFrame(frames2, 10 * 1000)) // 10 sconds
 			{
-				LOG(LOG_TYPE_ERROR, "Kinect 2 timeout");
+				APE_LOG_ERROR("Kinect 2 timeout");
 			}
 
 			rgb = frames2[libfreenect2::Frame::Color];
@@ -310,12 +310,12 @@ void Ape::MultiKinectPlugin::Run()
 		framecount++;
 		//std::cout << "\n" + std::to_string(framecount) + "\n";
 		if (framecount % 100 == 0)
-			LOG(LOG_TYPE_DEBUG, "got " + std::to_string(framecount) + " frames");
+			APE_LOG_DEBUG("got " + std::to_string(framecount) + " frames");
 		
 		listener.release(frames);
 		if (sensorNum == 2) listener2.release(frames2);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::MultiKinectPlugin::Step()

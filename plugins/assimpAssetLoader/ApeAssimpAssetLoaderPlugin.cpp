@@ -266,7 +266,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							textureCoordinates.push_back(assimpTerxtureCoordinates.x);
 							textureCoordinates.push_back(1.0f - assimpTerxtureCoordinates.y);
 						}
-						//LOG(LOG_TYPE_DEBUG, "HasTextureCoords: " << assimpMesh->mName.C_Str());
+						//APE_LOG_DEBUG("HasTextureCoords: " << assimpMesh->mName.C_Str());
 					}
 				}
 				std::string groupName = std::string();
@@ -275,7 +275,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, textureCoordinates, material);
 				if (textureCoordinates.size() && diffuseTextureFileName.length())
 				{
-					if (auto fileTexture = std::static_pointer_cast<Ape::IFileTexture>(mpScene->createEntity(diffuseTextureFileName, Ape::Entity::Type::TEXTURE_FILE).lock()))
+					if (auto fileTexture = std::static_pointer_cast<Ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, Ape::Entity::Type::TEXTURE_FILE).lock()))
 					{
 						fileTexture->setFileName(diffuseTextureFileName);
 						material->setPassTexture(fileTexture);

@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_FILETEXTUREIMPL_H
 #define APE_FILETEXTUREIMPL_H
 
-#include "ApeIFileTexture.h"
+#include "sceneelements/ApeIFileTexture.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
-#include "ApeIScene.h"
+#include "managers/ApeISceneManager.h"
 
 namespace Ape
 {
@@ -55,7 +55,7 @@ namespace Ape
 	private:
 		Ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpScene;
 
 		std::string mFileName;
 

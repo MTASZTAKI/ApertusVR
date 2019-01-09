@@ -39,6 +39,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeICamera.h"
 #include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileTexture.h"
 #include "sceneelements/ApeIIndexedFaceSetGeometry.h"
 #include "sceneelements/ApeIManualMaterial.h"
 #include "sceneelements/ApeINode.h"

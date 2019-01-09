@@ -31,27 +31,27 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "ApeInterpolator.h"
+#include "utils/ApeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISystemConfig.h"
-#include "ApeINode.h"
-#include "ApeIScene.h"
-#include "ApeIMainWindow.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeICamera.h"
-#include "ApeITextGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIManualPass.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIPointCloud.h"
-#include "ApeIFileGeometry.h"
+#include "plugin/ApePluginAPI.h"
+#include "plugin/ApeIPlugin.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeINode.h"
+#include "managers/ApeISceneManager.h"
+#include "system/ApeIMainWindow.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeIManualPass.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeIFileGeometry.h"
 #include "libfreenect2\libfreenect2.hpp"
 #include "libfreenect2\frame_listener_impl.h"
 #include "libfreenect2\registration.h"
@@ -114,7 +114,7 @@ namespace Ape
 		Ape::PointCloudWeakPtr mPointCloud;
 		Ape::PointCloudWeakPtr mPointCloud2;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpScene;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -139,7 +139,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateMultiKinectPlugin, DestroyMultiKinectPlugin);
 		return 0;
 	}

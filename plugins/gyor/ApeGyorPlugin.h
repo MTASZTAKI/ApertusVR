@@ -101,10 +101,6 @@ namespace Ape
 
 		void createSkyBox();
 
-		void createPlane();
-
-		void createLights();
-
 		void createTexts();
 
 	public:

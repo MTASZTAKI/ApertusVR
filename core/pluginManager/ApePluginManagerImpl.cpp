@@ -55,7 +55,7 @@ void Ape::PluginManagerImpl::CreatePlugins()
 		if (mpInternalPluginManager->Load((*it)))
 		{
 			CreatePlugin(*it);
-			LOG(LOG_TYPE_DEBUG, "Plugin loaded: " << *it);
+			APE_LOG_DEBUG("Plugin loaded: " << *it);
 		}
 		else
 		{

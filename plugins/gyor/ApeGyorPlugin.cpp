@@ -7,10 +7,10 @@ Ape::ApeGyorPlugin::ApeGyorPlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApeGyorPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = AApe::ISceneManager::getSingletonPtr();::getSingletonPtr();
+	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mUserNode = Ape::NodeWeakPtr();
 	mStateText = Ape::EntityWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApeGyorPlugin::~ApeGyorPlugin()
@@ -24,8 +24,8 @@ void Ape::ApeGyorPlugin::eventCallBack(const Ape::Event& event)
 {
 	if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
-		LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
+		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			auto intersections = rayGeometry->getIntersections();
 			for (auto intersection : intersections)
@@ -92,12 +92,12 @@ void Ape::ApeGyorPlugin::createTexts()
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		if (auto stateTextNode = mpScene->createNode("stateNode").lock())
+		if (auto stateTextNode = mpSceneManager->createNode("stateNode").lock())
 		{
 			stateTextNode->setParentNode(mUserNode);
 			stateTextNode->setPosition(Ape::Vector3(0, 17, -50));
 
-			mStateText = mpScene->createEntity("stateText", Ape::Entity::GEOMETRY_TEXT);
+			mStateText = mpSceneManager->createEntity("stateText", Ape::Entity::GEOMETRY_TEXT);
 			if (auto stateText = std::static_pointer_cast<Ape::ITextGeometry>(mStateText.lock()))
 			{
 				stateText->setCaption("stateText");
@@ -110,22 +110,20 @@ void Ape::ApeGyorPlugin::createTexts()
 
 void Ape::ApeGyorPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
 
 	createSkyBox();
-	createPlane();
-	createLights();
 	createTexts();
 
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApeGyorPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		if (auto userNode = mUserNode.lock())

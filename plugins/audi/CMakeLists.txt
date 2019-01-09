@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeAudiPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeAudiPlugin ApePluginManager ApeScene ApeEventManager ApeLogManager ApeMainWindow )
+target_link_libraries (ApeAudiPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow )
 
 set_property (TARGET ApeAudiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

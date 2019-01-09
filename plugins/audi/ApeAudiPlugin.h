@@ -31,29 +31,29 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <list>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeISceneSession.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeICamera.h"
-#include "ApeISystemConfig.h"
-#include "ApeIFileMaterial.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeITextGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApeIPbsPass.h"
-#include "ApeInterpolator.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIMainWindow.h"
-#include "ApeIPointCloud.h"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "managers/ApeISceneSession.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeICamera.h"
+#include "managers/ApeISystemConfig.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIPlaneGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeISphereGeometry.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "sceneelements/ApeIIndexedLineSetGeometry.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIPbsPass.h"
+#include "utils/ApeInterpolator.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "system/ApeIMainWindow.h"
+#include "sceneelements/ApeIPointCloud.h"
 
 #define THIS_PLUGINNAME "ApeAudiPlugin"
 
@@ -64,7 +64,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpScene;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
@@ -126,7 +126,7 @@ namespace Ape
 
 	APE_PLUGIN_ALLOC()
 	{
-		LOG(LOG_TYPE_DEBUG, THIS_PLUGINNAME << "_CREATE");
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
 		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAudiPlugin, DestroyApeAudiPlugin);
 		return 0;
 	}

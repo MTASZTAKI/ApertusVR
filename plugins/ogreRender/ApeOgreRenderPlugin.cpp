@@ -1347,7 +1347,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == Ape::Event::Group::TEXTURE_FILE)
 		{
-			if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpScene->getEntity(event.subjectName).lock()))
+			if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string textureManualName = textureManual->getName();
 				switch (event.type)
@@ -1962,7 +1962,7 @@ bool Ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
 	/*if (mRenderWindows.size() > 0)
 	{
-		LOG(LOG_TYPE_DEBUG, "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
+		APE_LOG_DEBUG("FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
 	}*/
 	processEventDoubleQueue();
 	if (mpHydrax && mpSkyxSkylight)

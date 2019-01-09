@@ -296,7 +296,7 @@ Ape::EntityWeakPtr Ape::SceneManagerImpl::createEntity(std::string name, Ape::En
 		}
 		case Ape::Entity::TEXTURE_FILE:
 		{
-			LOG_TRACE("type: TEXTURE_FILE");
+			APE_LOG_TRACE("type: TEXTURE_FILE");
 			auto entity = std::make_shared<Ape::FileTextureImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_FILE_CREATE));

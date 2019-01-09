@@ -2,20 +2,20 @@
 
 Ape::ApePolimiPlugin::ApePolimiPlugin()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApePolimiPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePolimiPlugin::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpScene = Ape::ISceneManager::getSingletonPtr();
 	mUserNode = Ape::NodeWeakPtr();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::ApePolimiPlugin::~ApePolimiPlugin()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePolimiPlugin::createCoordinateSystem()
@@ -178,7 +178,7 @@ void Ape::ApePolimiPlugin::eventCallBack(const Ape::Event& event)
 
 void Ape::ApePolimiPlugin::Init()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 		mUserNode = userNode;
@@ -219,17 +219,17 @@ void Ape::ApePolimiPlugin::Init()
 		light->setDiffuseColor(Ape::Color(0.6f, 0.6f, 0.6f));
 		light->setSpecularColor(Ape::Color(0.6f, 0.6f, 0.6f));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePolimiPlugin::Run()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(40));
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::ApePolimiPlugin::Step()
