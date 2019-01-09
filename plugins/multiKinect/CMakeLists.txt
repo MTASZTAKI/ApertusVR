@@ -23,6 +23,8 @@
 # freenect2 patch log begin
 # 3rdParty\multikinect\libfreenect2-master\cmake_modules\FindLibUSB.cmake was modified
 # 3rdParty\multikinect\libfreenect2-master\depends\install_libusb_vs2017.cmd was added
+# 3rdParty\multikinect\libfreenect2-master\src\cuda_depth_packet_processor.cu was modified
+# 3rdParty\multikinect\libfreenect2-master\src\cuda_kde_depth_packet_processor.cu was modified
 # freenect2 log end
 
 set (MULTI_KINECT_HOME ${CMAKE_SOURCE_DIR}/3rdParty/multiKinect/libfreenect2-master)
