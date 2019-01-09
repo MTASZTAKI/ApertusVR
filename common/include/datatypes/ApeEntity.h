@@ -54,6 +54,7 @@ namespace Ape
 			PASS_PBS,
 			PASS_MANUAL,
 			TEXTURE_MANUAL,
+			TEXTURE_FILE,
 			TEXTURE_UNIT,
 			BROWSER,
 			WATER,

@@ -5,7 +5,7 @@
     },
     "sceneSession": {
         "participantType": "Local",
-        "uniqueUserNamePrefix": "",
+        "uniqueUserNamePrefix": "Local",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
             "/plugins/tester/resources"
@@ -22,10 +22,10 @@
         }
     },
     "pluginManager": {
-        "plugins": [
-            "ApeOgreRenderPlugin",
-            "ApeOisUserInputPlugin",
-            "ApeTesterPlugin"
-        ]
+      "plugins": [
+        "ApeSceneRecorderPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin"
+      ]
     }
 }

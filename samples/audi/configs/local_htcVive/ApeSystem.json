@@ -1,0 +1,37 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+  "sceneSession": {
+    "participantType": "Local",
+    "uniqueUserNamePrefix": "Local",
+    "sessionGUID": "1013311130628945935",
+    "sessionIP": "192.168.0.97",
+    "sessionPort": "62666",
+    "sessionResourceLocation": [
+      "/plugins/audi/resources"
+    ],
+    "natPunchThroughServer": {
+      "use": false,
+      "ip": "195.111.2.95",
+      "port": "61666"
+    },
+    "lobbyServer": {
+      "useLobby": false,
+      "ip": "195.111.2.95",
+      "port": "8888",
+      "sessionName": "k508"
+    }
+  },
+    "pluginManager": {
+      "plugins": [
+        "ApeNodeJsPlugin",
+        "ApeOgreRenderPlugin",
+        "ApeOisUserInputPlugin",
+        "ApeAudiPlugin",
+        "ApeKinectPlugin",
+        "ApeHtcVivePlugin"
+      ]
+    }
+}

@@ -45,6 +45,7 @@ SOFTWARE.*/
 #include "ApeSkyImpl.h"
 #include "ApeWaterImpl.h"
 #include "ApePointCloudImpl.h"
+#include "ApeFileTextureImpl.h"
 
 Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -164,6 +165,11 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_UNIT).lock())
 				return ((Ape::UnitTextureImpl*)entity.get());
+		}
+		else if (objectType == "FileTexture")
+		{
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_FILE).lock())
+				return ((Ape::FileTextureImpl*)entity.get());
 		}
 		else if (objectType == "Sky")
 		{

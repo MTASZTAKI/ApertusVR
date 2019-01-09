@@ -74,7 +74,6 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 		; //TODO open a platform specific window if needed
 
 	gpPluginManagerImpl->CreatePlugins();
-
 	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
 	if (auto userNode = gpSceneManagerImpl->createNode(uniqueUserNodeName.str()).lock())
 	{

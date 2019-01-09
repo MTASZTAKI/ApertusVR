@@ -30,6 +30,7 @@ set(HEADERS
 	ApeCameraImpl.h
 	ApeSceneManagerImpl.h
 	ApeFileGeometryImpl.h
+	ApeFileTextureImpl.h
 	ApePlaneGeometryImpl.h
 	ApeBoxGeometryImpl.h
 	ApeIndexedFaceSetGeometryImpl.h
@@ -64,6 +65,7 @@ set(SOURCES
 	ApeNodeImpl.cpp
 	ApeCameraImpl.cpp
 	ApeSceneManagerImpl.cpp
+	ApeFileTextureImpl.cpp
 	ApeFileGeometryImpl.cpp
 	ApePlaneGeometryImpl.cpp
 	ApeBoxGeometryImpl.cpp

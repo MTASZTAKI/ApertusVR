@@ -28,6 +28,7 @@ set (HEADERS
 	ApeICylinderGeometry.h
 	ApeIFileGeometry.h
 	ApeIFileMaterial.h
+	ApeIFileTexture.h
 	ApeIIndexedFaceSetGeometry.h
 	ApeIIndexedLineSetGeometry.h
 	ApeILight.h

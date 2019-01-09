@@ -47,6 +47,7 @@ SOFTWARE.*/
 #include "ApeSkyImpl.h"
 #include "ApeWaterImpl.h"
 #include "ApePointCloudImpl.h"
+#include "ApeFileTextureImpl.h"
 
 Ape::SceneManagerImpl::SceneManagerImpl()
 {
@@ -289,6 +290,16 @@ Ape::EntityWeakPtr Ape::SceneManagerImpl::createEntity(std::string name, Ape::En
 			auto entity = std::make_shared<Ape::ManualTextureImpl>(name, mpSceneSessionImpl->isHost());
 			mEntities.insert(std::make_pair(name, entity));
 			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_MANUAL_CREATE));
+			if (auto replicaManager = mReplicaManager.lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
+		case Ape::Entity::TEXTURE_FILE:
+		{
+			APE_LOG_TRACE("type: TEXTURE_FILE");
+			auto entity = std::make_shared<Ape::FileTextureImpl>(name, mpSceneSessionImpl->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			mpEventManagerImpl->fireEvent(Ape::Event(name, Ape::Event::Type::TEXTURE_FILE_CREATE));
 			if (auto replicaManager = mReplicaManager.lock())
 				replicaManager->Reference(entity.get());
 			return entity;

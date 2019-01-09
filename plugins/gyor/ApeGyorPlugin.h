@@ -53,6 +53,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeISphereGeometry.h"
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
+#include "sceneelements/ApeIRayGeometry.h"
 #include "utils/ApeInterpolator.h"
 
 #define THIS_PLUGINNAME "ApeGyorPlugin"
@@ -92,7 +93,15 @@ namespace Ape
 
 		Ape::Quaternion mGripperLeftEndNodeInitialOrientation;
 
+		Ape::EntityWeakPtr mStateText;
+
+		Ape::NodeWeakPtr mUserNode;
+
 		void eventCallBack(const Ape::Event& event);
+
+		void createSkyBox();
+
+		void createTexts();
 
 	public:
 		ApeGyorPlugin();

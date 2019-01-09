@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 namespace Ape
 {
@@ -35,7 +36,7 @@ namespace Ape
 		float x, y, z;
 
 		Vector3() :
-			x(0.0f), y(0.0f), z(0.0f)
+			x(0.0f), y(0.0f), z(0.0f) 
 		{}
 
 		Vector3(float _x, float _y, float _z) :
@@ -45,6 +46,20 @@ namespace Ape
 		Vector3(float _d) :
 			x(_d), y(_d), z(_d)
 		{}
+
+		void write(std::ofstream& fileStreamOut)
+		{
+			fileStreamOut.write(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&z), sizeof(float));
+		}
+
+		void read(std::ifstream& fileStreamIn)
+		{
+			fileStreamIn.read(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&z), sizeof(float));
+		}
 
 		float squaredLength() const
 		{

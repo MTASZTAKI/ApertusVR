@@ -1,0 +1,25 @@
+material skyBox
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			texture_unit
+			{
+				cubic_texture sky.jpg combinedUVW
+				tex_address_mode clamp
+			}
+			rtshader_system
+ 			{	 				
+ 				lighting_stage per_pixel				
+ 			}
+		}
+	}
+}
+
+
+
+
+
