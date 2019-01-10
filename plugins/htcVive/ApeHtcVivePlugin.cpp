@@ -16,6 +16,8 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	mUserMaterial = Ape::ManualMaterialWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
+	mTranslate = Ape::Vector3();
+	mRotate = Ape::Quaternion();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -58,18 +60,17 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		{
 			auto openVRPose = hmdPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 apeScale;
-			Ape::Quaternion apeRotation;
-			Ape::Vector3 apeTranslate;
-			Ape::Matrix4 apePose = conversionFromOpenVR(openVRPose);
-			apePose.decomposition(apeScale, apeRotation, apeTranslate);
-			apeScale = apeScale * 100;
-			apeTranslate = apeTranslate * 100;
+			Ape::Vector3 trackerScale;
+			Ape::Quaternion trackerOrientation;
+			Ape::Vector3 trackerPosition;
+			Ape::Matrix4 trackerPose = conversionFromOpenVR(openVRPose);
+			trackerPose.decomposition(trackerScale, trackerOrientation, trackerPosition);
+			trackerScale = 100;
+			trackerPosition = trackerPosition * trackerScale;
 			if (auto headNode = mHeadNode.lock())
 			{
-				headNode->setOrientation(apeRotation);
-				headNode->setPosition(apeTranslate);
-				//APE_LOG_DEBUG("rotation:" << rotation.toString() << " translate:" << translate.toString());
+				headNode->setOrientation(mRotate * trackerOrientation);
+				headNode->setPosition(mTranslate + mRotate * trackerPosition);
 			}
 		}
 	}
@@ -159,8 +160,8 @@ void Ape::ApeHtcVivePlugin::Init()
 			mUserMaterial = userMaterial;
 		}
 	}
-
-	APE_LOG_DEBUG("waiting for main window");
+	mpApeUserInputMacro = new Ape::UserInputMacro();
+	LOG(LOG_TYPE_DEBUG, "waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("main window was found");
@@ -276,6 +277,28 @@ void Ape::ApeHtcVivePlugin::Run()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 	while (true)
 	{
+		vr::VRControllerState_t controllerState3;
+		if (mpOpenVrSystem->GetControllerState(3, &controllerState3, sizeof controllerState3))
+		{
+			//rotate in world coordinate system
+			//mOrientation * getDerivedOrientation().Inverse() * qnorm * getDerivedOrientation())
+			if (auto headNode = mHeadNode.lock())
+			{
+				Quaternion qnorm;
+				qnorm.FromAngleAxis(Ape::Degree(1).toRadian(), Ape::Vector3(0, -controllerState3.rAxis[0].x, 0));
+				qnorm.normalise();
+				mRotate = qnorm * mRotate;
+			}
+		}
+		vr::VRControllerState_t controllerState4;
+		if (mpOpenVrSystem->GetControllerState(4, &controllerState4, sizeof controllerState4))
+		{
+			//translate in the headNode's coordinate system
+			if (auto headNode = mHeadNode.lock())
+			{
+				mTranslate = headNode->getOrientation() * Ape::Vector3(0, 0, -controllerState4.rAxis[0].y) + mTranslate;
+			}
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	APE_LOG_FUNC_LEAVE();
