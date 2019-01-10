@@ -3,11 +3,11 @@
 
 Ape::UserInputMacro::UserInputMacro()
 {
-	LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
-	mpScene = Ape::IScene::getSingletonPtr();
+	mpScene = Ape::ISceneManager::getSingletonPtr();
 	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
 	{
 		mUserNode = userNode;
@@ -19,13 +19,13 @@ Ape::UserInputMacro::UserInputMacro()
 		}
 		//userNode->setParentNode(mDummyNode);
 	}
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 }
 
 Ape::UserInputMacro::~UserInputMacro()
 {
-	LOG_FUNC_ENTER();
-	LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
 }
 
 void Ape::UserInputMacro::translateUserNode(Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace)

@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeUserInputMacro STATIC ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeUserInputMacro ApeScene ApeEventManager ApeLogManager)
+target_link_libraries (ApeUserInputMacro ApeSceneManager ApeEventManager ApeLogManager)
 
 set_property (TARGET ApeUserInputMacro PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

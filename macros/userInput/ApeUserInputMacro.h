@@ -27,18 +27,16 @@ SOFTWARE.*/
 #include <thread>
 #include <chrono>
 #include <memory>
-#include "ApePluginAPI.h"
-#include "ApeIEventManager.h"
-#include "ApeILogManager.h"
-#include "ApeIScene.h"
-#include "ApeINode.h"
-#include "ApeILight.h"
-#include "ApeITextGeometry.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIFileMaterial.h"
-#include "ApeISystemConfig.h"
-
-#define THIS_PLUGINNAME "UserInputMacro"
+#include "plugin/ApePluginAPI.h"
+#include "managers/ApeIEventManager.h"
+#include "managers/ApeILogManager.h"
+#include "managers/ApeISceneManager.h"
+#include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeILight.h"
+#include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIFileMaterial.h"
+#include "managers/ApeISystemConfig.h"
 
 namespace Ape
 {
@@ -48,7 +46,7 @@ namespace Ape
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::IScene* mpScene;
+		Ape::ISceneManager* mpScene;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
