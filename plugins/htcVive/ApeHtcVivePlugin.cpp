@@ -161,7 +161,7 @@ void Ape::ApeHtcVivePlugin::Init()
 		}
 	}
 	mpApeUserInputMacro = new Ape::UserInputMacro();
-	LOG(LOG_TYPE_DEBUG, "waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("main window was found");

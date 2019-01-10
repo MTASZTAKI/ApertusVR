@@ -257,12 +257,12 @@ void Ape::OISUserInputPlugin::Init()
 		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
 			toggleUserNodePoses(userNode);
 
-		mDummyNode = mpScene->createNode(userNode->getName() + "_DummyNode");
+		mDummyNode = mpSceneManager->createNode(userNode->getName() + "_DummyNode");
 		if (auto dummyNode = mDummyNode.lock())
 		{
 			toggleUserNodePoses(dummyNode);
 		}
-		if (auto headNode = mpScene->getNode(userNode->getName() + "_HeadNode").lock())
+		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
 		{
 			mHeadNode = headNode;
 			mHeadNodeName = headNode->getName();
@@ -371,8 +371,8 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	}
 	if (e.key == OIS::KeyCode::KC_V)
 	{
-		LOG(LOG_TYPE_DEBUG, "Key pressed V");
-		toggleUserNodePoses();
+		APE_LOG_DEBUG("Key pressed V");
+		//toggleUserNodePoses();
 	}
 	if (e.key == OIS::KeyCode::KC_B)
 	{
@@ -667,7 +667,7 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::OISUserInputPlugin::toggleUserNodePoses()
+void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 {
 	if (mUserNodePoses.size() > 0 && mUserNodePosesToggleIndex < mUserNodePoses.size())
 	{
