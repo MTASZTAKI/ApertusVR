@@ -150,6 +150,8 @@ namespace Ape
 
 		int monitorIndex;
 
+		bool hidden;
+
 		int width;
 
 		int height;
@@ -175,6 +177,7 @@ namespace Ape
 			this->enable = true;
 			this->name = "";
 			this->monitorIndex = 0;
+			this->hidden = false,
 			this->width = 0;
 			this->height = 0;
 			this->vSync = false;
@@ -190,6 +193,7 @@ namespace Ape
 		OgreRenderWindowConfig(bool enable,
 		std::string name,
 		int monitorIndex,
+		bool hidden,
 		int width,
 		int height,
 		bool vSync,
@@ -204,6 +208,7 @@ namespace Ape
 			this->enable = enable;
 			this->name = name;
 			this->monitorIndex = monitorIndex;
+			this->hidden = hidden,
 			this->width = width;
 			this->height = height;
 			this->vSync = vSync;

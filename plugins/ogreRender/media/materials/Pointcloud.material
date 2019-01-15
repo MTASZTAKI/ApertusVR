@@ -8,11 +8,16 @@ material Pointcloud
 			diffuse vertexcolour
 			specular vertexcolour
 			ambient vertexcolour
+
 			point_size 3
 			point_sprites off
 			point_size_attenuation off
-			//point_size_attenuation on 0 0 0
-			//point_size_attenuation off
+
+			//point_size 0.001
+			//point_sprites on
+			//point_size_attenuation on 1000 10 1
+
+
 			//point_size_min 0
 			//point_size_max 0.01
 		}

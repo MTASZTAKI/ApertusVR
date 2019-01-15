@@ -56,6 +56,7 @@ SOFTWARE.*/
 #include "libfreenect2\frame_listener_impl.h"
 #include "libfreenect2\registration.h"
 #include "libfreenect2\packet_pipeline.h"
+#include "libfreenect2\depth_packet_processor.h"
 #include "libfreenect2\logger.h"
 
 #define THIS_PLUGINNAME "ApeMultiKinectPlugin"
@@ -83,36 +84,62 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
+		struct Sensor
+		{
+			std::string serial;
+			int id;
+			libfreenect2::Registration* registration;
+			libfreenect2::Frame* undistorted;
+			libfreenect2::Frame* registered;
+			libfreenect2::Freenect2Device* device;
+			libfreenect2::SyncMultiFrameListener* listener;
+			libfreenect2::FrameMap frames;
+			libfreenect2::PacketPipeline* packePipeline;
+			float maxDepth;
+			Ape::PointCloudPoints points;
+			Ape::PointCloudColors colors;
+			Ape::Vector3 position;
+			Ape::Quaternion orientation;
+			Ape::PointCloudWeakPtr pointCloud;
+			Ape::NodeWeakPtr pointCloudNode;
+
+			Sensor() : serial(std::string()), id(-1), registration(nullptr), undistorted(nullptr), registered(nullptr), device(nullptr),
+				listener(nullptr),
+				frames(libfreenect2::FrameMap()), packePipeline(nullptr), maxDepth(10000.0f), points(Ape::PointCloudPoints()), colors(Ape::PointCloudColors()),
+				position(Ape::Vector3()), orientation(Ape::Quaternion()), pointCloud(Ape::PointCloudWeakPtr()), pointCloudNode(Ape::NodeWeakPtr()) {}
+
+			Sensor(std::string serial, int id, libfreenect2::Registration* registration, libfreenect2::Frame* undistorted, libfreenect2::Frame* registered,
+				libfreenect2::Freenect2Device* device, libfreenect2::SyncMultiFrameListener* listener, libfreenect2::FrameMap frames, libfreenect2::PacketPipeline* packePipeline, 
+				float maxDepth, Ape::PointCloudPoints points, Ape::PointCloudColors colors,
+			    Ape::Vector3 position, Ape::Quaternion orientation, Ape::PointCloudWeakPtr pointCloud, Ape::NodeWeakPtr pointCloudNode)
+			{
+				this->serial = serial;
+				this->id = id;
+				this->registration = registration;
+				this->undistorted = undistorted;
+				this->registered = registered;
+				this->device = device;
+				this->listener = listener;
+				this->frames = frames;
+				this->packePipeline = packePipeline;
+				this->maxDepth = maxDepth;
+				this->points = points;
+				this->colors = colors;
+				this->position = position;
+				this->orientation = orientation;
+				this->pointCloud = pointCloud;
+				this->pointCloudNode = pointCloudNode;
+			}
+		};
+
 	private:
-		libfreenect2::Freenect2 freenect2;
-		libfreenect2::Freenect2Device *device1;
-		libfreenect2::Freenect2Device *device2;
-		//libfreenect2::PacketPipeline *pipeline;
+		libfreenect2::Freenect2 mFreenect2;
 
-		std::string serial;
-		std::string serial2;
+		std::vector<Sensor> mSensors;
 
-		libfreenect2::Registration* registration = NULL;
+		const unsigned int mWidth = 512;
 
-		unsigned char sensorNum = 0;//number of kinects used (1 or 2)
-
-		Ape::PointCloudPoints KPts;//stores the actual point coordinates
-		Ape::PointCloudColors KCol;//stores the actual point colors
-		Ape::PointCloudPoints KPts2;
-		Ape::PointCloudColors KCol2;
-
-		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
-		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
-		float KPos2[3] = { 0.0, 0.0, 0.0 };
-		float KRot2[4] = { 0.0, 0.0, 0.0, 0.0 };
-		
-		bool pointsGenerated = false;
-		const unsigned int width = 512;
-		const unsigned int height = 424;
-
-		Ape::NodeWeakPtr RootNode;
-		Ape::PointCloudWeakPtr mPointCloud;
-		Ape::PointCloudWeakPtr mPointCloud2;
+		const unsigned int mHeight = 424;
 
 		Ape::ISceneManager* mpScene;
 

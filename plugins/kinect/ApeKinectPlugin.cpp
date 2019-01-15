@@ -395,7 +395,6 @@ void Ape::KinectPlugin::Run()
 							mPointCloud = pointCloud;
 						}
 					}
-
 					pointsGenerated = true;
 				}
 
@@ -822,7 +821,6 @@ void Ape::KinectPlugin::Update()
 	}
 	IMultiSourceFrame* pFrame = NULL;
 	HRESULT hr = reader->AcquireLatestFrame(&pFrame);
-	//APE_LOG_DEBUG("update");
 	if (backgroundRemoval)
 	{
 		if (maxFPS)
@@ -871,7 +869,6 @@ void Ape::KinectPlugin::Update()
 					}
 				}
 			}
-
 			SafeRelease(pFrame);
 			framecount++;
 		}

@@ -2103,6 +2103,8 @@ void Ape::OgreRenderPlugin::Init()
 						ogreRenderWindowConfig.name = renderWindowMemberIterator->value.GetString();
 					else if (renderWindowMemberIterator->name == "monitorIndex")
 						ogreRenderWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
+					else if (renderWindowMemberIterator->name == "hidden")
+						ogreRenderWindowConfig.hidden = renderWindowMemberIterator->value.GetBool();
 					else if (renderWindowMemberIterator->name == "resolution")
 					{
 						for (rapidjson::Value::MemberIterator resolutionMemberIterator = 
