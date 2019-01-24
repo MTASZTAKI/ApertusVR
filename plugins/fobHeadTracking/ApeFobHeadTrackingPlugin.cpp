@@ -18,8 +18,8 @@ Ape::ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	mCameraCount = 0;
 	mCameraDoubleQueue = Ape::DoubleQueue<Ape::CameraWeakPtr>();
 	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
-	mTrackerConfig = Ape::FobHeadTrackingTrackerConfig();
-	mDisplayConfigList = Ape::FobHeadTrackingDisplayConfigList();
+	mTrackerConfig = Ape::HeadTrackerConfig();
+	mDisplayConfigList = Ape::HeadTrackerDisplayConfigList();
 	mHeadNode = Ape::NodeWeakPtr();
 	mTrackedViewerPosition = Ape::Vector3();
 	mTrackedViewerOrientation = Ape::Quaternion();
@@ -170,7 +170,7 @@ void Ape::ApeFobHeadTrackingPlugin::Init()
 			rapidjson::Value& displays = jsonDocument["displays"];
 			for (auto& display : displays.GetArray())
 			{
-				Ape::FobHeadTrackingDisplayConfig fobHeadTrackingDisplayConfig;
+				Ape::HeadTrackerDisplayConfig fobHeadTrackingDisplayConfig;
 				for (rapidjson::Value::MemberIterator displayMemberIterator = 
 					display.MemberBegin(); displayMemberIterator != display.MemberEnd(); ++displayMemberIterator)
 				{
@@ -331,7 +331,7 @@ Ape::Matrix4 Ape::ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayD
 	return m;
 }
 
-Ape::Matrix4 Ape::ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::FobHeadTrackingDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
+Ape::Matrix4 Ape::ApeFobHeadTrackingPlugin::calculateCameraProjection(Ape::HeadTrackerDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 

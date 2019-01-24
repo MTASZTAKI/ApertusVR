@@ -1,0 +1,143 @@
+{
+    "tracker": {
+        "rotation": {
+            "angle": 0,
+            "x": 0,
+            "y": 1,
+            "z": 0
+        },
+        "translate": {
+            "x": 0,
+            "y": -15,
+            "z": 0
+        },
+        "scale": {
+            "x": 30.48,
+            "y": 30.48,
+            "z": 30.48
+        },
+        "eyeSeparation": 8
+    },
+    "displays": [
+        {
+            "name": "leftDisplay",
+            "cameras": {
+                "left": "camera3"
+            },
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": -150,
+                "y": 112.5,
+                "z": 0
+            },
+            "orientation": {
+                "angle": 90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "corners": [
+                {
+                    "bottomLeftCorner": {
+                        "x": -150,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "bottomRightCorner": {
+                        "x": -150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "topLeftCorner": {
+                        "x": -150,
+                        "y": 225,
+                        "z": 150
+                    }
+                }
+            ]
+        },
+        {
+            "name": "frontDisplay",
+            "cameras": {
+                "left": "camera2"
+            },
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": 0,
+                "y": 112.5,
+                "z": -150
+            },
+            "orientation": {
+                "angle": 0,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "corners": [
+                {
+                    "bottomLeftCorner": {
+                        "x": -150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "bottomRightCorner": {
+                        "x": 150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "topLeftCorner": {
+                        "x": -150,
+                        "y": 225,
+                        "z": -150
+                    }
+                }
+            ]
+        },
+        {
+            "name": "rightDisplay",
+            "cameras": {
+                "left": "camera1"
+            },
+            "size": {
+                "width": 300,
+                "height": 225
+            },
+            "position": {
+                "x": 150,
+                "y": 112.5,
+                "z": 0
+            },
+            "orientation": {
+                "angle": -90,
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "corners": [
+                {
+                    "bottomLeftCorner": {
+                        "x": 150,
+                        "y": 0,
+                        "z": -150
+                    },
+                    "bottomRightCorner": {
+                        "x": 150,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "topLeftCorner": {
+                        "x": 150,
+                        "y": 225,
+                        "z": -150
+                    }
+                }
+            ]
+        }
+    ]
+}

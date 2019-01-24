@@ -20,59 +20,87 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_FOBHEADTRACKINGPLUGIN_H
-#define APE_FOBHEADTRACKINGPLUGIN_H
+#ifndef APE_KINECTHEADTRACKINGPLUGIN_H
+#define APE_KINECTHEADTRACKINGPLUGIN_H
 
-#include <algorithm>
-#include <chrono>
+#include <fstream>
 #include <iostream>
-#include <iterator>
-#include <map>
-#include <memory>
-#include <mutex>
+#include <sstream>
+#include <string>
+#include <strsafe.h>
 #include <thread>
-#include <vector>
+#include "stdafx.h"
+#include "resource.h"
 #include "system/ApeIMainWindow.h"
+#include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
 #include "managers/ApeILogManager.h"
 #include "managers/ApeISceneManager.h"
 #include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeMatrix4.h"
-#include "datatypes/ApeEuler.h"
 #include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
+#include "sceneelements/ApeIFileGeometry.h"
 #include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIManualPass.h"
 #include "sceneelements/ApeINode.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeISphereGeometry.h"
 #include "sceneelements/ApeITextGeometry.h"
+#include "sceneelements/ApeITubeGeometry.h"
 #include "utils/ApeDoubleQueue.h"
+#include "utils/ApeInterpolator.h"
 #include "utils/ApeHeadTrackingConfigs.h"
-#include "ApeFobHeadTracking.h"
+#include "datatypes/ApeEuler.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/writer.h"
 
-#define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
+#define THIS_PLUGINNAME "ApeKinectHeadTrackingPlugin"
 
 namespace Ape
 {
-	class ApeFobHeadTrackingPlugin : public Ape::IPlugin
+	class KinectHeadTrackingPlugin : public Ape::IPlugin
 	{
-	private:
-		int mCameraCount;
+	public:
+		KinectHeadTrackingPlugin();
 
-		Ape::IEventManager* mpEventManager;
+		~KinectHeadTrackingPlugin();
+
+		void Init() override;
+
+		void Run() override;
+
+		void Step() override;
+
+		void Stop() override;
+
+		void Suspend() override;
+
+		void Restart() override;
+
+	private:
+		IKinectSensor* mpKinectSensor;
+
+		ICoordinateMapper* mpCoordinateMapper;
+
+		IMultiSourceFrameReader* mpKinectReader;   
 
 		Ape::ISceneManager* mpSceneManager;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::NodeWeakPtr mHeadNode;
-
-		Ape::ManualMaterialWeakPtr mUserMaterial;
-
-		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::IMainWindow* mpMainWindow;
+
+		Ape::IEventManager* mpEventManager;
+
+		Ape::NodeWeakPtr mUserNode;
+
+		Ape::ManualMaterialWeakPtr mUserMaterial;
+
+		Ape::NodeWeakPtr mHeadNode;
+
+		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
 		Ape::HeadTrackerConfig mTrackerConfig;
 
@@ -94,7 +122,7 @@ namespace Ape
 
 		float mD;
 
-		void* mpFobTracker;
+		int mCameraCount;
 
 		void eventCallBack(const Ape::Event& event);
 
@@ -104,40 +132,29 @@ namespace Ape
 
 		Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 
-	public:
-		ApeFobHeadTrackingPlugin();
+		HRESULT InitializeDefaultSensor();
 
-		~ApeFobHeadTrackingPlugin();
+		void getHeadPositionFromBodyData(IBody* pBody);
 
-		void Init() override;
-
-		void Run() override;
-
-		void Step() override;
-
-		void Stop() override;
-
-		void Suspend() override;
-
-		void Restart() override;
+		void getBodyDataFromSensor(IMultiSourceFrame * pframe);
 	};
-
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
+	
+	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectHeadTrackingPlugin()
 	{
-		return new Ape::ApeFobHeadTrackingPlugin;
+		return new Ape::KinectHeadTrackingPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyKinectHeadTrackingPlugin(Ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeFobHeadTrackingPlugin*)plugin;
+		delete (Ape::KinectHeadTrackingPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 
 	APE_PLUGIN_ALLOC()
 	{
-		APE_LOG_DEBUG(THIS_PLUGINNAME "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
+		ApeRegisterPlugin(THIS_PLUGINNAME, CreateKinectHeadTrackingPlugin, DestroyKinectHeadTrackingPlugin);
 		return 0;
 	}
 }

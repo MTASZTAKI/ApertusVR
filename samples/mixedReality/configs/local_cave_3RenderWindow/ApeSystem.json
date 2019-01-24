@@ -1,0 +1,33 @@
+{
+    "mainWindow": {
+        "name": "Ape",
+        "creator": "ApeOgreRenderPlugin"
+    },
+    "sceneSession": {
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "",
+        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
+        "sessionResourceLocation": [
+            "/plugins/engineeringScene/resources"
+        ],
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+      "lobbyServer": {
+        "useLobby": true,
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "sessionName": "k508"
+      }
+    },
+    "pluginManager": {
+        "plugins": [
+            "ApeNodeJsPlugin",
+            "ApeOgreRenderPlugin",
+            "ApeOisUserInputPlugin",
+            "ApeIndustry40Plugin",
+            "ApeKinectHeadTrackingPlugin"
+        ]
+    }
+}

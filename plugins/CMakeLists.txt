@@ -106,6 +106,11 @@ if (${APE_PLUGIN_FobHeadTracking})
 	add_subdirectory (fobHeadTracking)
 endif ()
 
+option(APE_PLUGIN_KinectHeadTracking "Use KinectHeadTrackingPlugin?" ON )
+if (${APE_PLUGIN_KinectHeadTracking})
+	add_subdirectory (kinectHeadTracking)
+endif ()
+
 # Renders
 
 option(APE_PLUGIN_OgreRender "Use OgreRenderPlugin?" ON )

@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_FOBHEADTRACKINGPLUGINCONFIGS_H
-#define APE_FOBHEADTRACKINGPLUGINCONFIGS_H
+#ifndef APE_HEADTRACKINGPLUGINCONFIGS_H
+#define APE_HEADTRACKINGPLUGINCONFIGS_H
 
 #include <vector>
 #include <string>
@@ -32,7 +32,7 @@ SOFTWARE.*/
 
 namespace Ape
 {
-	struct FobHeadTrackingTrackerConfig
+	struct HeadTrackerConfig
 	{
 		Ape::Vector3 translate;
 		
@@ -44,7 +44,7 @@ namespace Ape
 
 		Ape::Vector3 rightEyeOffset;
 
-		FobHeadTrackingTrackerConfig()
+		HeadTrackerConfig()
 		{
 			this->translate = Ape::Vector3();
 			this->rotation = Ape::Quaternion();
@@ -53,7 +53,7 @@ namespace Ape
 			this->rightEyeOffset = Ape::Vector3();
 		}
 
-		FobHeadTrackingTrackerConfig(
+		HeadTrackerConfig(
 			Ape::Vector3 translate,
 			Ape::Quaternion rotation,
 			Ape::Vector3 scale,
@@ -68,7 +68,7 @@ namespace Ape
 		}
 	};
 
-	struct FobHeadTrackingDisplayConfig
+	struct HeadTrackerDisplayConfig
 	{
 		std::string name;
 
@@ -100,7 +100,7 @@ namespace Ape
 
 		Ape::Matrix4 transform;
 
-		FobHeadTrackingDisplayConfig()
+		HeadTrackerDisplayConfig()
 		{
 			this->size = Ape::Vector2();
 			this->position = Ape::Vector3();
@@ -114,7 +114,7 @@ namespace Ape
 			this->transform = Ape::Matrix4();
 		}
 
-		FobHeadTrackingDisplayConfig(
+		HeadTrackerDisplayConfig(
 			Ape::Vector2 size,
 			Ape::Vector3 position,
 			Ape::Quaternion orientation,
@@ -139,7 +139,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::FobHeadTrackingDisplayConfig > FobHeadTrackingDisplayConfigList;
+	typedef std::vector < Ape::HeadTrackerDisplayConfig > HeadTrackerDisplayConfigList;
 }
 
 #endif
