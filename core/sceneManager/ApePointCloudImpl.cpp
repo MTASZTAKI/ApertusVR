@@ -46,11 +46,11 @@ Ape::PointCloudImpl::~PointCloudImpl()
 
 }
 
-void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
+void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointScaleOffset, float unitScaleDistance)
 {
 	mPointsSize = static_cast<int>(points.size());
 	mColorsSize = static_cast<int>(colors.size());
-	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius);
+	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius, pointScaleOffset, unitScaleDistance);
 	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
 }
 

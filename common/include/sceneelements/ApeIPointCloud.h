@@ -40,6 +40,8 @@ namespace Ape
 		Ape::PointCloudPoints points;
 		Ape::PointCloudColors colors;
 		float boundigSphereRadius;
+		float pointScaleOffset;
+		float unitScaleDistance;
 
 		PointCloudSetParameters()
 		{
@@ -48,13 +50,17 @@ namespace Ape
 			this->colors = Ape::PointCloudColors();
 			this->colors.resize(0);
 			this->boundigSphereRadius = 0.0f;
+			this->pointScaleOffset = 0.0f;
+			this->unitScaleDistance = 0.0f;
 		}
 
-		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
+		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointScaleOffset, float unitScaleDistance)
 		{
 			this->points = points;
 			this->colors = colors;
 			this->boundigSphereRadius = boundigSphereRadius;
+			this->pointScaleOffset = pointScaleOffset;
+			this->unitScaleDistance = unitScaleDistance;
 		}
 
 		Ape::PointCloudPoints getPoints()
@@ -72,6 +78,11 @@ namespace Ape
 			return boundigSphereRadius;
 		}
 
+		Ape::Vector3 getPointScaleOffset()
+		{
+			return pointScaleOffset;
+		}
+
 		std::string toString() const
 		{
 			std::ostringstream buff;
@@ -86,6 +97,8 @@ namespace Ape
 
 			buff << "BoundigSphereRadius(" << boundigSphereRadius << ")" << std::endl;
 
+			buff << "PointScaleOffset(" << pointScaleOffset << ")" << std::endl;
+
 			return buff.str();
 		}
 	};
@@ -98,7 +111,7 @@ namespace Ape
 		virtual ~IPointCloud() {};
 
 	public:
-		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius) = 0;
+		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointScaleOffset, float unitScaleDistance) = 0;
 
 		virtual Ape::PointCloudSetParameters getParameters() = 0;
 

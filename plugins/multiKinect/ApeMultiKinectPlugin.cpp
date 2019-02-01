@@ -66,7 +66,9 @@ void Ape::MultiKinectPlugin::Init()
 					sensor.orientation.x = sensorData["orientation"].GetArray()[1].GetFloat();
 					sensor.orientation.y = sensorData["orientation"].GetArray()[2].GetFloat();
 					sensor.orientation.z = sensorData["orientation"].GetArray()[3].GetFloat();
-					sensor.maxDepth = sensorData["maxDepth"].GetFloat();
+					sensor.maxDepth = sensorData["maxDepth"].GetFloat() / 100.f;
+					sensor.pointScaleOffset = sensorData["pointScaleOffset"].GetFloat();
+					sensor.unitScaleDistance = sensorData["unitScaleDistance"].GetFloat();
 					mSensors.push_back(sensor);
 				}
 			}
@@ -127,16 +129,25 @@ void Ape::MultiKinectPlugin::Init()
 			sensor.registered = new libfreenect2::Frame(mWidth, mHeight, 4);
 			sensor.points.resize(3 * mWidth * mHeight);
 			sensor.colors.resize(3 * mWidth * mHeight);
-			if (auto pointCloudNode = mpScene->createNode("MultiKinectPointCloudNode" + sensor.id).lock())
+			if (auto pointCloudNode = mpScene->createNode("MultiKinectPointCloudNode" + std::to_string(sensor.id)).lock())
 			{
 				pointCloudNode->setPosition(sensor.position);
 				pointCloudNode->setOrientation(sensor.orientation);
 				pointCloudNode->setScale(Ape::Vector3(100, 100, 100));
 				sensor.pointCloudNode = pointCloudNode;
+				if (auto textNode = mpScene->createNode(pointCloudNode->getName() + "TextNode").lock())
+				{
+					textNode->setParentNode(pointCloudNode);
+					if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(textNode->getName() + "Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+					{
+						text->setCaption(pointCloudNode->getName());
+						text->setParentNode(textNode);
+					}
+				}
 			}
 			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("MultiKinectPointCloud" + sensor.id, Ape::Entity::POINT_CLOUD).lock()))
 			{
-				pointCloud->setParameters(sensor.points, sensor.colors, 10000);
+				pointCloud->setParameters(sensor.points, sensor.colors, 10000, sensor.pointScaleOffset, sensor.unitScaleDistance);
 				pointCloud->setParentNode(sensor.pointCloudNode);
 				sensor.pointCloud = pointCloud;
 			}

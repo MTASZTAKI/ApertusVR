@@ -390,7 +390,7 @@ void Ape::KinectPlugin::Run()
 						}
 						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Kinect", Ape::Entity::POINT_CLOUD).lock()))
 						{
-							pointCloud->setParameters(KPts, KCol, 10000);
+							pointCloud->setParameters(KPts, KCol, 10000, -400.0f, 500.0f);
 							pointCloud->setParentNode(pointCloudNode);
 							mPointCloud = pointCloud;
 						}
@@ -425,7 +425,7 @@ void Ape::KinectPlugin::Run()
 						}
 						if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectOperator", Ape::Entity::POINT_CLOUD).lock()))
 						{
-							pointCloud->setParameters(OperatorPoints, OperatorColors, 100000);
+							pointCloud->setParameters(OperatorPoints, OperatorColors, 100000, -400.0f, 500.0f);
 							pointCloud->setParentNode(pointCloudNode);
 							mOperatorPointCloud = pointCloud;
 						}
@@ -503,7 +503,7 @@ void Ape::KinectPlugin::Run()
 					}
 					if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectScanner", Ape::Entity::POINT_CLOUD).lock()))
 					{
-						pointCloud->setParameters(ScannedPoints, ScannedColors, 100000);
+						pointCloud->setParameters(ScannedPoints, ScannedColors, 100000, -400.0f, 500.0f);
 						pointCloud->setParentNode(pointCloudNode);
 						mOperatorPointCloud = pointCloud;
 					}

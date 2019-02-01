@@ -23,13 +23,16 @@ SOFTWARE.*/
 #ifndef APE_OGREPOINTCLOUD_H
 #define APE_OGREPOINTCLOUD_H
 
+#include <iostream>
 #include "Ogre.h"
+#include "sceneelements/ApeINode.h"
 
 namespace Ape {
 	class OgrePointCloud
 	{
 	public:
-		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius);
+		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
+			Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointScaleOffset, float unitScaleDistance);
 
 		void updateVertexPositions(int size, float *points);
 
@@ -39,6 +42,20 @@ namespace Ape {
 
 	private:
 		int mSize;
+
+		Ogre::MeshPtr mMesh;
+
+		Ogre::SubMesh* mSubMesh;
+
+		Ogre::MaterialPtr mMaterial;
+
+		Ape::NodeWeakPtr mUserNode;
+
+		Ape::NodeWeakPtr mPointCloudNode;
+
+		float mPointScaleOffset;
+
+		float  mUnitScaleDistance;
 
 		Ogre::HardwareVertexBufferSharedPtr mVbuf;
 

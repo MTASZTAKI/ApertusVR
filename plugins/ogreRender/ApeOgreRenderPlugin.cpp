@@ -1726,7 +1726,18 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				{
 				case Ape::Event::Type::POINT_CLOUD_CREATE:
 				{
-					;
+					auto ogreMaterial = Ogre::MaterialManager::getSingletonPtr()->create(pointCloudName + "Material", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					if (!ogreMaterial.isNull())
+					{
+						if (auto ogreTechnique = ogreMaterial->getTechnique(0))
+						{
+							if (auto ogrePass = ogreTechnique->getPass(0))
+							{
+								ogrePass->setLightingEnabled(false);
+								ogrePass->setVertexColourTracking(Ogre::TVC_DIFFUSE);
+							}
+						}
+					}
 				}
 				break;
 				case Ape::Event::Type::POINT_CLOUD_PARAMETERS:
@@ -1734,11 +1745,13 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					int size = pointCloudParameters.points.size() / 3;
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
-					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName + "Mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, size, points, colors, pointCloudParameters.boundigSphereRadius))
+					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+						size, points, colors, pointCloudParameters.boundigSphereRadius, mUserNode, pointCloud->getParentNode(),
+						pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance))
 					{
 						if (auto ogreEntity = mpOgreSceneManager->createEntity(pointCloudName, pointCloudName + "Mesh"))
 						{
-							ogreEntity->setMaterialName("Pointcloud");
+							ogreEntity->setMaterialName(pointCloudName + "Material");
 							mOgrePointCloudMeshes[pointCloudName + "Mesh"] = ogrePointCloudMesh;
 						}
 					}

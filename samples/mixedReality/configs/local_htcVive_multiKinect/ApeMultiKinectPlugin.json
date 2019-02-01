@@ -4,13 +4,9 @@
             "ID": 1,
             "position": [ -5.0, 165.0, 240.0 ],
             "orientation": [ 0.0, 1.0, 0.0, 0.0 ],
-            "maxDepth" : 5.0
-        },
-        {
-            "ID": 0,
-            "position": [ 5.0, 165.0, -240.0 ],
-            "orientation": [ 0.0, 0.0, 0.0, 1.0 ],
-            "maxDepth": 5.0
+            "maxDepth": 500.0,
+            "pointScaleOffset": 500.0,
+            "unitScaleDistance": 500.0
         }
     ]
 }

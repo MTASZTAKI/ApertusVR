@@ -102,16 +102,20 @@ namespace Ape
 			Ape::Quaternion orientation;
 			Ape::PointCloudWeakPtr pointCloud;
 			Ape::NodeWeakPtr pointCloudNode;
+			float pointScaleOffset;
+			float unitScaleDistance;
 
 			Sensor() : serial(std::string()), id(-1), registration(nullptr), undistorted(nullptr), registered(nullptr), device(nullptr),
 				listener(nullptr),
-				frames(libfreenect2::FrameMap()), packePipeline(nullptr), maxDepth(10000.0f), points(Ape::PointCloudPoints()), colors(Ape::PointCloudColors()),
-				position(Ape::Vector3()), orientation(Ape::Quaternion()), pointCloud(Ape::PointCloudWeakPtr()), pointCloudNode(Ape::NodeWeakPtr()) {}
+				frames(libfreenect2::FrameMap()), packePipeline(nullptr), maxDepth(0.0f), points(Ape::PointCloudPoints()), colors(Ape::PointCloudColors()),
+				position(Ape::Vector3()), orientation(Ape::Quaternion()), pointCloud(Ape::PointCloudWeakPtr()), pointCloudNode(Ape::NodeWeakPtr()), pointScaleOffset(0.0f),
+				unitScaleDistance(0.0f) {}
 
 			Sensor(std::string serial, int id, libfreenect2::Registration* registration, libfreenect2::Frame* undistorted, libfreenect2::Frame* registered,
 				libfreenect2::Freenect2Device* device, libfreenect2::SyncMultiFrameListener* listener, libfreenect2::FrameMap frames, libfreenect2::PacketPipeline* packePipeline, 
 				float maxDepth, Ape::PointCloudPoints points, Ape::PointCloudColors colors,
-			    Ape::Vector3 position, Ape::Quaternion orientation, Ape::PointCloudWeakPtr pointCloud, Ape::NodeWeakPtr pointCloudNode)
+			    Ape::Vector3 position, Ape::Quaternion orientation, Ape::PointCloudWeakPtr pointCloud, Ape::NodeWeakPtr pointCloudNode,
+				float pointScaleOffset, float unitScaleDistance)
 			{
 				this->serial = serial;
 				this->id = id;
@@ -129,6 +133,8 @@ namespace Ape
 				this->orientation = orientation;
 				this->pointCloud = pointCloud;
 				this->pointCloudNode = pointCloudNode;
+				this->pointScaleOffset = pointScaleOffset;
+				this->unitScaleDistance = unitScaleDistance;
 			}
 		};
 
