@@ -1746,8 +1746,8 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
 					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-						size, points, colors, pointCloudParameters.boundigSphereRadius, mUserNode, pointCloud->getParentNode(),
-						pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance))
+						size, points, colors, pointCloudParameters.boundigSphereRadius, mUserNode, pointCloud->getParentNode(), pointCloudParameters.pointSize,
+						pointCloudParameters.pointScale, pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance, pointCloudParameters.scaleFactor))
 					{
 						if (auto ogreEntity = mpOgreSceneManager->createEntity(pointCloudName, pointCloudName + "Mesh"))
 						{

@@ -67,8 +67,15 @@ void Ape::MultiKinectPlugin::Init()
 					sensor.orientation.y = sensorData["orientation"].GetArray()[2].GetFloat();
 					sensor.orientation.z = sensorData["orientation"].GetArray()[3].GetFloat();
 					sensor.maxDepth = sensorData["maxDepth"].GetFloat() / 100.f;
-					sensor.pointScaleOffset = sensorData["pointScaleOffset"].GetFloat();
-					sensor.unitScaleDistance = sensorData["unitScaleDistance"].GetFloat();
+					sensor.pointSize = sensorData["pointSize"].GetFloat();
+					rapidjson::Value& pointScale = sensorData["pointScale"];
+					if (pointScale.IsObject())
+					{
+						sensor.pointScale = true;
+						sensor.pointScaleOffset = pointScale["unitDistance"].GetFloat();
+						sensor.unitScaleDistance = pointScale["offset"].GetFloat();
+						sensor.scaleFactor = pointScale["factor"].GetFloat();
+					}
 					mSensors.push_back(sensor);
 				}
 			}
@@ -147,7 +154,7 @@ void Ape::MultiKinectPlugin::Init()
 			}
 			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("MultiKinectPointCloud" + sensor.id, Ape::Entity::POINT_CLOUD).lock()))
 			{
-				pointCloud->setParameters(sensor.points, sensor.colors, 10000, sensor.pointScaleOffset, sensor.unitScaleDistance);
+				pointCloud->setParameters(sensor.points, sensor.colors, 10000, sensor.pointSize, sensor.pointScale, sensor.pointScaleOffset, sensor.unitScaleDistance, sensor.scaleFactor);
 				pointCloud->setParentNode(sensor.pointCloudNode);
 				sensor.pointCloud = pointCloud;
 			}

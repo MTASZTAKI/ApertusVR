@@ -32,7 +32,8 @@ namespace Ape {
 	{
 	public:
 		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
-			Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointScaleOffset, float unitScaleDistance);
+			Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+			float pointScaleOffset, float unitScaleDistance, float scaleFactor);
 
 		void updateVertexPositions(int size, float *points);
 
@@ -53,9 +54,15 @@ namespace Ape {
 
 		Ape::NodeWeakPtr mPointCloudNode;
 
+		float mPointSize;
+
+		bool mPointScale;
+
 		float mPointScaleOffset;
 
-		float  mUnitScaleDistance;
+		float mUnitScaleDistance;
+
+		float mScaleFactor;
 
 		Ogre::HardwareVertexBufferSharedPtr mVbuf;
 

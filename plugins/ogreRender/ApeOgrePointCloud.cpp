@@ -1,7 +1,8 @@
 #include "ApeOgrePointCloud.h"
 
 Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
-	Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointScaleOffset, float unitScaleDistance)
+	Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+	float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 {
 	mRenderSystemForVertex = Ogre::Root::getSingleton().getRenderSystem();
 	mMesh = Ogre::MeshManager::getSingleton().createManual(name + "Mesh", resourcegroup);
@@ -40,10 +41,14 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 	//msh->_setBoundingSphereRadius(boundigSphereRadius);
 	mMesh->load();
 	mMaterial = Ogre::MaterialManager::getSingletonPtr()->getByName(name + "Material");
-	mUserNode = userNode;
-	mPointCloudNode = pointCloudNode;
+	mPointSize = pointSize;
+	mMaterial->setPointSize(mPointSize);
+	mPointScale = pointScale;
 	mPointScaleOffset = pointScaleOffset;
 	mUnitScaleDistance = unitScaleDistance;
+	mScaleFactor = scaleFactor;
+	mUserNode = userNode;
+	mPointCloudNode = pointCloudNode;
 }
 
 Ape::OgrePointCloud::~OgrePointCloud()
@@ -60,16 +65,18 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 		pPArray[i + 1] = points[i + 1];
 		pPArray[i + 2] = points[i + 2];
 	}
-	if (auto userNode = mUserNode.lock())
+	if (mPointScale)
 	{
-		if (auto pointCloudNode = mPointCloudNode.lock())
+		if (auto userNode = mUserNode.lock())
 		{
-			Ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - Ape::Vector3(0, 0, mPointScaleOffset);
-			Ape::Vector3 userNodePositionInPointScalePosition = userNode->getPosition() - pointScalePosition;
-			float scaleFactor = 3.0f;
-			float scale = scaleFactor * (mUnitScaleDistance / userNodePositionInPointScalePosition.z);
-			mMaterial->setPointSize(scale);
-			std::cout << "scale: " << scale << std::endl;
+			if (auto pointCloudNode = mPointCloudNode.lock())
+			{
+				Ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - Ape::Vector3(0, 0, mPointScaleOffset);
+				Ape::Vector3 userNodePositionInPointScalePosition = userNode->getPosition() - pointScalePosition;
+				float scale = mScaleFactor * (mUnitScaleDistance / userNodePositionInPointScalePosition.z);
+				mMaterial->setPointSize(scale);
+				//std::cout << "scale: " << scale << std::endl;
+			}
 		}
 	}
 	mVbuf->unlock();
