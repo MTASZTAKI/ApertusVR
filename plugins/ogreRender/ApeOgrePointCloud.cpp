@@ -1,7 +1,7 @@
 #include "ApeOgrePointCloud.h"
 
 Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
-	Ape::NodeWeakPtr userNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+	Ape::NodeWeakPtr headNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
 	float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 {
 	mRenderSystemForVertex = Ogre::Root::getSingleton().getRenderSystem();
@@ -47,7 +47,7 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 	mPointScaleOffset = pointScaleOffset;
 	mUnitScaleDistance = unitScaleDistance;
 	mScaleFactor = scaleFactor;
-	mUserNode = userNode;
+	mHeadNode = headNode;
 	mPointCloudNode = pointCloudNode;
 }
 
@@ -67,15 +67,14 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 	}
 	if (mPointScale)
 	{
-		if (auto userNode = mUserNode.lock())
+		if (auto headNode = mHeadNode.lock())
 		{
 			if (auto pointCloudNode = mPointCloudNode.lock())
 			{
 				Ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - Ape::Vector3(0, 0, mPointScaleOffset);
-				Ape::Vector3 userNodePositionInPointScalePosition = userNode->getPosition() - pointScalePosition;
-				float scale = mScaleFactor * (mUnitScaleDistance / userNodePositionInPointScalePosition.z);
+				Ape::Vector3 headNodePositionInPointScalePosition = headNode->getDerivedPosition() - pointScalePosition;
+				float scale = mScaleFactor * (mUnitScaleDistance / headNodePositionInPointScalePosition.z);
 				mMaterial->setPointSize(scale);
-				//std::cout << "scale: " << scale << std::endl;
 			}
 		}
 	}

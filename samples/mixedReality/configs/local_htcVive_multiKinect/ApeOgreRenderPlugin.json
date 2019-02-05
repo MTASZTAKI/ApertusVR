@@ -9,7 +9,7 @@
     {
       "name": "local",
         "monitorIndex": 0,
-        "hidden":  false,
+        "hidden":  true,
       "resolution": {
         "width": 1512,
         "height": 1680,

@@ -69,12 +69,6 @@ namespace Ape
 
 		Ape::CameraWeakPtr mCameraRight;
 
-		Ape::NodeWeakPtr mHeadNode;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::NodeWeakPtr mDummyNode;
-
 		Ape::Vector3 mTranslate;
 
 		Ape::Quaternion mRotate;
@@ -99,8 +93,6 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		Ape::CameraWeakPtr createCamera(std::string name);
-
 		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
 
 		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
@@ -110,6 +102,8 @@ namespace Ape
 		void submitTextureRightToOpenVR();
 
 		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::Pose mUserInputMacroPose;
 
 	public:
 		ApeHtcVivePlugin();

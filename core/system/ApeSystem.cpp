@@ -74,26 +74,6 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 		; //TODO open a platform specific window if needed
 
 	gpPluginManagerImpl->CreatePlugins();
-	//Must create a userNode by the Ape::System with an unqiue name, or not? Who is the responsible for that? System or a plugin?
-	if (auto userNode = gpSceneManagerImpl->createNode(uniqueUserNodeName.str()).lock())
-	{
-		if (auto headNode = gpSceneManagerImpl->createNode(uniqueUserNodeName.str() + "_HeadNode").lock())
-		{
-			headNode->setParentNode(userNode);
-			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(gpSceneManagerImpl->createEntity(uniqueUserNodeName.str() + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
-			{
-				std::random_device rd;
-				std::mt19937 gen(rd());
-				std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-				std::vector<double> randomColors;
-				for (int i = 0; i < 3; i++)
-					randomColors.push_back(distDouble(gen));
-				userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-				userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-			}
-		}
-	}
-
 	gpPluginManagerImpl->InitAndRunPlugins();
 
 	if (isBlockingMode)
