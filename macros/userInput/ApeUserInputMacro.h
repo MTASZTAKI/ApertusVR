@@ -49,28 +49,35 @@ namespace Ape
 	public: 
 		struct Pose
 		{
-			Ape::Vector3 position;
+			Ape::Vector3 userPosition;
 
-			Ape::Quaternion orientation;
+			Ape::Quaternion userOrientation;
 
-			Ape::Vector3 translate;
+			Ape::Vector3 userTranslate;
 
-			Ape::Radian rotateAngle;
-			
-			Ape::Vector3 rotateAxis;
+			Ape::Radian userRotateAngle;
+
+			Ape::Vector3 userRotateAxis;
+
+			Ape::Vector3 headPosition;
+
+			Ape::Quaternion headOrientation;
 
 			Pose()
 			{
 
 			}
 
-			Pose(Ape::Vector3 position, Ape::Quaternion orientation, Ape::Vector3 translate, Ape::Radian rotateAngle, Ape::Vector3 rotateAxis)
+			Pose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 userTranslate, Ape::Radian userRotateAngle, Ape::Vector3 userRotateAxis,
+				Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
 			{
-				this->position = position;
-				this->orientation = orientation;
-				this->translate = translate;
-				this->rotateAngle = rotateAngle;
-				this->rotateAxis = rotateAxis;
+				this->userPosition = userPosition;
+				this->userOrientation = userOrientation;
+				this->userTranslate = userTranslate;
+				this->userRotateAngle = userRotateAngle;
+				this->userRotateAxis = userRotateAxis;
+				this->headPosition = headPosition;
+				this->headOrientation = headOrientation;
 			}
 		};
 
@@ -86,8 +93,6 @@ namespace Ape
 		std::string mUniqueUserNodeName;
 
 		Ape::NodeWeakPtr mHeadNode;
-
-		Ape::Vector3 mTranslate;
 
 		std::map<std::string, Ape::CameraWeakPtr> mCameras;
 

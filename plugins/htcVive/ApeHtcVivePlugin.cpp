@@ -14,8 +14,6 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	mCameraRight = Ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
-	mTranslate = Ape::Vector3();
-	mRotate = Ape::Quaternion();
 	mpApeUserInputMacro = new UserInputMacro();
 	mUserInputMacroPose = Ape::UserInputMacro::Pose();
 	APE_LOG_FUNC_LEAVE();
@@ -56,28 +54,37 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 	error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	if (!error)
 	{
+		vr::TrackedDevicePose_t controllerPose;
+		unsigned int controllerID = 3;
+		if ((controllerPose = mOpenVrTrackedPoses[controllerID]).bPoseIsValid)
+		{
+			auto openVRPose = controllerPose.mDeviceToAbsoluteTracking;
+			Ape::Vector3 controllerTrackerScale;
+			Ape::Quaternion controllerTrackerOrientation;
+			Ape::Vector3 controllerTrackerPosition;
+			Ape::Matrix4 controllerTrackerPose = conversionFromOpenVR(openVRPose);
+			controllerTrackerPose.decomposition(controllerTrackerScale, controllerTrackerOrientation, controllerTrackerPosition);
+			controllerTrackerScale = 100;
+			controllerTrackerPosition = controllerTrackerPosition * controllerTrackerScale;
+			vr::VRControllerState_t openVRControllerState;
+			mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
+			mUserInputMacroPose.userTranslate = controllerTrackerOrientation * Ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y);
+		}
 		vr::TrackedDevicePose_t hmdPose;
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		{
 			auto openVRPose = hmdPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 trackerScale;
-			Ape::Quaternion trackerOrientation;
-			Ape::Vector3 trackerPosition;
-			Ape::Matrix4 trackerPose = conversionFromOpenVR(openVRPose);
-			trackerPose.decomposition(trackerScale, trackerOrientation, trackerPosition);
-			trackerScale = 100;
-			trackerPosition = trackerPosition * trackerScale;
-			vr::VRControllerState_t controllerState3;
-			mpOpenVrSystem->GetControllerState(3, &controllerState3, sizeof controllerState3);
-			vr::VRControllerState_t controllerState4;
-			mpOpenVrSystem->GetControllerState(4, &controllerState4, sizeof controllerState4);
-			mUserInputMacroPose.position = trackerPosition;
-			mUserInputMacroPose.orientation = trackerOrientation;
-			mUserInputMacroPose.translate = Ape::Vector3(5 *-controllerState4.rAxis[0].x, 0, 5 * -controllerState4.rAxis[0].y);
-			mUserInputMacroPose.rotateAngle = Ape::Degree(3).toRadian();
-			mUserInputMacroPose.rotateAxis = Ape::Vector3(0, -controllerState3.rAxis[0].x, 0);
-			mpApeUserInputMacro->updatePose(mUserInputMacroPose);
+			Ape::Vector3 hmdTrackerScale;
+			Ape::Quaternion hmdTrackerOrientation;
+			Ape::Vector3 hmdTrackerPosition;
+			Ape::Matrix4 hmdTrackerPose = conversionFromOpenVR(openVRPose);
+			hmdTrackerPose.decomposition(hmdTrackerScale, hmdTrackerOrientation, hmdTrackerPosition);
+			hmdTrackerScale = 100;
+			hmdTrackerPosition = hmdTrackerPosition * hmdTrackerScale;
+			mUserInputMacroPose.headPosition = hmdTrackerPosition;
+			mUserInputMacroPose.headOrientation = hmdTrackerOrientation;
 		}
+		mpApeUserInputMacro->updatePose(mUserInputMacroPose);
 	}
 	else
 	{

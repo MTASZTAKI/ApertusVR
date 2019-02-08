@@ -69,12 +69,6 @@ namespace Ape
 
 		Ape::CameraWeakPtr mCameraRight;
 
-		Ape::Vector3 mTranslate;
-
-		Ape::Quaternion mRotate;
-
-		Ape::ManualMaterialWeakPtr mUserMaterial;
-
 		Ape::ManualTextureWeakPtr mManualTextureRightEye;
 		
 		Ape::ManualTextureWeakPtr mManualTextureLeftEye;

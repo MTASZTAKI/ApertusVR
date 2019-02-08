@@ -9,7 +9,6 @@ Ape::UserInputMacro::UserInputMacro()
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, Ape::CameraWeakPtr>();
-	mTranslate = Ape::Vector3();
 	mUniqueUserNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	if (auto userNode = mpSceneManager->createNode(mUniqueUserNodeName).lock())
 	{
@@ -45,13 +44,12 @@ void Ape::UserInputMacro::updatePose(Pose pose)
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		userNode->translate(pose.translate, Ape::Node::TransformationSpace::WORLD);
-		userNode->rotate(pose.rotateAngle, pose.rotateAxis, Ape::Node::TransformationSpace::LOCAL);
+		userNode->translate(pose.userTranslate, Ape::Node::TransformationSpace::WORLD);
 	}
 	if (auto headNode = mHeadNode.lock())
 	{
-		headNode->setPosition(pose.position);
-		headNode->setOrientation(pose.orientation);
+		headNode->setPosition(pose.headPosition);
+		headNode->setOrientation(pose.headOrientation);
 	}
 }
 
