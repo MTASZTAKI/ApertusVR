@@ -446,10 +446,6 @@ void Ape::KinectHeadTrackingPlugin::Run()
 				mC = -(mFarClip + mNearClip) / (mFarClip - mNearClip);
 				mD = -(2.0f * mFarClip * mNearClip) / (mFarClip - mNearClip);
 				cameraCount++;
-				if (auto cameraNode = camera->getParentNode().lock())
-				{
-					cameraNode->setInheritOrientation(false);
-				}
 			}
 			mCameraDoubleQueue.pop();
 		}
