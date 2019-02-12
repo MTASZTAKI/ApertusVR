@@ -5,20 +5,20 @@
     },
     "sceneSession": {
         "participantType": "Local",
-        "uniqueUserNamePrefix": "",
+        "uniqueUserNamePrefix": "Local",
         "sessionGUID": "UNASSIGNED_RAKNET_GUID",
         "sessionResourceLocation": [
-            "/plugins/engineeringScene/resources"
+            "/plugins/industry40/resources"
         ],
         "natPunchThroughServer": {
             "ip": "195.111.2.95",
             "port": "61666"
         },
       "lobbyServer": {
-        "useLobby": true,
+        "useLobby": false,
         "ip": "195.111.2.95",
         "port": "8888",
-        "sessionName": "k508"
+        "sessionName": ""
       }
     },
     "pluginManager": {

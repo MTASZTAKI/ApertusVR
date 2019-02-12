@@ -78,7 +78,7 @@ void Ape::KinectHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-Ape::Matrix4 Ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float & displayDistanceLeft, float & displayDistanceRight, float & displayDistanceBottom, float & displayDistanceTop)
+Ape::Matrix4 Ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
 {
 	float x = 2.0f * mNearClip / (displayDistanceRight - displayDistanceLeft);
 	float y = 2.0f * mNearClip / (displayDistanceTop - displayDistanceBottom);
@@ -92,7 +92,7 @@ Ape::Matrix4 Ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float & display
 	return m;
 }
 
-Ape::Matrix4 Ape::KinectHeadTrackingPlugin::calculateCameraProjection(Ape::HeadTrackerDisplayConfig & displayConfig, Ape::Vector3 & trackedEyePosition)
+Ape::Matrix4 Ape::KinectHeadTrackingPlugin::calculateCameraProjection(Ape::HeadTrackerDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
 {
 	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 
@@ -453,14 +453,15 @@ void Ape::KinectHeadTrackingPlugin::Run()
 	}
 	while (true)
 	{
-		IMultiSourceFrame* pFrame = NULL;
+		/*IMultiSourceFrame* pFrame = NULL;
 		float positionDataFromTracker[3];
 		if (mpKinectReader)
 		{
 			HRESULT hr = mpKinectReader->AcquireLatestFrame(&pFrame);
 			if (SUCCEEDED(hr))
 			{
-				getBodyDataFromSensor(pFrame);
+				getBodyDataFromSensor(pFrame);*/
+				mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
 				if (auto headNode = mHeadNode.lock())
 				{
 					headNode->setPosition(mTrackedViewerPosition);
@@ -470,18 +471,12 @@ void Ape::KinectHeadTrackingPlugin::Run()
 					auto displayConfig = mDisplayConfigList[i];
 					if (auto cameraLeft = displayConfig.cameraLeft.lock())
 					{
-						Ape::Vector3 trackedViewerLeftEyePosition = mTrackedViewerPosition + (mTrackedViewerOrientation * mTrackerConfig.leftEyeOffset);
-						cameraLeft->setProjection(calculateCameraProjection(displayConfig, trackedViewerLeftEyePosition));
-					}
-					if (auto cameraRight = displayConfig.cameraRight.lock())
-					{
-						Ape::Vector3 trackedViewerRightEyePosition = mTrackedViewerPosition + (mTrackedViewerOrientation * mTrackerConfig.rightEyeOffset);
-						cameraRight->setProjection(calculateCameraProjection(displayConfig, trackedViewerRightEyePosition));
+						cameraLeft->setProjection(calculateCameraProjection(displayConfig, mTrackedViewerPosition));
 					}
 				}
-			}
+		/*	}
 			SafeRelease(pFrame);
-		}
+		}*/
 	}
 	APE_LOG_FUNC_LEAVE();
 }
