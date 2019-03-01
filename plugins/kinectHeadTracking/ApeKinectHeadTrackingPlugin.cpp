@@ -18,7 +18,7 @@ Ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mTrackerConfig = Ape::HeadTrackerConfig();
 	mDisplayConfigList = Ape::HeadTrackerDisplayConfigList();
 	mHeadNode = Ape::NodeWeakPtr();
-	mTrackedViewerPosition = Ape::Vector3();
+	mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
 	mTrackedViewerOrientation = Ape::Quaternion();
 	mTrackedViewerOrientationYPR = Ape::Euler();
 	mNearClip = 0.0f;
@@ -379,18 +379,16 @@ void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 			hr = pBody->get_IsTracked(&bTracked);
 			if (SUCCEEDED(hr) && bTracked)
 			{
-				Joint joints[JointType_Head];
+				Joint joints[JointType_Count];
 				hr = pBody->GetJoints(_countof(joints), joints);
 				if (SUCCEEDED(hr))
 				{
-					for (int i = 0; i < _countof(joints); ++i)
+					if (joints[JointType_Head].TrackingState == 2)
 					{
-						if (joints[i].TrackingState == 2)
-						{
-							mTrackedViewerPosition.x = joints[i].Position.X;
-							mTrackedViewerPosition.y = joints[i].Position.Y;
-							mTrackedViewerPosition.z = joints[i].Position.Z;
-						}
+						mTrackedViewerPosition.x = joints[JointType_Head].Position.X * 100;
+						mTrackedViewerPosition.y = joints[JointType_Head].Position.Y * 100;
+						mTrackedViewerPosition.z = joints[JointType_Head].Position.Z * 100;
+						//APE_LOG_DEBUG("mTrackedViewerPosition: " << mTrackedViewerPosition.toString());
 					}
 				}
 			}
@@ -409,15 +407,30 @@ void Ape::KinectHeadTrackingPlugin::getBodyDataFromSensor(IMultiSourceFrame* pfr
 	{
 		hr = pBodyFrameRef->AcquireFrame(&pBodyFrame);
 	}
+	else
+	{
+		APE_LOG_DEBUG("get_BodyFrameReference Error: " << HRESULT_CODE(hr));
+	}
 	SafeRelease(pBodyFrameRef);
 
 	if (SUCCEEDED(hr))
 	{
-		IBody* ppBodies[1] = { 0 };
+		IBody* ppBodies[BODY_COUNT] = { 0 };
 		hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
 		if (SUCCEEDED(hr))
 		{
-			getHeadPositionFromBodyData(ppBodies[0]);
+			for (int i = 0; i < BODY_COUNT; ++i)
+			{
+				IBody* pBody = ppBodies[i];
+				if (pBody)
+				{
+					getHeadPositionFromBodyData(pBody);
+				}
+			}
+		}
+		else
+		{
+			APE_LOG_DEBUG("GetAndRefreshBodyData Error: " << HRESULT_CODE(hr));
 		}
 		for (int i = 0; i < _countof(ppBodies); ++i)
 		{
@@ -453,15 +466,14 @@ void Ape::KinectHeadTrackingPlugin::Run()
 	}
 	while (true)
 	{
-		/*IMultiSourceFrame* pFrame = NULL;
+		IMultiSourceFrame* pFrame = NULL;
 		float positionDataFromTracker[3];
 		if (mpKinectReader)
 		{
 			HRESULT hr = mpKinectReader->AcquireLatestFrame(&pFrame);
 			if (SUCCEEDED(hr))
 			{
-				getBodyDataFromSensor(pFrame);*/
-				mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
+				getBodyDataFromSensor(pFrame);
 				if (auto headNode = mHeadNode.lock())
 				{
 					headNode->setPosition(mTrackedViewerPosition);
@@ -474,9 +486,9 @@ void Ape::KinectHeadTrackingPlugin::Run()
 						cameraLeft->setProjection(calculateCameraProjection(displayConfig, mTrackedViewerPosition));
 					}
 				}
-		/*	}
+			}
 			SafeRelease(pFrame);
-		}*/
+		}
 	}
 	APE_LOG_FUNC_LEAVE();
 }
