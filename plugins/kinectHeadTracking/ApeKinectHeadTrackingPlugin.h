@@ -100,6 +100,8 @@ namespace Ape
 
 		Ape::NodeWeakPtr mHeadNode;
 
+		Ape::TextGeometryWeakPtr mUserPositionDisplayText;
+
 		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
 		Ape::HeadTrackerConfig mTrackerConfig;

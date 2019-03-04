@@ -18,6 +18,7 @@ Ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mTrackerConfig = Ape::HeadTrackerConfig();
 	mDisplayConfigList = Ape::HeadTrackerDisplayConfigList();
 	mHeadNode = Ape::NodeWeakPtr();
+	mUserPositionDisplayText = Ape::TextGeometryWeakPtr();
 	mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
 	mTrackedViewerOrientation = Ape::Quaternion();
 	mTrackedViewerOrientationYPR = Ape::Euler();
@@ -138,6 +139,17 @@ void Ape::KinectHeadTrackingPlugin::Init()
 		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(userNode->getName() + "_Material").lock()))
 		{
 			mUserMaterial = userMaterial;
+		}
+	}
+	if (auto userPositionDisplayNode = mpSceneManager->createNode("userPositionDisplayNode").lock())
+	{
+		userPositionDisplayNode->setParentNode(mHeadNode);
+		userPositionDisplayNode->setPosition(Ape::Vector3(0, -20, -20));
+		if (auto userPositionDisplayText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("userPositionDisplayText", Ape::Entity::GEOMETRY_TEXT).lock()))
+		{
+			userPositionDisplayText->showOnTop(true);
+			userPositionDisplayText->setParentNode(userPositionDisplayNode);
+			mUserPositionDisplayText = userPositionDisplayText;
 		}
 	}
 
@@ -385,10 +397,12 @@ void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 				{
 					if (joints[JointType_Head].TrackingState == 2)
 					{
-						mTrackedViewerPosition.x = joints[JointType_Head].Position.X * 100;
-						mTrackedViewerPosition.y = joints[JointType_Head].Position.Y * 100;
-						mTrackedViewerPosition.z = joints[JointType_Head].Position.Z * 100;
-						//APE_LOG_DEBUG("mTrackedViewerPosition: " << mTrackedViewerPosition.toString());
+						Ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
+						mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
+						if (auto userPositionDisplayText = mUserPositionDisplayText.lock())
+						{
+							userPositionDisplayText->setCaption(mTrackedViewerPosition.toString());
+						}
 					}
 				}
 			}
@@ -476,7 +490,7 @@ void Ape::KinectHeadTrackingPlugin::Run()
 				getBodyDataFromSensor(pFrame);
 				if (auto headNode = mHeadNode.lock())
 				{
-					headNode->setPosition(mTrackedViewerPosition);
+					//headNode->setPosition(mTrackedViewerPosition);
 				}
 				for (int i = 0; i < mDisplayConfigList.size(); i++)
 				{
