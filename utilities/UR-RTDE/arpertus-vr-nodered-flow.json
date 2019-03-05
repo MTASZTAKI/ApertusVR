@@ -1,0 +1,190 @@
+[
+    {
+        "id": "b968a7b5.f8c27",
+        "type": "tab",
+        "label": "ApertusVR",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d28b2e61.db59a8",
+        "type": "comment",
+        "z": "b968a7b5.f8c27",
+        "name": "UR RTDE INPUT",
+        "info": "",
+        "x": 120,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "f62906f0.37d62",
+        "type": "tcp in",
+        "z": "b968a7b5.f8c27",
+        "name": "UR RTDE",
+        "server": "server",
+        "host": "",
+        "port": "11994",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "RTDE",
+        "base64": false,
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "d30f2d64.02cff8"
+            ]
+        ]
+    },
+    {
+        "id": "d30f2d64.02cff8",
+        "type": "json",
+        "z": "b968a7b5.f8c27",
+        "name": "",
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "d72ff1.c0f1901"
+            ]
+        ]
+    },
+    {
+        "id": "64b1cc45.929d2c",
+        "type": "comment",
+        "z": "b968a7b5.f8c27",
+        "name": "Apertus VR virtual robot OUTPUT",
+        "info": "name:       SetOrientation\ntype:       POST\nURL:        http://ipAddr:port/api/v1/nodes/nodeName/orientation\nBodyParam:  Json, Quaternion: { \"w\": \"value\", \"x\": \"value\", \"y\": \"value\", \"z\": \"value\" }\nExample:    curl --silent --header \"Content-Type: application/json\" -X POST http://localhost:3000/api/v1/nodes/testNode/orientation --data '{\"w\": \"0.7\", \"x\": \"0\", \"y\": \"0.7\", \"z\": \"0\"}'\n\nname:       SetPosition\ntype:       POST\nURL:        http://ipAddr:port/api/v1/nodes/nodeName/position\nBodyParam:  Json, Vector: { \"x\": \"value\", \"y\": \"value\", \"z\": \"value\" }\nExample:    curl --silent --header \"Content-Type: application/json\" -X POST http://localhost:3000/api/v1/nodes/testNode/position --data '{\"x\": \"10\", \"y\": \"20\", \"z\": \"30\"}'",
+        "x": 760,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d675a9b2.48ecc",
+        "type": "debug",
+        "z": "b968a7b5.f8c27",
+        "name": "ApertusVR Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "complete": "true",
+        "x": 1250,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "a032a764.6c6728",
+        "type": "debug",
+        "z": "b968a7b5.f8c27",
+        "name": "Properties Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.data.items",
+        "x": 1070,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "aedf75d3.430438",
+        "type": "function",
+        "z": "b968a7b5.f8c27",
+        "name": "Parse to ApertusVR Properties",
+        "func": "var request = {};\nvar req = \n{\n\tdata: {\n\t\titems: [\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q1)2ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: msg.payload.actual_q[0],\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q2)3ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: (msg.payload.actual_q[1]+Math.PI/2),\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q3)4ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: msg.payload.actual_q[2],\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q4)5ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: (msg.payload.actual_q[3]+Math.PI/2),\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q5)6ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: msg.payload.actual_q[4],\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"node\",\n\t\t\t\tname: \"JOINT(Rotational)(q6)7ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\torientation: {\n\t\t\t\t\t    angle: msg.payload.actual_q[5],\n\t\t\t\t\t    axis: {\n\t\t\t\t\t        x: 0,\n\t\t\t\t\t        y: 0,\n\t\t\t\t\t        z: 1\n\t\t\t\t\t    }\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t{\n\t\t\t    type: \"gripper\",\n\t\t\t\tname: \"ur10Gripper\",\n\t\t\t\tproperties: {\n\t\t\t\t\tvalue: msg.payload.output_int_register_0\n\t\t\t\t}\n\t\t\t}\n\t\t]\n\t}\n};\nrequest.headers = {};\nrequest.headers[\"Content-Type\"] =\"application/json\";\nrequest.payload = req;\nreturn request;",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 750,
+        "y": 120,
+        "wires": [
+            [
+                "a032a764.6c6728",
+                "6bee3c02.67a4d4"
+            ]
+        ]
+    },
+    {
+        "id": "d72ff1.c0f1901",
+        "type": "function",
+        "z": "b968a7b5.f8c27",
+        "name": "Toggle",
+        "func": "if(msg.payload === true)\n{\n    if(context.get('send') === true){\n        context.set('send',false);\n        node.status({text:\"OFF\"});\n    }\n    else {\n        context.set('send',true);\n        node.status({text:\"ON\"});\n    }\n}\nif (context.get('send') && msg.payload !== true) {\n    if(msg.payload.hasOwnProperty(\"gstate\")){\n        return [msg, null];\n    }\n    else{\n        return [null, msg];\n    }\n}\nelse {\n    return [null,null];\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 470,
+        "y": 80,
+        "wires": [
+            [
+                "eb045b82.1cc008"
+            ],
+            [
+                "aedf75d3.430438"
+            ]
+        ]
+    },
+    {
+        "id": "6bee3c02.67a4d4",
+        "type": "http request",
+        "z": "b968a7b5.f8c27",
+        "name": "HTTP-SetProperties-localhost:3001-ApertusVR",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://localhost:3001/api/v1/setproperties",
+        "tls": "",
+        "x": 1160,
+        "y": 100,
+        "wires": [
+            [
+                "d675a9b2.48ecc"
+            ]
+        ]
+    },
+    {
+        "id": "53c200d2.d3e24",
+        "type": "inject",
+        "z": "b968a7b5.f8c27",
+        "name": "Start/Stop Propterties Sending",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "d72ff1.c0f1901"
+            ]
+        ]
+    },
+    {
+        "id": "eb045b82.1cc008",
+        "type": "function",
+        "z": "b968a7b5.f8c27",
+        "name": "Parse to ApertusVR Text",
+        "func": "var command = msg.payload.hstate;\nvar commands = [\n    \"IDLE\",\n    \"STOP HAND TRACKING DEMO\",\n    \"START HAND TRACKING DEMO\",\n    \"FETCH DICE\",\n    \"START TOWER BUILDING DEMO\",\n    \"STOP TOWER BUILDING DEMO\"\n    ]\nvar request = {};\nvar req = \n{\n\tdata: {\n\t\titems: [\n\t\t\t{\n\t\t\t    type: \"text\",\n\t\t\t\tname: \"stateText\",\n\t\t\t\tproperties: {\n\t\t\t\t\tcaption: commands[command]\n\t\t\t\t}\n\t\t\t}\n\t\t]\n\t}\n};\nrequest.headers = {};\nrequest.headers[\"Content-Type\"] =\"application/json\";\nrequest.payload = req;\nif(command == 0){\n    return null;\n}\nelse{\n    return request;\n}",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 730,
+        "y": 80,
+        "wires": [
+            [
+                "6bee3c02.67a4d4",
+                "a032a764.6c6728"
+            ]
+        ]
+    },
+    {
+        "id": "42d3c8a3.8009c8",
+        "type": "comment",
+        "z": "b968a7b5.f8c27",
+        "name": "Please Press for ApertusVR",
+        "info": "",
+        "x": 160,
+        "y": 140,
+        "wires": []
+    }
+]

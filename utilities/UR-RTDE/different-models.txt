@@ -1,0 +1,60 @@
+﻿-----
+UR10
+-----
+
+name: "JOINT(Rotational)(q1)2ur10Gripper",
+angle: state.payload.actual_q[0],
+
+name: "JOINT(Rotational)(q2)3ur10Gripper",
+angle: (state.payload.actual_q[1]+Math.PI/2),
+
+name: "JOINT(Rotational)(q3)4ur10Gripper",
+angle: state.payload.actual_q[2],
+
+name: "JOINT(Rotational)(q4)5ur10Gripper",
+angle: (state.payload.actual_q[3]+Math.PI/2),
+
+name: "JOINT(Rotational)(q5)6ur10Gripper",
+angle: state.payload.actual_q[4],
+
+name: "JOINT(Rotational)(q6)7ur10Gripper",
+angle: state.payload.actual_q[5],
+
+name: "ur10Gripper",
+value: state.payload.output_int_register_0
+
+-----
+TWO UR5
+-----
+
+name: "JOINT(Rotational)(θ1)6TwoUR5",
+angle: state.actual_q[0],
+
+name: "JOINT(Rotational)(θ2)7TwoUR5",
+angle: (state.actual_q[1]+Math.PI/2),
+
+name: "JOINT(Rotational)(θ3)8TwoUR5",
+angle: state.actual_q[2],
+
+name: "JOINT(Rotational)(θ4)9TwoUR5",
+angle: (state.actual_q[3]+Math.PI/2),
+
+name: "JOINT(Rotational)(θ5)10TwoUR5",
+angle: state.actual_q[4],
+
+name: "JOINT(Rotational)(θ6)11TwoUR5",
+angle: state.actual_q[5],
+
+
+-----
+MELECS
+-----
+
+JOINT(Rotational)(q1)13melecsCell
+JOINT(Rotational)(q2)14melecsCell
+JOINT(Rotational)(q3)15melecsCell
+JOINT(Rotational)(q4)16melecsCell
+JOINT(Rotational)(q5)17melecsCell
+JOINT(Rotational)(q6)18melecsCell
+
+

@@ -225,6 +225,11 @@ if (${APE_PLUGIN_GyorPlugin})
 	add_subdirectory (gyor)
 endif ()
 
+option(APE_PLUGIN_GyorPathPlanningPlugin "Use GyorPathPlanningPlugin?" ON )
+if (${APE_PLUGIN_GyorPathPlanningPlugin})
+	add_subdirectory (gyorPathPlanning)
+endif ()
+
 option(APE_PLUGIN_AudiPlugin "Use AudiPlugin?" ON )
 if (${APE_PLUGIN_AudiPlugin})
 	add_subdirectory (audi)

@@ -175,6 +175,11 @@ if (${APE_SAMPLES_Gyor})
 	add_subdirectory (gyor)
 endif ()
 
+option(APE_SAMPLES_GyorPathPlanning "APE_SAMPLES_GyorPathPlanning?" ON )
+if (${APE_SAMPLES_GyorPathPlanning})
+	add_subdirectory (gyorPathPlanning)
+endif ()
+
 option(APE_SAMPLES_Audi "APE_SAMPLES_Audi?" ON )
 if (${APE_SAMPLES_Audi})
 	add_subdirectory (audi)
