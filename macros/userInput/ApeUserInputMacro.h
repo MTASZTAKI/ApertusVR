@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <random>
 #include <memory>
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
@@ -35,26 +36,67 @@ SOFTWARE.*/
 #include "sceneelements/ApeILight.h"
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeIFileGeometry.h"
+#include "sceneelements/ApeIConeGeometry.h"
 #include "sceneelements/ApeIFileMaterial.h"
+#include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeICamera.h"
 #include "managers/ApeISystemConfig.h"
 
 namespace Ape
 {
-
     class UserInputMacro
     {
+	public: 
+		struct Pose
+		{
+			Ape::Vector3 userPosition;
+
+			Ape::Quaternion userOrientation;
+
+			Ape::Vector3 userTranslate;
+
+			Ape::Radian userRotateAngle;
+
+			Ape::Vector3 userRotateAxis;
+
+			Ape::Vector3 headPosition;
+
+			Ape::Quaternion headOrientation;
+
+			Pose()
+			{
+
+			}
+
+			Pose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 userTranslate, Ape::Radian userRotateAngle, Ape::Vector3 userRotateAxis,
+				Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
+			{
+				this->userPosition = userPosition;
+				this->userOrientation = userOrientation;
+				this->userTranslate = userTranslate;
+				this->userRotateAngle = userRotateAngle;
+				this->userRotateAxis = userRotateAxis;
+				this->headPosition = headPosition;
+				this->headOrientation = headOrientation;
+			}
+		};
+
 	private:
 		Ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpScene;
+		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::NodeWeakPtr mUserNode;
 
+		std::string mUniqueUserNodeName;
+
 		Ape::NodeWeakPtr mHeadNode;
 
-		Ape::NodeWeakPtr mDummyNode;
+		std::map<std::string, Ape::CameraWeakPtr> mCameras;
+
+		Ape::ManualMaterialWeakPtr mUserMaterial;
 
 		void eventCallBack(const Ape::Event& event);
 
@@ -63,9 +105,9 @@ namespace Ape
 
 		~UserInputMacro();
 
-		void translateUserNode(Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace);
+		void updatePose(Pose pose); 
 
-		void rotateUserNode(Ape::Degree angle, Ape::Vector3 axis, Ape::Node::TransformationSpace transformationSpace);
+		Ape::CameraWeakPtr createCamera(std::string name);
     };
 }
 

@@ -40,6 +40,11 @@ namespace Ape
 		Ape::PointCloudPoints points;
 		Ape::PointCloudColors colors;
 		float boundigSphereRadius;
+		float pointSize;
+		bool pointScale;
+		float pointScaleOffset;
+		float unitScaleDistance;
+		float scaleFactor;
 
 		PointCloudSetParameters()
 		{
@@ -48,28 +53,24 @@ namespace Ape
 			this->colors = Ape::PointCloudColors();
 			this->colors.resize(0);
 			this->boundigSphereRadius = 0.0f;
+			this->pointSize = 0.0f;
+			this->pointScale = false;
+			this->pointScaleOffset = 0.0f;
+			this->unitScaleDistance = 0.0f;
+			this->scaleFactor = 0.0f;
 		}
 
-		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius)
+		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+			float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 		{
 			this->points = points;
 			this->colors = colors;
 			this->boundigSphereRadius = boundigSphereRadius;
-		}
-
-		Ape::PointCloudPoints getPoints()
-		{
-			return points;
-		}
-
-		Ape::PointCloudColors getColors()
-		{
-			return colors;
-		}
-
-		float getBoundigSphereRadius()
-		{
-			return boundigSphereRadius;
+			this->pointSize = pointSize;
+			this->pointScale = pointScale;
+			this->pointScaleOffset = pointScaleOffset;
+			this->unitScaleDistance = unitScaleDistance;
+			this->scaleFactor = scaleFactor;
 		}
 
 		std::string toString() const
@@ -86,6 +87,8 @@ namespace Ape
 
 			buff << "BoundigSphereRadius(" << boundigSphereRadius << ")" << std::endl;
 
+			buff << "PointScaleOffset(" << pointScaleOffset << ")" << std::endl;
+
 			return buff.str();
 		}
 	};
@@ -98,7 +101,8 @@ namespace Ape
 		virtual ~IPointCloud() {};
 
 	public:
-		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius) = 0;
+		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+			float pointScaleOffset, float unitScaleDistance, float scaleFactor) = 0;
 
 		virtual Ape::PointCloudSetParameters getParameters() = 0;
 

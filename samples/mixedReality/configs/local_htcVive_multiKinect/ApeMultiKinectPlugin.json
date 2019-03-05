@@ -1,0 +1,28 @@
+{
+    "sensors": [
+        {
+            "ID": 0,
+            "position": [ -5.0, 165.0, 240.0 ],
+            "orientation": [ 0.0, 1.0, 0.0, 0.0 ],
+            "maxDepth": 500.0,
+            "pointSize": 1.0,
+            "pointScale": {
+                "unitDistance": 500.0,
+                "offset": 500.0,
+                "factor": 3.0
+            }
+        },
+        {
+            "ID": 1,
+            "position": [ 5.0, 165.0, -240.0 ],
+            "orientation": [ 0.0, 0.0, 0.0, 1.0 ],
+            "maxDepth": 500.0,
+            "pointSize": 1.0,
+            "pointScale": {
+                "unitDistance": -500.0,
+                "offset": -500.0,
+                "factor": 3.0
+            }
+        }
+    ]
+}

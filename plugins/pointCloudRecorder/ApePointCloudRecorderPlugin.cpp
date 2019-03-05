@@ -126,7 +126,7 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 				mCurrentPoints.resize(mPointCloudSize);
 				mCurrentColors.resize(mPointCloudSize);
 				readFrame();
-				pointCloud->setParameters(mCurrentPoints, mCurrentColors, 100000);
+				pointCloud->setParameters(mCurrentPoints, mCurrentColors, 100000, 1.0f, true, 500.0f, 500.0f, 3.0f);
 				pointCloud->setParentNode(pointCloudNode);
 				mPointCloud = pointCloud;
 			}

@@ -1,20 +1,24 @@
 #include "ApeOgrePointCloud.h"
 
-Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius)
+Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
+	Ape::NodeWeakPtr headNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+	float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 {
 	mRenderSystemForVertex = Ogre::Root::getSingleton().getRenderSystem();
-	Ogre::MeshPtr msh = Ogre::MeshManager::getSingleton().createManual(name, resourcegroup);
-	Ogre::SubMesh* sub = msh->createSubMesh();
-	msh->sharedVertexData = new Ogre::VertexData();
-	msh->sharedVertexData->vertexCount = numpoints;
-	Ogre::VertexDeclaration* decl = msh->sharedVertexData->vertexDeclaration;
+	mMesh = Ogre::MeshManager::getSingleton().createManual(name + "Mesh", resourcegroup);
+	mSubMesh = mMesh->createSubMesh();
+	mMesh->sharedVertexData = new Ogre::VertexData();
+	mMesh->sharedVertexData->vertexCount = numpoints;
+	Ogre::VertexDeclaration* decl = mMesh->sharedVertexData->vertexDeclaration;
 	decl->addElement(0, 0, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
-	mVbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(decl->getVertexSize(0), msh->sharedVertexData->vertexCount, Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
+	mVbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(decl->getVertexSize(0), mMesh->sharedVertexData->vertexCount,
+		Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
 	mVbuf->writeData(0, mVbuf->getSizeInBytes(), parray, true);
 	if (carray != NULL)
 	{
 		decl->addElement(1, 0, Ogre::VET_COLOUR, Ogre::VES_DIFFUSE);
-		mCbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(Ogre::VertexElement::getTypeSize(Ogre::VET_COLOUR),msh->sharedVertexData->vertexCount, Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
+		mCbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(Ogre::VertexElement::getTypeSize(Ogre::VET_COLOUR), mMesh->sharedVertexData->vertexCount,
+			Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
 		Ogre::RenderSystem* rs = Ogre::Root::getSingleton().getRenderSystem();
 		Ogre::RGBA *colours = new Ogre::RGBA[numpoints];
 		for (int i = 0, k = 0; i < numpoints * 3, k < numpoints; i += 3, k++)
@@ -25,17 +29,26 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 		mCbuf->writeData(0, mCbuf->getSizeInBytes(), colours, true);
 		delete[] colours;
 	}
-	Ogre::VertexBufferBinding* bind = msh->sharedVertexData->vertexBufferBinding;
+	Ogre::VertexBufferBinding* bind = mMesh->sharedVertexData->vertexBufferBinding;
 	bind->setBinding(0, mVbuf);
 	if (carray != NULL)
 	{
 		bind->setBinding(1, mCbuf);
 	}
-	sub->useSharedVertices = true;
-	sub->operationType = Ogre::RenderOperation::OT_POINT_LIST;
-	msh->_setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-boundigSphereRadius, -boundigSphereRadius, -boundigSphereRadius), Ogre::Vector3(boundigSphereRadius, boundigSphereRadius, boundigSphereRadius)), true);
+	mSubMesh->useSharedVertices = true;
+	mSubMesh->operationType = Ogre::RenderOperation::OT_POINT_LIST;
+	mMesh->_setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-boundigSphereRadius, -boundigSphereRadius, -boundigSphereRadius), Ogre::Vector3(boundigSphereRadius, boundigSphereRadius, boundigSphereRadius)), true);
 	//msh->_setBoundingSphereRadius(boundigSphereRadius);
-	msh->load();
+	mMesh->load();
+	mMaterial = Ogre::MaterialManager::getSingletonPtr()->getByName(name + "Material");
+	mPointSize = pointSize;
+	mMaterial->setPointSize(mPointSize);
+	mPointScale = pointScale;
+	mPointScaleOffset = pointScaleOffset;
+	mUnitScaleDistance = unitScaleDistance;
+	mScaleFactor = scaleFactor;
+	mHeadNode = headNode;
+	mPointCloudNode = pointCloudNode;
 }
 
 Ape::OgrePointCloud::~OgrePointCloud()
@@ -51,6 +64,19 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 		pPArray[i] = points[i];
 		pPArray[i + 1] = points[i + 1];
 		pPArray[i + 2] = points[i + 2];
+	}
+	if (mPointScale)
+	{
+		if (auto headNode = mHeadNode.lock())
+		{
+			if (auto pointCloudNode = mPointCloudNode.lock())
+			{
+				Ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - Ape::Vector3(0, 0, mPointScaleOffset);
+				Ape::Vector3 headNodePositionInPointScalePosition = headNode->getDerivedPosition() - pointScalePosition;
+				float scale = mScaleFactor * (mUnitScaleDistance / headNodePositionInPointScalePosition.z);
+				mMaterial->setPointSize(scale);
+			}
+		}
 	}
 	mVbuf->unlock();
 }

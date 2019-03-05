@@ -55,7 +55,8 @@ namespace Ape
 
 		~PointCloudImpl();
 
-		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius) override;
+		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+			float pointScaleOffset, float unitScaleDistance, float scaleFactor) override;
 
 		Ape::PointCloudSetParameters getParameters() override;
 

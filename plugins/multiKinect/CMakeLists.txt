@@ -91,7 +91,9 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include  
-	${MULTI_KINECT_HOME}/install/include
+	${MULTI_KINECT_HOME}/include
+	${MULTI_KINECT_HOME}/include/internal
+	${MULTI_KINECT_HOME}
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
@@ -111,14 +113,20 @@ if (WIN32)
 		file(COPY ${MULTI_KINECT_HOME}/bin/Debug/freenect2d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/libusb-1.0.dll)
-		file(COPY ${MULTI_KINECT_HOME}/depends/libusb_src/x64/Debug/dll/libusb-1.0.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		file(COPY ${MULTI_KINECT_HOME}/bin/Debug/libusb-1.0.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/turbojpeg.dll)
+		file(COPY ${MULTI_KINECT_HOME}/bin/Debug/turbojpeg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
 	# release dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/freenect2.dll)
 		file(COPY ${MULTI_KINECT_HOME}/bin/Release/freenect2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/libusb-1.0.dll)
-		file(COPY ${MULTI_KINECT_HOME}/depends/libusb_src/x64/Release/dll/libusb-1.0.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+		file(COPY ${MULTI_KINECT_HOME}/bin/Release/libusb-1.0.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+	endif()
+	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/turbojpeg.dll)
+		file(COPY ${MULTI_KINECT_HOME}/bin/Release/turbojpeg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
 	endif()
 endif ()
 
