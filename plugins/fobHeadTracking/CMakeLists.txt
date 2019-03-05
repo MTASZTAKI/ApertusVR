@@ -26,7 +26,6 @@ add_subdirectory (fobLib)
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	ApeFobHeadTrackingPlugin.h
-	ApeFobHeadTrackingPluginConfigs.h
 	)
 
 set (SOURCES 

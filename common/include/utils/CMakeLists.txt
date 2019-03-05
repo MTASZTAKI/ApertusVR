@@ -21,6 +21,7 @@
 #SOFTWARE.
 
 set (HEADERS
+	ApeHeadTrackingConfigs.h
 	ApeDoubleQueue.h
 	ApeInterpolator.h
 	ApeSingleton.h
