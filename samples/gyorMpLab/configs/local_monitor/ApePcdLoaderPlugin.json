@@ -1,0 +1,10 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/pcdLoader/samples/cut.pcd",
+      "scale": [ 1, 1, 1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 1, 0, 0, 0 ]
+    }
+  ]
+}

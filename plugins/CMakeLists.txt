@@ -159,11 +159,6 @@ if (${APE_PLUGIN_Zed})
 	add_subdirectory (zed)
 endif ()
 
-option(APE_PLUGIN_PcdImporter "Use PcdImporter?" ON )
-if (${APE_PLUGIN_PcdImporter})
- 	add_subdirectory (pcdImporter)
-endif ()
-
 option(APE_PLUGIN_ "Use PointCloudRecorder?" ON )
 if (${APE_PLUGIN_PointCloudRecorder})
  	add_subdirectory (pointCloudRecorder)
