@@ -2,9 +2,9 @@
   "assets": [
     {
       "file": "/plugins/pcdLoader/samples/cut.pcd",
-      "scale": [ 1, 1, 1 ],
+      "scale": [ 10, 10, 10 ],
       "position": [ 0, 0, 0 ],
-      "orientation": [ 1, 0, 0, 0 ]
+      "orientation": [ 0.707, -0.707, 0, 0 ]
     }
   ]
 }
