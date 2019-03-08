@@ -240,8 +240,8 @@ function parseData(size, binaryData, header) {
 		}
 	}
 	return {
-		position: position, 
-		color: color
+		position: Array.prototype.slice.call(position), 
+		color: Array.prototype.slice.call(color)
 	};
 }
 
@@ -252,12 +252,12 @@ function createApertusPointCloud(pointCloud) {
 	apeNode.setOrientation(new ape.nbind.Quaternion(asset.orientation[0], asset.orientation[1], asset.orientation[2], asset.orientation[3]));
 	apeNode.setPosition(new ape.nbind.Vector3(asset.position[0], asset.position[1], asset.position[2]));
 	var apePointCloud = ape.nbind.JsBindManager().createPointCloud(asset.file);
-	//apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
-	//if (apeNode) {
-	//	apePointCloud.setParentNodeJsPtr(apeNode);
-	//	console.log('PcdLoaderPlugin - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
-	//} else
-	//	console.log('PcdLoaderPlugin no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
+	apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
+	if (apeNode) {
+		apePointCloud.setParentNodeJsPtr(apeNode);
+		console.log('PcdLoaderPlugin - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
+	} else
+		console.log('PcdLoaderPlugin no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
 	console.log('PcdLoaderPlugin createApertusPointCloud end');
 }
 
