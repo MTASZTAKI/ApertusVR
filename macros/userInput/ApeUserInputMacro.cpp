@@ -40,11 +40,12 @@ Ape::UserInputMacro::~UserInputMacro()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::UserInputMacro::updatePose(Pose pose)
+void Ape::UserInputMacro::updateViewPose(Pose pose)
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		userNode->translate(pose.userTranslate, Ape::Node::TransformationSpace::WORLD);
+		userNode->setPosition(pose.userPosition);
+		userNode->setOrientation(pose.userOrientation);
 	}
 	if (auto headNode = mHeadNode.lock())
 	{

@@ -738,49 +738,66 @@ void Ape::OISUserInputPlugin::moveUserNodeByKeyBoard()
 	int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(0, +transScalar, 0);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(0, +transScalar, 0);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(0, -transScalar, 0);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(0, -transScalar, 0);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_D])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(+transScalar, 0, 0);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(+transScalar, 0, 0);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_A])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(-transScalar, 0, 0);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(-transScalar, 0, 0);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_W])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(0, 0, -transScalar);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(0, 0, -transScalar);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_S])
 	{
-		mUserInputMacroPose.userTranslate = Ape::Vector3(0, 0, +transScalar);
+		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * Ape::Vector3(0, 0, +transScalar);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
 	{
-		mUserInputMacroPose.userRotateAngle = 0.017f * mRotateSpeedFactorKeyboard;
-		mUserInputMacroPose.userRotateAxis = Ape::Vector3(0, 1, 0);
+		Ape::Quaternion qnorm;
+		qnorm.FromAngleAxis(Ape::Radian(0.017f * mRotateSpeedFactorKeyboard), Ape::Vector3(0, 1, 0));
+		qnorm.normalise();
+		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
 	{
-		mUserInputMacroPose.userRotateAngle = -0.017f * mRotateSpeedFactorKeyboard;
-		mUserInputMacroPose.userRotateAxis = Ape::Vector3(0, 1, 0);
+		Ape::Quaternion qnorm;
+		qnorm.FromAngleAxis(Ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), Ape::Vector3(0, 1, 0));
+		qnorm.normalise();
+		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_UP])
 	{
-		mUserInputMacroPose.userRotateAngle = 0.017f * mRotateSpeedFactorKeyboard;
-		mUserInputMacroPose.userRotateAxis = Ape::Vector3(1, 0, 0);
+		Ape::Quaternion qnorm;
+		qnorm.FromAngleAxis(Ape::Radian(0.017f * mRotateSpeedFactorKeyboard), Ape::Vector3(1, 0, 0));
+		qnorm.normalise();
+		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
 	{
-		mUserInputMacroPose.userRotateAngle = -0.017f * mRotateSpeedFactorKeyboard;
-		mUserInputMacroPose.userRotateAxis = Ape::Vector3(1, 0, 0);
+		Ape::Quaternion qnorm;
+		qnorm.FromAngleAxis(Ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), Ape::Vector3(1, 0, 0));
+		qnorm.normalise();
+		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
-	mpApeUserInputMacro->updatePose(mUserInputMacroPose);
 }
 
 void Ape::OISUserInputPlugin::moveUserNodeByMouse()
