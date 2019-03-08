@@ -159,7 +159,7 @@ function parseHeader(binaryData) {
 	return header
 }
 
-function parseData(binaryData, header) {
+function parseData(size, binaryData, header) {
 	console.log('PcdLoaderPlugin parseData, header:', header);
 	var offset = header.offset
 
@@ -206,12 +206,13 @@ function parseData(binaryData, header) {
 		}
 	} else if (header.data === 'binary') {
 		var row = 0
-		var dataArrayView = new DataView(binaryData, header.headerLen)
+		var arrayBuffer = new Uint8Array(binaryData).buffer;
+		var dataArrayView = new DataView(arrayBuffer, header.headerLen)
 		for (var p = 0; p < header.points; row += header.rowSize, p++) {
 			if (position !== false) {
-				position[p * 3 + 0] = dataArrayView.getFloat32(row + offset.x, this.littleEndian)
-				position[p * 3 + 1] = dataArrayView.getFloat32(row + offset.y, this.littleEndian)
-				position[p * 3 + 2] = dataArrayView.getFloat32(row + offset.z, this.littleEndian)
+				position[p * 3 + 0] = dataArrayView.getFloat32(row + offset.x, true)
+				position[p * 3 + 1] = dataArrayView.getFloat32(row + offset.y, true)
+				position[p * 3 + 2] = dataArrayView.getFloat32(row + offset.z, true)
 			}
 			if (color !== false) {
 				color[p * 3 + 2] = dataArrayView.getUint8(row + color_offset + 0) / 255.0
@@ -227,9 +228,9 @@ function parseData(binaryData, header) {
 		dataArrayView = new DataView(decompressed.buffer)
 		for (p = 0; p < header.points; p++) {
 			if (position !== false) {
-				position[p * 3 + 0] = dataArrayView.getFloat32(offset.x + p * 4, this.littleEndian)
-				position[p * 3 + 1] = dataArrayView.getFloat32(offset.y + p * 4, this.littleEndian)
-				position[p * 3 + 2] = dataArrayView.getFloat32(offset.z + p * 4, this.littleEndian)
+				position[p * 3 + 0] = dataArrayView.getFloat32(offset.x + p * 4, true)
+				position[p * 3 + 1] = dataArrayView.getFloat32(offset.y + p * 4, true)
+				position[p * 3 + 2] = dataArrayView.getFloat32(offset.z + p * 4, true)
 			}
 			if (color !== false) {
 				color[p * 3 + 2] = dataArrayView.getUint8(color_offset + p * 4 + 0) / 255.0
@@ -240,24 +241,24 @@ function parseData(binaryData, header) {
 	}
 	return {
 		position: position, 
-		color: color,
-		normal: normal
+		color: color
 	};
 }
 
 function createApertusPointCloud(pointCloud) {
-	console.log('PcdLoaderPlugin createApertusPointCloud');
+	console.log('PcdLoaderPlugin createApertusPointCloud begin...');
 	var apeNode = ape.nbind.JsBindManager().createNode(asset.file);
 	apeNode.setScale(new ape.nbind.Vector3(asset.scale[0], asset.scale[1], asset.scale[2]));
 	apeNode.setOrientation(new ape.nbind.Quaternion(asset.orientation[0], asset.orientation[1], asset.orientation[2], asset.orientation[3]));
 	apeNode.setPosition(new ape.nbind.Vector3(asset.position[0], asset.position[1], asset.position[2]));
 	var apePointCloud = ape.nbind.JsBindManager().createPointCloud(asset.file);
-	apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
-	if (apeNode) {
-		apePointCloud.setParentNodeJsPtr(apeNode);
-		console.log('PcdLoaderPlugin - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
-	} else
-		console.log('PcdLoaderPlugin no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
+	//apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
+	//if (apeNode) {
+	//	apePointCloud.setParentNodeJsPtr(apeNode);
+	//	console.log('PcdLoaderPlugin - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
+	//} else
+	//	console.log('PcdLoaderPlugin no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
+	console.log('PcdLoaderPlugin createApertusPointCloud end');
 }
 
 exports.parsePclAsync = function (callback) {
@@ -269,8 +270,8 @@ exports.parsePclAsync = function (callback) {
 			console.log('PcdLoaderPlugin File opened, size: ', size);
 			var binaryData = await myBinaryFile.read(size);
 			var header = parseHeader(binaryData);
-			var pointCloud = parseData(binaryData, header);
-			//createApertusPointCloud(pointCloud);
+			var pointCloud = parseData(size, binaryData, header);
+			createApertusPointCloud(pointCloud);
 			await myBinaryFile.close();
 			console.log('PcdLoaderPlugin File closed');
 		} catch (err) {
