@@ -1809,10 +1809,25 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 				switch (event.type)
 				{
 				case Ape::Event::Type::CAMERA_CREATE:
+				{
+					mOgreCameras.push_back(mpOgreSceneManager->createCamera(event.subjectName));
+					for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 					{
-						mOgreCameras.push_back(mpOgreSceneManager->createCamera(event.subjectName));
+						for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
+						{
+							OgreCameraConfig cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
+							if (cameraSetting.name == camera->getName())
+							{
+								camera->setWindow(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name);
+								camera->setFocalLength(1.0f);
+								camera->setNearClipDistance(cameraSetting.nearClip);
+								camera->setFarClipDistance(cameraSetting.farClip);
+								camera->setFOVy(cameraSetting.fovY.toRadian());
+							}
+						}
 					}
-					break;
+				}
+				break;
 				case Ape::Event::Type::CAMERA_WINDOW:
 				{
 					if (mpOgreSceneManager->hasCamera(event.subjectName))
@@ -2334,68 +2349,6 @@ void Ape::OgreRenderPlugin::Init()
 			APE_LOG_DEBUG("winDesc:" << " name=" << winDesc.name << " width=" << winDesc.width << " height=" << winDesc.height << " fullScreen=" << winDesc.useFullScreen);
 			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
-			for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
-			{
-				OgreCameraConfig cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
-				if (auto userNode = mUserNode.lock())
-				{
-					std::string uniqueName = userNode->getName() + cameraSetting.name;
-					if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
-					{
-						cameraNode->setParentNode(mHeadNode);
-						auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(cameraSetting.name, Ape::Entity::Type::CAMERA).lock());
-						if (camera)
-						{
-							//TODO why it is not ok
-							//camera->setAspectRatio((float)mOgreRenderWindowConfigList[i].width / (float)mOgreRenderWindowConfigList[i].height);
-							camera->setWindow(winDesc.name);
-							camera->setFocalLength(1.0f);
-							camera->setNearClipDistance(cameraSetting.nearClip);
-							camera->setFarClipDistance(cameraSetting.farClip);
-							camera->setFOVy(cameraSetting.fovY.toRadian());
-							if (cameraSetting.parentNodeName == "" || cameraSetting.parentNodeName == "cameraNode")
-							{
-								camera->setParentNode(cameraNode);
-							}
-							else if (cameraSetting.parentNodeName == "userNode")
-							{
-								camera->setParentNode(userNode);
-							}
-							else
-							{
-								if (auto parentNode = mpSceneManager->getNode(cameraSetting.parentNodeName).lock())
-								{
-									camera->setParentNode(parentNode);
-								}
-							}
-							if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(userNode->getName() + "_Material").lock()))
-							{
-								if (auto cameraConeNode = mpSceneManager->createNode(uniqueName + "_ConeNode").lock())
-								{
-									cameraConeNode->setParentNode(cameraNode);
-									cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-									if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpSceneManager->createEntity(uniqueName + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
-									{
-										cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
-										cameraCone->setParentNode(cameraConeNode);
-										cameraCone->setMaterial(userMaterial);
-									}
-								}
-								if (auto userNameTextNode = mpSceneManager->createNode(uniqueName + "_TextNode").lock())
-								{
-									userNameTextNode->setParentNode(cameraNode);
-									userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-									if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity(uniqueName + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
-									{
-										userNameText->setCaption(uniqueName);
-										userNameText->setParentNode(userNameTextNode);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();

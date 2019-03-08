@@ -56,7 +56,7 @@ void Ape::UserInputMacro::updatePose(Pose pose)
 Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
 {
 	std::string uniqueName = mUniqueUserNodeName + name;
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(uniqueName, Ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
 	{
 		if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
 		{

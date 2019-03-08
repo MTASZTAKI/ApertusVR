@@ -28,193 +28,272 @@ var fs = require('fs');
 var async = moduleManager.requireNodeModule('async');
 const path = require('path');
 var request = moduleManager.requireNodeModule('request');
-const BinaryFile = require('binary-file');
+var BinaryFile = moduleManager.requireNodeModule('binary-file');
 var self = this;
 
 function log(...args) {
 	logger.debug(args);
 }
 
-function parseHeader( data ) {
-		var PCDheader = {};
-		var result1 = data.search( /[\r\n]DATA\s(\S*)\s/i );
-		var result2 = /[\r\n]DATA\s(\S*)\s/i.exec( data.substr( result1 - 1 ) );
-		PCDheader.data = result2[ 1 ];
-		PCDheader.headerLen = result2[ 0 ].length + result1;
-		PCDheader.str = data.substr( 0, PCDheader.headerLen );
-		// remove comments
-		PCDheader.str = PCDheader.str.replace( /\#.*/gi, '' );
-		// parse
-		PCDheader.version = /VERSION (.*)/i.exec( PCDheader.str );
-		PCDheader.fields = /FIELDS (.*)/i.exec( PCDheader.str );
-		PCDheader.size = /SIZE (.*)/i.exec( PCDheader.str );
-		PCDheader.type = /TYPE (.*)/i.exec( PCDheader.str );
-		PCDheader.count = /COUNT (.*)/i.exec( PCDheader.str );
-		PCDheader.width = /WIDTH (.*)/i.exec( PCDheader.str );
-		PCDheader.height = /HEIGHT (.*)/i.exec( PCDheader.str );
-		PCDheader.viewpoint = /VIEWPOINT (.*)/i.exec( PCDheader.str );
-		PCDheader.points = /POINTS (.*)/i.exec( PCDheader.str );
-		// evaluate
-		if ( PCDheader.version !== null )
-			PCDheader.version = parseFloat( PCDheader.version[ 1 ] );
-
-		if ( PCDheader.fields !== null )
-			PCDheader.fields = PCDheader.fields[ 1 ].split( ' ' );
-
-		if ( PCDheader.type !== null )
-			PCDheader.type = PCDheader.type[ 1 ].split( ' ' );
-
-		if ( PCDheader.width !== null )
-			PCDheader.width = parseInt( PCDheader.width[ 1 ] );
-
-		if ( PCDheader.height !== null )
-			PCDheader.height = parseInt( PCDheader.height[ 1 ] );
-
-		if ( PCDheader.viewpoint !== null )
-			PCDheader.viewpoint = PCDheader.viewpoint[ 1 ];
-
-		if ( PCDheader.points !== null )
-			PCDheader.points = parseInt( PCDheader.points[ 1 ], 10 );
-
-		if ( PCDheader.points === null )
-			PCDheader.points = PCDheader.width * PCDheader.height;
-
-		if ( PCDheader.size !== null ) {
-			PCDheader.size = PCDheader.size[ 1 ].split( ' ' ).map( function ( x ) {
-				return parseInt( x, 10 );
-			} );
-		}
-		if ( PCDheader.count !== null ) {
-			PCDheader.count = PCDheader.count[ 1 ].split( ' ' ).map( function ( x ) {
-				return parseInt( x, 10 );
-			} );
+function decompressLZF (inData, outLength) {
+	var inLength = inData.length
+	var outData = new Uint8Array(outLength)
+	var inPtr = 0
+	var outPtr = 0
+	var ctrl
+	var len
+	var ref
+	do {
+		ctrl = inData[inPtr++]
+		if (ctrl < (1 << 5)) {
+			ctrl++
+			if (outPtr + ctrl > outLength) throw new Error('Output buffer is not large enough')
+			if (inPtr + ctrl > inLength) throw new Error('Invalid compressed data')
+			do {
+				outData[outPtr++] = inData[inPtr++]
+			} while (--ctrl)
 		} else {
-			PCDheader.count = [];
-			for ( var i = 0, l = PCDheader.fields.length; i < l; i ++ ) {
-				PCDheader.count.push( 1 );
+			len = ctrl >> 5
+			ref = outPtr - ((ctrl & 0x1f) << 8) - 1
+			if (inPtr >= inLength) throw new Error('Invalid compressed data')
+			if (len === 7) {
+				len += inData[inPtr++]
+				if (inPtr >= inLength) throw new Error('Invalid compressed data')
 			}
+			ref -= inData[inPtr++]
+			if (outPtr + len + 2 > outLength) throw new Error('Output buffer is not large enough')
+			if (ref < 0) throw new Error('Invalid compressed data')
+			if (ref >= outPtr) throw new Error('Invalid compressed data')
+			do {
+				outData[outPtr++] = outData[ref++]
+			} while (--len + 2)
 		}
-		PCDheader.offset = {};
-		var sizeSum = 0;
-		for ( var i = 0, l = PCDheader.fields.length; i < l; i ++ ) {
-			if ( PCDheader.data === 'ascii' ) {
-				PCDheader.offset[ PCDheader.fields[ i ] ] = i;
-			} else {
-				PCDheader.offset[ PCDheader.fields[ i ] ] = sizeSum;
-				sizeSum += PCDheader.size[ i ];
-			}
-		}
-		// for binary only
-		PCDheader.rowSize = sizeSum;
-		return PCDheader;
+	} while (inPtr < inLength)
+	return outData
 }
 
-function parseData( PCDheader ) {
-	var position = [];
-	var normal = [];
-	var color = [];
-	// ascii
-	if ( PCDheader.data === 'ascii' ) {
-		var offset = PCDheader.offset;
-		var pcdData = textData.substr( PCDheader.headerLen );
-		var lines = pcdData.split( '\n' );
-		for ( var i = 0, l = lines.length; i < l; i ++ ) {
-			if ( lines[ i ] === '' ) continue;
-			var line = lines[ i ].split( ' ' );
-			if ( offset.x !== undefined ) {
-				position.push( parseFloat( line[ offset.x ] ) );
-				position.push( parseFloat( line[ offset.y ] ) );
-				position.push( parseFloat( line[ offset.z ] ) );
+
+function parseHeader(binaryData) {
+	console.log('PcdLoaderPlugin parseHeader');
+	var headerText = ''
+	var charArray = new Uint8Array(binaryData)
+	var i = 0
+	var max = charArray.length
+	while (i < max && headerText.search(/[\r\n]DATA\s(\S*)\s/i) === -1) {
+		headerText += String.fromCharCode(charArray[i++])
+	}
+	var result1 = headerText.search(/[\r\n]DATA\s(\S*)\s/i)
+	var result2 = /[\r\n]DATA\s(\S*)\s/i.exec(headerText.substr(result1 - 1))
+
+	var header = {}
+	header.data = result2[1]
+	header.headerLen = result2[0].length + result1
+	header.str = headerText.substr(0, header.headerLen)
+
+	// Remove comments
+	header.str = header.str.replace(/\#.*/gi, '')
+	header.version = /VERSION (.*)/i.exec(header.str)
+	if (header.version !== null) {
+		header.version = parseFloat(header.version[1])
+	}
+	header.fields = /FIELDS (.*)/i.exec(header.str)
+	if (header.fields !== null) {
+		header.fields = header.fields[1].split(' ')
+	}
+	header.size = /SIZE (.*)/i.exec(header.str)
+	if (header.size !== null) {
+		header.size = header.size[1].split(' ').map(function (x) {
+			return parseInt(x, 10)
+		})
+	}
+	header.type = /TYPE (.*)/i.exec(header.str)
+	if (header.type !== null) {
+		header.type = header.type[1].split(' ')
+	}
+	header.count = /COUNT (.*)/i.exec(header.str)
+	if (header.count !== null) {
+		header.count = header.count[1].split(' ').map(function (x) {
+			return parseInt(x, 10)
+		})
+	}
+	header.width = /WIDTH (.*)/i.exec(header.str)
+	if (header.width !== null) {
+		header.width = parseInt(header.width[1])
+	}
+	header.height = /HEIGHT (.*)/i.exec(header.str)
+	if (header.height !== null) {
+		header.height = parseInt(header.height[1])
+	}
+	header.viewpoint = /VIEWPOINT (.*)/i.exec(header.str)
+	if (header.viewpoint !== null) {
+		header.viewpoint = header.viewpoint[1]
+	}
+	header.points = /POINTS (.*)/i.exec(header.str)
+	if (header.points !== null) {
+		header.points = parseInt(header.points[1], 10)
+	}
+	if (header.points === null) {
+		header.points = header.width * header.height
+	}
+	if (header.count === null) {
+		header.count = []
+		for (i = 0; i < header.fields; i++) {
+			header.count.push(1)
+		}
+	}
+	header.offset = {}
+	var sizeSum = 0
+	for (var j = 0; j < header.fields.length; j++) {
+		if (header.data === 'ascii') {
+			header.offset[header.fields[j]] = j
+		} else if (header.data === 'binary') {
+			header.offset[header.fields[j]] = sizeSum
+			sizeSum += header.size[j]
+		} else if (header.data === 'binary_compressed') {
+			header.offset[header.fields[j]] = sizeSum
+			sizeSum += header.size[j] * header.points
+		}
+	}
+	// For binary only
+	header.rowSize = sizeSum
+	return header
+}
+
+function parseData(binaryData, header) {
+	console.log('PcdLoaderPlugin parseData, header:', header);
+	var offset = header.offset
+
+	var position = false
+	if (offset.x !== undefined && offset.y !== undefined && offset.z !== undefined) {
+		position = new Float32Array(header.points * 3)
+	}
+
+	var color = false
+	var color_offset
+	if (offset.rgb !== undefined || offset.rgba !== undefined) {
+		color = new Float32Array(header.points * 3)
+		color_offset = offset.rgb === undefined ? offset.rgba : offset.rgb
+	}
+
+	if (header.data === 'ascii') {
+		var charArrayView = new Uint8Array(binaryData)
+		var dataString = ''
+		for (var j = header.headerLen; j < binaryData.byteLength; j++) {
+			dataString += String.fromCharCode(charArrayView[j])
+		}
+
+		var lines = dataString.split('\n')
+		var i3 = 0
+		for (var i = 0; i < lines.length; i++, i3 += 3) {
+			var line = lines[i].split(' ')
+			if (position !== false) {
+				position[i3 + 0] = parseFloat(line[offset.x])
+				position[i3 + 1] = parseFloat(line[offset.y])
+				position[i3 + 2] = parseFloat(line[offset.z])
 			}
-			if ( offset.rgb !== undefined ) {
-				var rgb = parseFloat( line[ offset.rgb ] );
-				var r = ( rgb >> 16 ) & 0x0000ff;
-				var g = ( rgb >> 8 ) & 0x0000ff;
-				var b = ( rgb >> 0 ) & 0x0000ff;
-				color.push( r / 255, g / 255, b / 255 );
+			if (color !== false) {
+				var c
+				if (offset.rgba !== undefined) {
+					c = new Uint32Array([parseInt(line[offset.rgba])])
+				} else if (offset.rgb !== undefined) {
+					c = new Float32Array([parseFloat(line[offset.rgb])])
+				}
+				var dataview = new Uint8Array(c.buffer, 0)
+				color[i3 + 2] = dataview[0] / 255.0
+				color[i3 + 1] = dataview[1] / 255.0
+				color[i3 + 0] = dataview[2] / 255.0
 			}
-			if ( offset.normal_x !== undefined ) {
-				normal.push( parseFloat( line[ offset.normal_x ] ) );
-				normal.push( parseFloat( line[ offset.normal_y ] ) );
-				normal.push( parseFloat( line[ offset.normal_z ] ) );
+		}
+	} else if (header.data === 'binary') {
+		var row = 0
+		var dataArrayView = new DataView(binaryData, header.headerLen)
+		for (var p = 0; p < header.points; row += header.rowSize, p++) {
+			if (position !== false) {
+				position[p * 3 + 0] = dataArrayView.getFloat32(row + offset.x, this.littleEndian)
+				position[p * 3 + 1] = dataArrayView.getFloat32(row + offset.y, this.littleEndian)
+				position[p * 3 + 2] = dataArrayView.getFloat32(row + offset.z, this.littleEndian)
+			}
+			if (color !== false) {
+				color[p * 3 + 2] = dataArrayView.getUint8(row + color_offset + 0) / 255.0
+				color[p * 3 + 1] = dataArrayView.getUint8(row + color_offset + 1) / 255.0
+				color[p * 3 + 0] = dataArrayView.getUint8(row + color_offset + 2) / 255.0
+			}
+		}
+	} else if (header.data === 'binary_compressed') {
+		var sizes = new Uint32Array(binaryData.slice(header.headerLen, header.headerLen + 8))
+		var compressedSize = sizes[0]
+		var decompressedSize = sizes[1]
+		var decompressed = decompressLZF(new Uint8Array(binaryData, header.headerLen + 8, compressedSize), decompressedSize)
+		dataArrayView = new DataView(decompressed.buffer)
+		for (p = 0; p < header.points; p++) {
+			if (position !== false) {
+				position[p * 3 + 0] = dataArrayView.getFloat32(offset.x + p * 4, this.littleEndian)
+				position[p * 3 + 1] = dataArrayView.getFloat32(offset.y + p * 4, this.littleEndian)
+				position[p * 3 + 2] = dataArrayView.getFloat32(offset.z + p * 4, this.littleEndian)
+			}
+			if (color !== false) {
+				color[p * 3 + 2] = dataArrayView.getUint8(color_offset + p * 4 + 0) / 255.0
+				color[p * 3 + 1] = dataArrayView.getUint8(color_offset + p * 4 + 1) / 255.0
+				color[p * 3 + 0] = dataArrayView.getUint8(color_offset + p * 4 + 2) / 255.0
 			}
 		}
 	}
-	// binary
-	if ( PCDheader.data === 'binary_compressed' ) {
-		console.error( 'THREE.PCDLoader: binary_compressed files are not supported' );
-		return;
-	}
-	if ( PCDheader.data === 'binary' ) {
-		var dataview = new DataView( data, PCDheader.headerLen );
-		var offset = PCDheader.offset;
-		for ( var i = 0, row = 0; i < PCDheader.points; i ++, row += PCDheader.rowSize ) {
-			if ( offset.x !== undefined ) {
-				position.push( dataview.getFloat32( row + offset.x, this.littleEndian ) );
-				position.push( dataview.getFloat32( row + offset.y, this.littleEndian ) );
-				position.push( dataview.getFloat32( row + offset.z, this.littleEndian ) );
-			}
-			if ( offset.rgb !== undefined ) {
-				color.push( dataview.getUint8( row + offset.rgb + 2 ) / 255.0 );
-				color.push( dataview.getUint8( row + offset.rgb + 1 ) / 255.0 );
-				color.push( dataview.getUint8( row + offset.rgb + 0 ) / 255.0 );
-			}
-			if ( offset.normal_x !== undefined ) {
-				normal.push( dataview.getFloat32( row + offset.normal_x, this.littleEndian ) );
-				normal.push( dataview.getFloat32( row + offset.normal_y, this.littleEndian ) );
-				normal.push( dataview.getFloat32( row + offset.normal_z, this.littleEndian ) );
-			}
-		}
-	}
-	 return {
-        position: position, 
-        color: color,
+	return {
+		position: position, 
+		color: color,
 		normal: normal
-    };
+	};
 }
 
-function createApertusPointCloud( data ) {
+function createApertusPointCloud(pointCloud) {
+	console.log('PcdLoaderPlugin createApertusPointCloud');
 	var apeNode = ape.nbind.JsBindManager().createNode(asset.file);
 	apeNode.setScale(new ape.nbind.Vector3(asset.scale[0], asset.scale[1], asset.scale[2]));
 	apeNode.setOrientation(new ape.nbind.Quaternion(asset.orientation[0], asset.orientation[1], asset.orientation[2], asset.orientation[3]));
 	apeNode.setPosition(new ape.nbind.Vector3(asset.position[0], asset.position[1], asset.position[2]));
 	var apePointCloud = ape.nbind.JsBindManager().createPointCloud(asset.file);
-	apePointCloud.setParameters(data.position, data.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
+	apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
 	if (apeNode) {
 		apePointCloud.setParentNodeJsPtr(apeNode);
-		log(' - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
+		console.log('PcdLoaderPlugin - this: ' + apePointCloud.getName() + ' - parentNode: ' + apeNode.getName());
 	} else
-		log('no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
+		console.log('PcdLoaderPlugin no parent, thus cannot attach to the pointCloud: ' + apePointCloud.getName());
 }
 
 exports.parsePclAsync = function (callback) {
 	const myBinaryFile = new BinaryFile(asset.file, 'r', true);
-	myBinaryFile.open();
-    console.log('File opened');
-    var PCDheader = parseHeader(myBinaryFile);
-	var data = parseData(PCDheader);
-	createApertusPointCloud(asset.file, data);
-    console.log(`File read: ${string}`);
+	(async function () {
+		try {
+			await myBinaryFile.open();
+			var size = await myBinaryFile.size();
+			console.log('PcdLoaderPlugin File opened, size: ', size);
+			var binaryData = await myBinaryFile.read(size);
+			var header = parseHeader(binaryData);
+			var pointCloud = parseData(binaryData, header);
+			//createApertusPointCloud(pointCloud);
+			await myBinaryFile.close();
+			console.log('PcdLoaderPlugin File closed');
+		} catch (err) {
+			console.log(`There was an error: ${err}`);
+		}
+	})();
 }
 
 var asset;
 
 exports.loadFiles = function() {
-	log("PcdLoaderPlugin.loadFiles()");
+	console.log("PcdLoaderPlugin.loadFiles()");
 	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
-	log('PcdLoaderPlugin configFolderPath: ' + configFolderPath);
+	console.log('PcdLoaderPlugin configFolderPath: ' + configFolderPath);
 	config = require(configFolderPath + '\\ApePcdLoaderPlugin.json');
 	asyncFunctions = new Array();
 	for (var i = 0; i < config.assets.length; i++) {
 		var fn = function (callback) {
 			asset = config.assets.pop();
-			log('PcdLoaderPlugin asset to load: ', asset.file);
-			var filePath = moduleManager.sourcePath + asset.file;
-			var scale = asset.scale;
-			var position = asset.position;
-			var orientation = asset.orientation;
+			console.log('PcdLoaderPlugin asset to load: ', asset.file);
+			asset.file = moduleManager.sourcePath + asset.file;
 			self.parsePclAsync(function() {
-				log('Pcl-parsing done: ' + filePath + ' scale: ' + scale + ' position: ' + position + ' orientation: ' + orientation);
+				console.log('PcdLoaderPlugin Pcl-parsing done: ' + filePath + ' scale: ' + asset.scale + ' position: ' + asset.position + ' orientation: ' + asset.orientation);
 				callback(null);
 			});
 		}
@@ -223,9 +302,9 @@ exports.loadFiles = function() {
 	async.waterfall(
 			asyncFunctions,
 			function(err, result) {
-				log("async tasks done");
+				console.log("PcdLoaderPlugin async tasks done");
 				if (err) {
-					log('Pcl-init error: ', err);
+					console.log('PcdLoaderPlugin Pcd-init error: ', err);
 				}
 			}
 		);
@@ -235,6 +314,6 @@ exports.init = function(PclFilePath) {
 	try {
 		self.loadFiles();
 	} catch (e) {
-		log('Pcl-init exception cached: ' + e);
+		console.log('PcdLoaderPlugin Pcd-init exception cached: ' + e);
 	}
 }

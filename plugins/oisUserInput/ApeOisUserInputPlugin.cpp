@@ -26,8 +26,6 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
 	mRayGeometry = Ape::RayGeometryWeakPtr();
 	mRayOverlayNode = Ape::NodeWeakPtr();
-	mHeadNode = Ape::NodeWeakPtr();
-	mDummyNode = Ape::NodeWeakPtr();
 	mCursorNode = Ape::NodeWeakPtr();
 	mCursorText = Ape::TextGeometryWeakPtr();
 	mIsNewKeyEvent = false;
@@ -37,9 +35,8 @@ Ape::OISUserInputPlugin::OISUserInputPlugin()
 	mUserNodePosesToggleIndex = 0;
 	mIsKeyPressed = false;
 	mIsUserNodeAnimated = false;
-
+	mpApeUserInputMacro = new UserInputMacro();
 	fillUserNodeAnimatePoses();
-
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -61,7 +58,7 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 	{
 		if (event.subjectName == "robotRootNode")
 		{
-			mNodeToMove = mpSceneManager->getNode(event.subjectName);
+			//mNodeToMove = mpSceneManager->getNode(event.subjectName);
 		}
 	}
 	/*else if (event.type == Ape::Event::Type::NODE_ORIENTATION)
@@ -131,12 +128,12 @@ void Ape::OISUserInputPlugin::eventCallBack(const Ape::Event& event)
 					std::string entityName = entity->getName();
 					Ape::Entity::Type entityType = entity->getType();
 					//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
-					if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
+					/*if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
 						removeItem = true;
 					else if (entityName.find("coord") != std::string::npos)
 						removeItem = true;
 					else if (entityName.find("cursor") != std::string::npos)
-						removeItem = true;
+						removeItem = true;*/
 				}
 				if (removeItem)
 					i = intersectionList.erase(i);
@@ -278,16 +275,27 @@ void Ape::OISUserInputPlugin::Init()
 					}
 				}
 			}
-			if (jsonDocument.HasMember("cameraPoses"))
+			if (jsonDocument.HasMember("userPoses"))
 			{
-				rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
-				if (cameraPoses.IsArray())
+				rapidjson::Value& userPoses = jsonDocument["userPoses"];
+				if (userPoses.IsArray())
 				{
-					for (auto& cameraPose : cameraPoses.GetArray())
+					for (auto& userPose : userPoses.GetArray())
 					{
-						Ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
-						Ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
+						Ape::Vector3 position(userPose[0].GetFloat(), userPose[1].GetFloat(), userPose[2].GetFloat());
+						Ape::Quaternion orientation(userPose[3].GetFloat(), userPose[4].GetFloat(), userPose[5].GetFloat(), userPose[6].GetFloat());
 						mUserNodeTogglePoses.push_back(UserNodePose(position, orientation));
+					}
+				}
+			}
+			if (jsonDocument.HasMember("cameraNames"))
+			{
+				rapidjson::Value& cameraNames = jsonDocument["cameraNames"];
+				if (cameraNames.IsArray())
+				{
+					for (auto& cameraName : cameraNames.GetArray())
+					{
+						mpApeUserInputMacro->createCamera(cameraName.GetString());
 					}
 				}
 			}
@@ -295,55 +303,31 @@ void Ape::OISUserInputPlugin::Init()
 		fclose(apeOisUserInputConfigFile);
 	}
 
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+	/*if (auto cursorNode = mpSceneManager->createNode("cursorNode").lock())
 	{
-		mUserNode = userNode;
-		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
-			toggleUserNodePoses(userNode);
-
-		mDummyNode = mpSceneManager->createNode(userNode->getName() + "_DummyNode");
-		if (auto dummyNode = mDummyNode.lock())
+		if (auto cursorGeometry = std::static_pointer_cast<Ape::ITorusGeometry>(mpSceneManager->createEntity("cursor", Ape::Entity::GEOMETRY_TORUS).lock()))
 		{
-			toggleUserNodePoses(dummyNode);
-		}
-		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
-		{
-			mHeadNode = headNode;
-			mHeadNodeName = headNode->getName();
-		}
-		if (auto dummyNode = mDummyNode.lock())
-		{
-			toggleUserNodePoses(userNode);
-			toggleUserNodePoses(dummyNode);
+			cursorGeometry->setParameters(0.1f, 0.05f, Ape::Vector2(100, 100));
+			cursorGeometry->setParentNode(cursorNode);
+			cursorNode->setParentNode(userNode);
+			cursorNode->setPosition(Ape::Vector3(0, 0, -10));
+			cursorNode->setOrientation(Ape::Quaternion(0.5, -0.5, -0.5, 0.5));
+			mCursorNode = cursorNode;
 		}
 
-
-		/*if (auto cursorNode = mpSceneManager->createNode("cursorNode").lock())
+		if (auto textNode = mpSceneManager->createNode("cursorTextNode").lock())
 		{
-			if (auto cursorGeometry = std::static_pointer_cast<Ape::ITorusGeometry>(mpSceneManager->createEntity("cursor", Ape::Entity::GEOMETRY_TORUS).lock()))
+			if (auto cursorText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("cursorText", Ape::Entity::GEOMETRY_TEXT).lock()))
 			{
-				cursorGeometry->setParameters(0.1f, 0.05f, Ape::Vector2(100, 100));
-				cursorGeometry->setParentNode(cursorNode);
-				cursorNode->setParentNode(userNode);
-				cursorNode->setPosition(Ape::Vector3(0, 0, -10));
-				cursorNode->setOrientation(Ape::Quaternion(0.5, -0.5, -0.5, 0.5));
-				mCursorNode = cursorNode;
+				cursorText->setParentNode(textNode);
+				cursorText->setCaption("hello");
+				cursorText->showOnTop(true);
+				mCursorText = cursorText;
 			}
-
-			if (auto textNode = mpSceneManager->createNode("cursorTextNode").lock())
-			{
-				if (auto cursorText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("cursorText", Ape::Entity::GEOMETRY_TEXT).lock()))
-				{
-					cursorText->setParentNode(textNode);
-					cursorText->setCaption("hello");
-					cursorText->showOnTop(true);
-					mCursorText = cursorText;
-				}
-				textNode->setParentNode(userNode);
-				textNode->setPosition(Ape::Vector3(7, -1, -100));
-			}
-		}*/
-	}
+			textNode->setParentNode(userNode);
+			textNode->setPosition(Ape::Vector3(7, -1, -100));
+		}
+	}*/
 
 	APE_LOG_DEBUG("OISUserInputPlugin waiting for main window");
 	while (mpMainWindow->getHandle() == nullptr)
@@ -394,7 +378,7 @@ void Ape::OISUserInputPlugin::Init()
 			rayGeometry->setParentNode(rayNode);
 			mRayGeometry = rayGeometry;
 		}
-		rayNode->setParentNode(mUserNode);
+		//rayNode->setParentNode(mUserNode);
 		mRayOverlayNode = rayNode;
 	}
 
@@ -420,7 +404,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	}
 	if (e.key == OIS::KeyCode::KC_B)
 	{
-		if (auto userNode = mUserNode.lock())
+		/*if (auto userNode = mUserNode.lock())
 		{
 			auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
 			moveInterpolator->addSection(
@@ -443,7 +427,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 				if (!rotateInterpolator->isQueueEmpty())
 					rotateInterpolator->iterateTopSection();
 			}
-		}
+		}*/
 	}
 	if (e.key == OIS::KeyCode::KC_SPACE)
 	{
@@ -451,7 +435,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	}
 	else if (e.key == OIS::KeyCode::KC_P)
 	{
-		auto userNode = mUserNode.lock();
+		/*auto userNode = mUserNode.lock();
 		if (userNode && !mIsUserNodeAnimated)
 		{
 			mIsUserNodeAnimated = true;
@@ -468,7 +452,7 @@ bool Ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 					dummyNode->setPosition(userNode->getPosition());
 				}
 			}
-		}
+		}*/
 	}
 
 	if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -720,7 +704,7 @@ void Ape::OISUserInputPlugin::clearNodeSelection()
 void Ape::OISUserInputPlugin::saveUserNodePose()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto userNode = mUserNode.lock())
+	/*if (auto userNode = mUserNode.lock())
 	{
 		std::ofstream userNodePoseFile;
 		userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -728,7 +712,7 @@ void Ape::OISUserInputPlugin::saveUserNodePose()
 			userNode->getOrientation().w << ", " << userNode->getOrientation().x << ", " << userNode->getOrientation().y << ", " << userNode->getOrientation().z
 			<< " ]," << std::endl;
 		userNodePoseFile.close();
-	}
+	}*/
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -747,114 +731,85 @@ void Ape::OISUserInputPlugin::toggleUserNodePoses(Ape::NodeSharedPtr userNode)
 
 void Ape::OISUserInputPlugin::moveUserNodeByKeyBoard()
 {
-	if (auto userNode = mUserNode.lock())
+	if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 	{
-		if (auto dummyNode = mDummyNode.lock())
-		{
-			if (auto headNode = mHeadNode.lock())
-			{
-				if (!dummyNode->getOrientation().equals(headNode->getDerivedOrientation(), Ape::Radian(0.0f)))
-				{
-					dummyNode->setOrientation(headNode->getDerivedOrientation());
-				}
-			}
-
-			if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
-			{
-				mGeneralSpeedFactor += 3;
-			}
-			int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
-			if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
-			{
-				dummyNode->translate(Ape::Vector3(0, +transScalar, 0), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
-			{
-				dummyNode->translate(Ape::Vector3(0, -transScalar, 0), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_D])
-			{
-				dummyNode->translate(Ape::Vector3(+transScalar, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_A])
-			{
-				dummyNode->translate(Ape::Vector3(-transScalar, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_W])
-			{
-				dummyNode->translate(Ape::Vector3(0, 0, -transScalar), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_S])
-			{
-				dummyNode->translate(Ape::Vector3(0, 0, +transScalar), Ape::Node::TransformationSpace::LOCAL);
-				userNode->setPosition(dummyNode->getPosition());
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
-			{
-				userNode->rotate(0.017f * mRotateSpeedFactorKeyboard, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
-			{
-				userNode->rotate(-0.017f * mRotateSpeedFactorKeyboard, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_UP])
-			{
-				userNode->rotate(0.017f * mRotateSpeedFactorKeyboard, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-			}
-			if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
-			{
-				userNode->rotate(-0.017f * mRotateSpeedFactorKeyboard, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-			}
-		}
+		mGeneralSpeedFactor += 3;
 	}
+	int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
+	if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(0, +transScalar, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(0, -transScalar, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_D])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(+transScalar, 0, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_A])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(-transScalar, 0, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_W])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(0, 0, -transScalar);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_S])
+	{
+		mUserInputMacroPose.userTranslate = Ape::Vector3(0, 0, +transScalar);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
+	{
+		mUserInputMacroPose.userRotateAngle = 0.017f * mRotateSpeedFactorKeyboard;
+		mUserInputMacroPose.userRotateAxis = Ape::Vector3(0, 1, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
+	{
+		mUserInputMacroPose.userRotateAngle = -0.017f * mRotateSpeedFactorKeyboard;
+		mUserInputMacroPose.userRotateAxis = Ape::Vector3(0, 1, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_UP])
+	{
+		mUserInputMacroPose.userRotateAngle = 0.017f * mRotateSpeedFactorKeyboard;
+		mUserInputMacroPose.userRotateAxis = Ape::Vector3(1, 0, 0);
+	}
+	if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
+	{
+		mUserInputMacroPose.userRotateAngle = -0.017f * mRotateSpeedFactorKeyboard;
+		mUserInputMacroPose.userRotateAxis = Ape::Vector3(1, 0, 0);
+	}
+	mpApeUserInputMacro->updatePose(mUserInputMacroPose);
 }
 
 void Ape::OISUserInputPlugin::moveUserNodeByMouse()
 {
-	if (auto userNode = mUserNode.lock())
+	if (mMouseState.isMouseMoved)
 	{
-		if (auto dummyNode = mDummyNode.lock())
+		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isDragModeRight)
 		{
-			if (auto headNode = mHeadNode.lock())
-			{
-				if (!dummyNode->getOrientation().equals(headNode->getDerivedOrientation(), Ape::Radian(0.0f)))
-				{
-					dummyNode->setOrientation(headNode->getDerivedOrientation());
-				}
-			}
-
-			if (mMouseState.isMouseMoved)
-			{
-				if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isDragModeRight)
-				{
-					//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
-					//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
-				}
-				if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle] && mMouseState.isDragModeMiddle)
-				{
-					dummyNode->translate(Ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
-					dummyNode->translate(Ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
-					userNode->setPosition(dummyNode->getPosition());
-				}
-				if (mMouseState.scrollVelocity != 0)
-				{
-					APE_LOG_TRACE("z: " << mMouseState.scrollVelocity);
-					int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
-					if (transScalar < 0)
-						transScalar -= mGeneralSpeedFactor;
-					if (transScalar > 0)
-						transScalar += mGeneralSpeedFactor;
-					dummyNode->translate(Ape::Vector3(0, 0, -transScalar), Ape::Node::TransformationSpace::LOCAL);
-					userNode->setPosition(dummyNode->getPosition());
-				}
-				mMouseState.isMouseMoved = false;
-			}
+			//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::LOCAL);
+			//userNode->rotate(Ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, Ape::Vector3(0, 1, 0), Ape::Node::TransformationSpace::WORLD);
 		}
+		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle] && mMouseState.isDragModeMiddle)
+		{
+			/*dummyNode->translate(Ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
+			dummyNode->translate(Ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse), Ape::Node::TransformationSpace::LOCAL);
+			userNode->setPosition(dummyNode->getPosition());*/
+		}
+		if (mMouseState.scrollVelocity != 0)
+		{
+			APE_LOG_TRACE("z: " << mMouseState.scrollVelocity);
+			int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
+			if (transScalar < 0)
+				transScalar -= mGeneralSpeedFactor;
+			if (transScalar > 0)
+				transScalar += mGeneralSpeedFactor;
+			/*dummyNode->translate(Ape::Vector3(0, 0, -transScalar), Ape::Node::TransformationSpace::LOCAL);
+			userNode->setPosition(dummyNode->getPosition());*/
+		}
+		mMouseState.isMouseMoved = false;
 	}
 }
 

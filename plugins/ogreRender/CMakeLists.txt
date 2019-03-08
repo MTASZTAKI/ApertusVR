@@ -276,7 +276,7 @@ set (SOURCES
 	ApeOgrePointCloud.cpp
 	)
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OGRE_HLMS_INCLUDE_DIRS}
