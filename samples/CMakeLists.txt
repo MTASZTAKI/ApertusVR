@@ -180,6 +180,11 @@ if (${APE_SAMPLES_GyorPathPlanning})
 	add_subdirectory (gyorPathPlanning)
 endif ()
 
+option(APE_SAMPLES_GyorMpLab "APE_SAMPLES_GyorMpLab?" ON )
+if (${APE_SAMPLES_GyorMpLab})
+	add_subdirectory (gyorMpLab)
+endif ()
+
 option(APE_SAMPLES_Audi "APE_SAMPLES_Audi?" ON )
 if (${APE_SAMPLES_Audi})
 	add_subdirectory (audi)

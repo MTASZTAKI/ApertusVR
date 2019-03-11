@@ -53,12 +53,6 @@ namespace Ape
 
 			Ape::Quaternion userOrientation;
 
-			Ape::Vector3 userTranslate;
-
-			Ape::Radian userRotateAngle;
-
-			Ape::Vector3 userRotateAxis;
-
 			Ape::Vector3 headPosition;
 
 			Ape::Quaternion headOrientation;
@@ -68,14 +62,10 @@ namespace Ape
 
 			}
 
-			Pose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 userTranslate, Ape::Radian userRotateAngle, Ape::Vector3 userRotateAxis,
-				Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
+			Pose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
 			{
 				this->userPosition = userPosition;
 				this->userOrientation = userOrientation;
-				this->userTranslate = userTranslate;
-				this->userRotateAngle = userRotateAngle;
-				this->userRotateAxis = userRotateAxis;
 				this->headPosition = headPosition;
 				this->headOrientation = headOrientation;
 			}
@@ -105,7 +95,7 @@ namespace Ape
 
 		~UserInputMacro();
 
-		void updatePose(Pose pose); 
+		void updateViewPose(Pose pose);
 
 		Ape::CameraWeakPtr createCamera(std::string name);
     };

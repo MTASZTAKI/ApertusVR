@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeIUnitTexture.h"
 #include "sceneelements/ApeITorusGeometry.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeUserInputMacro.h"
 #include "ApeOisUserInputPluginConfigs.h"
 #include "OIS.h"
 
@@ -128,16 +129,6 @@ namespace Ape
 
 		Ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::NodeWeakPtr mNodeToMove;
-
-		Ape::NodeWeakPtr mHeadNode;
-
-		std::string mHeadNodeName;
-
-		Ape::NodeWeakPtr mDummyNode;
-
 		Ape::NodeWeakPtr mCursorNode;
 
 		Ape::TextGeometryWeakPtr mCursorText;
@@ -179,6 +170,10 @@ namespace Ape
 		bool mIsKeyPressed;
 
 		bool mIsUserNodeAnimated;
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::Pose mUserInputMacroPose;
 
 		void moveUserNodeByKeyBoard();
 

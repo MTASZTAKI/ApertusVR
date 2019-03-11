@@ -46,6 +46,7 @@ SOFTWARE.*/
 #include "ApeManualMaterialJsBind.h"
 #include "ApeManualPassJsBind.h"
 #include "ApePbsPassJsBind.h"
+#include "ApePointCloudJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -471,6 +472,40 @@ public:
 		return success;
 	}
 
+	PointCloudJsPtr createPointCloud(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return PointCloudJsPtr(mpSceneManager->createEntity(name, Ape::Entity::POINT_CLOUD));
+	}
+
+	bool getPointCloud(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
+		{
+			if (auto PointCloud = std::dynamic_pointer_cast<Ape::IPointCloud>(entity))
+			{
+				success = true;
+				done(!success, PointCloudJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
 	std::string getFolderPath()
 	{
 		APE_LOG_FUNC_ENTER();
@@ -525,6 +560,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createManualPass);
 	method(getManualPass);
+
+	method(createPointCloud);
+	method(getPointCloud);
 
 	method(getFolderPath);
 }

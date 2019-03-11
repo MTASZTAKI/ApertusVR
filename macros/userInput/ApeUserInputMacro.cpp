@@ -40,11 +40,12 @@ Ape::UserInputMacro::~UserInputMacro()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::UserInputMacro::updatePose(Pose pose)
+void Ape::UserInputMacro::updateViewPose(Pose pose)
 {
 	if (auto userNode = mUserNode.lock())
 	{
-		userNode->translate(pose.userTranslate, Ape::Node::TransformationSpace::WORLD);
+		userNode->setPosition(pose.userPosition);
+		userNode->setOrientation(pose.userOrientation);
 	}
 	if (auto headNode = mHeadNode.lock())
 	{
@@ -56,7 +57,7 @@ void Ape::UserInputMacro::updatePose(Pose pose)
 Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
 {
 	std::string uniqueName = mUniqueUserNodeName + name;
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(uniqueName, Ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
 	{
 		if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
 		{

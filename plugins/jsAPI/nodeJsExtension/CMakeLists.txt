@@ -50,6 +50,7 @@ set (HEADERS
 	wrappers/ApeIndexedLineSetGeometryJsBind.h
 	wrappers/ApeBoxGeometryJsBind.h
 	wrappers/ApeFileGeometryJsBind.h
+	wrappers/ApePointCloudJsBind.h
 	)
 
 set (SOURCES

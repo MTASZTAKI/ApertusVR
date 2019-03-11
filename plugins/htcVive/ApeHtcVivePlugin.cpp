@@ -68,7 +68,7 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 			controllerTrackerPosition = controllerTrackerPosition * controllerTrackerScale;
 			vr::VRControllerState_t openVRControllerState;
 			mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
-			mUserInputMacroPose.userTranslate = controllerTrackerOrientation * Ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y);
+			mUserInputMacroPose.userPosition += (controllerTrackerOrientation * Ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y));
 		}
 		vr::TrackedDevicePose_t hmdPose;
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
@@ -84,7 +84,7 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 			mUserInputMacroPose.headPosition = hmdTrackerPosition;
 			mUserInputMacroPose.headOrientation = hmdTrackerOrientation;
 		}
-		mpApeUserInputMacro->updatePose(mUserInputMacroPose);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	else
 	{
