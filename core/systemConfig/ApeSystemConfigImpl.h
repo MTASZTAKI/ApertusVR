@@ -61,8 +61,6 @@ namespace Ape
 		MainWindowConfig getMainWindowConfig() override;
 
 		std::string getFolderPath() override;
-
-		void setGeneratedUniqueUserNodeName(std::string generatedUniqueUserName);
 	};
 }
 

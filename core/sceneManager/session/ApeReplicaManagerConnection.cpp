@@ -59,7 +59,7 @@ Ape::ReplicaManagerConnection::~ReplicaManagerConnection()
 
 RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3)
 {
-	//TODO how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
+	//TODO_CORE how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
 	RakNet::RakString objectType;
 	allocationIdBitstream->Read(objectType);
 	//APE_LOG_DEBUG("Received: " << objectType);

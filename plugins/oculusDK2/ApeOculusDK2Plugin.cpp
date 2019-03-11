@@ -11,8 +11,8 @@ Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 	mpHMD = NULL;
 	mCameraLeft = Ape::CameraWeakPtr();
 	mCameraRight = Ape::CameraWeakPtr();
-	mHeadNode = Ape::NodeWeakPtr();
-	mUserMaterial = Ape::ManualMaterialWeakPtr();
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -33,40 +33,6 @@ Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 	return matrix4;
 }
 
-Ape::CameraWeakPtr Ape::ApeOculusDK2Plugin::createCamera(std::string name)
-{
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
-	{
-		if (auto cameraNode = mpSceneManager->createNode(name + "_Node").lock())
-		{
-			cameraNode->setParentNode(mHeadNode);
-			/*if (auto cameraConeNode = mpSceneManager->createNode(name + "_ConeNode").lock())
-			{
-				cameraConeNode->setParentNode(cameraNode);
-				cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-				if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpSceneManager->createEntity(name + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
-				{
-					cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
-					cameraCone->setParentNode(cameraConeNode);
-					cameraCone->setMaterial(mUserMaterial);
-				}
-			}
-			if (auto userNameTextNode = mpSceneManager->createNode(name + "_TextNode").lock())
-			{
-				userNameTextNode->setParentNode(cameraNode);
-				userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity(name + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
-				{
-					userNameText->setCaption(name);
-					userNameText->setParentNode(userNameTextNode);
-				}
-			}*/
-			camera->setParentNode(cameraNode);
-		}
-		return camera;
-	}
-}
-
 
 void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 {
@@ -76,25 +42,6 @@ void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeOculusDK2Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-	{
-		userNode->setFixedYaw(true);
-		mUserNode = userNode;
-		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
-		{
-			mHeadNode = headNode;
-		}
-		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(userNode->getName() + "_Material").lock()))
-		{
-			mUserMaterial = userMaterial;
-		}
-	}
-
-	APE_LOG_DEBUG("waiting for main window");
-	while (Ape::IMainWindow::getSingletonPtr()->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
 	ovr_Initialize();
 	mpHMD = ovrHmd_Create(0);
 	if (!mpHMD)
@@ -236,12 +183,8 @@ void Ape::ApeOculusDK2Plugin::Init()
 		}
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
-	if (auto userNode = mUserNode.lock())
-	{
-		mCameraLeft = createCamera(userNode->getName() + "HmdLeftCamera");
-		mCameraRight = createCamera(userNode->getName() + "HmdRightCamera");
-	}
-
+	mCameraLeft = mpApeUserInputMacro->createCamera("HmdLeftCamera");
+	mCameraRight = mpApeUserInputMacro->createCamera("HmdRightCamera");
 	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
 	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
@@ -292,16 +235,9 @@ void Ape::ApeOculusDK2Plugin::Run()
 		OVR::Posef pose = ts.HeadPose.ThePose;
 		ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-		if (auto headNode = mHeadNode.lock())
-		{
-			headNode->setOrientation(Ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z));
-			headNode->setPosition(Ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100));
-		}
-		//TODO is it needed? or it is enough to uopdate the projection for the cameras only once?
-		/*if (auto cameraLeft = mCameraLeft.lock())
-			cameraLeft->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovLeft, 1, 10000, true)));
-		if (auto cameraRight = mCameraRight.lock())
-			cameraRight->setProjection(conversionFromOVR(ovrMatrix4f_Projection(fovRight, 1, 10000, true)));*/
+		mUserInputMacroPose.headPosition = Ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100);
+		mUserInputMacroPose.headOrientation = Ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
+		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();

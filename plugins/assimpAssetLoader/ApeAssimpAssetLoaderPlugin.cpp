@@ -8,7 +8,6 @@ Ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpAssimpImporter = nullptr;
 	mAssimpScenes = std::vector<const aiScene*>();
 	mAssimpAssetConfigs = std::vector<AssetConfig>();
@@ -91,7 +90,6 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 	aiQuaterniont<float> rotation;
 	aiVector3t<float> position;
 	nodeTransformation.Decompose(scaling, rotation, position);
-	//TODO get uuid generator
 	std::stringstream nodeUniqueName;
 	std::string assimpNodeOriginalName = assimpNode->mName.C_Str();
 	nodeUniqueName << assimpNode->mName.C_Str() << "_" << mObjectCount;
@@ -116,15 +114,6 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 		{
 			mObjectCount++;
 			aiMesh* assimpMesh = mAssimpScenes[assimpSceneID]->mMeshes[assimpNode->mMeshes[i]];
-			//TODO just for own demo, just remove it when it necessary 
-			/*std::string meshName = assimpMesh->mName.C_Str();
-			int id = atoi(meshName.c_str());
-			if (id > 970 && id < 990 )
-				continue;
-			if (id > 1025 && id < 1027)
-				continue;
-			if (id > 885 && id < 890)
-				continue;*/
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
@@ -136,7 +125,7 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					aiVector3D assimpVertex = assimpMesh->mVertices[i];
 					Ape::Vector3 vertexPosition(assimpVertex.x, assimpVertex.y, assimpVertex.z);
 					if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
-						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mAssimpAssetConfigs[assimpSceneID].scale; //TODO somehow detect the unit of the scene
+						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mAssimpAssetConfigs[assimpSceneID].scale;
 					coordinates.push_back(vertexPosition.x);
 					coordinates.push_back(vertexPosition.y);
 					coordinates.push_back(vertexPosition.z);
@@ -162,22 +151,6 @@ void Ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '>'), modifiedMaterialName.end());
 
 				auto material = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(modifiedMaterialName).lock());
-				//TODO just a hotfix for window mesh where no transparent material is created
-				//if (meshUniqueName.str().find("window") != std::string::npos || meshUniqueName.str().find("Window") != std::string::npos)
-				//{
-				//	modifiedMaterialName += "window";
-				//	material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->getEntity(modifiedMaterialName).lock());
-				//	if (!material)
-				//	{
-				//		material = std::static_pointer_cast<Ape::IManualMaterial>(mpScene->createEntity(modifiedMaterialName, Ape::Entity::MATERIAL_MANUAL).lock());
-				//		float opacity = 0.12f;
-				//		material->setDiffuseColor(Ape::Color(0.058053, 0.0753292, 0.0675212, opacity));
-				//		material->setSpecularColor(Ape::Color(0.58053, 0.753292, 0.675212, opacity));
-				//		material->setAmbientColor(Ape::Color(0, 0, 0));
-				//		material->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
-				//		//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
-				//	}
-				//}
 				std::string diffuseTextureFileName = std::string();
 				if (!material)
 				{
@@ -356,7 +329,6 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 						assetConfig.file = assimpAssetFileNamePath.str();
 						std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
 						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
-						//TODO be careful maybe should impelent the pluginManager interface and get infomration about ogreRender plugin  (native format when ogrePlugin is the renderer)
 						if (fileExtension == ".mesh")
 						{
 							if (auto node = mpSceneManager->createNode("node").lock())
@@ -365,9 +337,9 @@ void Ape::AssimpAssetLoaderPlugin::loadConfig()
 								{
 									meshFile->setFileName(fileName);
 									//meshFile->mergeSubMeshes();
-									//TODO how to use it when static geomtery is created?
+									//TODO_ApeAssimpAssetLoaderPlugin how to use it when static geomtery is created?
 									meshFile->setParentNode(node);
-									//TODO how to export the optimized mesh when static geomtery is created?
+									//TODO_ApeAssimpAssetLoaderPlugin how to export the optimized mesh when static geomtery is created?
 									//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
 									//meshFile->exportMesh();
 								}
@@ -430,7 +402,6 @@ void Ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 			{
 				if (auto rootNode = mpSceneManager->getNode(mAssimpAssetConfigs[ID].rootNodeName).lock())
 				{
-					//TODO somehow detect the unit of the scene
 					APE_LOG_DEBUG("setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
 						<< " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());
 					rootNode->setScale(mAssimpAssetConfigs[ID].scale);

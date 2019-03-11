@@ -35,7 +35,6 @@ SOFTWARE.*/
 void runHost()
 {
 	std::stringstream exe;
-	//TODO platfrom specific new window command
 	exe << "start " << "ApeIndustry40.exe host_monitor";
 	std::system(exe.str().c_str());
 }
@@ -43,7 +42,6 @@ void runHost()
 void runGuest()
 {
 	std::stringstream exe;
-	//TODO platfrom specific new window command
 	exe << "start " << "ApeIndustry40.exe guest_monitor";
 	std::system(exe.str().c_str());
 }

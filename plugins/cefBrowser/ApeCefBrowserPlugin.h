@@ -83,8 +83,6 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
 
 		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;

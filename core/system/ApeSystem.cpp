@@ -24,13 +24,6 @@ SOFTWARE.*/
 #include <random>
 #include "system/ApePlatform.h"
 #include "system/ApeSystem.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeLogManagerImpl.h"
 #include "ApeMainWindowImpl.h"
@@ -51,17 +44,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
 	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
-
 	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
-	std::string uniqueUserNamePrefix = gpSystemConfigImpl->getSceneSessionConfig().uniqueUserNamePrefix;
-	std::string delimiter = "-";
-	auto tp = std::chrono::system_clock::now();
-	auto dur = tp.time_since_epoch();
-	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
-	std::stringstream uniqueUserNodeName;
-	uniqueUserNodeName << uniqueUserNamePrefix << delimiter << nanoseconds;
-	gpSystemConfigImpl->setGeneratedUniqueUserNodeName(uniqueUserNodeName.str());
-
 	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
 	gpLogManagerImpl = new LogManagerImpl();
@@ -69,13 +52,8 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneManagerImpl = new SceneManagerImpl();
 	gpSceneSessionImpl->setScene(gpSceneManagerImpl);
-	
-	if (gpSystemConfigImpl->getMainWindowConfig().creator == "ApeSystem")
-		; //TODO open a platform specific window if needed
-
 	gpPluginManagerImpl->CreatePlugins();
 	gpPluginManagerImpl->InitAndRunPlugins();
-
 	if (isBlockingMode)
 		gpPluginManagerImpl->joinPluginThreads();
 	else

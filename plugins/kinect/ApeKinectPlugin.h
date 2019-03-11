@@ -52,6 +52,7 @@ SOFTWARE.*/
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
+#include "ApeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "ApeKinectPlugin"
 
@@ -152,11 +153,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
-
-		Ape::NodeWeakPtr mUserNode;
 
 		Ape::NodeWeakPtr mClothNode;
 
@@ -164,6 +161,10 @@ namespace Ape
 
 		Ape::PointCloudWeakPtr mPointCloud;
 		Ape::PointCloudWeakPtr mOperatorPointCloud;
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		bool _1Detected = false;
 		bool operatorPointsGenerated = false;

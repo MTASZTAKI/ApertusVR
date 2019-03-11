@@ -62,17 +62,9 @@ namespace Ape
 
 		Ape::ISceneManager* mpSceneManager;
 
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::NodeWeakPtr mHeadNode;
-
-		Ape::ManualMaterialWeakPtr mUserMaterial;
-
 		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
 		Ape::ISystemConfig* mpSystemConfig;
-
-		Ape::IMainWindow* mpMainWindow;
 
 		Ape::HeadTrackerConfig mTrackerConfig;
 

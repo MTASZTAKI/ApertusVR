@@ -41,7 +41,7 @@ void Ape::ApePointCloudRecorderPlugin::readFrame()
 
 void Ape::ApePointCloudRecorderPlugin::writeFrame()
 {
-	//TODO maybe write timestamp for timing?
+	//TODO_ApePointCloudRecorderPlugin maybe write timestamp for timing?
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
 }
@@ -98,7 +98,7 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 	mIsPlayer = true;
 	mIsLooping = true;
 	mFileName = "pointCloud.bin";
-	//TODO get the pose information from the file like pointCloudSize
+	//TODO_ApePointCloudRecorderPlugin get the pose information from the file like pointCloudSize
 	mPointCloudPosition = Ape::Vector3(0.0, 170.0, -250.0);
 	mPointCloudOrinetation = Ape::Quaternion(0.707, 0.0, 0.707, 0.0);
 	if (mIsRecorder)
@@ -160,7 +160,7 @@ void Ape::ApePointCloudRecorderPlugin::Run()
 				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
 				mFileStreamIn.read(reinterpret_cast<char*>(&mPointCloudSize), sizeof(long));
 			}
-			//TODO maybe timig by reading timestamps from the file?
+			//TODO_ApePointCloudRecorderPlugin maybe timig by reading timestamps from the file?
 			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 	}

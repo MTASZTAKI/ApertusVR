@@ -37,12 +37,13 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/macros/userInput 	
 	)
 
 add_library (ApeTexasEEGPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig)
+target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro)
 
 if (WIN32)
 	# we have to link to some DirectX libraries 

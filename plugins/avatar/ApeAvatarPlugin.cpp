@@ -19,10 +19,6 @@ Ape::ApeAvatarPlugin::~ApeAvatarPlugin()
 
 void Ape::ApeAvatarPlugin::eventCallBack(const Ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
-		mRightHandNode = mpSceneManager->getNode(event.subjectName);
-	if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
-		mLeftHandNode = mpSceneManager->getNode(event.subjectName);
 }
 
 void Ape::ApeAvatarPlugin::Init()

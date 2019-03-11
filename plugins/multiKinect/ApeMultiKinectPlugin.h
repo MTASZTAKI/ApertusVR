@@ -158,11 +158,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
-
-		Ape::NodeWeakPtr mUserNode;
 	};
 
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateMultiKinectPlugin()

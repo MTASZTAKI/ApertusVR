@@ -48,6 +48,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeISphereGeometry.h"
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeArtScenePlugin"
 
@@ -61,6 +62,12 @@ namespace Ape
 		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
+
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
+
+		std::vector<std::string> mModelFileNames;
+
+		std::vector<Ape::Vector3> mModelPositions;
 
 		void eventCallBack(const Ape::Event& event);
 

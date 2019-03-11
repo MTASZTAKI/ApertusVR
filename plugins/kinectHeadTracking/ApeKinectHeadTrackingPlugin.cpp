@@ -14,11 +14,8 @@ Ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mCameraCount = 0;
 	mCameraDoubleQueue = Ape::DoubleQueue<Ape::CameraWeakPtr>();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mTrackerConfig = Ape::HeadTrackerConfig();
 	mDisplayConfigList = Ape::HeadTrackerDisplayConfigList();
-	mHeadNode = Ape::NodeWeakPtr();
-	mUserPositionDisplayText = Ape::TextGeometryWeakPtr();
 	mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
 	mTrackedViewerOrientation = Ape::Quaternion();
 	mTrackedViewerOrientationYPR = Ape::Euler();
@@ -26,6 +23,8 @@ Ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mFarClip = 0.0f;
 	mC = 0.0f;
 	mD = 0.0f;
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -129,35 +128,7 @@ void Ape::KinectHeadTrackingPlugin::Init()
 	APE_LOG_DEBUG("Sensor init begin");
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-	{
-		mUserNode = userNode;
-		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
-		{
-			mHeadNode = headNode;
-		}
-		if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->getEntity(userNode->getName() + "_Material").lock()))
-		{
-			mUserMaterial = userMaterial;
-		}
-	}
-	if (auto userPositionDisplayNode = mpSceneManager->createNode("userPositionDisplayNode").lock())
-	{
-		userPositionDisplayNode->setParentNode(mHeadNode);
-		userPositionDisplayNode->setPosition(Ape::Vector3(0, -20, -20));
-		if (auto userPositionDisplayText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("userPositionDisplayText", Ape::Entity::GEOMETRY_TEXT).lock()))
-		{
-			userPositionDisplayText->showOnTop(true);
-			userPositionDisplayText->setParentNode(userPositionDisplayNode);
-			mUserPositionDisplayText = userPositionDisplayText;
-		}
-	}
-
-	APE_LOG_DEBUG("ApeKinectHeadTrackingPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("ApeKinectHeadTrackingPlugin main window was found");
-
+	mpApeUserInputMacro->createOverLayText("userPosition");
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeKinectHeadTrackingPlugin.json";
 	FILE* apeKinectHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -399,10 +370,7 @@ void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 					{
 						Ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
 						mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
-						if (auto userPositionDisplayText = mUserPositionDisplayText.lock())
-						{
-							userPositionDisplayText->setCaption(mTrackedViewerPosition.toString());
-						}
+						mpApeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
 					}
 				}
 			}
@@ -488,10 +456,6 @@ void Ape::KinectHeadTrackingPlugin::Run()
 			if (SUCCEEDED(hr))
 			{
 				getBodyDataFromSensor(pFrame);
-				if (auto headNode = mHeadNode.lock())
-				{
-					//headNode->setPosition(mTrackedViewerPosition);
-				}
 				for (int i = 0; i < mDisplayConfigList.size(); i++)
 				{
 					auto displayConfig = mDisplayConfigList[i];

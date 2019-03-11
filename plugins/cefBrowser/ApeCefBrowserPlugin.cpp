@@ -6,7 +6,6 @@ Ape::CefBrowserPlugin::CefBrowserPlugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpApeCefRenderHandlerImpl = nullptr;
 	mpApeCefLifeSpanHandlerImpl = nullptr;
 	mpApeCefKeyboardHandlerImpl = nullptr;

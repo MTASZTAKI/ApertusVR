@@ -31,12 +31,13 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
+	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
 	)
 
 add_library (ApeGyorPathPlanningPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeGyorPathPlanningPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow )
+target_link_libraries (ApeGyorPathPlanningPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeSceneMakerMacro)
 
 set_property (TARGET ApeGyorPathPlanningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

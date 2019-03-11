@@ -171,11 +171,6 @@ if (${APE_PLUGIN_Industry40})
 	add_subdirectory (industry40)
 endif ()
 
-option(APE_PLUGIN_RobotMonitoring "Use RobotMonitoringPlugin?" ON )
-if (${APE_PLUGIN_RobotMonitoring})
-	add_subdirectory (robotMonitoring)
-endif ()
-
 # Apis, servers
 
 option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )

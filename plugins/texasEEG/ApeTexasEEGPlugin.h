@@ -41,6 +41,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeILight.h"
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeITextGeometry.h"
+#include "ApeUserInputMacro.h"
 #include "GameManager.h"
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
@@ -58,8 +59,6 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mUserNode;
-
 		int mBubblesActivateNextCount;
 
 		int mScore;
@@ -71,6 +70,10 @@ namespace Ape
 		TexasEEG::GameManager* mGameManager;
 
 		TexasEEG::BubbleManager* mBubbleManager;
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
 		ApeTexasEEGPlugin();

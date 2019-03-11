@@ -31,13 +31,15 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
+	${PROJECT_SOURCE_DIR}/macros/userInput
+	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 add_library (ApeHtmlOverlayUIPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeHtmlOverlayUIPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig)
+target_link_libraries (ApeHtmlOverlayUIPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro ApeSceneMakerMacro)
 
 set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY FOLDER "Plugins")

@@ -61,8 +61,6 @@ namespace Ape
 
 		Ape::ISceneManager* mpSceneManager;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::ISystemConfig* mpSystemConfig;
 
 		Ape::CameraWeakPtr mCameraLeft;
@@ -97,7 +95,7 @@ namespace Ape
 
 		Ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::Pose mUserInputMacroPose;
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
 		ApeHtcVivePlugin();

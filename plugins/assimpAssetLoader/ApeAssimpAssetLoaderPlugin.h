@@ -87,11 +87,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
-
-		Ape::NodeWeakPtr mUserNode;
 
 		Assimp::Importer* mpAssimpImporter;
 

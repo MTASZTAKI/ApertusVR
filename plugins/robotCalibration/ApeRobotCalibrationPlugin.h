@@ -58,6 +58,8 @@ SOFTWARE.*/
 #include "sceneelements/ApeITubeGeometry.h"
 #include "sceneelements/ApeIUnitTexture.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeUserInputMacro.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
@@ -66,43 +68,19 @@ namespace Ape
 	class ApeRobotCalibrationPlugin : public Ape::IPlugin
 	{
 	private:
-		struct NodeJsPluginConfig
-		{
-			int serverPort;
-
-			NodeJsPluginConfig(int serverPort = 3000)
-			{
-				this->serverPort = serverPort;
-			}
-		};
-
 		Ape::IEventManager* mpEventManager;
 
 		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		NodeJsPluginConfig mNodeJsPluginConfig;
+		Ape::UserInputMacro* mpApeUserInputMacro;
 
-		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
-
-		Ape::PointCloudWeakPtr mPointCloud;
-
-		int mPointCloudSize;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		void createLights();
-
-		void createSkyBox();
-
-		void createCoordinateSystem();
-
-		void parseNodeJsConfig();
-
-		void createOverlayBrowser();
 
 	public:
 		ApeRobotCalibrationPlugin();

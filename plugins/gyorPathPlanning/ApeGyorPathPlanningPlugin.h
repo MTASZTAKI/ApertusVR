@@ -54,6 +54,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeGyorPathPlanningPlugin"
 
@@ -68,29 +69,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mGripperLeftRootNode;
-
-		Ape::NodeWeakPtr mGripperLeftHelperNode;
-
-		Ape::NodeWeakPtr mGripperLeftEndNode;
-
-		Ape::NodeWeakPtr mGripperRightRootNode;
-
-		Ape::NodeWeakPtr mGripperRightEndNode;
-
-		Ape::NodeWeakPtr mGripperRightHelperNode;
-
-		Ape::Quaternion mGripperRightHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperRightRootNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftRootNodeInitialOrientation;
-
-		Ape::Quaternion mGripperRightEndNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftEndNodeInitialOrientation;
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
 

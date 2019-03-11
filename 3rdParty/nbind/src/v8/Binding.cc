@@ -112,7 +112,7 @@ static void registerMethods(
 	SignatureParam *param;
 
 	for(auto &func : bindClass.getMethodList()) {
-		// TODO: Support for function overloading goes here.
+		//TODO_ApeNodeJsExtension Support for function overloading goes here.
 
 		const BaseSignature *signature = func.getSignature();
 
@@ -332,7 +332,7 @@ static void initModule(Handle<Object> exports) {
 		if(!superClassList.empty()) {
 			// This fails if the constructor template of any other child class
 			// has already been instantiated!
-			// TODO: Is this correct? What the superclass inherits may still
+			//TODO_ApeNodeJsExtension Is this correct? What the superclass inherits may still
 			// be undefined. Should this be in registerSuperMethods instead?
 			constructorTemplate->Inherit(Nan::New(superClassList.front().superClass.constructorTemplate));
 		} else {

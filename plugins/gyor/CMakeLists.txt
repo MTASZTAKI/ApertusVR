@@ -31,12 +31,14 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
+	${PROJECT_SOURCE_DIR}/macros/userInput
+	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
 	)
 
 add_library (ApeGyorPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeGyorPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow )
+target_link_libraries (ApeGyorPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro ApeSceneMakerMacro)
 
 set_property (TARGET ApeGyorPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

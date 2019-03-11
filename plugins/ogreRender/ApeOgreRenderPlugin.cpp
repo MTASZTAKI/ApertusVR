@@ -62,6 +62,8 @@ Ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mOgrePointCloudMeshes = std::map<std::string, Ape::OgrePointCloud*>();
 	mCameraCountFromConfig = 0;
 	mRttList = std::vector<Ape::ManualTextureWeakPtr>();
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -290,7 +292,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 											std::size_t found = filePath.find_last_of("/\\");
 											filePath = filePath.substr(0, found + 1);
 											std::string materialFileName = materialName;
-											//TODO automatic filesystem check for filenames and coding conversion
+											//TODO_ApeOgreRenderPlugin automatic filesystem check for filenames and coding conversion
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '<'), materialFileName.end());
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '>'), materialFileName.end());
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/'), materialFileName.end());
@@ -851,7 +853,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 											v2.z = coordinate1.z - coordinate0.z;
 											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-											//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											//TODO_ApeOgreRenderPlugin maybe create new vertices because of trinagle list, instead of not accumulating the normals?
 											normals[parameters.indices[indexIndex]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
@@ -880,7 +882,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 											v2.z = coordinate1.z - coordinate0.z;
 											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-											//TODO maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											//TODO_ApeOgreRenderPlugin  maybe create new vertices because of trinagle list, instead of not accumulating the normals?
 											normals[parameters.indices[indexIndex]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
@@ -889,7 +891,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 										}
 										else
 										{
-											// TODO
+											//TODO_ApeOgreRenderPlugin 
 											indexIndex = indexIndex + indexCount + 1;
 										}
 									}
@@ -1509,7 +1511,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (auto raySpaceNode = rayOverlayNode->getParentNode().lock())
 							{
 								Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
-									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); // TODO: check enabled window in ogreRenderWindowConfigList
+									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); //TODO_ApeOgreRenderPlugin check enabled window in ogreRenderWindowConfigList
 								Ogre::RaySceneQuery *raySceneQuery = mpOgreSceneManager->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
 								if (raySceneQuery != NULL)
 								{
@@ -1746,7 +1748,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
 					if (auto ogrePointCloudMesh = new Ape::OgrePointCloud(pointCloudName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-						size, points, colors, pointCloudParameters.boundigSphereRadius, mHeadNode, pointCloud->getParentNode(), pointCloudParameters.pointSize,
+						size, points, colors, pointCloudParameters.boundigSphereRadius, mpApeUserInputMacro->getHeadNode(), pointCloud->getParentNode(), pointCloudParameters.pointSize,
 						pointCloudParameters.pointScale, pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance, pointCloudParameters.scaleFactor))
 					{
 						if (auto ogreEntity = mpOgreSceneManager->createEntity(pointCloudName, pointCloudName + "Mesh"))
@@ -1834,7 +1836,7 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreCamera = mpOgreSceneManager->getCamera(event.subjectName))
 						{
-
+							//TODO_ApeOgreRenderPlugin wait for Ape::IViewPort definiton
 							//begin: cave mosaic case :), for sure, waiting for ApeViewport class :)
 							//int zorder = (mOgreCameras.size() - 1);
 							/*float width = 1;
@@ -1853,7 +1855,6 @@ void Ape::OgreRenderPlugin::processEventDoubleQueue()
 
 							if (auto viewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera))
 							{
-								//TODO why it is working instead of in the init phase?
 								APE_LOG_DEBUG("ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft());
 								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
 								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
@@ -2081,15 +2082,6 @@ void Ape::OgreRenderPlugin::Step()
 void Ape::OgreRenderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-	{
-		mUserNode = userNode;
-		if (auto headNode = mpSceneManager->getNode(userNode->getName() + "_HeadNode").lock())
-		{
-			mHeadNode = headNode;
-		}
-	}
 
 	std::stringstream fileFullPath;
 	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";

@@ -59,6 +59,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeITubeGeometry.h"
 #include "sceneelements/ApeIUnitTexture.h"
 #include "sceneelements/ApeIWater.h"
+#include "ApeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "utils/ApeDoubleQueue.h"
 #include "ApeOgreShaderGeneratorResolver.h"
@@ -211,15 +212,15 @@ namespace Ape
 
 		Ape::OgreRenderPluginConfig mOgreRenderPluginConfig;
 
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::NodeWeakPtr mHeadNode;
-
 		std::vector<Ape::ManualTextureWeakPtr> mRttList;
 
 		int mCameraCountFromConfig;
 
 		std::map<std::string, Ape::OgrePointCloud*> mOgrePointCloudMeshes;
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		void processEventDoubleQueue();
 

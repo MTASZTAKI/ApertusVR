@@ -28,7 +28,6 @@ Ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mUniqueUserNodeName = mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName;
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<Ape::IPlugin*>();
 	mPluginCount = 0;
@@ -69,7 +68,7 @@ void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
 {
 	plugin->Init();
 	plugin->Run();
-	//TODO name
+	//TODO_CORE name
 	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
 }
 

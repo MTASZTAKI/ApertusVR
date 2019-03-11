@@ -56,7 +56,6 @@ namespace Ape
 
 		Ape::SkyWeakPtr mSky;
 
-		Ape::IMainWindow* mpMainWindow;
 
 		Ape::NodeWeakPtr mSkyLightNode;
 

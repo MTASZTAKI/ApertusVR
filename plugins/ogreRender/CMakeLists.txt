@@ -277,6 +277,7 @@ set (SOURCES
 	)
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include
+	${PROJECT_SOURCE_DIR}/macros/userInput 
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OGRE_HLMS_INCLUDE_DIRS}
@@ -297,7 +298,7 @@ include_directories(
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 add_library (ApeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeSceneManager ApeEventManager ApeSystemConfig ApeMainWindow ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
+target_link_libraries (ApeOgreRenderPlugin ApePluginManager ApeSceneManager ApeEventManager ApeSystemConfig ApeMainWindow ApeUserInputMacro ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
 ${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} MY_HYDRAX MY_SKYX )
 if (${APE_PLUGIN_OgreRender_HydraxNew})
 	set_property (TARGET ApeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}" HYDRAX_NEW)
@@ -307,7 +308,7 @@ endif()
 
 set_property (TARGET ApeOgreRenderPlugin PROPERTY FOLDER "Plugins")
 if (WIN32)
-	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_ApeOgreRenderPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ogre bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OgreMain_d.dll)

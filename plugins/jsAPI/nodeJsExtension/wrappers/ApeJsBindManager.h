@@ -47,6 +47,7 @@ SOFTWARE.*/
 #include "ApeManualPassJsBind.h"
 #include "ApePbsPassJsBind.h"
 #include "ApePointCloudJsBind.h"
+#include "ApeUserInputMacro.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -71,6 +72,8 @@ public:
 		mpEventManager = Ape::IEventManager::getSingletonPtr();
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
+		mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+		mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 		APE_LOG_FUNC_LEAVE();
 	}
 
@@ -151,7 +154,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
-		auto nodeWeakPtr = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName);
+		auto nodeWeakPtr = mpApeUserInputMacro->getUserNode();
 		if (auto node = nodeWeakPtr.lock())
 		{
 			success = true;
@@ -517,7 +520,8 @@ private:
 	Ape::ISceneManager* mpSceneManager;
 	Ape::ISystemConfig* mpSystemConfig;
 	Ape::IEventManager* mpEventManager;
-
+	Ape::UserInputMacro* mpApeUserInputMacro;
+	Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 	std::map<int, nbind::cbFunction*> mEventMap;
 };
 

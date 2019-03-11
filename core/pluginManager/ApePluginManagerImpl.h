@@ -65,8 +65,6 @@ namespace Ape
 
 		unsigned int mPluginCount;
 
-		std::string mUniqueUserNodeName;
-
 	public:
 		PluginManagerImpl();
 
