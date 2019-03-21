@@ -28,20 +28,20 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class IndexedLineSetGeometryImpl : public Ape::IIndexedLineSetGeometry, public Ape::Replica
+	class IndexedLineSetGeometryImpl : public ape::IIndexedLineSetGeometry, public ape::Replica
 	{
 	public:
 		IndexedLineSetGeometryImpl(std::string name, bool isHostCreated);
 
 		~IndexedLineSetGeometryImpl();
 
-		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) override;
+		void setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color) override;
 
-		Ape::GeometryIndexedLineSetParameters getParameters() override;
+		ape::GeometryIndexedLineSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -50,11 +50,11 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryIndexedLineSetParameters mParameters;
+		ape::GeometryIndexedLineSetParameters mParameters;
 	};
 }
 

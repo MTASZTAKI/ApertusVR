@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "datatypes/ApeVector4.h"
 
-namespace Ape
+namespace ape
 {
 	struct Matrix3
 	{
@@ -251,7 +251,7 @@ namespace Ape
 			return fDet;
 		}
 
-		void QDUDecomposition(Ape::Matrix3& kQ, Ape::Vector3& kD, Ape::Vector3& kU) const
+		void QDUDecomposition(ape::Matrix3& kQ, ape::Vector3& kD, ape::Vector3& kU) const
 		{
 			float fInvLength = 1.0f / std::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0] + m[2][0] * m[2][0]);
 
@@ -294,7 +294,7 @@ namespace Ape
 						kQ[iRow][iCol] = -kQ[iRow][iCol];
 			}
 
-			Ape::Matrix3 kR;
+			ape::Matrix3 kR;
 			kR[0][0] = kQ[0][0] * m[0][0] + kQ[1][0] * m[1][0] + kQ[2][0] * m[2][0];
 			kR[0][1] = kQ[0][0] * m[0][1] + kQ[1][0] * m[1][1] + kQ[2][0] * m[2][1];
 			kR[1][1] = kQ[0][1] * m[0][1] + kQ[1][1] * m[1][1] + kQ[2][1] * m[2][1];

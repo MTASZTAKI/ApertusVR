@@ -58,20 +58,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApePointCloudRecorderPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApePointCloudRecorderPlugin : public Ape::IPlugin
+	class ApePointCloudRecorderPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::PointCloudWeakPtr mPointCloud;
+		ape::PointCloudWeakPtr mPointCloud;
 
 		std::string mRecordedPointCloudName;
 
@@ -87,17 +87,17 @@ namespace Ape
 
 		std::ifstream mFileStreamIn;
 
-		Ape::Vector3 mPointCloudPosition;
+		ape::Vector3 mPointCloudPosition;
 
-		Ape::Quaternion mPointCloudOrinetation;
+		ape::Quaternion mPointCloudOrinetation;
 
-		Ape::NodeWeakPtr mPointCloudNode;
+		ape::NodeWeakPtr mPointCloudNode;
 
 		long mPointCloudSize;
 
-		Ape::PointCloudPoints mCurrentPoints;
+		ape::PointCloudPoints mCurrentPoints;
 
-		Ape::PointCloudColors mCurrentColors;
+		ape::PointCloudColors mCurrentColors;
 
 		void readFrame();
 
@@ -121,14 +121,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApePointCloudRecorderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApePointCloudRecorderPlugin()
 	{
-		return new Ape::ApePointCloudRecorderPlugin;
+		return new ape::ApePointCloudRecorderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApePointCloudRecorderPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApePointCloudRecorderPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApePointCloudRecorderPlugin*)plugin;
+		delete (ape::ApePointCloudRecorderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

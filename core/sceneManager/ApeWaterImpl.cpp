@@ -22,39 +22,39 @@ SOFTWARE.*/
 
 #include "ApeWaterImpl.h"
 
-Ape::WaterImpl::WaterImpl(std::string name, bool isHostCreated) : Ape::IWater(name), Ape::Replica("Water", isHostCreated)
+ape::WaterImpl::WaterImpl(std::string name, bool isHostCreated) : ape::IWater(name), ape::Replica("Water", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mSky = Ape::SkyWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mSky = ape::SkyWeakPtr();
 	mSkyName = std::string();
-	mCameras = std::vector<Ape::CameraWeakPtr>();
+	mCameras = std::vector<ape::CameraWeakPtr>();
 	mCamerasName = std::vector<std::string>();
 }
 
-Ape::WaterImpl::~WaterImpl()
+ape::WaterImpl::~WaterImpl()
 {
 
 }
 
-void Ape::WaterImpl::setSky(Ape::SkyWeakPtr sky)
+void ape::WaterImpl::setSky(ape::SkyWeakPtr sky)
 {
 	if (auto skySP = sky.lock())
 	{
 		mSky = sky;
 		mSkyName = skySP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_SKY));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::WATER_SKY));
 	}
 	else
-		mSky = Ape::SkyWeakPtr();
+		mSky = ape::SkyWeakPtr();
 }
 
-Ape::SkyWeakPtr Ape::WaterImpl::getSky()
+ape::SkyWeakPtr ape::WaterImpl::getSky()
 {
 	return mSky;
 }
 
-void Ape::WaterImpl::setCameras(std::vector<Ape::CameraWeakPtr> cameras)
+void ape::WaterImpl::setCameras(std::vector<ape::CameraWeakPtr> cameras)
 {
 	for (auto camera : cameras)
 	{
@@ -65,25 +65,25 @@ void Ape::WaterImpl::setCameras(std::vector<Ape::CameraWeakPtr> cameras)
 		}
 		else
 		{
-			mCameras.push_back(Ape::CameraWeakPtr());
+			mCameras.push_back(ape::CameraWeakPtr());
 			mCamerasName.push_back(std::string());
 		}
 	}
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_CAMERAS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::WATER_CAMERAS));
 }
 
-std::vector<Ape::CameraWeakPtr> Ape::WaterImpl::getCameras()
+std::vector<ape::CameraWeakPtr> ape::WaterImpl::getCameras()
 {
 	return mCameras;
 }
 
-void Ape::WaterImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::WaterImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::WaterImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::WaterImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -94,7 +94,7 @@ RakNet::RM3SerializationResult Ape::WaterImpl::Serialize(RakNet::SerializeParame
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
@@ -102,25 +102,25 @@ void Ape::WaterImpl::Deserialize(RakNet::DeserializeParameters *deserializeParam
 	{
 		for (auto cameraName : mCamerasName)
 		{
-			if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
+			if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
 			{
 				mCameras.push_back(camera);
 				mCamerasName.push_back(camera->getName());
 			}
 			else
 			{
-				mCameras.push_back(Ape::CameraWeakPtr());
+				mCameras.push_back(ape::CameraWeakPtr());
 				mCamerasName.push_back(std::string());
 			}
 		}
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_CAMERAS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::WATER_CAMERAS));
 	}
 	RakNet::RakString skyName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, skyName))
 	{
 		mSkyName = skyName.C_String();
-		mSky = std::static_pointer_cast<Ape::ISky>(mpSceneManager->getEntity(mSkyName).lock());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::WATER_SKY));
+		mSky = std::static_pointer_cast<ape::ISky>(mpSceneManager->getEntity(mSkyName).lock());
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::WATER_SKY));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

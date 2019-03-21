@@ -34,19 +34,19 @@ SOFTWARE.*/
 #include "sceneelements/ApeIBrowser.h"
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	class CefLifeSpanHandlerImpl : public CefLifeSpanHandler
 	{
 	private:
-		std::map<int, Ape::BrowserWeakPtr> mBrowserIDs;
+		std::map<int, ape::BrowserWeakPtr> mBrowserIDs;
 
 	public:
 		CefLifeSpanHandlerImpl();
 
 		~CefLifeSpanHandlerImpl();
 
-		void registerBrowser(int ID, Ape::BrowserWeakPtr browser);
+		void registerBrowser(int ID, ape::BrowserWeakPtr browser);
 
 		void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 

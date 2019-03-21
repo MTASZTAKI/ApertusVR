@@ -62,9 +62,9 @@
 //
 //#define THIS_PLUGINNAME "ApePresentationScenePlugin"
 //
-//namespace Ape
+//namespace ape
 //{
-//	class ApePresentationScenePlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+//	class ApePresentationScenePlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 //	{
 //	private:
 //		enum Context
@@ -76,12 +76,12 @@
 //		};
 //		struct StoryElement
 //		{
-//			Ape::Vector3 cameraPosition;
-//			Ape::Quaternion cameraOrientation;
+//			ape::Vector3 cameraPosition;
+//			ape::Quaternion cameraOrientation;
 //			std::string browserName;
 //			std::string browserURL;
-//			Ape::Vector3 browserPosition;
-//			Ape::Quaternion browserOrientation;
+//			ape::Vector3 browserPosition;
+//			ape::Quaternion browserOrientation;
 //			int browserWidth;
 //			int browserHeight;
 //			int browserZoom;
@@ -90,12 +90,12 @@
 //
 //			StoryElement()
 //			{
-//				this->cameraPosition = Ape::Vector3();
-//				this->cameraOrientation = Ape::Quaternion();
+//				this->cameraPosition = ape::Vector3();
+//				this->cameraOrientation = ape::Quaternion();
 //				this->browserName = std::string();
 //				this->browserURL = std::string();
-//				this->browserPosition = Ape::Vector3();
-//				this->browserOrientation = Ape::Quaternion();
+//				this->browserPosition = ape::Vector3();
+//				this->browserOrientation = ape::Quaternion();
 //				this->browserWidth = int();
 //				this->browserHeight = int();
 //				this->browserZoom = int();
@@ -104,12 +104,12 @@
 //			}
 //
 //			StoryElement(
-//				Ape::Vector3 cameraPosition,
-//				Ape::Quaternion cameraOrientation,
+//				ape::Vector3 cameraPosition,
+//				ape::Quaternion cameraOrientation,
 //				std::string browserName = std::string(),
 //				std::string browserURL = std::string(),
-//				Ape::Vector3 browserPosition = Ape::Vector3(),
-//				Ape::Quaternion browserOrientation = Ape::Quaternion(),
+//				ape::Vector3 browserPosition = ape::Vector3(),
+//				ape::Quaternion browserOrientation = ape::Quaternion(),
 //				int browserWidth = int(),
 //				int browserHeight = int(),
 //				int browserZoom = 0,
@@ -131,25 +131,25 @@
 //			}
 //		};
 //
-//		Ape::IEventManager* mpEventManager;
+//		ape::IEventManager* mpEventManager;
 //
-//		Ape::ISceneManager* mpSceneManager;
+//		ape::ISceneManager* mpSceneManager;
 //
-//		Ape::ISystemConfig* mpSystemConfig;
+//		ape::ISystemConfig* mpSystemConfig;
 //
-//		Ape::IMainWindow* mpMainWindow;
+//		ape::IMainWindow* mpMainWindow;
 //
-//		Ape::NodeWeakPtr mUserNode;
+//		ape::NodeWeakPtr mUserNode;
 //
-//		Ape::CameraWeakPtr mCamera;
+//		ape::CameraWeakPtr mCamera;
 //
-//		void eventCallBack(const Ape::Event& event);
+//		void eventCallBack(const ape::Event& event);
 //
-//		Ape::Vector3 mOldXMLFormatTranslateVector;
+//		ape::Vector3 mOldXMLFormatTranslateVector;
 //
-//		Ape::Vector3 mOldXMLFormatTranslateVectorCamera;
+//		ape::Vector3 mOldXMLFormatTranslateVectorCamera;
 //
-//		Ape::Quaternion mOldXMLFormatRotationQuaternion;
+//		ape::Quaternion mOldXMLFormatRotationQuaternion;
 //
 //		int mCurrentStoryElementIndex;
 //
@@ -171,31 +171,31 @@
 //
 //		OIS::Mouse* mpMouse;
 //
-//		std::map<std::string, Ape::BrowserWeakPtr> mBrowsers;
+//		std::map<std::string, ape::BrowserWeakPtr> mBrowsers;
 //
-//		std::map<std::string, Ape::UnitTextureWeakPtr> mGeometriesMouseTextures;
+//		std::map<std::string, ape::UnitTextureWeakPtr> mGeometriesMouseTextures;
 //
-//		std::map<std::string, Ape::BrowserWeakPtr> mBrowserMouseTextures;
+//		std::map<std::string, ape::BrowserWeakPtr> mBrowserMouseTextures;
 //
-//		Ape::UnitTextureWeakPtr mActiveMouseTexture;
+//		ape::UnitTextureWeakPtr mActiveMouseTexture;
 //
-//		Ape::BrowserWeakPtr mActiveBrowser;
+//		ape::BrowserWeakPtr mActiveBrowser;
 //
-//		Ape::BrowserWeakPtr mOverlayBrowser;
+//		ape::BrowserWeakPtr mOverlayBrowser;
 //
-//		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+//		ape::UnitTextureWeakPtr mOverlayMouseTexture;
 //
-//		Ape::ManualMaterialWeakPtr mOverlayMouseMaterial;
+//		ape::ManualMaterialWeakPtr mOverlayMouseMaterial;
 //
-//		Ape::RayGeometryWeakPtr mRayGeometry;
+//		ape::RayGeometryWeakPtr mRayGeometry;
 //
-//		Ape::NodeWeakPtr mRayOverlayNode;
+//		ape::NodeWeakPtr mRayOverlayNode;
 //
 //		clock_t mLastLeftClickTime;
 //
-//		Ape::Vector3 mUserNodePositionBeforeFullScreen;
+//		ape::Vector3 mUserNodePositionBeforeFullScreen;
 //
-//		Ape::Quaternion mUserNodeOrientationBeforeFullScreen;
+//		ape::Quaternion mUserNodeOrientationBeforeFullScreen;
 //
 //		Context mContext;
 //
@@ -203,15 +203,15 @@
 //
 //		void moveUserNode();
 //
-//		void saveUserNodePose(Ape::NodeSharedPtr userNode);
+//		void saveUserNodePose(ape::NodeSharedPtr userNode);
 //
-//		void animateToStoryElements(Ape::NodeSharedPtr userNode);
+//		void animateToStoryElements(ape::NodeSharedPtr userNode);
 //
-//		void jumpToStoryElement(Ape::NodeSharedPtr userNode);
+//		void jumpToStoryElement(ape::NodeSharedPtr userNode);
 //
 //		void manageBrowser(StoryElement storyElement);
 //
-//		void createMesh(std::string name, Ape::Vector3 position = Ape::Vector3(), Ape::Quaternion orientation = Ape::Quaternion());
+//		void createMesh(std::string name, ape::Vector3 position = ape::Vector3(), ape::Quaternion orientation = ape::Quaternion());
 //
 //	public:
 //		ApePresentationScenePlugin();
@@ -242,14 +242,14 @@
 //
 //	};
 //
-//	APE_PLUGIN_FUNC Ape::IPlugin* CreateApePresentationScenePlugin()
+//	APE_PLUGIN_FUNC ape::IPlugin* CreateApePresentationScenePlugin()
 //	{
-//		return new Ape::ApePresentationScenePlugin;
+//		return new ape::ApePresentationScenePlugin;
 //	}
 //
-//	APE_PLUGIN_FUNC void DestroyApePresentationScenePlugin(Ape::IPlugin *plugin)
+//	APE_PLUGIN_FUNC void DestroyApePresentationScenePlugin(ape::IPlugin *plugin)
 //	{
-//		delete (Ape::ApePresentationScenePlugin*)plugin;
+//		delete (ape::ApePresentationScenePlugin*)plugin;
 //	}
 //
 //	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

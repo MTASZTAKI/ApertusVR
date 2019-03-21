@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "plugin/ApePluginDefines.h"
 #include "ApePluginInstance.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGIN_INTERNAL InternalPluginManager
 	{

@@ -34,7 +34,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "datatypes/ApeVector4.h"
 
-namespace Ape
+namespace ape
 {
 	struct Matrix4
 	{
@@ -147,9 +147,9 @@ namespace Ape
 			return concatenate(m2);
 		}
 
-		Ape::Vector3 operator * (const Ape::Vector3& v) const
+		ape::Vector3 operator * (const ape::Vector3& v) const
 		{
-			Ape::Vector3 r;
+			ape::Vector3 r;
 
 			float fInvW = 1.0f / (m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3]);
 
@@ -160,9 +160,9 @@ namespace Ape
 			return r;
 		}
 
-		Ape::Vector4 operator * (const Ape::Vector4& v) const
+		ape::Vector4 operator * (const ape::Vector4& v) const
 		{
-			return Ape::Vector4(
+			return ape::Vector4(
 			           m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w,
 			           m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w,
 			           m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w,
@@ -253,9 +253,9 @@ namespace Ape
 			               m[0][3], m[1][3], m[2][3], m[3][3]);
 		}
 
-		void makeTransform(const Ape::Vector3& scale, const Ape::Quaternion& rotation, const Ape::Vector3& translate)
+		void makeTransform(const ape::Vector3& scale, const ape::Quaternion& rotation, const ape::Vector3& translate)
 		{
-			Ape::Matrix3 rot3x3;
+			ape::Matrix3 rot3x3;
 			rotation.ToRotationMatrix(rot3x3);
 
 			m[0][0] = scale.x * rot3x3[0][0]; m[0][1] = scale.y * rot3x3[0][1]; m[0][2] = scale.z * rot3x3[0][2]; m[0][3] = translate.x;
@@ -265,7 +265,7 @@ namespace Ape
 			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 		}
 
-		void extract3x3Matrix(Ape::Matrix3& m3x3) const
+		void extract3x3Matrix(ape::Matrix3& m3x3) const
 		{
 			m3x3.m[0][0] = m[0][0];
 			m3x3.m[0][1] = m[0][1];
@@ -278,20 +278,20 @@ namespace Ape
 			m3x3.m[2][2] = m[2][2];
 		}
 
-		void decomposition(Ape::Vector3& scale, Ape::Quaternion& rotation, Ape::Vector3& translate)
+		void decomposition(ape::Vector3& scale, ape::Quaternion& rotation, ape::Vector3& translate)
 		{
-			Ape::Matrix3 m3x3;
+			ape::Matrix3 m3x3;
 			extract3x3Matrix(m3x3);
 
-			Ape::Matrix3 matQ;
-			Ape::Vector3 vecU;
+			ape::Matrix3 matQ;
+			ape::Vector3 vecU;
 			m3x3.QDUDecomposition(matQ, scale, vecU);
 
-			rotation = Ape::Quaternion(matQ);
-			translate = Ape::Vector3(m[0][3], m[1][3], m[2][3]);
+			rotation = ape::Quaternion(matQ);
+			translate = ape::Vector3(m[0][3], m[1][3], m[2][3]);
 		}
 
-		Ape::Matrix4 inverse() const
+		ape::Matrix4 inverse() const
 		{
 			float m00 = m[0][0], m01 = m[0][1], m02 = m[0][2], m03 = m[0][3];
 			float m10 = m[1][0], m11 = m[1][1], m12 = m[1][2], m13 = m[1][3];

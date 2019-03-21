@@ -30,30 +30,30 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class ManualPassImpl : public Ape::IManualPass, public Ape::Replica
+	class ManualPassImpl : public ape::IManualPass, public ape::Replica
 	{
 	public:
 		ManualPassImpl(std::string name, bool isHostCreated);
 
 		~ManualPassImpl();
 
-		void setDiffuseColor(Ape::Color diffuse) override;
+		void setDiffuseColor(ape::Color diffuse) override;
 
-		void setSpecularColor(Ape::Color specular) override;
+		void setSpecularColor(ape::Color specular) override;
 
-		void setAmbientColor(Ape::Color ambient) override;
+		void setAmbientColor(ape::Color ambient) override;
 
-		void setEmissiveColor(Ape::Color emissive) override;
+		void setEmissiveColor(ape::Color emissive) override;
 
 		void setShininess(float shininess) override;
 
-		void setTexture(Ape::TextureWeakPtr texture) override;
+		void setTexture(ape::TextureWeakPtr texture) override;
 
-		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
+		void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) override;
 
-		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
+		void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -62,9 +62,9 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 	};
 }
 

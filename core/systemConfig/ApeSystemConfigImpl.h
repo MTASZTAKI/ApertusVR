@@ -36,7 +36,7 @@ SOFTWARE.*/
 
 #include "managers/ApeISystemConfig.h"
 
-namespace Ape
+namespace ape
 { 
 	class APE_SYSTEMCONFIG_DLL_EXPORT SystemConfigImpl : public ISystemConfig
 	{

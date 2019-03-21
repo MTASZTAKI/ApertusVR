@@ -37,7 +37,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeINode.h"
 #include "datatypes/ApeEntity.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_SCENEMANAGER_DLL_EXPORT ISceneManager : public Singleton<ISceneManager>
 	{
@@ -45,17 +45,17 @@ namespace Ape
 		virtual ~ISceneManager() {};
 
 	public:
-		virtual Ape::NodeWeakPtrNameMap getNodes() = 0;
+		virtual ape::NodeWeakPtrNameMap getNodes() = 0;
 
-		virtual Ape::NodeWeakPtr getNode(std::string name) = 0;
+		virtual ape::NodeWeakPtr getNode(std::string name) = 0;
 
-		virtual Ape::NodeWeakPtr createNode(std::string name) = 0;
+		virtual ape::NodeWeakPtr createNode(std::string name) = 0;
 
-		virtual Ape::EntityWeakPtrNameMap getEntities() = 0;
+		virtual ape::EntityWeakPtrNameMap getEntities() = 0;
 
-		virtual Ape::EntityWeakPtr getEntity(std::string name) = 0;
+		virtual ape::EntityWeakPtr getEntity(std::string name) = 0;
 
-		virtual Ape::EntityWeakPtr createEntity(std::string name, Ape::Entity::Type type) = 0;
+		virtual ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type) = 0;
 
 		virtual void deleteNode(std::string name) = 0;
 

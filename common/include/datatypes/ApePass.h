@@ -32,20 +32,20 @@ SOFTWARE.*/
 #include "datatypes/ApeTexture.h"
 #include "datatypes/ApeVector3.h"
 
-namespace Ape
+namespace ape
 {
 	struct PassGpuVector3Parameter
 	{
 		std::string name;
-		Ape::Vector3 value;
+		ape::Vector3 value;
 
 		PassGpuVector3Parameter()
 		{
-			this->value = Ape::Vector3();
+			this->value = ape::Vector3();
 			this->name = std::string();
 		}
 
-		PassGpuVector3Parameter(std::string name, Ape::Vector3 value)
+		PassGpuVector3Parameter(std::string name, ape::Vector3 value)
 		{
 			this->value = value;
 			this->name = name;
@@ -69,40 +69,40 @@ namespace Ape
 
 		virtual ~Pass() {};
 
-		Ape::Color mDiffuseColor;
+		ape::Color mDiffuseColor;
 
-		Ape::Color mSpecularColor;
+		ape::Color mSpecularColor;
 
-		Ape::Color mAmbientColor;
+		ape::Color mAmbientColor;
 
-		Ape::Color mEmissiveColor;
+		ape::Color mEmissiveColor;
 
 		float mShininess;
 
-		Ape::TextureWeakPtr mTexture;
+		ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
 
-		Ape::PassGpuParameters mPassGpuParameters;
+		ape::PassGpuParameters mPassGpuParameters;
 
-		Ape::Pass::SceneBlendingType mSceneBlendingType;
+		ape::Pass::SceneBlendingType mSceneBlendingType;
 
 	public:
-		Ape::Color getDiffuseColor() { return mDiffuseColor; };
+		ape::Color getDiffuseColor() { return mDiffuseColor; };
 
-		Ape::Color getSpecularColor() { return mSpecularColor; };
+		ape::Color getSpecularColor() { return mSpecularColor; };
 
-		Ape::Color getAmbientColor() { return mAmbientColor; };
+		ape::Color getAmbientColor() { return mAmbientColor; };
 
-		Ape::Color getEmissiveColor() { return mEmissiveColor; };
+		ape::Color getEmissiveColor() { return mEmissiveColor; };
 
 		float getShininess() { return mShininess; };
 
-		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
+		ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 
-		Ape::TextureWeakPtr getTexture() { return mTexture; };
+		ape::TextureWeakPtr getTexture() { return mTexture; };
 
-		Ape::PassGpuParameters getPassGpuParameters() { return mPassGpuParameters; };
+		ape::PassGpuParameters getPassGpuParameters() { return mPassGpuParameters; };
 	};
 }
 

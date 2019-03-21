@@ -47,17 +47,17 @@ SOFTWARE.*/
 #include "ApePointCloudImpl.h"
 #include "ApeFileTextureImpl.h"
 
-Ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
+ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
-	mpSceneManagerImpl = ((Ape::SceneManagerImpl*)Ape::ISceneManager::getSingletonPtr());
+	mpSceneManagerImpl = ((ape::SceneManagerImpl*)ape::ISceneManager::getSingletonPtr());
 }
 
-Ape::ReplicaManagerConnection::~ReplicaManagerConnection()
+ape::ReplicaManagerConnection::~ReplicaManagerConnection()
 {
 
 }
 
-RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3)
+RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3)
 {
 	//TODO_CORE how to guarantee the unqiue node and entity name in a mulitplayer session? This question belongs to all replicas (nodes and entites)? Or the plugins must consider this regulation?
 	RakNet::RakString objectType;
@@ -69,7 +69,7 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		allocationIdBitstream->Read(nodeName);
 		//APE_LOG_DEBUG("Received name: " << nodeName.C_String() << std::endl;
 		if (auto node = mpSceneManagerImpl->createNode(nodeName.C_String()).lock())
-			return ((Ape::NodeImpl*)node.get());
+			return ((ape::NodeImpl*)node.get());
 	}
 	else
 	{
@@ -78,113 +78,113 @@ RakNet::Replica3* Ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		//APE_LOG_DEBUG("Received name: " << entityName.C_String());
 		if (objectType == "FileGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_FILE).lock())
-				return ((Ape::FileGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_FILE).lock())
+				return ((ape::FileGeometryImpl*)entity.get());
 		}
 		else if (objectType == "PlaneGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_PLANE).lock())
-				return ((Ape::PlaneGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_PLANE).lock())
+				return ((ape::PlaneGeometryImpl*)entity.get());
 		}
 		else if (objectType == "BoxGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_BOX).lock())
-				return ((Ape::BoxGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_BOX).lock())
+				return ((ape::BoxGeometryImpl*)entity.get());
 		}
 		else if (objectType == "ConeGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_CONE).lock())
-				return ((Ape::ConeGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CONE).lock())
+				return ((ape::ConeGeometryImpl*)entity.get());
 		}
 		else if (objectType == "CylinderGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_CYLINDER).lock())
-				return ((Ape::CylinderGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CYLINDER).lock())
+				return ((ape::CylinderGeometryImpl*)entity.get());
 		}
 		else if (objectType == "SphereGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_SPHERE).lock())
-				return ((Ape::SphereGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_SPHERE).lock())
+				return ((ape::SphereGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TorusGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TORUS).lock())
-				return ((Ape::TorusGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TORUS).lock())
+				return ((ape::TorusGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TubeGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TUBE).lock())
-				return ((Ape::TubeGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TUBE).lock())
+				return ((ape::TubeGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TextGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_TEXT).lock())
-				return ((Ape::TextGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TEXT).lock())
+				return ((ape::TextGeometryImpl*)entity.get());
 		}
 		else if (objectType == "IndexedFaceSetGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDFACESET).lock())
-				return ((Ape::IndexedFaceSetGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDFACESET).lock())
+				return ((ape::IndexedFaceSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "IndexedLineSetGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::GEOMETRY_INDEXEDLINESET).lock())
-				return ((Ape::IndexedLineSetGeometryImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDLINESET).lock())
+				return ((ape::IndexedLineSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "FileMaterial")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::MATERIAL_FILE).lock())
-				return ((Ape::FileMaterialImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_FILE).lock())
+				return ((ape::FileMaterialImpl*)entity.get());
 		}
 		else if (objectType == "Light")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::LIGHT).lock())
-				return ((Ape::LightImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::LIGHT).lock())
+				return ((ape::LightImpl*)entity.get());
 		}
 		else if (objectType == "ManualMaterial")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::MATERIAL_MANUAL).lock())
-				return ((Ape::ManualMaterialImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_MANUAL).lock())
+				return ((ape::ManualMaterialImpl*)entity.get());
 		}
 		else if (objectType == "PbsPass")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::PASS_PBS).lock())
-				return ((Ape::PbsPassImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::PASS_PBS).lock())
+				return ((ape::PbsPassImpl*)entity.get());
 		}
 		else if (objectType == "ManualPass")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::PASS_MANUAL).lock())
-				return ((Ape::ManualPassImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::PASS_MANUAL).lock())
+				return ((ape::ManualPassImpl*)entity.get());
 		}
 		else if (objectType == "Browser")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::BROWSER).lock())
-				return ((Ape::BrowserImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::BROWSER).lock())
+				return ((ape::BrowserImpl*)entity.get());
 		}
 		else if (objectType == "UnitTexture")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_UNIT).lock())
-				return ((Ape::UnitTextureImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_UNIT).lock())
+				return ((ape::UnitTextureImpl*)entity.get());
 		}
 		else if (objectType == "FileTexture")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::TEXTURE_FILE).lock())
-				return ((Ape::FileTextureImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_FILE).lock())
+				return ((ape::FileTextureImpl*)entity.get());
 		}
 		else if (objectType == "Sky")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::SKY).lock())
-				return ((Ape::SkyImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::SKY).lock())
+				return ((ape::SkyImpl*)entity.get());
 		}
 		else if (objectType == "Water")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::WATER).lock())
-				return ((Ape::WaterImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::WATER).lock())
+				return ((ape::WaterImpl*)entity.get());
 		}
 		else if (objectType == "PointCloud")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), Ape::Entity::POINT_CLOUD).lock())
-				return ((Ape::PointCloudImpl*)entity.get());
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::POINT_CLOUD).lock())
+				return ((ape::PointCloudImpl*)entity.get());
 		}
 	}
 	

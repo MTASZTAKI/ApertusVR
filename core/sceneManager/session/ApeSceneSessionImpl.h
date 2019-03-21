@@ -67,9 +67,9 @@ SOFTWARE.*/
 #include "HTTPConnection2.h"
 #include "DS_List.h"
 
-namespace Ape
+namespace ape
 {
-	class APE_SCENEMANAGER_DLL_EXPORT SceneSessionImpl : public Ape::ISceneSession
+	class APE_SCENEMANAGER_DLL_EXPORT SceneSessionImpl : public ape::ISceneSession
 	{
 	private:
 		RakNet::RakPeerInterface* mpRakReplicaPeer;
@@ -102,23 +102,23 @@ namespace Ape
 
 		std::string mLobbyServerSessionName;
 
-		Ape::SceneSession::ParticipantType mParticipantType;
+		ape::SceneSession::ParticipantType mParticipantType;
 
 		bool mIsConnectedToNATServer;
 		
 		bool mIsHost;
 		
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IPluginManager* mpPluginManager;
+		ape::IPluginManager* mpPluginManager;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		std::vector<Ape::Replica*> mStreamReplicas;
+		std::vector<ape::Replica*> mStreamReplicas;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		bool mIsConnectedToHost;
 
@@ -145,13 +145,13 @@ namespace Ape
 
 		SceneSessionUniqueID getGUID();
 
-		Ape::SceneSession::ParticipantType getParticipantType() override;
+		ape::SceneSession::ParticipantType getParticipantType() override;
 
 		bool isHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
 
-		void setScene(Ape::ISceneManager* scene);
+		void setScene(ape::ISceneManager* scene);
 	};
 }
 

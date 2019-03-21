@@ -30,35 +30,35 @@ SOFTWARE.*/
 #include "datatypes/ApeDegree.h"
 #include "datatypes/ApeRadian.h"
 
-namespace Ape
+namespace ape
 {
 	struct HeadTrackerConfig
 	{
-		Ape::Vector3 translate;
+		ape::Vector3 translate;
 		
-		Ape::Quaternion rotation;
+		ape::Quaternion rotation;
 		
-		Ape::Vector3 scale;
+		ape::Vector3 scale;
 
-		Ape::Vector3 leftEyeOffset;
+		ape::Vector3 leftEyeOffset;
 
-		Ape::Vector3 rightEyeOffset;
+		ape::Vector3 rightEyeOffset;
 
 		HeadTrackerConfig()
 		{
-			this->translate = Ape::Vector3();
-			this->rotation = Ape::Quaternion();
-			this->scale = Ape::Vector3();
-			this->leftEyeOffset = Ape::Vector3();
-			this->rightEyeOffset = Ape::Vector3();
+			this->translate = ape::Vector3();
+			this->rotation = ape::Quaternion();
+			this->scale = ape::Vector3();
+			this->leftEyeOffset = ape::Vector3();
+			this->rightEyeOffset = ape::Vector3();
 		}
 
 		HeadTrackerConfig(
-			Ape::Vector3 translate,
-			Ape::Quaternion rotation,
-			Ape::Vector3 scale,
-			Ape::Vector3 leftEyeOffset,
-			Ape::Vector3 rightEyeOffset)
+			ape::Vector3 translate,
+			ape::Quaternion rotation,
+			ape::Vector3 scale,
+			ape::Vector3 leftEyeOffset,
+			ape::Vector3 rightEyeOffset)
 		{
 			this->translate = translate;
 			this->rotation = rotation;
@@ -72,59 +72,59 @@ namespace Ape
 	{
 		std::string name;
 
-		Ape::CameraWeakPtr cameraLeft;
+		ape::CameraWeakPtr cameraLeft;
 
-		Ape::CameraWeakPtr cameraRight;
+		ape::CameraWeakPtr cameraRight;
 
 		std::string cameraLeftName;
 
 		std::string cameraRightName;
 
-		Ape::Vector2 size;
+		ape::Vector2 size;
 		
-		Ape::Vector3 position;
+		ape::Vector3 position;
 		
-		Ape::Quaternion orientation;
+		ape::Quaternion orientation;
 
-		Ape::Vector3 bottomLeftCorner;
+		ape::Vector3 bottomLeftCorner;
 
-		Ape::Vector3 bottomRightCorner;
+		ape::Vector3 bottomRightCorner;
 
-		Ape::Vector3 topLeftCorner;
+		ape::Vector3 topLeftCorner;
 
-		Ape::Vector3 width;
+		ape::Vector3 width;
 
-		Ape::Vector3 height;
+		ape::Vector3 height;
 
-		Ape::Vector3 normal;
+		ape::Vector3 normal;
 
-		Ape::Matrix4 transform;
+		ape::Matrix4 transform;
 
 		HeadTrackerDisplayConfig()
 		{
-			this->size = Ape::Vector2();
-			this->position = Ape::Vector3();
-			this->orientation = Ape::Quaternion();
-			this->bottomLeftCorner = Ape::Vector3();
-			this->bottomRightCorner = Ape::Vector3();
-			this->topLeftCorner = Ape::Vector3();
-			this->width = Ape::Vector3();
-			this->height = Ape::Vector3();
-			this->normal = Ape::Vector3();
-			this->transform = Ape::Matrix4();
+			this->size = ape::Vector2();
+			this->position = ape::Vector3();
+			this->orientation = ape::Quaternion();
+			this->bottomLeftCorner = ape::Vector3();
+			this->bottomRightCorner = ape::Vector3();
+			this->topLeftCorner = ape::Vector3();
+			this->width = ape::Vector3();
+			this->height = ape::Vector3();
+			this->normal = ape::Vector3();
+			this->transform = ape::Matrix4();
 		}
 
 		HeadTrackerDisplayConfig(
-			Ape::Vector2 size,
-			Ape::Vector3 position,
-			Ape::Quaternion orientation,
-			Ape::Vector3 bottomLeftCorner,
-			Ape::Vector3 bottomRightCorner,
-			Ape::Vector3 topLeftCorner,
-			Ape::Vector3 width,
-			Ape::Vector3 height,
-			Ape::Vector3 normal,
-			Ape::Matrix4 transform)
+			ape::Vector2 size,
+			ape::Vector3 position,
+			ape::Quaternion orientation,
+			ape::Vector3 bottomLeftCorner,
+			ape::Vector3 bottomRightCorner,
+			ape::Vector3 topLeftCorner,
+			ape::Vector3 width,
+			ape::Vector3 height,
+			ape::Vector3 normal,
+			ape::Matrix4 transform)
 		{
 			this->size = size;
 			this->position = position;
@@ -139,7 +139,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::HeadTrackerDisplayConfig > HeadTrackerDisplayConfigList;
+	typedef std::vector < ape::HeadTrackerDisplayConfig > HeadTrackerDisplayConfigList;
 }
 
 #endif

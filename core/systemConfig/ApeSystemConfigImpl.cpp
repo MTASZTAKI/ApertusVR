@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 
-Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
+ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 {
 	struct stat info;
 	msSingleton = this;
@@ -157,27 +157,27 @@ Ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 	}
 }
 
-Ape::SystemConfigImpl::~SystemConfigImpl()
+ape::SystemConfigImpl::~SystemConfigImpl()
 {
 
 }
 
-Ape::SceneSessionConfig Ape::SystemConfigImpl::getSceneSessionConfig()
+ape::SceneSessionConfig ape::SystemConfigImpl::getSceneSessionConfig()
 {
 	return mSceneSessionConfig;
 }
 
-Ape::MainWindowConfig Ape::SystemConfigImpl::getMainWindowConfig()
+ape::MainWindowConfig ape::SystemConfigImpl::getMainWindowConfig()
 {
 	return mMainWindowConfig;
 }
 
-Ape::PluginManagerConfig Ape::SystemConfigImpl::getPluginManagerConfig()
+ape::PluginManagerConfig ape::SystemConfigImpl::getPluginManagerConfig()
 {
 	return mPluginManagerConfig;
 }
 
-std::string Ape::SystemConfigImpl::getFolderPath()
+std::string ape::SystemConfigImpl::getFolderPath()
 {
 	return mFolderPath;
 }

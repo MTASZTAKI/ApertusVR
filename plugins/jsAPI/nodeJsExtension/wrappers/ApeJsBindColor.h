@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
-using namespace Ape;
+using namespace ape;
 
 #ifdef NBIND_CLASS
 

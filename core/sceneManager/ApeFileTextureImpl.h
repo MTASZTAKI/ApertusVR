@@ -28,10 +28,10 @@ SOFTWARE.*/
 #include "ApeReplica.h"
 #include "managers/ApeISceneManager.h"
 
-namespace Ape
+namespace ape
 {
 
-	class FileTextureImpl : public Ape::IFileTexture, public Ape::Replica
+	class FileTextureImpl : public ape::IFileTexture, public ape::Replica
 	{
 	public:
 		FileTextureImpl(std::string name, bool isHostCreated);
@@ -53,13 +53,13 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpScene;
+		ape::ISceneManager* mpScene;
 
 		std::string mFileName;
 
-		Ape::IFileTexture::MapType mMapType;
+		ape::IFileTexture::MapType mMapType;
 	};
 }
 

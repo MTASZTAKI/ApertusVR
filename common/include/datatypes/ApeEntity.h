@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 
-namespace Ape
+namespace ape
 {
 	class Entity
 	{

@@ -60,20 +60,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApePolimiPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApePolimiPlugin : public Ape::IPlugin
+	class ApePolimiPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpScene;
+		ape::ISceneManager* mpScene;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApePolimiPlugin();
@@ -93,14 +93,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApePolimiPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApePolimiPlugin()
 	{
-		return new Ape::ApePolimiPlugin;
+		return new ape::ApePolimiPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApePolimiPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApePolimiPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApePolimiPlugin*)plugin;
+		delete (ape::ApePolimiPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

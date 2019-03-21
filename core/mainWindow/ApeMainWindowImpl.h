@@ -35,7 +35,7 @@ SOFTWARE.*/
 
 #include "system/ApeIMainWindow.h"
 
-namespace Ape
+namespace ape
 { 
 	class APE_MAINWINDOW_DLL_EXPORT MainWindowImpl : public IMainWindow
 	{

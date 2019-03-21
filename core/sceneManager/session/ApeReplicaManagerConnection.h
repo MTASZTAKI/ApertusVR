@@ -28,12 +28,12 @@ SOFTWARE.*/
 #include "ReplicaManager3.h"
 #include "ApeSceneManagerImpl.h"
 
-namespace Ape
+namespace ape
 {
 	class ReplicaManagerConnection : public RakNet::Connection_RM3
 	{
 	private:
-		Ape::SceneManagerImpl* mpSceneManagerImpl;
+		ape::SceneManagerImpl* mpSceneManagerImpl;
 		
 	public:
 		ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid);

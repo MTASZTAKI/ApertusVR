@@ -23,23 +23,23 @@ SOFTWARE.*/
 #include "ApeReplicaManager.h"
 #include "ApeReplicaManagerConnection.h"
 
-Ape::ReplicaManager::ReplicaManager()
+ape::ReplicaManager::ReplicaManager()
 {
 
 }
 
-Ape::ReplicaManager::~ReplicaManager()
+ape::ReplicaManager::~ReplicaManager()
 {
 
 }
 
-void Ape::ReplicaManager::DeallocConnection(RakNet::Connection_RM3 *connection) const
+void ape::ReplicaManager::DeallocConnection(RakNet::Connection_RM3 *connection) const
 {
 	delete connection;
 }
 
-RakNet::Connection_RM3* Ape::ReplicaManager::AllocConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID rakNetGUID) const
+RakNet::Connection_RM3* ape::ReplicaManager::AllocConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID rakNetGUID) const
 {
-	return new Ape::ReplicaManagerConnection(systemAddress, rakNetGUID);
+	return new ape::ReplicaManagerConnection(systemAddress, rakNetGUID);
 }
 

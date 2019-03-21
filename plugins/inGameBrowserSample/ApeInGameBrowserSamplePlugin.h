@@ -37,12 +37,12 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeInGameBrowserSamplePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeInGameBrowserSamplePlugin : public Ape::IPlugin
+	class ApeInGameBrowserSamplePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
 		ApeInGameBrowserSamplePlugin();
@@ -62,14 +62,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeInGameBrowserSamplePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeInGameBrowserSamplePlugin()
 	{
-		return new Ape::ApeInGameBrowserSamplePlugin;
+		return new ape::ApeInGameBrowserSamplePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeInGameBrowserSamplePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeInGameBrowserSamplePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeInGameBrowserSamplePlugin*)plugin;
+		delete (ape::ApeInGameBrowserSamplePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -26,6 +26,6 @@ SOFTWARE.*/
 
 void ApeRegisterPlugin(const char *type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb)
 {
-	Ape::PluginFactory::RegisterPlugin(type, init_cb, free_cb);
+	ape::PluginFactory::RegisterPlugin(type, init_cb, free_cb);
 }
 

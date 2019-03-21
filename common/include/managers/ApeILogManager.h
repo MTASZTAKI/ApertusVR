@@ -83,7 +83,7 @@ SOFTWARE.*/
 #define APE_LOG_FUNC_WIDTH 45
 #define APE_LOG_FILL(WIDTH) std::setfill(' ') << std::setw(WIDTH)
 
-#define APE_LOG_WRITE(LEVEL, SS) { std::stringstream superStringStream; superStringStream << SS << APE_LOG_LINE_END; Ape::ILogManager::getSingletonPtr()->log(superStringStream, LEVEL); }
+#define APE_LOG_WRITE(LEVEL, SS) { std::stringstream superStringStream; superStringStream << SS << APE_LOG_LINE_END; ape::ILogManager::getSingletonPtr()->log(superStringStream, LEVEL); }
 
 #ifdef LOG
 	#undef LOG
@@ -137,7 +137,7 @@ SOFTWARE.*/
 	#define APE_LOG_ERROR(SS) do { } while(0);
 #endif
 
-namespace Ape
+namespace ape
 {
 	class APE_LOGMANAGER_DLL_EXPORT ILogManager : public Singleton<ILogManager>
 	{

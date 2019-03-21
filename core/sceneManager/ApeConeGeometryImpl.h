@@ -28,24 +28,24 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class ConeGeometryImpl : public Ape::IConeGeometry, public Ape::Replica
+	class ConeGeometryImpl : public ape::IConeGeometry, public ape::Replica
 	{
 	public:
 		ConeGeometryImpl(std::string name, bool isHostCreated);
 
 		~ConeGeometryImpl();
 
-		void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg) override;
+		void setParameters(float radius, float height, float tile, ape::Vector2 numSeg) override;
 
-		Ape::GeometryConeParameters getParameters() override;
+		ape::GeometryConeParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material) override;
+		void setMaterial(ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial() override;
+		ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,13 +54,13 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryConeParameters mParameters;
+		ape::GeometryConeParameters mParameters;
 
-		Ape::MaterialWeakPtr mMaterial;
+		ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
 	};

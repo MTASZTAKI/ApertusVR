@@ -50,19 +50,19 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeAssimpAssetLoaderPlugin"
 
-namespace Ape
+namespace ape
 {
 	struct AssetConfig
 	{
 		std::string file;
-		Ape::Vector3 scale;
-		Ape::Vector3 position;
-		Ape::Quaternion orientation;
+		ape::Vector3 scale;
+		ape::Vector3 position;
+		ape::Quaternion orientation;
 		bool mergeAndExportMeshes;
 		bool regenerateNormals;
 		std::string rootNodeName;
 	};
-	class AssimpAssetLoaderPlugin : public Ape::IPlugin
+	class AssimpAssetLoaderPlugin : public ape::IPlugin
 	{
 	public:
 		AssimpAssetLoaderPlugin();
@@ -83,11 +83,11 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
 		Assimp::Importer* mpAssimpImporter;
 
@@ -101,7 +101,7 @@ namespace Ape
 
 		std::mutex mMutex;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 
@@ -112,14 +112,14 @@ namespace Ape
 		void loadScene(const aiScene* assimpScene, int ID);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateAssimpAssetLoaderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateAssimpAssetLoaderPlugin()
 	{
-		return new Ape::AssimpAssetLoaderPlugin;
+		return new ape::AssimpAssetLoaderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyAssimpAssetLoaderPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyAssimpAssetLoaderPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::AssimpAssetLoaderPlugin*)plugin;
+		delete (ape::AssimpAssetLoaderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

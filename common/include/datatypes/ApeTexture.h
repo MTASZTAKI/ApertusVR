@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include "datatypes/ApeEntity.h"
 #include "datatypes/ApePass.h"
 
-namespace Ape
+namespace ape
 {
 	class Texture : public Entity
 	{

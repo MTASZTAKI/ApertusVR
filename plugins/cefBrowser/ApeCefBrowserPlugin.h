@@ -56,9 +56,9 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeCefBrowserPlugin"
 
-namespace Ape
+namespace ape
 {
-	class CefBrowserPlugin : public Ape::IPlugin
+	class CefBrowserPlugin : public ape::IPlugin
 	{
 	public:
 		CefBrowserPlugin();
@@ -79,49 +79,49 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
+		ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
 
-		Ape::CefLifeSpanHandlerImpl* mpApeCefLifeSpanHandlerImpl;
+		ape::CefLifeSpanHandlerImpl* mpApeCefLifeSpanHandlerImpl;
 
-		Ape::CefKeyboardHandlerImpl* mpApeCefKeyboardHandlerImpl;
+		ape::CefKeyboardHandlerImpl* mpApeCefKeyboardHandlerImpl;
 		
 		int mBrowserCounter;
 
-		Ape::NodeWeakPtr mRayOverlayNode;
+		ape::NodeWeakPtr mRayOverlayNode;
 
-		CefRefPtr<Ape::CefClientImpl> mApeCefClientImpl;
+		CefRefPtr<ape::CefClientImpl> mApeCefClientImpl;
 
 		bool mCefIsInintialzed;
 
 		CefBrowserSettings mBrowserSettings;
 
-		Ape::DoubleQueue<Event> mEventDoubleQueue;
+		ape::DoubleQueue<Event> mEventDoubleQueue;
 
 		std::map<std::string, int> mBrowserIDNames;
 
 		void processEventDoubleQueue();
 
-		void processEvent(Ape::Event event);
+		void processEvent(ape::Event event);
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		void createBrowser(Ape::BrowserSharedPtr browser);
+		void createBrowser(ape::BrowserSharedPtr browser);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateCefBrowserPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateCefBrowserPlugin()
 	{
-		return new Ape::CefBrowserPlugin;
+		return new ape::CefBrowserPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyCefBrowserPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyCefBrowserPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::CefBrowserPlugin*)plugin;
+		delete (ape::CefBrowserPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

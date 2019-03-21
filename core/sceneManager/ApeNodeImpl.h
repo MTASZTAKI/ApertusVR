@@ -28,9 +28,9 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class NodeImpl : public Ape::INode, public Ape::Replica
+	class NodeImpl : public ape::INode, public ape::Replica
 	{
 	public:
 
@@ -56,19 +56,19 @@ namespace Ape
 
 		bool isFixedYaw() override;
 		
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		ape::NodeWeakPtr getParentNode() override;
 
-		void addChildNode(Ape::NodeWeakPtr node);
+		void addChildNode(ape::NodeWeakPtr node);
 
-		void removeChildNode(Ape::NodeWeakPtr childNode);
+		void removeChildNode(ape::NodeWeakPtr childNode);
 
-		std::vector<Ape::NodeWeakPtr> getChildNodes() override;
+		std::vector<ape::NodeWeakPtr> getChildNodes() override;
 
 		bool hasChildNode() override;
 
-		bool isChildNode(Ape::NodeWeakPtr childNode) override;
+		bool isChildNode(ape::NodeWeakPtr childNode) override;
 
 		void setPosition(Vector3 position) override;
 		
@@ -88,9 +88,9 @@ namespace Ape
 
 		void setInitalState() override;
 		
-		void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) override;
+		void translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace) override;
 		
-		void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) override;
+		void rotate(Radian angle, Vector3 axis, ape::Node::TransformationSpace nodeTransformSpace) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 		
@@ -100,23 +100,23 @@ namespace Ape
 
 	private:
 
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		std::string mName;
 
-		Ape::NodeWeakPtr mParentNode;
+		ape::NodeWeakPtr mParentNode;
 
-		std::vector<Ape::NodeWeakPtr> mChildNodes;
+		std::vector<ape::NodeWeakPtr> mChildNodes;
 
 		std::string mParentNodeName;
 
-		Ape::Vector3 mPosition;
+		ape::Vector3 mPosition;
 
-		Ape::Quaternion mOrientation;
+		ape::Quaternion mOrientation;
 
-		Ape::Vector3 mScale;
+		ape::Vector3 mScale;
 
 		bool mChildrenVisibility;
 

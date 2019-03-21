@@ -31,14 +31,14 @@ SOFTWARE.*/
 #include "Ape.h"
 #include "datatypes/ApeEntity.h"
 
-namespace Ape
+namespace ape
 {
 	typedef std::vector<float> PointCloudPoints;
 	typedef std::vector<float> PointCloudColors;
 	struct PointCloudSetParameters
 	{
-		Ape::PointCloudPoints points;
-		Ape::PointCloudColors colors;
+		ape::PointCloudPoints points;
+		ape::PointCloudColors colors;
 		float boundigSphereRadius;
 		float pointSize;
 		bool pointScale;
@@ -48,9 +48,9 @@ namespace Ape
 
 		PointCloudSetParameters()
 		{
-			this->points = Ape::PointCloudPoints();
+			this->points = ape::PointCloudPoints();
 			this->points.resize(0);
-			this->colors = Ape::PointCloudColors();
+			this->colors = ape::PointCloudColors();
 			this->colors.resize(0);
 			this->boundigSphereRadius = 0.0f;
 			this->pointSize = 0.0f;
@@ -60,7 +60,7 @@ namespace Ape
 			this->scaleFactor = 0.0f;
 		}
 
-		PointCloudSetParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+		PointCloudSetParameters(ape::PointCloudPoints points, ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
 			float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 		{
 			this->points = points;
@@ -101,22 +101,22 @@ namespace Ape
 		virtual ~IPointCloud() {};
 
 	public:
-		virtual void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+		virtual void setParameters(ape::PointCloudPoints points, ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
 			float pointScaleOffset, float unitScaleDistance, float scaleFactor) = 0;
 
-		virtual Ape::PointCloudSetParameters getParameters() = 0;
+		virtual ape::PointCloudSetParameters getParameters() = 0;
 
-		virtual void updatePoints(Ape::PointCloudPoints points) = 0;
+		virtual void updatePoints(ape::PointCloudPoints points) = 0;
 
-		virtual void updateColors(Ape::PointCloudColors colors) = 0;
+		virtual void updateColors(ape::PointCloudColors colors) = 0;
 
-		virtual Ape::PointCloudPoints getCurrentPoints() = 0;
+		virtual ape::PointCloudPoints getCurrentPoints() = 0;
 
-		virtual Ape::PointCloudColors getCurrentColors() = 0;
+		virtual ape::PointCloudColors getCurrentColors() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+		virtual ape::NodeWeakPtr getParentNode() = 0;
 	};
 }
 

@@ -46,22 +46,22 @@ SOFTWARE.*/
 #include "ApeInternalPluginManager.h"
 #include "ApePluginFactory.h"
 
-namespace Ape
+namespace ape
 { 
 	class APE_PLUGINMANAGER_DLL_EXPORT PluginManagerImpl : public IPluginManager
 	{	
 	private:
 		std::vector<std::thread> mPluginThreadVector;
 
-		std::vector<Ape::IPlugin*> mPluginVector;
+		std::vector<ape::IPlugin*> mPluginVector;
 		
 		InternalPluginManager* mpInternalPluginManager;
 
 		void CreatePlugin(std::string pluginname);
 
-		void InitAndRunPlugin(Ape::IPlugin* plugin);
+		void InitAndRunPlugin(ape::IPlugin* plugin);
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
 		unsigned int mPluginCount;
 

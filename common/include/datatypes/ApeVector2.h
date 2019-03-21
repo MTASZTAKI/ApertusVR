@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <vector>
 
-namespace Ape
+namespace ape
 {
 	struct Vector2
 	{

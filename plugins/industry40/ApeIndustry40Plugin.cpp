@@ -1,31 +1,31 @@
 #include "ApeIndustry40Plugin.h"
 
-Ape::ApeIndustry40Plugin::ApeIndustry40Plugin()
+ape::ApeIndustry40Plugin::ApeIndustry40Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpSceneMakerMacro = new Ape::SceneMakerMacro();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
+ape::ApeIndustry40Plugin::~ApeIndustry40Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::eventCallBack(const Ape::Event& event)
+void ape::ApeIndustry40Plugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::ApeIndustry40Plugin::Init()
+void ape::ApeIndustry40Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -34,7 +34,7 @@ void Ape::ApeIndustry40Plugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::Run()
+void ape::ApeIndustry40Plugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -47,7 +47,7 @@ void Ape::ApeIndustry40Plugin::Run()
 			std::vector<double> randomPoints;
 			for (int i = 0; i < 9; i++)
 				randomPoints.push_back(distInt(gen));
-			Ape::PointCloudPoints points = {
+			ape::PointCloudPoints points = {
 				(float)randomPoints[0], 0, 0,
 				(float)randomPoints[1], 0, 0,
 				(float)randomPoints[2], 0, 0,
@@ -62,7 +62,7 @@ void Ape::ApeIndustry40Plugin::Run()
 			std::vector<double> randomRedColors;
 			for (int i = 0; i < 9; i++)
 				randomRedColors.push_back(distDouble(gen));
-			Ape::PointCloudColors colors = {
+			ape::PointCloudColors colors = {
 				(float)randomRedColors[0], 0, 0,
 				(float)randomRedColors[1], 0, 0,
 				(float)randomRedColors[2], 0, 0,
@@ -81,25 +81,25 @@ void Ape::ApeIndustry40Plugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::Step()
+void ape::ApeIndustry40Plugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::Stop()
+void ape::ApeIndustry40Plugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::Suspend()
+void ape::ApeIndustry40Plugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeIndustry40Plugin::Restart()
+void ape::ApeIndustry40Plugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

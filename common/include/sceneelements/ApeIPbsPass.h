@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "datatypes/ApePass.h"
 #include "datatypes/ApeTexture.h"
 
-namespace Ape
+namespace ape
 {
 	class IPbsPass : public Pass
 	{
@@ -41,21 +41,21 @@ namespace Ape
 		virtual ~IPbsPass() {};
 
 	public:
-		virtual void setAlbedo(Ape::Color albedo) = 0;
+		virtual void setAlbedo(ape::Color albedo) = 0;
 
 		virtual void setRoughness(float roughness) = 0;
 
 		virtual void setLightRoughnessOffset(float lightRoughnessOffset) = 0;
 
-		virtual void setF0(Ape::Color f0) = 0;
+		virtual void setF0(ape::Color f0) = 0;
 
-		virtual Ape::Color getAlbedo() = 0;
+		virtual ape::Color getAlbedo() = 0;
 
 		virtual float getRoughness() = 0;
 
 		virtual float getLightRoughnessOffset() = 0;
 
-		virtual Ape::Color getF0() = 0;
+		virtual ape::Color getF0() = 0;
 
 		virtual void setDiffuseColor(Color diffuse) = 0;
 

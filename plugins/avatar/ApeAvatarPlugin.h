@@ -44,22 +44,22 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeAvatarPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeAvatarPlugin : public Ape::IPlugin
+	class ApeAvatarPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mLeftHandNode;
+		ape::NodeWeakPtr mLeftHandNode;
 
-		Ape::NodeWeakPtr mRightHandNode;
+		ape::NodeWeakPtr mRightHandNode;
 
 	public:
 		ApeAvatarPlugin();
@@ -79,14 +79,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeAvatarPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeAvatarPlugin()
 	{
-		return new Ape::ApeAvatarPlugin;
+		return new ape::ApeAvatarPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeAvatarPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeAvatarPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeAvatarPlugin*)plugin;
+		delete (ape::ApeAvatarPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -22,76 +22,76 @@ SOFTWARE.*/
 
 #include "ApeUnitTextureImpl.h"
 
-Ape::UnitTextureImpl::UnitTextureImpl(std::string name, bool isHostCreated) : Ape::IUnitTexture(name), Ape::Replica("UnitTexture", isHostCreated)
+ape::UnitTextureImpl::UnitTextureImpl(std::string name, bool isHostCreated) : ape::IUnitTexture(name), ape::Replica("UnitTexture", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mScroll = Ape::Vector2();
-	mAddressingMode = Ape::Texture::AddressingMode::AM_NONE;
-	mFiltering = Ape::IUnitTexture::Filtering();
-	mParameters = Ape::IUnitTexture::Parameters();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mScroll = ape::Vector2();
+	mAddressingMode = ape::Texture::AddressingMode::AM_NONE;
+	mFiltering = ape::IUnitTexture::Filtering();
+	mParameters = ape::IUnitTexture::Parameters();
 }
 
-Ape::UnitTextureImpl::~UnitTextureImpl()
+ape::UnitTextureImpl::~UnitTextureImpl()
 {
 	
 }
 
-void Ape::UnitTextureImpl::setParameters(Ape::MaterialWeakPtr material, std::string fileName)
+void ape::UnitTextureImpl::setParameters(ape::MaterialWeakPtr material, std::string fileName)
 {
 	mParameters.material = material;
 	mParameters.fileName = fileName;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_PARAMETERS));
 }
 
-Ape::IUnitTexture::Parameters Ape::UnitTextureImpl::getParameters()
+ape::IUnitTexture::Parameters ape::UnitTextureImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::UnitTextureImpl::setTextureScroll(float u, float v)
+void ape::UnitTextureImpl::setTextureScroll(float u, float v)
 {
 	mScroll.x = u;
 	mScroll.y = v;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_SCROLL));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_SCROLL));
 }
 
-Ape::Vector2 Ape::UnitTextureImpl::getTextureScroll()
+ape::Vector2 ape::UnitTextureImpl::getTextureScroll()
 {
 	return mScroll;
 }
 
-void Ape::UnitTextureImpl::setTextureAddressingMode(Ape::Texture::AddressingMode addressingMode)
+void ape::UnitTextureImpl::setTextureAddressingMode(ape::Texture::AddressingMode addressingMode)
 {
 	mAddressingMode = addressingMode;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_ADDRESSING));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_ADDRESSING));
 }
 
-Ape::Texture::AddressingMode Ape::UnitTextureImpl::getTextureAddressingMode()
+ape::Texture::AddressingMode ape::UnitTextureImpl::getTextureAddressingMode()
 {
 	return mAddressingMode;
 }
 
-void Ape::UnitTextureImpl::setTextureFiltering(Ape::Texture::Filtering minFilter, Ape::Texture::Filtering magFilter, Ape::Texture::Filtering mipFilter)
+void ape::UnitTextureImpl::setTextureFiltering(ape::Texture::Filtering minFilter, ape::Texture::Filtering magFilter, ape::Texture::Filtering mipFilter)
 {
 	mFiltering.minFilter = minFilter;
 	mFiltering.magFilter = magFilter;
 	mFiltering.mipFilter = mipFilter;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_FILTERING));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_FILTERING));
 }
 
-Ape::IUnitTexture::Filtering Ape::UnitTextureImpl::getTextureFiltering()
+ape::IUnitTexture::Filtering ape::UnitTextureImpl::getTextureFiltering()
 {
 	return mFiltering;
 }
 
-void Ape::UnitTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::UnitTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::UnitTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::UnitTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -104,18 +104,18 @@ RakNet::RM3SerializationResult Ape::UnitTextureImpl::Serialize(RakNet::Serialize
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::UnitTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::UnitTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_PARAMETERS));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScroll))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_SCROLL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_SCROLL));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAddressingMode))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_ADDRESSING));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_ADDRESSING));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mFiltering))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_UNIT_FILTERING));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_FILTERING));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

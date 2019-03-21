@@ -58,7 +58,7 @@ SOFTWARE.*/
 
 //#define operatortest
 
-namespace Ape
+namespace ape
 {
 	enum ScanningState {
 		WAITING,
@@ -66,7 +66,7 @@ namespace Ape
 		SECOND_DONE
 	};
 
-	class KinectPlugin : public Ape::IPlugin
+	class KinectPlugin : public ape::IPlugin
 	{
 		static const int        cDepthWidth = 512;
 		static const int        cDepthHeight = 424;
@@ -113,13 +113,13 @@ namespace Ape
 
 	private:
 		BOOLEAN Operatorfound[BODY_COUNT] = { false,false,false,false,false,false };
-		Ape::NodeWeakPtr RootNode;
-		std::vector<Ape::NodeWeakPtr> _0Body;
-		std::vector<Ape::NodeWeakPtr> _1Body;
-		std::vector<Ape::NodeWeakPtr> _2Body;
-		std::vector<Ape::NodeWeakPtr> _3Body;
-		std::vector<Ape::NodeWeakPtr> _4Body;
-		std::vector<Ape::NodeWeakPtr> _5Body;
+		ape::NodeWeakPtr RootNode;
+		std::vector<ape::NodeWeakPtr> _0Body;
+		std::vector<ape::NodeWeakPtr> _1Body;
+		std::vector<ape::NodeWeakPtr> _2Body;
+		std::vector<ape::NodeWeakPtr> _3Body;
+		std::vector<ape::NodeWeakPtr> _4Body;
+		std::vector<ape::NodeWeakPtr> _5Body;
 
 		float body[cBodyCount][JointType_Count][3];//stores the detected joint coordinates
 
@@ -137,34 +137,34 @@ namespace Ape
 		bool pointsGenerated = false;
 		double pointratio = 1;
 
-		Ape::PointCloudPoints KPts;//stores the actual point coordinates
-		Ape::PointCloudColors KCol;//stores the actual point colors
+		ape::PointCloudPoints KPts;//stores the actual point coordinates
+		ape::PointCloudColors KCol;//stores the actual point colors
 
-		Ape::PointCloudPoints OperatorPoints;
-		Ape::PointCloudColors OperatorColors;
+		ape::PointCloudPoints OperatorPoints;
+		ape::PointCloudColors OperatorColors;
 
-		Ape::PointCloudPoints ScannedPoints;
-		Ape::PointCloudColors ScannedColors;
+		ape::PointCloudPoints ScannedPoints;
+		ape::PointCloudColors ScannedColors;
 
 		float KPos[3] = { 0.0, 0.0, 0.0 };//Point cloud origin position
 		float KRot[4] = { 0.0, 0.0, 0.0, 0.0 };//Point cloud origin quaternion rotaton
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mClothNode;
+		ape::NodeWeakPtr mClothNode;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::PointCloudWeakPtr mPointCloud;
-		Ape::PointCloudWeakPtr mOperatorPointCloud;
+		ape::PointCloudWeakPtr mPointCloud;
+		ape::PointCloudWeakPtr mOperatorPointCloud;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		bool _1Detected = false;
 		bool operatorPointsGenerated = false;
@@ -189,14 +189,14 @@ namespace Ape
 		Vector3 anchor;
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateKinectPlugin()
 	{
-		return new Ape::KinectPlugin;
+		return new ape::KinectPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyKinectPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyKinectPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::KinectPlugin*)plugin;
+		delete (ape::KinectPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

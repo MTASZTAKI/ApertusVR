@@ -39,7 +39,7 @@ SOFTWARE.*/
 #include "managers/ApeISceneSession.h"
 #include "utils/ApeSingleton.h"
 
-namespace Ape
+namespace ape
 {
 	struct PluginManagerConfig
 	{

@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <string>
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	struct CurlData 
 	{

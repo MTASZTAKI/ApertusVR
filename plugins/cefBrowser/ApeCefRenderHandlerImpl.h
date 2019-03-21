@@ -32,16 +32,16 @@ SOFTWARE.*/
 #include "sceneelements/ApeIManualTexture.h"
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	class CefRenderHandlerImpl : public CefRenderHandler
 	{
 	private:
-		std::map<int, Ape::ManualTextureWeakPtr> mBrowserIDTextures;
+		std::map<int, ape::ManualTextureWeakPtr> mBrowserIDTextures;
 
 		std::map<int, CefRefPtr<CefBrowser>> mBrowsers;
 
-		Ape::Vector2 mMouseCurrentPosition;
+		ape::Vector2 mMouseCurrentPosition;
 
 	public:
 		CefRenderHandlerImpl();
@@ -52,7 +52,7 @@ namespace Ape
 
 		void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height) override;
 
-		void addTexture(int browserID, Ape::ManualTextureWeakPtr texture);
+		void addTexture(int browserID, ape::ManualTextureWeakPtr texture);
 
 		void setZoomLevel(int browserID, int zoomLevel);
 

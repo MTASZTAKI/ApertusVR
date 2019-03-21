@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "datatypes/ApeMaterial.h"
 #include "datatypes/ApeVector3.h"
 
-namespace Ape
+namespace ape
 {
 	typedef std::vector<float> GeometryCoordinates;
 
@@ -48,20 +48,20 @@ namespace Ape
 	{
 	protected:
 		Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType)
-			, mParentNode(Ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
+			, mParentNode(ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
 
 		virtual ~Geometry() {};
 
-		Ape::NodeWeakPtr mParentNode;
+		ape::NodeWeakPtr mParentNode;
 
 		std::string mParentNodeName;
 
 		bool mIntersectingEnabled;
 
-		std::vector<Ape::EntityWeakPtr> mIntersections;
+		std::vector<ape::EntityWeakPtr> mIntersections;
 
 	public:
-		Ape::NodeWeakPtr getParentNode()
+		ape::NodeWeakPtr getParentNode()
 		{
 			return mParentNode;
 		};
@@ -71,7 +71,7 @@ namespace Ape
 			return mIntersectingEnabled;
 		};
 
-		std::vector<Ape::EntityWeakPtr> getIntersections()
+		std::vector<ape::EntityWeakPtr> getIntersections()
 		{
 			return mIntersections;
 		};

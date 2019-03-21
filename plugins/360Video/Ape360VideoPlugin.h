@@ -37,12 +37,12 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "Ape360VideoPlugin"
 
-namespace Ape
+namespace ape
 {
-	class Ape360VideoPlugin : public Ape::IPlugin
+	class Ape360VideoPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
 		Ape360VideoPlugin();
@@ -62,14 +62,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360VideoPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApe360VideoPlugin()
 	{
-		return new Ape::Ape360VideoPlugin;
+		return new ape::Ape360VideoPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApe360VideoPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApe360VideoPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::Ape360VideoPlugin*)plugin;
+		delete (ape::Ape360VideoPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -32,15 +32,15 @@ SOFTWARE.*/
 #include "ApeSceneSessionImpl.h"
 #include "ApeSystemConfigImpl.h"
 
-Ape::PluginManagerImpl* gpPluginManagerImpl;
-Ape::EventManagerImpl* gpEventManagerImpl;
-Ape::LogManagerImpl* gpLogManagerImpl;
-Ape::SceneManagerImpl* gpSceneManagerImpl;
-Ape::SceneSessionImpl* gpSceneSessionImpl;
-Ape::SystemConfigImpl* gpSystemConfigImpl;
-Ape::MainWindowImpl* gpMainWindowImpl;
+ape::PluginManagerImpl* gpPluginManagerImpl;
+ape::EventManagerImpl* gpEventManagerImpl;
+ape::LogManagerImpl* gpLogManagerImpl;
+ape::SceneManagerImpl* gpSceneManagerImpl;
+ape::SceneSessionImpl* gpSceneSessionImpl;
+ape::SystemConfigImpl* gpSystemConfigImpl;
+ape::MainWindowImpl* gpMainWindowImpl;
 
-void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
+void ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
 	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
@@ -60,7 +60,7 @@ void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
 		gpPluginManagerImpl->detachPluginThreads();
 }
 
-void Ape::System::Stop()
+void ape::System::Stop()
 {
 	delete gpEventManagerImpl;
 	delete gpSceneManagerImpl;

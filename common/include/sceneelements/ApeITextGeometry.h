@@ -29,7 +29,7 @@ SOFTWARE.*/
 #include "datatypes/ApeGeometry.h"
 #include "datatypes/ApeVector3.h"
 
-namespace Ape
+namespace ape
 {
 	class ITextGeometry : public Geometry
 	{
@@ -49,7 +49,7 @@ namespace Ape
 
 		virtual void setVisible(bool enabled) = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
 		virtual void showOnTop(bool show) = 0;
 

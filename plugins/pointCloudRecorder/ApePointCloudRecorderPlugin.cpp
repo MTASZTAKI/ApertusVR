@@ -1,29 +1,29 @@
 #include <iostream>
 #include "ApePointCloudRecorderPlugin.h"
 
-Ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
+ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mPointCloud = Ape::PointCloudWeakPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mPointCloud = ape::PointCloudWeakPtr();
 	mRecordedPointCloudName = "";
 	mIsRecorder = false;
 	mIsPlayer = false;
 	mIsLooping = false;
 	mFileName = "";
-	mPointCloudPosition = Ape::Vector3();
-	mPointCloudOrinetation = Ape::Quaternion();
-	mPointCloudNode = Ape::NodeWeakPtr();
+	mPointCloudPosition = ape::Vector3();
+	mPointCloudOrinetation = ape::Quaternion();
+	mPointCloudNode = ape::NodeWeakPtr();
 	mPointCloudSize = 0;
-	mCurrentPoints = Ape::PointCloudPoints();
-	mCurrentColors = Ape::PointCloudColors();
+	mCurrentPoints = ape::PointCloudPoints();
+	mCurrentColors = ape::PointCloudColors();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
+ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	if (mFileStreamOut.is_open())
@@ -33,34 +33,34 @@ Ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::readFrame()
+void ape::ApePointCloudRecorderPlugin::readFrame()
 {
 	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
 	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
 }
 
-void Ape::ApePointCloudRecorderPlugin::writeFrame()
+void ape::ApePointCloudRecorderPlugin::writeFrame()
 {
 	//TODO_ApePointCloudRecorderPlugin maybe write timestamp for timing?
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
 }
 
-void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
+void ape::ApePointCloudRecorderPlugin::eventCallBack(const ape::Event& event)
 {
 	if (mIsRecorder)
 	{
-		if (event.type == Ape::Event::Type::POINT_CLOUD_CREATE)
+		if (event.type == ape::Event::Type::POINT_CLOUD_CREATE)
 		{
 			if (event.subjectName == mRecordedPointCloudName)
 			{
 				if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 				{
-					mPointCloud = std::static_pointer_cast<Ape::IPointCloud>(entity);
+					mPointCloud = std::static_pointer_cast<ape::IPointCloud>(entity);
 				}
 			}
 		}
-		else if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+		else if (event.type == ape::Event::Type::POINT_CLOUD_PARAMETERS)
 		{
 			if (event.subjectName == mRecordedPointCloudName)
 			{
@@ -75,7 +75,7 @@ void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
 				}
 			}
 		}
-		else if (event.type == Ape::Event::Type::POINT_CLOUD_COLORS)
+		else if (event.type == ape::Event::Type::POINT_CLOUD_COLORS)
 		{
 			if (event.subjectName == mRecordedPointCloudName)
 			{
@@ -90,7 +90,7 @@ void Ape::ApePointCloudRecorderPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void Ape::ApePointCloudRecorderPlugin::Init()
+void ape::ApePointCloudRecorderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mRecordedPointCloudName = "pointCloud_Kinect";
@@ -99,8 +99,8 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 	mIsLooping = true;
 	mFileName = "pointCloud.bin";
 	//TODO_ApePointCloudRecorderPlugin get the pose information from the file like pointCloudSize
-	mPointCloudPosition = Ape::Vector3(0.0, 170.0, -250.0);
-	mPointCloudOrinetation = Ape::Quaternion(0.707, 0.0, 0.707, 0.0);
+	mPointCloudPosition = ape::Vector3(0.0, 170.0, -250.0);
+	mPointCloudOrinetation = ape::Quaternion(0.707, 0.0, 0.707, 0.0);
 	if (mIsRecorder)
 		mFileStreamOut.open(mFileName, std::ios::out | std::ios::binary);
 	else if (mIsPlayer)
@@ -113,14 +113,14 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 			if (auto textNode = mpSceneManager->createNode("pointCloudNode_Player_Text_Node").lock())
 			{
 				textNode->setParentNode(pointCloudNode);
-				textNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNode_Player_Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+				textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
+				if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNode_Player_Text", ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					text->setCaption("Player");
 					text->setParentNode(textNode);
 				}
 			}
-			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Player", Ape::Entity::POINT_CLOUD).lock()))
+			if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Player", ape::Entity::POINT_CLOUD).lock()))
 			{
 				mFileStreamIn.read(reinterpret_cast<char*>(&mPointCloudSize), sizeof(long));
 				mCurrentPoints.resize(mPointCloudSize);
@@ -136,7 +136,7 @@ void Ape::ApePointCloudRecorderPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::Run()
+void ape::ApePointCloudRecorderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -164,29 +164,29 @@ void Ape::ApePointCloudRecorderPlugin::Run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::Step()
+void ape::ApePointCloudRecorderPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::Stop()
+void ape::ApePointCloudRecorderPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::Suspend()
+void ape::ApePointCloudRecorderPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApePointCloudRecorderPlugin::Restart()
+void ape::ApePointCloudRecorderPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

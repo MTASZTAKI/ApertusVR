@@ -37,59 +37,59 @@ SOFTWARE.*/
 class TextJsPtr
 {
 private:
-	Ape::TextGeometryWeakPtr mPtr;
+	ape::TextGeometryWeakPtr mPtr;
 
 public:
-	TextJsPtr(Ape::TextGeometryWeakPtr ptr)
+	TextJsPtr(ape::TextGeometryWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	TextJsPtr(Ape::EntityWeakPtr ptr)
+	TextJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::ITextGeometry>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::ITextGeometry>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::GeometryWeakPtr getGeometryWeakPtr()
+	ape::GeometryWeakPtr getGeometryWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Geometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::Geometry>(mPtr.lock());
 	}
 
-	Ape::GeometrySharedPtr getGeometrySharedPtr()
+	ape::GeometrySharedPtr getGeometrySharedPtr()
 	{
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::TextGeometryWeakPtr getTextGeometryWeakPtr()
+	ape::TextGeometryWeakPtr getTextGeometryWeakPtr()
 	{
 		return mPtr;
 	}
 
-	Ape::TextGeometrySharedPtr getTextGeometrySharedPtr()
+	ape::TextGeometrySharedPtr getTextGeometrySharedPtr()
 	{
-		return std::static_pointer_cast<Ape::ITextGeometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::ITextGeometry>(mPtr.lock());
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -111,7 +111,7 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
@@ -142,8 +142,8 @@ public:
 
 NBIND_CLASS(TextJsPtr)
 {
-	construct<Ape::TextGeometryWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::TextGeometryWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

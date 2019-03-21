@@ -26,18 +26,18 @@ SOFTWARE.*/
 #include "ApeReplicaManager.h"
 #include "ApeNodeImpl.h"
 
-Ape::SceneSessionImpl::SceneSessionImpl()
+ape::SceneSessionImpl::SceneSessionImpl()
 	: mpRakReplicaPeer(nullptr)
 	, mpRakStreamPeer(nullptr)
 	, mpReplicaManager3(nullptr)
 	, mpNatPunchthroughClient(nullptr)
 	, mpLobbyManager(nullptr)
 {
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpPluginManager = Ape::IPluginManager::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::POINT_CLOUD, std::bind(&SceneSessionImpl::eventCallBack, this, std::placeholders::_1));
-	mStreamReplicas = std::vector<Ape::Replica*>();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpPluginManager = ape::IPluginManager::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&SceneSessionImpl::eventCallBack, this, std::placeholders::_1));
+	mStreamReplicas = std::vector<ape::Replica*>();
 	mIsConnectedToNATServer = false;
 	mIsConnectedToHost = false;
 	mNATServerAddress.FromString("");
@@ -45,11 +45,11 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	mHostGuid = RakNet::RakNetGUID();
 	mHostAddress = RakNet::SystemAddress();
 
-	if (mParticipantType == Ape::SceneSession::HOST || mParticipantType == Ape::SceneSession::GUEST)
+	if (mParticipantType == ape::SceneSession::HOST || mParticipantType == ape::SceneSession::GUEST)
 	{
 		init();
 	}
-	if (mParticipantType == Ape::SceneSession::HOST)
+	if (mParticipantType == ape::SceneSession::HOST)
 	{
 		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
 		{
@@ -58,9 +58,9 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 		}
 		create();
 	}
-	else if (mParticipantType == Ape::SceneSession::GUEST)
+	else if (mParticipantType == ape::SceneSession::GUEST)
 	{
-		Ape::SceneSessionUniqueID uuid;
+		ape::SceneSessionUniqueID uuid;
 		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
 		{
 			APE_LOG_DEBUG("use lobbyManager to get scene session guid");
@@ -81,7 +81,7 @@ Ape::SceneSessionImpl::SceneSessionImpl()
 	}
 }
 
-Ape::SceneSessionImpl::~SceneSessionImpl()
+ape::SceneSessionImpl::~SceneSessionImpl()
 {
 	if (mpRakReplicaPeer)
 	{
@@ -93,7 +93,7 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 		RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
 
 	if (mpLobbyManager) {
-		if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+		if (mParticipantType == ape::SceneSession::ParticipantType::HOST)
 			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
 
 		delete mpLobbyManager;
@@ -101,35 +101,35 @@ Ape::SceneSessionImpl::~SceneSessionImpl()
 	}
 }
 
-void Ape::SceneSessionImpl::eventCallBack(const Ape::Event & event)
+void ape::SceneSessionImpl::eventCallBack(const ape::Event & event)
 {
-	if (mParticipantType == Ape::SceneSession::HOST)
+	if (mParticipantType == ape::SceneSession::HOST)
 	{
-		if (event.type == Ape::Event::Type::POINT_CLOUD_PARAMETERS)
+		if (event.type == ape::Event::Type::POINT_CLOUD_PARAMETERS)
 		{
 			if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 			{
-				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+				if (auto pointCloud = ((ape::PointCloudImpl*)entity.get()))
 				{
 					mStreamReplicas.push_back(pointCloud);
 					APE_LOG_DEBUG("listenStreamPeerSendThread for replica named: " << event.subjectName);
-					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
+					std::thread runStreamPeerListenThread((std::bind(&ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
 					runStreamPeerListenThread.detach();
 				}
 			}
 		}
 	}
-	else if (mParticipantType == Ape::SceneSession::GUEST)
+	else if (mParticipantType == ape::SceneSession::GUEST)
 	{
-		if (event.type == Ape::Event::Type::POINT_CLOUD_CREATE)
+		if (event.type == ape::Event::Type::POINT_CLOUD_CREATE)
 		{
 			if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 			{
-				if (auto pointCloud = ((Ape::PointCloudImpl*)entity.get()))
+				if (auto pointCloud = ((ape::PointCloudImpl*)entity.get()))
 				{
 					mStreamReplicas.push_back(pointCloud);
 					APE_LOG_DEBUG("listenStreamPeerReceiveThread for replica named: " << event.subjectName);
-					std::thread runStreamPeerListenThread((std::bind(&Ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
+					std::thread runStreamPeerListenThread((std::bind(&ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
 					runStreamPeerListenThread.detach();
 				}
 			}
@@ -137,13 +137,13 @@ void Ape::SceneSessionImpl::eventCallBack(const Ape::Event & event)
 	}
 }
 
-void Ape::SceneSessionImpl::init()
+void ape::SceneSessionImpl::init()
 {
-	Ape::SceneSessionConfig::NatPunchThroughServerConfig natPunchThroughServerConfig = mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig;
+	ape::SceneSessionConfig::NatPunchThroughServerConfig natPunchThroughServerConfig = mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
 
-	Ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
+	ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
 
 	mLobbyServerIP = lobbyServerConfig.ip;
 	APE_LOG_DEBUG("mLobbyServerIP: " << mLobbyServerIP);
@@ -157,7 +157,7 @@ void Ape::SceneSessionImpl::init()
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
 	if (natPunchThroughServerConfig.use)
 		mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
-	mpReplicaManager3 = std::make_shared<Ape::ReplicaManager>();
+	mpReplicaManager3 = std::make_shared<ape::ReplicaManager>();
 	if (natPunchThroughServerConfig.use)
 		mpRakReplicaPeer->AttachPlugin(mpNatPunchthroughClient);
 	mpRakReplicaPeer->AttachPlugin(mpReplicaManager3.get());
@@ -165,11 +165,11 @@ void Ape::SceneSessionImpl::init()
 	mpReplicaManager3->SetAutoManageConnections(false,true);
 	RakNet::SocketDescriptor sd;
 	sd.socketFamily = AF_INET;
-	if (mParticipantType == Ape::SceneSession::HOST)
+	if (mParticipantType == ape::SceneSession::HOST)
 	{
 		sd.port = atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str());
 	}
-	else if (mParticipantType == Ape::SceneSession::GUEST)
+	else if (mParticipantType == ape::SceneSession::GUEST)
 	{
 		sd.port = 0;
 	}
@@ -208,7 +208,7 @@ void Ape::SceneSessionImpl::init()
 	mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
 	int socketFamily;
 	socketFamily = AF_INET;
-	if (mParticipantType == Ape::SceneSession::HOST)
+	if (mParticipantType == ape::SceneSession::HOST)
 	{
 		mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 		RakNet::SocketDescriptor socketDescriptor(STREAM_PORT, 0);
@@ -222,7 +222,7 @@ void Ape::SceneSessionImpl::init()
 		}
 		APE_LOG_DEBUG("Started stream server on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 	}
-	else if (mParticipantType == Ape::SceneSession::GUEST)
+	else if (mParticipantType == ape::SceneSession::GUEST)
 	{
 		mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 		RakNet::SocketDescriptor socketDescriptor(0, 0);
@@ -237,7 +237,7 @@ void Ape::SceneSessionImpl::init()
 	}
 }
 
-void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
+void ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 {
 	mIsHost = false;
 	mHostGuid.FromString(sceneSessionUniqueID.c_str());
@@ -268,53 +268,53 @@ void Ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 	}
 }
 
-void Ape::SceneSessionImpl::leave()
+void ape::SceneSessionImpl::leave()
 {
 	
 }
 
-void Ape::SceneSessionImpl::destroy()
+void ape::SceneSessionImpl::destroy()
 {
 }
 
-void Ape::SceneSessionImpl::create()
+void ape::SceneSessionImpl::create()
 {
 	mIsHost = true;
-	mParticipantType = Ape::SceneSession::ParticipantType::HOST;
+	mParticipantType = ape::SceneSession::ParticipantType::HOST;
 	APE_LOG_DEBUG("Listening....");
 	if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
 		mpNatPunchthroughClient->FindRouterPortStride(mNATServerAddress);
 }
 
-bool Ape::SceneSessionImpl::isHost()
+bool ape::SceneSessionImpl::isHost()
 {
 	return mIsHost;
 }
 
-Ape::SceneSessionUniqueID Ape::SceneSessionImpl::getGUID()
+ape::SceneSessionUniqueID ape::SceneSessionImpl::getGUID()
 {
 	return mGuid.ToString();
 }
 
-std::weak_ptr<RakNet::ReplicaManager3> Ape::SceneSessionImpl::getReplicaManager()
+std::weak_ptr<RakNet::ReplicaManager3> ape::SceneSessionImpl::getReplicaManager()
 {
 	return mpReplicaManager3;
 }
 
-void Ape::SceneSessionImpl::setScene(Ape::ISceneManager* scene)
+void ape::SceneSessionImpl::setScene(ape::ISceneManager* scene)
 {
 	mpSceneManager = scene;
 }
 
-Ape::SceneSession::ParticipantType Ape::SceneSessionImpl::getParticipantType()
+ape::SceneSession::ParticipantType ape::SceneSessionImpl::getParticipantType()
 {
 	return mParticipantType;
 }
 
 
-void Ape::SceneSessionImpl::runReplicaPeerListen()
+void ape::SceneSessionImpl::runReplicaPeerListen()
 {
-	if (mParticipantType == Ape::SceneSession::GUEST)
+	if (mParticipantType == ape::SceneSession::GUEST)
 	{
 		APE_LOG_DEBUG("thread start waiting for all plugin init");
 		//TODO_CORE
@@ -329,7 +329,7 @@ void Ape::SceneSessionImpl::runReplicaPeerListen()
 	}
 }
 
-void Ape::SceneSessionImpl::listenReplicaPeer()
+void ape::SceneSessionImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
@@ -339,7 +339,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 			case ID_NEW_INCOMING_CONNECTION:
 			{
 				APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION"); 
-				if (mParticipantType == Ape::SceneSession::HOST)
+				if (mParticipantType == ape::SceneSession::HOST)
 				{
 					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 					if (mpReplicaManager3->PushConnection(connection))
@@ -371,7 +371,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 							else
 								mIsConnectedToNATServer = false;
 						}
-						else if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+						else if (mParticipantType == ape::SceneSession::ParticipantType::HOST)
 						{
 							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 							if (mpReplicaManager3->PushConnection(connection))
@@ -385,7 +385,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 							}
 						}
 					}
-					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+					else if (mParticipantType == ape::SceneSession::ParticipantType::GUEST)
 					{
 						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 						if (mpReplicaManager3->PushConnection(connection))
@@ -423,7 +423,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 				{
 					unsigned char weAreTheSender = packet->data[1];
 					APE_LOG_DEBUG("ID_NAT_PUNCHTHROUGH_SUCCEEDED: weAreTheSender=" << weAreTheSender);
-					if (mParticipantType == Ape::SceneSession::ParticipantType::HOST)
+					if (mParticipantType == ape::SceneSession::ParticipantType::HOST)
 					{
 						mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
 						RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
@@ -436,7 +436,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 							APE_LOG_DEBUG("NAT punch success from remote system " << packet->systemAddress.ToString(true));
 						}
 					}
-					else if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+					else if (mParticipantType == ape::SceneSession::ParticipantType::GUEST)
 					{
 						if (!weAreTheSender)
 						{
@@ -472,7 +472,7 @@ void Ape::SceneSessionImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						if (mParticipantType == Ape::SceneSession::ParticipantType::GUEST)
+						if (mParticipantType == ape::SceneSession::ParticipantType::GUEST)
 						{
 							//std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 							mIsConnectedToHost = true;

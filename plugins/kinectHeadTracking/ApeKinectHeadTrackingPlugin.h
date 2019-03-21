@@ -59,9 +59,9 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeKinectHeadTrackingPlugin"
 
-namespace Ape
+namespace ape
 {
-	class KinectHeadTrackingPlugin : public Ape::IPlugin
+	class KinectHeadTrackingPlugin : public ape::IPlugin
 	{
 	public:
 		KinectHeadTrackingPlugin();
@@ -87,25 +87,25 @@ namespace Ape
 
 		IMultiSourceFrameReader* mpKinectReader;   
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
+		ape::DoubleQueue<ape::CameraWeakPtr> mCameraDoubleQueue;
 
-		Ape::HeadTrackerConfig mTrackerConfig;
+		ape::HeadTrackerConfig mTrackerConfig;
 
-		Ape::HeadTrackerDisplayConfigList mDisplayConfigList;
+		ape::HeadTrackerDisplayConfigList mDisplayConfigList;
 
-		Ape::Vector3 mTrackedViewerPosition;
+		ape::Vector3 mTrackedViewerPosition;
 
-		Ape::Vector3 mTrackedPrevViewerPosition;
+		ape::Vector3 mTrackedPrevViewerPosition;
 
-		Ape::Quaternion mTrackedViewerOrientation;
+		ape::Quaternion mTrackedViewerOrientation;
 
-		Ape::Euler mTrackedViewerOrientationYPR;
+		ape::Euler mTrackedViewerOrientationYPR;
 
 		float mNearClip;
 
@@ -117,17 +117,17 @@ namespace Ape
 
 		int mCameraCount;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
+		void setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr);
 
-		Ape::Matrix4 calculateCameraProjection(Ape::HeadTrackerDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition);
+		ape::Matrix4 calculateCameraProjection(ape::HeadTrackerDisplayConfig& displayConfig, ape::Vector3& trackedEyePosition);
 
-		Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
+		ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 
 		HRESULT InitializeDefaultSensor();
 
@@ -136,14 +136,14 @@ namespace Ape
 		void getBodyDataFromSensor(IMultiSourceFrame * pframe);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateKinectHeadTrackingPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateKinectHeadTrackingPlugin()
 	{
-		return new Ape::KinectHeadTrackingPlugin;
+		return new ape::KinectHeadTrackingPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyKinectHeadTrackingPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyKinectHeadTrackingPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::KinectHeadTrackingPlugin*)plugin;
+		delete (ape::KinectHeadTrackingPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

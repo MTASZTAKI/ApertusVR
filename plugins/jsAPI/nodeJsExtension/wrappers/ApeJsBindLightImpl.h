@@ -32,17 +32,17 @@ SOFTWARE.*/
 class LightJsPtr
 {
 private:
-	Ape::LightWeakPtr mPtr;
+	ape::LightWeakPtr mPtr;
 
 public:
-	LightJsPtr(Ape::LightWeakPtr ptr)
+	LightJsPtr(ape::LightWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	LightJsPtr(Ape::EntityWeakPtr ptr)
+	LightJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::ILight>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::ILight>(ptr.lock());
 	}
 
 	const std::string getName()
@@ -50,12 +50,12 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Color getDiffuseColor()
+	const ape::Color getDiffuseColor()
 	{
 		return mPtr.lock()->getDiffuseColor();
 	}
 
-	void setDiffuseColor(Ape::Color color)
+	void setDiffuseColor(ape::Color color)
 	{
 		mPtr.lock()->setDiffuseColor(color);
 	}
@@ -63,8 +63,8 @@ public:
 
 NBIND_CLASS(LightJsPtr)
 {
-	construct<Ape::LightWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::LightWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 	method(getName);
 	method(getDiffuseColor);
 	method(setDiffuseColor);

@@ -55,26 +55,26 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeLinkageDesignerVRPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeLinkageDesignerVRPlugin : public Ape::IPlugin
+	class ApeLinkageDesignerVRPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		int mSwitchNodeVisibilityToggleIndex;
 
 		std::vector<std::string> mSwitchNodeVisibilityNames;
 
-		std::vector<Ape::NodeWeakPtr> mSwitchNodes;
+		std::vector<ape::NodeWeakPtr> mSwitchNodes;
 
 		void toggleSwitchNodesVisibility();
 
@@ -96,14 +96,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLinkageDesignerVRPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeLinkageDesignerVRPlugin()
 	{
-		return new Ape::ApeLinkageDesignerVRPlugin;
+		return new ape::ApeLinkageDesignerVRPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeLinkageDesignerVRPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeLinkageDesignerVRPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeLinkageDesignerVRPlugin*)plugin;
+		delete (ape::ApeLinkageDesignerVRPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

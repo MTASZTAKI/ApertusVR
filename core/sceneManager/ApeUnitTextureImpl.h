@@ -29,28 +29,28 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class UnitTextureImpl : public Ape::IUnitTexture, public Ape::Replica
+	class UnitTextureImpl : public ape::IUnitTexture, public ape::Replica
 	{
 	public:
 		UnitTextureImpl(std::string name, bool isHostCreated);
 
 		~UnitTextureImpl();
 
-		void setParameters(Ape::MaterialWeakPtr material, std::string fileName) override;
+		void setParameters(ape::MaterialWeakPtr material, std::string fileName) override;
 
-		Ape::IUnitTexture::Parameters getParameters() override;
+		ape::IUnitTexture::Parameters getParameters() override;
 
 		void setTextureScroll(float u, float v) override;
 
-		Ape::Vector2 getTextureScroll() override;
+		ape::Vector2 getTextureScroll() override;
 
-		void setTextureAddressingMode(Ape::Texture::AddressingMode addressingMode) override;
+		void setTextureAddressingMode(ape::Texture::AddressingMode addressingMode) override;
 
-		Ape::Texture::AddressingMode getTextureAddressingMode() override;
+		ape::Texture::AddressingMode getTextureAddressingMode() override;
 
-		void setTextureFiltering(Ape::Texture::Filtering minFilter, Ape::Texture::Filtering magFilter, Ape::Texture::Filtering mipFilter) override;
+		void setTextureFiltering(ape::Texture::Filtering minFilter, ape::Texture::Filtering magFilter, ape::Texture::Filtering mipFilter) override;
 
 		Filtering getTextureFiltering() override;
 
@@ -61,17 +61,17 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::Vector2 mScroll;
+		ape::Vector2 mScroll;
 
-		Ape::Texture::AddressingMode mAddressingMode;
+		ape::Texture::AddressingMode mAddressingMode;
 
-		Ape::IUnitTexture::Filtering mFiltering;
+		ape::IUnitTexture::Filtering mFiltering;
 
-		Ape::IUnitTexture::Parameters mParameters;
+		ape::IUnitTexture::Parameters mParameters;
 
 	};
 }

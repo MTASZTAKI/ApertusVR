@@ -39,7 +39,7 @@ SOFTWARE.*/
 #include "utils/ApeSingleton.h"
 #include "system/ApeSystem.h"
 
-namespace Ape
+namespace ape
 {
 	typedef std::string SceneSessionUniqueID;
 
@@ -60,7 +60,7 @@ namespace Ape
 		virtual ~ISceneSession() {};
 
 	public:
-		virtual Ape::SceneSession::ParticipantType getParticipantType() = 0;
+		virtual ape::SceneSession::ParticipantType getParticipantType() = 0;
 	};
 }
 

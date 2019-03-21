@@ -22,70 +22,70 @@ SOFTWARE.*/
 
 #include "ApeConeGeometryImpl.h"
 
-Ape::ConeGeometryImpl::ConeGeometryImpl(std::string name, bool isHostCreated) : Ape::IConeGeometry(name), Ape::Replica("ConeGeometry", isHostCreated)
+ape::ConeGeometryImpl::ConeGeometryImpl(std::string name, bool isHostCreated) : ape::IConeGeometry(name), ape::Replica("ConeGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryConeParameters();
-	mMaterial = Ape::MaterialWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryConeParameters();
+	mMaterial = ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::ConeGeometryImpl::~ConeGeometryImpl()
+ape::ConeGeometryImpl::~ConeGeometryImpl()
 {
 	
 }
 
-void Ape::ConeGeometryImpl::setParameters(float radius, float height, float tile, Ape::Vector2 numSeg)
+void ape::ConeGeometryImpl::setParameters(float radius, float height, float tile, ape::Vector2 numSeg)
 {
 	mParameters.radius = radius;
 	mParameters.height = height;
 	mParameters.tile = tile;
 	mParameters.numSeg = numSeg;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_PARAMETERS));
 }
 
-Ape::GeometryConeParameters Ape::ConeGeometryImpl::getParameters()
+ape::GeometryConeParameters ape::ConeGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::ConeGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::ConeGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::ConeGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void ape::ConeGeometryImpl::setMaterial(ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_MATERIAL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_MATERIAL));
 	}
 	else
-		mMaterial = Ape::MaterialWeakPtr();
+		mMaterial = ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::ConeGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::ConeGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::ConeGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::ConeGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::ConeGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::ConeGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -97,27 +97,27 @@ RakNet::RM3SerializationResult Ape::ConeGeometryImpl::Serialize(RakNet::Serializ
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::ConeGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::ConeGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
 	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
+		if (auto material = std::static_pointer_cast<ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CONE_MATERIAL));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CONE_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

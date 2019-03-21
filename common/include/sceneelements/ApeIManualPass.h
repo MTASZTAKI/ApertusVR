@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "datatypes/ApePass.h"
 #include "datatypes/ApeTexture.h"
 
-namespace Ape
+namespace ape
 {
 	class IManualPass : public Pass
 	{
@@ -51,11 +51,11 @@ namespace Ape
 
 		virtual void setShininess(float shininess) = 0;
 
-		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
+		virtual void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) = 0;
 
-		virtual void setTexture(Ape::TextureWeakPtr texture) = 0;
+		virtual void setTexture(ape::TextureWeakPtr texture) = 0;
 
-		virtual void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) = 0;
+		virtual void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) = 0;
 	};
 }
 

@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryTubeParameters
 	{
@@ -52,23 +52,23 @@ namespace Ape
 		}
 	};
 
-	class ITubeGeometry : public Ape::Geometry
+	class ITubeGeometry : public ape::Geometry
 	{
 	protected:
-		ITubeGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_TUBE) {}
+		ITubeGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_TUBE) {}
 
 		virtual ~ITubeGeometry() {};
 
 	public:
 		virtual void setParameters(float height, float tile) = 0;
 
-		virtual Ape::GeometryTubeParameters getParameters() = 0;
+		virtual ape::GeometryTubeParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

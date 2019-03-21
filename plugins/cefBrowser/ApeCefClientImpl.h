@@ -35,7 +35,7 @@ SOFTWARE.*/
 #include "ApeCefLifeSpanHandlerImpl.h"
 #include "ApeCefKeyboardHandlerImpl.h"
 
-namespace Ape
+namespace ape
 {
 	class CefClientImpl : public CefClient
 	{
@@ -47,7 +47,7 @@ namespace Ape
 		CefRefPtr<CefKeyboardHandler> mCefKeyboardHandlerImpl;
 
 	public:
-		CefClientImpl(Ape::CefRenderHandlerImpl *cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl);
+		CefClientImpl(ape::CefRenderHandlerImpl *cefRenderHandlerImpl, ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl);
 
 		~CefClientImpl();
 

@@ -39,19 +39,19 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeHelloWorldPlugin"
 
-namespace Ape
+namespace ape
 {
 
-    class ApeHelloWorldPlugin : public Ape::IPlugin
+    class ApeHelloWorldPlugin : public ape::IPlugin
     {
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::NodeWeakPtr mPlanetNode;
+		ape::NodeWeakPtr mPlanetNode;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeHelloWorldPlugin();
@@ -71,14 +71,14 @@ namespace Ape
 		void Restart() override;
     };
 
-    APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHelloWorldPlugin()
+    APE_PLUGIN_FUNC ape::IPlugin* CreateApeHelloWorldPlugin()
 	{
-		return new Ape::ApeHelloWorldPlugin;
+		return new ape::ApeHelloWorldPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHelloWorldPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeHelloWorldPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeHelloWorldPlugin*)plugin;
+		delete (ape::ApeHelloWorldPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

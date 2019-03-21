@@ -22,50 +22,50 @@ SOFTWARE.*/
 
 #include "ApeIndexedLineSetGeometryImpl.h"
 
-Ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bool isHostCreated) : Ape::IIndexedLineSetGeometry(name), Ape::Replica("IndexedLineSetGeometry", isHostCreated)
+ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bool isHostCreated) : ape::IIndexedLineSetGeometry(name), ape::Replica("IndexedLineSetGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryIndexedLineSetParameters();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryIndexedLineSetParameters();
 }
 
-Ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
+ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
 {
 	
 }
 
-void Ape::IndexedLineSetGeometryImpl::setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color)
+void ape::IndexedLineSetGeometryImpl::setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color)
 {
 	mParameters.coordinates = coordinates;
 	mParameters.indices = indices;
 	mParameters.color = color;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
 }
 
-Ape::GeometryIndexedLineSetParameters Ape::IndexedLineSetGeometryImpl::getParameters()
+ape::GeometryIndexedLineSetParameters ape::IndexedLineSetGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::IndexedLineSetGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::IndexedLineSetGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::IndexedLineSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::IndexedLineSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::IndexedLineSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::IndexedLineSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -76,18 +76,18 @@ RakNet::RM3SerializationResult Ape::IndexedLineSetGeometryImpl::Serialize(RakNet
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

@@ -48,9 +48,9 @@ SOFTWARE.*/
 #define PLUGIN_MAX_VERSION(version) \
 	APE_PLUGIN_API const char * ApePluginMaxVersion = version
 
-typedef Ape::IPlugin* (*ApePluginAllocFunc)();
+typedef ape::IPlugin* (*ApePluginAllocFunc)();
 
-typedef void (*ApePluginFreeFunc)(Ape::IPlugin*);
+typedef void (*ApePluginFreeFunc)(ape::IPlugin*);
 
 APE_PLUGIN_INTERNAL_FUNC void ApeRegisterPlugin(const char* type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb);
 

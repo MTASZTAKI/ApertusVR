@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"
 
-namespace Ape
+namespace ape
 {
 	class Replica : public RakNet::Replica3
 	{

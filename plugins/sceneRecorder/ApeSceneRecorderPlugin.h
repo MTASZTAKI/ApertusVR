@@ -60,18 +60,18 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeSceneRecorderPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeSceneRecorderPlugin : public Ape::IPlugin
+	class ApeSceneRecorderPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpScene;
+		ape::ISceneManager* mpScene;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		bool mIsRecorder;
 
@@ -91,9 +91,9 @@ namespace Ape
 
 		void readEvent();
 
-		void writeEvent(Ape::Event event);
+		void writeEvent(ape::Event event);
 
-		void fireEvent(unsigned int millisceonds, Ape::Event event);
+		void fireEvent(unsigned int millisceonds, ape::Event event);
 
 	public:
 		ApeSceneRecorderPlugin();
@@ -113,14 +113,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeSceneRecorderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeSceneRecorderPlugin()
 	{
-		return new Ape::ApeSceneRecorderPlugin;
+		return new ape::ApeSceneRecorderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeSceneRecorderPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeSceneRecorderPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeSceneRecorderPlugin*)plugin;
+		delete (ape::ApeSceneRecorderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

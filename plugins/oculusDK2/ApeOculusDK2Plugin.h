@@ -50,32 +50,32 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeOculusDK2Plugin : public Ape::IPlugin
+	class ApeOculusDK2Plugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
 		ovrHmd mpHMD;
 
 		ovrFrameTiming mHMDFrameTiming;
 
-		Ape::CameraWeakPtr mCameraLeft;
+		ape::CameraWeakPtr mCameraLeft;
 
-		Ape::CameraWeakPtr mCameraRight;
+		ape::CameraWeakPtr mCameraRight;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
+		ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 
 	public:
 		ApeOculusDK2Plugin();
@@ -95,14 +95,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeOculusDK2Plugin()
 	{
-		return new Ape::ApeOculusDK2Plugin;
+		return new ape::ApeOculusDK2Plugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeOculusDK2Plugin*)plugin;
+		delete (ape::ApeOculusDK2Plugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

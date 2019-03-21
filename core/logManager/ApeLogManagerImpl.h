@@ -44,7 +44,7 @@ SOFTWARE.*/
 #include "system/ApePlatform.h"
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_LOGMANAGER_DLL_EXPORT LogManagerImpl : public ILogManager
 	{

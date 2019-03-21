@@ -41,42 +41,42 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeSceneManagerImpl"
 
-namespace Ape
+namespace ape
 {
 
-	class APE_SCENEMANAGER_DLL_EXPORT SceneManagerImpl : public Ape::ISceneManager
+	class APE_SCENEMANAGER_DLL_EXPORT SceneManagerImpl : public ape::ISceneManager
 	{ 
 	public:
 		SceneManagerImpl();
 
 		~SceneManagerImpl();
 
-		Ape::NodeWeakPtrNameMap getNodes() override;
+		ape::NodeWeakPtrNameMap getNodes() override;
 
-		Ape::NodeWeakPtr getNode(std::string name) override;
+		ape::NodeWeakPtr getNode(std::string name) override;
 
-		Ape::NodeWeakPtr createNode(std::string name) override;
+		ape::NodeWeakPtr createNode(std::string name) override;
 
-		Ape::EntityWeakPtrNameMap getEntities() override;
+		ape::EntityWeakPtrNameMap getEntities() override;
 
-		Ape::EntityWeakPtr getEntity(std::string name) override;
+		ape::EntityWeakPtr getEntity(std::string name) override;
 
-		Ape::EntityWeakPtr createEntity(std::string name, Ape::Entity::Type type) override;
+		ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type) override;
 
 		void deleteNode(std::string name) override;
 
 		void deleteEntity(std::string name) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::NodeSharedPtrNameMap mNodes;
+		ape::NodeSharedPtrNameMap mNodes;
 
-		Ape::EntitySharedPtrNameMap mEntities;
+		ape::EntitySharedPtrNameMap mEntities;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneSessionImpl* mpSceneSessionImpl;
+		ape::SceneSessionImpl* mpSceneSessionImpl;
 
 		std::weak_ptr<RakNet::ReplicaManager3> mReplicaManager;
 	};

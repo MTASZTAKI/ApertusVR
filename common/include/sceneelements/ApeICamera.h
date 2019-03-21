@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	namespace Camera
 	{
@@ -47,7 +47,7 @@ namespace Ape
 	class ICamera : public Entity
 	{
 	protected:
-		ICamera(std::string name) : Entity(name, Ape::Entity::CAMERA) {}
+		ICamera(std::string name) : Entity(name, ape::Entity::CAMERA) {}
 
 		virtual ~ICamera() {};
 
@@ -57,13 +57,13 @@ namespace Ape
 
 		virtual void setFocalLength(float focalLength) = 0;
 
-		virtual Ape::Vector2 getFrustumOffset() = 0;
+		virtual ape::Vector2 getFrustumOffset() = 0;
 
-		virtual void setFrustumOffset(Ape::Vector2 frustumOffset) = 0;
+		virtual void setFrustumOffset(ape::Vector2 frustumOffset) = 0;
 
-		virtual Ape::Radian getFOVy() = 0;
+		virtual ape::Radian getFOVy() = 0;
 
-		virtual void setFOVy(Ape::Radian fovY) = 0;
+		virtual void setFOVy(ape::Radian fovY) = 0;
 
 		virtual float getNearClipDistance() = 0;
 
@@ -81,30 +81,30 @@ namespace Ape
 
 		virtual bool isAutoAspectRatio() = 0;
 
-		virtual Ape::Matrix4 getProjection() = 0;
+		virtual ape::Matrix4 getProjection() = 0;
 
-		virtual void setProjection(Ape::Matrix4 projection) = 0;
+		virtual void setProjection(ape::Matrix4 projection) = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+		virtual ape::NodeWeakPtr getParentNode() = 0;
 
-		virtual void setProjectionType(Ape::Camera::ProjectionType type) = 0;
+		virtual void setProjectionType(ape::Camera::ProjectionType type) = 0;
 
-		virtual Ape::Camera::ProjectionType getProjectionType() = 0;
+		virtual ape::Camera::ProjectionType getProjectionType() = 0;
 
 		virtual void setOrthoWindowSize(float width, float height) = 0;
 
-		virtual Ape::Vector2 getOrthoWindowSize() = 0;
+		virtual ape::Vector2 getOrthoWindowSize() = 0;
 
 		virtual void setWindow(std::string window) = 0;
 
 		virtual std::string getWindow() = 0;
 	};
 
-	typedef std::shared_ptr<Ape::ICamera> CameraSharedPtr;
+	typedef std::shared_ptr<ape::ICamera> CameraSharedPtr;
 
-	typedef std::weak_ptr<Ape::ICamera> CameraWeakPtr;
+	typedef std::weak_ptr<ape::ICamera> CameraWeakPtr;
 }
 
 #endif

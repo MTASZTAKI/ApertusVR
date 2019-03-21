@@ -27,7 +27,7 @@ SOFTWARE.*/
 #endif
 #include "ApePluginInstance.h"
 
-class Ape::PluginInstance::Impl
+class ape::PluginInstance::Impl
 {
 public:
 	std::string mFileName;
@@ -88,7 +88,7 @@ public:
 
 };
 
-Ape::PluginInstance::PluginInstance(const std::string &name)
+ape::PluginInstance::PluginInstance(const std::string &name)
 {
 	mImpl = new Impl;
 	mImpl->mDisplayName = name;
@@ -102,12 +102,12 @@ Ape::PluginInstance::PluginInstance(const std::string &name)
 #endif
 }
 
-Ape::PluginInstance::~PluginInstance()
+ape::PluginInstance::~PluginInstance()
 {
 	delete mImpl;
 }
 
-bool Ape::PluginInstance::Load()
+bool ape::PluginInstance::Load()
 {
 	if (! mImpl->Load())
 		return false;
@@ -128,22 +128,22 @@ bool Ape::PluginInstance::Load()
 	return true;
 }
 
-bool Ape::PluginInstance::Unload()
+bool ape::PluginInstance::Unload()
 {
 	return mImpl->Unload();
 }
 
-bool Ape::PluginInstance::IsLoaded()
+bool ape::PluginInstance::IsLoaded()
 {
 	return (mImpl->handle != NULL);
 }
 
-std::string Ape::PluginInstance::GetFileName()
+std::string ape::PluginInstance::GetFileName()
 {
 	return mImpl->mFileName;
 }
 
-std::string Ape::PluginInstance::GetDisplayName()
+std::string ape::PluginInstance::GetDisplayName()
 {
 	return mImpl->mDisplayName;
 }

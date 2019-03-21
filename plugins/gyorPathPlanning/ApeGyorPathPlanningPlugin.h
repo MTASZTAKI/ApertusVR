@@ -58,20 +58,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeGyorPathPlanningPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeGyorPathPlanningPlugin : public Ape::IPlugin
+	class ApeGyorPathPlanningPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeGyorPathPlanningPlugin();
@@ -91,14 +91,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGyorPathPlanningPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeGyorPathPlanningPlugin()
 	{
-		return new Ape::ApeGyorPathPlanningPlugin;
+		return new ape::ApeGyorPathPlanningPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeGyorPathPlanningPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeGyorPathPlanningPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeGyorPathPlanningPlugin*)plugin;
+		delete (ape::ApeGyorPathPlanningPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

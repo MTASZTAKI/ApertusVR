@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginDefines.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGIN_INTERNAL PluginInstance
 	{

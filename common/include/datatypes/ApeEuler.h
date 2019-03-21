@@ -27,68 +27,68 @@ SOFTWARE.*/
 #include <iostream>
 #include "datatypes/ApeQuaternion.h"
 
-namespace Ape
+namespace ape
 {
 	struct Euler
 	{
-		Ape::Radian m_yaw;
+		ape::Radian m_yaw;
 
-		Ape::Radian m_pitch;
+		ape::Radian m_pitch;
 
-		Ape::Radian m_roll;
+		ape::Radian m_roll;
 
-		Ape::Quaternion m_cachedQuaternion;
+		ape::Quaternion m_cachedQuaternion;
 
 		bool m_changed;
 
-		Euler(Ape::Radian y = Ape::Radian(0.0f), Ape::Radian p = Ape::Radian(0.0f), Ape::Radian r = Ape::Radian(0.0f)): m_yaw(y), m_pitch(p), m_roll(r), m_changed(true)
+		Euler(ape::Radian y = ape::Radian(0.0f), ape::Radian p = ape::Radian(0.0f), ape::Radian r = ape::Radian(0.0f)): m_yaw(y), m_pitch(p), m_roll(r), m_changed(true)
 		{
 		}
 
-		Euler(Ape::Quaternion q)
+		Euler(ape::Quaternion q)
 		{
 			m_yaw = std::atan2(2.0 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
 			m_pitch = std::asin(-2.0 * (q.x * q.z - q.w * q.y));
 			m_roll = std::atan2(2.0 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
 		}
 
-		Ape::Radian getYaw()
+		ape::Radian getYaw()
 		{
 			return m_yaw;
 		}
 
-		Ape::Radian getPitch()
+		ape::Radian getPitch()
 		{
 			return m_pitch;
 		}
 
-		Ape::Radian getRoll()
+		ape::Radian getRoll()
 		{
 			return m_roll;
 		}
 
-		Euler& setYaw(Ape::Radian y)
+		Euler& setYaw(ape::Radian y)
 		{
 			m_yaw = y;
 			m_changed = true;
 			return *this;
 		}
 
-		Euler& setPitch(Ape::Radian p)
+		Euler& setPitch(ape::Radian p)
 		{
 			m_pitch = p;
 			m_changed = true;
 			return *this;
 		}
 
-		Euler& setRoll(Ape::Radian r)
+		Euler& setRoll(ape::Radian r)
 		{
 			m_roll = r;
 			m_changed = true;
 			return *this;
 		}
 
-		Ape::Quaternion toQuaternion()
+		ape::Quaternion toQuaternion()
 		{
 			if (m_changed)
 			{
@@ -104,13 +104,13 @@ namespace Ape
 				double x = c1c2 * s3 + s1s2 * c3;
 				double y = s1 * c2 * c3 + c1 * s2 * s3;
 				double z = c1 * s2 * c3 - s1 * c2 * s3;
-				m_cachedQuaternion = Ape::Quaternion((float) w, (float) y, (float) z, (float) x);
+				m_cachedQuaternion = ape::Quaternion((float) w, (float) y, (float) z, (float) x);
 				m_changed = false;
 			}
 			return m_cachedQuaternion;
 		}
 
-		operator Ape::Quaternion()
+		operator ape::Quaternion()
 		{
 			return toQuaternion();
 		}

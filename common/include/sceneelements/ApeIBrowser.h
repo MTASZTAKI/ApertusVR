@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector2.h"
 #include "datatypes/ApeEntity.h"
 
-namespace Ape
+namespace ape
 {
 	namespace Browser
 	{
@@ -41,20 +41,20 @@ namespace Ape
 		};
 		struct MouseState
 		{
-			Ape::Vector2 position;
+			ape::Vector2 position;
 			MouseClick click;
 			bool isClickDown;
-			Ape::Vector2 scrollDelta;
+			ape::Vector2 scrollDelta;
 
 			MouseState()
 			{
-				this->position = Ape::Vector2();
+				this->position = ape::Vector2();
 				this->click = MouseClick::UNKNOWN;
 				this->isClickDown = false;
-				this->scrollDelta = Ape::Vector2();
+				this->scrollDelta = ape::Vector2();
 			}
 
-			MouseState(Ape::Vector2 position, MouseClick click, bool isClickDown, Ape::Vector2 scrollDelta)
+			MouseState(ape::Vector2 position, MouseClick click, bool isClickDown, ape::Vector2 scrollDelta)
 			{
 				this->position = position;
 				this->click = click;
@@ -77,11 +77,11 @@ namespace Ape
 
 		virtual void setResoultion(float vertical, float horizontal) = 0;
 
-		virtual Ape::Vector2 getResoultion() = 0;
+		virtual ape::Vector2 getResoultion() = 0;
 
-		virtual void setGeometry(Ape::GeometryWeakPtr geometry) = 0;
+		virtual void setGeometry(ape::GeometryWeakPtr geometry) = 0;
 
-		virtual Ape::GeometryWeakPtr getGeometry() = 0;
+		virtual ape::GeometryWeakPtr getGeometry() = 0;
 
 		virtual void showOnOverlay(bool enable, int zOrder) = 0;
 
@@ -91,13 +91,13 @@ namespace Ape
 
 		virtual int getZOrder() = 0;
 
-		virtual void mouseClick(Ape::Browser::MouseClick click, bool isClickDown) = 0;
+		virtual void mouseClick(ape::Browser::MouseClick click, bool isClickDown) = 0;
 
-		virtual void mouseMoved(Ape::Vector2 position) = 0;
+		virtual void mouseMoved(ape::Vector2 position) = 0;
 
-		virtual void mouseScroll(Ape::Vector2 delta) = 0;
+		virtual void mouseScroll(ape::Vector2 delta) = 0;
 
-		virtual Ape::Browser::MouseState getMouseState() = 0;
+		virtual ape::Browser::MouseState getMouseState() = 0;
 
 		virtual void keyASCIIValue(int keyASCIIValue) = 0;
 

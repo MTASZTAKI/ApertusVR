@@ -23,77 +23,77 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApeTextGeometryImpl.h"
 
-Ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : Ape::ITextGeometry(name), Ape::Replica("TextGeometry", isHostCreated)
+ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool isHostCreated) : ape::ITextGeometry(name), ape::Replica("TextGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCaption = "";
 	mVisibility = false;
 	mShowOnTop = false;
 }
 
-Ape::TextGeometryImpl::~TextGeometryImpl()
+ape::TextGeometryImpl::~TextGeometryImpl()
 {
 	
 }
 
-std::string Ape::TextGeometryImpl::getCaption()
+std::string ape::TextGeometryImpl::getCaption()
 {
 	return mCaption;
 }
 
-void Ape::TextGeometryImpl::setCaption( std::string caption )
+void ape::TextGeometryImpl::setCaption( std::string caption )
 {
 	mCaption = caption;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_CAPTION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_CAPTION));
 }
 
-void Ape::TextGeometryImpl::clearCaption()
+void ape::TextGeometryImpl::clearCaption()
 {
 	setCaption("");
 }
 
-bool Ape::TextGeometryImpl::isVisible()
+bool ape::TextGeometryImpl::isVisible()
 {
 	return mVisibility;
 }
 
-void Ape::TextGeometryImpl::setVisible( bool enabled )
+void ape::TextGeometryImpl::setVisible( bool enabled )
 {
 	mVisibility = enabled;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
 }
 
-void Ape::TextGeometryImpl::showOnTop(bool show)
+void ape::TextGeometryImpl::showOnTop(bool show)
 {
 	mShowOnTop = show;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_SHOWONTOP));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_SHOWONTOP));
 }
 
-bool Ape::TextGeometryImpl::isShownOnTop()
+bool ape::TextGeometryImpl::isShownOnTop()
 {
 	return mShowOnTop;
 }
 
-void Ape::TextGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::TextGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::TextGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::TextGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::TextGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -105,7 +105,7 @@ RakNet::RM3SerializationResult Ape::TextGeometryImpl::Serialize(RakNet::Serializ
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
@@ -114,7 +114,7 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, caption))
 	{
 		mCaption = caption.C_String();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_CAPTION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_CAPTION));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
@@ -122,10 +122,10 @@ void Ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		{
 			mParentNode = parentNode;
 			mParentNodeName = parentName.C_String();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_PARENTNODE));
 		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_VISIBLE));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

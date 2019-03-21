@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeGeometry.h"
 
-namespace Ape
+namespace ape
 {
 	class IRayGeometry : public Geometry
 	{
@@ -39,11 +39,11 @@ namespace Ape
 	public:
 		virtual void setIntersectingEnabled(bool enable) = 0;
 
-		virtual void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) = 0;
+		virtual void setIntersections(std::vector<ape::EntityWeakPtr> intersections) = 0;
 
 		virtual void fireIntersectionQuery() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

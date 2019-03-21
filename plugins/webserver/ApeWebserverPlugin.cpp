@@ -1,23 +1,23 @@
 #include "ApeWebserverPlugin.h"
 
-Ape::ApeWebserverPlugin::ApeWebserverPlugin()
+ape::ApeWebserverPlugin::ApeWebserverPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeWebserverPlugin::~ApeWebserverPlugin()
+ape::ApeWebserverPlugin::~ApeWebserverPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeWebserverPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::eventCallBack(const Ape::Event& ev)
+void ape::ApeWebserverPlugin::eventCallBack(const ape::Event& ev)
 {
 	for (auto u : mWebSocketUsers)
 	{
@@ -29,13 +29,13 @@ void Ape::ApeWebserverPlugin::eventCallBack(const Ape::Event& ev)
 	}
 }
 
-void Ape::ApeWebserverPlugin::Init()
+void ape::ApeWebserverPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::Run()
+void ape::ApeWebserverPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 
@@ -83,25 +83,25 @@ void Ape::ApeWebserverPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::Step()
+void ape::ApeWebserverPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::Stop()
+void ape::ApeWebserverPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::Suspend()
+void ape::ApeWebserverPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeWebserverPlugin::Restart()
+void ape::ApeWebserverPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

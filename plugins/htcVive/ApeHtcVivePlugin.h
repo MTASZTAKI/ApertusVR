@@ -52,24 +52,24 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeHtcVivePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeHtcVivePlugin : public Ape::IPlugin
+	class ApeHtcVivePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::CameraWeakPtr mCameraLeft;
+		ape::CameraWeakPtr mCameraLeft;
 
-		Ape::CameraWeakPtr mCameraRight;
+		ape::CameraWeakPtr mCameraRight;
 
-		Ape::ManualTextureWeakPtr mManualTextureRightEye;
+		ape::ManualTextureWeakPtr mManualTextureRightEye;
 		
-		Ape::ManualTextureWeakPtr mManualTextureLeftEye;
+		ape::ManualTextureWeakPtr mManualTextureLeftEye;
 
 		vr::IVRSystem* mpOpenVrSystem;
 
@@ -83,19 +83,19 @@ namespace Ape
 
 		vr::TrackedDevicePose_t mOpenVrTrackedPoses[vr::k_unMaxTrackedDeviceCount];
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
+		ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
 
-		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
+		ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
 
 		void submitTextureLeftToOpenVR();
 
 		void submitTextureRightToOpenVR();
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
 		ApeHtcVivePlugin();
@@ -115,14 +115,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHtcVivePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeHtcVivePlugin()
 	{
-		return new Ape::ApeHtcVivePlugin;
+		return new ape::ApeHtcVivePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHtcVivePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeHtcVivePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeHtcVivePlugin*)plugin;
+		delete (ape::ApeHtcVivePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

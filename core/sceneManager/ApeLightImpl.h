@@ -28,9 +28,9 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class LightImpl : public ILight, public Ape::Replica
+	class LightImpl : public ILight, public ape::Replica
 	{
 	public:
 
@@ -62,9 +62,9 @@ namespace Ape
 		
 		void setLightDirection(Vector3 lightDirection) override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		ape::NodeWeakPtr getParentNode() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -73,9 +73,9 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		Light::Type mLightType;
 

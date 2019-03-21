@@ -38,7 +38,7 @@ namespace TexasEEG
 	class GameManager
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		std::thread* mGameThread;
 
@@ -46,15 +46,15 @@ namespace TexasEEG
 
 		TexasEEG::BubbleManager* mBubbleManager;
 
-		Ape::NodeWeakPtr mUserNode;
+		ape::NodeWeakPtr mUserNode;
 
 		std::mutex lockMutex;
 
-		Ape::EntityWeakPtr mStatusText;
+		ape::EntityWeakPtr mStatusText;
 
-		Ape::EntityWeakPtr mTimeText;
+		ape::EntityWeakPtr mTimeText;
 
-		Ape::EntityWeakPtr mScoreText;
+		ape::EntityWeakPtr mScoreText;
 
 		int mTime;
 
@@ -67,7 +67,7 @@ namespace TexasEEG
 		void Run();
 
 	public:
-		GameManager(Ape::NodeWeakPtr userNode);
+		GameManager(ape::NodeWeakPtr userNode);
 
 		~GameManager();
 

@@ -28,10 +28,10 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
 
-	class FileMaterialImpl : public Ape::IFileMaterial, public Ape::Replica
+	class FileMaterialImpl : public ape::IFileMaterial, public ape::Replica
 	{
 	public:
 		FileMaterialImpl(std::string name, bool isHostCreated);
@@ -44,13 +44,13 @@ namespace Ape
 
 		void setAsSkyBox() override;
 
-		void setPassTexture(Ape::TextureWeakPtr texture) override;
+		void setPassTexture(ape::TextureWeakPtr texture) override;
 
-		void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) override;
+		void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) override;
 
-		Ape::TextureWeakPtr getPassTexture() override;
+		ape::TextureWeakPtr getPassTexture() override;
 
-		Ape::PassGpuParameters getPassGpuParameters() override;
+		ape::PassGpuParameters getPassGpuParameters() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -59,19 +59,19 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		std::string mFileName;
 
 		bool mIsSkyBox;
 
-		Ape::TextureWeakPtr mTexture;
+		ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
 
-		Ape::PassGpuParameters mPassGpuParameters;
+		ape::PassGpuParameters mPassGpuParameters;
 	};
 }
 

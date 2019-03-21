@@ -34,7 +34,7 @@ SOFTWARE.*/
 	#include <dirent.h>
 #endif
 
-namespace Ape
+namespace ape
 {
 	class FileSystem {
 	public:
@@ -78,7 +78,7 @@ namespace Ape
 			}
 			else
 			{
-				auto dirs = Ape::FileSystem::getDirectories(configDirPath);
+				auto dirs = ape::FileSystem::getDirectories(configDirPath);
 				std::cout << "Configurations:" << std::endl;
 				std::map<int, std::string> configMap;
 				int i = 0;

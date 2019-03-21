@@ -34,19 +34,19 @@ SOFTWARE.*/
 #include "sceneelements/ApeIBrowser.h"
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	class CefKeyboardHandlerImpl : public CefKeyboardHandler
 	{
 	private:
-		std::map<int, Ape::BrowserWeakPtr> mBrowserIDs;
+		std::map<int, ape::BrowserWeakPtr> mBrowserIDs;
 
 	public:
 		CefKeyboardHandlerImpl();
 
 		~CefKeyboardHandlerImpl();
 
-		void registerBrowser(int ID, Ape::BrowserWeakPtr browser);
+		void registerBrowser(int ID, ape::BrowserWeakPtr browser);
 
 		bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event, bool* is_keyboard_shortcut) override;
 

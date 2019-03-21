@@ -22,22 +22,22 @@ SOFTWARE.*/
 
 #include "ApeEventManagerImpl.h"
 
-Ape::EventManagerImpl::EventManagerImpl()
+ape::EventManagerImpl::EventManagerImpl()
 {
 	msSingleton = this;
 }
 
-Ape::EventManagerImpl::~EventManagerImpl()
+ape::EventManagerImpl::~EventManagerImpl()
 {
 
 }
 
-void Ape::EventManagerImpl::connectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&) > cb)
+void ape::EventManagerImpl::connectEvent(ape::Event::Group group, std::function<void(const ape::Event&) > cb)
 {
 	mEventMap[group].push_back(cb);
 }
 
-void Ape::EventManagerImpl::disconnectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&) > callback)
+void ape::EventManagerImpl::disconnectEvent(ape::Event::Group group, std::function<void(const ape::Event&) > callback)
 {
 	if (mEventMap.find(group) != mEventMap.end())
 	{
@@ -51,7 +51,7 @@ void Ape::EventManagerImpl::disconnectEvent(Ape::Event::Group group, std::functi
 	}
 }
 
-void Ape::EventManagerImpl::fireEvent(const Ape::Event& event)
+void ape::EventManagerImpl::fireEvent(const ape::Event& event)
 {
 	if (mEventMap.find(event.group) != mEventMap.end())
 	{

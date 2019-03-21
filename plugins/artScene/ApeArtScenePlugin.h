@@ -52,24 +52,24 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeArtScenePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeArtScenePlugin : public Ape::IPlugin
+	class ApeArtScenePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		std::vector<std::string> mModelFileNames;
 
-		std::vector<Ape::Vector3> mModelPositions;
+		std::vector<ape::Vector3> mModelPositions;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeArtScenePlugin();
@@ -89,14 +89,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeArtScenePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeArtScenePlugin()
 	{
-		return new Ape::ApeArtScenePlugin;
+		return new ape::ApeArtScenePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeArtScenePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeArtScenePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeArtScenePlugin*)plugin;
+		delete (ape::ApeArtScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -28,9 +28,9 @@ int main(int argc, char** argv)
 {
 	std::stringstream configDir;
 	configDir << APE_SOURCE_DIR << "/samples/oculusDK2/configs/";
-	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
-	Ape::System::Start(configDir.str().c_str(), true);
-	Ape::System::Stop();
+	configDir << ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	ape::System::Start(configDir.str().c_str(), true);
+	ape::System::Stop();
 	return 0;
 }
 

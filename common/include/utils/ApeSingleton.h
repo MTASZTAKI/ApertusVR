@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <assert.h>
 
-namespace Ape
+namespace ape
 {
 	template <typename T> class Singleton
 	{
@@ -67,6 +67,6 @@ namespace Ape
 	};
 }
 
-template<class T> T* Ape::Singleton<T>::msSingleton = 0;
+template<class T> T* ape::Singleton<T>::msSingleton = 0;
 
 #endif

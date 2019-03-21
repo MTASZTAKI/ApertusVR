@@ -30,28 +30,28 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryConeParameters
 	{
 		float radius;
 		float height;
 		float tile;
-		Ape::Vector2 numSeg;
+		ape::Vector2 numSeg;
 
 		GeometryConeParameters()
 		{
 			this->radius = 0.0f;
 			this->height = 0.0f;
 			this->tile = 0.0f;
-			this->numSeg = Ape::Vector2();
+			this->numSeg = ape::Vector2();
 		}
 
 		GeometryConeParameters(
 		    float radius,
 		    float height,
 		    float tile,
-		    Ape::Vector2 numSeg)
+		    ape::Vector2 numSeg)
 		{
 			this->radius = radius;
 			this->height = height;
@@ -60,23 +60,23 @@ namespace Ape
 		}
 	};
 
-	class IConeGeometry : public Ape::Geometry
+	class IConeGeometry : public ape::Geometry
 	{
 	protected:
-		IConeGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CONE) {}
+		IConeGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_CONE) {}
 
 		virtual ~IConeGeometry() {};
 
 	public:
-		virtual void setParameters(float radius, float height, float tile, Ape::Vector2 numSeg) = 0;
+		virtual void setParameters(float radius, float height, float tile, ape::Vector2 numSeg) = 0;
 
-		virtual Ape::GeometryConeParameters getParameters() = 0;
+		virtual ape::GeometryConeParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

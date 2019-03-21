@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include <string>
 #include <map>
 
-namespace Ape
+namespace ape
 {
 	struct Event
 	{

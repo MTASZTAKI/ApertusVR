@@ -31,24 +31,24 @@ SOFTWARE.*/
 #include "datatypes/ApeVector2.h"
 #include "sceneelements/ApeICamera.h"
 
-namespace Ape
+namespace ape
 {
 	struct ManualTextureParameters
 	{
 		unsigned int height;
 		unsigned int width;
-		Ape::Texture::PixelFormat pixelFormat;
-		Ape::Texture::Usage usage;
+		ape::Texture::PixelFormat pixelFormat;
+		ape::Texture::Usage usage;
 
 		ManualTextureParameters()
 		{
 			this->height = 0;
 			this->width = 0;
-			pixelFormat = Ape::Texture::PixelFormat::PF_INVALID;
-			usage = Ape::Texture::Usage::U_INVALID;
+			pixelFormat = ape::Texture::PixelFormat::PF_INVALID;
+			usage = ape::Texture::Usage::U_INVALID;
 		}
 
-		ManualTextureParameters(unsigned int height, unsigned int width, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
+		ManualTextureParameters(unsigned int height, unsigned int width, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage)
 		{
 			this->height = height;
 			this->width = width;
@@ -65,13 +65,13 @@ namespace Ape
 		virtual ~IManualTexture() {};
 
 	public:
-		virtual void setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) = 0;
+		virtual void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage) = 0;
 
-		virtual Ape::ManualTextureParameters getParameters() = 0;
+		virtual ape::ManualTextureParameters getParameters() = 0;
 
-		virtual void setSourceCamera(Ape::CameraWeakPtr camera) = 0;
+		virtual void setSourceCamera(ape::CameraWeakPtr camera) = 0;
 
-		virtual Ape::CameraWeakPtr getSourceCamera() = 0;
+		virtual ape::CameraWeakPtr getSourceCamera() = 0;
 
 		virtual void setGraphicsApiID(void* id) = 0;
 

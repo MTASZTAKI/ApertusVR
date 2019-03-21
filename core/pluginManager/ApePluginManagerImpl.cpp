@@ -24,29 +24,29 @@ SOFTWARE.*/
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-Ape::PluginManagerImpl::PluginManagerImpl()
+ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
 	mPluginThreadVector = std::vector<std::thread>();
-	mPluginVector = std::vector<Ape::IPlugin*>();
+	mPluginVector = std::vector<ape::IPlugin*>();
 	mPluginCount = 0;
 }
 
-Ape::PluginManagerImpl::~PluginManagerImpl()
+ape::PluginManagerImpl::~PluginManagerImpl()
 {
 	
 }
 
-void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
+void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
-	mPluginVector.push_back(Ape::PluginFactory::CreatePlugin(pluginname));
+	mPluginVector.push_back(ape::PluginFactory::CreatePlugin(pluginname));
 }
 
-void Ape::PluginManagerImpl::CreatePlugins()
+void ape::PluginManagerImpl::CreatePlugins()
 {
-	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
-	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
+	mpInternalPluginManager = &ape::InternalPluginManager::GetInstance();
+	ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
 	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
 	mPluginCount = pluginManagerConfig.pluginnames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
@@ -64,28 +64,28 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	}
 }
 
-void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
+void ape::PluginManagerImpl::InitAndRunPlugin(ape::IPlugin* plugin)
 {
 	plugin->Init();
 	plugin->Run();
 	//TODO_CORE name
-	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+	//ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
 }
 
-void Ape::PluginManagerImpl::InitAndRunPlugins()
+void ape::PluginManagerImpl::InitAndRunPlugins()
 {
-	for (std::vector<Ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
+	for (std::vector<ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
 	{
 		mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
 	}
 }
 
-void Ape::PluginManagerImpl::joinPluginThreads()
+void ape::PluginManagerImpl::joinPluginThreads()
 {
 	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::join));
 }
 
-void Ape::PluginManagerImpl::detachPluginThreads()
+void ape::PluginManagerImpl::detachPluginThreads()
 {
 	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
 }

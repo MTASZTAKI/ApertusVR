@@ -1,7 +1,7 @@
 #include "ApeOgrePointCloud.h"
 
-Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
-	Ape::NodeWeakPtr headNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
+	ape::NodeWeakPtr headNode, ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
 	float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 {
 	mRenderSystemForVertex = Ogre::Root::getSingleton().getRenderSystem();
@@ -51,12 +51,12 @@ Ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& 
 	mPointCloudNode = pointCloudNode;
 }
 
-Ape::OgrePointCloud::~OgrePointCloud()
+ape::OgrePointCloud::~OgrePointCloud()
 {
 
 }
 
-void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
+void ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 {
 	float *pPArray = static_cast<float*>(mVbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 	for (int i = 0; i < size * 3; i += 3)
@@ -71,8 +71,8 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 		{
 			if (auto pointCloudNode = mPointCloudNode.lock())
 			{
-				Ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - Ape::Vector3(0, 0, mPointScaleOffset);
-				Ape::Vector3 headNodePositionInPointScalePosition = headNode->getDerivedPosition() - pointScalePosition;
+				ape::Vector3 pointScalePosition = pointCloudNode->getPosition() - ape::Vector3(0, 0, mPointScaleOffset);
+				ape::Vector3 headNodePositionInPointScalePosition = headNode->getDerivedPosition() - pointScalePosition;
 				float scale = mScaleFactor * (mUnitScaleDistance / headNodePositionInPointScalePosition.z);
 				mMaterial->setPointSize(scale);
 			}
@@ -81,7 +81,7 @@ void Ape::OgrePointCloud::updateVertexPositions(int size, float *points)
 	mVbuf->unlock();
 }
 
-void Ape::OgrePointCloud::updateVertexColours(int size, float *colours)
+void ape::OgrePointCloud::updateVertexColours(int size, float *colours)
 {
 	Ogre::RGBA *colorArrayBuffer = static_cast<Ogre::RGBA*>(mCbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 	int j = 0;

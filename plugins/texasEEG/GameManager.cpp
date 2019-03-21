@@ -1,8 +1,8 @@
 #include "GameManager.h"
 
-TexasEEG::GameManager::GameManager(Ape::NodeWeakPtr userNode)
+TexasEEG::GameManager::GameManager(ape::NodeWeakPtr userNode)
 {
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mTime = 0;
 	mScore = 0;
 	mUserNode = userNode;
@@ -21,10 +21,10 @@ void TexasEEG::GameManager::Init()
 	if (auto timerNode = mpSceneManager->createNode("timerNode").lock())
 	{
 		timerNode->setParentNode(mUserNode);
-		timerNode->setPosition(Ape::Vector3(-18, 10, -30));
+		timerNode->setPosition(ape::Vector3(-18, 10, -30));
 
-		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", Ape::Entity::GEOMETRY_TEXT);
-		if (auto timeText = std::static_pointer_cast<Ape::ITextGeometry>(mTimeText.lock()))
+		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", ape::Entity::GEOMETRY_TEXT);
+		if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
 		{
 			timeText->setCaption(std::to_string(mTime));
 			timeText->showOnTop(true);
@@ -37,10 +37,10 @@ void TexasEEG::GameManager::Init()
 	if (auto scoreNode = mpSceneManager->createNode("scoreNode").lock())
 	{
 		scoreNode->setParentNode(mUserNode);
-		scoreNode->setPosition(Ape::Vector3(18, 10, -30));
+		scoreNode->setPosition(ape::Vector3(18, 10, -30));
 
-		mScoreText = mpSceneManager->createEntity("scoreText", Ape::Entity::GEOMETRY_TEXT);
-		if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
+		mScoreText = mpSceneManager->createEntity("scoreText", ape::Entity::GEOMETRY_TEXT);
+		if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
 		{
 			scoreText->setCaption(std::to_string(mScore));
 			scoreText->showOnTop(true);
@@ -120,7 +120,7 @@ int TexasEEG::GameManager::GetScore()
 void TexasEEG::GameManager::UpdateTime()
 {
 	mTime++;
-	if (auto timeText = std::static_pointer_cast<Ape::ITextGeometry>(mTimeText.lock()))
+	if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
 	{
 		timeText->setCaption(std::to_string(mTime));
 	}
@@ -128,7 +128,7 @@ void TexasEEG::GameManager::UpdateTime()
 
 void TexasEEG::GameManager::UpdateScore(int score)
 {
-	if (auto scoreText = std::static_pointer_cast<Ape::ITextGeometry>(mScoreText.lock()))
+	if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
 	{
 		scoreText->setCaption(std::to_string(mScore));
 	}
@@ -136,8 +136,8 @@ void TexasEEG::GameManager::UpdateScore(int score)
 
 void TexasEEG::GameManager::UpdateStatus()
 {
-	mStatusText = mpSceneManager->createEntity("statusText", Ape::Entity::GEOMETRY_TEXT);
-	if (auto statusText = std::static_pointer_cast<Ape::ITextGeometry>(mStatusText.lock()))
+	mStatusText = mpSceneManager->createEntity("statusText", ape::Entity::GEOMETRY_TEXT);
+	if (auto statusText = std::static_pointer_cast<ape::ITextGeometry>(mStatusText.lock()))
 	{
 		statusText->setCaption("Game Over");
 		statusText->setParentNode(mUserNode);

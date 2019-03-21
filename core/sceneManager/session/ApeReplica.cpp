@@ -22,90 +22,90 @@ SOFTWARE.*/
 
 #include "ApeReplica.h"
 
-Ape::Replica::Replica(RakNet::RakString objectType, bool isHostCreated)
+ape::Replica::Replica(RakNet::RakString objectType, bool isHostCreated)
 {
 	mObjectType = objectType;
 	mIsHostCreated = isHostCreated;
 }
 
-Ape::Replica::~Replica()
+ape::Replica::~Replica()
 {
 
 }
 
-RakNet::RM3ConstructionState Ape::Replica::QueryConstruction( RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3 )
+RakNet::RM3ConstructionState ape::Replica::QueryConstruction( RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3 )
 {
 	return QueryConstruction_ClientConstruction(destinationConnection, mIsHostCreated);
 }
 
-bool Ape::Replica::QueryRemoteConstruction( RakNet::Connection_RM3 *sourceConnection )
+bool ape::Replica::QueryRemoteConstruction( RakNet::Connection_RM3 *sourceConnection )
 {
 	return QueryRemoteConstruction_ClientConstruction(sourceConnection, mIsHostCreated);
 }
 
-void Ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection )
+void ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection )
 {
 	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
 	destructionBitstream->Write(mObjectType + RakNet::RakString(" SerializeDestruction"));
 }
 
-bool Ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
+bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
 {
 	PrintStringInBitstream(destructionBitstream);
 	return true;
 }
 
-void Ape::Replica::SerializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection )
+void ape::Replica::SerializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection )
 {
 	mVariableDeltaSerializer.AddRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
 }
 
-bool Ape::Replica::DeserializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection )
+bool ape::Replica::DeserializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection )
 {
 	return true;
 }
 
-RakNet::RM3ActionOnPopConnection Ape::Replica::QueryActionOnPopConnection( RakNet::Connection_RM3 *droppedConnection ) const
+RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNet::Connection_RM3 *droppedConnection ) const
 {
 	return QueryActionOnPopConnection_Client(droppedConnection);
 }
 
-void Ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
+void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
 	delete this;
 }
 
-RakNet::RM3QuerySerializationResult Ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
+RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
 {
 	return QuerySerialization_ClientSerializable(destinationConnection, mIsHostCreated);
 }
 
-void Ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
+void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
 {
 
 }
 
-void Ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
+void ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
 {
 
 }
 
-void Ape::Replica::OnUserReplicaPreSerializeTick()
+void ape::Replica::OnUserReplicaPreSerializeTick()
 {
 	mVariableDeltaSerializer.OnPreSerializeTick();
 }
 
-void Ape::Replica::OnPoppedConnection( RakNet::Connection_RM3 *droppedConnection )
+void ape::Replica::OnPoppedConnection( RakNet::Connection_RM3 *droppedConnection )
 {
 	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(droppedConnection->GetRakNetGUID());
 }
 
-void Ape::Replica::NotifyReplicaOfMessageDeliveryStatus( RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived )
+void ape::Replica::NotifyReplicaOfMessageDeliveryStatus( RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived )
 {
 	mVariableDeltaSerializer.OnMessageReceipt(guid,receiptId,messageArrived);
 }
 
-void Ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )
+void ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )
 {
 	if (bs->GetNumberOfBitsUsed() == 0) return;
 	RakNet::RakString rakString;

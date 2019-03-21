@@ -32,7 +32,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeISky.h"
 
-namespace Ape
+namespace ape
 {
 	class IWater : public Entity
 	{
@@ -42,13 +42,13 @@ namespace Ape
 		virtual ~IWater() {};
 
 	public:
-		virtual void setSky(Ape::SkyWeakPtr sky) = 0;
+		virtual void setSky(ape::SkyWeakPtr sky) = 0;
 
-		virtual Ape::SkyWeakPtr getSky() = 0;
+		virtual ape::SkyWeakPtr getSky() = 0;
 
-		virtual void setCameras(std::vector<Ape::CameraWeakPtr> cameras) = 0;
+		virtual void setCameras(std::vector<ape::CameraWeakPtr> cameras) = 0;
 
-		virtual std::vector<Ape::CameraWeakPtr> getCameras() = 0;
+		virtual std::vector<ape::CameraWeakPtr> getCameras() = 0;
 	};
 }
 

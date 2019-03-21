@@ -46,34 +46,34 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeTexasEEGPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeTexasEEGPlugin : public Ape::IPlugin
+	class ApeTexasEEGPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
 		int mBubblesActivateNextCount;
 
 		int mScore;
 
-		Ape::EntityWeakPtr mStatusText;
+		ape::EntityWeakPtr mStatusText;
 
-		Ape::EntityWeakPtr mScoreText;
+		ape::EntityWeakPtr mScoreText;
 
 		TexasEEG::GameManager* mGameManager;
 
 		TexasEEG::BubbleManager* mBubbleManager;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
 		ApeTexasEEGPlugin();
@@ -95,14 +95,14 @@ namespace Ape
 		void UpdateScore(int score);
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTexasEEGPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeTexasEEGPlugin()
 	{
-		return new Ape::ApeTexasEEGPlugin;
+		return new ape::ApeTexasEEGPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeTexasEEGPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeTexasEEGPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeTexasEEGPlugin*)plugin;
+		delete (ape::ApeTexasEEGPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

@@ -1,13 +1,13 @@
 #include <fstream>
 #include "ApeLeapMotionPlugin.h"
 
-Ape::LeapMotionPlugin::LeapMotionPlugin()
+ape::LeapMotionPlugin::LeapMotionPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	mLeapController = Leap::Controller();
 	mFingerNames = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
 	mBoneNames = {"Metacarpal", "Proximal", "Middle", "Distal"};
@@ -17,19 +17,19 @@ Ape::LeapMotionPlugin::LeapMotionPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::LeapMotionPlugin::~LeapMotionPlugin()
+ape::LeapMotionPlugin::~LeapMotionPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
+void ape::LeapMotionPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::LeapMotionPlugin::Init()
+void ape::LeapMotionPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mLeapController.addListener(*this);
@@ -38,7 +38,7 @@ void Ape::LeapMotionPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::Run()
+void ape::LeapMotionPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -48,8 +48,8 @@ void Ape::LeapMotionPlugin::Run()
 		Leap::Hand rightMost = frame.hands().rightmost();
 		if (auto rightHandNode = mRightHandNode.lock())
 		{
-			rightHandNode->setPosition(Ape::Vector3(rightMost.palmPosition().x / 10, rightMost.palmPosition().z / 10, -rightMost.palmPosition().y / 10));
-			//rightHandNode->setPosition(Ape::Vector3(0, 0, -100));
+			rightHandNode->setPosition(ape::Vector3(rightMost.palmPosition().x / 10, rightMost.palmPosition().z / 10, -rightMost.palmPosition().y / 10));
+			//rightHandNode->setPosition(ape::Vector3(0, 0, -100));
 			//APE_LOG_DEBUG(rightHandNode->getPosition().toString());
 		}
 		mPreviousFramePitch = rightMost.direction().pitch() * Leap::RAD_TO_DEG;
@@ -94,37 +94,37 @@ void Ape::LeapMotionPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::Step()
+void ape::LeapMotionPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::Stop()
+void ape::LeapMotionPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::Suspend()
+void ape::LeapMotionPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::Restart()
+void ape::LeapMotionPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onInit(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onInit(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onConnect(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onConnect(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	controller.enableGesture(Leap::Gesture::TYPE_CIRCLE);
@@ -134,19 +134,19 @@ void Ape::LeapMotionPlugin::onConnect(const Leap::Controller& controller)
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onDisconnect(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onDisconnect(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onExit(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onExit(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
 {
 	//APE_LOG_DEBUG("LeapMotionPlugin::onFrame");
 	const Leap::Frame frame = controller.frame();
@@ -238,19 +238,19 @@ void Ape::LeapMotionPlugin::onFrame(const Leap::Controller& controller)
 	//}
 }
 
-void Ape::LeapMotionPlugin::onFocusGained(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onFocusGained(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onFocusLost(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onFocusLost(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onDeviceChange(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onDeviceChange(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	const Leap::DeviceList devices = controller.devices();
@@ -262,13 +262,13 @@ void Ape::LeapMotionPlugin::onDeviceChange(const Leap::Controller& controller)
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onServiceConnect(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onServiceConnect(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::LeapMotionPlugin::onServiceDisconnect(const Leap::Controller& controller)
+void ape::LeapMotionPlugin::onServiceDisconnect(const Leap::Controller& controller)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

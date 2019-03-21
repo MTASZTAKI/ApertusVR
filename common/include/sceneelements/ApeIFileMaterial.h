@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include "datatypes/ApeMaterial.h"
 
-namespace Ape
+namespace ape
 {
 	class IFileMaterial : public Material
 	{
@@ -41,13 +41,13 @@ namespace Ape
 
 		virtual void setAsSkyBox() = 0;
 
-		virtual void setPassTexture(Ape::TextureWeakPtr texture) = 0;
+		virtual void setPassTexture(ape::TextureWeakPtr texture) = 0;
 
-		virtual void setPassGpuParameters(Ape::PassGpuParameters passGpuParameters) = 0;
+		virtual void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) = 0;
 
-		virtual Ape::TextureWeakPtr getPassTexture() = 0;
+		virtual ape::TextureWeakPtr getPassTexture() = 0;
 
-		virtual Ape::PassGpuParameters getPassGpuParameters() = 0;
+		virtual ape::PassGpuParameters getPassGpuParameters() = 0;
 	};
 
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;

@@ -40,9 +40,9 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeOisUserInputPlugin"
 
-namespace Ape
+namespace ape
 {
-	class OISUserInputPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class OISUserInputPlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 	{
 	public:
 		OISUserInputPlugin();
@@ -90,19 +90,19 @@ namespace Ape
 
 		OIS::Mouse* mpMouse;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
+		ape::IMainWindow* mpMainWindow;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		MouseState mMouseState;
 
-		std::vector<Ape::UserInputMacro::ViewPose> mViewPoses;
+		std::vector<ape::UserInputMacro::ViewPose> mViewPoses;
 
 		int mViewPosesToggleIndex;
 
@@ -118,11 +118,11 @@ namespace Ape
 
 		bool mIsKeyPressed;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		Ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
+		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
 		void updateViewPoseByKeyBoard();
 
@@ -130,17 +130,17 @@ namespace Ape
 
 		void toggleViewPoses(bool isInterpolated);
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateOISUserInputPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateOISUserInputPlugin()
 	{
-		return new Ape::OISUserInputPlugin;
+		return new ape::OISUserInputPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::OISUserInputPlugin*)plugin;
+		delete (ape::OISUserInputPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

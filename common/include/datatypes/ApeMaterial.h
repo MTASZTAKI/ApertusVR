@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "datatypes/ApePass.h"
 #include "datatypes/ApeVector2.h"
 
-namespace Ape
+namespace ape
 {
 	class Material : public Entity
 	{
@@ -56,13 +56,13 @@ namespace Ape
 
 		virtual ~Material() {};
 
-		Ape::PassWeakPtr mPass;
+		ape::PassWeakPtr mPass;
 
 		CullingMode mCullingMode;
 
 		ManualCullingMode mManualCullingMode;
 
-		Ape::Pass::SceneBlendingType mSceneBlendingType;
+		ape::Pass::SceneBlendingType mSceneBlendingType;
 
 		bool mDepthWriteEnabled;
 
@@ -70,14 +70,14 @@ namespace Ape
 
 		bool mLightingEnabled;
 
-		Ape::Vector2 mDepthBias;
+		ape::Vector2 mDepthBias;
 
 		std::string mPassName;
 
 		bool mIsShowOnOverlay;
 
 	public:
-		Ape::PassWeakPtr getPass() { return mPass; };
+		ape::PassWeakPtr getPass() { return mPass; };
 
 		CullingMode getCullingMode() { return mCullingMode; };
 
@@ -87,11 +87,11 @@ namespace Ape
 
 		bool getDepthCheckEnabled() { return mDepthCheckEnabled; };
 
-		Ape::Vector2 getDepthBias() { return mDepthBias; };
+		ape::Vector2 getDepthBias() { return mDepthBias; };
 
 		bool getLightingEnabled() { return mLightingEnabled; };
 
-		Ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
+		ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 
 		bool isShowOnOverlay() { return mIsShowOnOverlay; };
 	};

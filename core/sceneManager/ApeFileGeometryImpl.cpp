@@ -23,89 +23,89 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApeFileGeometryImpl.h"
 
-Ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : Ape::IFileGeometry(name), Ape::Replica("FileGeometry", isHostCreated)
+ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : ape::IFileGeometry(name), ape::Replica("FileGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mIsExportMesh = false;
 	mIsSubMeshesMerged = false;
 }
 
-Ape::FileGeometryImpl::~FileGeometryImpl()
+ape::FileGeometryImpl::~FileGeometryImpl()
 {
 	
 }
 
-std::string Ape::FileGeometryImpl::getFileName()
+std::string ape::FileGeometryImpl::getFileName()
 {
 	return mFileName;
 }
 
-void Ape::FileGeometryImpl::setFileName(std::string fileName)
+void ape::FileGeometryImpl::setFileName(std::string fileName)
 {
 	mFileName = fileName;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_FILENAME));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_FILENAME));
 }
 
-void Ape::FileGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::FileGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::FileGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void ape::FileGeometryImpl::setMaterial(ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MATERIAL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MATERIAL));
 	}
 	else
-		mMaterial = Ape::MaterialWeakPtr();
+		mMaterial = ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::FileGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::FileGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::FileGeometryImpl::exportMesh()
+void ape::FileGeometryImpl::exportMesh()
 {
 	mIsExportMesh = true;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_EXPORT));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_EXPORT));
 }
 
-bool Ape::FileGeometryImpl::isExportMesh()
+bool ape::FileGeometryImpl::isExportMesh()
 {
 	return mIsExportMesh;
 }
 
-void Ape::FileGeometryImpl::mergeSubMeshes()
+void ape::FileGeometryImpl::mergeSubMeshes()
 {
 	mIsSubMeshesMerged = true;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 }
 
-bool Ape::FileGeometryImpl::isMergeSubMeshes()
+bool ape::FileGeometryImpl::isMergeSubMeshes()
 {
 	return mIsSubMeshesMerged;
 }
 
-void Ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -119,7 +119,7 @@ RakNet::RM3SerializationResult Ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
@@ -127,7 +127,7 @@ void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, fileName))
 	{
 		mFileName = fileName.C_String();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_FILENAME));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_FILENAME));
 	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
@@ -136,23 +136,23 @@ void Ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		{
 			mParentNode = parentNode;
 			mParentNodeName = parentName.C_String();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
 		}
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
 	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
+		if (auto material = std::static_pointer_cast<ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MATERIAL));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MATERIAL));
 		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsExportMesh))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_EXPORT));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_EXPORT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSubMeshesMerged))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

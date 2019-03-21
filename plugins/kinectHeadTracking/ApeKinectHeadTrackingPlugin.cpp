@@ -1,38 +1,38 @@
 #include "ApeKinectHeadTrackingPlugin.h"
 
 
-Ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
+ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpKinectSensor = NULL;
 	mpKinectReader = NULL;
 	mpCoordinateMapper = NULL;
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameraCount = 0;
-	mCameraDoubleQueue = Ape::DoubleQueue<Ape::CameraWeakPtr>();
-	mTrackerConfig = Ape::HeadTrackerConfig();
-	mDisplayConfigList = Ape::HeadTrackerDisplayConfigList();
-	mTrackedViewerPosition = Ape::Vector3(0, -60, 150);
-	mTrackedViewerOrientation = Ape::Quaternion();
-	mTrackedViewerOrientationYPR = Ape::Euler();
+	mCameraDoubleQueue = ape::DoubleQueue<ape::CameraWeakPtr>();
+	mTrackerConfig = ape::HeadTrackerConfig();
+	mDisplayConfigList = ape::HeadTrackerDisplayConfigList();
+	mTrackedViewerPosition = ape::Vector3(0, -60, 150);
+	mTrackedViewerOrientation = ape::Quaternion();
+	mTrackedViewerOrientationYPR = ape::Euler();
 	mNearClip = 0.0f;
 	mFarClip = 0.0f;
 	mC = 0.0f;
 	mD = 0.0f;
-	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
+	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::KinectHeadTrackingPlugin::~KinectHeadTrackingPlugin()
+ape::KinectHeadTrackingPlugin::~KinectHeadTrackingPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(Ape::Event::Group::CAMERA, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	SafeRelease(mpKinectReader);
 	SafeRelease(mpCoordinateMapper);
 	if (mpKinectSensor)
@@ -43,7 +43,7 @@ Ape::KinectHeadTrackingPlugin::~KinectHeadTrackingPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::KinectHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr)
+void ape::KinectHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("cameraName: " << cameraName);
@@ -66,11 +66,11 @@ void Ape::KinectHeadTrackingPlugin::setCameraConfigByName(std::string cameraName
 }
 
 
-void Ape::KinectHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
+void ape::KinectHeadTrackingPlugin::eventCallBack(const ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::CAMERA_CREATE)
+	if (event.type == ape::Event::Type::CAMERA_CREATE)
 	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			APE_LOG_DEBUG("camera: " << camera->getName());
 			mCameraDoubleQueue.push(camera);
@@ -78,13 +78,13 @@ void Ape::KinectHeadTrackingPlugin::eventCallBack(const Ape::Event& event)
 	}
 }
 
-Ape::Matrix4 Ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
+ape::Matrix4 ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
 {
 	float x = 2.0f * mNearClip / (displayDistanceRight - displayDistanceLeft);
 	float y = 2.0f * mNearClip / (displayDistanceTop - displayDistanceBottom);
 	float a = (displayDistanceRight + displayDistanceLeft) / (displayDistanceRight - displayDistanceLeft);
 	float b = (displayDistanceTop + displayDistanceBottom) / (displayDistanceTop - displayDistanceBottom);
-	Ape::Matrix4 m(
+	ape::Matrix4 m(
 		x, 0, a, 0,
 		0, y, b, 0,
 		0, 0, mC, mD,
@@ -92,9 +92,9 @@ Ape::Matrix4 Ape::KinectHeadTrackingPlugin::perspectiveOffCenter(float& displayD
 	return m;
 }
 
-Ape::Matrix4 Ape::KinectHeadTrackingPlugin::calculateCameraProjection(Ape::HeadTrackerDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition)
+ape::Matrix4 ape::KinectHeadTrackingPlugin::calculateCameraProjection(ape::HeadTrackerDisplayConfig& displayConfig, ape::Vector3& trackedEyePosition)
 {
-	Ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
+	ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 
 	float displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop, trackedViewerDistanceToDisplay;
 
@@ -109,20 +109,20 @@ Ape::Matrix4 Ape::KinectHeadTrackingPlugin::calculateCameraProjection(Ape::HeadT
 	displayDistanceBottom = (displayConfig.height.dotProduct(trackedViewerDistanceToDisplayBottomLeftCorner) * mNearClip) / trackedViewerDistanceToDisplay;
 	displayDistanceTop = (displayConfig.height.dotProduct(trackedViewerDistanceToDisplayTopLeftCorner) * mNearClip) / trackedViewerDistanceToDisplay;
 
-	Ape::Matrix4 perspectiveOffCenterProjection = perspectiveOffCenter(displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop);
+	ape::Matrix4 perspectiveOffCenterProjection = perspectiveOffCenter(displayDistanceLeft, displayDistanceRight, displayDistanceBottom, displayDistanceTop);
 
-	Ape::Matrix4 trackedViewerTranslate(
+	ape::Matrix4 trackedViewerTranslate(
 		1, 0, 0, -trackedEyePosition.x,
 		0, 1, 0, -trackedEyePosition.y,
 		0, 0, 1, -trackedEyePosition.z,
 		0, 0, 0, 1);
 
-	Ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * displayConfig.transform * trackedViewerTranslate;
+	ape::Matrix4 cameraProjection = perspectiveOffCenterProjection * displayConfig.transform * trackedViewerTranslate;
 
 	return cameraProjection;
 }
 
-void Ape::KinectHeadTrackingPlugin::Init()
+void ape::KinectHeadTrackingPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("Sensor init begin");
@@ -146,8 +146,8 @@ void Ape::KinectHeadTrackingPlugin::Init()
 			{
 				if (trackerMemberIterator->name == "rotation")
 				{
-					Ape::Degree angle;
-					Ape::Vector3 axis;
+					ape::Degree angle;
+					ape::Vector3 axis;
 					for (rapidjson::Value::MemberIterator rotationMemberIterator =
 						tracker[trackerMemberIterator->name].MemberBegin();
 						rotationMemberIterator != tracker[trackerMemberIterator->name].MemberEnd(); ++rotationMemberIterator)
@@ -161,7 +161,7 @@ void Ape::KinectHeadTrackingPlugin::Init()
 						else if (rotationMemberIterator->name == "z")
 							axis.z = rotationMemberIterator->value.GetFloat();
 					}
-					mTrackerConfig.rotation.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
+					mTrackerConfig.rotation.FromAngleAxis(ape::Radian(angle.toRadian()), axis);
 				}
 				else if (trackerMemberIterator->name == "translate")
 				{
@@ -193,17 +193,17 @@ void Ape::KinectHeadTrackingPlugin::Init()
 				}
 				else if (trackerMemberIterator->name == "leftEyeOffset")
 				{
-					mTrackerConfig.leftEyeOffset = Ape::Vector3(trackerMemberIterator->value.GetFloat(), 0, 0);
+					mTrackerConfig.leftEyeOffset = ape::Vector3(trackerMemberIterator->value.GetFloat(), 0, 0);
 				}
 				else if (trackerMemberIterator->name == "rightEyeOffset")
 				{
-					mTrackerConfig.rightEyeOffset = Ape::Vector3(trackerMemberIterator->value.GetFloat(), 0, 0);
+					mTrackerConfig.rightEyeOffset = ape::Vector3(trackerMemberIterator->value.GetFloat(), 0, 0);
 				}
 			}
 			rapidjson::Value& displays = jsonDocument["displays"];
 			for (auto& display : displays.GetArray())
 			{
-				Ape::HeadTrackerDisplayConfig kinectHeadTrackingDisplayConfig;
+				ape::HeadTrackerDisplayConfig kinectHeadTrackingDisplayConfig;
 				for (rapidjson::Value::MemberIterator displayMemberIterator =
 					display.MemberBegin(); displayMemberIterator != display.MemberEnd(); ++displayMemberIterator)
 				{
@@ -257,8 +257,8 @@ void Ape::KinectHeadTrackingPlugin::Init()
 					}
 					else if (displayMemberIterator->name == "orientation")
 					{
-						Ape::Degree angle;
-						Ape::Vector3 axis;
+						ape::Degree angle;
+						ape::Vector3 axis;
 						for (rapidjson::Value::MemberIterator orientationMemberIterator =
 							display[displayMemberIterator->name].MemberBegin();
 							orientationMemberIterator != display[displayMemberIterator->name].MemberEnd(); ++orientationMemberIterator)
@@ -272,7 +272,7 @@ void Ape::KinectHeadTrackingPlugin::Init()
 							else if (orientationMemberIterator->name == "z")
 								axis.z = orientationMemberIterator->value.GetFloat();
 						}
-						kinectHeadTrackingDisplayConfig.orientation.FromAngleAxis(Ape::Radian(angle.toRadian()), axis);
+						kinectHeadTrackingDisplayConfig.orientation.FromAngleAxis(ape::Radian(angle.toRadian()), axis);
 					}
 					else if (displayMemberIterator->name == "corners")
 					{
@@ -334,7 +334,7 @@ void Ape::KinectHeadTrackingPlugin::Init()
 					kinectHeadTrackingDisplayConfig.normal = kinectHeadTrackingDisplayConfig.width.crossProduct(kinectHeadTrackingDisplayConfig.height);
 					kinectHeadTrackingDisplayConfig.normal.normalise();
 
-					kinectHeadTrackingDisplayConfig.transform = Ape::Matrix4(
+					kinectHeadTrackingDisplayConfig.transform = ape::Matrix4(
 						kinectHeadTrackingDisplayConfig.width.x, kinectHeadTrackingDisplayConfig.width.y, kinectHeadTrackingDisplayConfig.width.z, 0,
 						kinectHeadTrackingDisplayConfig.height.x, kinectHeadTrackingDisplayConfig.height.y, kinectHeadTrackingDisplayConfig.height.z, 0,
 						kinectHeadTrackingDisplayConfig.normal.x, kinectHeadTrackingDisplayConfig.normal.y, kinectHeadTrackingDisplayConfig.normal.z, 0,
@@ -350,7 +350,7 @@ void Ape::KinectHeadTrackingPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
+void ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 {
 	APE_LOG_FUNC_ENTER();
 	HRESULT hr;
@@ -368,7 +368,7 @@ void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 				{
 					if (joints[JointType_Head].TrackingState == 2)
 					{
-						Ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
+						ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
 						mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
 						mpApeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
 					}
@@ -379,7 +379,7 @@ void Ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::KinectHeadTrackingPlugin::getBodyDataFromSensor(IMultiSourceFrame* pframe)
+void ape::KinectHeadTrackingPlugin::getBodyDataFromSensor(IMultiSourceFrame* pframe)
 {
 	APE_LOG_FUNC_ENTER();
 	IBodyFrame* pBodyFrame = NULL;
@@ -423,7 +423,7 @@ void Ape::KinectHeadTrackingPlugin::getBodyDataFromSensor(IMultiSourceFrame* pfr
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::KinectHeadTrackingPlugin::Run()
+void ape::KinectHeadTrackingPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	int cameraCount = 0;
@@ -471,7 +471,7 @@ void Ape::KinectHeadTrackingPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-HRESULT Ape::KinectHeadTrackingPlugin::InitializeDefaultSensor()
+HRESULT ape::KinectHeadTrackingPlugin::InitializeDefaultSensor()
 {
 	APE_LOG_FUNC_ENTER();
 	HRESULT hr;
@@ -503,22 +503,22 @@ HRESULT Ape::KinectHeadTrackingPlugin::InitializeDefaultSensor()
 	return hr;
 }
 
-void Ape::KinectHeadTrackingPlugin::Step()
+void ape::KinectHeadTrackingPlugin::Step()
 {
 
 }
 
-void Ape::KinectHeadTrackingPlugin::Stop()
+void ape::KinectHeadTrackingPlugin::Stop()
 {
 
 }
 
-void Ape::KinectHeadTrackingPlugin::Suspend()
+void ape::KinectHeadTrackingPlugin::Suspend()
 {
 
 }
 
-void Ape::KinectHeadTrackingPlugin::Restart()
+void ape::KinectHeadTrackingPlugin::Restart()
 {
 
 }

@@ -35,21 +35,21 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
     return size * nmemb;
 }
 
-Ape::HttpManager::HttpManager()
+ape::HttpManager::HttpManager()
 {
 #ifdef HTTPMANAGER_USE_CURL
     mpCurl = curl_easy_init();
 #endif
 }
 
-Ape::HttpManager::~HttpManager()
+ape::HttpManager::~HttpManager()
 {
 #ifdef HTTPMANAGER_USE_CURL
     curl_easy_cleanup(mpCurl);
 #endif
 }
 
-std::string Ape::HttpManager::download(const std::string& url)
+std::string ape::HttpManager::download(const std::string& url)
 {
 	std::stringstream out;
 #ifdef HTTPMANAGER_USE_CURL
@@ -71,7 +71,7 @@ std::string Ape::HttpManager::download(const std::string& url)
     return out.str();
 }
 
-std::string Ape::HttpManager::post(const std::string& url, const std::string& data)
+std::string ape::HttpManager::post(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
 #ifdef HTTPMANAGER_USE_CURL
@@ -107,7 +107,7 @@ std::string Ape::HttpManager::post(const std::string& url, const std::string& da
 	return out.str();
 }
 
-std::string Ape::HttpManager::del(const std::string& url, const std::string& data)
+std::string ape::HttpManager::del(const std::string& url, const std::string& data)
 {
 	std::stringstream out;
 #ifdef HTTPMANAGER_USE_CURL

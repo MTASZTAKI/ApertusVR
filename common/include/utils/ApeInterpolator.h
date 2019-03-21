@@ -36,7 +36,7 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeQuaternion.h"
 
-namespace Ape
+namespace ape
 {
 	typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
@@ -262,9 +262,9 @@ namespace Ape
 	typedef std::shared_ptr<Interpolator> InterpolatorPtr;
 
 	template <>
-	Ape::Quaternion inline Interpolator::Section<Ape::Quaternion>::_increment_by_percent(double percent)
+	ape::Quaternion inline Interpolator::Section<ape::Quaternion>::_increment_by_percent(double percent)
 	{
-		return Ape::Quaternion::Slerp((float)percent, m_value_start, m_value_goal, true);
+		return ape::Quaternion::Slerp((float)percent, m_value_start, m_value_goal, true);
 	}
 }
 

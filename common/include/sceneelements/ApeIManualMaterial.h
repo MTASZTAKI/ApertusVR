@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include "datatypes/ApeMaterial.h"
 
-namespace Ape
+namespace ape
 {
 	class IManualMaterial : public Material
 	{
@@ -34,40 +34,40 @@ namespace Ape
 
 		virtual ~IManualMaterial() {};
 
-		Ape::Color mDiffuseColor;
+		ape::Color mDiffuseColor;
 
-		Ape::Color mSpecularColor;
+		ape::Color mSpecularColor;
 
-		Ape::Color mAmbientColor;
+		ape::Color mAmbientColor;
 
-		Ape::Color mEmissiveColor;
+		ape::Color mEmissiveColor;
 
 	public:
 		virtual void setDiffuseColor(Color diffuse) = 0;
 
 		virtual void setSpecularColor(Color specular) = 0;
 
-		Ape::Color getDiffuseColor() { return mDiffuseColor; };
+		ape::Color getDiffuseColor() { return mDiffuseColor; };
 
-		Ape::Color getSpecularColor() { return mSpecularColor; };
+		ape::Color getSpecularColor() { return mSpecularColor; };
 
 		virtual void setAmbientColor(Color ambient) = 0;
 
 		virtual void setEmissiveColor(Color emissive) = 0;
 
-		Ape::Color getAmbientColor() { return mAmbientColor; };
+		ape::Color getAmbientColor() { return mAmbientColor; };
 
-		Ape::Color getEmissiveColor() { return mEmissiveColor; };
+		ape::Color getEmissiveColor() { return mEmissiveColor; };
 
-		virtual void setPassTexture(Ape::TextureWeakPtr texture) = 0;
+		virtual void setPassTexture(ape::TextureWeakPtr texture) = 0;
 
-		virtual Ape::TextureWeakPtr getPassTexture() = 0;
+		virtual ape::TextureWeakPtr getPassTexture() = 0;
 
-		virtual void setPass(Ape::PassWeakPtr pass) = 0;
+		virtual void setPass(ape::PassWeakPtr pass) = 0;
 
-		virtual void setCullingMode(Ape::Material::CullingMode cullingMode) = 0;
+		virtual void setCullingMode(ape::Material::CullingMode cullingMode) = 0;
 
-		virtual void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) = 0;
+		virtual void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) = 0;
 
 		virtual void setDepthWriteEnabled(bool enable) = 0;
 
@@ -75,7 +75,7 @@ namespace Ape
 
 		virtual void setLightingEnabled(bool enable) = 0;
 
-		virtual void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) = 0;
+		virtual void setManualCullingMode(ape::Material::ManualCullingMode manualcullingMode) = 0;
 
 		virtual void setDepthBias(float constantBias, float slopeScaleBias) = 0;
 

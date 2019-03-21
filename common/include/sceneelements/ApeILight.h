@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	namespace Light
 	{
@@ -79,12 +79,12 @@ namespace Ape
 	class ILight : public Entity
 	{
 	protected:
-		ILight(std::string name) : Entity(name, Ape::Entity::LIGHT) {}
+		ILight(std::string name) : Entity(name, ape::Entity::LIGHT) {}
 
 		virtual ~ILight() {};
 
 	public:
-		virtual Ape::Light::Type getLightType() = 0;
+		virtual ape::Light::Type getLightType() = 0;
 
 		virtual Color getDiffuseColor() = 0;
 
@@ -96,7 +96,7 @@ namespace Ape
 
 		virtual Vector3 getLightDirection() = 0;
 
-		virtual void setLightType(Ape::Light::Type lightType) = 0;
+		virtual void setLightType(ape::Light::Type lightType) = 0;
 
 		virtual void setDiffuseColor(Color diffuseColor) = 0;
 
@@ -108,9 +108,9 @@ namespace Ape
 
 		virtual void setLightDirection(Vector3 lightDirection) = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+		virtual ape::NodeWeakPtr getParentNode() = 0;
 
 	};
 }

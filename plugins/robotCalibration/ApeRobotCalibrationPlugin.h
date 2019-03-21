@@ -63,24 +63,24 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeRobotCalibrationPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeRobotCalibrationPlugin : public Ape::IPlugin
+	class ApeRobotCalibrationPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeRobotCalibrationPlugin();
@@ -100,14 +100,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeRobotCalibrationPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeRobotCalibrationPlugin()
 	{
-		return new Ape::ApeRobotCalibrationPlugin;
+		return new ape::ApeRobotCalibrationPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeRobotCalibrationPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeRobotCalibrationPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeRobotCalibrationPlugin*)plugin;
+		delete (ape::ApeRobotCalibrationPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

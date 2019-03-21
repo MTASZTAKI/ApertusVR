@@ -50,18 +50,18 @@ SOFTWARE.*/
 #include "utils/ApeInterpolator.h"
 #include "utils/ApeSingleton.h"
 
-namespace Ape
+namespace ape
 {
     class SceneMakerMacro
     {
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		SceneMakerMacro();
@@ -90,7 +90,7 @@ namespace Ape
 
 		void makeOverlayBrowser();
 
-		void interpolate(Ape::NodeWeakPtr node, Ape::Vector3 position, Ape::Quaternion orientation, unsigned int milliseconds);
+		void interpolate(ape::NodeWeakPtr node, ape::Vector3 position, ape::Quaternion orientation, unsigned int milliseconds);
 
     };
 }

@@ -22,67 +22,67 @@ SOFTWARE.*/
 
 #include "ApeBoxGeometryImpl.h"
 
-Ape::BoxGeometryImpl::BoxGeometryImpl(std::string name, bool isHostCreated) : Ape::IBoxGeometry(name), Ape::Replica("BoxGeometry", isHostCreated)
+ape::BoxGeometryImpl::BoxGeometryImpl(std::string name, bool isHostCreated) : ape::IBoxGeometry(name), ape::Replica("BoxGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryBoxParameters();
-	mMaterial = Ape::MaterialWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryBoxParameters();
+	mMaterial = ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::BoxGeometryImpl::~BoxGeometryImpl()
+ape::BoxGeometryImpl::~BoxGeometryImpl()
 {
 	
 }
 
-void Ape::BoxGeometryImpl::setParameters(Ape::Vector3 dimensions)
+void ape::BoxGeometryImpl::setParameters(ape::Vector3 dimensions)
 {
 	mParameters.dimensions = dimensions;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_PARAMETERS));
 }
 
-Ape::GeometryBoxParameters Ape::BoxGeometryImpl::getParameters()
+ape::GeometryBoxParameters ape::BoxGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::BoxGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::BoxGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::BoxGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void ape::BoxGeometryImpl::setMaterial(ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_MATERIAL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_MATERIAL));
 	}
 	else
-		mMaterial = Ape::MaterialWeakPtr();
+		mMaterial = ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::BoxGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::BoxGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::BoxGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::BoxGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::BoxGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::BoxGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -94,27 +94,27 @@ RakNet::RM3SerializationResult Ape::BoxGeometryImpl::Serialize(RakNet::Serialize
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::BoxGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::BoxGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
 	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
+		if (auto material = std::static_pointer_cast<ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_BOX_MATERIAL));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_BOX_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

@@ -51,32 +51,32 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeFobHeadTrackingPlugin : public Ape::IPlugin
+	class ApeFobHeadTrackingPlugin : public ape::IPlugin
 	{
 	private:
 		int mCameraCount;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
+		ape::DoubleQueue<ape::CameraWeakPtr> mCameraDoubleQueue;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::HeadTrackerConfig mTrackerConfig;
+		ape::HeadTrackerConfig mTrackerConfig;
 
-		Ape::HeadTrackerDisplayConfigList mDisplayConfigList;
+		ape::HeadTrackerDisplayConfigList mDisplayConfigList;
 
-		Ape::Vector3 mTrackedViewerPosition;
+		ape::Vector3 mTrackedViewerPosition;
 
-		Ape::Vector3 mTrackedPrevViewerPosition;
+		ape::Vector3 mTrackedPrevViewerPosition;
 
-		Ape::Quaternion mTrackedViewerOrientation;
+		ape::Quaternion mTrackedViewerOrientation;
 
-		Ape::Euler mTrackedViewerOrientationYPR;
+		ape::Euler mTrackedViewerOrientationYPR;
 
 		float mNearClip;
 
@@ -88,13 +88,13 @@ namespace Ape
 
 		void* mpFobTracker;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		void setCameraConfigByName(std::string cameraName, Ape::CameraWeakPtr cameraWkPtr);
+		void setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr);
 
-		Ape::Matrix4 calculateCameraProjection(Ape::HeadTrackerDisplayConfig& displayConfig, Ape::Vector3& trackedEyePosition);
+		ape::Matrix4 calculateCameraProjection(ape::HeadTrackerDisplayConfig& displayConfig, ape::Vector3& trackedEyePosition);
 
-		Ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
+		ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 
 	public:
 		ApeFobHeadTrackingPlugin();
@@ -114,14 +114,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeFobHeadTrackingPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeFobHeadTrackingPlugin()
 	{
-		return new Ape::ApeFobHeadTrackingPlugin;
+		return new ape::ApeFobHeadTrackingPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeFobHeadTrackingPlugin*)plugin;
+		delete (ape::ApeFobHeadTrackingPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

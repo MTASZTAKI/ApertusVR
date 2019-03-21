@@ -22,9 +22,9 @@ SOFTWARE.*/
 
 #include "ApePluginFactory.h"
 
-Ape::PluginFactory::CallbackMap Ape::PluginFactory::mPluginCallbackMap;
+ape::PluginFactory::CallbackMap ape::PluginFactory::mPluginCallbackMap;
 
-void Ape::PluginFactory::RegisterPlugin(const std::string &type, CreateCallback createCb, DestroyCallback destroyCb)
+void ape::PluginFactory::RegisterPlugin(const std::string &type, CreateCallback createCb, DestroyCallback destroyCb)
 {
 	PluginCallbacks pb;
 	pb.createCb = createCb;
@@ -32,7 +32,7 @@ void Ape::PluginFactory::RegisterPlugin(const std::string &type, CreateCallback 
 	mPluginCallbackMap[type] = pb;
 }
 
-void Ape::PluginFactory::UnregisterPlugin(const std::string &type, Ape::IPlugin *plugin)
+void ape::PluginFactory::UnregisterPlugin(const std::string &type, ape::IPlugin *plugin)
 {
 	CallbackMap::iterator it = mPluginCallbackMap.find(type);
 	if (it != mPluginCallbackMap.end())
@@ -40,7 +40,7 @@ void Ape::PluginFactory::UnregisterPlugin(const std::string &type, Ape::IPlugin 
 	mPluginCallbackMap.erase(type);
 }
 
-Ape::IPlugin* Ape::PluginFactory::CreatePlugin(const std::string &type)
+ape::IPlugin* ape::PluginFactory::CreatePlugin(const std::string &type)
 {
 	CallbackMap::iterator it = mPluginCallbackMap.find(type);
 	if (it != mPluginCallbackMap.end())

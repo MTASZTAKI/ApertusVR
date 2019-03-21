@@ -23,56 +23,56 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApeRayGeometryImpl.h"
 
-Ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHostCreated) : Ape::IRayGeometry(name), Ape::Replica("RayGeometry", isHostCreated)
+ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHostCreated) : ape::IRayGeometry(name), ape::Replica("RayGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mIntersectingEnabled = false;
-	mIntersections = std::vector<Ape::EntityWeakPtr>();
-	mParentNode = Ape::NodeWeakPtr();
+	mIntersections = std::vector<ape::EntityWeakPtr>();
+	mParentNode = ape::NodeWeakPtr();
 }
 
-Ape::RayGeometryImpl::~RayGeometryImpl()
+ape::RayGeometryImpl::~RayGeometryImpl()
 {
 	
 }
 
-void Ape::RayGeometryImpl::setIntersectingEnabled(bool enable)
+void ape::RayGeometryImpl::setIntersectingEnabled(bool enable)
 {
 	mIntersectingEnabled = enable;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
 }
 
-void Ape::RayGeometryImpl::setIntersections(std::vector<Ape::EntityWeakPtr> intersections)
+void ape::RayGeometryImpl::setIntersections(std::vector<ape::EntityWeakPtr> intersections)
 {
 	mIntersections = intersections;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTION));
 }
 
-void Ape::RayGeometryImpl::fireIntersectionQuery()
+void ape::RayGeometryImpl::fireIntersectionQuery()
 {
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY));
 }
 
-void Ape::RayGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::RayGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::RayGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::RayGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::RayGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::RayGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -84,20 +84,20 @@ RakNet::RM3SerializationResult Ape::RayGeometryImpl::Serialize(RakNet::Serialize
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::RayGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::RayGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIntersectingEnabled))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIntersections))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_INTERSECTION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTION));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_RAY_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_PARENTNODE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

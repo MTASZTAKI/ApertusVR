@@ -36,59 +36,59 @@ SOFTWARE.*/
 class IndexedFaceSetJsPtr
 {
 private:
-	Ape::IndexedFaceSetGeometryWeakPtr mPtr;
+	ape::IndexedFaceSetGeometryWeakPtr mPtr;
 
 public:
-	IndexedFaceSetJsPtr(Ape::IndexedFaceSetGeometryWeakPtr ptr)
+	IndexedFaceSetJsPtr(ape::IndexedFaceSetGeometryWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	IndexedFaceSetJsPtr(Ape::EntityWeakPtr ptr)
+	IndexedFaceSetJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::GeometryWeakPtr getGeometryWeakPtr()
+	ape::GeometryWeakPtr getGeometryWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Geometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::Geometry>(mPtr.lock());
 	}
 
-	Ape::GeometrySharedPtr getGeometrySharedPtr()
+	ape::GeometrySharedPtr getGeometrySharedPtr()
 	{
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::IndexedFaceSetGeometrySharedPtr getIndexedFaceSetGeometrySharedPtr()
+	ape::IndexedFaceSetGeometrySharedPtr getIndexedFaceSetGeometrySharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mPtr.lock());
 	}
 
-	Ape::IndexedFaceSetGeometryWeakPtr getIndexedFaceSetGeometryWeakPtr()
+	ape::IndexedFaceSetGeometryWeakPtr getIndexedFaceSetGeometryWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -110,30 +110,30 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IIndexedFaceSetGeometry
 
-	Ape::GeometryIndexedFaceSetParameters getParameters()
+	ape::GeometryIndexedFaceSetParameters getParameters()
 	{
 		return mPtr.lock()->getParameters();
 	}
 
-	void setParametersWithMaterial(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors, ManualMaterialJsPtr manualMaterial)
+	void setParametersWithMaterial(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, ape::GeometryColors colors, ManualMaterialJsPtr manualMaterial)
 	{
-		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, Ape::GeometryTextureCoordinates(), manualMaterial.getManualMaterialSharedPtr());
+		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, ape::GeometryTextureCoordinates(), manualMaterial.getManualMaterialSharedPtr());
 	}
 
-	void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, Ape::GeometryColors colors)
+	void setParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, ape::GeometryColors colors)
 	{
-		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, Ape::GeometryTextureCoordinates(), Ape::MaterialWeakPtr());
+		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, ape::GeometryTextureCoordinates(), ape::MaterialWeakPtr());
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 NBIND_CLASS(GeometryIndexedFaceSetParameters)
 {
 	construct<>();
@@ -150,8 +150,8 @@ NBIND_CLASS(GeometryIndexedFaceSetParameters)
 
 NBIND_CLASS(IndexedFaceSetJsPtr)
 {
-	construct<Ape::IndexedFaceSetGeometryWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::IndexedFaceSetGeometryWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

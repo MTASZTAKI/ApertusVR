@@ -37,7 +37,7 @@ SOFTWARE.*/
 #include "datatypes/ApeEvent.h"
 #include "utils/ApeSingleton.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_EVENTMANAGER_DLL_EXPORT IEventManager : public Singleton<IEventManager>
 	{
@@ -45,9 +45,9 @@ namespace Ape
 		virtual ~IEventManager() {};
 
 	public:
-		virtual void connectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback ) = 0;
+		virtual void connectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> callback ) = 0;
 
-		virtual void disconnectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback) = 0;
+		virtual void disconnectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> callback) = 0;
 	};
 }
 

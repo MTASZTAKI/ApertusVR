@@ -58,22 +58,22 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeIndustry40Plugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeIndustry40Plugin : public Ape::IPlugin
+	class ApeIndustry40Plugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::PointCloudWeakPtr mPointCloud;
+		ape::PointCloudWeakPtr mPointCloud;
 
 	public:
 		ApeIndustry40Plugin();
@@ -93,14 +93,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeIndustry40Plugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeIndustry40Plugin()
 	{
-		return new Ape::ApeIndustry40Plugin;
+		return new ape::ApeIndustry40Plugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeIndustry40Plugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeIndustry40Plugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeIndustry40Plugin*)plugin;
+		delete (ape::ApeIndustry40Plugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

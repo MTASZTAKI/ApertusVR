@@ -29,7 +29,7 @@ SOFTWARE.*/
 #include <vector>
 #include <fstream>
 
-namespace Ape
+namespace ape
 {
 	struct Vector3
 	{

@@ -30,25 +30,25 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryPlaneParameters
 	{
-		Ape::Vector2 numSeg;
-		Ape::Vector2 size;
-		Ape::Vector2 tile;
+		ape::Vector2 numSeg;
+		ape::Vector2 size;
+		ape::Vector2 tile;
 
 		GeometryPlaneParameters()
 		{
-			this->numSeg = Ape::Vector2();
-			this->size = Ape::Vector2();
-			this->tile = Ape::Vector2();
+			this->numSeg = ape::Vector2();
+			this->size = ape::Vector2();
+			this->tile = ape::Vector2();
 		}
 
 		GeometryPlaneParameters(
-		    Ape::Vector2 numSeg,
-		    Ape::Vector2 size,
-		    Ape::Vector2 tile)
+		    ape::Vector2 numSeg,
+		    ape::Vector2 size,
+		    ape::Vector2 tile)
 		{
 			this->numSeg = numSeg;
 			this->size = size;
@@ -56,23 +56,23 @@ namespace Ape
 		}
 	};
 
-	class IPlaneGeometry : public Ape::Geometry
+	class IPlaneGeometry : public ape::Geometry
 	{
 	protected:
-		IPlaneGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_PLANE) {}
+		IPlaneGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_PLANE) {}
 
 		virtual ~IPlaneGeometry() {};
 
 	public:
-		virtual void setParameters(Ape::Vector2 numSeg, Ape::Vector2 size, Ape::Vector2 tile) = 0;
+		virtual void setParameters(ape::Vector2 numSeg, ape::Vector2 size, ape::Vector2 tile) = 0;
 
-		virtual Ape::GeometryPlaneParameters getParameters() = 0;
+		virtual ape::GeometryPlaneParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

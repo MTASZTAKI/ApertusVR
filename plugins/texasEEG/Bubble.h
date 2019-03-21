@@ -37,17 +37,17 @@ namespace TexasEEG
 	private:
 		std::thread* mTimerThread;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::NodeWeakPtr mBubbleNode;
+		ape::NodeWeakPtr mBubbleNode;
 
-		Ape::EntityWeakPtr mGeometry;
+		ape::EntityWeakPtr mGeometry;
 
-		Ape::EntityWeakPtr mCounterText;
+		ape::EntityWeakPtr mCounterText;
 
-		Ape::EntityWeakPtr mMaterial;
+		ape::EntityWeakPtr mMaterial;
 
-		Ape::Vector3 mPosition;
+		ape::Vector3 mPosition;
 
 		int mValue;
 
@@ -62,7 +62,7 @@ namespace TexasEEG
 		void init();
 
 	public:
-		Bubble(Ape::Vector3 pos = Ape::Vector3(0, 0, 0), int maxCount = 10);
+		Bubble(ape::Vector3 pos = ape::Vector3(0, 0, 0), int maxCount = 10);
 
 		~Bubble();
 
@@ -76,7 +76,7 @@ namespace TexasEEG
 
 		int getId();
 
-		Ape::Vector3 getPosition();
+		ape::Vector3 getPosition();
 
 		int getValue();
 
@@ -86,7 +86,7 @@ namespace TexasEEG
 
 		void decCounter();
 
-		void setColor(Ape::Color color);
+		void setColor(ape::Color color);
 
 		void setText(std::string caption);
 

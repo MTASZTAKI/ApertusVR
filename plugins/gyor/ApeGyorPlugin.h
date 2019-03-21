@@ -60,24 +60,24 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeGyorPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeGyorPlugin : public Ape::IPlugin
+	class ApeGyorPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeGyorPlugin();
@@ -97,14 +97,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGyorPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeGyorPlugin()
 	{
-		return new Ape::ApeGyorPlugin;
+		return new ape::ApeGyorPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeGyorPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeGyorPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeGyorPlugin*)plugin;
+		delete (ape::ApeGyorPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

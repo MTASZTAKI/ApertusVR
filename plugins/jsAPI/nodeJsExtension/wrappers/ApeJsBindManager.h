@@ -67,27 +67,27 @@ public:
 	JsBindManager()
 	{
 		APE_LOG_FUNC_ENTER();
-		mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-		mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-		mpEventManager = Ape::IEventManager::getSingletonPtr();
+		mpSceneManager = ape::ISceneManager::getSingletonPtr();
+		mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+		mpEventManager = ape::IEventManager::getSingletonPtr();
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
-		mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
-		mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
+		mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+		mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 		APE_LOG_FUNC_LEAVE();
 	}
 
 	void start(std::string configFolderPath)
 	{
 		APE_LOG_FUNC_ENTER();
-		Ape::System::Start(configFolderPath.c_str(), true);
+		ape::System::Start(configFolderPath.c_str(), true);
 		APE_LOG_FUNC_LEAVE();
 	}
 
 	void stop()
 	{
 		APE_LOG_FUNC_ENTER();
-		Ape::System::Stop();
+		ape::System::Stop();
 		APE_LOG_FUNC_LEAVE();
 	}
 
@@ -130,7 +130,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getNode(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto node = std::dynamic_pointer_cast<Ape::INode>(entity))
+			if (auto node = std::dynamic_pointer_cast<ape::INode>(entity))
 			{
 				success = true;
 				done(!success, NodeJsPtr(entityWeakPtr));
@@ -173,7 +173,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return LightJsPtr(mpSceneManager->createEntity(name, Ape::Entity::LIGHT));
+		return LightJsPtr(mpSceneManager->createEntity(name, ape::Entity::LIGHT));
 	}
 
 	bool getLight(std::string name, nbind::cbFunction &done)
@@ -183,7 +183,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto textGeometry = std::dynamic_pointer_cast<Ape::ILight>(entity))
+			if (auto textGeometry = std::dynamic_pointer_cast<ape::ILight>(entity))
 			{
 				success = true;
 				done(!success, LightJsPtr(entityWeakPtr));
@@ -207,7 +207,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return TextJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_TEXT));
+		return TextJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_TEXT));
 	}
 
 	bool getText(std::string name, nbind::cbFunction &done)
@@ -217,7 +217,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto textGeometry = std::dynamic_pointer_cast<Ape::ITextGeometry>(entity))
+			if (auto textGeometry = std::dynamic_pointer_cast<ape::ITextGeometry>(entity))
 			{
 				success = true;
 				done(!success, TextJsPtr(entityWeakPtr));
@@ -241,7 +241,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDFACESET));
+		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET));
 	}
 
 	bool getIndexedFaceSet(std::string name, nbind::cbFunction &done)
@@ -251,7 +251,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto indexedFaceSet = std::dynamic_pointer_cast<Ape::IIndexedFaceSetGeometry>(entity))
+			if (auto indexedFaceSet = std::dynamic_pointer_cast<ape::IIndexedFaceSetGeometry>(entity))
 			{
 				success = true;
 				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
@@ -275,7 +275,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return IndexedLineSetJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_INDEXEDLINESET));
+		return IndexedLineSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDLINESET));
 	}
 
 	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
@@ -285,7 +285,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto indexedLineSet = std::dynamic_pointer_cast<Ape::IIndexedLineSetGeometry>(entity))
+			if (auto indexedLineSet = std::dynamic_pointer_cast<ape::IIndexedLineSetGeometry>(entity))
 			{
 				success = true;
 				done(!success, IndexedLineSetJsPtr(entityWeakPtr));
@@ -309,7 +309,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return BoxJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_BOX));
+		return BoxJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX));
 	}
 
 	bool getBox(std::string name, nbind::cbFunction &done)
@@ -319,7 +319,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto box = std::dynamic_pointer_cast<Ape::IBoxGeometry>(entity))
+			if (auto box = std::dynamic_pointer_cast<ape::IBoxGeometry>(entity))
 			{
 				success = true;
 				done(!success, BoxJsPtr(entityWeakPtr));
@@ -343,7 +343,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return FileGeometryJsPtr(mpSceneManager->createEntity(name, Ape::Entity::GEOMETRY_FILE));
+		return FileGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_FILE));
 	}
 
 	bool getFileGeometry(std::string name, nbind::cbFunction &done)
@@ -353,7 +353,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto box = std::dynamic_pointer_cast<Ape::IFileGeometry>(entity))
+			if (auto box = std::dynamic_pointer_cast<ape::IFileGeometry>(entity))
 			{
 				success = true;
 				done(!success, FileGeometryJsPtr(entityWeakPtr));
@@ -377,7 +377,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return ManualMaterialJsPtr(mpSceneManager->createEntity(name, Ape::Entity::MATERIAL_MANUAL));
+		return ManualMaterialJsPtr(mpSceneManager->createEntity(name, ape::Entity::MATERIAL_MANUAL));
 	}
 
 	bool getManualMaterial(std::string name, nbind::cbFunction &done)
@@ -387,7 +387,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto manualMaterial = std::dynamic_pointer_cast<Ape::IManualMaterial>(entity))
+			if (auto manualMaterial = std::dynamic_pointer_cast<ape::IManualMaterial>(entity))
 			{
 				success = true;
 				done(!success, ManualMaterialJsPtr(entityWeakPtr));
@@ -411,7 +411,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return PbsPassJsPtr(mpSceneManager->createEntity(name, Ape::Entity::PASS_PBS));
+		return PbsPassJsPtr(mpSceneManager->createEntity(name, ape::Entity::PASS_PBS));
 	}
 
 	bool getPbsPass(std::string name, nbind::cbFunction &done)
@@ -421,7 +421,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto pbsPass = std::dynamic_pointer_cast<Ape::IPbsPass>(entity))
+			if (auto pbsPass = std::dynamic_pointer_cast<ape::IPbsPass>(entity))
 			{
 				success = true;
 				done(!success, PbsPassJsPtr(entityWeakPtr));
@@ -445,7 +445,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return ManualPassJsPtr(mpSceneManager->createEntity(name, Ape::Entity::PASS_MANUAL));
+		return ManualPassJsPtr(mpSceneManager->createEntity(name, ape::Entity::PASS_MANUAL));
 	}
 
 	bool getManualPass(std::string name, nbind::cbFunction &done)
@@ -455,7 +455,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto ManualPass = std::dynamic_pointer_cast<Ape::IManualPass>(entity))
+			if (auto ManualPass = std::dynamic_pointer_cast<ape::IManualPass>(entity))
 			{
 				success = true;
 				done(!success, ManualPassJsPtr(entityWeakPtr));
@@ -479,7 +479,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return PointCloudJsPtr(mpSceneManager->createEntity(name, Ape::Entity::POINT_CLOUD));
+		return PointCloudJsPtr(mpSceneManager->createEntity(name, ape::Entity::POINT_CLOUD));
 	}
 
 	bool getPointCloud(std::string name, nbind::cbFunction &done)
@@ -489,7 +489,7 @@ public:
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
-			if (auto PointCloud = std::dynamic_pointer_cast<Ape::IPointCloud>(entity))
+			if (auto PointCloud = std::dynamic_pointer_cast<ape::IPointCloud>(entity))
 			{
 				success = true;
 				done(!success, PointCloudJsPtr(entityWeakPtr));
@@ -517,11 +517,11 @@ public:
 	}
 
 private:
-	Ape::ISceneManager* mpSceneManager;
-	Ape::ISystemConfig* mpSystemConfig;
-	Ape::IEventManager* mpEventManager;
-	Ape::UserInputMacro* mpApeUserInputMacro;
-	Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+	ape::ISceneManager* mpSceneManager;
+	ape::ISystemConfig* mpSystemConfig;
+	ape::IEventManager* mpEventManager;
+	ape::UserInputMacro* mpApeUserInputMacro;
+	ape::UserInputMacro::ViewPose mUserInputMacroPose;
 	std::map<int, nbind::cbFunction*> mEventMap;
 };
 

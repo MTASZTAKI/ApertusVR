@@ -1,31 +1,31 @@
 #include "ApeOculusDK2Plugin.h"
 
-Ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
+ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpHMD = NULL;
-	mCameraLeft = Ape::CameraWeakPtr();
-	mCameraRight = Ape::CameraWeakPtr();
-	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
+	mCameraLeft = ape::CameraWeakPtr();
+	mCameraRight = ape::CameraWeakPtr();
+	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
+ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
+ape::Matrix4 ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 {
-	Ape::Matrix4 matrix4(
+	ape::Matrix4 matrix4(
 		ovrMatrix4.M[0][0], ovrMatrix4.M[0][1], ovrMatrix4.M[0][2], ovrMatrix4.M[0][3],
 		ovrMatrix4.M[1][0], ovrMatrix4.M[1][1], ovrMatrix4.M[1][2], ovrMatrix4.M[1][3],
 		ovrMatrix4.M[2][0], ovrMatrix4.M[2][1], ovrMatrix4.M[2][2], ovrMatrix4.M[2][3],
@@ -34,12 +34,12 @@ Ape::Matrix4 Ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 }
 
 
-void Ape::ApeOculusDK2Plugin::eventCallBack(const Ape::Event& event)
+void ape::ApeOculusDK2Plugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::ApeOculusDK2Plugin::Init()
+void ape::ApeOculusDK2Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	ovr_Initialize();
@@ -68,24 +68,24 @@ void Ape::ApeOculusDK2Plugin::Init()
 	APE_LOG_DEBUG("Left eye: " << recommendedTex0Size.w << "x" << recommendedTex0Size.h);
 	APE_LOG_DEBUG("Right eye: " << recommendedTex1Size.w << "x" << recommendedTex1Size.h);
 
-	Ape::FileMaterialWeakPtr fileMaterialRightEye, fileMaterialLeftEye;
-	Ape::ManualTextureWeakPtr manualTextureRightEye, manualTextureLeftEye;
-	if (auto fileMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("Oculus/LeftEye_CG", Ape::Entity::MATERIAL_FILE).lock()))
+	ape::FileMaterialWeakPtr fileMaterialRightEye, fileMaterialLeftEye;
+	ape::ManualTextureWeakPtr manualTextureRightEye, manualTextureLeftEye;
+	if (auto fileMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("Oculus/LeftEye_CG", ape::Entity::MATERIAL_FILE).lock()))
 	{
 		fileMaterialLeftEye = fileMaterial;
-		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
+		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
+			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureLeftEye = manualTexture;
 		}
 	}
-	if (auto fileMaterial = std::static_pointer_cast<Ape::IFileMaterial>(mpSceneManager->createEntity("Oculus/RightEye_CG", Ape::Entity::MATERIAL_FILE).lock()))
+	if (auto fileMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("Oculus/RightEye_CG", ape::Entity::MATERIAL_FILE).lock()))
 	{
 		fileMaterialRightEye = fileMaterial;
-		if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
+		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureRight", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, Ape::Texture::PixelFormat::R8G8B8, Ape::Texture::Usage::RENDERTARGET);
+			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureRightEye = manualTexture;
 		}
@@ -106,11 +106,11 @@ void Ape::ApeOculusDK2Plugin::Init()
 	viewports[1].Pos.y = 0;
 	viewports[1].Size.w = recommendedTex1Size.w;
 	viewports[1].Size.h = recommendedTex1Size.h;
-	Ape::NodeWeakPtr meshNode;
+	ape::NodeWeakPtr meshNode;
 	if (auto oculusDK2MeshNode = mpSceneManager->createNode("oculusDK2MeshNode").lock())
 	{
-		oculusDK2MeshNode->setPosition(Ape::Vector3(0, 0, -1));
-		oculusDK2MeshNode->setScale(Ape::Vector3(1, 1, -1));
+		oculusDK2MeshNode->setPosition(ape::Vector3(0, 0, -1));
+		oculusDK2MeshNode->setScale(ape::Vector3(1, 1, -1));
 		meshNode = oculusDK2MeshNode;
 	}
 	for (int eyeNum = 0; eyeNum < 2; eyeNum++)
@@ -120,27 +120,27 @@ void Ape::ApeOculusDK2Plugin::Init()
 		if (eyeNum == 0)
 		{
 			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov, recommendedTex0Size, viewports[eyeNum], UVScaleOffset);
-			Ape::PassGpuParameters params;
-			params.push_back(Ape::PassGpuVector3Parameter("eyeToSourceUVScale", Ape::Vector3(UVScaleOffset[0].x, UVScaleOffset[0].y, 0)));
-			params.push_back(Ape::PassGpuVector3Parameter("eyeToSourceUVOffset", Ape::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0)));
+			ape::PassGpuParameters params;
+			params.push_back(ape::PassGpuVector3Parameter("eyeToSourceUVScale", ape::Vector3(UVScaleOffset[0].x, UVScaleOffset[0].y, 0)));
+			params.push_back(ape::PassGpuVector3Parameter("eyeToSourceUVOffset", ape::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0)));
 			if (auto fileMaterial = fileMaterialLeftEye.lock())
 				fileMaterial->setPassGpuParameters(params);
 		}
 		else
 		{
 			ovrHmd_GetRenderScaleAndOffset(eyeRenderDesc[eyeNum].Fov, recommendedTex1Size, viewports[eyeNum], UVScaleOffset);
-			Ape::PassGpuParameters params;
-			params.push_back(Ape::PassGpuVector3Parameter("eyeToSourceUVScale", Ape::Vector3(UVScaleOffset[0].x, UVScaleOffset[0].y, 0)));
-			params.push_back(Ape::PassGpuVector3Parameter("eyeToSourceUVOffset", Ape::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0)));
+			ape::PassGpuParameters params;
+			params.push_back(ape::PassGpuVector3Parameter("eyeToSourceUVScale", ape::Vector3(UVScaleOffset[0].x, UVScaleOffset[0].y, 0)));
+			params.push_back(ape::PassGpuVector3Parameter("eyeToSourceUVOffset", ape::Vector3(UVScaleOffset[1].x, UVScaleOffset[1].y, 0)));
 			if (auto fileMaterial = fileMaterialRightEye.lock())
 				fileMaterial->setPassGpuParameters(params);
 		}
 		APE_LOG_DEBUG("UVScaleOffset[0]: " << UVScaleOffset[0].x << ", " << UVScaleOffset[0].y);
 		APE_LOG_DEBUG("UVScaleOffset[1]: " << UVScaleOffset[1].x << ", " << UVScaleOffset[1].y);
-		Ape::GeometryCoordinates coordinates;
-		Ape::GeometryIndices indices;
-		Ape::GeometryColors colors;
-		Ape::GeometryTextureCoordinates textureCoordinates;
+		ape::GeometryCoordinates coordinates;
+		ape::GeometryIndices indices;
+		ape::GeometryColors colors;
+		ape::GeometryTextureCoordinates textureCoordinates;
 		for (unsigned int i = 0; i < meshData.VertexCount; i++)
 		{
 			ovrDistortionVertex v = meshData.pVertexData[i];
@@ -167,17 +167,17 @@ void Ape::ApeOculusDK2Plugin::Init()
 		}
 		if (eyeNum == 0)
 		{
-			if (auto manual = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity("RiftRenderObjectLeft", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			if (auto manual = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity("RiftRenderObjectLeft", ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
-				manual->setParameters("", coordinates, indices, Ape::GeometryNormals(), false, colors, textureCoordinates, fileMaterialLeftEye);
+				manual->setParameters("", coordinates, indices, ape::GeometryNormals(), false, colors, textureCoordinates, fileMaterialLeftEye);
 				manual->setParentNode(meshNode);
 			}
 		}
 		else
 		{
-			if (auto manual = std::static_pointer_cast<Ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity("RiftRenderObjectRight", Ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			if (auto manual = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity("RiftRenderObjectRight", ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
-				manual->setParameters("", coordinates, indices, Ape::GeometryNormals(), false, colors, textureCoordinates, fileMaterialRightEye);
+				manual->setParameters("", coordinates, indices, ape::GeometryNormals(), false, colors, textureCoordinates, fileMaterialRightEye);
 				manual->setParentNode(meshNode);
 			}
 		}
@@ -197,7 +197,7 @@ void Ape::ApeOculusDK2Plugin::Init()
 		cameraLeft->setAspectRatio(aspectRatio);
 		if (auto cameraNode = cameraLeft->getParentNode().lock())
 		{
-			cameraNode->setPosition(Ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
+			cameraNode->setPosition(ape::Vector3(-ipd / 2.0f, 0.0f, 0.0f));
 		}
 
 		if (auto texture = manualTextureLeftEye.lock())
@@ -209,24 +209,24 @@ void Ape::ApeOculusDK2Plugin::Init()
 		cameraRight->setAspectRatio(aspectRatio);
 		if (auto cameraNode = cameraRight->getParentNode().lock())
 		{
-			cameraNode->setPosition(Ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
+			cameraNode->setPosition(ape::Vector3(ipd / 2.0f, 0.0f, 0.0f));
 		}
 
 		if (auto texture = manualTextureRightEye.lock())
 			texture->setSourceCamera(cameraRight);
 	}
 
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity("OculusRiftExternalCamera", Ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity("OculusRiftExternalCamera", ape::Entity::Type::CAMERA).lock()))
 	{
-		camera->setWindow(Ape::IMainWindow::getSingletonPtr()->getName());
+		camera->setWindow(ape::IMainWindow::getSingletonPtr()->getName());
 		camera->setFarClipDistance(50);
 		camera->setNearClipDistance(0.001);
-		camera->setProjectionType(Ape::Camera::ORTHOGRAPHIC);
+		camera->setProjectionType(ape::Camera::ORTHOGRAPHIC);
 		camera->setOrthoWindowSize(2, 2);
 	}
 }
 
-void Ape::ApeOculusDK2Plugin::Run()
+void ape::ApeOculusDK2Plugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (mpHMD)
@@ -235,33 +235,33 @@ void Ape::ApeOculusDK2Plugin::Run()
 		OVR::Posef pose = ts.HeadPose.ThePose;
 		ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-		mUserInputMacroPose.headPosition = Ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100);
-		mUserInputMacroPose.headOrientation = Ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
+		mUserInputMacroPose.headPosition = ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100);
+		mUserInputMacroPose.headOrientation = ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
 		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeOculusDK2Plugin::Step()
+void ape::ApeOculusDK2Plugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeOculusDK2Plugin::Stop()
+void ape::ApeOculusDK2Plugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeOculusDK2Plugin::Suspend()
+void ape::ApeOculusDK2Plugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeOculusDK2Plugin::Restart()
+void ape::ApeOculusDK2Plugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

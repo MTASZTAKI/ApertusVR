@@ -22,69 +22,69 @@ SOFTWARE.*/
 
 #include "ApeCylinderGeometryImpl.h"
 
-Ape::CylinderGeometryImpl::CylinderGeometryImpl(std::string name, bool isHostCreated) : Ape::ICylinderGeometry(name), Ape::Replica("CylinderGeometry", isHostCreated)
+ape::CylinderGeometryImpl::CylinderGeometryImpl(std::string name, bool isHostCreated) : ape::ICylinderGeometry(name), ape::Replica("CylinderGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryCylinderParameters();
-	mMaterial = Ape::MaterialWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryCylinderParameters();
+	mMaterial = ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::CylinderGeometryImpl::~CylinderGeometryImpl()
+ape::CylinderGeometryImpl::~CylinderGeometryImpl()
 {
 	
 }
 
-void Ape::CylinderGeometryImpl::setParameters(float radius, float height, float tile)
+void ape::CylinderGeometryImpl::setParameters(float radius, float height, float tile)
 {
 	mParameters.radius = radius;
 	mParameters.height = height;
 	mParameters.tile = tile;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_PARAMETERS));
 }
 
-Ape::GeometryCylinderParameters Ape::CylinderGeometryImpl::getParameters()
+ape::GeometryCylinderParameters ape::CylinderGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::CylinderGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::CylinderGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::CylinderGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void ape::CylinderGeometryImpl::setMaterial(ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_MATERIAL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_MATERIAL));
 	}
 	else
-		mMaterial = Ape::MaterialWeakPtr();
+		mMaterial = ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::CylinderGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::CylinderGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::CylinderGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::CylinderGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::CylinderGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::CylinderGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -96,27 +96,27 @@ RakNet::RM3SerializationResult Ape::CylinderGeometryImpl::Serialize(RakNet::Seri
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::CylinderGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::CylinderGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
 	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
+		if (auto material = std::static_pointer_cast<ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_CYLINDER_MATERIAL));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CYLINDER_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

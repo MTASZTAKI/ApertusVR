@@ -36,7 +36,7 @@ SOFTWARE.*/
 #include <string>
 #include "utils/ApeSingleton.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_MAINWINDOW_DLL_EXPORT IMainWindow : public Singleton<IMainWindow>
 	{

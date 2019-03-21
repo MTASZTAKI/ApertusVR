@@ -63,24 +63,24 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeHtmlOverlayUIPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeHtmlOverlayUIPlugin : public Ape::IPlugin
+	class ApeHtmlOverlayUIPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeHtmlOverlayUIPlugin();
@@ -100,14 +100,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHtmlOverlayUIPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeHtmlOverlayUIPlugin()
 	{
-		return new Ape::ApeHtmlOverlayUIPlugin;
+		return new ape::ApeHtmlOverlayUIPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHtmlOverlayUIPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeHtmlOverlayUIPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeHtmlOverlayUIPlugin*)plugin;
+		delete (ape::ApeHtmlOverlayUIPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

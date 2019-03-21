@@ -39,12 +39,12 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeGallerySamplePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeGallerySamplePlugin : public Ape::IPlugin
+	class ApeGallerySamplePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
 		ApeGallerySamplePlugin();
@@ -64,14 +64,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGallerySamplePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeGallerySamplePlugin()
 	{
-		return new Ape::ApeGallerySamplePlugin;
+		return new ape::ApeGallerySamplePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeGallerySamplePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeGallerySamplePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeGallerySamplePlugin*)plugin;
+		delete (ape::ApeGallerySamplePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

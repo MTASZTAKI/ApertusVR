@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeGeometry.h"
 
-namespace Ape
+namespace ape
 {
 	class IFileTexture : public Texture
 	{

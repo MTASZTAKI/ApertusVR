@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeGeometry.h"
 
-namespace Ape
+namespace ape
 {
 	class IFileGeometry : public Geometry
 	{
@@ -40,11 +40,11 @@ namespace Ape
 
 		virtual std::string getFileName () = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 
 		virtual void exportMesh() = 0;
 

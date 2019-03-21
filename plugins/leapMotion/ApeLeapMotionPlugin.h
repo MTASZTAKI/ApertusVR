@@ -41,9 +41,9 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeLeapMotionPlugin"
 
-namespace Ape
+namespace ape
 {
-	class LeapMotionPlugin : public Ape::IPlugin, public Leap::Listener 
+	class LeapMotionPlugin : public ape::IPlugin, public Leap::Listener 
 	{
 	public:
 		LeapMotionPlugin();
@@ -84,13 +84,13 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		Leap::Controller mLeapController;
 
@@ -108,19 +108,19 @@ namespace Ape
 
 		bool mHandOrientationFlag;
 
-		Ape::NodeWeakPtr mLeftHandNode;
+		ape::NodeWeakPtr mLeftHandNode;
 
-		Ape::NodeWeakPtr mRightHandNode;
+		ape::NodeWeakPtr mRightHandNode;
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateLeapMotionPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateLeapMotionPlugin()
 	{
-		return new Ape::LeapMotionPlugin;
+		return new ape::LeapMotionPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyLeapMotionPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyLeapMotionPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::LeapMotionPlugin*)plugin;
+		delete (ape::LeapMotionPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

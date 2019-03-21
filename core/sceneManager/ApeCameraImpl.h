@@ -27,9 +27,9 @@ SOFTWARE.*/
 #include "sceneelements/ApeICamera.h"
 #include "ApeEventManagerImpl.h"
 
-namespace Ape
+namespace ape
 {
-	class CameraImpl : public Ape::ICamera
+	class CameraImpl : public ape::ICamera
 	{
 	public:
 		CameraImpl(std::string name);
@@ -40,13 +40,13 @@ namespace Ape
 
 		void setFocalLength(float focalLength)  override;
 
-		Ape::Vector2 getFrustumOffset()  override;
+		ape::Vector2 getFrustumOffset()  override;
 
-		void setFrustumOffset(Ape::Vector2 frustumOffset)  override;
+		void setFrustumOffset(ape::Vector2 frustumOffset)  override;
 
-		Ape::Radian getFOVy()  override;
+		ape::Radian getFOVy()  override;
 
-		void setFOVy(Ape::Radian fovY)  override;
+		void setFOVy(ape::Radian fovY)  override;
 
 		float getNearClipDistance()  override;
 
@@ -64,36 +64,36 @@ namespace Ape
 
 		bool isAutoAspectRatio() override;
 		
-		Ape::Matrix4 getProjection() override;
+		ape::Matrix4 getProjection() override;
 
-		void setProjection(Ape::Matrix4 projection) override;
+		void setProjection(ape::Matrix4 projection) override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		ape::NodeWeakPtr getParentNode() override;
 
-		void setProjectionType(Ape::Camera::ProjectionType type) override;
+		void setProjectionType(ape::Camera::ProjectionType type) override;
 
-		Ape::Camera::ProjectionType getProjectionType() override;
+		ape::Camera::ProjectionType getProjectionType() override;
 
 		void setOrthoWindowSize(float width, float height) override;
 
-		Ape::Vector2 getOrthoWindowSize() override;
+		ape::Vector2 getOrthoWindowSize() override;
 
 		void setWindow(std::string window) override;
 
 		std::string getWindow() override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		float mFocalLength;
 
-		Ape::Vector2 mFrustumOffset;
+		ape::Vector2 mFrustumOffset;
 
-		Ape::Radian mFOVy;
+		ape::Radian mFOVy;
 
 		float mNearClipDistance;
 
@@ -103,13 +103,13 @@ namespace Ape
 
 		bool mIsAutoAspectRatio;
 		
-		Ape::Matrix4 mProjection;
+		ape::Matrix4 mProjection;
 
 		NodeWeakPtr mParentNode;
 
-		Ape::Camera::ProjectionType mProjectionType;
+		ape::Camera::ProjectionType mProjectionType;
 
-		Ape::Vector2 mOrthoWindowSize;
+		ape::Vector2 mOrthoWindowSize;
 
 		std::string mWindow;
 	};

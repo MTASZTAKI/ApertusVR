@@ -55,20 +55,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeEngineeringScenePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeEngineeringScenePlugin : public Ape::IPlugin
+	class ApeEngineeringScenePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeEngineeringScenePlugin();
@@ -88,14 +88,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeEngineeringScenePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeEngineeringScenePlugin()
 	{
-		return new Ape::ApeEngineeringScenePlugin;
+		return new ape::ApeEngineeringScenePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeEngineeringScenePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeEngineeringScenePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeEngineeringScenePlugin*)plugin;
+		delete (ape::ApeEngineeringScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

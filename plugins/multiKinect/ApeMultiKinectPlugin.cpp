@@ -1,18 +1,18 @@
 #include "ApeMultiKinectPlugin.h"
 
-Ape::MultiKinectPlugin::MultiKinectPlugin()
+ape::MultiKinectPlugin::MultiKinectPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mFreenect2;
-	mpScene = Ape::ISceneManager::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&MultiKinectPlugin::eventCallBack, this, std::placeholders::_1));
+	mpScene = ape::ISceneManager::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&MultiKinectPlugin::eventCallBack, this, std::placeholders::_1));
 	mSensors = std::vector<Sensor>();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::MultiKinectPlugin::~MultiKinectPlugin()
+ape::MultiKinectPlugin::~MultiKinectPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	for (auto sensor : mSensors)
@@ -27,12 +27,12 @@ Ape::MultiKinectPlugin::~MultiKinectPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::MultiKinectPlugin::eventCallBack(const Ape::Event& event)
+void ape::MultiKinectPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::MultiKinectPlugin::Init()
+void ape::MultiKinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream MultiKinectPluginConfigFilePath;
@@ -133,19 +133,19 @@ void Ape::MultiKinectPlugin::Init()
 			{
 				pointCloudNode->setPosition(sensor.position);
 				pointCloudNode->setOrientation(sensor.orientation);
-				pointCloudNode->setScale(Ape::Vector3(100, 100, 100));
+				pointCloudNode->setScale(ape::Vector3(100, 100, 100));
 				sensor.pointCloudNode = pointCloudNode;
 				if (auto textNode = mpScene->createNode(pointCloudNode->getName() + "TextNode").lock())
 				{
 					textNode->setParentNode(pointCloudNode);
-					if (auto text = std::static_pointer_cast<Ape::ITextGeometry>(mpScene->createEntity(textNode->getName() + "Text", Ape::Entity::GEOMETRY_TEXT).lock()))
+					if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpScene->createEntity(textNode->getName() + "Text", ape::Entity::GEOMETRY_TEXT).lock()))
 					{
 						text->setCaption(pointCloudNode->getName());
 						text->setParentNode(textNode);
 					}
 				}
 			}
-			if (auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(mpScene->createEntity("MultiKinectPointCloud" + sensor.id, Ape::Entity::POINT_CLOUD).lock()))
+			if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpScene->createEntity("MultiKinectPointCloud" + sensor.id, ape::Entity::POINT_CLOUD).lock()))
 			{
 				pointCloud->setParameters(sensor.points, sensor.colors, 10000, sensor.pointSize, sensor.pointScale, sensor.pointScaleOffset, sensor.unitScaleDistance, sensor.scaleFactor);
 				pointCloud->setParentNode(sensor.pointCloudNode);
@@ -157,7 +157,7 @@ void Ape::MultiKinectPlugin::Init()
 }
 	
 
-void Ape::MultiKinectPlugin::Run()
+void ape::MultiKinectPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -199,22 +199,22 @@ void Ape::MultiKinectPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::MultiKinectPlugin::Step()
+void ape::MultiKinectPlugin::Step()
 {
 
 }
 
-void Ape::MultiKinectPlugin::Stop()
+void ape::MultiKinectPlugin::Stop()
 {
 
 }
 
-void Ape::MultiKinectPlugin::Suspend()
+void ape::MultiKinectPlugin::Suspend()
 {
 
 }
 
-void Ape::MultiKinectPlugin::Restart()
+void ape::MultiKinectPlugin::Restart()
 {
 
 }

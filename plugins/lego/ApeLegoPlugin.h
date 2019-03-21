@@ -55,25 +55,25 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeLegoPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeLegoPlugin : public Ape::IPlugin
+	class ApeLegoPlugin : public ape::IPlugin
 	{
 	private:
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		std::vector<std::string> mModelFileNames;
 
-		std::vector<Ape::Vector3> mInterpolatePositions;
+		std::vector<ape::Vector3> mInterpolatePositions;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		void blowModel();
 
@@ -95,14 +95,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLegoPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeLegoPlugin()
 	{
-		return new Ape::ApeLegoPlugin;
+		return new ape::ApeLegoPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeLegoPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeLegoPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeLegoPlugin*)plugin;
+		delete (ape::ApeLegoPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

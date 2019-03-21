@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryCylinderParameters
 	{
@@ -56,23 +56,23 @@ namespace Ape
 		}
 	};
 
-	class ICylinderGeometry : public Ape::Geometry
+	class ICylinderGeometry : public ape::Geometry
 	{
 	protected:
-		ICylinderGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_CYLINDER) {}
+		ICylinderGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_CYLINDER) {}
 
 		virtual ~ICylinderGeometry() {};
 
 	public:
 		virtual void setParameters(float radius, float height, float tile) = 0;
 
-		virtual Ape::GeometryCylinderParameters getParameters() = 0;
+		virtual ape::GeometryCylinderParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

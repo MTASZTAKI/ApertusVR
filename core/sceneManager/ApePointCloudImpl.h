@@ -45,9 +45,9 @@ union dataUnionBytesShort {
 	char sBuff[sizeof(short)];
 };
 
-namespace Ape
+namespace ape
 {
-	class PointCloudImpl : public IPointCloud, public Ape::Replica
+	class PointCloudImpl : public IPointCloud, public ape::Replica
 	{
 	public:
 
@@ -55,22 +55,22 @@ namespace Ape
 
 		~PointCloudImpl();
 
-		void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+		void setParameters(ape::PointCloudPoints points, ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
 			float pointScaleOffset, float unitScaleDistance, float scaleFactor) override;
 
-		Ape::PointCloudSetParameters getParameters() override;
+		ape::PointCloudSetParameters getParameters() override;
 
-		void updatePoints(Ape::PointCloudPoints points) override;
+		void updatePoints(ape::PointCloudPoints points) override;
 
-		void updateColors(Ape::PointCloudColors colors) override;
+		void updateColors(ape::PointCloudColors colors) override;
 
-		Ape::PointCloudPoints getCurrentPoints() override;
+		ape::PointCloudPoints getCurrentPoints() override;
 
-		Ape::PointCloudColors getCurrentColors() override;
+		ape::PointCloudColors getCurrentColors() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		Ape::NodeWeakPtr getParentNode() override;
+		ape::NodeWeakPtr getParentNode() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -83,15 +83,15 @@ namespace Ape
 		void listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::NodeWeakPtr mParentNode;
+		ape::NodeWeakPtr mParentNode;
 
 		std::string mParentNodeName;
 
-		Ape::PointCloudSetParameters mParameters;
+		ape::PointCloudSetParameters mParameters;
 
 		int mPointsSize;
 
@@ -99,9 +99,9 @@ namespace Ape
 
 		int mStreamHeaderSizeInBytes;
 
-		Ape::PointCloudPoints mCurrentPoints;
+		ape::PointCloudPoints mCurrentPoints;
 
-		Ape::PointCloudColors mCurrentColors;
+		ape::PointCloudColors mCurrentColors;
 
 		int mCurrentPointsSize;
 

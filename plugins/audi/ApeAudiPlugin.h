@@ -58,20 +58,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeAudiPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeAudiPlugin : public Ape::IPlugin
+	class ApeAudiPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpScene;
+		ape::ISceneManager* mpScene;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeAudiPlugin();
@@ -91,14 +91,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeAudiPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeAudiPlugin()
 	{
-		return new Ape::ApeAudiPlugin;
+		return new ape::ApeAudiPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeAudiPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeAudiPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeAudiPlugin*)plugin;
+		delete (ape::ApeAudiPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

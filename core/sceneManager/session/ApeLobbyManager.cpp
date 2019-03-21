@@ -3,14 +3,14 @@
 #include <string>
 #include <sstream>
 
-Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port)
+ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port)
 {
 	mIp = ip;
 	mPort = port;
 	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
 }
 
-Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName)
+ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port, const std::string& sessionName)
 {
 	mIp = ip;
 	mPort = port;
@@ -18,12 +18,12 @@ Ape::LobbyManager::LobbyManager(const std::string& ip, const std::string& port, 
 	mApiEndPointUrl = mIp + ":" + mPort + "/sessions";
 }
 
-Ape::LobbyManager::~LobbyManager()
+ape::LobbyManager::~LobbyManager()
 {
 	
 }
 
-bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResponse& resp)
+bool ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResponse& resp)
 {
 	if (httpResponse.empty())
 		return false;
@@ -101,7 +101,7 @@ bool Ape::LobbyManager::parseResponse(const std::string& httpResponse, LobbyResp
 	return true;
 }
 
-bool Ape::LobbyManager::createSession(const std::string& sessionName, SceneSessionUniqueID guid)
+bool ape::LobbyManager::createSession(const std::string& sessionName, SceneSessionUniqueID guid)
 {
 	std::string response;
 	LobbyResponse resp;
@@ -134,7 +134,7 @@ bool Ape::LobbyManager::createSession(const std::string& sessionName, SceneSessi
 	return false;
 }
 
-bool Ape::LobbyManager::removeSession(const std::string& sessionName)
+bool ape::LobbyManager::removeSession(const std::string& sessionName)
 {
 	std::string response;
 	LobbyResponse resp;
@@ -167,7 +167,7 @@ bool Ape::LobbyManager::removeSession(const std::string& sessionName)
 	return false;
 }
 
-bool Ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessionUniqueID& guid)
+bool ape::LobbyManager::getSessionHostGuid(std::string& sessionName, SceneSessionUniqueID& guid)
 {
 	std::string response;
 	LobbyResponse resp;

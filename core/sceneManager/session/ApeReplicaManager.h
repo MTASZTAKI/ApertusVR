@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include "RakNetTypes.h"
 #include "ReplicaManager3.h"
 
-namespace Ape
+namespace ape
 {
 	class ReplicaManager : public RakNet::ReplicaManager3
 	{

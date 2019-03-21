@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "datatypes/ApeQuaternion.h"
 #include "datatypes/ApeVector3.h"
 
-namespace Ape
+namespace ape
 {
 	namespace Node
 	{
@@ -68,15 +68,15 @@ namespace Ape
 
 		virtual bool isFixedYaw() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual Ape::NodeWeakPtr getParentNode() = 0;
+		virtual ape::NodeWeakPtr getParentNode() = 0;
 
-		virtual std::vector<Ape::NodeWeakPtr> getChildNodes() = 0;
+		virtual std::vector<ape::NodeWeakPtr> getChildNodes() = 0;
 
 		virtual bool hasChildNode() = 0;
 
-		virtual bool isChildNode(Ape::NodeWeakPtr childNode) = 0;
+		virtual bool isChildNode(ape::NodeWeakPtr childNode) = 0;
 
 		virtual void setPosition(Vector3 position) = 0;
 
@@ -84,9 +84,9 @@ namespace Ape
 
 		virtual void setScale(Vector3 scale) = 0;
 
-		virtual void translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
+		virtual void translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace) = 0;
 
-		virtual void rotate(Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace) = 0;
+		virtual void rotate(Radian angle, Vector3 axis, ape::Node::TransformationSpace nodeTransformSpace) = 0;
 
 		virtual void setChildrenVisibility(bool visible) = 0;
 

@@ -27,34 +27,34 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeGeometry.h"
 
-namespace Ape
+namespace ape
 {	
 	struct GeometryIndexedFaceSetParameters
 	{
 		std::string groupName;
-		Ape::GeometryCoordinates coordinates;
-		Ape::GeometryIndices indices;
-		Ape::GeometryNormals normals;
+		ape::GeometryCoordinates coordinates;
+		ape::GeometryIndices indices;
+		ape::GeometryNormals normals;
 		bool generateNormals;
-		Ape::GeometryColors colors;
-		Ape::GeometryTextureCoordinates textureCoordinates;
-		Ape::MaterialWeakPtr material;
+		ape::GeometryColors colors;
+		ape::GeometryTextureCoordinates textureCoordinates;
+		ape::MaterialWeakPtr material;
 		std::string materialName;
 		
 		GeometryIndexedFaceSetParameters()
 		{
 			this->groupName = std::string();
-			this->coordinates = Ape::GeometryCoordinates();
-			this->indices = Ape::GeometryIndices();
-			this->normals = Ape::GeometryNormals();
+			this->coordinates = ape::GeometryCoordinates();
+			this->indices = ape::GeometryIndices();
+			this->normals = ape::GeometryNormals();
 			this->generateNormals = true;
-			this->colors = Ape::GeometryColors();
-			this->textureCoordinates = Ape::GeometryTextureCoordinates();
-			this->material = Ape::MaterialWeakPtr();
+			this->colors = ape::GeometryColors();
+			this->textureCoordinates = ape::GeometryTextureCoordinates();
+			this->material = ape::MaterialWeakPtr();
 			this->materialName = std::string();
 		}
 
-		GeometryIndexedFaceSetParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
+		GeometryIndexedFaceSetParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, bool generateNormals, ape::GeometryColors colors, ape::GeometryTextureCoordinates textureCoordinates, ape::MaterialWeakPtr material)
 		{
 			this->groupName = groupName;
 			this->coordinates = coordinates;
@@ -70,27 +70,27 @@ namespace Ape
 				this->materialName = std::string();
 		}
 
-		Ape::GeometryCoordinates getCoordinates()
+		ape::GeometryCoordinates getCoordinates()
 		{
 			return coordinates;
 		}
 
-		Ape::GeometryIndices getIndices()
+		ape::GeometryIndices getIndices()
 		{
 			return indices;
 		}
 
-		Ape::GeometryNormals getNormals()
+		ape::GeometryNormals getNormals()
 		{
 			return normals;
 		}
 
-		Ape::GeometryColors getColors()
+		ape::GeometryColors getColors()
 		{
 			return colors;
 		}
 
-		Ape::GeometryTextureCoordinates getTextureCoordinates()
+		ape::GeometryTextureCoordinates getTextureCoordinates()
 		{
 			return textureCoordinates;
 		}
@@ -131,13 +131,13 @@ namespace Ape
 		virtual ~IIndexedFaceSetGeometry() {};
 		
 	public:
-		virtual void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) = 0;
+		virtual void setParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, bool generateNormals, ape::GeometryColors colors, ape::GeometryTextureCoordinates textureCoordinates, ape::MaterialWeakPtr material) = 0;
 		
-		virtual Ape::GeometryIndexedFaceSetParameters getParameters() = 0;
+		virtual ape::GeometryIndexedFaceSetParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

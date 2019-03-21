@@ -22,48 +22,48 @@ SOFTWARE.*/
 
 #include "ApeFileTextureImpl.h"
 
-Ape::FileTextureImpl::FileTextureImpl(std::string name, bool isHostCreated) : Ape::IFileTexture(name), Ape::Replica("FileTexture", isHostCreated)
+ape::FileTextureImpl::FileTextureImpl(std::string name, bool isHostCreated) : ape::IFileTexture(name), ape::Replica("FileTexture", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpScene = Ape::ISceneManager::getSingletonPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpScene = ape::ISceneManager::getSingletonPtr();
 	mFileName = std::string();
 }
 
-Ape::FileTextureImpl::~FileTextureImpl()
+ape::FileTextureImpl::~FileTextureImpl()
 {
 	
 }
 
-std::string Ape::FileTextureImpl::getFileName()
+std::string ape::FileTextureImpl::getFileName()
 {
 	return mFileName;
 }
 
-void Ape::FileTextureImpl::setFileName(std::string fileName)
+void ape::FileTextureImpl::setFileName(std::string fileName)
 {
 	mFileName = fileName;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_FILE_FILENAME));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_FILE_FILENAME));
 }
 
-void Ape::FileTextureImpl::setMapType(MapType mapType)
+void ape::FileTextureImpl::setMapType(MapType mapType)
 {
 	mMapType = mapType;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_FILE_TYPE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_FILE_TYPE));
 }
 
-Ape::IFileTexture::MapType Ape::FileTextureImpl::getMapType()
+ape::IFileTexture::MapType ape::FileTextureImpl::getMapType()
 {
 	return mMapType;
 }
 
 
-void Ape::FileTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::FileTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::FileTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::FileTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -74,7 +74,7 @@ RakNet::RM3SerializationResult Ape::FileTextureImpl::Serialize(RakNet::Serialize
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::FileTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::FileTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
@@ -82,10 +82,10 @@ void Ape::FileTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializ
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, fileName))
 	{
 		mFileName = fileName.C_String();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_FILE_FILENAME));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_FILE_FILENAME));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMapType))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_FILE_TYPE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_FILE_TYPE));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

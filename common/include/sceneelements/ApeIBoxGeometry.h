@@ -30,23 +30,23 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryBoxParameters
 	{
-		Ape::Vector3 dimensions;
+		ape::Vector3 dimensions;
 
 		GeometryBoxParameters()
 		{
-			this->dimensions = Ape::Vector3();
+			this->dimensions = ape::Vector3();
 		}
 
-		GeometryBoxParameters(Ape::Vector3 dimensions)
+		GeometryBoxParameters(ape::Vector3 dimensions)
 		{
 			this->dimensions = dimensions;
 		}
 
-		Ape::Vector3 getDimensions()
+		ape::Vector3 getDimensions()
 		{
 			return dimensions;
 		}
@@ -59,23 +59,23 @@ namespace Ape
 		}
 	};
 
-	class IBoxGeometry : public Ape::Geometry
+	class IBoxGeometry : public ape::Geometry
 	{
 	protected:
-		IBoxGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_BOX) {}
+		IBoxGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_BOX) {}
 
 		virtual ~IBoxGeometry() {};
 
 	public:
-		virtual void setParameters(Ape::Vector3 dimensions) = 0;
+		virtual void setParameters(ape::Vector3 dimensions) = 0;
 
-		virtual Ape::GeometryBoxParameters getParameters() = 0;
+		virtual ape::GeometryBoxParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

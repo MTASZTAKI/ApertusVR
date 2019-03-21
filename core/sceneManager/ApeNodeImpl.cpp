@@ -22,47 +22,47 @@ SOFTWARE.*/
 
 #include "ApeNodeImpl.h"
 
-Ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : Ape::Replica("Node", isHostCreated)
+ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : ape::Replica("Node", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mName = name;
-	mParentNode = Ape::NodeWeakPtr();
+	mParentNode = ape::NodeWeakPtr();
 	mParentNodeName = std::string();
-	mPosition = Ape::Vector3();
-	mScale = Ape::Vector3(1.0f, 1.0f, 1.0f);
-	mOrientation = Ape::Quaternion();
+	mPosition = ape::Vector3();
+	mScale = ape::Vector3(1.0f, 1.0f, 1.0f);
+	mOrientation = ape::Quaternion();
 	mChildrenVisibility = true;
 	mIsFixedYaw = false;
 	mIsInheritOrientation = true;
 }
 
-Ape::NodeImpl::~NodeImpl()
+ape::NodeImpl::~NodeImpl()
 {
 	
 }
 
-std::string Ape::NodeImpl::getName() const
+std::string ape::NodeImpl::getName() const
 {
 	return mName;
 }
 
-Ape::Vector3 Ape::NodeImpl::getPosition() const
+ape::Vector3 ape::NodeImpl::getPosition() const
 {
 	return mPosition;
 }
 
-Ape::Quaternion Ape::NodeImpl::getOrientation() const
+ape::Quaternion ape::NodeImpl::getOrientation() const
 {
 	return mOrientation;
 }
 
-Ape::Vector3 Ape::NodeImpl::getScale() const
+ape::Vector3 ape::NodeImpl::getScale() const
 {
 	return mScale;
 }
 
-Ape::Vector3 Ape::NodeImpl::getDerivedPosition() const
+ape::Vector3 ape::NodeImpl::getDerivedPosition() const
 {
 	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedPosition() + (parentNode->getDerivedOrientation() * (parentNode->getDerivedScale() * mPosition));
@@ -70,7 +70,7 @@ Ape::Vector3 Ape::NodeImpl::getDerivedPosition() const
 		return mPosition;
 }
 
-Ape::Quaternion Ape::NodeImpl::getDerivedOrientation() const
+ape::Quaternion ape::NodeImpl::getDerivedOrientation() const
 {
 	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedOrientation() * mOrientation;
@@ -78,7 +78,7 @@ Ape::Quaternion Ape::NodeImpl::getDerivedOrientation() const
 		return mOrientation;
 }
 
-Ape::Vector3 Ape::NodeImpl::getDerivedScale() const
+ape::Vector3 ape::NodeImpl::getDerivedScale() const
 {
 	if (auto parentNode = mParentNode.lock())
 		return parentNode->getDerivedScale() * mScale;
@@ -86,58 +86,58 @@ Ape::Vector3 Ape::NodeImpl::getDerivedScale() const
 		return mScale;
 }
 
-bool Ape::NodeImpl::getChildrenVisibility()
+bool ape::NodeImpl::getChildrenVisibility()
 {
 	return mChildrenVisibility;
 }
 
-bool Ape::NodeImpl::isFixedYaw()
+bool ape::NodeImpl::isFixedYaw()
 {
 	return mIsFixedYaw;
 }
 
-void Ape::NodeImpl::setParentNode(Ape::NodeWeakPtr newParentNode)
+void ape::NodeImpl::setParentNode(ape::NodeWeakPtr newParentNode)
 {
 	if (auto parentNodeSP = mpSceneManager->getNode(mParentNodeName).lock())
 	{
-		((Ape::NodeImpl*)parentNodeSP.get())->removeChildNode(mpSceneManager->getNode(mName));
+		((ape::NodeImpl*)parentNodeSP.get())->removeChildNode(mpSceneManager->getNode(mName));
 	}
 	if (auto newParentNodeSP = newParentNode.lock())
 	{
 		mParentNode = newParentNode;
 		mParentNodeName = newParentNodeSP->getName();
-		((Ape::NodeImpl*)newParentNodeSP.get())->addChildNode(mpSceneManager->getNode(mName));
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
+		((ape::NodeImpl*)newParentNodeSP.get())->addChildNode(mpSceneManager->getNode(mName));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-Ape::NodeWeakPtr Ape::NodeImpl::getParentNode()
+ape::NodeWeakPtr ape::NodeImpl::getParentNode()
 {
 	return mParentNode;
 }
 
-void Ape::NodeImpl::addChildNode(Ape::NodeWeakPtr node)
+void ape::NodeImpl::addChildNode(ape::NodeWeakPtr node)
 {
 	mChildNodes.push_back(node);
 }
 
-std::vector<Ape::NodeWeakPtr> Ape::NodeImpl::getChildNodes()
+std::vector<ape::NodeWeakPtr> ape::NodeImpl::getChildNodes()
 {
 	return mChildNodes;
 }
 
-bool Ape::NodeImpl::hasChildNode()
+bool ape::NodeImpl::hasChildNode()
 {
 	return mChildNodes.size() > 0;
 }
 
-bool Ape::NodeImpl::isChildNode(Ape::NodeWeakPtr childNode)
+bool ape::NodeImpl::isChildNode(ape::NodeWeakPtr childNode)
 {
 	if (auto childNodeSP = childNode.lock())
 	{
-		for (std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin(); it != mChildNodes.end(); ++it)
+		for (std::vector<ape::NodeWeakPtr>::iterator it = mChildNodes.begin(); it != mChildNodes.end(); ++it)
 		{
 			if (auto itemSP = it->lock())
 			{
@@ -151,11 +151,11 @@ bool Ape::NodeImpl::isChildNode(Ape::NodeWeakPtr childNode)
 	return false;
 }
 
-void Ape::NodeImpl::removeChildNode(Ape::NodeWeakPtr childNode)
+void ape::NodeImpl::removeChildNode(ape::NodeWeakPtr childNode)
 {
 	if (auto childNodeSP = childNode.lock())
 	{
-		std::vector<Ape::NodeWeakPtr>::iterator it = mChildNodes.begin();
+		std::vector<ape::NodeWeakPtr>::iterator it = mChildNodes.begin();
 		for (; it != mChildNodes.end(); ++it)
 		{
 			if (auto itemSP = it->lock())
@@ -176,69 +176,69 @@ void Ape::NodeImpl::removeChildNode(Ape::NodeWeakPtr childNode)
 	}
 }
 
-void Ape::NodeImpl::setPosition( Vector3 position )
+void ape::NodeImpl::setPosition( Vector3 position )
 {
 	mPosition = position;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_POSITION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_POSITION));
 }
 
-void Ape::NodeImpl::setOrientation( Quaternion orientation )
+void ape::NodeImpl::setOrientation( Quaternion orientation )
 {
 	mOrientation = orientation;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_ORIENTATION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_ORIENTATION));
 }
 
-void Ape::NodeImpl::setScale( Vector3 scale )
+void ape::NodeImpl::setScale( Vector3 scale )
 {
 	mScale = scale;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
 }
 
-void Ape::NodeImpl::setChildrenVisibility(bool visible)
+void ape::NodeImpl::setChildrenVisibility(bool visible)
 {
 	mChildrenVisibility = visible;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
 }
 
-void Ape::NodeImpl::setFixedYaw(bool fix)
+void ape::NodeImpl::setFixedYaw(bool fix)
 {
 	mIsFixedYaw = fix;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_FIXEDYAW));
 }
 
-void Ape::NodeImpl::showBoundingBox(bool show)
+void ape::NodeImpl::showBoundingBox(bool show)
 {
 	mIsBoundingBoxVisible = show;
 	if (show)
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SHOWBOUNDINGBOX));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SHOWBOUNDINGBOX));
 	else
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_HIDEBOUNDINGBOX));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_HIDEBOUNDINGBOX));
 }
 
-void Ape::NodeImpl::setInheritOrientation(bool enable)
+void ape::NodeImpl::setInheritOrientation(bool enable)
 {
 	mIsInheritOrientation = enable;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
 }
 
-bool Ape::NodeImpl::isInheritOrientation()
+bool ape::NodeImpl::isInheritOrientation()
 {
 	return mIsInheritOrientation;
 }
 
-void Ape::NodeImpl::setInitalState()
+void ape::NodeImpl::setInitalState()
 {
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
 }
 
-void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace )
+void ape::NodeImpl::translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace )
 {
 	switch(nodeTransformSpace)
 	{
-	case Ape::Node::TransformationSpace::LOCAL:
+	case ape::Node::TransformationSpace::LOCAL:
 		setPosition(mPosition + (mOrientation * transformVector));
 		break;
-	case Ape::Node::TransformationSpace::WORLD:
+	case ape::Node::TransformationSpace::WORLD:
 	{
 		if (auto parentNode = mParentNode.lock())
 			setPosition(mPosition + ((parentNode->getDerivedOrientation().Inverse() * transformVector) / parentNode->getDerivedScale()));
@@ -246,17 +246,17 @@ void Ape::NodeImpl::translate(Vector3 transformVector, Ape::Node::Transformation
 			setPosition(mPosition + transformVector);
 		break;
 	}
-	case Ape::Node::TransformationSpace::PARENT:
+	case ape::Node::TransformationSpace::PARENT:
 		setPosition(mPosition + transformVector);
 		break;
-	case Ape::Node::TransformationSpace::INVALID:
+	case ape::Node::TransformationSpace::INVALID:
 		break;
 	default:
 		break;
 	}
 }
 
-void Ape::NodeImpl::rotate( Radian angle, Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace )
+void ape::NodeImpl::rotate( Radian angle, Vector3 axis, ape::Node::TransformationSpace nodeTransformSpace )
 {
 	Quaternion qnorm;
 	qnorm.FromAngleAxis(angle, axis);
@@ -264,28 +264,28 @@ void Ape::NodeImpl::rotate( Radian angle, Vector3 axis, Ape::Node::Transformatio
 
 	switch (nodeTransformSpace)
 	{
-	case Ape::Node::TransformationSpace::PARENT:
+	case ape::Node::TransformationSpace::PARENT:
 		setOrientation(qnorm * mOrientation);
 		break;
-	case Ape::Node::TransformationSpace::WORLD:
+	case ape::Node::TransformationSpace::WORLD:
 		setOrientation(mOrientation * getDerivedOrientation().Inverse() * qnorm * getDerivedOrientation());
 		break;
-	case Ape::Node::TransformationSpace::LOCAL:
+	case ape::Node::TransformationSpace::LOCAL:
 		setOrientation(mOrientation * qnorm);
 		break;
-	case Ape::Node::TransformationSpace::INVALID:
+	case ape::Node::TransformationSpace::INVALID:
 	default:
 		break;
 	}
 }
 
-void Ape::NodeImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::NodeImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -301,32 +301,32 @@ RakNet::RM3SerializationResult Ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPosition))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_POSITION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_POSITION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mOrientation))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_ORIENTATION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_ORIENTATION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
 		if (auto parentNode = mParentNode.lock())
 		{
-			((Ape::NodeImpl*)parentNode.get())->addChildNode(mpSceneManager->getNode(mName));
+			((ape::NodeImpl*)parentNode.get())->addChildNode(mpSceneManager->getNode(mName));
 		}
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_PARENTNODE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_SCALE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_CHILDVISIBILITY));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_FIXEDYAW));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_FIXEDYAW));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsInheritOrientation))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::NODE_INHERITORIENTATION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

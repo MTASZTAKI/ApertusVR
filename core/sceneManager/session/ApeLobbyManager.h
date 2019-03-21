@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "managers/ApeILogManager.h"
 #include "ApeHttpManager.h"
 
-namespace Ape
+namespace ape
 {
 	struct LobbyResponseErrorItem
 	{

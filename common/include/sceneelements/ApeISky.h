@@ -33,7 +33,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeICamera.h"
 
-namespace Ape
+namespace ape
 {
 	class ISky : public Entity
 	{
@@ -68,13 +68,13 @@ namespace Ape
 
 		virtual Time getTime() = 0;
 
-		virtual void setSunLight(Ape::LightWeakPtr sunLight) = 0;
+		virtual void setSunLight(ape::LightWeakPtr sunLight) = 0;
 
-		virtual Ape::LightWeakPtr getSunLight() = 0;
+		virtual ape::LightWeakPtr getSunLight() = 0;
 
-		virtual void setSkyLight(Ape::LightWeakPtr skyLight) = 0;
+		virtual void setSkyLight(ape::LightWeakPtr skyLight) = 0;
 
-		virtual Ape::LightWeakPtr getSkyLight() = 0;
+		virtual ape::LightWeakPtr getSkyLight() = 0;
 
 		virtual void setSize(float size) = 0;
 

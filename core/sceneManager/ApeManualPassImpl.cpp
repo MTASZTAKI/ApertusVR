@@ -23,86 +23,86 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApeManualPassImpl.h"
 
-Ape::ManualPassImpl::ManualPassImpl(std::string name, bool isHostCreated) : Ape::IManualPass(name), Ape::Replica("ManualPass", isHostCreated)
+ape::ManualPassImpl::ManualPassImpl(std::string name, bool isHostCreated) : ape::IManualPass(name), ape::Replica("ManualPass", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mAmbientColor = Ape::Color();
-	mDiffuseColor = Ape::Color();
-	mSpecularColor = Ape::Color();
-	mEmissiveColor = Ape::Color();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mAmbientColor = ape::Color();
+	mDiffuseColor = ape::Color();
+	mSpecularColor = ape::Color();
+	mEmissiveColor = ape::Color();
 	mShininess = 0.0f;
-	mSceneBlendingType = Ape::Pass::SceneBlendingType::INVALID;
+	mSceneBlendingType = ape::Pass::SceneBlendingType::INVALID;
 	mTextureName = std::string();
-	mTexture = Ape::TextureWeakPtr();
+	mTexture = ape::TextureWeakPtr();
 }
 
-Ape::ManualPassImpl::~ManualPassImpl()
+ape::ManualPassImpl::~ManualPassImpl()
 {
 	
 }
 
-void Ape::ManualPassImpl::setDiffuseColor(Ape::Color diffuse)
+void ape::ManualPassImpl::setDiffuseColor(ape::Color diffuse)
 {
 	mDiffuseColor = diffuse;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_DIFFUSE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_DIFFUSE));
 }
 
-void Ape::ManualPassImpl::setSpecularColor(Ape::Color specular)
+void ape::ManualPassImpl::setSpecularColor(ape::Color specular)
 {
 	mSpecularColor = specular;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SPECULAR));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SPECULAR));
 }
 
-void Ape::ManualPassImpl::setAmbientColor(Ape::Color ambient)
+void ape::ManualPassImpl::setAmbientColor(ape::Color ambient)
 {
 	mAmbientColor = ambient;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_AMBIENT));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_AMBIENT));
 }
 
-void Ape::ManualPassImpl::setEmissiveColor(Ape::Color emissive)
+void ape::ManualPassImpl::setEmissiveColor(ape::Color emissive)
 {
 	mEmissiveColor = emissive;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_EMISSIVE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_EMISSIVE));
 }
 
-void Ape::ManualPassImpl::setShininess(float shininess)
+void ape::ManualPassImpl::setShininess(float shininess)
 {
 	mShininess = shininess;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SHININESS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SHININESS));
 }
 
-void Ape::ManualPassImpl::setTexture(Ape::TextureWeakPtr texture)
+void ape::ManualPassImpl::setTexture(ape::TextureWeakPtr texture)
 {
 	if (auto textureSP = texture.lock())
 	{
 		mTexture = texture;
 		mTextureName = textureSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_TEXTURE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_TEXTURE));
 	}
 	else
-		mTexture = Ape::TextureWeakPtr();
+		mTexture = ape::TextureWeakPtr();
 }
 
-void Ape::ManualPassImpl::setPassGpuParameters(Ape::PassGpuParameters passGpuParameters)
+void ape::ManualPassImpl::setPassGpuParameters(ape::PassGpuParameters passGpuParameters)
 {
 	mPassGpuParameters = passGpuParameters;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_GPUPARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_GPUPARAMETERS));
 }
 
-void Ape::ManualPassImpl::setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType)
+void ape::ManualPassImpl::setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType)
 {
 	mSceneBlendingType = sceneBlendingType;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
 }
 
-void Ape::ManualPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::ManualPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::ManualPassImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::ManualPassImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -118,47 +118,47 @@ RakNet::RM3SerializationResult Ape::ManualPassImpl::Serialize(RakNet::SerializeP
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::ManualPassImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::ManualPassImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
 	{
 		//APE_LOG_DEBUG("Deserialize mAmbientColor " << mAmbientColor.toString());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_AMBIENT));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_AMBIENT));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
 	{
 		//APE_LOG_DEBUG("Deserialize mDiffuseColor " <<  mDiffuseColor.toString());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_DIFFUSE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_DIFFUSE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
 	{
 		//APE_LOG_DEBUG("Deserialize mSpecularColor " << mSpecularColor.toString());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SPECULAR));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SPECULAR));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
 	{
 		//APE_LOG_DEBUG("Deserialize mEmissiveColor " << mEmissiveColor.toString());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_EMISSIVE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_EMISSIVE));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mShininess))
 	{
 		//APE_LOG_DEBUG("Deserialize mShininess " << mShininess);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SHININESS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SHININESS));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSceneBlendingType))
 	{
 		//APE_LOG_DEBUG("Deserialize mSceneBlendingType " << mSceneBlendingType);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_SCENEBLENDING));
 	}
 	RakNet::RakString textureName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
 	{
 		mTextureName = textureName.C_String();
 		//APE_LOG_DEBUG("Deserialize mTextureName " << mTextureName);
-		mTexture = std::static_pointer_cast<Ape::Texture>(mpSceneManager->getEntity(mTextureName).lock());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_MANUAL_TEXTURE));
+		mTexture = std::static_pointer_cast<ape::Texture>(mpSceneManager->getEntity(mTextureName).lock());
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_MANUAL_TEXTURE));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

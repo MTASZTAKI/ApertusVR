@@ -34,49 +34,49 @@ SOFTWARE.*/
 class PointCloudJsPtr
 {
 private:
-	Ape::PointCloudWeakPtr mPtr;
+	ape::PointCloudWeakPtr mPtr;
 
 public:
-	PointCloudJsPtr(Ape::PointCloudWeakPtr ptr)
+	PointCloudJsPtr(ape::PointCloudWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	PointCloudJsPtr(Ape::EntityWeakPtr ptr)
+	PointCloudJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IPointCloud>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IPointCloud>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::PointCloudSharedPtr getPointCloudSharedPtr()
+	ape::PointCloudSharedPtr getPointCloudSharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IPointCloud>(mPtr.lock());
+		return std::static_pointer_cast<ape::IPointCloud>(mPtr.lock());
 	}
 
-	Ape::PointCloudWeakPtr getPointCloudWeakPtr()
+	ape::PointCloudWeakPtr getPointCloudWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -98,51 +98,51 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IPointCloud
 
-	void setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+	void setParameters(ape::PointCloudPoints points, ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
 		float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 	{
 		mPtr.lock()->setParameters(points, colors, boundigSphereRadius, pointSize, pointScale, pointScaleOffset, unitScaleDistance, scaleFactor);
 	}
 
-	Ape::PointCloudSetParameters getParameters()
+	ape::PointCloudSetParameters getParameters()
 	{
 		return mPtr.lock()->getParameters();
 	}
 
-	void updatePoints(Ape::PointCloudPoints points)
+	void updatePoints(ape::PointCloudPoints points)
 	{
 		mPtr.lock()->updatePoints(points);
 	}
 
-	void updateColors(Ape::PointCloudColors colors)
+	void updateColors(ape::PointCloudColors colors)
 	{
 		mPtr.lock()->updateColors(colors);
 	}
 
-	Ape::PointCloudPoints getCurrentPoints()
+	ape::PointCloudPoints getCurrentPoints()
 	{
 		return mPtr.lock()->getCurrentPoints();
 	}
 
-	Ape::PointCloudColors getCurrentColors()
+	ape::PointCloudColors getCurrentColors()
 	{
 		return mPtr.lock()->getCurrentColors();
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 
 NBIND_CLASS(PointCloudJsPtr)
 {
-	construct<Ape::PointCloudWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::PointCloudWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

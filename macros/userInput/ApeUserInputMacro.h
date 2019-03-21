@@ -58,24 +58,24 @@ SOFTWARE.*/
 #include "managers/ApeISystemConfig.h"
 #include "utils/ApeInterpolator.h"
 
-namespace Ape
+namespace ape
 {
     class APE_USERINPUTMACRO_DLL_EXPORT UserInputMacro
     {
 	public: 
 		struct ViewPose
 		{
-			Ape::Vector3 userPosition;
+			ape::Vector3 userPosition;
 
-			Ape::Quaternion userOrientation;
+			ape::Quaternion userOrientation;
 
-			Ape::Vector3 headPosition;
+			ape::Vector3 headPosition;
 
-			Ape::Quaternion headOrientation;
+			ape::Quaternion headOrientation;
 
 			ViewPose() {}
 
-			ViewPose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
+			ViewPose(ape::Vector3 userPosition, ape::Quaternion userOrientation, ape::Vector3 headPosition, ape::Quaternion headOrientation)
 			{
 				this->userPosition = userPosition;
 				this->userOrientation = userOrientation;
@@ -86,15 +86,15 @@ namespace Ape
 
 		struct Pose
 		{
-			Ape::Vector3 position;
+			ape::Vector3 position;
 
-			Ape::Quaternion orientation;
+			ape::Quaternion orientation;
 
-			Ape::Vector3 scale;
+			ape::Vector3 scale;
 
 			Pose() {}
 
-			Pose(Ape::Vector3 position, Ape::Quaternion orientation, Ape::Vector3 scale)
+			Pose(ape::Vector3 position, ape::Quaternion orientation, ape::Vector3 scale)
 			{
 				this->position = position;
 				this->orientation = orientation;
@@ -104,19 +104,19 @@ namespace Ape
 
 		struct OverlayBrowserCursor
 		{
-			Ape::Vector2 cursorTexturePosition;
+			ape::Vector2 cursorTexturePosition;
 
-			Ape::Vector2 cursorBrowserPosition;
+			ape::Vector2 cursorBrowserPosition;
 
-			Ape::Vector2 cursorScrollPosition;
+			ape::Vector2 cursorScrollPosition;
 
 			bool cursorClick;
 
-			Ape::Browser::MouseClick cursorClickType;
+			ape::Browser::MouseClick cursorClickType;
 
 			OverlayBrowserCursor() {}
 
-			OverlayBrowserCursor(Ape::Vector2 cursorTexturePosition, Ape::Vector2 cursorBrowserPosition, Ape::Vector2 cursorScrollPosition, bool cursorClick, Ape::Browser::MouseClick cursorClickType)
+			OverlayBrowserCursor(ape::Vector2 cursorTexturePosition, ape::Vector2 cursorBrowserPosition, ape::Vector2 cursorScrollPosition, bool cursorClick, ape::Browser::MouseClick cursorClickType)
 			{
 				this->cursorTexturePosition = cursorTexturePosition;
 				this->cursorBrowserPosition = cursorBrowserPosition;
@@ -134,35 +134,35 @@ namespace Ape
 
 		~UserInputMacro();
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mUserNode;
+		ape::NodeWeakPtr mUserNode;
 
 		std::string mUniqueUserNodeName;
 
-		Ape::NodeWeakPtr mHeadNode;
+		ape::NodeWeakPtr mHeadNode;
 
-		Ape::TextGeometryWeakPtr mOverlayText;
+		ape::TextGeometryWeakPtr mOverlayText;
 
-		std::map<std::string, Ape::CameraWeakPtr> mCameras;
+		std::map<std::string, ape::CameraWeakPtr> mCameras;
 
-		Ape::ManualMaterialWeakPtr mUserMaterial;
+		ape::ManualMaterialWeakPtr mUserMaterial;
 
-		std::map<std::string, Ape::NodeWeakPtr> mSelectedNodes;
+		std::map<std::string, ape::NodeWeakPtr> mSelectedNodes;
 
-		Ape::BrowserWeakPtr mOverlayBrowser;
+		ape::BrowserWeakPtr mOverlayBrowser;
 
-		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+		ape::UnitTextureWeakPtr mOverlayMouseTexture;
 
-		Ape::RayGeometryWeakPtr mRayGeometry;
+		ape::RayGeometryWeakPtr mRayGeometry;
 
-		Ape::NodeWeakPtr mRayOverlayNode;
+		ape::NodeWeakPtr mRayOverlayNode;
 
-		Ape::TextGeometryWeakPtr mCursorText;
+		ape::TextGeometryWeakPtr mCursorText;
 
 		std::string mKeyStringValue;
 
@@ -178,17 +178,17 @@ namespace Ape
 			return mpInstance;
 		}
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		void updateViewPose(ViewPose pose);
 
 		void interpolateViewPose(ViewPose pose, unsigned int milliseconds);
 
-		Ape::NodeWeakPtr getUserNode();
+		ape::NodeWeakPtr getUserNode();
 
-		Ape::NodeWeakPtr getHeadNode();
+		ape::NodeWeakPtr getHeadNode();
 
-		Ape::CameraWeakPtr createCamera(std::string name);
+		ape::CameraWeakPtr createCamera(std::string name);
 
 		void createOverLayText(std::string caption);
 
@@ -210,7 +210,7 @@ namespace Ape
 
 		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
 
-		void rayQuery(Ape::Vector3 position);
+		void rayQuery(ape::Vector3 position);
     };
 }
 

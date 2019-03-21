@@ -28,24 +28,24 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class TorusGeometryImpl : public Ape::ITorusGeometry, public Ape::Replica
+	class TorusGeometryImpl : public ape::ITorusGeometry, public ape::Replica
 	{
 	public:
 		TorusGeometryImpl(std::string name, bool isHostCreated);
 
 		~TorusGeometryImpl();
 
-		void setParameters(float radius, float sectionRadius, Ape::Vector2 tile) override;
+		void setParameters(float radius, float sectionRadius, ape::Vector2 tile) override;
 
-		Ape::GeometryTorusParameters getParameters() override;
+		ape::GeometryTorusParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material) override;
+		void setMaterial(ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial() override;
+		ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,13 +54,13 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryTorusParameters mParameters;
+		ape::GeometryTorusParameters mParameters;
 
-		Ape::MaterialWeakPtr mMaterial;
+		ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
 	};

@@ -29,9 +29,9 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class RayGeometryImpl : public Ape::IRayGeometry, public Ape::Replica
+	class RayGeometryImpl : public ape::IRayGeometry, public ape::Replica
 	{
 	public:
 		RayGeometryImpl(std::string name, bool isHostCreated);
@@ -40,11 +40,11 @@ namespace Ape
 
 		void setIntersectingEnabled(bool enable) override;
 
-		void setIntersections(std::vector<Ape::EntityWeakPtr> intersections) override;
+		void setIntersections(std::vector<ape::EntityWeakPtr> intersections) override;
 
 		void fireIntersectionQuery() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -53,9 +53,9 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 	};
 }
 

@@ -28,9 +28,9 @@ SOFTWARE.*/
 #include "ApeEventManagerImpl.h"
 #include "ApeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class CylinderGeometryImpl : public Ape::ICylinderGeometry, public Ape::Replica
+	class CylinderGeometryImpl : public ape::ICylinderGeometry, public ape::Replica
 	{
 	public:
 		CylinderGeometryImpl(std::string name, bool isHostCreated);
@@ -39,13 +39,13 @@ namespace Ape
 
 		void setParameters(float radius, float height, float tile) override;
 
-		Ape::GeometryCylinderParameters getParameters() override;
+		ape::GeometryCylinderParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material) override;
+		void setMaterial(ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial() override;
+		ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,13 +54,13 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryCylinderParameters mParameters;
+		ape::GeometryCylinderParameters mParameters;
 
-		Ape::MaterialWeakPtr mMaterial;
+		ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
 	};

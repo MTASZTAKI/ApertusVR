@@ -30,22 +30,22 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryTorusParameters
 	{
 		float radius;
 		float sectionRadius;
-		Ape::Vector2 tile;
+		ape::Vector2 tile;
 
 		GeometryTorusParameters()
 		{
 			this->radius = 0.0f;
 			this->sectionRadius = 0.0f;
-			this->tile = Ape::Vector2();
+			this->tile = ape::Vector2();
 		}
 
-		GeometryTorusParameters(float radius, float sectionRadius, Ape::Vector2 tile)
+		GeometryTorusParameters(float radius, float sectionRadius, ape::Vector2 tile)
 		{
 			this->radius = radius;
 			this->sectionRadius = sectionRadius;
@@ -53,23 +53,23 @@ namespace Ape
 		}
 	};
 
-	class ITorusGeometry : public Ape::Geometry
+	class ITorusGeometry : public ape::Geometry
 	{
 	protected:
-		ITorusGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_TORUS) {}
+		ITorusGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_TORUS) {}
 
 		virtual ~ITorusGeometry() {};
 
 	public:
-		virtual void setParameters(float radius, float sectionRadius, Ape::Vector2 tile) = 0;
+		virtual void setParameters(float radius, float sectionRadius, ape::Vector2 tile) = 0;
 
-		virtual Ape::GeometryTorusParameters getParameters() = 0;
+		virtual ape::GeometryTorusParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

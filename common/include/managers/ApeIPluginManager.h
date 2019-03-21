@@ -36,7 +36,7 @@ SOFTWARE.*/
 #include "utils/ApeSingleton.h"
 #include "plugin/ApeIPlugin.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGINMANAGER_DLL_EXPORT IPluginManager : public Singleton<IPluginManager>
 	{

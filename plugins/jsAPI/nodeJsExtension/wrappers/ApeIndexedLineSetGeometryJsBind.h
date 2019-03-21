@@ -34,59 +34,59 @@ SOFTWARE.*/
 class IndexedLineSetJsPtr
 {
 private:
-	Ape::IndexedLineSetGeometryWeakPtr mPtr;
+	ape::IndexedLineSetGeometryWeakPtr mPtr;
 
 public:
-	IndexedLineSetJsPtr(Ape::IndexedLineSetGeometryWeakPtr ptr)
+	IndexedLineSetJsPtr(ape::IndexedLineSetGeometryWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	IndexedLineSetJsPtr(Ape::EntityWeakPtr ptr)
+	IndexedLineSetJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::GeometryWeakPtr getGeometryWeakPtr()
+	ape::GeometryWeakPtr getGeometryWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Geometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::Geometry>(mPtr.lock());
 	}
 
-	Ape::GeometrySharedPtr getGeometrySharedPtr()
+	ape::GeometrySharedPtr getGeometrySharedPtr()
 	{
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::IndexedLineSetGeometrySharedPtr getIndexedLineSetGeometrySharedPtr()
+	ape::IndexedLineSetGeometrySharedPtr getIndexedLineSetGeometrySharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IIndexedLineSetGeometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mPtr.lock());
 	}
 
-	Ape::IndexedLineSetGeometryWeakPtr getIndexedLineSetGeometryWeakPtr()
+	ape::IndexedLineSetGeometryWeakPtr getIndexedLineSetGeometryWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -108,25 +108,25 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IIndexedLineSetGeometry
 
-	Ape::GeometryIndexedLineSetParameters getParameters()
+	ape::GeometryIndexedLineSetParameters getParameters()
 	{
 		return mPtr.lock()->getParameters();
 	}
 
-	void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color)
+	void setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color)
 	{
 		mPtr.lock()->setParameters(coordinates, indices, color);
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 NBIND_CLASS(GeometryIndexedLineSetParameters)
 {
 	construct<>();
@@ -141,8 +141,8 @@ NBIND_CLASS(GeometryIndexedLineSetParameters)
 
 NBIND_CLASS(IndexedLineSetJsPtr)
 {
-	construct<Ape::IndexedLineSetGeometryWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::IndexedLineSetGeometryWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

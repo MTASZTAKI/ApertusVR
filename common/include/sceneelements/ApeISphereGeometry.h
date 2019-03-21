@@ -30,22 +30,22 @@ SOFTWARE.*/
 #include "datatypes/ApeVector3.h"
 #include "sceneelements/ApeINode.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometrySphereParameters
 	{
 		float radius;
-		Ape::Vector2 tile;
+		ape::Vector2 tile;
 
 		GeometrySphereParameters()
 		{
 			this->radius = 0.0f;
-			this->tile = Ape::Vector2();
+			this->tile = ape::Vector2();
 		}
 
 		GeometrySphereParameters(
 		    float radius,
-		    Ape::Vector2 tile)
+		    ape::Vector2 tile)
 		{
 			this->radius = radius;
 			this->tile = tile;
@@ -53,23 +53,23 @@ namespace Ape
 	};
 
 
-	class ISphereGeometry : public Ape::Geometry
+	class ISphereGeometry : public ape::Geometry
 	{
 	protected:
-		ISphereGeometry(std::string name) : Ape::Geometry(name, Ape::Entity::GEOMETRY_SPHERE) {}
+		ISphereGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_SPHERE) {}
 
 		virtual ~ISphereGeometry() {};
 
 	public:
-		virtual void setParameters(float radius, Ape::Vector2 tile) = 0;
+		virtual void setParameters(float radius, ape::Vector2 tile) = 0;
 
-		virtual Ape::GeometrySphereParameters getParameters() = 0;
+		virtual ape::GeometrySphereParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
-		virtual void setMaterial(Ape::MaterialWeakPtr material) = 0;
+		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
-		virtual Ape::MaterialWeakPtr getMaterial() = 0;
+		virtual ape::MaterialWeakPtr getMaterial() = 0;
 	};
 }
 

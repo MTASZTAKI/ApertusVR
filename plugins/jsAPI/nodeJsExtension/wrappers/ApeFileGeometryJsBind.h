@@ -35,59 +35,59 @@ SOFTWARE.*/
 class FileGeometryJsPtr
 {
 private:
-	Ape::FileGeometryWeakPtr mPtr;
+	ape::FileGeometryWeakPtr mPtr;
 
 public:
-	FileGeometryJsPtr(Ape::FileGeometryWeakPtr ptr)
+	FileGeometryJsPtr(ape::FileGeometryWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	FileGeometryJsPtr(Ape::EntityWeakPtr ptr)
+	FileGeometryJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IFileGeometry>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IFileGeometry>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::GeometryWeakPtr getGeometryWeakPtr()
+	ape::GeometryWeakPtr getGeometryWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Geometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::Geometry>(mPtr.lock());
 	}
 
-	Ape::GeometrySharedPtr getGeometrySharedPtr()
+	ape::GeometrySharedPtr getGeometrySharedPtr()
 	{
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::FileGeometrySharedPtr getFileGeometrySharedPtr()
+	ape::FileGeometrySharedPtr getFileGeometrySharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IFileGeometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::IFileGeometry>(mPtr.lock());
 	}
 
-	Ape::FileGeometryWeakPtr getFileGeometryWeakPtr()
+	ape::FileGeometryWeakPtr getFileGeometryWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -109,7 +109,7 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
@@ -127,12 +127,12 @@ public:
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 
 NBIND_CLASS(FileGeometryJsPtr)
 {
-	construct<Ape::FileGeometryWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::FileGeometryWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

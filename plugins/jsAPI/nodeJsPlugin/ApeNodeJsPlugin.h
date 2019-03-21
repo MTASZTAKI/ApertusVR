@@ -40,7 +40,7 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeNodeJsPlugin"
 
-class ApeNodeJsPlugin : public Ape::IPlugin
+class ApeNodeJsPlugin : public ape::IPlugin
 {
 private:
 	struct NodeJsPluginConfig
@@ -53,15 +53,15 @@ private:
 		}
 	};
 
-	Ape::IEventManager* mpEventManager;
+	ape::IEventManager* mpEventManager;
 
-	Ape::ISceneManager* mpSceneManager;
+	ape::ISceneManager* mpSceneManager;
 
-	Ape::ISystemConfig* mpSystemConfig;
+	ape::ISystemConfig* mpSystemConfig;
 
 	NodeJsPluginConfig mNodeJsPluginConfig;
 
-	void eventCallBack(const Ape::Event& event);
+	void eventCallBack(const ape::Event& event);
 
 	void parseNodeJsConfig();
 
@@ -83,12 +83,12 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeNodeJsPlugin()
+APE_PLUGIN_FUNC ape::IPlugin* CreateApeNodeJsPlugin()
 {
 	return new ApeNodeJsPlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApeNodeJsPlugin(Ape::IPlugin* ApeNodeJsPlugin)
+APE_PLUGIN_FUNC void DestroyApeNodeJsPlugin(ape::IPlugin* ApeNodeJsPlugin)
 {
 	delete ApeNodeJsPlugin;
 }

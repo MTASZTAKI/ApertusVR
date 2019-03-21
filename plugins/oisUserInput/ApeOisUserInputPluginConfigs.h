@@ -30,7 +30,7 @@ SOFTWARE.*/
 #include "datatypes/ApeDegree.h"
 #include "datatypes/ApeRadian.h"
 
-namespace Ape
+namespace ape
 {
 	typedef std::vector<std::string> OisInputs;
 

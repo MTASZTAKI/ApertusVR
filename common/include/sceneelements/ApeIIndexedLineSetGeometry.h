@@ -27,42 +27,42 @@ SOFTWARE.*/
 #include <vector>
 #include "datatypes/ApeGeometry.h"
 
-namespace Ape
+namespace ape
 {
 	struct GeometryIndexedLineSetParameters
 	{
-		Ape::GeometryCoordinates coordinates;
-		Ape::GeometryIndices indices;
-		Ape::Color color;
+		ape::GeometryCoordinates coordinates;
+		ape::GeometryIndices indices;
+		ape::Color color;
 
 		GeometryIndexedLineSetParameters()
 		{
-			this->coordinates = Ape::GeometryCoordinates();
-			this->indices = Ape::GeometryIndices();
-			this->color = Ape::Color();
+			this->coordinates = ape::GeometryCoordinates();
+			this->indices = ape::GeometryIndices();
+			this->color = ape::Color();
 		}
 
 		GeometryIndexedLineSetParameters(
-		    Ape::GeometryCoordinates coordinates,
-		    Ape::GeometryIndices indices,
-		    Ape::Color color)
+		    ape::GeometryCoordinates coordinates,
+		    ape::GeometryIndices indices,
+		    ape::Color color)
 		{
 			this->coordinates = coordinates;
 			this->indices = indices;
 			this->color = color;
 		}
 
-		Ape::GeometryCoordinates getCoordinates()
+		ape::GeometryCoordinates getCoordinates()
 		{
 			return coordinates;
 		}
 
-		Ape::GeometryIndices getIndices()
+		ape::GeometryIndices getIndices()
 		{
 			return indices;
 		}
 
-		Ape::Color getColor()
+		ape::Color getColor()
 		{
 			return color;
 		}
@@ -93,11 +93,11 @@ namespace Ape
 		virtual ~IIndexedLineSetGeometry() {};
 
 	public:
-		virtual void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) = 0;
+		virtual void setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color) = 0;
 
-		virtual Ape::GeometryIndexedLineSetParameters getParameters() = 0;
+		virtual ape::GeometryIndexedLineSetParameters getParameters() = 0;
 
-		virtual void setParentNode(Ape::NodeWeakPtr parentNode) = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 	};
 }
 

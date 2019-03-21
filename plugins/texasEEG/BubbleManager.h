@@ -35,7 +35,7 @@ namespace TexasEEG
 	class BubbleManager
 	{
 	private:
-		Ape::NodeWeakPtr mUserNode;
+		ape::NodeWeakPtr mUserNode;
 
 		std::thread* mTimerThread;
 
@@ -54,7 +54,7 @@ namespace TexasEEG
 		void UpdateTimers();
 
 	public:
-		BubbleManager(Ape::NodeWeakPtr userNode);
+		BubbleManager(ape::NodeWeakPtr userNode);
 
 		~BubbleManager();
 

@@ -23,94 +23,94 @@ SOFTWARE.*/
 #include <iostream>
 #include "ApePointCloudImpl.h"
 
-Ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : Ape::IPointCloud(name), Ape::Replica("PointCloud", isHostCreated)
+ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : ape::IPointCloud(name), ape::Replica("PointCloud", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParentNode = Ape::NodeWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParentNode = ape::NodeWeakPtr();
 	mParentNodeName = std::string();
-	mParameters = Ape::PointCloudSetParameters();
+	mParameters = ape::PointCloudSetParameters();
 	mPointsSize = 0;
 	mColorsSize = 0;
 	mCurrentPointsSize = 0;
 	mCurrentColorsSize = 0;
 	mIsCurrentPointsChanged = false;
 	mIsCurrentColorsChanged = false;
-	mCurrentPoints = Ape::PointCloudPoints();
-	mCurrentColors = Ape::PointCloudColors();
+	mCurrentPoints = ape::PointCloudPoints();
+	mCurrentColors = ape::PointCloudColors();
 	mStreamHeaderSizeInBytes = 9; // 9 means 1byte(char) for packetID and 8 more(2 integer) for point cloud size
 }
 
-Ape::PointCloudImpl::~PointCloudImpl()
+ape::PointCloudImpl::~PointCloudImpl()
 {
 
 }
 
-void Ape::PointCloudImpl::setParameters(Ape::PointCloudPoints points, Ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
+void ape::PointCloudImpl::setParameters(ape::PointCloudPoints points, ape::PointCloudColors colors, float boundigSphereRadius, float pointSize, bool pointScale,
 	float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 {
 	mPointsSize = static_cast<int>(points.size());
 	mColorsSize = static_cast<int>(colors.size());
-	mParameters = Ape::PointCloudSetParameters(points, colors, boundigSphereRadius, pointSize, pointScale, pointScaleOffset, unitScaleDistance, scaleFactor);
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
+	mParameters = ape::PointCloudSetParameters(points, colors, boundigSphereRadius, pointSize, pointScale, pointScaleOffset, unitScaleDistance, scaleFactor);
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
 }
 
-Ape::PointCloudSetParameters Ape::PointCloudImpl::getParameters()
+ape::PointCloudSetParameters ape::PointCloudImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::PointCloudImpl::updatePoints(Ape::PointCloudPoints points)
+void ape::PointCloudImpl::updatePoints(ape::PointCloudPoints points)
 {
 	mIsCurrentPointsChanged = true;
 	mCurrentPointsSize = static_cast<int>(points.size());
 	mCurrentPoints = points;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_POINTS));
 }
 
-void Ape::PointCloudImpl::updateColors(Ape::PointCloudColors colors)
+void ape::PointCloudImpl::updateColors(ape::PointCloudColors colors)
 {
 	mIsCurrentColorsChanged = true;
 	mCurrentColorsSize = static_cast<int>(colors.size());
 	mCurrentColors = colors;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_COLORS));
 }
 
-Ape::PointCloudPoints Ape::PointCloudImpl::getCurrentPoints()
+ape::PointCloudPoints ape::PointCloudImpl::getCurrentPoints()
 {
 	return mCurrentPoints;
 }
 
-Ape::PointCloudColors Ape::PointCloudImpl::getCurrentColors()
+ape::PointCloudColors ape::PointCloudImpl::getCurrentColors()
 {
 	return mCurrentColors;
 }
 
 
-void Ape::PointCloudImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::PointCloudImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNodeSP;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-Ape::NodeWeakPtr Ape::PointCloudImpl::getParentNode()
+ape::NodeWeakPtr ape::PointCloudImpl::getParentNode()
 {
 	return mParentNode;
 }
 
-void Ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	if (serializeParameters->whenLastSerialized == 0)
 	{
@@ -129,7 +129,7 @@ RakNet::RM3SerializationResult Ape::PointCloudImpl::Serialize(RakNet::SerializeP
 	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
-void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	if (deserializeParameters->bitstreamWrittenTo[0])
 	{
@@ -149,7 +149,7 @@ void Ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserialize
 	}
 }
 
-void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet * packet)
+void ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet * packet)
 {
 	int streamPacketSizeInBytes = (mCurrentPointsSize * sizeof(short)) + (mCurrentColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
@@ -190,7 +190,7 @@ void Ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 	streamPacket = nullptr;
 }
 
-void Ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * streamPeer, RakNet::Packet * packet)
+void ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * streamPeer, RakNet::Packet * packet)
 {
 	int streamPacketSizeInBytes = (mPointsSize * sizeof(short)) + (mColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
@@ -231,7 +231,7 @@ void Ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * stream
 	streamPacket = nullptr;
 }
 
-void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
+void ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
 {
 	while (true)
 	{
@@ -269,7 +269,7 @@ void Ape::PointCloudImpl::listenStreamPeerSendThread(RakNet::RakPeerInterface* s
 	}
 }
 
-void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
+void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
 {
 	while (true)
 	{
@@ -310,8 +310,8 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					packetDataIndex++;
 				}
 				APE_LOG_DEBUG("Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
-				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARAMETERS));
-				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_PARENTNODE));
+				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
+				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARENTNODE));
 			}
 			else if (packet->data[0] == 255)
 			{
@@ -341,14 +341,14 @@ void Ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 						packetDataIndex++;
 					}
 				}
-				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_POINTS));
+				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_POINTS));
 				for (int i = 0; i < mCurrentColorsSize; i++)
 				{
 					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
 				//APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
-				mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::POINT_CLOUD_COLORS));
+				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)
 			{

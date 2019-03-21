@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "ApeMainWindowImpl.h"
 
-Ape::MainWindowImpl::MainWindowImpl()
+ape::MainWindowImpl::MainWindowImpl()
 {
 	msSingleton = this;
 	mpHandle = nullptr;
@@ -31,47 +31,47 @@ Ape::MainWindowImpl::MainWindowImpl()
 	mName = std::string();
 }
 
-Ape::MainWindowImpl::~MainWindowImpl()
+ape::MainWindowImpl::~MainWindowImpl()
 {
 
 }
 
-void* Ape::MainWindowImpl::getHandle()
+void* ape::MainWindowImpl::getHandle()
 {
 	return mpHandle;
 }
 
-unsigned int Ape::MainWindowImpl::getWidth()
+unsigned int ape::MainWindowImpl::getWidth()
 {
 	return mWidth;
 }
 
-unsigned int Ape::MainWindowImpl::getHeight()
+unsigned int ape::MainWindowImpl::getHeight()
 {
 	return mHeight;
 }
 
-void Ape::MainWindowImpl::setHandle(void* handle)
+void ape::MainWindowImpl::setHandle(void* handle)
 {
 	mpHandle = handle;
 }
 
-void Ape::MainWindowImpl::setWidth(unsigned int width)
+void ape::MainWindowImpl::setWidth(unsigned int width)
 {
 	mWidth = width;
 }
 
-void Ape::MainWindowImpl::setHeight(unsigned int height)
+void ape::MainWindowImpl::setHeight(unsigned int height)
 {
 	mHeight = height;
 }
 
-void Ape::MainWindowImpl::setName(std::string name)
+void ape::MainWindowImpl::setName(std::string name)
 {
 	mName = name;
 }
 
-std::string Ape::MainWindowImpl::getName()
+std::string ape::MainWindowImpl::getName()
 {
 	return mName;
 }

@@ -28,7 +28,7 @@ SOFTWARE.*/
 #include <set>
 #include <vector>
 
-namespace Ape
+namespace ape
 {
 	template<typename T>
 	class DoubleQueue

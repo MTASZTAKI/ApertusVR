@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include <sstream>
 #include <vector>
 
-namespace Ape
+namespace ape
 {
 	struct Color
 	{
@@ -80,7 +80,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::Color > ColorVector;
+	typedef std::vector < ape::Color > ColorVector;
 }
 
 #endif

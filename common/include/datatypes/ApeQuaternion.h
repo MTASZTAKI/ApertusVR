@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "datatypes/ApeRadian.h"
 #include "datatypes/ApeVector3.h"
 
-namespace Ape
+namespace ape
 {
 	struct Quaternion
 	{
@@ -45,17 +45,17 @@ namespace Ape
 			w(_w), x(_x), y(_y), z(_z)
 		{}
 
-		Quaternion(const Ape::Degree& _degRot, const Ape::Vector3& _axRot)
+		Quaternion(const ape::Degree& _degRot, const ape::Vector3& _axRot)
 		{
-			FromAngleAxis(Ape::Radian(_degRot.toRadian()), _axRot);
+			FromAngleAxis(ape::Radian(_degRot.toRadian()), _axRot);
 		}
 
-		Quaternion(const Ape::Radian& _radRot, const Ape::Vector3& _axRot)
+		Quaternion(const ape::Radian& _radRot, const ape::Vector3& _axRot)
 		{
 			FromAngleAxis(_radRot, _axRot);
 		}
 
-		Quaternion(const Ape::Matrix3& m3x3)
+		Quaternion(const ape::Matrix3& m3x3)
 		{
 			FromRotationMatrix(m3x3);
 		}
@@ -84,10 +84,10 @@ namespace Ape
 			           z / fScalar);
 		}
 
-		Ape::Vector3 operator* (const Ape::Vector3& v) const
+		ape::Vector3 operator* (const ape::Vector3& v) const
 		{
-			Ape::Vector3 uv, uuv;
-			Ape::Vector3 qvec(x, y, z);
+			ape::Vector3 uv, uuv;
+			ape::Vector3 qvec(x, y, z);
 			uv = qvec.crossProduct(v);
 			uuv = qvec.crossProduct(uv);
 			uv = uv * (2.0f * w);
@@ -119,7 +119,7 @@ namespace Ape
 			return product(rkQ);
 		}
 
-		void FromAngleAxis(Ape::Radian _angleRadian, const Ape::Vector3& _axis)
+		void FromAngleAxis(ape::Radian _angleRadian, const ape::Vector3& _axis)
 		{
 			float fHalfAngle((float)(0.5 * _angleRadian.radian));
 			float fSin = std::sin(fHalfAngle);
@@ -129,7 +129,7 @@ namespace Ape
 			z = fSin * _axis.z;
 		}
 
-		void FromRotationMatrix(const Ape::Matrix3& kRot)
+		void FromRotationMatrix(const ape::Matrix3& kRot)
 		{
 			float fTrace = kRot[0][0] + kRot[1][1] + kRot[2][2];
 			float fRoot;
@@ -164,7 +164,7 @@ namespace Ape
 			}
 		}
 
-		bool equals(const Ape::Quaternion& _q2, Ape::Radian _tolerance)
+		bool equals(const ape::Quaternion& _q2, ape::Radian _tolerance)
 		{
 			/*float fCos = w * _q2.w + x * _q2.x + y * _q2.y + z * _q2.z;
 			float angle = std::acos(fCos);
@@ -240,7 +240,7 @@ namespace Ape
 			}
 		}
 
-		void ToRotationMatrix(Ape::Matrix3& kRot) const
+		void ToRotationMatrix(ape::Matrix3& kRot) const
 		{
 			float fTx = x + x;
 			float fTy = y + y;

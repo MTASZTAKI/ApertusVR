@@ -62,20 +62,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeWebserverPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeWebserverPlugin : public Ape::IPlugin
+	class ApeWebserverPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
 		std::unordered_set<crow::websocket::connection*> mWebSocketUsers;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeWebserverPlugin();
@@ -95,14 +95,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeWebserverPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeWebserverPlugin()
 	{
-		return new Ape::ApeWebserverPlugin;
+		return new ape::ApeWebserverPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeWebserverPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeWebserverPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeWebserverPlugin*)plugin;
+		delete (ape::ApeWebserverPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

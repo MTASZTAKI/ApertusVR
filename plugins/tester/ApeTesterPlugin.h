@@ -58,20 +58,20 @@ SOFTWARE.*/
 
 #define THIS_PLUGINNAME "ApeTesterPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeTesterPlugin : public Ape::IPlugin
+	class ApeTesterPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ISystemConfig* mpSystemConfig;
 
-		Ape::SceneMakerMacro* mpSceneMakerMacro;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 	public:
 		ApeTesterPlugin();
@@ -91,14 +91,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeTesterPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeTesterPlugin()
 	{
-		return new Ape::ApeTesterPlugin;
+		return new ape::ApeTesterPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeTesterPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeTesterPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeTesterPlugin*)plugin;
+		delete (ape::ApeTesterPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

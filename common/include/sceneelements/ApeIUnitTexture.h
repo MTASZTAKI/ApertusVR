@@ -30,24 +30,24 @@ SOFTWARE.*/
 #include "datatypes/ApeVector2.h"
 #include "sceneelements/ApeICamera.h"
 
-namespace Ape
+namespace ape
 {
 	class IUnitTexture : public Texture
 	{
 	public:
 		struct Parameters
 		{
-			Ape::MaterialWeakPtr material;
+			ape::MaterialWeakPtr material;
 
 			std::string fileName;
 
 			Parameters()
 			{
-				this->material = Ape::MaterialWeakPtr();
+				this->material = ape::MaterialWeakPtr();
 				this->fileName = std::string();
 			}
 
-			Parameters(Ape::MaterialWeakPtr material, std::string fileName)
+			Parameters(ape::MaterialWeakPtr material, std::string fileName)
 			{
 				this->material = material;
 				this->fileName = fileName;
@@ -57,20 +57,20 @@ namespace Ape
 
 		struct Filtering
 		{
-			Ape::Texture::Filtering minFilter;
+			ape::Texture::Filtering minFilter;
 
-			Ape::Texture::Filtering magFilter;
+			ape::Texture::Filtering magFilter;
 
-			Ape::Texture::Filtering mipFilter;
+			ape::Texture::Filtering mipFilter;
 
 			Filtering()
 			{
-				this->minFilter = Ape::Texture::Filtering::F_NONE;
-				this->magFilter = Ape::Texture::Filtering::F_NONE;
-				this->mipFilter = Ape::Texture::Filtering::F_NONE;
+				this->minFilter = ape::Texture::Filtering::F_NONE;
+				this->magFilter = ape::Texture::Filtering::F_NONE;
+				this->mipFilter = ape::Texture::Filtering::F_NONE;
 			}
 
-			Filtering(Ape::Texture::Filtering minFilter, Ape::Texture::Filtering magFilter, Ape::Texture::Filtering mipFilter)
+			Filtering(ape::Texture::Filtering minFilter, ape::Texture::Filtering magFilter, ape::Texture::Filtering mipFilter)
 			{
 				this->minFilter = minFilter;
 				this->magFilter = magFilter;
@@ -84,19 +84,19 @@ namespace Ape
 		virtual ~IUnitTexture() {};
 
 	public:
-		virtual void setParameters(Ape::MaterialWeakPtr material, std::string fileName) = 0;
+		virtual void setParameters(ape::MaterialWeakPtr material, std::string fileName) = 0;
 
 		virtual Parameters getParameters() = 0;
 
 		virtual void setTextureScroll(float u, float v) = 0;
 
-		virtual Ape::Vector2 getTextureScroll() = 0;
+		virtual ape::Vector2 getTextureScroll() = 0;
 
-		virtual void setTextureAddressingMode(Ape::Texture::AddressingMode addressingMode) = 0;
+		virtual void setTextureAddressingMode(ape::Texture::AddressingMode addressingMode) = 0;
 
-		virtual Ape::Texture::AddressingMode getTextureAddressingMode() = 0;
+		virtual ape::Texture::AddressingMode getTextureAddressingMode() = 0;
 
-		virtual void setTextureFiltering(Ape::Texture::Filtering minFilter, Ape::Texture::Filtering magFilter, Ape::Texture::Filtering mipFilter) = 0;
+		virtual void setTextureFiltering(ape::Texture::Filtering minFilter, ape::Texture::Filtering magFilter, ape::Texture::Filtering mipFilter) = 0;
 
 		virtual Filtering getTextureFiltering() = 0;
 	};

@@ -38,23 +38,23 @@ SOFTWARE.*/
 #include "managers/ApeIEventManager.h"
 #include "managers/ApeILogManager.h"
 
-namespace Ape
+namespace ape
 { 
 	class APE_EVENTMANAGER_DLL_EXPORT EventManagerImpl : public IEventManager
 	{
 	private:
-		std::map<Ape::Event::Group, std::vector< std::function<void(const Ape::Event&)>>> mEventMap;
+		std::map<ape::Event::Group, std::vector< std::function<void(const ape::Event&)>>> mEventMap;
 
 	public:
 		EventManagerImpl();
 
 		~EventManagerImpl();
 
-		void connectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback) override;
+		void connectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> callback) override;
 
-		void disconnectEvent(Ape::Event::Group group, std::function<void(const Ape::Event&)> callback) override;
+		void disconnectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> callback) override;
 
-		void fireEvent(const Ape::Event& event);
+		void fireEvent(const ape::Event& event);
 	};
 }
 
