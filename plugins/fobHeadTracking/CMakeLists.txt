@@ -35,13 +35,14 @@ set (SOURCES
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include 
 	fobLib
+	${PROJECT_SOURCE_DIR}/macros/userInput 
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeFobHeadTrackingLib)
+target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro ApeFobHeadTrackingLib)
 
 set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

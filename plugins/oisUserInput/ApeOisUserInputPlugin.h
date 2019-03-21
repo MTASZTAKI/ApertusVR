@@ -34,15 +34,6 @@ SOFTWARE.*/
 #include "managers/ApeILogManager.h"
 #include "managers/ApeISceneManager.h"
 #include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIUnitTexture.h"
-#include "sceneelements/ApeITorusGeometry.h"
-#include "utils/ApeInterpolator.h"
 #include "ApeUserInputMacro.h"
 #include "ApeOisUserInputPluginConfigs.h"
 #include "OIS.h"
@@ -80,14 +71,6 @@ namespace Ape
 
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
-		bool isNodeSelected(std::string nodeName);
-
-		void addNodeSelection(std::string nodeName);
-
-		bool removeNodeSelection(std::string nodeName);
-
-		void clearNodeSelection();
-
 	private:
 		struct MouseState
 		{
@@ -103,20 +86,6 @@ namespace Ape
 			int scrollVelocity = 0;
 		};
 
-		struct UserNodePose
-		{
-			Ape::Vector3 position;
-			Ape::Quaternion orientation;
-
-			UserNodePose(
-				Ape::Vector3 position,
-				Ape::Quaternion orientation)
-			{
-				this->position = position;
-				this->orientation = orientation;
-			}
-		};
-
 		OIS::Keyboard* mpKeyboard; 
 
 		OIS::Mouse* mpMouse;
@@ -129,33 +98,13 @@ namespace Ape
 
 		Ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mCursorNode;
-
-		Ape::TextGeometryWeakPtr mCursorText;
-
 		std::map<OIS::KeyCode, bool> mKeyCodeMap;
 
 		MouseState mMouseState;
 
-		std::vector<UserNodePose> mUserNodeTogglePoses;
+		std::vector<Ape::UserInputMacro::ViewPose> mViewPoses;
 
-		std::vector<UserNodePose> mUserNodeAnimatePoses;
-
-		Ape::BrowserWeakPtr mOverlayBrowser;
-
-		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
-
-		Ape::RayGeometryWeakPtr mRayGeometry;
-
-		Ape::NodeWeakPtr mRayOverlayNode;
-
-		std::map<std::string, Ape::NodeWeakPtr> mSelectedNodes;
-
-		bool mEnableOverlayBrowserKeyEvents;
-
-		bool mIsNewKeyEvent;
-
-		int mUserNodePosesToggleIndex;
+		int mViewPosesToggleIndex;
 
 		float mTranslateSpeedFactorKeyboard;
 
@@ -169,25 +118,19 @@ namespace Ape
 
 		bool mIsKeyPressed;
 
-		bool mIsUserNodeAnimated;
-
 		Ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::UserInputMacro::Pose mUserInputMacroPose;
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		void moveUserNodeByKeyBoard();
+		Ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
-		void moveUserNodeByMouse();
+		void updateViewPoseByKeyBoard();
 
-		void saveUserNodePose();
+		void updateViewPoseByMouse();
 
-		void toggleUserNodePoses(Ape::NodeSharedPtr userNode);
+		void toggleViewPoses(bool isInterpolated);
 
 		void eventCallBack(const Ape::Event& event);
-
-		void animateUserNode(Ape::NodeSharedPtr userNode);
-
-		void fillUserNodeAnimatePoses();
 	};
 	
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateOISUserInputPlugin()

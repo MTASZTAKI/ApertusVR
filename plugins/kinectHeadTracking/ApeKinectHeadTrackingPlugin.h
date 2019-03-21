@@ -51,6 +51,7 @@ SOFTWARE.*/
 #include "utils/ApeInterpolator.h"
 #include "utils/ApeHeadTrackingConfigs.h"
 #include "datatypes/ApeEuler.h"
+#include "ApeUserInputMacro.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
@@ -90,17 +91,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::ManualMaterialWeakPtr mUserMaterial;
-
-		Ape::NodeWeakPtr mHeadNode;
-
-		Ape::TextGeometryWeakPtr mUserPositionDisplayText;
 
 		Ape::DoubleQueue<Ape::CameraWeakPtr> mCameraDoubleQueue;
 
@@ -125,6 +116,10 @@ namespace Ape
 		float mD;
 
 		int mCameraCount;
+
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		void eventCallBack(const Ape::Event& event);
 

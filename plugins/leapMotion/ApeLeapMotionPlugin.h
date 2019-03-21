@@ -88,11 +88,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::IMainWindow* mpMainWindow;
-
 		Ape::IEventManager* mpEventManager;
-
-		Ape::NodeWeakPtr mUserNode;
 
 		void eventCallBack(const Ape::Event& event);
 

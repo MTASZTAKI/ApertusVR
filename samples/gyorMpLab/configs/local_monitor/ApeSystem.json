@@ -10,7 +10,7 @@
     "sessionIP": "192.168.0.130",
     "sessionPort": "62666",
     "sessionResourceLocation": [
-      "/plugins/industry40/resources"
+      "/macros/sceneMaker/resources"
     ],
     "natPunchThroughServer": {
       "use": false,

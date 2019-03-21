@@ -51,13 +51,13 @@ SOFTWARE.*/
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
 #include "utils/ApeInterpolator.h"
-#include "OIS.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeLegoPlugin"
 
 namespace Ape
 {
-	class ApeLegoPlugin : public Ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class ApeLegoPlugin : public Ape::IPlugin
 	{
 	private:
 
@@ -67,35 +67,13 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		int mInterpolatorsToggleIndex;
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		int mInterpolatorCount;
+		std::vector<std::string> mModelFileNames;
 
-		std::vector<std::string> mMeshNames;
-
-		std::vector<Ape::NodeWeakPtr> mAnimationNodes;
+		std::vector<Ape::Vector3> mInterpolatePositions;
 
 		void eventCallBack(const Ape::Event& event);
-
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::IMainWindow* mpMainWindow;
-
-		OIS::Keyboard* mpKeyboard;
-
-		OIS::Mouse* mpMouse;
-
-		float mTranslateSpeedFactor;
-
-		float mRotateSpeedFactor;
-
-		void moveUserNode();
-
-		void toggleInterpolators();
-
-		void interpolate(int interpolatorIndex);
 
 		void blowModel();
 
@@ -115,16 +93,6 @@ namespace Ape
 		void Suspend() override;
 
 		void Restart() override;
-
-		bool keyPressed(const OIS::KeyEvent& e) override;
-
-		bool keyReleased(const OIS::KeyEvent& e) override;
-
-		bool mouseMoved(const OIS::MouseEvent& e) override;
-
-		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 	};
 
 	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeLegoPlugin()

@@ -182,11 +182,6 @@ std::string Ape::SystemConfigImpl::getFolderPath()
 	return mFolderPath;
 }
 
-void Ape::SystemConfigImpl::setGeneratedUniqueUserNodeName(std::string generatedUniqueUserName)
-{
-	mSceneSessionConfig.generatedUniqueUserNodeName = generatedUniqueUserName;
-}
-
 
 
 

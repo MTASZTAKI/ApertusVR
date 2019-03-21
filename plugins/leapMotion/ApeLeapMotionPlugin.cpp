@@ -7,7 +7,6 @@ Ape::LeapMotionPlugin::LeapMotionPlugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	mLeapController = Leap::Controller();
 	mFingerNames = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
@@ -27,24 +26,15 @@ Ape::LeapMotionPlugin::~LeapMotionPlugin()
 
 void Ape::LeapMotionPlugin::eventCallBack(const Ape::Event& event)
 {
-	/*TODO must create at init not here or think about that (Is this the responsibility of a plugin or a system?)*/
-	/*if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_rightHandNode"))
-		mRightHandNode = mpSceneManager->getNode(event.subjectName);
-	else if (event.type == Ape::Event::Type::NODE_CREATE && event.subjectName == (mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName + "_leftHandNode"))
-		mLeftHandNode = mpSceneManager->getNode(event.subjectName);*/
+
 }
 
 void Ape::LeapMotionPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-		mUserNode = userNode;
-
 	mLeapController.addListener(*this);
 	mLeapController.setPolicyFlags(Leap::Controller::POLICY_BACKGROUND_FRAMES);
 	onFrame(mLeapController);
-
 	APE_LOG_FUNC_LEAVE();
 }
 

@@ -10,7 +10,6 @@ Ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mWater = Ape::WaterWeakPtr();
 	mSky = Ape::SkyWeakPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mSkyLight = Ape::LightWeakPtr();
 	mSunLight = Ape::LightWeakPtr();
 	mSkyLightNode = Ape::NodeWeakPtr();

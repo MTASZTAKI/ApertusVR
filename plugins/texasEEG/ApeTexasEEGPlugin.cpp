@@ -6,9 +6,10 @@ Ape::ApeTexasEEGPlugin::ApeTexasEEGPlugin()
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mUserNode = Ape::NodeWeakPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mScore = 0;
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -32,11 +33,7 @@ void Ape::ApeTexasEEGPlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeTexasEEGPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-		mUserNode = userNode;
-
-	mGameManager = new TexasEEG::GameManager(mUserNode);
+	mGameManager = new TexasEEG::GameManager(mpApeUserInputMacro->getUserNode());
 	mGameManager->Start();
 
 	APE_LOG_FUNC_LEAVE();

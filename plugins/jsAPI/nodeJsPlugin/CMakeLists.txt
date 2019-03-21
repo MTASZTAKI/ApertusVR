@@ -62,7 +62,7 @@ if (WIN32)
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${NODE_LIB_PATH_DEBUG})
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${NODE_LIB_PATH_RELEASE})
 endif ()
-# TODO: MY_NODEJS_LIB under unix
+# TODO_ApeNodeJsExtension MY_NODEJS_LIB under unix
 
 # Link dependencies
 target_link_libraries(${MY_TARGET_NAME} ApeSceneManager ApePluginManager ApeEventManager ApeLogManager ApeSystemConfig MY_NODEJS_LIB)

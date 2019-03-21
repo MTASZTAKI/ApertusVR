@@ -56,6 +56,7 @@ SOFTWARE.*/
 #include "system/ApeIMainWindow.h"
 #include "sceneelements/ApeIPointCloud.h"
 #include "sceneelements/ApeIRayGeometry.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApePolimiPlugin"
 
@@ -70,7 +71,7 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mUserNode;
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
 
@@ -78,8 +79,6 @@ namespace Ape
 		ApePolimiPlugin();
 
 		~ApePolimiPlugin();
-
-		void createCoordinateSystem();
 
 		void Init() override;
 

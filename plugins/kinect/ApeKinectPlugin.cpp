@@ -17,12 +17,12 @@ Ape::KinectPlugin::KinectPlugin()
 	m_pKinectSensor = NULL;
 	m_pCoordinateMapper = NULL;
 	reader = NULL;
-
 	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	RootNode = mpSceneManager->createNode("KinectRootNode").lock();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -67,9 +67,6 @@ void Ape::KinectPlugin::Init()
 
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
-
-	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-		mUserNode = userNode;
 
 	CloudSize = (unsigned int)(size*pointratio);
 	if (CloudSize % 3 != 0)
@@ -515,115 +512,15 @@ void Ape::KinectPlugin::Run()
 					std::cout << "locked" << std::endl;
 					rootClothNode->setPosition(anchor);
 					std::cout << rootClothNode->getPosition().toString() << std::endl;
-
-					if (auto userNode = mUserNode.lock())
-					{
-						auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
-						moveInterpolator->addSection(
-							userNode->getPosition(),
-							Ape::Vector3(-0.931241, 31.6337, 110.023),
-							5.0,
-							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
-						);
-						auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
-						rotateInterpolator->addSection(
-							userNode->getOrientation(),
-							Ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706),
-							5.0,
-							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
-						);
-						while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
-						{
-							if (!moveInterpolator->isQueueEmpty())
-								moveInterpolator->iterateTopSection();
-							if (!rotateInterpolator->isQueueEmpty())
-								rotateInterpolator->iterateTopSection();
-						}
-						auto moveInterpolator2 = std::make_unique<Ape::Interpolator>(false);
-						moveInterpolator2->addSection(
-							userNode->getPosition(),
-							Ape::Vector3(-406.561, 45.8449, -250.643),
-							15.0,
-							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
-						);
-						auto rotateInterpolator2 = std::make_unique<Ape::Interpolator>(false);
-						rotateInterpolator2->addSection(
-							userNode->getOrientation(),
-							Ape::Quaternion(-0.710511, 0.0605394, 0.698546, 0.0595197),
-							15.0,
-							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
-						);
-						while (!moveInterpolator2->isQueueEmpty() && !rotateInterpolator2->isQueueEmpty())
-						{
-							if (!moveInterpolator2->isQueueEmpty())
-								moveInterpolator2->iterateTopSection();
-							if (!rotateInterpolator2->isQueueEmpty())
-								rotateInterpolator2->iterateTopSection();
-						}
-						auto moveInterpolator3 = std::make_unique<Ape::Interpolator>(false);
-						moveInterpolator3->addSection(
-							userNode->getPosition(),
-							Ape::Vector3(11.0208, 51.4279, -695.983),
-							15.0,
-							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
-						);
-						auto rotateInterpolator3 = std::make_unique<Ape::Interpolator>(false);
-						rotateInterpolator3->addSection(
-							userNode->getOrientation(),
-							Ape::Quaternion(0.0135394, -0.00138574, 0.994711, 0.101814),
-							15.0,
-							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
-						);
-						while (!moveInterpolator3->isQueueEmpty() && !rotateInterpolator3->isQueueEmpty())
-						{
-							if (!moveInterpolator3->isQueueEmpty())
-								moveInterpolator3->iterateTopSection();
-							if (!rotateInterpolator3->isQueueEmpty())
-								rotateInterpolator3->iterateTopSection();
-						}
-						auto moveInterpolator4 = std::make_unique<Ape::Interpolator>(false);
-						moveInterpolator4->addSection(
-							userNode->getPosition(),
-							Ape::Vector3(460.696, 62.134, -252.101),
-							15.0,
-							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
-						);
-						auto rotateInterpolator4 = std::make_unique<Ape::Interpolator>(false);
-						rotateInterpolator4->addSection(
-							userNode->getOrientation(),
-							Ape::Quaternion(0.704635, -0.0721229, 0.702226, 0.0718766),
-							15.0,
-							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
-						);
-						while (!moveInterpolator4->isQueueEmpty() && !rotateInterpolator4->isQueueEmpty())
-						{
-							if (!moveInterpolator4->isQueueEmpty())
-								moveInterpolator4->iterateTopSection();
-							if (!rotateInterpolator4->isQueueEmpty())
-								rotateInterpolator4->iterateTopSection();
-						}
-						auto moveInterpolator5 = std::make_unique<Ape::Interpolator>(false);
-						moveInterpolator5->addSection(
-							userNode->getPosition(),
-							Ape::Vector3(-0.931241, 31.6337, 110.023),
-							15.0,
-							[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
-						);
-						auto rotateInterpolator5 = std::make_unique<Ape::Interpolator>(false);
-						rotateInterpolator5->addSection(
-							userNode->getOrientation(),
-							Ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706),
-							15.0,
-							[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
-						);
-						while (!moveInterpolator5->isQueueEmpty() && !rotateInterpolator5->isQueueEmpty())
-						{
-							if (!moveInterpolator5->isQueueEmpty())
-								moveInterpolator5->iterateTopSection();
-							if (!rotateInterpolator5->isQueueEmpty())
-								rotateInterpolator5->iterateTopSection();
-						}
-					}
+					mUserInputMacroPose.userPosition = Ape::Vector3(-0.931241, 31.6337, 110.023);
+					mUserInputMacroPose.userOrientation = Ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706);
+					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mUserInputMacroPose.userPosition = Ape::Vector3(-406.561, 45.8449, -250.643);
+					mUserInputMacroPose.userOrientation = Ape::Quaternion(-0.710511, 0.0605394, 0.698546, 0.0595197);
+					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mUserInputMacroPose.userPosition = Ape::Vector3(11.0208, 51.4279, -695.983);
+					mUserInputMacroPose.userOrientation = Ape::Quaternion(0.0135394, -0.00138574, 0.994711, 0.101814);
+					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 				}
 				operatorPointsGenerated = true;
 			}

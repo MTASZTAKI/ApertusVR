@@ -5,7 +5,6 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
@@ -14,8 +13,8 @@ Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
 	mCameraRight = Ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
-	mpApeUserInputMacro = new UserInputMacro();
-	mUserInputMacroPose = Ape::UserInputMacro::Pose();
+	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -121,11 +120,6 @@ void Ape::ApeHtcVivePlugin::eventCallBack(const Ape::Event& event)
 void Ape::ApeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
-
 	APE_LOG_DEBUG("try to initialize openVR HMD");
 	mpOpenVrSystem = vr::VR_Init(&mOpenVrHmdError, vr::EVRApplicationType::VRApplication_Scene);
 	if (mOpenVrHmdError != vr::VRInitError_None)

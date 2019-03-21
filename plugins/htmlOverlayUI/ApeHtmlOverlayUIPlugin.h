@@ -58,6 +58,8 @@ SOFTWARE.*/
 #include "sceneelements/ApeITubeGeometry.h"
 #include "sceneelements/ApeIUnitTexture.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeUserInputMacro.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeHtmlOverlayUIPlugin"
 
@@ -66,35 +68,19 @@ namespace Ape
 	class ApeHtmlOverlayUIPlugin : public Ape::IPlugin
 	{
 	private:
-		struct NodeJsPluginConfig
-		{
-			int serverPort;
-
-			NodeJsPluginConfig(int serverPort = 3000)
-			{
-				this->serverPort = serverPort;
-			}
-		};
-
 		Ape::IEventManager* mpEventManager;
 
 		Ape::ISceneManager* mpSceneManager;
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		NodeJsPluginConfig mNodeJsPluginConfig;
+		Ape::UserInputMacro* mpApeUserInputMacro;
+
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
-
-		Ape::PointCloudWeakPtr mPointCloud;
-
-		int mPointCloudSize;
-
-		Ape::NodeWeakPtr mUserNode;
-
-		void parseNodeJsConfig();
-
-		void createOverlayBrowser();
 
 	public:
 		ApeHtmlOverlayUIPlugin();

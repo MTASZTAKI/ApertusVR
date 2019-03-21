@@ -54,6 +54,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeITextGeometry.h"
 #include "sceneelements/ApeITubeGeometry.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeIndustry40Plugin"
 
@@ -68,11 +69,9 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		std::vector<std::unique_ptr<Ape::Interpolator>> mInterpolators;
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
-
-		Ape::NodeWeakPtr mUserNode;
 
 		Ape::PointCloudWeakPtr mPointCloud;
 

@@ -27,4 +27,9 @@ if (${APE_MACRO_UserInput})
 	add_subdirectory (userInput)
 endif ()
 
+option(APE_MACRO_SceneMaker "Use SceneMakerMacro?" ON )
+if (${APE_MACRO_SceneMaker})
+	add_subdirectory (sceneMaker)
+endif ()
+
 

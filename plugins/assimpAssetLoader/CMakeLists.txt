@@ -95,7 +95,7 @@ target_link_libraries (ApeAssimpAssetLoaderPlugin ApePluginManager ApeSceneManag
 set_property (TARGET ApeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_ApeAssimpAssetLoaderPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the assimp bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/assimp-vc140-mt.dll)

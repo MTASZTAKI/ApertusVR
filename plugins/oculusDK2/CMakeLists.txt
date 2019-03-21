@@ -37,7 +37,8 @@ if (WIN32)
 endif ()	
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/common/include
+	 ${PROJECT_SOURCE_DIR}/macros/userInput 
 	${OCULUS_HOME}/LibOVR/Include
 	)
 
@@ -45,7 +46,7 @@ add_library (ApeOculusDK2Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if (WIN32)
-target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow OCULUS_LIB winmm.lib)
+target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro OCULUS_LIB winmm.lib)
 endif ()
 
 set_property (TARGET ApeOculusDK2Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")

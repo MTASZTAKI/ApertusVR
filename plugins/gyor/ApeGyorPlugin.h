@@ -55,6 +55,8 @@ SOFTWARE.*/
 #include "sceneelements/ApeITubeGeometry.h"
 #include "sceneelements/ApeIRayGeometry.h"
 #include "utils/ApeInterpolator.h"
+#include "ApeUserInputMacro.h"
+#include "ApeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "ApeGyorPlugin"
 
@@ -69,39 +71,13 @@ namespace Ape
 
 		Ape::ISystemConfig* mpSystemConfig;
 
-		Ape::NodeWeakPtr mGripperLeftRootNode;
+		Ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::NodeWeakPtr mGripperLeftHelperNode;
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		Ape::NodeWeakPtr mGripperLeftEndNode;
-
-		Ape::NodeWeakPtr mGripperRightRootNode;
-
-		Ape::NodeWeakPtr mGripperRightEndNode;
-
-		Ape::NodeWeakPtr mGripperRightHelperNode;
-
-		Ape::Quaternion mGripperRightHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftHelperNodeInitialOrientation;
-
-		Ape::Quaternion mGripperRightRootNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftRootNodeInitialOrientation;
-
-		Ape::Quaternion mGripperRightEndNodeInitialOrientation;
-
-		Ape::Quaternion mGripperLeftEndNodeInitialOrientation;
-
-		Ape::EntityWeakPtr mStateText;
-
-		Ape::NodeWeakPtr mUserNode;
+		Ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const Ape::Event& event);
-
-		void createSkyBox();
-
-		void createTexts();
 
 	public:
 		ApeGyorPlugin();

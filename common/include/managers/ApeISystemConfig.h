@@ -128,8 +128,6 @@ namespace Ape
 
 		std::string uniqueUserNamePrefix;
 
-		std::string generatedUniqueUserNodeName;
-
 		std::vector<std::string> sessionResourceLocation;
 
 		std::string sessionGUID;
@@ -147,7 +145,6 @@ namespace Ape
 			this->sessionIP = std::string();
 			this->sessionPort = std::string();
 			this->uniqueUserNamePrefix = std::string();
-			this->generatedUniqueUserNodeName = std::string();
 			this->sessionResourceLocation = std::vector<std::string>();
 		}
 
@@ -170,7 +167,6 @@ namespace Ape
 			this->sessionIP = sessionIP;
 			this->sessionPort = sessionPort;
 			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
-			this->generatedUniqueUserNodeName = generatedUniqueUserName;
 			this->sessionResourceLocation = sessionResourceLocation;
 		}
 	};

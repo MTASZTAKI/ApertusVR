@@ -45,6 +45,7 @@ SOFTWARE.*/
 #include "sceneelements/ApeIManualTexture.h"
 #include "sceneelements/ApeINode.h"
 #include "sceneelements/ApeITextGeometry.h"
+#include "ApeUserInputMacro.h"
 #include "OVR.h"
 
 #define THIS_PLUGINNAME "ApeOculusDK2Plugin"
@@ -68,17 +69,13 @@ namespace Ape
 
 		Ape::CameraWeakPtr mCameraRight;
 
-		Ape::NodeWeakPtr mHeadNode;
+		Ape::UserInputMacro* mpApeUserInputMacro;
 
-		Ape::NodeWeakPtr mUserNode;
-
-		Ape::ManualMaterialWeakPtr mUserMaterial;
+		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		void eventCallBack(const Ape::Event& event);
 
 		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
-
-		Ape::CameraWeakPtr createCamera(std::string name);
 
 	public:
 		ApeOculusDK2Plugin();

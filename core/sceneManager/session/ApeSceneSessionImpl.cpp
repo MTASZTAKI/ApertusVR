@@ -317,7 +317,7 @@ void Ape::SceneSessionImpl::runReplicaPeerListen()
 	if (mParticipantType == Ape::SceneSession::GUEST)
 	{
 		APE_LOG_DEBUG("thread start waiting for all plugin init");
-		//TODO
+		//TODO_CORE
 		//while (!mpPluginManager->isAllPluginInitialized())
 			//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		APE_LOG_DEBUG("thread start listening after all plugins are inited");

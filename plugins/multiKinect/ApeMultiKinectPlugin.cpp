@@ -7,7 +7,6 @@ Ape::MultiKinectPlugin::MultiKinectPlugin()
 	mpScene = Ape::ISceneManager::getSingletonPtr();
 	mpEventManager = Ape::IEventManager::getSingletonPtr();
 	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = Ape::IMainWindow::getSingletonPtr();
 	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&MultiKinectPlugin::eventCallBack, this, std::placeholders::_1));
 	mSensors = std::vector<Sensor>();
 	APE_LOG_FUNC_LEAVE();
@@ -36,10 +35,6 @@ void Ape::MultiKinectPlugin::eventCallBack(const Ape::Event& event)
 void Ape::MultiKinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("MultiKinectPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("MultiKinectPlugin main window was found");
 	std::stringstream MultiKinectPluginConfigFilePath;
 	MultiKinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeMultiKinectPlugin.json";
 	APE_LOG_DEBUG("MultiKinectPluginConfigFilePath: " << MultiKinectPluginConfigFilePath.str());
@@ -84,8 +79,6 @@ void Ape::MultiKinectPlugin::Init()
 	}
 	else
 		APE_LOG_DEBUG("Error cannot open config file");
-	if (auto userNode = mpScene->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
-		mUserNode = userNode;
 	int foundSensorCount = mFreenect2.enumerateDevices();
 	if (foundSensorCount == 0)
 	{

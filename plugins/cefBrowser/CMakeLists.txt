@@ -62,7 +62,7 @@ if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource})
 			message (STATUS "Cef build succesfully finished")	
 		endif()
 	endif()
-	#todo copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
+	#todo_ApeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
 endif ()
 
 if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
@@ -178,7 +178,7 @@ endif()
 set_property (TARGET ApeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeCefBrowserPlugin PROPERTY FOLDER "Plugins/ApeCefBrowser")
 if (WIN32)
-	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_ApeCefBrowserPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ogre bins to the desired place
 	# debug
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/chrome_elf.dll)

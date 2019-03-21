@@ -31,12 +31,13 @@ set (SOURCES
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/common/include 
+	${PROJECT_SOURCE_DIR}/macros/sceneMaker 	
 	)
 
 add_library (ApeTesterPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeTesterPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (ApeTesterPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
 
 set_property (TARGET ApeTesterPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

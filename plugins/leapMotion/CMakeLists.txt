@@ -87,7 +87,7 @@ target_link_libraries (ApeLeapMotionPlugin ApePluginManager ApeSceneManager ApeE
 set_property (TARGET ApeLeapMotionPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_ApeLeapMotionPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the leap bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/Leap.dll)

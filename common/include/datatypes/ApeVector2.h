@@ -39,6 +39,13 @@ namespace Ape
 			x(_x), y(_y)
 		{}
 
+		Vector2 operator * (const Vector2& rhs) const
+		{
+			return Vector2(
+				x * rhs.x,
+				y * rhs.y);
+		}
+
 		std::string toJsonString() const
 		{
 			std::ostringstream buff;

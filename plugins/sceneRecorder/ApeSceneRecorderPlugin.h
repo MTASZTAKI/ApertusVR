@@ -73,8 +73,6 @@ namespace Ape
 
 		void eventCallBack(const Ape::Event& event);
 
-		Ape::NodeWeakPtr mUserNode;
-
 		bool mIsRecorder;
 
 		bool mIsPlayer;

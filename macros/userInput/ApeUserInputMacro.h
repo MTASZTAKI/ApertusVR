@@ -23,11 +23,22 @@ SOFTWARE.*/
 #ifndef APE_USERINPUTMACRO_H
 #define APE_USERINPUTMACRO_H
 
+#ifdef _WIN32
+#ifdef BUILDING_APE_USERINPUTMACRO_DLL
+#define APE_USERINPUTMACRO_DLL_EXPORT __declspec(dllexport)
+#else
+#define APE_USERINPUTMACRO_DLL_EXPORT __declspec(dllimport)
+#endif
+#else
+#define APE_USERINPUTMACRO_DLL_EXPORT 
+#endif
+
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <random>
 #include <memory>
+#include <list>
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
 #include "managers/ApeILogManager.h"
@@ -39,15 +50,20 @@ SOFTWARE.*/
 #include "sceneelements/ApeIConeGeometry.h"
 #include "sceneelements/ApeIFileMaterial.h"
 #include "sceneelements/ApeIManualMaterial.h"
+#include "sceneelements/ApeIBrowser.h"
 #include "sceneelements/ApeICamera.h"
+#include "sceneelements/ApeIRayGeometry.h"
+#include "sceneelements/ApeIPointCloud.h"
+#include "sceneelements/ApeIUnitTexture.h"
 #include "managers/ApeISystemConfig.h"
+#include "utils/ApeInterpolator.h"
 
 namespace Ape
 {
-    class UserInputMacro
+    class APE_USERINPUTMACRO_DLL_EXPORT UserInputMacro
     {
 	public: 
-		struct Pose
+		struct ViewPose
 		{
 			Ape::Vector3 userPosition;
 
@@ -57,12 +73,9 @@ namespace Ape
 
 			Ape::Quaternion headOrientation;
 
-			Pose()
-			{
+			ViewPose() {}
 
-			}
-
-			Pose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
+			ViewPose(Ape::Vector3 userPosition, Ape::Quaternion userOrientation, Ape::Vector3 headPosition, Ape::Quaternion headOrientation)
 			{
 				this->userPosition = userPosition;
 				this->userOrientation = userOrientation;
@@ -71,7 +84,56 @@ namespace Ape
 			}
 		};
 
+		struct Pose
+		{
+			Ape::Vector3 position;
+
+			Ape::Quaternion orientation;
+
+			Ape::Vector3 scale;
+
+			Pose() {}
+
+			Pose(Ape::Vector3 position, Ape::Quaternion orientation, Ape::Vector3 scale)
+			{
+				this->position = position;
+				this->orientation = orientation;
+				this->scale = scale;
+			}
+		};
+
+		struct OverlayBrowserCursor
+		{
+			Ape::Vector2 cursorTexturePosition;
+
+			Ape::Vector2 cursorBrowserPosition;
+
+			Ape::Vector2 cursorScrollPosition;
+
+			bool cursorClick;
+
+			Ape::Browser::MouseClick cursorClickType;
+
+			OverlayBrowserCursor() {}
+
+			OverlayBrowserCursor(Ape::Vector2 cursorTexturePosition, Ape::Vector2 cursorBrowserPosition, Ape::Vector2 cursorScrollPosition, bool cursorClick, Ape::Browser::MouseClick cursorClickType)
+			{
+				this->cursorTexturePosition = cursorTexturePosition;
+				this->cursorBrowserPosition = cursorBrowserPosition;
+				this->cursorScrollPosition = cursorScrollPosition;
+				this->cursorClick = cursorClick;
+				this->cursorClickType = cursorClickType;
+			}
+		};
+
+
 	private:
+		static UserInputMacro* mpInstance;
+
+		UserInputMacro();
+
+		~UserInputMacro();
+
 		Ape::IEventManager* mpEventManager;
 
 		Ape::ISceneManager* mpSceneManager;
@@ -84,20 +146,71 @@ namespace Ape
 
 		Ape::NodeWeakPtr mHeadNode;
 
+		Ape::TextGeometryWeakPtr mOverlayText;
+
 		std::map<std::string, Ape::CameraWeakPtr> mCameras;
 
 		Ape::ManualMaterialWeakPtr mUserMaterial;
 
-		void eventCallBack(const Ape::Event& event);
+		std::map<std::string, Ape::NodeWeakPtr> mSelectedNodes;
+
+		Ape::BrowserWeakPtr mOverlayBrowser;
+
+		Ape::UnitTextureWeakPtr mOverlayMouseTexture;
+
+		Ape::RayGeometryWeakPtr mRayGeometry;
+
+		Ape::NodeWeakPtr mRayOverlayNode;
+
+		Ape::TextGeometryWeakPtr mCursorText;
+
+		std::string mKeyStringValue;
+
+		bool mEnableOverlayBrowserKeyEvents;
+
+		bool mIsNewKeyEvent;
 
 	public:
-		UserInputMacro();
+		static UserInputMacro* getSingletonPtr()
+		{
+			if (mpInstance == nullptr)
+				mpInstance = new UserInputMacro();
+			return mpInstance;
+		}
 
-		~UserInputMacro();
+		void eventCallBack(const Ape::Event& event);
 
-		void updateViewPose(Pose pose);
+		void updateViewPose(ViewPose pose);
+
+		void interpolateViewPose(ViewPose pose, unsigned int milliseconds);
+
+		Ape::NodeWeakPtr getUserNode();
+
+		Ape::NodeWeakPtr getHeadNode();
 
 		Ape::CameraWeakPtr createCamera(std::string name);
+
+		void createOverLayText(std::string caption);
+
+		void updateOverLayText(std::string caption);
+
+		void saveViewPose();
+
+		bool isNodeSelected(std::string nodeName);
+
+		void addNodeSelection(std::string nodeName);
+
+		bool removeNodeSelection(std::string nodeName);
+
+		void clearNodeSelection();
+
+		void keyStringValue(std::string keyStringValue);
+
+		void updateSelectedNodePose(Pose pose);
+
+		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
+
+		void rayQuery(Ape::Vector3 position);
     };
 }
 

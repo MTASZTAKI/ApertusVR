@@ -22,7 +22,7 @@
 
 # ois patch log begin
 # CMakeLists.txt was copied to the ois root folder
-# Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO: Implement OS version*/; }
+# Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO_ApeOisUserInputPlugin Implement OS version*/; }
 # ois patch log begin
 
 set (OIS_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ois)
@@ -101,7 +101,7 @@ endif ()
 set_property (TARGET ApeOisUserInputPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# TODO_ApeOisUserInputPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ois bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OIS_d.lib)
