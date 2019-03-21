@@ -22,7 +22,6 @@
 
 set (HEADERS
 	ApeFileSystem.h
-	ApeIMainWindow.h
 	ApePlatform.h
 	ApeSystem.h
 )

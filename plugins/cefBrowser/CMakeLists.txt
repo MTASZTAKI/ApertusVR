@@ -173,7 +173,7 @@ include_directories(
 
 add_library (ApeCefBrowserPlugin SHARED ${SOURCES} ${HEADERS})
 if (WIN32)
-	target_link_libraries (ApeCefBrowserPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
+	target_link_libraries (ApeCefBrowserPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
 endif()
 set_property (TARGET ApeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET ApeCefBrowserPlugin PROPERTY FOLDER "Plugins/ApeCefBrowser")

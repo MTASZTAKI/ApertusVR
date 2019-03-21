@@ -274,7 +274,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
 	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeAssimpAssetLoaderConfigFile)

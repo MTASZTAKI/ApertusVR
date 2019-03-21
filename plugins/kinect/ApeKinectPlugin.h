@@ -31,7 +31,6 @@ SOFTWARE.*/
 #include <thread>
 #include "stdafx.h"
 #include "resource.h"
-#include "system/ApeIMainWindow.h"
 #include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"

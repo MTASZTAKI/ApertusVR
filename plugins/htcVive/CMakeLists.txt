@@ -44,7 +44,7 @@ include_directories(
 
 add_library (ApeHtcVivePlugin SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApeHtcVivePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro OPENVR_LIB)
+target_link_libraries (ApeHtcVivePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeUserInputMacro OPENVR_LIB)
 
 set_property (TARGET ApeHtcVivePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

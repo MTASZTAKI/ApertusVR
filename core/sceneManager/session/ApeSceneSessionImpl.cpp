@@ -41,7 +41,7 @@ ape::SceneSessionImpl::SceneSessionImpl()
 	mIsConnectedToNATServer = false;
 	mIsConnectedToHost = false;
 	mNATServerAddress.FromString("");
-	mParticipantType = mpSystemConfig->getSceneSessionConfig().participantType;
+	mParticipantType = mpSystemConfig->getSessionConfig().participantType;
 	mHostGuid = RakNet::RakNetGUID();
 	mHostAddress = RakNet::SystemAddress();
 
@@ -51,9 +51,9 @@ ape::SceneSessionImpl::SceneSessionImpl()
 	}
 	if (mParticipantType == ape::SceneSession::HOST)
 	{
-		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
+		if (mpSystemConfig->getSessionConfig().lobbyServerConfig.use)
 		{
-			bool createSessionResult = mpLobbyManager->createSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName, mGuid.ToString());
+			bool createSessionResult = mpLobbyManager->createSession(mpSystemConfig->getSessionConfig().lobbyServerConfig.sessionName, mGuid.ToString());
 			APE_LOG_DEBUG("lobbyManager->createSession(): " << createSessionResult);
 		}
 		create();
@@ -61,22 +61,16 @@ ape::SceneSessionImpl::SceneSessionImpl()
 	else if (mParticipantType == ape::SceneSession::GUEST)
 	{
 		ape::SceneSessionUniqueID uuid;
-		if (mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.useLobby)
+		if (mpSystemConfig->getSessionConfig().lobbyServerConfig.use)
 		{
 			APE_LOG_DEBUG("use lobbyManager to get scene session guid");
-			std::string name = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName;
+			std::string name = mpSystemConfig->getSessionConfig().lobbyServerConfig.sessionName;
 			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
 			APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 			if (getSessionRes && !uuid.empty())
 			{
 				connect(uuid);
 			}
-		}
-		else
-		{
-			uuid = mpSystemConfig->getSceneSessionConfig().sessionGUID;
-			APE_LOG_DEBUG("lobbyManager is turned off, use sessionGUID: " << uuid);
-			connect(uuid);
 		}
 	}
 }
@@ -94,7 +88,7 @@ ape::SceneSessionImpl::~SceneSessionImpl()
 
 	if (mpLobbyManager) {
 		if (mParticipantType == ape::SceneSession::ParticipantType::HOST)
-			mpLobbyManager->removeSession(mpSystemConfig->getSceneSessionConfig().lobbyServerConfig.sessionName);
+			mpLobbyManager->removeSession(mpSystemConfig->getSessionConfig().lobbyServerConfig.sessionName);
 
 		delete mpLobbyManager;
 		mpLobbyManager = nullptr;
@@ -139,11 +133,13 @@ void ape::SceneSessionImpl::eventCallBack(const ape::Event & event)
 
 void ape::SceneSessionImpl::init()
 {
-	ape::SceneSessionConfig::NatPunchThroughServerConfig natPunchThroughServerConfig = mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig;
+	ape::SessionConfig::NatPunchThroughServerConfig natPunchThroughServerConfig = mpSystemConfig->getSessionConfig().natPunchThroughServerConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
 
-	ape::SceneSessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSceneSessionConfig().lobbyServerConfig;
+	ape::SessionConfig::LobbyServerConfig lobbyServerConfig = mpSystemConfig->getSessionConfig().lobbyServerConfig;
+
+	ape::SessionConfig::LocalNetworkConfig localNetworkConfig = mpSystemConfig->getSessionConfig().localNetworkConfig;
 
 	mLobbyServerIP = lobbyServerConfig.ip;
 	APE_LOG_DEBUG("mLobbyServerIP: " << mLobbyServerIP);
@@ -165,13 +161,16 @@ void ape::SceneSessionImpl::init()
 	mpReplicaManager3->SetAutoManageConnections(false,true);
 	RakNet::SocketDescriptor sd;
 	sd.socketFamily = AF_INET;
-	if (mParticipantType == ape::SceneSession::HOST)
+	if (localNetworkConfig.use)
 	{
-		sd.port = atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str());
-	}
-	else if (mParticipantType == ape::SceneSession::GUEST)
-	{
-		sd.port = 0;
+		if (mParticipantType == ape::SceneSession::HOST)
+		{
+			sd.port = atoi(localNetworkConfig.port.c_str());
+		}
+		else if (mParticipantType == ape::SceneSession::GUEST)
+		{
+			sd.port = 0;
+		}
 	}
 
 	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
@@ -241,7 +240,7 @@ void ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 {
 	mIsHost = false;
 	mHostGuid.FromString(sceneSessionUniqueID.c_str());
-	if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+	if (mpSystemConfig->getSessionConfig().natPunchThroughServerConfig.use)
 	{
 		APE_LOG_DEBUG("Try to NAT punch to: " << mHostGuid.ToString());
 		if (mpNatPunchthroughClient->OpenNAT(mHostGuid, mNATServerAddress))
@@ -255,15 +254,15 @@ void ape::SceneSessionImpl::connect(SceneSessionUniqueID sceneSessionUniqueID)
 	}
 	else
 	{
-		APE_LOG_DEBUG("Try to connect to host IP: " << mpSystemConfig->getSceneSessionConfig().sessionIP << " port: " << mpSystemConfig->getSceneSessionConfig().sessionPort);
-		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSceneSessionConfig().sessionIP.c_str(), atoi(mpSystemConfig->getSceneSessionConfig().sessionPort.c_str()), 0, 0);
+		APE_LOG_DEBUG("Try to connect to host IP: " << mpSystemConfig->getSessionConfig().localNetworkConfig.ip << " port: " << mpSystemConfig->getSessionConfig().localNetworkConfig.port);
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpSystemConfig->getSessionConfig().localNetworkConfig.ip.c_str(), atoi(mpSystemConfig->getSessionConfig().localNetworkConfig.port.c_str()), 0, 0);
 		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		{
-			APE_LOG_DEBUG("Failed connect call to " << mpSystemConfig->getSceneSessionConfig().sessionIP << ". Code=" << car);
+			APE_LOG_DEBUG("Failed connect call to " << mpSystemConfig->getSessionConfig().localNetworkConfig.ip << ". Code=" << car);
 		}
 		else
 		{
-			APE_LOG_DEBUG("Connection attempt was successful to remote system " << mpSystemConfig->getSceneSessionConfig().sessionIP);
+			APE_LOG_DEBUG("Connection attempt was successful to remote system " << mpSystemConfig->getSessionConfig().localNetworkConfig.ip);
 		}
 	}
 }
@@ -282,7 +281,7 @@ void ape::SceneSessionImpl::create()
 	mIsHost = true;
 	mParticipantType = ape::SceneSession::ParticipantType::HOST;
 	APE_LOG_DEBUG("Listening....");
-	if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+	if (mpSystemConfig->getSessionConfig().natPunchThroughServerConfig.use)
 		mpNatPunchthroughClient->FindRouterPortStride(mNATServerAddress);
 }
 
@@ -360,7 +359,7 @@ void ape::SceneSessionImpl::listenReplicaPeer()
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				{
 					APE_LOG_DEBUG("ID_CONNECTION_REQUEST_ACCEPTED from " << packet->systemAddress.ToString(true) << ", guid=" << packet->guid.ToString() << ", participantType=" << mParticipantType);
-					if (mpSystemConfig->getSceneSessionConfig().natPunchThroughServerConfig.use)
+					if (mpSystemConfig->getSessionConfig().natPunchThroughServerConfig.use)
 					{
 						if (mNATServerIP == packet->systemAddress.ToString(false))
 						{

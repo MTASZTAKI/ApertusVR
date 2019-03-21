@@ -218,7 +218,7 @@ void ape::ApeOculusDK2Plugin::Init()
 
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity("OculusRiftExternalCamera", ape::Entity::Type::CAMERA).lock()))
 	{
-		camera->setWindow(ape::IMainWindow::getSingletonPtr()->getName());
+		camera->setWindow(mpSystemConfig->getWindowConfig().name);
 		camera->setFarClipDistance(50);
 		camera->setNearClipDistance(0.001);
 		camera->setProjectionType(ape::Camera::ORTHOGRAPHIC);

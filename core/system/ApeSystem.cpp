@@ -26,7 +26,6 @@ SOFTWARE.*/
 #include "system/ApeSystem.h"
 #include "ApeEventManagerImpl.h"
 #include "ApeLogManagerImpl.h"
-#include "ApeMainWindowImpl.h"
 #include "ApePluginManagerImpl.h"
 #include "ApeSceneManagerImpl.h"
 #include "ApeSceneSessionImpl.h"
@@ -38,14 +37,12 @@ ape::LogManagerImpl* gpLogManagerImpl;
 ape::SceneManagerImpl* gpSceneManagerImpl;
 ape::SceneSessionImpl* gpSceneSessionImpl;
 ape::SystemConfigImpl* gpSystemConfigImpl;
-ape::MainWindowImpl* gpMainWindowImpl;
 
 void ape::System::Start(const char* configFolderPath, int isBlockingMode)
 {
 	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
 	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
-	gpMainWindowImpl = new MainWindowImpl();
 	gpEventManagerImpl = new EventManagerImpl();
 	gpLogManagerImpl = new LogManagerImpl();
 	gpPluginManagerImpl = new PluginManagerImpl();
@@ -67,6 +64,5 @@ void ape::System::Stop()
 	delete gpSceneSessionImpl;
 	delete gpPluginManagerImpl;
 	delete gpSystemConfigImpl;
-	delete gpMainWindowImpl;
 }
 

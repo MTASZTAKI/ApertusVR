@@ -53,7 +53,6 @@ SOFTWARE.*/
 #include "sceneelements/ApeIPbsPass.h"
 #include "utils/ApeInterpolator.h"
 #include "sceneelements/ApeIFileGeometry.h"
-#include "system/ApeIMainWindow.h"
 #include "sceneelements/ApeIPointCloud.h"
 #include "sceneelements/ApeIRayGeometry.h"
 #include "ApeSceneMakerMacro.h"

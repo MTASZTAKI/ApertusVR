@@ -52,7 +52,7 @@ void ApeNodeJsPlugin::parseNodeJsConfig()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "/ApeNodeJsPlugin.json";
 	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (configFile)

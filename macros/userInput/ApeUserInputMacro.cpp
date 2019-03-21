@@ -14,12 +14,12 @@ ape::UserInputMacro::UserInputMacro()
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, ape::CameraWeakPtr>();
-	std::string uniqueUserNamePrefix = mpSystemConfig->getSceneSessionConfig().uniqueUserNamePrefix;
+	std::string userName = mpSystemConfig->getSessionConfig().userName;
 	std::string delimiter = "-";
 	auto tp = std::chrono::system_clock::now();
 	auto dur = tp.time_since_epoch();
 	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
-	mUniqueUserNodeName =  uniqueUserNamePrefix + delimiter + std::to_string(nanoseconds);
+	mUniqueUserNodeName = userName + delimiter + std::to_string(nanoseconds);
 	if (auto userNode = mpSceneManager->createNode(mUniqueUserNodeName).lock())
 	{
 		if (auto headNode = mpSceneManager->createNode(mUniqueUserNodeName + "_HeadNode").lock())

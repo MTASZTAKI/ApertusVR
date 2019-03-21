@@ -11,7 +11,6 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = ape::IMainWindow::getSingletonPtr();
 	mEventDoubleQueue = ape::DoubleQueue<Event>();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -1604,7 +1603,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSkyx->create();
 						mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
 						mpRoot->addFrameListener(mpSkyx);
-						mRenderWindows[mpMainWindow->getName()]->addListener(mpSkyx);
+						mRenderWindows[mpSystemConfig->getWindowConfig().name]->addListener(mpSkyx);
 						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
 						//APE_LOG_DEBUG("skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera));
 						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
@@ -1984,7 +1983,7 @@ void ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* reques
 	mpCurrentlyLoadingMeshEntity = mpOgreSceneManager->createEntity(meshEntityName, mCurrentlyLoadingMeshEntityLodConfig.mesh);
 	mpCurrentlyLoadingMeshEntity->setMeshLodBias(mOgreRenderPluginConfig.ogreLodLevelsConfig.bias);
 	std::stringstream filePath;
-	filePath << mpSystemConfig->getSceneSessionConfig().sessionResourceLocation[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
+	filePath << mpSystemConfig->getSessionConfig().resourceLocations[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
 	mMeshSerializer.exportMesh(mCurrentlyLoadingMeshEntityLodConfig.mesh.getPointer(), filePath.str());
 }
 
@@ -2084,7 +2083,7 @@ void ape::OgreRenderPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOgreRenderPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeOgreRenderPluginConfigFile)
@@ -2301,7 +2300,7 @@ void ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");
-	for (auto resourceLocation : mpSystemConfig->getSceneSessionConfig().sessionResourceLocation)
+	for (auto resourceLocation : mpSystemConfig->getSessionConfig().resourceLocations)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	
 	mpRoot->initialise(false, "Ape");
@@ -2352,18 +2351,15 @@ void ape::OgreRenderPlugin::Init()
 	mpMeshLodGenerator = new  Ogre::MeshLodGenerator();
 	mpMeshLodGenerator->_initWorkQueue();
 	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(this);
-	if (mpSystemConfig->getMainWindowConfig().creator == THIS_PLUGINNAME)
-	{
-		int mainWindowID = 0; //first window will be the main window
-		Ogre::RenderWindowDescription mainWindowDesc = winDescList[mainWindowID];
-		mRenderWindows[mainWindowDesc.name]->getCustomAttribute("WINDOW", &mainWindowHnd);
-		std::ostringstream windowHndStr;
-		windowHndStr << mainWindowHnd;
-		mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].windowHandler = windowHndStr.str();
-		mpMainWindow->setName(mainWindowDesc.name);
-		mpMainWindow->setWidth(mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width);
-		mpMainWindow->setHeight(mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height);
-		mpMainWindow->setHandle(mainWindowHnd);
-	}
+	int mainWindowID = 0; //first window will be the main window
+	Ogre::RenderWindowDescription mainWindowDesc = winDescList[mainWindowID];
+	mRenderWindows[mainWindowDesc.name]->getCustomAttribute("WINDOW", &mainWindowHnd);
+	std::ostringstream windowHndStr;
+	windowHndStr << mainWindowHnd;
+	mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].windowHandler = windowHndStr.str();
+	mpSystemConfig->getWindowConfig().name = mainWindowDesc.name;
+	mpSystemConfig->getWindowConfig().width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width;
+	mpSystemConfig->getWindowConfig().height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height;
+	mpSystemConfig->getWindowConfig().handle = mainWindowHnd;
 	APE_LOG_FUNC_LEAVE();
 }

@@ -28,7 +28,6 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "system/ApeIMainWindow.h"
 #include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
@@ -205,8 +204,6 @@ namespace ape
 		ape::IEventManager* mpEventManager;
 
 		ape::ISystemConfig* mpSystemConfig;
-
-		ape::IMainWindow* mpMainWindow;
 
 		ape::DoubleQueue<Event> mEventDoubleQueue;
 

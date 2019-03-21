@@ -32,7 +32,6 @@ SOFTWARE.*/
 #include <mutex>
 #include <thread>
 #include <vector>
-#include "system/ApeIMainWindow.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
 #include "managers/ApeILogManager.h"

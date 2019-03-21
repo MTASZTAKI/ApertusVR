@@ -41,28 +41,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	struct PluginManagerConfig
-	{
-		std::vector<std::string> pluginnames;
-		std::vector<std::string> jsPluginNames;
-
-		PluginManagerConfig()
-		{
-			this->pluginnames = std::vector<std::string>();
-			this->jsPluginNames = std::vector<std::string>();
-		}
-
-		PluginManagerConfig(
-		    std::vector<std::string> pluginnames,
-		    std::vector<std::string> jsPluginNames
-		)
-		{
-			this->pluginnames = pluginnames;
-			this->jsPluginNames = jsPluginNames;
-		}
-	};
-
-	struct SceneSessionConfig
+	struct SessionConfig
 	{
 		struct NatPunchThroughServerConfig
 		{
@@ -96,100 +75,126 @@ namespace ape
 			std::string ip;
 			std::string port;
 			std::string sessionName;
-			bool useLobby;
+			bool use;
 
 			LobbyServerConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
 				this->sessionName = std::string();
-				this->useLobby = false;
+				this->use = false;
 			}
 
 			LobbyServerConfig(
 			    std::string ip,
 			    std::string port,
 			    std::string sessionName = "",
-			    bool useLobby = false
+			    bool use = false
 			)
 			{
 				this->ip = ip;
 				this->port = port;
 				this->sessionName = sessionName;
-				this->useLobby = useLobby;
+				this->use = use;
+			}
+		};
+
+		struct LocalNetworkConfig
+		{
+			bool use;
+
+			std::string ip;
+
+			std::string port;
+
+			LocalNetworkConfig()
+			{
+				this->use = true;
+				this->ip = std::string();
+				this->port = std::string();
+			}
+
+			LocalNetworkConfig(
+				bool use,
+				std::string ip,
+				std::string port
+			)
+			{
+				this->use = use;
+				this->ip = ip;
+				this->port = port;
 			}
 		};
 
 		SceneSession::ParticipantType participantType;
 
+		std::string userName;
+
 		NatPunchThroughServerConfig natPunchThroughServerConfig;
+
+		LocalNetworkConfig localNetworkConfig;
+
+		std::vector<std::string> resourceLocations;
 
 		LobbyServerConfig lobbyServerConfig;
 
-		std::string uniqueUserNamePrefix;
-
-		std::vector<std::string> sessionResourceLocation;
-
-		std::string sessionGUID;
-
-		std::string sessionIP;
-
-		std::string sessionPort;
-
-		SceneSessionConfig()
+		SessionConfig()
 		{
-			this->natPunchThroughServerConfig = NatPunchThroughServerConfig();
-			this->lobbyServerConfig = LobbyServerConfig();
 			this->participantType = SceneSession::ParticipantType::INVALID;
-			this->sessionGUID = std::string();
-			this->sessionIP = std::string();
-			this->sessionPort = std::string();
-			this->uniqueUserNamePrefix = std::string();
-			this->sessionResourceLocation = std::vector<std::string>();
+			this->userName = std::string();
+			this->natPunchThroughServerConfig = NatPunchThroughServerConfig();
+			this->localNetworkConfig = LocalNetworkConfig();
+			this->resourceLocations = std::vector<std::string>();
+			this->lobbyServerConfig = LobbyServerConfig();
 		}
 
-		SceneSessionConfig(
-		    NatPunchThroughServerConfig natPunchThroughServerConfig,
-		    LobbyServerConfig lobbyServerConfig,
-		    SceneSession::ParticipantType participantType,
-		    std::string sessionName,
-		    std::string uniqueUserNamePrefix,
-		    std::string generatedUniqueUserName,
-		    std::vector<std::string> sessionResourceLocation,
-			std::string sessionIP,
-			std::string sessionPort
+		SessionConfig(
+			SceneSession::ParticipantType participantType,
+			std::string userName,
+			NatPunchThroughServerConfig natPunchThroughServerConfig,
+			LocalNetworkConfig localNetwrokConfig,
+			std::vector<std::string> resourceLocations,
+			LobbyServerConfig lobbyServerConfig
 		)
 		{
-			this->natPunchThroughServerConfig = natPunchThroughServerConfig;
-			this->lobbyServerConfig = lobbyServerConfig;
 			this->participantType = participantType;
-			this->sessionGUID = sessionName;
-			this->sessionIP = sessionIP;
-			this->sessionPort = sessionPort;
-			this->uniqueUserNamePrefix = uniqueUserNamePrefix;
-			this->sessionResourceLocation = sessionResourceLocation;
+			this->userName = userName;
+			this->natPunchThroughServerConfig = natPunchThroughServerConfig;
+			this->localNetworkConfig = localNetwrokConfig;
+			this->resourceLocations = resourceLocations;
+			this->lobbyServerConfig = lobbyServerConfig;
 		}
 	};
 
-	struct MainWindowConfig
+	struct WindowConfig
 	{
 		std::string name;
 
-		std::string creator;
+		void* handle;
 
-		MainWindowConfig()
+		unsigned int width;
+
+		unsigned int height;
+
+		WindowConfig()
 		{
 			this->name = std::string();
-			this->creator = std::string();
+			this->handle = nullptr;
+			this->width = unsigned int();
+			this->height = unsigned int();
 		}
 
-		MainWindowConfig(
+		WindowConfig(
 		    std::string name,
-		    std::string creator
+			void* handle,
+			unsigned int width,
+			unsigned int height
 		)
 		{
 			this->name = name;
-			this->creator = creator;
+			this->handle = handle;
+			this->width = width;
+			this->height = height;
 		}
 	};
 
@@ -199,13 +204,13 @@ namespace ape
 		virtual ~ISystemConfig() {};
 
 	public:
-		virtual PluginManagerConfig getPluginManagerConfig() = 0;
+		virtual std::vector<std::string> getPluginNames() = 0;
 
-		virtual SceneSessionConfig getSceneSessionConfig() = 0;
+		virtual SessionConfig getSessionConfig() = 0;
 
-		virtual MainWindowConfig getMainWindowConfig() = 0;
+		virtual WindowConfig& getWindowConfig() = 0;
 
-		virtual std::string getFolderPath() = 0;
+		virtual std::string getConfigFolderPath() = 0;
 	};
 }
 #endif

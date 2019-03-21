@@ -12,7 +12,6 @@ ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
-	mpMainWindow = ape::IMainWindow::getSingletonPtr();
 	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
 	mTranslateSpeedFactorKeyboard = 3;
 	mRotateSpeedFactorKeyboard = 1;
@@ -49,7 +48,7 @@ void ape::OISUserInputPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeOisUserInputPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeOisUserInputPlugin.json";
 	FILE* apeOisUserInputConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeOisUserInputConfigFile)
@@ -101,16 +100,16 @@ void ape::OISUserInputPlugin::Init()
 		fclose(apeOisUserInputConfigFile);
 	}
 	APE_LOG_DEBUG("OISUserInputPlugin waiting for main window");
-	while (mpMainWindow->getHandle() == nullptr)
+	while (mpSystemConfig->getWindowConfig().handle == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("OisUserInputPlugin main window was found");
 	std::stringstream hwndStrStream;
-	hwndStrStream << mpMainWindow->getHandle();
+	hwndStrStream << mpSystemConfig->getWindowConfig().handle;
 	std::stringstream windowHndStr;
 	windowHndStr << std::stoul(hwndStrStream.str(), nullptr, 16);
 	oisWindowConfig.handler = windowHndStr.str();
-	oisWindowConfig.width = mpMainWindow->getWidth();
-	oisWindowConfig.height = mpMainWindow->getHeight();
+	oisWindowConfig.width = mpSystemConfig->getWindowConfig().width;
+	oisWindowConfig.height = mpSystemConfig->getWindowConfig().height;
 	OIS::ParamList pl;
 	pl.insert(std::make_pair("WINDOW", oisWindowConfig.handler));
 #ifdef WIN32
@@ -273,11 +272,11 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 	mMouseState.scrollVelocity = mMouseState.posCurrent.Z.abs - mMouseState.posPrevious.Z.abs;
 	mMouseState.posPrevious = mMouseState.posCurrent;
 	ape::Vector2 cursorTexturePosition;
-	cursorTexturePosition.x = (float)-e.state.X.abs / (float)mpMainWindow->getWidth();
-	cursorTexturePosition.y = (float)-e.state.Y.abs / (float)mpMainWindow->getHeight();
+	cursorTexturePosition.x = (float)-e.state.X.abs / (float)mpSystemConfig->getWindowConfig().width;
+	cursorTexturePosition.y = (float)-e.state.Y.abs / (float)mpSystemConfig->getWindowConfig().height;
 	ape::Vector2 cursorBrowserPosition;
-	cursorBrowserPosition.x = ((float)e.state.X.abs / (float)mpMainWindow->getWidth());
-	cursorBrowserPosition.y = ((float)e.state.Y.abs / (float)mpMainWindow->getHeight());
+	cursorBrowserPosition.x = (float)e.state.X.abs / (float)mpSystemConfig->getWindowConfig().width;
+	cursorBrowserPosition.y = (float)e.state.Y.abs / (float)mpSystemConfig->getWindowConfig().height;
 	mOverlayBrowserCursor.cursorBrowserPosition = cursorBrowserPosition;
 	mOverlayBrowserCursor.cursorTexturePosition = cursorTexturePosition;
 	mOverlayBrowserCursor.cursorScrollPosition = ape::Vector2(0, e.state.Z.rel);

@@ -36,7 +36,7 @@ include_directories(
 add_library (ApeSkyWaterTerrainScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeSkyWaterTerrainScenePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow)
+target_link_libraries (ApeSkyWaterTerrainScenePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
 
 set_property (TARGET ApeSkyWaterTerrainScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

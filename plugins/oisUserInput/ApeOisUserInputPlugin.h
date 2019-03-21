@@ -27,7 +27,6 @@ SOFTWARE.*/
 #include <list>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
 #include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"
@@ -93,8 +92,6 @@ namespace ape
 		ape::ISceneManager* mpSceneManager;
 
 		ape::ISystemConfig* mpSystemConfig;
-
-		ape::IMainWindow* mpMainWindow;
 
 		ape::IEventManager* mpEventManager;
 

@@ -41,7 +41,6 @@ SOFTWARE.*/
 #include "managers/ApeISystemConfig.h"
 #include "sceneelements/ApeINode.h"
 #include "managers/ApeISceneManager.h"
-#include "system/ApeIMainWindow.h"
 #include "managers/ApeIEventManager.h"
 #include "managers/ApeILogManager.h"
 #include "sceneelements/ApeICamera.h"

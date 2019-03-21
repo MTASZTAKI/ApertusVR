@@ -32,27 +32,27 @@ SOFTWARE.*/
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 
-ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
+ape::SystemConfigImpl::SystemConfigImpl(std::string configFolderPath)
 {
 	struct stat info;
 	msSingleton = this;
-	mFolderPath = folderPath;
+	mConfigFolderPath = configFolderPath;
 
-	if (stat(mFolderPath.c_str(), &info) != 0)
+	if (stat(mConfigFolderPath.c_str(), &info) != 0)
 	{
-		std::cout << "SystemConfigImpl: cannot access to " << mFolderPath << std::endl;
+		std::cout << "SystemConfigImpl: cannot access to " << mConfigFolderPath << std::endl;
 	}
 	else if (info.st_mode & S_IFDIR)
 	{
-		std::cout << "SystemConfigImpl: loading config files from " << mFolderPath << std::endl;
+		std::cout << "SystemConfigImpl: loading config files from " << mConfigFolderPath << std::endl;
 	}
 	else
 	{
-		std::cout << "SystemConfigImpl: no directory at " << mFolderPath << std::endl;
+		std::cout << "SystemConfigImpl: no directory at " << mConfigFolderPath << std::endl;
 	}
 
 	std::stringstream fileFullPath; 
-	fileFullPath << mFolderPath << "/ApeSystem.json";
+	fileFullPath << mConfigFolderPath << "/ApeSystem.json";
 	FILE* apeSystemConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeSystemConfigFile)
@@ -62,95 +62,88 @@ ape::SystemConfigImpl::SystemConfigImpl(std::string folderPath)
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
-			rapidjson::Value& mainWindow = jsonDocument["mainWindow"];
-			for (rapidjson::Value::MemberIterator mainWindowMemberIterator =
-				mainWindow.MemberBegin();
-				mainWindowMemberIterator != mainWindow.MemberEnd(); ++mainWindowMemberIterator)
+			rapidjson::Value& session = jsonDocument["session"];
+			for (rapidjson::Value::MemberIterator sessionMemberIterator =
+				session.MemberBegin();
+				sessionMemberIterator != session.MemberEnd(); ++sessionMemberIterator)
 			{
-				if (mainWindowMemberIterator->name == "name")
-					mMainWindowConfig.name = mainWindowMemberIterator->value.GetString();
-				else if (mainWindowMemberIterator->name == "creator")
-					mMainWindowConfig.creator = mainWindowMemberIterator->value.GetString();
-			}
-			rapidjson::Value& sceneSession = jsonDocument["sceneSession"];
-			for (rapidjson::Value::MemberIterator sceneSessionMemberIterator =
-				sceneSession.MemberBegin();
-				sceneSessionMemberIterator != sceneSession.MemberEnd(); ++sceneSessionMemberIterator)
-			{
-				if (sceneSessionMemberIterator->name == "natPunchThroughServer")
+				if (sessionMemberIterator->name == "participantType")
 				{
-					rapidjson::Value& natPunchThroughServer = jsonDocument["sceneSession"]["natPunchThroughServer"];
+					std::string participantType = jsonDocument["session"]["participantType"].GetString();
+					if (participantType == "Host")
+						mSessionConfig.participantType = ape::SceneSession::ParticipantType::HOST;
+					else if (participantType == "Guest")
+						mSessionConfig.participantType = ape::SceneSession::ParticipantType::GUEST;
+					else if (participantType == "Local")
+						mSessionConfig.participantType = ape::SceneSession::ParticipantType::LOCAL;
+					else
+						mSessionConfig.participantType = ape::SceneSession::ParticipantType::INVALID;
+				}
+				else if (sessionMemberIterator->name == "userName")
+					mSessionConfig.userName = jsonDocument["session"]["userName"].GetString();
+				else if (sessionMemberIterator->name == "natPunchThroughServer")
+				{
+					rapidjson::Value& natPunchThroughServer = jsonDocument["session"]["natPunchThroughServer"];
 					for (rapidjson::Value::MemberIterator natPunchThroughServerMemberIterator =
 						natPunchThroughServer.MemberBegin();
 						natPunchThroughServerMemberIterator != natPunchThroughServer.MemberEnd(); ++natPunchThroughServerMemberIterator)
 					{
 						if (natPunchThroughServerMemberIterator->name == "use")
-							mSceneSessionConfig.natPunchThroughServerConfig.use = natPunchThroughServerMemberIterator->value.GetBool();
+							mSessionConfig.natPunchThroughServerConfig.use = natPunchThroughServerMemberIterator->value.GetBool();
 						else if (natPunchThroughServerMemberIterator->name == "ip")
-							mSceneSessionConfig.natPunchThroughServerConfig.ip = natPunchThroughServerMemberIterator->value.GetString();
+							mSessionConfig.natPunchThroughServerConfig.ip = natPunchThroughServerMemberIterator->value.GetString();
 						else if (natPunchThroughServerMemberIterator->name == "port")
-							mSceneSessionConfig.natPunchThroughServerConfig.port = natPunchThroughServerMemberIterator->value.GetString();
+							mSessionConfig.natPunchThroughServerConfig.port = natPunchThroughServerMemberIterator->value.GetString();
 					}
 
 				}
-				else if (sceneSessionMemberIterator->name == "lobbyServer")
+				else if (sessionMemberIterator->name == "lobbyServer")
 				{
-					rapidjson::Value& lobbyServer = jsonDocument["sceneSession"]["lobbyServer"];
+					rapidjson::Value& lobbyServer = jsonDocument["session"]["lobbyServer"];
 					for (rapidjson::Value::MemberIterator lobbyServerMemberIterator =
 						lobbyServer.MemberBegin();
 						lobbyServerMemberIterator != lobbyServer.MemberEnd(); ++lobbyServerMemberIterator)
 					{
 						if (lobbyServerMemberIterator->name == "ip")
-							mSceneSessionConfig.lobbyServerConfig.ip = lobbyServerMemberIterator->value.GetString();
+							mSessionConfig.lobbyServerConfig.ip = lobbyServerMemberIterator->value.GetString();
 						else if (lobbyServerMemberIterator->name == "port")
-							mSceneSessionConfig.lobbyServerConfig.port = lobbyServerMemberIterator->value.GetString();
+							mSessionConfig.lobbyServerConfig.port = lobbyServerMemberIterator->value.GetString();
 						else if (lobbyServerMemberIterator->name == "sessionName")
-							mSceneSessionConfig.lobbyServerConfig.sessionName = lobbyServerMemberIterator->value.GetString();
-						else if (lobbyServerMemberIterator->name == "useLobby")
-							mSceneSessionConfig.lobbyServerConfig.useLobby = lobbyServerMemberIterator->value.GetBool();
+							mSessionConfig.lobbyServerConfig.sessionName = lobbyServerMemberIterator->value.GetString();
+						else if (lobbyServerMemberIterator->name == "use")
+							mSessionConfig.lobbyServerConfig.use = lobbyServerMemberIterator->value.GetBool();
+					}
+				}
+				else if (sessionMemberIterator->name == "resourceLocations")
+				{
+					for (auto& resourceLocation : jsonDocument["session"]["resourceLocations"].GetArray())
+					{
+						std::stringstream resourceLocationPath;
+						resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
+						mSessionConfig.resourceLocations.push_back(resourceLocationPath.str());
+					}
+				}
+				else if (sessionMemberIterator->name == "localNetwork")
+				{
+					rapidjson::Value& natPunchThroughServer = jsonDocument["session"]["localNetwork"];
+					for (rapidjson::Value::MemberIterator natPunchThroughServerMemberIterator =
+						natPunchThroughServer.MemberBegin();
+						natPunchThroughServerMemberIterator != natPunchThroughServer.MemberEnd(); ++natPunchThroughServerMemberIterator)
+					{
+						if (natPunchThroughServerMemberIterator->name == "use")
+							mSessionConfig.natPunchThroughServerConfig.use = natPunchThroughServerMemberIterator->value.GetBool();
+						else if (natPunchThroughServerMemberIterator->name == "ip")
+							mSessionConfig.natPunchThroughServerConfig.ip = natPunchThroughServerMemberIterator->value.GetString();
+						else if (natPunchThroughServerMemberIterator->name == "port")
+							mSessionConfig.natPunchThroughServerConfig.port = natPunchThroughServerMemberIterator->value.GetString();
 					}
 
 				}
-				else if (sceneSessionMemberIterator->name == "participantType")
-				{
-					std::string participantType = jsonDocument["sceneSession"]["participantType"].GetString();
-					if (participantType == "Host")
-						mSceneSessionConfig.participantType = SceneSession::ParticipantType::HOST;
-					else if (participantType == "Guest")
-						mSceneSessionConfig.participantType = SceneSession::ParticipantType::GUEST;
-					else if (participantType == "Local")
-						mSceneSessionConfig.participantType = SceneSession::ParticipantType::LOCAL;
-					else
-						mSceneSessionConfig.participantType = SceneSession::ParticipantType::INVALID;
-				}
-				else if (sceneSessionMemberIterator->name == "uniqueUserNamePrefix")
-					mSceneSessionConfig.uniqueUserNamePrefix = jsonDocument["sceneSession"]["uniqueUserNamePrefix"].GetString();
-				else if (sceneSessionMemberIterator->name == "sessionGUID")
-					mSceneSessionConfig.sessionGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
-				else if (sceneSessionMemberIterator->name == "sessionIP")
-					mSceneSessionConfig.sessionIP = jsonDocument["sceneSession"]["sessionIP"].GetString();
-				else if (sceneSessionMemberIterator->name == "sessionPort")
-					mSceneSessionConfig.sessionPort = jsonDocument["sceneSession"]["sessionPort"].GetString();
-				else if (sceneSessionMemberIterator->name == "sessionResourceLocation")
-				{
-					for (auto& resourceLocation : jsonDocument["sceneSession"]["sessionResourceLocation"].GetArray())
-					{
-						std::stringstream sessionResourceLocation;
-						sessionResourceLocation << APE_SOURCE_DIR << resourceLocation.GetString();
-						mSceneSessionConfig.sessionResourceLocation.push_back(sessionResourceLocation.str());
-					}
-				}
 			}
-			rapidjson::Value& pluginManager = jsonDocument["pluginManager"];
-			for (rapidjson::Value::MemberIterator pluginManagerMemberIterator =
-				pluginManager.MemberBegin();
-				pluginManagerMemberIterator != pluginManager.MemberEnd(); ++pluginManagerMemberIterator)
+			rapidjson::Value& plugins = jsonDocument["plugins"];
+			for (auto& plugin : jsonDocument["plugins"].GetArray())
 			{
-				if (pluginManagerMemberIterator->name == "plugins")
-				{
-					for (auto& plugin : pluginManager["plugins"].GetArray())
-						mPluginManagerConfig.pluginnames.push_back(plugin.GetString());
-				}
+				mPluginNames.push_back(plugin.GetString());
 			}
 		}
 		fclose(apeSystemConfigFile);
@@ -162,24 +155,24 @@ ape::SystemConfigImpl::~SystemConfigImpl()
 
 }
 
-ape::SceneSessionConfig ape::SystemConfigImpl::getSceneSessionConfig()
+ape::SessionConfig ape::SystemConfigImpl::getSessionConfig()
 {
-	return mSceneSessionConfig;
+	return mSessionConfig;
 }
 
-ape::MainWindowConfig ape::SystemConfigImpl::getMainWindowConfig()
+ape::WindowConfig& ape::SystemConfigImpl::getWindowConfig()
 {
-	return mMainWindowConfig;
+	return mWindowConfig;
 }
 
-ape::PluginManagerConfig ape::SystemConfigImpl::getPluginManagerConfig()
+std::vector<std::string> ape::SystemConfigImpl::getPluginNames()
 {
-	return mPluginManagerConfig;
+	return mPluginNames;
 }
 
-std::string ape::SystemConfigImpl::getFolderPath()
+std::string ape::SystemConfigImpl::getConfigFolderPath()
 {
-	return mFolderPath;
+	return mConfigFolderPath;
 }
 
 

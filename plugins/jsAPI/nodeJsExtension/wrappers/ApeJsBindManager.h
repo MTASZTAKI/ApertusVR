@@ -513,7 +513,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return mpSystemConfig->getFolderPath();
+		return mpSystemConfig->getConfigFolderPath();
 	}
 
 private:

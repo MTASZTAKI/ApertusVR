@@ -40,11 +40,11 @@ add_library (ApeSystem SHARED ${SOURCES} )
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig ApeMainWindow RAKNET ws2_32)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig RAKNET ws2_32)
 endif()
 
 if(APPLE)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig ApeMainWindow RAKNET)
+	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig RAKNET)
 endif()
 
 

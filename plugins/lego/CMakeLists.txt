@@ -45,7 +45,7 @@ include_directories(
 add_library (ApeLegoPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLegoPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeSceneMakerMacro)
+target_link_libraries (ApeLegoPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
 if (WIN32)
 	# we have to link to some DirectX libraries 
 	target_link_libraries (ApeLegoPlugin dinput8 dxguid)

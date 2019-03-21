@@ -130,7 +130,7 @@ void ape::KinectHeadTrackingPlugin::Init()
 	APE_LOG_DEBUG("Sensor init finished");
 	mpApeUserInputMacro->createOverLayText("userPosition");
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeKinectHeadTrackingPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeKinectHeadTrackingPlugin.json";
 	FILE* apeKinectHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeKinectHeadTrackingPluginConfigFile)

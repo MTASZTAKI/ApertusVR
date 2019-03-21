@@ -29,7 +29,6 @@ SOFTWARE.*/
 #include <mutex>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
 #include "plugin/ApeIPlugin.h"
 #include "plugin/ApePluginAPI.h"
 #include "managers/ApeIEventManager.h"

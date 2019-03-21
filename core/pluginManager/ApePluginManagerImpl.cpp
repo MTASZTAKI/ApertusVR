@@ -46,9 +46,8 @@ void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 void ape::PluginManagerImpl::CreatePlugins()
 {
 	mpInternalPluginManager = &ape::InternalPluginManager::GetInstance();
-	ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
-	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
-	mPluginCount = pluginManagerConfig.pluginnames.size();
+	auto pluginNames = mpSystemConfig->getPluginNames();
+	mPluginCount = pluginNames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))

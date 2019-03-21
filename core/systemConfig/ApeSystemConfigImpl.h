@@ -41,26 +41,26 @@ namespace ape
 	class APE_SYSTEMCONFIG_DLL_EXPORT SystemConfigImpl : public ISystemConfig
 	{
 	private:
-		SceneSessionConfig mSceneSessionConfig;
+		SessionConfig mSessionConfig;
 
-		MainWindowConfig mMainWindowConfig;
+		WindowConfig mWindowConfig;
 
-		PluginManagerConfig mPluginManagerConfig;
+		std::vector<std::string> mPluginNames;
 
-		std::string mFolderPath;
+		std::string mConfigFolderPath;
 
 	public:
-		SystemConfigImpl(std::string folderPath);
+		SystemConfigImpl(std::string configFolderPath);
 
 		~SystemConfigImpl();
 
-		PluginManagerConfig getPluginManagerConfig() override;
+		std::vector<std::string> getPluginNames() override;
 
-		SceneSessionConfig getSceneSessionConfig() override;
+		SessionConfig getSessionConfig() override;
 
-		MainWindowConfig getMainWindowConfig() override;
+		WindowConfig& getWindowConfig() override;
 
-		std::string getFolderPath() override;
+		std::string getConfigFolderPath() override;
 	};
 }
 

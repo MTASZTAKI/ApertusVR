@@ -77,7 +77,7 @@ void ape::ApeFobHeadTrackingPlugin::Init()
 	mpFobTracker = trackdInitTrackerReader(4126);
 	
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "\\ApeFobHeadTrackingPlugin.json";
+	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeFobHeadTrackingPlugin.json";
 	FILE* apeFobHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeFobHeadTrackingPluginConfigFile)

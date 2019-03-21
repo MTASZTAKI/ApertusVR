@@ -36,7 +36,7 @@ void ape::MultiKinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream MultiKinectPluginConfigFilePath;
-	MultiKinectPluginConfigFilePath << mpSystemConfig->getFolderPath() << "\\ApeMultiKinectPlugin.json";
+	MultiKinectPluginConfigFilePath << mpSystemConfig->getConfigFolderPath() << "\\ApeMultiKinectPlugin.json";
 	APE_LOG_DEBUG("MultiKinectPluginConfigFilePath: " << MultiKinectPluginConfigFilePath.str());
 	FILE* MultiKinectPluginConfigFile;
 	if (errno_t err = fopen_s(&MultiKinectPluginConfigFile, MultiKinectPluginConfigFilePath.str().c_str(), "r") == 0)
