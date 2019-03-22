@@ -1,19 +1,19 @@
-#include "ApeGallerySamplePlugin.h"
+#include "apeGallerySamplePlugin.h"
 
-ape::ApeGallerySamplePlugin::ApeGallerySamplePlugin()
+ape::apeGallerySamplePlugin::apeGallerySamplePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeGallerySamplePlugin::~ApeGallerySamplePlugin()
+ape::apeGallerySamplePlugin::~apeGallerySamplePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Init()
+void ape::apeGallerySamplePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
@@ -149,31 +149,31 @@ void ape::ApeGallerySamplePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Run()
+void ape::apeGallerySamplePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Step()
+void ape::apeGallerySamplePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Stop()
+void ape::apeGallerySamplePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Suspend()
+void ape::apeGallerySamplePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGallerySamplePlugin::Restart()
+void ape::apeGallerySamplePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

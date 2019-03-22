@@ -22,22 +22,22 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeSceneMakerMacro.h
+	apeSceneMakerMacro.h
 	)
 
 set (SOURCES 
-	ApeSceneMakerMacro.cpp
+	apeSceneMakerMacro.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApeSceneMakerMacro STATIC ${SOURCES} ${HEADERS})
+add_library (apeSceneMakerMacro STATIC ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeSceneMakerMacro ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (apeSceneMakerMacro apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApeSceneMakerMacro PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENEMAKERMACRO_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeSceneMakerMacro PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SCENEMAKERMACRO_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeSceneMakerMacro PROPERTY FOLDER "Macros")
+set_property (TARGET apeSceneMakerMacro PROPERTY FOLDER "Macros")

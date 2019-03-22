@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_SKYIMPL_H
 #define APE_SKYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeISky.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeISky.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

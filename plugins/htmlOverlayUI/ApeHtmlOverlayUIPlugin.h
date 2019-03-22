@@ -32,49 +32,49 @@ SOFTWARE.*/
 #include <random>
 #include <thread>
 #include <vector>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIUnitTexture.h"
-#include "utils/ApeInterpolator.h"
-#include "ApeUserInputMacro.h"
-#include "ApeSceneMakerMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIUnitTexture.h"
+#include "utils/apeInterpolator.h"
+#include "macros/userInput/apeUserInputMacro.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "ApeHtmlOverlayUIPlugin"
+#define THIS_PLUGINNAME "apeHtmlOverlayUIPlugin"
 
 namespace ape
 {
-	class ApeHtmlOverlayUIPlugin : public ape::IPlugin
+	class apeHtmlOverlayUIPlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
@@ -83,9 +83,9 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 	public:
-		ApeHtmlOverlayUIPlugin();
+		apeHtmlOverlayUIPlugin();
 
-		~ApeHtmlOverlayUIPlugin();
+		~apeHtmlOverlayUIPlugin();
 
 		void Init() override;
 
@@ -100,14 +100,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeHtmlOverlayUIPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeHtmlOverlayUIPlugin()
 	{
-		return new ape::ApeHtmlOverlayUIPlugin;
+		return new ape::apeHtmlOverlayUIPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHtmlOverlayUIPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeHtmlOverlayUIPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeHtmlOverlayUIPlugin*)plugin;
+		delete (ape::apeHtmlOverlayUIPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -115,7 +115,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHtmlOverlayUIPlugin, DestroyApeHtmlOverlayUIPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeHtmlOverlayUIPlugin, DestroyapeHtmlOverlayUIPlugin);
 		return 0;
 	}
 }

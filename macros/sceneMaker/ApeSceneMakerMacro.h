@@ -28,27 +28,27 @@ SOFTWARE.*/
 #include <chrono>
 #include <random>
 #include <memory>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeIUnitTexture.h"
-#include "managers/ApeISystemConfig.h"
-#include "utils/ApeInterpolator.h"
-#include "utils/ApeSingleton.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeIUnitTexture.h"
+#include "managers/apeICoreConfig.h"
+#include "utils/apeInterpolator.h"
+#include "utils/apeSingleton.h"
 
 namespace ape
 {
@@ -59,7 +59,7 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		void eventCallBack(const ape::Event& event);
 

@@ -1,10 +1,10 @@
 #include <iostream>
-#include "ApeSceneMakerMacro.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 
 ape::SceneMakerMacro::SceneMakerMacro()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&SceneMakerMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

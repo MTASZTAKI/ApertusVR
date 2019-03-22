@@ -1,28 +1,28 @@
-#include "ApeGyorPathPlanningPlugin.h"
+#include "apeGyorPathPlanningPlugin.h"
 
-ape::ApeGyorPathPlanningPlugin::ApeGyorPathPlanningPlugin()
+ape::apeGyorPathPlanningPlugin::apeGyorPathPlanningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeGyorPathPlanningPlugin::~ApeGyorPathPlanningPlugin()
+ape::apeGyorPathPlanningPlugin::~apeGyorPathPlanningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::eventCallBack(const ape::Event& event)
+void ape::apeGyorPathPlanningPlugin::eventCallBack(const ape::Event& event)
 {
 }
 
-void ape::ApeGyorPathPlanningPlugin::Init()
+void ape::apeGyorPathPlanningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -31,7 +31,7 @@ void ape::ApeGyorPathPlanningPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::Run()
+void ape::apeGyorPathPlanningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	//while (!(mGripperRightRootNode.lock() && mGripperLeftRootNode.lock() && mGripperLeftHelperNode.lock() && mGripperRightHelperNode.lock()
@@ -39,7 +39,7 @@ void ape::ApeGyorPathPlanningPlugin::Run()
 	//{
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	//}
-	//mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	//mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
 	//int gripperMaxValue = 255;
 	//int gripperMinValue = 0;
 	//int gripperCurrentValue = gripperMinValue;
@@ -98,25 +98,25 @@ void ape::ApeGyorPathPlanningPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::Step()
+void ape::apeGyorPathPlanningPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::Stop()
+void ape::apeGyorPathPlanningPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::Suspend()
+void ape::apeGyorPathPlanningPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeGyorPathPlanningPlugin::Restart()
+void ape::apeGyorPathPlanningPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

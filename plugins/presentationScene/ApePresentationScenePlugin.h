@@ -30,41 +30,41 @@
 //#include <mutex>
 //#include <thread>
 //#include <vector>
-//#include "Ape.h"
-//#include "system/ApeIMainWindow.h"
-//#include "plugin/ApePluginAPI.h"
-//#include "managers/ApeIEventManager.h"
-//#include "managers/ApeILogManager.h"
-//#include "managers/ApeISceneManager.h"
-//#include "managers/ApeISystemConfig.h"
-//#include "datatypes/ApeEuler.h"
-//#include "sceneelements/ApeIBrowser.h"
-//#include "sceneelements/ApeICamera.h"
-//#include "sceneelements/ApeIConeGeometry.h"
-//#include "sceneelements/ApeIFileGeometry.h"
-//#include "sceneelements/ApeIFileMaterial.h"
-//#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-//#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-//#include "sceneelements/ApeILight.h"
-//#include "sceneelements/ApeIManualMaterial.h"
-//#include "sceneelements/ApeIManualPass.h"
-//#include "sceneelements/ApeINode.h"
-//#include "sceneelements/ApeIPbsPass.h"
-//#include "sceneelements/ApeIPlaneGeometry.h"
-//#include "sceneelements/ApeIRayGeometry.h"
-//#include "sceneelements/ApeISphereGeometry.h"
-//#include "sceneelements/ApeITextGeometry.h"
-//#include "sceneelements/ApeITubeGeometry.h"
-//#include "sceneelements/ApeIUnitTexture.h"
-//#include "utils/ApeInterpolator.h"
-//#include "sceneelements/ApeIRayGeometry.h"
+//#include "ape.h"
+//#include "system/apeIMainWindow.h"
+//#include "plugin/apePluginAPI.h"
+//#include "managers/apeIEventManager.h"
+//#include "managers/apeILogManager.h"
+//#include "managers/apeISceneManager.h"
+//#include "managers/apeICoreConfig.h"
+//#include "datatypes/apeEuler.h"
+//#include "sceneelements/apeIBrowser.h"
+//#include "sceneelements/apeICamera.h"
+//#include "sceneelements/apeIConeGeometry.h"
+//#include "sceneelements/apeIFileGeometry.h"
+//#include "sceneelements/apeIFileMaterial.h"
+//#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+//#include "sceneelements/apeIIndexedLineSetGeometry.h"
+//#include "sceneelements/apeILight.h"
+//#include "sceneelements/apeIManualMaterial.h"
+//#include "sceneelements/apeIManualPass.h"
+//#include "sceneelements/apeINode.h"
+//#include "sceneelements/apeIPbsPass.h"
+//#include "sceneelements/apeIPlaneGeometry.h"
+//#include "sceneelements/apeIRayGeometry.h"
+//#include "sceneelements/apeISphereGeometry.h"
+//#include "sceneelements/apeITextGeometry.h"
+//#include "sceneelements/apeITubeGeometry.h"
+//#include "sceneelements/apeIUnitTexture.h"
+//#include "utils/apeInterpolator.h"
+//#include "sceneelements/apeIRayGeometry.h"
 //#include "OIS.h"
 //
-//#define THIS_PLUGINNAME "ApePresentationScenePlugin"
+//#define THIS_PLUGINNAME "apePresentationScenePlugin"
 //
 //namespace ape
 //{
-//	class ApePresentationScenePlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+//	class apePresentationScenePlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
 //	{
 //	private:
 //		enum Context
@@ -135,7 +135,7 @@
 //
 //		ape::ISceneManager* mpSceneManager;
 //
-//		ape::ISystemConfig* mpSystemConfig;
+//		ape::ICoreConfig* mpCoreConfig;
 //
 //		ape::IMainWindow* mpMainWindow;
 //
@@ -214,9 +214,9 @@
 //		void createMesh(std::string name, ape::Vector3 position = ape::Vector3(), ape::Quaternion orientation = ape::Quaternion());
 //
 //	public:
-//		ApePresentationScenePlugin();
+//		apePresentationScenePlugin();
 //
-//		~ApePresentationScenePlugin();
+//		~apePresentationScenePlugin();
 //
 //		void Init() override;
 //
@@ -242,14 +242,14 @@
 //
 //	};
 //
-//	APE_PLUGIN_FUNC ape::IPlugin* CreateApePresentationScenePlugin()
+//	APE_PLUGIN_FUNC ape::IPlugin* CreateapePresentationScenePlugin()
 //	{
-//		return new ape::ApePresentationScenePlugin;
+//		return new ape::apePresentationScenePlugin;
 //	}
 //
-//	APE_PLUGIN_FUNC void DestroyApePresentationScenePlugin(ape::IPlugin *plugin)
+//	APE_PLUGIN_FUNC void DestroyapePresentationScenePlugin(ape::IPlugin *plugin)
 //	{
-//		delete (ape::ApePresentationScenePlugin*)plugin;
+//		delete (ape::apePresentationScenePlugin*)plugin;
 //	}
 //
 //	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -257,7 +257,7 @@
 //	APE_PLUGIN_ALLOC()
 //	{
 //		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-//		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApePresentationScenePlugin, DestroyApePresentationScenePlugin);
+//		apeRegisterPlugin(THIS_PLUGINNAME, CreateapePresentationScenePlugin, DestroyapePresentationScenePlugin);
 //		return 0;
 //	}
 //}

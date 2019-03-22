@@ -22,32 +22,32 @@
 
 # Add all header and cpp files in the directory to the project
 set (SOURCES
-	ApeSystem.cpp
+	apeSystem.cpp
 	)
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/core/pluginManager
 	${PROJECT_SOURCE_DIR}/core/eventManager
 	${PROJECT_SOURCE_DIR}/core/logManager
-	${PROJECT_SOURCE_DIR}/core/systemConfig
+	${PROJECT_SOURCE_DIR}/core/CoreConfig
 	${PROJECT_SOURCE_DIR}/core/mainWindow
 	${PROJECT_SOURCE_DIR}/core/sceneManager
-	${PROJECT_SOURCE_DIR}/core/sceneManager/session
+	${PROJECT_SOURCE_DIR}/core/sceneManager/network
 	${RAKNET_INCLUDE_DIR}	
 	)
 
-add_library (ApeSystem SHARED ${SOURCES} )
+add_library (apeSystem SHARED ${SOURCES} )
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig RAKNET ws2_32)
+	target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig RAKNET ws2_32)
 endif()
 
 if(APPLE)
-	target_link_libraries (ApeSystem ApePluginManager ApeEventManager ApeLogManager ApeSceneManager ApeSystemConfig RAKNET)
+	target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig RAKNET)
 endif()
 
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeSystem PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEM_DLL)
-set_property (TARGET ApeSystem PROPERTY FOLDER "Core")
+set_property (TARGET apeSystem PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEM_DLL)
+set_property (TARGET apeSystem PROPERTY FOLDER "Core")

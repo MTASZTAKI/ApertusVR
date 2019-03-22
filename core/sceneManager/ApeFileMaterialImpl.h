@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_FILEMATERIALIMPL_H
 #define APE_FILEMATERIALIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

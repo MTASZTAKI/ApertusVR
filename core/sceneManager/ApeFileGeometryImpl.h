@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_FILEGEOMETRYIMPL_H
 #define APE_FILEGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeINode.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeINode.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

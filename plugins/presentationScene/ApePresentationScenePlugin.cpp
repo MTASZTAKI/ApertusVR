@@ -1,17 +1,17 @@
-//#include "ApePresentationScenePlugin.h"
+//#include "apePresentationScenePlugin.h"
 //
-//ape::ApePresentationScenePlugin::ApePresentationScenePlugin()
+//ape::apePresentationScenePlugin::apePresentationScenePlugin()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	mpKeyboard = NULL;
 //	mpMouse = NULL;
-//	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+//	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 //	mpEventManager = ape::IEventManager::getSingletonPtr();
-//	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+//	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 //	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 //	mpMainWindow = ape::IMainWindow::getSingletonPtr();
-//	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-//	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+//	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+//	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 //	mOldXMLFormatTranslateVector = ape::Vector3(26.809, 637.943, -22.163);
 //	mOldXMLFormatTranslateVectorCamera = ape::Vector3(0, 637.943, 0);
 //	mOldXMLFormatRotationQuaternion = ape::Quaternion();
@@ -51,13 +51,13 @@
 //	APE_LOG_FUNC_LEAVE();
 //}
 //
-//ape::ApePresentationScenePlugin::~ApePresentationScenePlugin()
+//ape::apePresentationScenePlugin::~apePresentationScenePlugin()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	APE_LOG_FUNC_LEAVE();
 //}
 //
-//void ape::ApePresentationScenePlugin::eventCallBack(const ape::Event& event)
+//void ape::apePresentationScenePlugin::eventCallBack(const ape::Event& event)
 //{
 //	if (event.type == ape::Event::Type::CAMERA_CREATE)
 //		mCamera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock());
@@ -84,11 +84,11 @@
 //	}
 //}
 //
-//void ape::ApePresentationScenePlugin::Init()
+//void ape::apePresentationScenePlugin::Init()
 //{
 //	APE_LOG_FUNC_ENTER();
 //
-//	if (auto userNode = mpSceneManager->getNode(mpSystemConfig->getSceneSessionConfig().generatedUniqueUserNodeName).lock())
+//	if (auto userNode = mpSceneManager->getNode(mpCoreConfig->getSceneNetworkConfig().generatedUniqueUserNodeName).lock())
 //		mUserNode = userNode;
 //
 //	std::stringstream hwndStrStream;
@@ -177,7 +177,7 @@
 //	storyElement.browserWidth = 278;
 //	storyElement.browserHeight = 157;
 //	manageBrowser(storyElement);
-//	/*ApertusVR begin*/
+//	/*apertusVR begin*/
 //	/*static elements begin*/
 //	//std::string name = "metalroom";
 //	//ape::Vector3 position = ape::Vector3();
@@ -364,11 +364,11 @@
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(0, 0, 0), ape::Quaternion(1, 0, 0, 0))); //zero
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-12.5, -270.943, 409.5), ape::Quaternion(1, 0, 0, 0))); //indigo
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-24.5, -273.943, -114), ape::Quaternion(1, 0, 0, 0),
-//	//	"github", "https://github.com/MTASZTAKI/ApertusVR", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
+//	//	"github", "https://github.com/MTASZTAKI/apertusVR", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-30.5, -247.443, -161), ape::Quaternion(1, 0, 0, 0),
-//	//	"github", "https://github.com/MTASZTAKI/ApertusVR#about", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
+//	//	"github", "https://github.com/MTASZTAKI/apertusVR#about", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#about
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-27.5, -278.943, -121), ape::Quaternion(1, 0, 0, 0),
-//	//	"github", "https://github.com/MTASZTAKI/ApertusVR#apertusvr", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
+//	//	"github", "https://github.com/MTASZTAKI/apertusVR#apertusvr", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150)); //github#swarch
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-312.127, 79.2832, 317.68), ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile1
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-393.724, 78.6628, 287.429), ape::Quaternion(0.383774, -0.00326215, 0.923396, 0.00784904))); //smartProfile2
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(97.6123, 67.057, 422.253), ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0))); //endo
@@ -393,7 +393,7 @@
 //	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_arvr.png", ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
 //	//mStoryElements.push_back(StoryElement(ape::Vector3(-12.5, -270.943, 461.5), ape::Quaternion(1, 0, 0, 0),
 //	//	"first", "http://srv.mvv.sztaki.hu/temp/honeywell/tech_iot.png", ape::Vector3(15, 367, 206) - mOldXMLFormatTranslateVector, ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 267, 150, 0, 2048, 1024)); //thank you for the attention
-//	///*ApertusVR end*
+//	///*apertusVR end*
 //
 //	storyElement.browserName = "partners";
 //	storyElement.browserURL = "http://srv.mvv.sztaki.hu/temp/partners/collage.png";
@@ -411,7 +411,7 @@
 //	manageBrowser(storyElement);
 //	mStoryElements.push_back(StoryElement(ape::Vector3(0, 0, 0), ape::Quaternion(1, 0, 0, 0)));
 //	mStoryElements.push_back(StoryElement(ape::Vector3(-24.5, -273.943, -114), ape::Quaternion(1, 0, 0, 0),
-//		"github", "https://github.com/MTASZTAKI/ApertusVR", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector,
+//		"github", "https://github.com/MTASZTAKI/apertusVR", ape::Vector3(0, 360, -370) - mOldXMLFormatTranslateVector,
 //		ape::Quaternion(1, 0, 0, 0) * mOldXMLFormatRotationQuaternion, 240, 150));
 //	mStoryElements.push_back(StoryElement(ape::Vector3(97.6123, 67.057, 422.253), ape::Quaternion(0.171713, -9.77448e-07, 0.985149, 0.0)));
 //	mStoryElements.push_back(StoryElement(ape::Vector3(-81.5577, 88.1323, 618.38), ape::Quaternion(0.129627, -0.00440998, 0.990982, 0.0337064),
@@ -458,7 +458,7 @@
 //	//}
 //}
 //
-//void ape::ApePresentationScenePlugin::animateToStoryElements(ape::NodeSharedPtr userNode)
+//void ape::apePresentationScenePlugin::animateToStoryElements(ape::NodeSharedPtr userNode)
 //{
 //	StoryElement storyElement = mStoryElements[mCurrentStoryElementIndex];
 //	if (auto userNode = mUserNode.lock())
@@ -489,7 +489,7 @@
 //		manageBrowser(storyElement);
 //}
 //
-//void ape::ApePresentationScenePlugin::jumpToStoryElement(ape::NodeSharedPtr userNode)
+//void ape::apePresentationScenePlugin::jumpToStoryElement(ape::NodeSharedPtr userNode)
 //{
 //	StoryElement storyElement = mStoryElements[mCurrentStoryElementIndex];
 //	userNode->setPosition(storyElement.cameraPosition);
@@ -498,7 +498,7 @@
 //		manageBrowser(storyElement);
 //}
 //
-//void ape::ApePresentationScenePlugin::manageBrowser(StoryElement storyElement)
+//void ape::apePresentationScenePlugin::manageBrowser(StoryElement storyElement)
 //{
 //	if (!mpSceneManager->getNode(storyElement.browserName).lock())
 //	{
@@ -555,7 +555,7 @@
 //	}
 //}
 //
-//void ape::ApePresentationScenePlugin::createMesh(std::string name, ape::Vector3 position, ape::Quaternion orientation)
+//void ape::apePresentationScenePlugin::createMesh(std::string name, ape::Vector3 position, ape::Quaternion orientation)
 //{
 //	if (auto node = mpSceneManager->createNode(name).lock())
 //	{
@@ -569,7 +569,7 @@
 //	}
 //}
 //
-//void ape::ApePresentationScenePlugin::moveUserNode()
+//void ape::apePresentationScenePlugin::moveUserNode()
 //{
 //	if (mContext == SPACE)
 //	{
@@ -604,7 +604,7 @@
 //	}
 //}
 //
-//void ape::ApePresentationScenePlugin::saveUserNodePose(ape::NodeSharedPtr userNode)
+//void ape::apePresentationScenePlugin::saveUserNodePose(ape::NodeSharedPtr userNode)
 //{
 //	std::ofstream userNodePoseFile;
 //	userNodePoseFile.open("userNodePoseFile.txt", std::ios::app);
@@ -613,7 +613,7 @@
 //	userNodePoseFile.close();
 //}
 //
-//bool ape::ApePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
+//bool ape::apePresentationScenePlugin::keyPressed(const OIS::KeyEvent& e)
 //{
 //	if (auto activeBrowser = mActiveBrowser.lock())
 //	{
@@ -720,13 +720,13 @@
 //	return true;
 //}
 //
-//bool ape::ApePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
+//bool ape::apePresentationScenePlugin::keyReleased(const OIS::KeyEvent& e)
 //{
 //	mKeyCodeMap[e.key] = false;
 //	return true;
 //}
 //
-//bool ape::ApePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
+//bool ape::apePresentationScenePlugin::mouseMoved(const OIS::MouseEvent & e)
 //{
 //	if (auto activeMouseTexture = mActiveMouseTexture.lock())
 //	{
@@ -748,7 +748,7 @@
 //	return true;
 //}
 //
-//bool ape::ApePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+//bool ape::apePresentationScenePlugin::mousePressed(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 //{
 //	if (id == OIS::MouseButtonID::MB_Left)
 //	{
@@ -821,7 +821,7 @@
 //	return true;
 //}
 //
-//bool ape::ApePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
+//bool ape::apePresentationScenePlugin::mouseReleased(const OIS::MouseEvent & e, OIS::MouseButtonID id)
 //{
 //	if (id == OIS::MouseButtonID::MB_Left)
 //	{
@@ -831,7 +831,7 @@
 //	return true;
 //}
 //
-//void ape::ApePresentationScenePlugin::Run()
+//void ape::apePresentationScenePlugin::Run()
 //{
 //	while (true)
 //	{
@@ -842,29 +842,29 @@
 //		moveUserNode();
 //		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 //	}
-//	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
-//	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ApePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+//	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
+//	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apePresentationScenePlugin::eventCallBack, this, std::placeholders::_1));
 //}
 //
-//void ape::ApePresentationScenePlugin::Step()
+//void ape::apePresentationScenePlugin::Step()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	APE_LOG_FUNC_LEAVE();
 //}
 //
-//void ape::ApePresentationScenePlugin::Stop()
+//void ape::apePresentationScenePlugin::Stop()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	APE_LOG_FUNC_LEAVE();
 //}
 //
-//void ape::ApePresentationScenePlugin::Suspend()
+//void ape::apePresentationScenePlugin::Suspend()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	APE_LOG_FUNC_LEAVE();
 //}
 //
-//void ape::ApePresentationScenePlugin::Restart()
+//void ape::apePresentationScenePlugin::Restart()
 //{
 //	APE_LOG_FUNC_ENTER();
 //	APE_LOG_FUNC_LEAVE();

@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_WATERIMPL_H
 #define APE_WATERIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIWater.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIWater.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

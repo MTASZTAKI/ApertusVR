@@ -25,9 +25,9 @@ SOFTWARE.*/
 
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "Ape.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "ApeJsBindNodeImpl.h"
+#include "ape.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "apeJsBindNodeImpl.h"
 
 #ifdef NBIND_CLASS
 

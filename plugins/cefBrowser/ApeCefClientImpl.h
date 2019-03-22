@@ -31,9 +31,9 @@ SOFTWARE.*/
 #include "cef_render_handler.h"
 #include "cef_life_span_handler.h"
 #include "cef_keyboard_handler.h"
-#include "ApeCefRenderHandlerImpl.h"
-#include "ApeCefLifeSpanHandlerImpl.h"
-#include "ApeCefKeyboardHandlerImpl.h"
+#include "apeCefRenderHandlerImpl.h"
+#include "apeCefLifeSpanHandlerImpl.h"
+#include "apeCefKeyboardHandlerImpl.h"
 
 namespace ape
 {

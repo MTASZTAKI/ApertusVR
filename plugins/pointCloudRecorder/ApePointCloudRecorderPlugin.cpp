@@ -1,12 +1,12 @@
 #include <iostream>
-#include "ApePointCloudRecorderPlugin.h"
+#include "apePointCloudRecorderPlugin.h"
 
-ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
+ape::apePointCloudRecorderPlugin::apePointCloudRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&apePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mPointCloud = ape::PointCloudWeakPtr();
 	mRecordedPointCloudName = "";
@@ -23,7 +23,7 @@ ape::ApePointCloudRecorderPlugin::ApePointCloudRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
+ape::apePointCloudRecorderPlugin::~apePointCloudRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	if (mFileStreamOut.is_open())
@@ -33,20 +33,20 @@ ape::ApePointCloudRecorderPlugin::~ApePointCloudRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::readFrame()
+void ape::apePointCloudRecorderPlugin::readFrame()
 {
 	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
 	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
 }
 
-void ape::ApePointCloudRecorderPlugin::writeFrame()
+void ape::apePointCloudRecorderPlugin::writeFrame()
 {
-	//TODO_ApePointCloudRecorderPlugin maybe write timestamp for timing?
+	//TODO_apePointCloudRecorderPlugin maybe write timestamp for timing?
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentPoints[0]), mPointCloudSize * sizeof(float));
 	mFileStreamOut.write(reinterpret_cast<char*>(&mCurrentColors[0]), mPointCloudSize * sizeof(float));
 }
 
-void ape::ApePointCloudRecorderPlugin::eventCallBack(const ape::Event& event)
+void ape::apePointCloudRecorderPlugin::eventCallBack(const ape::Event& event)
 {
 	if (mIsRecorder)
 	{
@@ -90,7 +90,7 @@ void ape::ApePointCloudRecorderPlugin::eventCallBack(const ape::Event& event)
 	}
 }
 
-void ape::ApePointCloudRecorderPlugin::Init()
+void ape::apePointCloudRecorderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mRecordedPointCloudName = "pointCloud_Kinect";
@@ -98,7 +98,7 @@ void ape::ApePointCloudRecorderPlugin::Init()
 	mIsPlayer = true;
 	mIsLooping = true;
 	mFileName = "pointCloud.bin";
-	//TODO_ApePointCloudRecorderPlugin get the pose information from the file like pointCloudSize
+	//TODO_apePointCloudRecorderPlugin get the pose information from the file like pointCloudSize
 	mPointCloudPosition = ape::Vector3(0.0, 170.0, -250.0);
 	mPointCloudOrinetation = ape::Quaternion(0.707, 0.0, 0.707, 0.0);
 	if (mIsRecorder)
@@ -136,7 +136,7 @@ void ape::ApePointCloudRecorderPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::Run()
+void ape::apePointCloudRecorderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -160,33 +160,33 @@ void ape::ApePointCloudRecorderPlugin::Run()
 				mFileStreamIn.open(mFileName, std::ios::in | std::ios::binary);
 				mFileStreamIn.read(reinterpret_cast<char*>(&mPointCloudSize), sizeof(long));
 			}
-			//TODO_ApePointCloudRecorderPlugin maybe timig by reading timestamps from the file?
+			//TODO_apePointCloudRecorderPlugin maybe timig by reading timestamps from the file?
 			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 	}
-	mpEventManager->disconnectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&apePointCloudRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::Step()
+void ape::apePointCloudRecorderPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::Stop()
+void ape::apePointCloudRecorderPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::Suspend()
+void ape::apePointCloudRecorderPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePointCloudRecorderPlugin::Restart()
+void ape::apePointCloudRecorderPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

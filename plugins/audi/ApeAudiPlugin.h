@@ -31,51 +31,51 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <list>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISceneSession.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeICamera.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "utils/ApeInterpolator.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "ApeSceneMakerMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeISceneNetwork.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeICamera.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "utils/apeInterpolator.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "ApeAudiPlugin"
+#define THIS_PLUGINNAME "apeAudiPlugin"
 
 namespace ape
 {
-	class ApeAudiPlugin : public ape::IPlugin
+	class apeAudiPlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpScene;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const ape::Event& event);
 
 	public:
-		ApeAudiPlugin();
+		apeAudiPlugin();
 
-		~ApeAudiPlugin();
+		~apeAudiPlugin();
 
 		void Init() override;
 
@@ -90,14 +90,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeAudiPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeAudiPlugin()
 	{
-		return new ape::ApeAudiPlugin;
+		return new ape::apeAudiPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeAudiPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeAudiPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeAudiPlugin*)plugin;
+		delete (ape::apeAudiPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -105,7 +105,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAudiPlugin, DestroyApeAudiPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeAudiPlugin, DestroyapeAudiPlugin);
 		return 0;
 	}
 }

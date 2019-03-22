@@ -25,12 +25,12 @@ SOFTWARE.*/
 
 #include <thread>
 #include <mutex>
-#include "Ape.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "managers/ApeILogManager.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeIManualPass.h"
+#include "ape.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "managers/apeILogManager.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIManualPass.h"
 #include "BubbleManager.h"
 
 namespace TexasEEG

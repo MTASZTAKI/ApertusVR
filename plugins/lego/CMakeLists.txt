@@ -30,28 +30,28 @@ endfunction ()
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeLegoPlugin.h
+	apeLegoPlugin.h
 	)
 
 set (SOURCES 
-	ApeLegoPlugin.cpp
+	apeLegoPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	 
+	
 	)
 
-add_library (ApeLegoPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeLegoPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLegoPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apeLegoPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 if (WIN32)
 	# we have to link to some DirectX libraries 
-	target_link_libraries (ApeLegoPlugin dinput8 dxguid)
+	target_link_libraries (apeLegoPlugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET ApeLegoPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeLegoPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeLegoPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeLegoPlugin PROPERTY FOLDER "Plugins")
 

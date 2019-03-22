@@ -1,4 +1,4 @@
-#include "ApeKinectHeadTrackingPlugin.h"
+#include "apeKinectHeadTrackingPlugin.h"
 
 
 ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
@@ -7,7 +7,7 @@ ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mpKinectSensor = NULL;
 	mpKinectReader = NULL;
 	mpCoordinateMapper = NULL;
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&KinectHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
@@ -23,7 +23,7 @@ ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mFarClip = 0.0f;
 	mC = 0.0f;
 	mD = 0.0f;
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -128,9 +128,9 @@ void ape::KinectHeadTrackingPlugin::Init()
 	APE_LOG_DEBUG("Sensor init begin");
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
-	mpApeUserInputMacro->createOverLayText("userPosition");
+	mpapeUserInputMacro->createOverLayText("userPosition");
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeKinectHeadTrackingPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeKinectHeadTrackingPlugin.json";
 	FILE* apeKinectHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeKinectHeadTrackingPluginConfigFile)
@@ -370,7 +370,7 @@ void ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 					{
 						ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
 						mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
-						mpApeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
+						mpapeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
 					}
 				}
 			}

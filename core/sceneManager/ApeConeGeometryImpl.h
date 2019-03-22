@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_CONEGEOMETRYIMPL_H
 #define APE_CONEGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

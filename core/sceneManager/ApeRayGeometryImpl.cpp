@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApeRayGeometryImpl.h"
+#include "apeRayGeometryImpl.h"
 
 ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHostCreated) : ape::IRayGeometry(name), ape::Replica("RayGeometry", isHostCreated)
 {

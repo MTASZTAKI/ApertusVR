@@ -22,21 +22,21 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeFobHeadTracking.h
+	apeFobHeadTracking.h
 	)
 
 set (SOURCES 
-	ApeFobHeadTracking.cpp
+	apeFobHeadTracking.cpp
 	)
 
-add_library (ApeFobHeadTrackingLib SHARED ${SOURCES} ${HEADERS})
+add_library (apeFobHeadTrackingLib SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingLib)
+target_link_libraries (apeFobHeadTrackingLib)
 
-set_property (TARGET ApeFobHeadTrackingLib PROPERTY COMPILE_DEFINITIONS TRACKD_DLL_EXPORTS)
+set_property (TARGET apeFobHeadTrackingLib PROPERTY COMPILE_DEFINITIONS TRACKD_DLL_EXPORTS)
 
-set_property (TARGET ApeFobHeadTrackingLib PROPERTY FOLDER "Plugins/ApeFobHeadTracking")
+set_property (TARGET apeFobHeadTrackingLib PROPERTY FOLDER "Plugins/apeFobHeadTracking")
 
 
 

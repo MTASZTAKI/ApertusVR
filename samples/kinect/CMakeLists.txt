@@ -23,14 +23,14 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeKinect.cpp
+	apeKinect.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeKinect ${SOURCES})
-target_link_libraries (ApeKinect ApeSystem ApePluginManager)
-set_property (TARGET ApeKinect PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeKinect PROPERTY FOLDER "Samples/Kinect")
+add_executable (apeKinect ${SOURCES})
+target_link_libraries (apeKinect apeSystem apePluginManager)
+set_property (TARGET apeKinect PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeKinect PROPERTY FOLDER "Samples/Kinect")

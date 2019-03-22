@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApeManualMaterialImpl.h"
+#include "apeManualMaterialImpl.h"
 
 ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated) : ape::IManualMaterial(name), ape::Replica("ManualMaterial", isHostCreated)
 {

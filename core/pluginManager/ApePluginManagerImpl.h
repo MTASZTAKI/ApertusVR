@@ -40,11 +40,11 @@ SOFTWARE.*/
 #include <mutex>
 #include <string>
 #include <thread>
-#include "managers/ApeILogManager.h"
-#include "managers/ApeIPluginManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "ApeInternalPluginManager.h"
-#include "ApePluginFactory.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeIPluginManager.h"
+#include "managers/apeICoreConfig.h"
+#include "apeInternalPluginManager.h"
+#include "apePluginFactory.h"
 
 namespace ape
 { 
@@ -61,7 +61,7 @@ namespace ape
 
 		void InitAndRunPlugin(ape::IPlugin* plugin);
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		unsigned int mPluginCount;
 

@@ -29,10 +29,10 @@ SOFTWARE.*/
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_life_span_handler.h"
-#include "Ape.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "managers/ApeILogManager.h"
+#include "ape.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeIBrowser.h"
+#include "managers/apeILogManager.h"
 
 namespace ape
 {

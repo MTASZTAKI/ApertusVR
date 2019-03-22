@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_EULER_H
 #define APE_JSBIND_EULER_H
 
-#include "datatypes/ApeEuler.h"
+#include "datatypes/apeEuler.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

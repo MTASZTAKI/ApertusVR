@@ -27,24 +27,24 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeISky.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIWater.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeISky.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIWater.h"
 
-#define THIS_PLUGINNAME "ApeSkyWaterTerrainScenePlugin"
+#define THIS_PLUGINNAME "apeSkyWaterTerrainScenePlugin"
 
 namespace ape
 {
-	class ApeSkyWaterTerrainScenePlugin : public ape::IPlugin
+	class apeSkyWaterTerrainScenePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -73,9 +73,9 @@ namespace ape
 		void createWater();
 
 	public:
-		ApeSkyWaterTerrainScenePlugin();
+		apeSkyWaterTerrainScenePlugin();
 
-		~ApeSkyWaterTerrainScenePlugin();
+		~apeSkyWaterTerrainScenePlugin();
 
 		void Init() override;
 
@@ -90,14 +90,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeSkyWaterTerrainScenePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeSkyWaterTerrainScenePlugin()
 	{
-		return new ape::ApeSkyWaterTerrainScenePlugin;
+		return new ape::apeSkyWaterTerrainScenePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeSkyWaterTerrainScenePlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeSkyWaterTerrainScenePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeSkyWaterTerrainScenePlugin*)plugin;
+		delete (ape::apeSkyWaterTerrainScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -105,7 +105,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeSkyWaterTerrainScenePlugin, DestroyApeSkyWaterTerrainScenePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeSkyWaterTerrainScenePlugin, DestroyapeSkyWaterTerrainScenePlugin);
 		return 0;
 	}
 }

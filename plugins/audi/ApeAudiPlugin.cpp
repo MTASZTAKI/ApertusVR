@@ -1,29 +1,29 @@
 #include <iostream>
-#include "ApeAudiPlugin.h"
+#include "apeAudiPlugin.h"
 
-ape::ApeAudiPlugin::ApeAudiPlugin()
+ape::apeAudiPlugin::apeAudiPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeAudiPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeAudiPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeAudiPlugin::~ApeAudiPlugin()
+ape::apeAudiPlugin::~apeAudiPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAudiPlugin::eventCallBack(const ape::Event& event)
+void ape::apeAudiPlugin::eventCallBack(const ape::Event& event)
 {
 	
 }
 
-void ape::ApeAudiPlugin::Init()
+void ape::apeAudiPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -32,7 +32,7 @@ void ape::ApeAudiPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAudiPlugin::Run()
+void ape::apeAudiPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -42,22 +42,22 @@ void ape::ApeAudiPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAudiPlugin::Step()
+void ape::apeAudiPlugin::Step()
 {
 
 }
 
-void ape::ApeAudiPlugin::Stop()
+void ape::apeAudiPlugin::Stop()
 {
 
 }
 
-void ape::ApeAudiPlugin::Suspend()
+void ape::apeAudiPlugin::Suspend()
 {
 
 }
 
-void ape::ApeAudiPlugin::Restart()
+void ape::apeAudiPlugin::Restart()
 {
 
 }

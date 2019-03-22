@@ -1,18 +1,18 @@
-#include "ApePolimiPlugin.h"
+#include "apePolimiPlugin.h"
 
-ape::ApePolimiPlugin::ApePolimiPlugin()
+ape::apePolimiPlugin::apePolimiPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApePolimiPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&ApePolimiPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apePolimiPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apePolimiPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApePolimiPlugin::~ApePolimiPlugin()
+ape::apePolimiPlugin::~apePolimiPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
@@ -20,12 +20,12 @@ ape::ApePolimiPlugin::~ApePolimiPlugin()
 
 
 
-void ape::ApePolimiPlugin::eventCallBack(const ape::Event& event)
+void ape::apePolimiPlugin::eventCallBack(const ape::Event& event)
 {
 	
 }
 
-void ape::ApePolimiPlugin::Init()
+void ape::apePolimiPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -34,7 +34,7 @@ void ape::ApePolimiPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePolimiPlugin::Run()
+void ape::apePolimiPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -44,22 +44,22 @@ void ape::ApePolimiPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApePolimiPlugin::Step()
+void ape::apePolimiPlugin::Step()
 {
 
 }
 
-void ape::ApePolimiPlugin::Stop()
+void ape::apePolimiPlugin::Stop()
 {
 
 }
 
-void ape::ApePolimiPlugin::Suspend()
+void ape::apePolimiPlugin::Suspend()
 {
 
 }
 
-void ape::ApePolimiPlugin::Restart()
+void ape::apePolimiPlugin::Restart()
 {
 
 }

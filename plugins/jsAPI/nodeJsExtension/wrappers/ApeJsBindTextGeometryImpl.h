@@ -24,13 +24,13 @@ SOFTWARE.*/
 #define APE_JSBIND_TEXTGEOMETRYIMPL_H
 
 #include <typeinfo>
-#include "Ape.h"
-#include "sceneelements/ApeITextGeometry.h"
+#include "ape.h"
+#include "sceneelements/apeITextGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeJsBindNodeImpl.h"
-#include "ApeNodeImpl.h"
-#include "ApeTextGeometryImpl.h"
+#include "apeJsBindNodeImpl.h"
+#include "apeNodeImpl.h"
+#include "apeTextGeometryImpl.h"
 
 #ifdef NBIND_CLASS
 

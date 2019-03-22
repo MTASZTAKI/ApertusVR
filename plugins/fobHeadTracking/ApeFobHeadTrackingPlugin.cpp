@@ -4,15 +4,15 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
-#include "ApeFobHeadTrackingPlugin.h"
+#include "apeFobHeadTrackingPlugin.h"
 
-ape::ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
+ape::apeFobHeadTrackingPlugin::apeFobHeadTrackingPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpFobTracker = nullptr;
 	mCameraCount = 0;
@@ -29,15 +29,15 @@ ape::ApeFobHeadTrackingPlugin::ApeFobHeadTrackingPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeFobHeadTrackingPlugin::~ApeFobHeadTrackingPlugin()
+ape::apeFobHeadTrackingPlugin::~apeFobHeadTrackingPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ApeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeFobHeadTrackingPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr)
+void ape::apeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("cameraName: " << cameraName);
@@ -59,7 +59,7 @@ void ape::ApeFobHeadTrackingPlugin::setCameraConfigByName(std::string cameraName
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::eventCallBack(const ape::Event& event)
+void ape::apeFobHeadTrackingPlugin::eventCallBack(const ape::Event& event)
 {
 	if (event.type == ape::Event::Type::CAMERA_CREATE)
 	{
@@ -71,13 +71,13 @@ void ape::ApeFobHeadTrackingPlugin::eventCallBack(const ape::Event& event)
 	}
 }
 
-void ape::ApeFobHeadTrackingPlugin::Init()
+void ape::apeFobHeadTrackingPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpFobTracker = trackdInitTrackerReader(4126);
 	
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeFobHeadTrackingPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeFobHeadTrackingPlugin.json";
 	FILE* apeFobHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeFobHeadTrackingPluginConfigFile)
@@ -297,7 +297,7 @@ void ape::ApeFobHeadTrackingPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::Matrix4 ape::ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
+ape::Matrix4 ape::apeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop)
 {
 	float x = 2.0f * mNearClip / (displayDistanceRight - displayDistanceLeft);
 	float y = 2.0f * mNearClip / (displayDistanceTop - displayDistanceBottom);
@@ -311,7 +311,7 @@ ape::Matrix4 ape::ApeFobHeadTrackingPlugin::perspectiveOffCenter(float& displayD
 	return m;
 }
 
-ape::Matrix4 ape::ApeFobHeadTrackingPlugin::calculateCameraProjection(ape::HeadTrackerDisplayConfig& displayConfig, ape::Vector3& trackedEyePosition)
+ape::Matrix4 ape::apeFobHeadTrackingPlugin::calculateCameraProjection(ape::HeadTrackerDisplayConfig& displayConfig, ape::Vector3& trackedEyePosition)
 {
 	ape::Vector3 trackedViewerDistanceToDisplayBottomLeftCorner, trackedViewerDistanceToDisplayBottomRightCorner, trackedViewerDistanceToDisplayTopLeftCorner;
 
@@ -341,7 +341,7 @@ ape::Matrix4 ape::ApeFobHeadTrackingPlugin::calculateCameraProjection(ape::HeadT
 	return cameraProjection;
 }
 
-void ape::ApeFobHeadTrackingPlugin::Run()
+void ape::apeFobHeadTrackingPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	int cameraCount = 0;
@@ -393,25 +393,25 @@ void ape::ApeFobHeadTrackingPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::Step()
+void ape::apeFobHeadTrackingPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::Stop()
+void ape::apeFobHeadTrackingPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::Suspend()
+void ape::apeFobHeadTrackingPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeFobHeadTrackingPlugin::Restart()
+void ape::apeFobHeadTrackingPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

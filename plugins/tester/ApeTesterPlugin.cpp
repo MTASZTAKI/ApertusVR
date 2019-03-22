@@ -1,29 +1,29 @@
-#include "ApeTesterPlugin.h"
+#include "apeTesterPlugin.h"
 
-ape::ApeTesterPlugin::ApeTesterPlugin()
+ape::apeTesterPlugin::apeTesterPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeTesterPlugin::~ApeTesterPlugin()
+ape::apeTesterPlugin::~apeTesterPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeTesterPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeTesterPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::eventCallBack(const ape::Event& event)
+void ape::apeTesterPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeTesterPlugin::Init()
+void ape::apeTesterPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeBackground();
@@ -34,7 +34,7 @@ void ape::ApeTesterPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::Run()
+void ape::apeTesterPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -45,25 +45,25 @@ void ape::ApeTesterPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::Step()
+void ape::apeTesterPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::Stop()
+void ape::apeTesterPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::Suspend()
+void ape::apeTesterPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTesterPlugin::Restart()
+void ape::apeTesterPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

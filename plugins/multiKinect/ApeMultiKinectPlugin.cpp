@@ -1,4 +1,4 @@
-#include "ApeMultiKinectPlugin.h"
+#include "apeMultiKinectPlugin.h"
 
 ape::MultiKinectPlugin::MultiKinectPlugin()
 {
@@ -6,7 +6,7 @@ ape::MultiKinectPlugin::MultiKinectPlugin()
 	mFreenect2;
 	mpScene = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&MultiKinectPlugin::eventCallBack, this, std::placeholders::_1));
 	mSensors = std::vector<Sensor>();
 	APE_LOG_FUNC_LEAVE();
@@ -36,7 +36,7 @@ void ape::MultiKinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream MultiKinectPluginConfigFilePath;
-	MultiKinectPluginConfigFilePath << mpSystemConfig->getConfigFolderPath() << "\\ApeMultiKinectPlugin.json";
+	MultiKinectPluginConfigFilePath << mpCoreConfig->getConfigFolderPath() << "\\apeMultiKinectPlugin.json";
 	APE_LOG_DEBUG("MultiKinectPluginConfigFilePath: " << MultiKinectPluginConfigFilePath.str());
 	FILE* MultiKinectPluginConfigFile;
 	if (errno_t err = fopen_s(&MultiKinectPluginConfigFile, MultiKinectPluginConfigFilePath.str().c_str(), "r") == 0)

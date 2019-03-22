@@ -20,18 +20,18 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-#ApeCefSubProcessApp
+#apeCefSubProcessApp
 set (CEF_SUBPROCESS_APP_SOURCES
-	ApeCefSubProcessAppMain.cpp
+	apeCefSubProcessAppMain.cpp
 	)
 include_directories(
 	${CEF_HOME}
 	${CEF_HOME}/include
 	)
 if (WIN32)
-	add_executable (ApeCefSubProcessApp WIN32 ${CEF_SUBPROCESS_APP_SOURCES})
-	target_link_libraries (ApeCefSubProcessApp MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
+	add_executable (apeCefSubProcessApp WIN32 ${CEF_SUBPROCESS_APP_SOURCES})
+	target_link_libraries (apeCefSubProcessApp MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
 endif()
-set_property (TARGET ApeCefSubProcessApp PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeCefSubProcessApp PROPERTY FOLDER "Plugins/ApeCefBrowser")
+set_property (TARGET apeCefSubProcessApp PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCefSubProcessApp PROPERTY FOLDER "Plugins/apeCefBrowser")
 

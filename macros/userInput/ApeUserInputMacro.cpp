@@ -1,12 +1,12 @@
 #include <iostream>
-#include "ApeUserInputMacro.h"
+#include "macros/userInput/apeUserInputMacro.h"
 
 ape::UserInputMacro* ape::UserInputMacro::mpInstance = 0;
 
 ape::UserInputMacro::UserInputMacro()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
@@ -14,7 +14,7 @@ ape::UserInputMacro::UserInputMacro()
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, ape::CameraWeakPtr>();
-	std::string userName = mpSystemConfig->getSessionConfig().userName;
+	std::string userName = mpCoreConfig->getNetworkConfig().userName;
 	std::string delimiter = "-";
 	auto tp = std::chrono::system_clock::now();
 	auto dur = tp.time_since_epoch();

@@ -32,6 +32,9 @@ var addonpath = moduleManager.apertusModulePath + 'nbind.node';
 logger.debug('c++ addon path: ', addonpath);
 exports.nbind = require(addonpath);
 
+var manager = this.nbind.JsBindManager();
+
+
 exports.initApi = function(app) {
 	var router = express.Router();
 	router.use(require(moduleManager.sourcePath + 'api/index.js'));
@@ -48,8 +51,12 @@ exports.start = function(app) {
 
 	// debugs
 	logger.debug(utils.inspect(this));
-	utils.iterate(this.nbind.JsBindManager(), 'ape.nbind.JsBindManager()', '');
+	utils.iterate(this.bindManager(), 'ape.nbind.JsBindManager()', '');
 
 	// start plugins
 	pluginManager.loadPlugins(app, express);
+};
+
+exports.bindManager = function () {
+	return manager;
 };

@@ -1,28 +1,28 @@
-#include "ApeEngineeringScenePlugin.h"
+#include "apeEngineeringScenePlugin.h"
 
-ape::ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
+ape::apeEngineeringScenePlugin::apeEngineeringScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
+ape::apeEngineeringScenePlugin::~apeEngineeringScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::eventCallBack(const ape::Event& event)
+void ape::apeEngineeringScenePlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeEngineeringScenePlugin::Init()
+void ape::apeEngineeringScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -32,36 +32,36 @@ void ape::ApeEngineeringScenePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::Run()
+void ape::apeEngineeringScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::Step()
+void ape::apeEngineeringScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::Stop()
+void ape::apeEngineeringScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::Suspend()
+void ape::apeEngineeringScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeEngineeringScenePlugin::Restart()
+void ape::apeEngineeringScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

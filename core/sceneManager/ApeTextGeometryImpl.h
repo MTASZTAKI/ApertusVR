@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_TEXTGEOMETRYIMPL_H
 #define APE_TEXTGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeINode.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeINode.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeFileMaterialImpl.h"
+#include "apeFileMaterialImpl.h"
 
 ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : ape::IFileMaterial(name), ape::Replica("FileMaterial", isHostCreated)
 {

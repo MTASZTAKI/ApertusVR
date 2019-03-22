@@ -22,7 +22,7 @@
 
 # ois patch log begin
 # CMakeLists.txt was copied to the ois root folder
-# Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO_ApeOisUserInputPlugin Implement OS version*/; }
+# Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO_apeOisUserInputPlugin Implement OS version*/; }
 # ois patch log begin
 
 set (OIS_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ois)
@@ -70,38 +70,38 @@ if (WIN32)
 	set_property(TARGET MY_OIS PROPERTY IMPORTED_LOCATION_RELEASE ${OIS_HOME}/Release/OIS.lib)
 endif ()
 
-#ApeOisUserInputPlugin
+#apeOisUserInputPlugin
 set (HEADERS
-	ApeOisUserInputPlugin.h
-	ApeOisUserInputPluginConfigs.h
+	apeOisUserInputPlugin.h
+	apeOisUserInputPluginConfigs.h
 	)
 
 set (SOURCES 
-	ApeOisUserInputPlugin.cpp
+	apeOisUserInputPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	${PROJECT_SOURCE_DIR}/macros/userInput 	
+	 
+	 	
 	${OIS_HOME}/includes
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeOisUserInputPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeOisUserInputPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeOisUserInputPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro MY_OIS)
+target_link_libraries (apeOisUserInputPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro MY_OIS)
 if (WIN32)
 	# we have to link to some DirectX libraries 
-	target_link_libraries (ApeOisUserInputPlugin dinput8 dxguid)
+	target_link_libraries (apeOisUserInputPlugin dinput8 dxguid)
 endif ()	
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeOisUserInputPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeOisUserInputPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# TODO_ApeOisUserInputPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# TODO_apeOisUserInputPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ois bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OIS_d.lib)

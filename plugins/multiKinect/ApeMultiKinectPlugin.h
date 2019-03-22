@@ -31,26 +31,26 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "utils/ApeInterpolator.h"
+#include "utils/apeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
-#include "plugin/ApePluginAPI.h"
-#include "plugin/ApeIPlugin.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeINode.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIFileGeometry.h"
+#include "plugin/apePluginAPI.h"
+#include "plugin/apeIPlugin.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeINode.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeIFileGeometry.h"
 #include "libfreenect2\libfreenect2.hpp"
 #include "libfreenect2\frame_listener_impl.h"
 #include "libfreenect2\registration.h"
@@ -58,7 +58,7 @@ SOFTWARE.*/
 #include "libfreenect2\depth_packet_processor.h"
 #include "libfreenect2\logger.h"
 
-#define THIS_PLUGINNAME "ApeMultiKinectPlugin"
+#define THIS_PLUGINNAME "apeMultiKinectPlugin"
 
 namespace ape
 {
@@ -155,7 +155,7 @@ namespace ape
 
 		ape::ISceneManager* mpScene;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
 	};
@@ -175,7 +175,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateMultiKinectPlugin, DestroyMultiKinectPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateMultiKinectPlugin, DestroyMultiKinectPlugin);
 		return 0;
 	}
 }

@@ -21,9 +21,9 @@
 #SOFTWARE.
 
 set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeNodeJsPlugin.json
-	ApeSystem.json
+	apeOgreRenderPlugin.json
+	apeNodeJsPlugin.json
+	apeCore.json
 	)
 
 add_custom_target(

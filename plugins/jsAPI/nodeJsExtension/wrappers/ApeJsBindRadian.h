@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_RADIAN_H
 #define APE_JSBIND_RADIAN_H
 
-#include "datatypes/ApeRadian.h"
+#include "datatypes/apeRadian.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

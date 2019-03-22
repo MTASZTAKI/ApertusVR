@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	Ape360Image.cpp
+	ape360Image.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (Ape360Image ${SOURCES})
-target_link_libraries (Ape360Image ApeSystem ApePluginManager)
-set_property (TARGET Ape360Image PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET Ape360Image PROPERTY FOLDER "Samples/360Image")
+add_executable (ape360Image ${SOURCES})
+target_link_libraries (ape360Image apeSystem apePluginManager)
+set_property (TARGET ape360Image PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ape360Image PROPERTY FOLDER "Samples/360Image")
 
 

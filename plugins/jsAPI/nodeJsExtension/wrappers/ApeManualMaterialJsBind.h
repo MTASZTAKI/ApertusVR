@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_MANUALMATERIALJSBIND_H
 #define APE_MANUALMATERIALJSBIND_H
 
-#include "Ape.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "ApeManualPassJsBind.h"
-#include "ApePbsPassJsBind.h"
+#include "ape.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "apeManualPassJsBind.h"
+#include "apePbsPassJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

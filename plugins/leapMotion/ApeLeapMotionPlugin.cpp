@@ -1,12 +1,12 @@
 #include <fstream>
-#include "ApeLeapMotionPlugin.h"
+#include "apeLeapMotionPlugin.h"
 
 ape::LeapMotionPlugin::LeapMotionPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&LeapMotionPlugin::eventCallBack, this, std::placeholders::_1));
 	mLeapController = Leap::Controller();
 	mFingerNames = {"Thumb", "Index", "Middle", "Ring", "Pinky"};

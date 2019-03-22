@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePbsPassImpl.h"
+#include "apePbsPassImpl.h"
 
 ape::PbsPassImpl::PbsPassImpl(std::string name, bool isHostCreated) : ape::IPbsPass(name), ape::Replica("PbsPass", isHostCreated)
 {

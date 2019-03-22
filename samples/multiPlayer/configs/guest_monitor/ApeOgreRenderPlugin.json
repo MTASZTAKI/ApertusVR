@@ -7,7 +7,7 @@
     "renderWindows": [
       {
         "enable": true,
-        "name": "ApeMultiPlayer - Guest",
+        "name": "apeMultiPlayer - Guest",
         "monitorIndex": 0,
         "resolution": {
           "width": 960,

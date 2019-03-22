@@ -63,31 +63,31 @@ if (WIN32)
 	set_property(TARGET MY_LEAP PROPERTY IMPORTED_LOCATION_RELEASE ${LEAP_HOME}/lib/x64/Leap.lib)
 endif ()
 
-#ApeLeapMotionPlugin
+#apeLeapMotionPlugin
 set (HEADERS
-	ApeLeapMotionPlugin.h
+	apeLeapMotionPlugin.h
 	)
 
 set (SOURCES 
-	ApeLeapMotionPlugin.cpp
+	apeLeapMotionPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include  
+	  
 	${LEAP_HOME}/include
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeLeapMotionPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeLeapMotionPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLeapMotionPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig MY_LEAP)
+target_link_libraries (apeLeapMotionPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig MY_LEAP)
 	
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeLeapMotionPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeLeapMotionPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo_ApeLeapMotionPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_apeLeapMotionPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the leap bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/Leap.dll)

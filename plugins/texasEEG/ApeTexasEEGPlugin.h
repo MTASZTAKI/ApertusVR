@@ -29,26 +29,26 @@ SOFTWARE.*/
 #include <math.h>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeEuler.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "ApeUserInputMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeEuler.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #include "GameManager.h"
 
-#define THIS_PLUGINNAME "ApeTexasEEGPlugin"
+#define THIS_PLUGINNAME "apeTexasEEGPlugin"
 
 namespace ape
 {
-	class ApeTexasEEGPlugin : public ape::IPlugin
+	class apeTexasEEGPlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -57,7 +57,7 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		int mBubblesActivateNextCount;
 
@@ -71,14 +71,14 @@ namespace ape
 
 		TexasEEG::BubbleManager* mBubbleManager;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
-		ApeTexasEEGPlugin();
+		apeTexasEEGPlugin();
 
-		~ApeTexasEEGPlugin();
+		~apeTexasEEGPlugin();
 
 		void Init() override;
 
@@ -95,14 +95,14 @@ namespace ape
 		void UpdateScore(int score);
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeTexasEEGPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeTexasEEGPlugin()
 	{
-		return new ape::ApeTexasEEGPlugin;
+		return new ape::apeTexasEEGPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeTexasEEGPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeTexasEEGPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeTexasEEGPlugin*)plugin;
+		delete (ape::apeTexasEEGPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -110,7 +110,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeTexasEEGPlugin, DestroyApeTexasEEGPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeTexasEEGPlugin, DestroyapeTexasEEGPlugin);
 		return 0;
 	}
 }

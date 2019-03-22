@@ -30,40 +30,40 @@ SOFTWARE.*/
 #include <mutex>
 #include <thread>
 #include <vector>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "utils/ApeInterpolator.h"
-#include "ApeSceneMakerMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "utils/apeInterpolator.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "ApeLinkageDesignerVRPlugin"
+#define THIS_PLUGINNAME "apeLinkageDesignerVRPlugin"
 
 namespace ape
 {
-	class ApeLinkageDesignerVRPlugin : public ape::IPlugin
+	class apeLinkageDesignerVRPlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
@@ -78,9 +78,9 @@ namespace ape
 		void toggleSwitchNodesVisibility();
 
 	public:
-		ApeLinkageDesignerVRPlugin();
+		apeLinkageDesignerVRPlugin();
 
-		~ApeLinkageDesignerVRPlugin();
+		~apeLinkageDesignerVRPlugin();
 
 		void Init() override;
 
@@ -95,14 +95,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeLinkageDesignerVRPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeLinkageDesignerVRPlugin()
 	{
-		return new ape::ApeLinkageDesignerVRPlugin;
+		return new ape::apeLinkageDesignerVRPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeLinkageDesignerVRPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeLinkageDesignerVRPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeLinkageDesignerVRPlugin*)plugin;
+		delete (ape::apeLinkageDesignerVRPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -110,7 +110,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeLinkageDesignerVRPlugin, DestroyApeLinkageDesignerVRPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeLinkageDesignerVRPlugin, DestroyapeLinkageDesignerVRPlugin);
 		return 0;
 	}
 }

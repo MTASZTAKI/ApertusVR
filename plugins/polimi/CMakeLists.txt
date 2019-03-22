@@ -22,26 +22,26 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApePolimiPlugin.h
+	apePolimiPlugin.h
 	)
 
 set (SOURCES 
-	ApePolimiPlugin.cpp
+	apePolimiPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	
+	
 	)
 
-add_library (ApePolimiPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apePolimiPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApePolimiPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apePolimiPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 
-set_property (TARGET ApePolimiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePolimiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApePolimiPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apePolimiPlugin PROPERTY FOLDER "Plugins")
 
 
 

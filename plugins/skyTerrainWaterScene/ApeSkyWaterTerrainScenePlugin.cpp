@@ -1,12 +1,12 @@
-#include "ApeSkyWaterTerrainScenePlugin.h"
+#include "apeSkyWaterTerrainScenePlugin.h"
 
-ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
+ape::apeSkyWaterTerrainScenePlugin::apeSkyWaterTerrainScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mWater = ape::WaterWeakPtr();
 	mSky = ape::SkyWeakPtr();
@@ -18,14 +18,14 @@ ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
+ape::apeSkyWaterTerrainScenePlugin::~apeSkyWaterTerrainScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const ape::Event& event)
+void ape::apeSkyWaterTerrainScenePlugin::eventCallBack(const ape::Event& event)
 {
 	APE_LOG_FUNC_ENTER();
 	if (event.type == ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
@@ -47,7 +47,7 @@ void ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const ape::Event& event)
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::createSky()
+void ape::apeSkyWaterTerrainScenePlugin::createSky()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto sky = std::static_pointer_cast<ape::ISky>(mpSceneManager->createEntity("sky", ape::Entity::SKY).lock()))
@@ -70,7 +70,7 @@ void ape::ApeSkyWaterTerrainScenePlugin::createSky()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::createWater()
+void ape::apeSkyWaterTerrainScenePlugin::createWater()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto water = std::static_pointer_cast<ape::IWater>(mpSceneManager->createEntity("water", ape::Entity::WATER).lock()))
@@ -83,7 +83,7 @@ void ape::ApeSkyWaterTerrainScenePlugin::createWater()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Init()
+void ape::apeSkyWaterTerrainScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("is waiting for the cameras");
@@ -95,7 +95,7 @@ void ape::ApeSkyWaterTerrainScenePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Run()
+void ape::apeSkyWaterTerrainScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -105,25 +105,25 @@ void ape::ApeSkyWaterTerrainScenePlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Step()
+void ape::apeSkyWaterTerrainScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Stop()
+void ape::apeSkyWaterTerrainScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Suspend()
+void ape::apeSkyWaterTerrainScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSkyWaterTerrainScenePlugin::Restart()
+void ape::apeSkyWaterTerrainScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

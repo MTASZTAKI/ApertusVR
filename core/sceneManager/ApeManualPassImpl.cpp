@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApeManualPassImpl.h"
+#include "apeManualPassImpl.h"
 
 ape::ManualPassImpl::ManualPassImpl(std::string name, bool isHostCreated) : ape::IManualPass(name), ape::Replica("ManualPass", isHostCreated)
 {

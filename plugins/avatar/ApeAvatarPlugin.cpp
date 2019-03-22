@@ -1,27 +1,27 @@
-#include "ApeAvatarPlugin.h"
+#include "apeAvatarPlugin.h"
 
-ape::ApeAvatarPlugin::ApeAvatarPlugin()
+ape::apeAvatarPlugin::apeAvatarPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeAvatarPlugin::~ApeAvatarPlugin()
+ape::apeAvatarPlugin::~apeAvatarPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeAvatarPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::eventCallBack(const ape::Event& event)
+void ape::apeAvatarPlugin::eventCallBack(const ape::Event& event)
 {
 }
 
-void ape::ApeAvatarPlugin::Init()
+void ape::apeAvatarPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::shared_ptr<ape::IManualMaterial> handMaterial;
@@ -50,7 +50,7 @@ void ape::ApeAvatarPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::Run()
+void ape::apeAvatarPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	/*while (true)
@@ -60,25 +60,25 @@ void ape::ApeAvatarPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::Step()
+void ape::apeAvatarPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::Stop()
+void ape::apeAvatarPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::Suspend()
+void ape::apeAvatarPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeAvatarPlugin::Restart()
+void ape::apeAvatarPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

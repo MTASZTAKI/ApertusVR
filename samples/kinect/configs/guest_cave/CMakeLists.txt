@@ -21,10 +21,10 @@
 #SOFTWARE.
 
 set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeFobHeadTrackingPlugin.json
-	ApeSystem.json
+	apeOgreRenderPlugin.json
+	apeOisUserInputPlugin.json
+	apeFobHeadTrackingPlugin.json
+	apeCore.json
 	)
 
 add_custom_target(

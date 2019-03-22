@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeLogManagerImpl.h"
+#include "apeLogManagerImpl.h"
 
 ape::LogManagerImpl::LogManagerImpl()
 	: mStream(&std::cout)
@@ -30,7 +30,7 @@ ape::LogManagerImpl::LogManagerImpl()
 #if defined(APE_LOG_ENABLE_COLORIZE) && defined(APE_PLATFORM_WIN)
 	system("color 0F");
 #endif
-	mOutFileStream = std::ofstream("ApertusVR.log");
+	mOutFileStream = std::ofstream("apertusVR.log");
 }
 
 ape::LogManagerImpl::~LogManagerImpl()

@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_PLANEGEOMETRYIMPL_H
 #define APE_PLANEGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

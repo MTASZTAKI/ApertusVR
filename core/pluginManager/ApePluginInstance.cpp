@@ -20,12 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #if _WIN32
 	#include <windows.h>
 #else
 	#include <dlfcn.h>
 #endif
-#include "ApePluginInstance.h"
+#include "apePluginInstance.h"
 
 class ape::PluginInstance::Impl
 {
@@ -40,6 +41,12 @@ public:
 	bool Load()
 	{
 		handle = LoadLibrary(mFileName.c_str());
+		if (handle == NULL)
+		{
+			auto error = GetLastError();
+			std::cout << "An unexpected error while loading library: " << mFileName << " error: " << error << std::endl;
+			std::cout << "Get last error while loading library: " << mFileName << " error : " << GetLastError() << std::endl;
+		}
 		return (handle != NULL);
 	}
 
@@ -112,13 +119,13 @@ bool ape::PluginInstance::Load()
 	if (! mImpl->Load())
 		return false;
 
-	Impl::PluginFunc init_func = mImpl->GetFunction("ApePluginInit");
+	Impl::PluginFunc init_func = mImpl->GetFunction("apePluginInit");
 	if (!init_func)
 		return false;
 
 	(*init_func)();
 
-	Impl::PluginFunc name_string = mImpl->GetFunction("ApePluginDisplayName");
+	Impl::PluginFunc name_string = mImpl->GetFunction("apePluginDisplayName");
 	if (name_string)
 	{
 		const char **ptr = (const char **) name_string;

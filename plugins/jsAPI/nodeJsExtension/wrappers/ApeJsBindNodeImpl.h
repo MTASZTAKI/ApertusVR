@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_NODEIMPL_H
 #define APE_JSBIND_NODEIMPL_H
 
-#include "datatypes/ApeEuler.h"
-#include "datatypes/ApeMatrix4.h"
-#include "ApeNodeImpl.h"
+#include "datatypes/apeEuler.h"
+#include "datatypes/apeMatrix4.h"
+#include "apeNodeImpl.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

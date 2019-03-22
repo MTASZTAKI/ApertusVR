@@ -21,13 +21,13 @@
 #SOFTWARE.
 
 set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeNodeJsPlugin.json
-	ApeAssimpAssetLoaderPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeKinectPlugin.json
-	ApeX3DLoaderPlugin.json
-	ApeSystem.json
+	apeOgreRenderPlugin.json
+	apeNodeJsPlugin.json
+	apeAssimpAssetLoaderPlugin.json
+	apeOisUserInputPlugin.json
+	apeKinectPlugin.json
+	apeX3DLoaderPlugin.json
+	apeCore.json
 	)
 
 add_custom_target(

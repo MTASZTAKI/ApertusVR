@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeBrowserImpl.h"
+#include "apeBrowserImpl.h"
 
 ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : ape::IBrowser(name), ape::Replica("Browser", isHostCreated)
 {

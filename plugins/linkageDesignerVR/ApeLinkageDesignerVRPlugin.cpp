@@ -1,12 +1,12 @@
-#include "ApeLinkageDesignerVRPlugin.h"
+#include "apeLinkageDesignerVRPlugin.h"
 
-ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
+ape::apeLinkageDesignerVRPlugin::apeLinkageDesignerVRPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mSwitchNodeVisibilityToggleIndex = 0;
@@ -34,15 +34,15 @@ ape::ApeLinkageDesignerVRPlugin::ApeLinkageDesignerVRPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeLinkageDesignerVRPlugin::~ApeLinkageDesignerVRPlugin()
+ape::apeLinkageDesignerVRPlugin::~apeLinkageDesignerVRPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeLinkageDesignerVRPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::eventCallBack(const ape::Event& event)
+void ape::apeLinkageDesignerVRPlugin::eventCallBack(const ape::Event& event)
 {
 	if (event.type == ape::Event::Type::NODE_CREATE)
 	{
@@ -58,7 +58,7 @@ void ape::ApeLinkageDesignerVRPlugin::eventCallBack(const ape::Event& event)
 	}
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Init()
+void ape::apeLinkageDesignerVRPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -66,7 +66,7 @@ void ape::ApeLinkageDesignerVRPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
+void ape::apeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 {
 	APE_LOG_FUNC_ENTER();
 	if (mSwitchNodes.size() > 0)
@@ -85,7 +85,7 @@ void ape::ApeLinkageDesignerVRPlugin::toggleSwitchNodesVisibility()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Run()
+void ape::apeLinkageDesignerVRPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -95,25 +95,25 @@ void ape::ApeLinkageDesignerVRPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Step()
+void ape::apeLinkageDesignerVRPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Stop()
+void ape::apeLinkageDesignerVRPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Suspend()
+void ape::apeLinkageDesignerVRPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLinkageDesignerVRPlugin::Restart()
+void ape::apeLinkageDesignerVRPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

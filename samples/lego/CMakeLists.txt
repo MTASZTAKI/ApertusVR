@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeLego.cpp
+	apeLego.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeLego ${SOURCES})
-target_link_libraries (ApeLego ApeSystem ApePluginManager)
-set_property (TARGET ApeLego PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeLego PROPERTY FOLDER "Samples/Lego")
+add_executable (apeLego ${SOURCES})
+target_link_libraries (apeLego apeSystem apePluginManager)
+set_property (TARGET apeLego PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeLego PROPERTY FOLDER "Samples/Lego")
 
 

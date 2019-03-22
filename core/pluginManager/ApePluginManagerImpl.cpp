@@ -20,14 +20,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePluginManagerImpl.h"
+#include "apePluginManagerImpl.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
 ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mPluginThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<ape::IPlugin*>();
 	mPluginCount = 0;
@@ -46,7 +46,7 @@ void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 void ape::PluginManagerImpl::CreatePlugins()
 {
 	mpInternalPluginManager = &ape::InternalPluginManager::GetInstance();
-	auto pluginNames = mpSystemConfig->getPluginNames();
+	auto pluginNames = mpCoreConfig->getPluginNames();
 	mPluginCount = pluginNames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{

@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApeIndexedFaceSetGeometryImpl.h"
+#include "apeIndexedFaceSetGeometryImpl.h"
 
 ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool isHostCreated) : ape::IIndexedFaceSetGeometry(name), ape::Replica("IndexedFaceSetGeometry", isHostCreated)
 {

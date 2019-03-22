@@ -28,14 +28,14 @@ SOFTWARE.*/
 void runHost()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeMultiPlayer.exe -c host";
+	exe << "start " << "apeMultiPlayer.exe -c host";
 	std::system(exe.str().c_str());
 }
 
 void runGuest()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeMultiPlayer.exe -c guest";
+	exe << "start " << "apeMultiPlayer.exe -c guest";
 	std::system(exe.str().c_str());
 }
 

@@ -62,12 +62,12 @@ if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource})
 			message (STATUS "Cef build succesfully finished")	
 		endif()
 	endif()
-	#todo_ApeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
+	#todo_apeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
 endif ()
 
 if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
 	set(CEF_VERSION "3.3113.1650.g6da2bbf")
-	set(CEF_DOWNLOAD_SERVER "http://srv.mvv.sztaki.mta.hu/Ape/3rdPartiesBin/cef_ffmpeg/")
+	set(CEF_DOWNLOAD_SERVER "http://srv.mvv.sztaki.mta.hu/ape/3rdPartiesBin/cef_ffmpeg/")
 else()
 	set(CEF_VERSION "3.3071.1643.ga83b8e9")
 	set(CEF_DOWNLOAD_SERVER "http://opensource.spotify.com/cefbuilds/")
@@ -150,35 +150,35 @@ endforeach ()
 add_library(MY_CEF_DLLWRAPPER_LIBS STATIC IMPORTED)
 set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_HOME}/libcef_dll_wrapper/Debug/libcef_dll_wrapper.lib)
 set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_HOME}/libcef_dll_wrapper/Release/libcef_dll_wrapper.lib)
-# ApeCefBrowserPlugin
+# apeCefBrowserPlugin
 set (HEADERS
-	ApeCefBrowserPlugin.h
-	ApeCefClientImpl.h
-	ApeCefRenderHandlerImpl.h
-	ApeCefLifeSpanHandlerImpl.h
-	ApeCefKeyboardHandlerImpl.h
+	apeCefBrowserPlugin.h
+	apeCefClientImpl.h
+	apeCefRenderHandlerImpl.h
+	apeCefLifeSpanHandlerImpl.h
+	apeCefKeyboardHandlerImpl.h
 	)
 set (SOURCES
-	ApeCefBrowserPlugin.cpp
-	ApeCefClientImpl.cpp
-	ApeCefRenderHandlerImpl.cpp
-	ApeCefLifeSpanHandlerImpl.cpp
-	ApeCefKeyboardHandlerImpl.cpp
+	apeCefBrowserPlugin.cpp
+	apeCefClientImpl.cpp
+	apeCefRenderHandlerImpl.cpp
+	apeCefLifeSpanHandlerImpl.cpp
+	apeCefKeyboardHandlerImpl.cpp
 	)
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	${CEF_HOME}
 	${CEF_HOME}/include
 	)
 
-add_library (ApeCefBrowserPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeCefBrowserPlugin SHARED ${SOURCES} ${HEADERS})
 if (WIN32)
-	target_link_libraries (ApeCefBrowserPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
+	target_link_libraries (apeCefBrowserPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
 endif()
-set_property (TARGET ApeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeCefBrowserPlugin PROPERTY FOLDER "Plugins/ApeCefBrowser")
+set_property (TARGET apeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCefBrowserPlugin PROPERTY FOLDER "Plugins/apeCefBrowser")
 if (WIN32)
-	# todo_ApeCefBrowserPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_apeCefBrowserPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the ogre bins to the desired place
 	# debug
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/chrome_elf.dll)

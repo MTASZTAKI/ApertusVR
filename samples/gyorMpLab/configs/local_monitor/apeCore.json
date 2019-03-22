@@ -1,0 +1,31 @@
+{
+    "plugins": [
+        "apeNodeJsPlugin",
+        "apeOgreRenderPlugin",
+        "apeOisUserInputPlugin",
+        "apeIndustry40Plugin"
+    ],
+    "network": {
+        "user": "gyorMPLab",
+        "participant": "none",
+        "internet": {
+            "natPunchThrough": {
+                "ip": "",
+                "port": ""
+            },
+            "lobby": {
+                "ip": "",
+                "port": "",
+                "room": ""
+            }
+        },
+        "lan": {
+            "ip": "",
+            "port": ""
+        },
+        "selected": "none",
+        "resourceLocations": [
+            "/macros/sceneMaker/resources"
+        ]
+    }
+}

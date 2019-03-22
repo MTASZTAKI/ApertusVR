@@ -31,29 +31,29 @@ SOFTWARE.*/
 #include <thread>
 #include "stdafx.h"
 #include "resource.h"
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "utils/ApeInterpolator.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "utils/apeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
-#include "ApeUserInputMacro.h"
+#include "macros/userInput/apeUserInputMacro.h"
 
-#define THIS_PLUGINNAME "ApeKinectPlugin"
+#define THIS_PLUGINNAME "apeKinectPlugin"
 
 //#define operatortest
 
@@ -150,7 +150,7 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
 
@@ -161,7 +161,7 @@ namespace ape
 		ape::PointCloudWeakPtr mPointCloud;
 		ape::PointCloudWeakPtr mOperatorPointCloud;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
@@ -203,7 +203,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateKinectPlugin, DestroyKinectPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateKinectPlugin, DestroyKinectPlugin);
 		return 0;
 	}
 }

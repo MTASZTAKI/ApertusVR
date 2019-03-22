@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCylinderGeometryImpl.h"
+#include "apeCylinderGeometryImpl.h"
 
 ape::CylinderGeometryImpl::CylinderGeometryImpl(std::string name, bool isHostCreated) : ape::ICylinderGeometry(name), ape::Replica("CylinderGeometry", isHostCreated)
 {

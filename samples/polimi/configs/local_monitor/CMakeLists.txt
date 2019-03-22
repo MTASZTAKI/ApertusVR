@@ -21,10 +21,10 @@
 #SOFTWARE.
 
 set (CONFIGS
-	ApeOgreRenderPlugin.json
-	ApeAssimpAssetLoaderPlugin.json
-	ApeOisUserInputPlugin.json
-	ApeSystem.json
+	apeOgreRenderPlugin.json
+	apeAssimpAssetLoaderPlugin.json
+	apeOisUserInputPlugin.json
+	apeCore.json
 	)
 
 add_custom_target(

@@ -1,12 +1,12 @@
-#include "ApeLegoPlugin.h"
+#include "apeLegoPlugin.h"
 
-ape::ApeLegoPlugin::ApeLegoPlugin()
+ape::apeLegoPlugin::apeLegoPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeLegoPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mModelFileNames = std::vector<std::string>();
@@ -128,20 +128,20 @@ ape::ApeLegoPlugin::ApeLegoPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeLegoPlugin::~ApeLegoPlugin()
+ape::apeLegoPlugin::~apeLegoPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeLegoPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeLegoPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeLegoPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::eventCallBack(const ape::Event& event)
+void ape::apeLegoPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeLegoPlugin::Init()
+void ape::apeLegoPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -153,7 +153,7 @@ void ape::ApeLegoPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::blowModel()
+void ape::apeLegoPlugin::blowModel()
 {
 	APE_LOG_FUNC_ENTER();
 	for (auto& modelFileName : mModelFileNames)
@@ -167,7 +167,7 @@ void ape::ApeLegoPlugin::blowModel()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::Run()
+void ape::apeLegoPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -183,25 +183,25 @@ void ape::ApeLegoPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::Step()
+void ape::apeLegoPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::Stop()
+void ape::apeLegoPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::Suspend()
+void ape::apeLegoPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeLegoPlugin::Restart()
+void ape::apeLegoPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

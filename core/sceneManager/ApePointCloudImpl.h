@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_POINTCLOUDIMPL_H
 #define APE_POINTCLOUDIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
 

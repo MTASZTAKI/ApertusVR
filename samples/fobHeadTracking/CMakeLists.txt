@@ -23,17 +23,17 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeFobHeadTracking.cpp
+	apeFobHeadTracking.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeFobHeadTracking ${SOURCES})
-target_link_libraries (ApeFobHeadTracking ApeSystem ApePluginManager)
-set_property (TARGET ApeFobHeadTracking PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeFobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking")
+add_executable (apeFobHeadTracking ${SOURCES})
+target_link_libraries (apeFobHeadTracking apeSystem apePluginManager)
+set_property (TARGET apeFobHeadTracking PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeFobHeadTracking PROPERTY FOLDER "Samples/FobHeadTracking")
 
 

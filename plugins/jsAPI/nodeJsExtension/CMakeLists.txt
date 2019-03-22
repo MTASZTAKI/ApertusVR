@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 # Set target properties
-set(MY_TARGET_NAME ApeNodeJsExtension)
+set(MY_TARGET_NAME apeNodeJsExtension)
 set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
 set(BUILD_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
@@ -32,25 +32,25 @@ set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	wrappers/ApeJsBindColor.h
-	wrappers/ApeJsBindDegree.h
-	wrappers/ApeJsBindEuler.h
-	wrappers/ApeJsBindIndexedFaceSetGeometryImpl.h
-	wrappers/ApeJsBindLightImpl.h
-	wrappers/ApeJsBindManager.h
-	wrappers/ApeJsBindNodeImpl.h
-	wrappers/ApeJsBindQuaternion.h
-	wrappers/ApeJsBindRadian.h
-	wrappers/ApeJsBindMatrix4.h
-	wrappers/ApeJsBindTextGeometryImpl.h
-	wrappers/ApeJsBindVector3.h
-	wrappers/ApeManualMaterialJsBind.h
-	wrappers/ApePbsPassJsBind.h
-	wrappers/ApeManualPassJsBind.h
-	wrappers/ApeIndexedLineSetGeometryJsBind.h
-	wrappers/ApeBoxGeometryJsBind.h
-	wrappers/ApeFileGeometryJsBind.h
-	wrappers/ApePointCloudJsBind.h
+	wrappers/apeJsBindColor.h
+	wrappers/apeJsBindDegree.h
+	wrappers/apeJsBindEuler.h
+	wrappers/apeJsBindIndexedFaceSetGeometryImpl.h
+	wrappers/apeJsBindLightImpl.h
+	wrappers/apeJsBindManager.h
+	wrappers/apeJsBindNodeImpl.h
+	wrappers/apeJsBindQuaternion.h
+	wrappers/apeJsBindRadian.h
+	wrappers/apeJsBindMatrix4.h
+	wrappers/apeJsBindTextGeometryImpl.h
+	wrappers/apeJsBindVector3.h
+	wrappers/apeManualMaterialJsBind.h
+	wrappers/apePbsPassJsBind.h
+	wrappers/apeManualPassJsBind.h
+	wrappers/apeIndexedLineSetGeometryJsBind.h
+	wrappers/apeBoxGeometryJsBind.h
+	wrappers/apeFileGeometryJsBind.h
+	wrappers/apePointCloudJsBind.h
 	)
 
 set (SOURCES
@@ -62,11 +62,10 @@ set (SOURCES
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
 	${PROJECT_SOURCE_DIR}/core/sceneManager
-	${PROJECT_SOURCE_DIR}/core/sceneManager/session
+	${PROJECT_SOURCE_DIR}/core/sceneManager/network
 	${PROJECT_SOURCE_DIR}/core/system
-	${PROJECT_SOURCE_DIR}/core/systemConfig
+	${PROJECT_SOURCE_DIR}/core/coreConfig
 	${PROJECT_SOURCE_DIR}/core/eventManager
 	${PROJECT_SOURCE_DIR}/core/pluginManager
 	${NODE_SOURCE_DIR}/src
@@ -76,7 +75,7 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/3rdParty/nan
 	${PROJECT_SOURCE_DIR}/3rdParty/raknet/Source
 	${PROJECT_SOURCE_DIR}/plugins/jsAPI/nodeJsExtension/wrappers
-	${PROJECT_SOURCE_DIR}/macros/userInput 	
+	 	
 	)
 
 # Add the dynamic library target to the project
@@ -93,11 +92,11 @@ if (WIN32)
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${NODE_LIB_PATH_DEBUG})
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${NODE_LIB_PATH_RELEASE})
 endif ()
-# TODO_ApeNodeJsExtension MY_NODEJS_LIB under unix
+# TODO_apeNodeJsExtension MY_NODEJS_LIB under unix
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} ApeSystem ApePluginManager ApeEventManager ApeSceneManager ApeSystemConfig ApeUserInputMacro RAKNET MY_NODEJS_LIB ws2_32)
+	target_link_libraries( ${MY_TARGET_NAME} apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro RAKNET MY_NODEJS_LIB ws2_32)
 endif()
 
 # Set target library's name

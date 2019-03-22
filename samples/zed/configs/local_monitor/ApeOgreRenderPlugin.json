@@ -7,7 +7,7 @@
   "shading": "perPixel",
   "renderWindows": [
     {
-      "name": "ApeZed",
+      "name": "apeZed",
       "monitorIndex": 0,
       "resolution": {
         "width": 1280,

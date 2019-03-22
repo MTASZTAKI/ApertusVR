@@ -27,22 +27,22 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
 
-#define THIS_PLUGINNAME "ApeHelloWorldPlugin"
+#define THIS_PLUGINNAME "apeHelloWorldPlugin"
 
 namespace ape
 {
 
-    class ApeHelloWorldPlugin : public ape::IPlugin
+    class apeHelloWorldPlugin : public ape::IPlugin
     {
 	private:
 		ape::IEventManager* mpEventManager;
@@ -54,9 +54,9 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 	public:
-		ApeHelloWorldPlugin();
+		apeHelloWorldPlugin();
 
-		~ApeHelloWorldPlugin();
+		~apeHelloWorldPlugin();
 
 		void Init() override;
 
@@ -71,14 +71,14 @@ namespace ape
 		void Restart() override;
     };
 
-    APE_PLUGIN_FUNC ape::IPlugin* CreateApeHelloWorldPlugin()
+    APE_PLUGIN_FUNC ape::IPlugin* CreateapeHelloWorldPlugin()
 	{
-		return new ape::ApeHelloWorldPlugin;
+		return new ape::apeHelloWorldPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHelloWorldPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeHelloWorldPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeHelloWorldPlugin*)plugin;
+		delete (ape::apeHelloWorldPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -86,7 +86,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHelloWorldPlugin, DestroyApeHelloWorldPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeHelloWorldPlugin, DestroyapeHelloWorldPlugin);
 		return 0;
 	}
 

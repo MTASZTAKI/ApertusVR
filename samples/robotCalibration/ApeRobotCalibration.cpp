@@ -22,8 +22,8 @@ SOFTWARE.*/
 
 #include <iostream>
 #include <sstream>
-#include "system/ApeSystem.h"
-#include "system/ApeFileSystem.h"
+#include "system/apeSystem.h"
+#include "system/apeFileSystem.h"
 
 int main(int argc, char** argv)
 {

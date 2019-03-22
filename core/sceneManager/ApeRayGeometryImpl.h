@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_RAYGEOMETRYIMPL_H
 #define APE_RAYGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

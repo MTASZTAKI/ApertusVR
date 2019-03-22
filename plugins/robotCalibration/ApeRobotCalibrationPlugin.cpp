@@ -1,34 +1,34 @@
 #include <fstream>
-#include "ApeRobotCalibrationPlugin.h"
+#include "apeRobotCalibrationPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
+ape::apeRobotCalibrationPlugin::apeRobotCalibrationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
+ape::apeRobotCalibrationPlugin::~apeRobotCalibrationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::eventCallBack(const ape::Event& event)
+void ape::apeRobotCalibrationPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeRobotCalibrationPlugin::Init()
+void ape::apeRobotCalibrationPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeOverlayBrowser();
@@ -38,31 +38,31 @@ void ape::ApeRobotCalibrationPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::Run()
+void ape::apeRobotCalibrationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::Step()
+void ape::apeRobotCalibrationPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::Stop()
+void ape::apeRobotCalibrationPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::Suspend()
+void ape::apeRobotCalibrationPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeRobotCalibrationPlugin::Restart()
+void ape::apeRobotCalibrationPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

@@ -23,13 +23,13 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_INDEXEDFACESETGEOMETRYIMPL_H
 #define APE_JSBIND_INDEXEDFACESETGEOMETRYIMPL_H
 
-#include "Ape.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
+#include "ape.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "ApeIndexedFaceSetGeometryImpl.h"
-#include "ApeJsBindNodeImpl.h"
-#include "ApeManualMaterialJsBind.h"
+#include "apeIndexedFaceSetGeometryImpl.h"
+#include "apeJsBindNodeImpl.h"
+#include "apeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS
 

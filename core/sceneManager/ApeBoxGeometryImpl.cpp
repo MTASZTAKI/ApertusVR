@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeBoxGeometryImpl.h"
+#include "apeBoxGeometryImpl.h"
 
 ape::BoxGeometryImpl::BoxGeometryImpl(std::string name, bool isHostCreated) : ape::IBoxGeometry(name), ape::Replica("BoxGeometry", isHostCreated)
 {

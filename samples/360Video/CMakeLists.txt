@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	Ape360Video.cpp
+	ape360Video.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (Ape360Video ${SOURCES})
-target_link_libraries (Ape360Video ApeSystem ApePluginManager)
-set_property (TARGET Ape360Video PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET Ape360Video PROPERTY FOLDER "Samples/360Video")
+add_executable (ape360Video ${SOURCES})
+target_link_libraries (ape360Video apeSystem apePluginManager)
+set_property (TARGET ape360Video PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ape360Video PROPERTY FOLDER "Samples/360Video")
 
 

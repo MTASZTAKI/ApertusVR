@@ -22,26 +22,26 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeEngineeringScenePlugin.h
+	apeEngineeringScenePlugin.h
 	)
 
 set (SOURCES 
-	ApeEngineeringScenePlugin.cpp
+	apeEngineeringScenePlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	${PROJECT_SOURCE_DIR}/macros/sceneMaker
 	)
 
-add_library (ApeEngineeringScenePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeEngineeringScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeEngineeringScenePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apeEngineeringScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 
-set_property (TARGET ApeEngineeringScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeEngineeringScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeEngineeringScenePlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeEngineeringScenePlugin PROPERTY FOLDER "Plugins")
 
 
 

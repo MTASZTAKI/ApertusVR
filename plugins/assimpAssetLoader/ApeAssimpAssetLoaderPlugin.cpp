@@ -1,4 +1,4 @@
-#include "ApeAssimpAssetLoaderPlugin.h"
+#include "apeAssimpAssetLoaderPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
@@ -7,7 +7,7 @@ ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpAssimpImporter = nullptr;
 	mAssimpScenes = std::vector<const aiScene*>();
 	mAssimpAssetConfigs = std::vector<AssetConfig>();
@@ -274,7 +274,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeAssimpAssetLoaderPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeAssimpAssetLoaderPlugin.json";
 	FILE* apeAssimpAssetLoaderConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeAssimpAssetLoaderConfigFile)
@@ -337,9 +337,9 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 								{
 									meshFile->setFileName(fileName);
 									//meshFile->mergeSubMeshes();
-									//TODO_ApeAssimpAssetLoaderPlugin how to use it when static geomtery is created?
+									//TODO_apeAssimpAssetLoaderPlugin how to use it when static geomtery is created?
 									meshFile->setParentNode(node);
-									//TODO_ApeAssimpAssetLoaderPlugin how to export the optimized mesh when static geomtery is created?
+									//TODO_apeAssimpAssetLoaderPlugin how to export the optimized mesh when static geomtery is created?
 									//std::this_thread::sleep_for(std::chrono::milliseconds(20000));
 									//meshFile->exportMesh();
 								}

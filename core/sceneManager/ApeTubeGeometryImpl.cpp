@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeTubeGeometryImpl.h"
+#include "apeTubeGeometryImpl.h"
 
 ape::TubeGeometryImpl::TubeGeometryImpl(std::string name, bool isHostCreated) : ape::ITubeGeometry(name), ape::Replica("TubeGeometry", isHostCreated)
 {

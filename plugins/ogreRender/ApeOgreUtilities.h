@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include "ApeOgreRenderPlugin.h"
+#include "apeOgreRenderPlugin.h"
 
 namespace ape
 {

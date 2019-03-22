@@ -32,7 +32,7 @@ exports.moduleTag = 'PluginManager';
 exports.loadPlugins = function(app, express) {
 	logger.debug("PluginManager::loadPlugins()");
 
-	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
+	var configFolderPath = ape.bindManager().getFolderPath();
 	logger.debug('PluginManager::loadPlugins() configFolderPath: ' + configFolderPath);
 
 	var config = require(configFolderPath + '\\ApeNodeJsPlugin.json');

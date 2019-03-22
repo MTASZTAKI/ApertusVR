@@ -1,11 +1,11 @@
-#include "ApeArtScenePlugin.h"
+#include "apeArtScenePlugin.h"
 
-ape::ApeArtScenePlugin::ApeArtScenePlugin()
+ape::apeArtScenePlugin::apeArtScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mModelFileNames = std::vector<std::string>();
@@ -87,19 +87,19 @@ ape::ApeArtScenePlugin::ApeArtScenePlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeArtScenePlugin::~ApeArtScenePlugin()
+ape::apeArtScenePlugin::~apeArtScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeArtScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::eventCallBack(const ape::Event& event)
+void ape::apeArtScenePlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeArtScenePlugin::Init()
+void ape::apeArtScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -120,7 +120,7 @@ void ape::ApeArtScenePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::Run()
+void ape::apeArtScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -130,25 +130,25 @@ void ape::ApeArtScenePlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::Step()
+void ape::apeArtScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::Stop()
+void ape::apeArtScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::Suspend()
+void ape::apeArtScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeArtScenePlugin::Restart()
+void ape::apeArtScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

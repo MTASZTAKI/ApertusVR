@@ -1,41 +1,41 @@
 #include <fstream>
-#include "ApeHtmlOverlayUIPlugin.h"
+#include "apeHtmlOverlayUIPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-ape::ApeHtmlOverlayUIPlugin::ApeHtmlOverlayUIPlugin()
+ape::apeHtmlOverlayUIPlugin::apeHtmlOverlayUIPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeHtmlOverlayUIPlugin::~ApeHtmlOverlayUIPlugin()
+ape::apeHtmlOverlayUIPlugin::~apeHtmlOverlayUIPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::eventCallBack(const ape::Event& event)
+void ape::apeHtmlOverlayUIPlugin::eventCallBack(const ape::Event& event)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Init()
+void ape::apeHtmlOverlayUIPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeOverlayBrowser();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Run()
+void ape::apeHtmlOverlayUIPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	double duration = 0;
@@ -43,29 +43,29 @@ void ape::ApeHtmlOverlayUIPlugin::Run()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Step()
+void ape::apeHtmlOverlayUIPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Stop()
+void ape::apeHtmlOverlayUIPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Suspend()
+void ape::apeHtmlOverlayUIPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtmlOverlayUIPlugin::Restart()
+void ape::apeHtmlOverlayUIPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

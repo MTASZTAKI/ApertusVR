@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_LIGHTIMPL_H
 #define APE_LIGHTIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeILight.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeILight.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

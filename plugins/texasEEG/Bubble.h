@@ -23,12 +23,12 @@ SOFTWARE.*/
 #ifndef APE_BUBBLE_H
 #define APE_BUBBLE_H
 
-#include "Ape.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
+#include "ape.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
 
 namespace TexasEEG
 {

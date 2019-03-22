@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <iostream>
 #include "Ogre.h"
-#include "sceneelements/ApeINode.h"
+#include "sceneelements/apeINode.h"
 
 namespace ape {
 	class OgrePointCloud

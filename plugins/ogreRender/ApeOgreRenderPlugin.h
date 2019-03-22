@@ -28,44 +28,44 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIBoxGeometry.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeICylinderGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "sceneelements/ApeISky.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeITorusGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIUnitTexture.h"
-#include "sceneelements/ApeIWater.h"
-#include "ApeUserInputMacro.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIBoxGeometry.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeICylinderGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeISky.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeITorusGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIUnitTexture.h"
+#include "sceneelements/apeIWater.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
-#include "utils/ApeDoubleQueue.h"
-#include "ApeOgreShaderGeneratorResolver.h"
-#include "ApeOgreMovableText.h"
-#include "ApeOgrePointCloud.h"
-#include "ApeOgreConversions.h"
-#include "ApeOgreRenderPluginConfigs.h"
+#include "utils/apeDoubleQueue.h"
+#include "apeOgreShaderGeneratorResolver.h"
+#include "apeOgreMovableText.h"
+#include "apeOgrePointCloud.h"
+#include "apeOgreConversions.h"
+#include "apeOgreRenderPluginConfigs.h"
 #include "OgreSceneManager.h"
 #include "OgreRoot.h"
 #include "OgreConfigFile.h"
@@ -123,7 +123,7 @@ SOFTWARE.*/
 #endif
 #include "SkyX.h"
 
-#define THIS_PLUGINNAME "ApeOgreRenderPlugin"
+#define THIS_PLUGINNAME "apeOgreRenderPlugin"
 
 namespace ape
 {
@@ -203,7 +203,7 @@ namespace ape
 
 		ape::IEventManager* mpEventManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::DoubleQueue<Event> mEventDoubleQueue;
 
@@ -215,7 +215,7 @@ namespace ape
 
 		std::map<std::string, ape::OgrePointCloud*> mOgrePointCloudMeshes;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
@@ -241,7 +241,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
 		return 0;
 	}
 }

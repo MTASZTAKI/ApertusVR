@@ -1,31 +1,31 @@
-#include "ApeHtcVivePlugin.h"
+#include "apeHtcVivePlugin.h"
 
-ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
+ape::apeHtcVivePlugin::apeHtcVivePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeHtcVivePlugin::~ApeHtcVivePlugin()
+ape::apeHtcVivePlugin::~apeHtcVivePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::Matrix4 ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34)
+ape::Matrix4 ape::apeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34)
 {
 	ape::Matrix4 matrix4(
 		ovrMatrix34.m[0][0], ovrMatrix34.m[0][1], ovrMatrix34.m[0][2], ovrMatrix34.m[0][3],
@@ -35,7 +35,7 @@ ape::Matrix4 ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMa
 	return matrix4;
 }
 
-ape::Matrix4 ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44)
+ape::Matrix4 ape::apeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44)
 {
 	ape::Matrix4 matrix4(
 		ovrMatrix44.m[0][0], ovrMatrix44.m[0][1], ovrMatrix44.m[0][2], ovrMatrix44.m[0][3],
@@ -45,7 +45,7 @@ ape::Matrix4 ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMa
 	return matrix4;
 }
 
-void ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
+void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
 	vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
 	vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
@@ -83,7 +83,7 @@ void ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 			mUserInputMacroPose.headPosition = hmdTrackerPosition;
 			mUserInputMacroPose.headOrientation = hmdTrackerOrientation;
 		}
-		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	else
 	{
@@ -91,13 +91,13 @@ void ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 	}
 }
 
-void ape::ApeHtcVivePlugin::submitTextureRightToOpenVR()
+void ape::apeHtcVivePlugin::submitTextureRightToOpenVR()
 {
 	//for openVR the only chanche to submit and render the compositor if you doing everything
-	//in only one CB function from the render thread which currently is ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR() function
+	//in only one CB function from the render thread which currently is ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function
 }
 
-void ape::ApeHtcVivePlugin::eventCallBack(const ape::Event& event)
+void ape::apeHtcVivePlugin::eventCallBack(const ape::Event& event)
 {
 	if (event.type == ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
 	{
@@ -106,18 +106,18 @@ void ape::ApeHtcVivePlugin::eventCallBack(const ape::Event& event)
 			if (event.subjectName == "OpenVrRenderTextureLeft")
 			{
 				mOpenVrRttTextureIDs[0] = textureManual->getGraphicsApiID();
-				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureLeftToOpenVR, this));
+				textureManual->registerFunction(std::bind(&apeHtcVivePlugin::submitTextureLeftToOpenVR, this));
 			}
 			else if (event.subjectName == "OpenVrRenderTextureRight")
 			{
 				mOpenVrRttTextureIDs[1] = textureManual->getGraphicsApiID();
-				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureRightToOpenVR, this));
+				textureManual->registerFunction(std::bind(&apeHtcVivePlugin::submitTextureRightToOpenVR, this));
 			}
 		}
 	}
 }
 
-void ape::ApeHtcVivePlugin::Init()
+void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("try to initialize openVR HMD");
@@ -162,8 +162,8 @@ void ape::ApeHtcVivePlugin::Init()
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
 		mManualTextureRightEye = manualTexture;
 	}
-	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
-	mCameraRight = mpApeUserInputMacro->createCamera("OpenVRHmdRightCamera");
+	mCameraLeft = mpapeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
+	mCameraRight = mpapeUserInputMacro->createCamera("OpenVRHmdRightCamera");
 	vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
 	vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
 	if (auto cameraLeft = mCameraLeft.lock())
@@ -223,37 +223,37 @@ void ape::ApeHtcVivePlugin::Init()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 }
 
-void ape::ApeHtcVivePlugin::Run()
+void ape::apeHtcVivePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
-		//nothing to do there becuse it is the ApeHtcVivePlugin thread. 
-		//compositor and pose update is done by the ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
+		//nothing to do there becuse it is the apeHtcVivePlugin thread. 
+		//compositor and pose update is done by the ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtcVivePlugin::Step()
+void ape::apeHtcVivePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtcVivePlugin::Stop()
+void ape::apeHtcVivePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtcVivePlugin::Suspend()
+void ape::apeHtcVivePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHtcVivePlugin::Restart()
+void ape::apeHtcVivePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

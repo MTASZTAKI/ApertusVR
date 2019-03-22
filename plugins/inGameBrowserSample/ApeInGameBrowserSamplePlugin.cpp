@@ -1,19 +1,19 @@
-#include "ApeInGameBrowserSamplePlugin.h"
+#include "apeInGameBrowserSamplePlugin.h"
 
-ape::ApeInGameBrowserSamplePlugin::ApeInGameBrowserSamplePlugin()
+ape::apeInGameBrowserSamplePlugin::apeInGameBrowserSamplePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeInGameBrowserSamplePlugin::~ApeInGameBrowserSamplePlugin()
+ape::apeInGameBrowserSamplePlugin::~apeInGameBrowserSamplePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Init()
+void ape::apeInGameBrowserSamplePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
@@ -43,31 +43,31 @@ void ape::ApeInGameBrowserSamplePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Run()
+void ape::apeInGameBrowserSamplePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Step()
+void ape::apeInGameBrowserSamplePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Stop()
+void ape::apeInGameBrowserSamplePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Suspend()
+void ape::apeInGameBrowserSamplePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeInGameBrowserSamplePlugin::Restart()
+void ape::apeInGameBrowserSamplePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

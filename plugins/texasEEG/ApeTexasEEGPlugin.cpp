@@ -1,22 +1,22 @@
-#include "ApeTexasEEGPlugin.h"
+#include "apeTexasEEGPlugin.h"
 
-ape::ApeTexasEEGPlugin::ApeTexasEEGPlugin()
+ape::apeTexasEEGPlugin::apeTexasEEGPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mScore = 0;
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
+ape::apeTexasEEGPlugin::~apeTexasEEGPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeTexasEEGPlugin::eventCallBack, this, std::placeholders::_1));
 	if (mBubbleManager)
 	{
 		delete mBubbleManager;
@@ -25,21 +25,21 @@ ape::ApeTexasEEGPlugin::~ApeTexasEEGPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::eventCallBack(const ape::Event& event)
+void ape::apeTexasEEGPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeTexasEEGPlugin::Init()
+void ape::apeTexasEEGPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mGameManager = new TexasEEG::GameManager(mpApeUserInputMacro->getUserNode());
+	mGameManager = new TexasEEG::GameManager(mpapeUserInputMacro->getUserNode());
 	mGameManager->Start();
 
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::Run()
+void ape::apeTexasEEGPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -49,25 +49,25 @@ void ape::ApeTexasEEGPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::Step()
+void ape::apeTexasEEGPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::Stop()
+void ape::apeTexasEEGPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::Suspend()
+void ape::apeTexasEEGPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeTexasEEGPlugin::Restart()
+void ape::apeTexasEEGPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

@@ -69,33 +69,33 @@ if (WIN32)
 	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_RELEASE ${ASSIMP_HOME}/lib/Release/assimp-vc140-mt.lib)
 endif ()
 
-#ApeAssimpAssetLoaderPlugin
+#apeAssimpAssetLoaderPlugin
 set (HEADERS
-	ApeAssimpAssetLoaderPlugin.h
+	apeAssimpAssetLoaderPlugin.h
 	)
 
 set (SOURCES 
-	ApeAssimpAssetLoaderPlugin.cpp
+	apeAssimpAssetLoaderPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include  
+	  
 	${ASSIMP_HOME}/include
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeAssimpAssetLoaderPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeAssimpAssetLoaderPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-set_property (TARGET ApeAssimpAssetLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-target_link_libraries (ApeAssimpAssetLoaderPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig MY_ASSIMP)
+set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+target_link_libraries (apeAssimpAssetLoaderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig MY_ASSIMP)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo_ApeAssimpAssetLoaderPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
+	# todo_apeAssimpAssetLoaderPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
 	# Copying the assimp bins to the desired place
 	# debug dlls
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/assimp-vc140-mt.dll)

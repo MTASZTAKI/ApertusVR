@@ -22,22 +22,22 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	Ape360VideoPlugin.h
+	ape360VideoPlugin.h
 	)
 
 set (SOURCES 
-	Ape360VideoPlugin.cpp
+	ape360VideoPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (Ape360VideoPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (ape360VideoPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (Ape360VideoPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (ape360VideoPlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET Ape360VideoPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ape360VideoPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET Ape360VideoPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET ape360VideoPlugin PROPERTY FOLDER "Plugins")

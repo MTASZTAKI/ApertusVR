@@ -25,10 +25,10 @@ SOFTWARE.*/
 
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "Ape.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "ApeJsBindNodeImpl.h"
-#include "ApeManualMaterialJsBind.h"
+#include "ape.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "apeJsBindNodeImpl.h"
+#include "apeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS
 

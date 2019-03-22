@@ -22,26 +22,26 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeAudiPlugin.h
+	apeAudiPlugin.h
 	)
 
 set (SOURCES 
-	ApeAudiPlugin.cpp
+	apeAudiPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${PROJECT_SOURCE_DIR}/macros/sceneMaker
 	)
 
-add_library (ApeAudiPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeAudiPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeAudiPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apeAudiPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 
-set_property (TARGET ApeAudiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeAudiPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeAudiPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeAudiPlugin PROPERTY FOLDER "Plugins")
 
 
 

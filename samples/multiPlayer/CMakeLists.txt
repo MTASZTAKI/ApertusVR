@@ -23,26 +23,26 @@
 add_subdirectory (configs)
 
 set (SOURCES_LAUNCHER 
-	ApeMultiPlayerLauncher.cpp
+	apeMultiPlayerLauncher.cpp
 	)
 
 set (SOURCES
-	ApeMultiPlayer.cpp
+	apeMultiPlayer.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeMultiPlayerLauncher ${SOURCES_LAUNCHER})
-target_link_libraries (ApeMultiPlayerLauncher)
-set_property (TARGET ApeMultiPlayerLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiPlayerLauncher PROPERTY FOLDER "Samples/MultiPlayer")
+add_executable (apeMultiPlayerLauncher ${SOURCES_LAUNCHER})
+target_link_libraries (apeMultiPlayerLauncher)
+set_property (TARGET apeMultiPlayerLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeMultiPlayerLauncher PROPERTY FOLDER "Samples/MultiPlayer")
 
-add_executable (ApeMultiPlayer ${SOURCES})
-target_link_libraries (ApeMultiPlayer ApeSystem ApePluginManager)
-set_property (TARGET ApeMultiPlayer PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiPlayer PROPERTY FOLDER "Samples/MultiPlayer")
+add_executable (apeMultiPlayer ${SOURCES})
+target_link_libraries (apeMultiPlayer apeSystem apePluginManager)
+set_property (TARGET apeMultiPlayer PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeMultiPlayer PROPERTY FOLDER "Samples/MultiPlayer")
 
 

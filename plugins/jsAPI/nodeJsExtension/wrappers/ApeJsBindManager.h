@@ -26,28 +26,28 @@ SOFTWARE.*/
 #include <iostream>
 #include <map>
 #include <string>
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "ApeBoxGeometryJsBind.h"
-#include "ApeFileGeometryJsBind.h"
-#include "ApeIndexedLineSetGeometryJsBind.h"
-#include "ApeJsBindColor.h"
-#include "ApeJsBindDegree.h"
-#include "ApeJsBindEuler.h"
-#include "ApeJsBindIndexedFaceSetGeometryImpl.h"
-#include "ApeJsBindLightImpl.h"
-#include "ApeJsBindMatrix4.h"
-#include "ApeJsBindNodeImpl.h"
-#include "ApeJsBindQuaternion.h"
-#include "ApeJsBindRadian.h"
-#include "ApeJsBindTextGeometryImpl.h"
-#include "ApeJsBindVector3.h"
-#include "ApeManualMaterialJsBind.h"
-#include "ApeManualPassJsBind.h"
-#include "ApePbsPassJsBind.h"
-#include "ApePointCloudJsBind.h"
-#include "ApeUserInputMacro.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "macros/userInput/apeUserInputMacro.h"
+#include "apeBoxGeometryJsBind.h"
+#include "apeFileGeometryJsBind.h"
+#include "apeIndexedLineSetGeometryJsBind.h"
+#include "apeJsBindColor.h"
+#include "apeJsBindDegree.h"
+#include "apeJsBindEuler.h"
+#include "apeJsBindIndexedFaceSetGeometryImpl.h"
+#include "apeJsBindLightImpl.h"
+#include "apeJsBindMatrix4.h"
+#include "apeJsBindNodeImpl.h"
+#include "apeJsBindQuaternion.h"
+#include "apeJsBindRadian.h"
+#include "apeJsBindTextGeometryImpl.h"
+#include "apeJsBindVector3.h"
+#include "apeManualMaterialJsBind.h"
+#include "apeManualPassJsBind.h"
+#include "apePbsPassJsBind.h"
+#include "apePointCloudJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -67,17 +67,18 @@ public:
 	JsBindManager()
 	{
 		APE_LOG_FUNC_ENTER();
+		std::cout << "JsBindManager: " << std::endl;
 		mpSceneManager = ape::ISceneManager::getSingletonPtr();
-		mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+		mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 		mpEventManager = ape::IEventManager::getSingletonPtr();
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
-		mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+		mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 		mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 		APE_LOG_FUNC_LEAVE();
 	}
 
-	void start(std::string configFolderPath)
+	/*void start(std::string configFolderPath)
 	{
 		APE_LOG_FUNC_ENTER();
 		ape::System::Start(configFolderPath.c_str(), true);
@@ -89,7 +90,7 @@ public:
 		APE_LOG_FUNC_ENTER();
 		ape::System::Stop();
 		APE_LOG_FUNC_LEAVE();
-	}
+	}*/
 
 	NodeJsPtr createNode(std::string name)
 	{
@@ -154,7 +155,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
-		auto nodeWeakPtr = mpApeUserInputMacro->getUserNode();
+		auto nodeWeakPtr = mpapeUserInputMacro->getUserNode();
 		if (auto node = nodeWeakPtr.lock())
 		{
 			success = true;
@@ -513,14 +514,14 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return mpSystemConfig->getConfigFolderPath();
+		return mpCoreConfig->getConfigFolderPath();
 	}
 
 private:
 	ape::ISceneManager* mpSceneManager;
-	ape::ISystemConfig* mpSystemConfig;
+	ape::ICoreConfig* mpCoreConfig;
 	ape::IEventManager* mpEventManager;
-	ape::UserInputMacro* mpApeUserInputMacro;
+	ape::UserInputMacro* mpapeUserInputMacro;
 	ape::UserInputMacro::ViewPose mUserInputMacroPose;
 	std::map<int, nbind::cbFunction*> mEventMap;
 };
@@ -529,8 +530,8 @@ NBIND_CLASS(JsBindManager)
 {
 	construct<>();
 
-	method(start);
-	method(stop);
+	/*method(start);
+	method(stop);*/
 
 	method(createNode);
 	method(getNodesNames);

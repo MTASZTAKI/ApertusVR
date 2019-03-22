@@ -23,12 +23,12 @@ SOFTWARE.*/
 #ifndef APE_MANUALPASSIMPL_H
 #define APE_MANUALPASSIMPL_H
 
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIManualPass.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

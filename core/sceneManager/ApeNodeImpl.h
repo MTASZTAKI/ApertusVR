@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_NODEIMPL_H
 #define APE_NODEIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {

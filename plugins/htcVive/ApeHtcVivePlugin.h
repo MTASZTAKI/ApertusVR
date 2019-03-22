@@ -27,40 +27,40 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeMatrix4.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "ApeUserInputMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeMatrix4.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #include "openvr.h"
 #include "openvr_capi.h"
 
 
-#define THIS_PLUGINNAME "ApeHtcVivePlugin"
+#define THIS_PLUGINNAME "apeHtcVivePlugin"
 
 namespace ape
 {
-	class ApeHtcVivePlugin : public ape::IPlugin
+	class apeHtcVivePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::CameraWeakPtr mCameraLeft;
 
@@ -92,14 +92,14 @@ namespace ape
 
 		void submitTextureRightToOpenVR();
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
-		ApeHtcVivePlugin();
+		apeHtcVivePlugin();
 
-		~ApeHtcVivePlugin();
+		~apeHtcVivePlugin();
 
 		void Init() override;
 
@@ -114,14 +114,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeHtcVivePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeHtcVivePlugin()
 	{
-		return new ape::ApeHtcVivePlugin;
+		return new ape::apeHtcVivePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHtcVivePlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeHtcVivePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeHtcVivePlugin*)plugin;
+		delete (ape::apeHtcVivePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -129,7 +129,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHtcVivePlugin, DestroyApeHtcVivePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeHtcVivePlugin, DestroyapeHtcVivePlugin);
 		return 0;
 	}
 }

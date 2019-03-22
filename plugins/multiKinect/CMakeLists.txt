@@ -80,17 +80,17 @@ if (WIN32)
 	set_property(TARGET MY_MULTI_KINECT PROPERTY IMPORTED_LOCATION_RELEASE ${MULTI_KINECT_HOME}/lib/Release/freenect2.lib)
 endif ()
 
-#ApeMultiKinectPlugin
+#apeMultiKinectPlugin
 set (HEADERS
-	ApeMultiKinectPlugin.h
+	apeMultiKinectPlugin.h
 	)
 
 set (SOURCES 
-	ApeMultiKinectPlugin.cpp
+	apeMultiKinectPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include  
+	  
 	${MULTI_KINECT_HOME}/include
 	${MULTI_KINECT_HOME}/include/internal
 	${MULTI_KINECT_HOME}
@@ -98,14 +98,14 @@ include_directories(
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeMultiKinectPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeMultiKinectPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeMultiKinectPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig MY_MULTI_KINECT)
+target_link_libraries (apeMultiKinectPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig MY_MULTI_KINECT)
 	
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeMultiKinectPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiKinectPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeMultiKinectPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeMultiKinectPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
 	# debug dlls

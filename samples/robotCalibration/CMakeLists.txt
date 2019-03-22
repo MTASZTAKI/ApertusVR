@@ -23,14 +23,14 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeRobotCalibration.cpp
+	apeRobotCalibration.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeRobotCalibration ${SOURCES})
-target_link_libraries (ApeRobotCalibration ApeSystem ApePluginManager)
-set_property (TARGET ApeRobotCalibration PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeRobotCalibration PROPERTY FOLDER "Samples/RobotCalibration")
+add_executable (apeRobotCalibration ${SOURCES})
+target_link_libraries (apeRobotCalibration apeSystem apePluginManager)
+set_property (TARGET apeRobotCalibration PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeRobotCalibration PROPERTY FOLDER "Samples/RobotCalibration")

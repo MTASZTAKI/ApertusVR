@@ -1,36 +1,36 @@
 #include <iostream>
-#include "ApeSceneRecorderPlugin.h"
+#include "apeSceneRecorderPlugin.h"
 
-ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
+ape::apeSceneRecorderPlugin::apeSceneRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TUBE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_PBS, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::SKY, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TUBE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::PASS_PBS, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::PASS_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::SKY, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = ape::ISceneManager::getSingletonPtr();
 	mLastEventTimeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 	mIsRecorder = false;
@@ -46,7 +46,7 @@ ape::ApeSceneRecorderPlugin::ApeSceneRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
+ape::apeSceneRecorderPlugin::~apeSceneRecorderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	if (mFileStreamOut.is_open())
@@ -56,7 +56,7 @@ ape::ApeSceneRecorderPlugin::~ApeSceneRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, ape::Event event)
+void ape::apeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, ape::Event event)
 {
 	if (milliseconds)
 		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
@@ -86,7 +86,7 @@ void ape::ApeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, ape::Even
 	}
 }
 
-void ape::ApeSceneRecorderPlugin::readEvent()
+void ape::apeSceneRecorderPlugin::readEvent()
 {
 	ape::Event event;
 	long timeToCallEventInMilliseconds;
@@ -98,12 +98,12 @@ void ape::ApeSceneRecorderPlugin::readEvent()
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
 	APE_LOG_DEBUG("subjectNameSize: " << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName << " type:" << event.type);
-	//auto eventCallbackThread = std::thread(&ApeSceneRecorderPlugin::fireEvent, this, timeToCallEventInMilliseconds, event);
+	//auto eventCallbackThread = std::thread(&apeSceneRecorderPlugin::fireEvent, this, timeToCallEventInMilliseconds, event);
 	//eventCallbackThread.detach();
 	fireEvent(timeToCallEventInMilliseconds, event);
 }
 
-void ape::ApeSceneRecorderPlugin::writeEvent(ape::Event event)
+void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 {
 	auto timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 	long timeToCallEventInMilliseconds = timeStamp.count() - mLastEventTimeStamp.count();
@@ -136,24 +136,24 @@ void ape::ApeSceneRecorderPlugin::writeEvent(ape::Event event)
 	}
 }
 
-void ape::ApeSceneRecorderPlugin::eventCallBack(const ape::Event& event)
+void ape::apeSceneRecorderPlugin::eventCallBack(const ape::Event& event)
 {
 	if (mIsRecorder)
 	{
 		//LOG(LOG_TYPE_DEBUG," name:" << event.subjectName << " type:" << event.type);
 		//writeEvent(event);
-		auto writeEventThread = std::thread(&ApeSceneRecorderPlugin::writeEvent, this, event);
+		auto writeEventThread = std::thread(&apeSceneRecorderPlugin::writeEvent, this, event);
 		writeEventThread.detach();
 	}
 }
 
-void ape::ApeSceneRecorderPlugin::Init()
+void ape::apeSceneRecorderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSceneRecorderPlugin::Run()
+void ape::apeSceneRecorderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -175,26 +175,26 @@ void ape::ApeSceneRecorderPlugin::Run()
 			}
 		}
 	}
-	mpEventManager->disconnectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&ApeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeSceneRecorderPlugin::Step()
+void ape::apeSceneRecorderPlugin::Step()
 {
 
 }
 
-void ape::ApeSceneRecorderPlugin::Stop()
+void ape::apeSceneRecorderPlugin::Stop()
 {
 
 }
 
-void ape::ApeSceneRecorderPlugin::Suspend()
+void ape::apeSceneRecorderPlugin::Suspend()
 {
 
 }
 
-void ape::ApeSceneRecorderPlugin::Restart()
+void ape::apeSceneRecorderPlugin::Restart()
 {
 
 }

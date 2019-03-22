@@ -3,14 +3,14 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
-#include "ApeOgreRenderPlugin.h"
-#include "ApeOgreUtilities.h"
+#include "apeOgreRenderPlugin.h"
+#include "apeOgreUtilities.h"
 
 ape::OgreRenderPlugin::OgreRenderPlugin( )
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mEventDoubleQueue = ape::DoubleQueue<Event>();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -61,7 +61,7 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
 	mCameraCountFromConfig = 0;
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -291,7 +291,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 											std::size_t found = filePath.find_last_of("/\\");
 											filePath = filePath.substr(0, found + 1);
 											std::string materialFileName = materialName;
-											//TODO_ApeOgreRenderPlugin automatic filesystem check for filenames and coding conversion
+											//TODO_apeOgreRenderPlugin automatic filesystem check for filenames and coding conversion
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '<'), materialFileName.end());
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '>'), materialFileName.end());
 											materialFileName.erase(std::remove(materialFileName.begin(), materialFileName.end(), '/'), materialFileName.end());
@@ -852,7 +852,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 											v2.z = coordinate1.z - coordinate0.z;
 											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-											//TODO_ApeOgreRenderPlugin maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											//TODO_apeOgreRenderPlugin maybe create new vertices because of trinagle list, instead of not accumulating the normals?
 											normals[parameters.indices[indexIndex]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
@@ -881,7 +881,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 											v2.z = coordinate1.z - coordinate0.z;
 											Ogre::Vector3 coordinateNormal((v2).crossProduct(v1));
 
-											//TODO_ApeOgreRenderPlugin  maybe create new vertices because of trinagle list, instead of not accumulating the normals?
+											//TODO_apeOgreRenderPlugin  maybe create new vertices because of trinagle list, instead of not accumulating the normals?
 											normals[parameters.indices[indexIndex]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 1]] += coordinateNormal;
 											normals[parameters.indices[indexIndex + 2]] += coordinateNormal;
@@ -890,7 +890,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 										}
 										else
 										{
-											//TODO_ApeOgreRenderPlugin 
+											//TODO_apeOgreRenderPlugin 
 											indexIndex = indexIndex + indexCount + 1;
 										}
 									}
@@ -1510,7 +1510,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							if (auto raySpaceNode = rayOverlayNode->getParentNode().lock())
 							{
 								Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
-									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); //TODO_ApeOgreRenderPlugin check enabled window in ogreRenderWindowConfigList
+									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); //TODO_apeOgreRenderPlugin check enabled window in ogreRenderWindowConfigList
 								Ogre::RaySceneQuery *raySceneQuery = mpOgreSceneManager->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
 								if (raySceneQuery != NULL)
 								{
@@ -1603,7 +1603,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						mpSkyx->create();
 						mpSkyx->getVCloudsManager()->getVClouds()->setDistanceFallingParams(Ogre::Vector2(1, -1));
 						mpRoot->addFrameListener(mpSkyx);
-						mRenderWindows[mpSystemConfig->getWindowConfig().name]->addListener(mpSkyx);
+						mRenderWindows[mpCoreConfig->getWindowConfig().name]->addListener(mpSkyx);
 						mpSkyx->getGPUManager()->addGroundPass(static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->createPass(), 250, Ogre::SBT_TRANSPARENT_COLOUR);
 						//APE_LOG_DEBUG("skyDomeRadius:" << mpSkyx->getMeshManager()->getSkydomeRadius(ogreCamera));
 						static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("Terrain"))->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("uLightY", mpSkyxBasicController->getSunDirection().y);
@@ -1747,7 +1747,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
 					if (auto ogrePointCloudMesh = new ape::OgrePointCloud(pointCloudName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-						size, points, colors, pointCloudParameters.boundigSphereRadius, mpApeUserInputMacro->getHeadNode(), pointCloud->getParentNode(), pointCloudParameters.pointSize,
+						size, points, colors, pointCloudParameters.boundigSphereRadius, mpapeUserInputMacro->getHeadNode(), pointCloud->getParentNode(), pointCloudParameters.pointSize,
 						pointCloudParameters.pointScale, pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance, pointCloudParameters.scaleFactor))
 					{
 						if (auto ogreEntity = mpOgreSceneManager->createEntity(pointCloudName, pointCloudName + "Mesh"))
@@ -1835,8 +1835,8 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreCamera = mpOgreSceneManager->getCamera(event.subjectName))
 						{
-							//TODO_ApeOgreRenderPlugin wait for ape::IViewPort definiton
-							//begin: cave mosaic case :), for sure, waiting for ApeViewport class :)
+							//TODO_apeOgreRenderPlugin wait for ape::IViewPort definiton
+							//begin: cave mosaic case :), for sure, waiting for apeViewport class :)
 							//int zorder = (mOgreCameras.size() - 1);
 							/*float width = 1;
 							float height = 1;
@@ -1850,7 +1850,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							//	APE_LOG_DEBUG("camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder);
 							//}
 							//if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width, height))
-							//end: cave mosaic case :), for sure, waiting for ApeViewport class :)
+							//end: cave mosaic case :), for sure, waiting for apeViewport class :)
 
 							if (auto viewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera))
 							{
@@ -1983,7 +1983,7 @@ void ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* reques
 	mpCurrentlyLoadingMeshEntity = mpOgreSceneManager->createEntity(meshEntityName, mCurrentlyLoadingMeshEntityLodConfig.mesh);
 	mpCurrentlyLoadingMeshEntity->setMeshLodBias(mOgreRenderPluginConfig.ogreLodLevelsConfig.bias);
 	std::stringstream filePath;
-	filePath << mpSystemConfig->getSessionConfig().resourceLocations[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
+	filePath << mpCoreConfig->getNetworkConfig().resourceLocations[0] << "/" << mCurrentlyLoadingMeshEntityLodConfig.mesh->getName();
 	mMeshSerializer.exportMesh(mCurrentlyLoadingMeshEntityLodConfig.mesh.getPointer(), filePath.str());
 }
 
@@ -2083,7 +2083,7 @@ void ape::OgreRenderPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getConfigFolderPath() << "\\ApeOgreRenderPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeOgreRenderPluginConfigFile)
@@ -2244,9 +2244,9 @@ void ape::OgreRenderPlugin::Init()
 	}	
 	
 	Ogre::LogManager* lm = new Ogre::LogManager();
-	lm->createLog("ApeOgreRenderPlugin.log", true, false, false);
+	lm->createLog("apeOgreRenderPlugin.log", true, false, false);
 	mpRoot = new Ogre::Root("", "", "");
-	//Ogre::LogManager::getSingleton().createLog("ApeOgreRenderPlugin.log", true, false, false);
+	//Ogre::LogManager::getSingleton().createLog("apeOgreRenderPlugin.log", true, false, false);
 
 	#if defined (_DEBUG)
 		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
@@ -2300,10 +2300,10 @@ void ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");
-	for (auto resourceLocation : mpSystemConfig->getSessionConfig().resourceLocations)
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	
-	mpRoot->initialise(false, "Ape");
+	mpRoot->initialise(false, "ape");
 	mpOgreSceneManager = mpRoot->createSceneManager(Ogre::ST_GENERIC);
 
 	mpRoot->addFrameListener(this);
@@ -2357,9 +2357,8 @@ void ape::OgreRenderPlugin::Init()
 	std::ostringstream windowHndStr;
 	windowHndStr << mainWindowHnd;
 	mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].windowHandler = windowHndStr.str();
-	mpSystemConfig->getWindowConfig().name = mainWindowDesc.name;
-	mpSystemConfig->getWindowConfig().width = mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width;
-	mpSystemConfig->getWindowConfig().height = mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height;
-	mpSystemConfig->getWindowConfig().handle = mainWindowHnd;
+	ape::WindowConfig windowConfig(mainWindowDesc.name, mainWindowHnd, mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width,
+		mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height);
+	mpCoreConfig->setWindowConfig(windowConfig);
 	APE_LOG_FUNC_LEAVE();
 }

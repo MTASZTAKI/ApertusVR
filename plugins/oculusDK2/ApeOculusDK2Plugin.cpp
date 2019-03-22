@@ -1,29 +1,29 @@
-#include "ApeOculusDK2Plugin.h"
+#include "apeOculusDK2Plugin.h"
 
-ape::ApeOculusDK2Plugin::ApeOculusDK2Plugin()
+ape::apeOculusDK2Plugin::apeOculusDK2Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpHMD = NULL;
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeOculusDK2Plugin::~ApeOculusDK2Plugin()
+ape::apeOculusDK2Plugin::~apeOculusDK2Plugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeOculusDK2Plugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::Matrix4 ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
+ape::Matrix4 ape::apeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 {
 	ape::Matrix4 matrix4(
 		ovrMatrix4.M[0][0], ovrMatrix4.M[0][1], ovrMatrix4.M[0][2], ovrMatrix4.M[0][3],
@@ -34,12 +34,12 @@ ape::Matrix4 ape::ApeOculusDK2Plugin::conversionFromOVR(ovrMatrix4f ovrMatrix4)
 }
 
 
-void ape::ApeOculusDK2Plugin::eventCallBack(const ape::Event& event)
+void ape::apeOculusDK2Plugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::ApeOculusDK2Plugin::Init()
+void ape::apeOculusDK2Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	ovr_Initialize();
@@ -183,8 +183,8 @@ void ape::ApeOculusDK2Plugin::Init()
 		}
 		ovrHmd_DestroyDistortionMesh(&meshData);
 	}
-	mCameraLeft = mpApeUserInputMacro->createCamera("HmdLeftCamera");
-	mCameraRight = mpApeUserInputMacro->createCamera("HmdRightCamera");
+	mCameraLeft = mpapeUserInputMacro->createCamera("HmdLeftCamera");
+	mCameraRight = mpapeUserInputMacro->createCamera("HmdRightCamera");
 	ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 	ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
 	float combinedTanHalfFovHorizontal = std::max(fovLeft.LeftTan, fovLeft.RightTan);
@@ -218,7 +218,7 @@ void ape::ApeOculusDK2Plugin::Init()
 
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity("OculusRiftExternalCamera", ape::Entity::Type::CAMERA).lock()))
 	{
-		camera->setWindow(mpSystemConfig->getWindowConfig().name);
+		camera->setWindow(mpCoreConfig->getWindowConfig().name);
 		camera->setFarClipDistance(50);
 		camera->setNearClipDistance(0.001);
 		camera->setProjectionType(ape::Camera::ORTHOGRAPHIC);
@@ -226,7 +226,7 @@ void ape::ApeOculusDK2Plugin::Init()
 	}
 }
 
-void ape::ApeOculusDK2Plugin::Run()
+void ape::apeOculusDK2Plugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (mpHMD)
@@ -237,31 +237,31 @@ void ape::ApeOculusDK2Plugin::Run()
 		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
 		mUserInputMacroPose.headPosition = ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100);
 		mUserInputMacroPose.headOrientation = ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeOculusDK2Plugin::Step()
+void ape::apeOculusDK2Plugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeOculusDK2Plugin::Stop()
+void ape::apeOculusDK2Plugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeOculusDK2Plugin::Suspend()
+void ape::apeOculusDK2Plugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeOculusDK2Plugin::Restart()
+void ape::apeOculusDK2Plugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

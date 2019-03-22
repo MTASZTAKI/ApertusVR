@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApePointCloudImpl.h"
+#include "apePointCloudImpl.h"
 
 ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : ape::IPointCloud(name), ape::Replica("PointCloud", isHostCreated)
 {

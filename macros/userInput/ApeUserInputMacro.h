@@ -39,24 +39,24 @@ SOFTWARE.*/
 #include <random>
 #include <memory>
 #include <list>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIUnitTexture.h"
-#include "managers/ApeISystemConfig.h"
-#include "utils/ApeInterpolator.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeIUnitTexture.h"
+#include "managers/apeICoreConfig.h"
+#include "utils/apeInterpolator.h"
 
 namespace ape
 {
@@ -138,7 +138,7 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::NodeWeakPtr mUserNode;
 

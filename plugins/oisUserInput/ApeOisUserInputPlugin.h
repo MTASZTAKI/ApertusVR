@@ -27,17 +27,17 @@ SOFTWARE.*/
 #include <list>
 #include <string>
 #include <thread>
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "ApeUserInputMacro.h"
-#include "ApeOisUserInputPluginConfigs.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "macros/userInput/apeUserInputMacro.h"
+#include "apeOisUserInputPluginConfigs.h"
 #include "OIS.h"
 
-#define THIS_PLUGINNAME "ApeOisUserInputPlugin"
+#define THIS_PLUGINNAME "apeOisUserInputPlugin"
 
 namespace ape
 {
@@ -91,7 +91,7 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
 
@@ -115,7 +115,7 @@ namespace ape
 
 		bool mIsKeyPressed;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
@@ -145,7 +145,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
 		return 0;
 	}
 }

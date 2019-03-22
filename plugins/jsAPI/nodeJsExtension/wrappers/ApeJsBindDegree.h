@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_DEGREE_H
 #define APE_JSBIND_DEGREE_H
 
-#include "datatypes/ApeDegree.h"
+#include "datatypes/apeDegree.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

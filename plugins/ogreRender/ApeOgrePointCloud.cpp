@@ -1,4 +1,4 @@
-#include "ApeOgrePointCloud.h"
+#include "apeOgrePointCloud.h"
 
 ape::OgrePointCloud::OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
 	ape::NodeWeakPtr headNode, ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,

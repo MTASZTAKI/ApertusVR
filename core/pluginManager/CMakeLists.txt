@@ -22,38 +22,38 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeInternalPluginManager.h
-	ApePluginManagerImpl.h
-	ApePluginFactory.h
-	ApePluginInstance.h
+	apeInternalPluginManager.h
+	apePluginManagerImpl.h
+	apePluginFactory.h
+	apePluginInstance.h
 	)
 
 set (SOURCES 
-	ApePluginManagerImpl.cpp
-	ApePluginAPI.cpp
-	ApePluginFactory.cpp
-	ApeInternalPluginManager.cpp
-	ApePluginInstance.cpp
+	apePluginManagerImpl.cpp
+	apePluginAPI.cpp
+	apePluginFactory.cpp
+	apeInternalPluginManager.cpp
+	apePluginInstance.cpp
 	)
 	
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
 # Add the dynamic library target to the project
-add_library (ApePluginManager SHARED ${SOURCES} ${HEADERS})
+add_library (apePluginManager SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApePluginManager ApeSystemConfig ApeLogManager)
+target_link_libraries (apePluginManager apeCoreConfig apeLogManager)
 # Link with dependency libraries
 if (NOT WIN32)
-	target_link_libraries (ApePluginManager ApeSystemConfig ApeLogManager dl pthread)
+	target_link_libraries (apePluginManager apeCoreConfig apeLogManager dl pthread)
 endif ()
 
 # Add preprocessor definitions
-set_property (TARGET ApePluginManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_PLUGINMANAGER_DLL BUILDING_APE_INTERNAL_PLUGINMANAGER)
+set_property (TARGET apePluginManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_PLUGINMANAGER_DLL BUILDING_APE_INTERNAL_PLUGINMANAGER)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApePluginManager PROPERTY FOLDER "Core")
+set_property (TARGET apePluginManager PROPERTY FOLDER "Core")
 

@@ -24,7 +24,7 @@ SOFTWARE.*/
 #define APE_SCENEMANAGERIMPL_H
 
 #ifdef _WIN32
-#ifdef BUILDING_APE_SCENEMANAGER_DLL
+#ifdef APE_SCENEMANAGER_DLL_EXPORT
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
 #else
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
@@ -33,13 +33,13 @@ SOFTWARE.*/
 #define APE_SCENEMANAGER_DLL_EXPORT 
 #endif
 
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "managers/ApeILogManager.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeSceneSessionImpl.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "managers/apeILogManager.h"
+#include "apeEventManagerImpl.h"
+#include "apeSceneNetworkImpl.h"
 
-#define THIS_PLUGINNAME "ApeSceneManagerImpl"
+#define THIS_PLUGINNAME "apeSceneManagerImpl"
 
 namespace ape
 {
@@ -74,9 +74,9 @@ namespace ape
 
 		ape::EntitySharedPtrNameMap mEntities;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		ape::SceneSessionImpl* mpSceneSessionImpl;
+		ape::SceneNetworkImpl* mpSceneNetworkImpl;
 
 		std::weak_ptr<RakNet::ReplicaManager3> mReplicaManager;
 	};

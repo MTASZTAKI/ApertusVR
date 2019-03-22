@@ -28,14 +28,14 @@ SOFTWARE.*/
 void runHost()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeVideoChat.exe host";
+	exe << "start " << "apeVideoChat.exe host";
 	std::system(exe.str().c_str());
 }
 
 void runGuest()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeVideoChat.exe guest";
+	exe << "start " << "apeVideoChat.exe guest";
 	std::system(exe.str().c_str());
 }
 

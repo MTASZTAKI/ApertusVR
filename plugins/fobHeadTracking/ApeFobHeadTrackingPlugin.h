@@ -32,27 +32,27 @@ SOFTWARE.*/
 #include <mutex>
 #include <thread>
 #include <vector>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeMatrix4.h"
-#include "datatypes/ApeEuler.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "utils/ApeDoubleQueue.h"
-#include "utils/ApeHeadTrackingConfigs.h"
-#include "ApeFobHeadTracking.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeMatrix4.h"
+#include "datatypes/apeEuler.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "utils/apeDoubleQueue.h"
+#include "utils/apeHeadTrackingConfigs.h"
+#include "apeFobHeadTracking.h"
 
-#define THIS_PLUGINNAME "ApeFobHeadTrackingPlugin"
+#define THIS_PLUGINNAME "apeFobHeadTrackingPlugin"
 
 namespace ape
 {
-	class ApeFobHeadTrackingPlugin : public ape::IPlugin
+	class apeFobHeadTrackingPlugin : public ape::IPlugin
 	{
 	private:
 		int mCameraCount;
@@ -63,7 +63,7 @@ namespace ape
 
 		ape::DoubleQueue<ape::CameraWeakPtr> mCameraDoubleQueue;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::HeadTrackerConfig mTrackerConfig;
 
@@ -96,9 +96,9 @@ namespace ape
 		ape::Matrix4 perspectiveOffCenter(float& displayDistanceLeft, float& displayDistanceRight, float& displayDistanceBottom, float& displayDistanceTop);
 
 	public:
-		ApeFobHeadTrackingPlugin();
+		apeFobHeadTrackingPlugin();
 
-		~ApeFobHeadTrackingPlugin();
+		~apeFobHeadTrackingPlugin();
 
 		void Init() override;
 
@@ -113,14 +113,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApeFobHeadTrackingPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeFobHeadTrackingPlugin()
 	{
-		return new ape::ApeFobHeadTrackingPlugin;
+		return new ape::apeFobHeadTrackingPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeFobHeadTrackingPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeFobHeadTrackingPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApeFobHeadTrackingPlugin*)plugin;
+		delete (ape::apeFobHeadTrackingPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -128,7 +128,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeFobHeadTrackingPlugin, DestroyApeFobHeadTrackingPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeFobHeadTrackingPlugin, DestroyapeFobHeadTrackingPlugin);
 		return 0;
 	}
 }

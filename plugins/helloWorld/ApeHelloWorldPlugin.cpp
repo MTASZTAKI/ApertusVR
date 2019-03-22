@@ -1,26 +1,26 @@
-#include "ApeHelloWorldPlugin.h"
+#include "apeHelloWorldPlugin.h"
 
-ape::ApeHelloWorldPlugin::ApeHelloWorldPlugin()
+ape::apeHelloWorldPlugin::apeHelloWorldPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ApeHelloWorldPlugin::~ApeHelloWorldPlugin()
+ape::apeHelloWorldPlugin::~apeHelloWorldPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ApeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeHelloWorldPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::eventCallBack(const ape::Event& event)
+void ape::apeHelloWorldPlugin::eventCallBack(const ape::Event& event)
 {
 }
 
-void ape::ApeHelloWorldPlugin::Init()
+void ape::apeHelloWorldPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
@@ -58,7 +58,7 @@ void ape::ApeHelloWorldPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::Run()
+void ape::apeHelloWorldPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -70,25 +70,25 @@ void ape::ApeHelloWorldPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::Step()
+void ape::apeHelloWorldPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::Stop()
+void ape::apeHelloWorldPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::Suspend()
+void ape::apeHelloWorldPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ApeHelloWorldPlugin::Restart()
+void ape::apeHelloWorldPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

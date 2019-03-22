@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeInGameBrowser.cpp
+	apeInGameBrowser.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeInGameBrowser ${SOURCES})
-target_link_libraries (ApeInGameBrowser ApeSystem ApePluginManager)
-set_property (TARGET ApeInGameBrowser PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeInGameBrowser PROPERTY FOLDER "Samples/InGameBrowser")
+add_executable (apeInGameBrowser ${SOURCES})
+target_link_libraries (apeInGameBrowser apeSystem apePluginManager)
+set_property (TARGET apeInGameBrowser PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeInGameBrowser PROPERTY FOLDER "Samples/InGameBrowser")
 
 

@@ -22,30 +22,30 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeLinkageDesignerVRPlugin.h
+	apeLinkageDesignerVRPlugin.h
 	)
 
 set (SOURCES 
-	ApeLinkageDesignerVRPlugin.cpp
+	apeLinkageDesignerVRPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	 
+	
 	)
 
-add_library (ApeLinkageDesignerVRPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeLinkageDesignerVRPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLinkageDesignerVRPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apeLinkageDesignerVRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 if (WIN32)
 	# we have to link to some DirectX libraries 
-	target_link_libraries (ApeLinkageDesignerVRPlugin dinput8 dxguid)
+	target_link_libraries (apeLinkageDesignerVRPlugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET ApeLinkageDesignerVRPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeLinkageDesignerVRPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeLinkageDesignerVRPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeLinkageDesignerVRPlugin PROPERTY FOLDER "Plugins")
 
 
 

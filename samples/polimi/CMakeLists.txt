@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApePolimi.cpp
+	apePolimi.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApePolimi ${SOURCES})
-target_link_libraries (ApePolimi ApeSystem ApePluginManager)
-set_property (TARGET ApePolimi PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApePolimi PROPERTY FOLDER "Samples/Polimi")
+add_executable (apePolimi ${SOURCES})
+target_link_libraries (apePolimi apeSystem apePluginManager)
+set_property (TARGET apePolimi PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePolimi PROPERTY FOLDER "Samples/Polimi")
 
 

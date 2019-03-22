@@ -31,53 +31,53 @@ SOFTWARE.*/
 #include <mutex>
 #include <vector>
 #include <list>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISceneSession.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeICamera.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "utils/ApeInterpolator.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "ApeSceneMakerMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeISceneNetwork.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeICamera.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "utils/apeInterpolator.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "ApePolimiPlugin"
+#define THIS_PLUGINNAME "apePolimiPlugin"
 
 namespace ape
 {
-	class ApePolimiPlugin : public ape::IPlugin
+	class apePolimiPlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpScene;
 
-		ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const ape::Event& event);
 
 	public:
-		ApePolimiPlugin();
+		apePolimiPlugin();
 
-		~ApePolimiPlugin();
+		~apePolimiPlugin();
 
 		void Init() override;
 
@@ -92,14 +92,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateApePolimiPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapePolimiPlugin()
 	{
-		return new ape::ApePolimiPlugin;
+		return new ape::apePolimiPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApePolimiPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapePolimiPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ApePolimiPlugin*)plugin;
+		delete (ape::apePolimiPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -107,7 +107,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApePolimiPlugin, DestroyApePolimiPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapePolimiPlugin, DestroyapePolimiPlugin);
 		return 0;
 	}
 }

@@ -1,4 +1,4 @@
-#include "ApeKinectPlugin.h"
+#include "apeKinectPlugin.h"
 
 //#define HALF
 const int width = 512;
@@ -19,9 +19,9 @@ ape::KinectPlugin::KinectPlugin()
 	reader = NULL;
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = ape::ISystemConfig::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
-	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	RootNode = mpSceneManager->createNode("KinectRootNode").lock();
 	APE_LOG_FUNC_LEAVE();
@@ -79,7 +79,7 @@ void ape::KinectPlugin::Init()
 	OperatorColors.resize(CloudSize);
 
 	std::stringstream kinectPluginConfigFilePath;
-	kinectPluginConfigFilePath << mpSystemConfig->getConfigFolderPath() << "\\ApeKinectPlugin.json";
+	kinectPluginConfigFilePath << mpCoreConfig->getConfigFolderPath() << "\\apeKinectPlugin.json";
 	APE_LOG_DEBUG("kinectPluginConfigFilePath: " << kinectPluginConfigFilePath.str());
 	FILE* KinectPluginConfigFile;
 	if (errno_t err = fopen_s(&KinectPluginConfigFile, kinectPluginConfigFilePath.str().c_str(), "r") == 0)
@@ -514,13 +514,13 @@ void ape::KinectPlugin::Run()
 					std::cout << rootClothNode->getPosition().toString() << std::endl;
 					mUserInputMacroPose.userPosition = ape::Vector3(-0.931241, 31.6337, 110.023);
 					mUserInputMacroPose.userOrientation = ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706);
-					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 					mUserInputMacroPose.userPosition = ape::Vector3(-406.561, 45.8449, -250.643);
 					mUserInputMacroPose.userOrientation = ape::Quaternion(-0.710511, 0.0605394, 0.698546, 0.0595197);
-					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 					mUserInputMacroPose.userPosition = ape::Vector3(11.0208, 51.4279, -695.983);
 					mUserInputMacroPose.userOrientation = ape::Quaternion(0.0135394, -0.00138574, 0.994711, 0.101814);
-					mpApeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 				}
 				operatorPointsGenerated = true;
 			}

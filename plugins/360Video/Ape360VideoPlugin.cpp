@@ -1,19 +1,19 @@
-#include "Ape360VideoPlugin.h"
+#include "ape360VideoPlugin.h"
 
-ape::Ape360VideoPlugin::Ape360VideoPlugin()
+ape::ape360VideoPlugin::ape360VideoPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::Ape360VideoPlugin::~Ape360VideoPlugin()
+ape::ape360VideoPlugin::~ape360VideoPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Init()
+void ape::ape360VideoPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
@@ -35,31 +35,31 @@ void ape::Ape360VideoPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Run()
+void ape::ape360VideoPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Step()
+void ape::ape360VideoPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Stop()
+void ape::ape360VideoPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Suspend()
+void ape::ape360VideoPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::Ape360VideoPlugin::Restart()
+void ape::ape360VideoPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

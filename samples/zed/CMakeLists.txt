@@ -23,14 +23,14 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeZed.cpp
+	apeZed.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeZed ${SOURCES})
-target_link_libraries (ApeZed ApeSystem ApePluginManager)
-set_property (TARGET ApeZed PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeZed PROPERTY FOLDER "Samples/Zed")
+add_executable (apeZed ${SOURCES})
+target_link_libraries (apeZed apeSystem apePluginManager)
+set_property (TARGET apeZed PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeZed PROPERTY FOLDER "Samples/Zed")
