@@ -28,6 +28,11 @@ if (${APE_SAMPLES_HelloWorld})
 	add_subdirectory (helloWorld)
 endif ()
 
+option(APE_SAMPLES_CoreTester "APE_SAMPLES_CoreTester?" ON )
+if (${APE_SAMPLES_CoreTester})
+	add_subdirectory (coreTester)
+endif ()
+
 option(APE_SAMPLES_Tester "APE_SAMPLES_Tester?" ON )
 if (${APE_SAMPLES_Tester})
 	add_subdirectory (tester)

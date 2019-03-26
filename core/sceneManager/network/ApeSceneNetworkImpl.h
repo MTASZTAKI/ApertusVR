@@ -25,7 +25,7 @@ SOFTWARE.*/
 #define APE_SCENENETWORKIMPL_H
 
 #ifdef _WIN32
-#ifdef APE_SCENEMANAGER_DLL_EXPORT
+#ifdef BUILDING_APE_SCENEMANAGER_DLL
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
 #else
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
@@ -40,7 +40,6 @@ SOFTWARE.*/
 #include <chrono>
 #include "managers/apeISceneNetwork.h"
 #include "managers/apeICoreConfig.h"
-#include "managers/apeIPluginManager.h"
 #include "managers/apeIEventManager.h"
 #include "managers/apeISceneManager.h"
 #include "apeLobbyManager.h"
@@ -110,8 +109,6 @@ namespace ape
 		
 		ape::ICoreConfig* mpCoreConfig;
 
-		ape::IPluginManager* mpPluginManager;
-
 		ape::IEventManager* mpEventManager;
 
 		ape::ISceneManager* mpSceneManager;
@@ -150,8 +147,6 @@ namespace ape
 		bool isHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
-
-		void setScene(ape::ISceneManager* scene);
 	};
 }
 

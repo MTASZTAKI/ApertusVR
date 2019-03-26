@@ -38,6 +38,7 @@ SOFTWARE.*/
 #include <cstdio>
 #include <cstdlib>
 #include <mutex>
+#include <functional>
 #include <string>
 #include <thread>
 #include "managers/apeILogManager.h"
@@ -51,10 +52,10 @@ namespace ape
 	class APE_PLUGINMANAGER_DLL_EXPORT PluginManagerImpl : public IPluginManager
 	{	
 	private:
-		std::vector<std::thread> mPluginThreadVector;
+		std::vector<std::thread> mThreadVector;
 
 		std::vector<ape::IPlugin*> mPluginVector;
-		
+
 		InternalPluginManager* mpInternalPluginManager;
 
 		void CreatePlugin(std::string pluginname);
@@ -74,9 +75,13 @@ namespace ape
 
 		void InitAndRunPlugins();
 
-		void joinPluginThreads();
+		void joinThreads();
 
-		void detachPluginThreads();
+		void registerUserThreadFunction(std::function<void()> userThreadFunction);
+
+		void detachThreads();
+
+		unsigned int getPluginCount();
 	};
 }
 #endif

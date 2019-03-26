@@ -24,7 +24,7 @@ SOFTWARE.*/
 #define APE_SCENEMANAGERIMPL_H
 
 #ifdef _WIN32
-#ifdef APE_SCENEMANAGER_DLL_EXPORT
+#ifdef BUILDING_APE_SCENEMANAGER_DLL
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
 #else
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)
@@ -36,10 +36,7 @@ SOFTWARE.*/
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
 #include "managers/apeILogManager.h"
-#include "apeEventManagerImpl.h"
-#include "apeSceneNetworkImpl.h"
-
-#define THIS_PLUGINNAME "apeSceneManagerImpl"
+#include "managers/apeIEventManager.h"
 
 namespace ape
 {
@@ -68,7 +65,7 @@ namespace ape
 		void deleteEntity(std::string name) override;
 
 	private:
-		ape::EventManagerImpl* mpEventManagerImpl;
+		ape::IEventManager* mpEventManager;
 
 		ape::NodeSharedPtrNameMap mNodes;
 
@@ -76,9 +73,7 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
-		ape::SceneNetworkImpl* mpSceneNetworkImpl;
-
-		std::weak_ptr<RakNet::ReplicaManager3> mReplicaManager;
+		ape::ISceneNetwork* mpSceneNetwork;
 	};
 }
 #endif

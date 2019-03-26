@@ -28,7 +28,7 @@ ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mPluginThreadVector = std::vector<std::thread>();
+	mThreadVector = std::vector<std::thread>();
 	mPluginVector = std::vector<ape::IPlugin*>();
 	mPluginCount = 0;
 }
@@ -75,18 +75,28 @@ void ape::PluginManagerImpl::InitAndRunPlugins()
 {
 	for (std::vector<ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
 	{
-		mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
+		mThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
 	}
 }
 
-void ape::PluginManagerImpl::joinPluginThreads()
+void ape::PluginManagerImpl::registerUserThreadFunction(std::function<void()> userThreadFunction)
 {
-	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::join));
+	mThreadVector.push_back(std::thread(userThreadFunction));
 }
 
-void ape::PluginManagerImpl::detachPluginThreads()
+void ape::PluginManagerImpl::joinThreads()
 {
-	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
+	std::for_each(mThreadVector.begin(), mThreadVector.end(), std::mem_fn(&std::thread::join));
+}
+
+void ape::PluginManagerImpl::detachThreads()
+{
+	std::for_each(mThreadVector.begin(), mThreadVector.end(), std::mem_fn(&std::thread::detach));
+}
+
+unsigned int ape::PluginManagerImpl::getPluginCount()
+{
+	return mPluginCount;
 }
 
 

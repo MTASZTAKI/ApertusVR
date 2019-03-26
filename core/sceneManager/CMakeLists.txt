@@ -111,7 +111,6 @@ add_library(apeSceneManager SHARED ${SOURCES} ${HEADERS})
 set(APE_LINK_LIBS_SCENEMANAGER
 	apeCoreConfig
 	apeEventManager
-	apePluginManager
 	apeLogManager
 	RAKNET
 	)

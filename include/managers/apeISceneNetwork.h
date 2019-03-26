@@ -24,7 +24,7 @@ SOFTWARE.*/
 #define APE_ISCENENETWORK_H
 
 #ifdef _WIN32
-#ifdef APE_SCENEMANAGER_DLL_EXPORT
+#ifdef BUILDING_APE_SCENEMANAGER_DLL
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllexport)
 #else
 #define APE_SCENEMANAGER_DLL_EXPORT __declspec(dllimport)

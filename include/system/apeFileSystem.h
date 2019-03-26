@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <map>
 #ifdef _WIN32
 	#include "../../3rdParty/dirent/dirent.h"
 #elif

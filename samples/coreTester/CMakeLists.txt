@@ -20,19 +20,20 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (configs)
-
+set(RESOURCE_FILES
+	apeCore.json
+)
 set (SOURCES
-	apeTester.cpp
+	apeCoreTester.cpp
 	)
 
 include_directories(
 	
 	)
 
-add_executable (apeTester ${SOURCES})
-target_link_libraries (apeTester apeSystem)
-set_property (TARGET apeTester PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET apeTester PROPERTY FOLDER "Samples/Tester")
+add_executable (apeCoreTester ${SOURCES})
+target_link_libraries (apeCoreTester apeSystem apeCoreConfig apeSceneManager)
+set_property (TARGET apeCoreTester PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCoreTester PROPERTY FOLDER "Samples/CoreTester")
 
 

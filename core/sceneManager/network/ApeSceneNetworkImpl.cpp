@@ -34,8 +34,8 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	, mpLobbyManager(nullptr)
 {
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mpPluginManager = ape::IPluginManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&SceneNetworkImpl::eventCallBack, this, std::placeholders::_1));
 	mStreamReplicas = std::vector<ape::Replica*>();
 	mIsConnectedToNATServer = false;
@@ -299,11 +299,6 @@ std::string ape::SceneNetworkImpl::getGUID()
 std::weak_ptr<RakNet::ReplicaManager3> ape::SceneNetworkImpl::getReplicaManager()
 {
 	return mpReplicaManager3;
-}
-
-void ape::SceneNetworkImpl::setScene(ape::ISceneManager* scene)
-{
-	mpSceneManager = scene;
 }
 
 ape::SceneNetwork::ParticipantType ape::SceneNetworkImpl::getParticipantType()

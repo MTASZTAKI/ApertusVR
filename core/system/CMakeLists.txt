@@ -32,20 +32,12 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/CoreConfig
 	${PROJECT_SOURCE_DIR}/core/mainWindow
 	${PROJECT_SOURCE_DIR}/core/sceneManager
-	${PROJECT_SOURCE_DIR}/core/sceneManager/network
 	${RAKNET_INCLUDE_DIR}	
 	)
 
 add_library (apeSystem SHARED ${SOURCES} )
 
-# Link with dependency libraries
-if(WIN32)
-	target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig RAKNET ws2_32)
-endif()
-
-if(APPLE)
-	target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig RAKNET)
-endif()
+target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig)
 
 
 # Place target xxx into the specified folder in IDEs supporting it

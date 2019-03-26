@@ -1,5 +1,5 @@
 {
-    "renderSystem": "DX9",
+    "renderSystem": "DX11",
     "lodLevels": {
         "autoGenerateAndSave": false,
         "bias": 0.5
@@ -29,6 +29,7 @@
                     "width": 1920,
                     "height": 1080,
                     "camera": {
+                        "name": "Polimi_Camera",
                         "nearClip": 1.0,
                         "farClip": 10000.0,
                         "fovY": 45.0

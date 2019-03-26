@@ -33,21 +33,16 @@ SOFTWARE.*/
 	#define APE_SYSTEM_DLL_EXPORT
 #endif
 
-
-#ifdef __cplusplus
-#include <string>
-#include "managers/apeISceneNetwork.h"
-#include "utils/apeSingleton.h"
+#include <functional>
 
 namespace ape
 {
 	namespace System
 	{
-		extern "C" APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, int isBlockingMode);
-		extern "C" APE_SYSTEM_DLL_EXPORT void Stop();
+		APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction = std::function<void()>());
+		APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }
 
 #endif
 
-#endif
