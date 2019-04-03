@@ -26,39 +26,38 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeGeometry.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
-#include "sceneelements/ApeIRayGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "utils/ApeDoubleQueue.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeGeometry.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "utils/apeDoubleQueue.h"
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_render_handler.h"
 #include "views/cef_browser_view.h"
-#include "ApeCefRenderHandlerImpl.h"
-#include "ApeCefLifeSpanHandlerImpl.h"
-#include "ApeCefKeyboardHandlerImpl.h"
-#include "ApeCefClientImpl.h"
+#include "apeCefRenderHandlerImpl.h"
+#include "apeCefLifeSpanHandlerImpl.h"
+#include "apeCefKeyboardHandlerImpl.h"
+#include "apeCefClientImpl.h"
 
-#define THIS_PLUGINNAME "ApeCefBrowserPlugin"
+#define THIS_PLUGINNAME "apeCefBrowserPlugin"
 
-namespace Ape
+namespace ape
 {
-	class CefBrowserPlugin : public Ape::IPlugin
+	class CefBrowserPlugin : public ape::IPlugin
 	{
 	public:
 		CefBrowserPlugin();
@@ -79,49 +78,49 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::CefRenderHandlerImpl* mpApeCefRenderHandlerImpl;
+		ape::CefRenderHandlerImpl* mpapeCefRenderHandlerImpl;
 
-		Ape::CefLifeSpanHandlerImpl* mpApeCefLifeSpanHandlerImpl;
+		ape::CefLifeSpanHandlerImpl* mpapeCefLifeSpanHandlerImpl;
 
-		Ape::CefKeyboardHandlerImpl* mpApeCefKeyboardHandlerImpl;
+		ape::CefKeyboardHandlerImpl* mpapeCefKeyboardHandlerImpl;
 		
 		int mBrowserCounter;
 
-		Ape::NodeWeakPtr mRayOverlayNode;
+		ape::NodeWeakPtr mRayOverlayNode;
 
-		CefRefPtr<Ape::CefClientImpl> mApeCefClientImpl;
+		CefRefPtr<ape::CefClientImpl> mapeCefClientImpl;
 
 		bool mCefIsInintialzed;
 
 		CefBrowserSettings mBrowserSettings;
 
-		Ape::DoubleQueue<Event> mEventDoubleQueue;
+		ape::DoubleQueue<Event> mEventDoubleQueue;
 
 		std::map<std::string, int> mBrowserIDNames;
 
 		void processEventDoubleQueue();
 
-		void processEvent(Ape::Event event);
+		void processEvent(ape::Event event);
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		void createBrowser(Ape::BrowserSharedPtr browser);
+		void createBrowser(ape::BrowserSharedPtr browser);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateCefBrowserPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateCefBrowserPlugin()
 	{
-		return new Ape::CefBrowserPlugin;
+		return new ape::CefBrowserPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyCefBrowserPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyCefBrowserPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::CefBrowserPlugin*)plugin;
+		delete (ape::CefBrowserPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -129,7 +128,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateCefBrowserPlugin, DestroyCefBrowserPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateCefBrowserPlugin, DestroyCefBrowserPlugin);
 		return 0;
 	}
 }

@@ -25,14 +25,14 @@ SOFTWARE.*/
 
 #include <iostream>
 #include "Ogre.h"
-#include "sceneelements/ApeINode.h"
+#include "sceneelements/apeINode.h"
 
-namespace Ape {
+namespace ape {
 	class OgrePointCloud
 	{
 	public:
 		OgrePointCloud(const std::string& name, const std::string& resourcegroup, const int numpoints, float *parray, float *carray, float boundigSphereRadius,
-			Ape::NodeWeakPtr headNode, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+			ape::NodeWeakPtr headNode, ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
 			float pointScaleOffset, float unitScaleDistance, float scaleFactor);
 
 		void updateVertexPositions(int size, float *points);
@@ -50,9 +50,9 @@ namespace Ape {
 
 		Ogre::MaterialPtr mMaterial;
 
-		Ape::NodeWeakPtr mHeadNode;
+		ape::NodeWeakPtr mHeadNode;
 
-		Ape::NodeWeakPtr mPointCloudNode;
+		ape::NodeWeakPtr mPointCloudNode;
 
 		float mPointSize;
 

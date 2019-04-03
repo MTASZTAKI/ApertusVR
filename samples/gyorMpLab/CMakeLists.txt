@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeGyorMpLab.cpp
+	apeGyorMpLab.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeGyorMpLab ${SOURCES})
-target_link_libraries (ApeGyorMpLab ApeSystem ApePluginManager)
-set_property (TARGET ApeGyorMpLab PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeGyorMpLab PROPERTY FOLDER "Samples/GyorMpLab")
+add_executable (apeGyorMpLab ${SOURCES})
+target_link_libraries (apeGyorMpLab apeSystem apePluginManager)
+set_property (TARGET apeGyorMpLab PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGyorMpLab PROPERTY FOLDER "Samples/GyorMpLab")
 
 

@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 # Set target properties
-set(MY_TARGET_NAME ApeNodeJsPlugin)
+set(MY_TARGET_NAME apeNodeJsPlugin)
 set(MY_TARGET_OUTPUT "/node_modules/apertusvr/")
 
 set(BUILD_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
@@ -32,15 +32,15 @@ set(TARGET_MODULE_PATH_RELEASE ${BUILD_PATH_RELEASE}/${MY_TARGET_OUTPUT})
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeNodeJsPlugin.h
+	apeNodeJsPlugin.h
 	)
 
 set (SOURCES
-	ApeNodeJsPlugin.cpp
+	apeNodeJsPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${JS_API_COMMON_DIR}
 	${RAPIDJSON_INCLUDE_DIR}
 	${NODE_SOURCE_DIR}/src
@@ -62,10 +62,10 @@ if (WIN32)
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${NODE_LIB_PATH_DEBUG})
     set_property(TARGET MY_NODEJS_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${NODE_LIB_PATH_RELEASE})
 endif ()
-# TODO_ApeNodeJsExtension MY_NODEJS_LIB under unix
+# TODO_apeNodeJsExtension MY_NODEJS_LIB under unix
 
 # Link dependencies
-target_link_libraries(${MY_TARGET_NAME} ApeSceneManager ApePluginManager ApeEventManager ApeLogManager ApeSystemConfig MY_NODEJS_LIB)
+target_link_libraries(${MY_TARGET_NAME} apeSceneManager apePluginManager apeEventManager apeLogManager apeCoreConfig MY_NODEJS_LIB)
 
 # Add preprocessor definitions
 set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)

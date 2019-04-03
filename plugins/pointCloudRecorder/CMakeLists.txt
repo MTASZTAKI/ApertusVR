@@ -22,25 +22,25 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApePointCloudRecorderPlugin.h
+	apePointCloudRecorderPlugin.h
 	)
 
 set (SOURCES 
-	ApePointCloudRecorderPlugin.cpp
+	apePointCloudRecorderPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_library (ApePointCloudRecorderPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apePointCloudRecorderPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApePointCloudRecorderPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow)
+target_link_libraries (apePointCloudRecorderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApePointCloudRecorderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePointCloudRecorderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApePointCloudRecorderPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apePointCloudRecorderPlugin PROPERTY FOLDER "Plugins")
 
 
 

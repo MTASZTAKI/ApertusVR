@@ -20,71 +20,71 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeTorusGeometryImpl.h"
+#include "apeTorusGeometryImpl.h"
 
-Ape::TorusGeometryImpl::TorusGeometryImpl(std::string name, bool isHostCreated) : Ape::ITorusGeometry(name), Ape::Replica("TorusGeometry", isHostCreated)
+ape::TorusGeometryImpl::TorusGeometryImpl(std::string name, bool isHostCreated) : ape::ITorusGeometry(name), ape::Replica("TorusGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryTorusParameters();
-	mMaterial = Ape::MaterialWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryTorusParameters();
+	mMaterial = ape::MaterialWeakPtr();
 	mMaterialName = std::string();
 }
 
-Ape::TorusGeometryImpl::~TorusGeometryImpl()
+ape::TorusGeometryImpl::~TorusGeometryImpl()
 {
 	
 }
 
-void Ape::TorusGeometryImpl::setParameters(float radius, float sectionRadius, Ape::Vector2 tile)
+void ape::TorusGeometryImpl::setParameters(float radius, float sectionRadius, ape::Vector2 tile)
 {
 	mParameters.radius = radius;
 	mParameters.sectionRadius = sectionRadius;
 	mParameters.tile = tile;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_PARAMETERS));
 }
 
-Ape::GeometryTorusParameters Ape::TorusGeometryImpl::getParameters()
+ape::GeometryTorusParameters ape::TorusGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::TorusGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::TorusGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-void Ape::TorusGeometryImpl::setMaterial(Ape::MaterialWeakPtr material)
+void ape::TorusGeometryImpl::setMaterial(ape::MaterialWeakPtr material)
 {
 	if (auto materialSP = material.lock())
 	{
 		mMaterial = material;
 		mMaterialName = materialSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_MATERIAL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_MATERIAL));
 	}
 	else
-		mMaterial = Ape::MaterialWeakPtr();
+		mMaterial = ape::MaterialWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::TorusGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::TorusGeometryImpl::getMaterial()
 {
 	return mMaterial;
 }
 
-void Ape::TorusGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::TorusGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::TorusGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::TorusGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -96,27 +96,27 @@ RakNet::RM3SerializationResult Ape::TorusGeometryImpl::Serialize(RakNet::Seriali
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::TorusGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::TorusGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_PARAMETERS));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_PARENTNODE));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
 	{
-		if (auto material = std::static_pointer_cast<Ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
+		if (auto material = std::static_pointer_cast<ape::Material>(mpSceneManager->getEntity(materialName.C_String()).lock()))
 		{
 			mMaterial = material;
 			mMaterialName = material->getName();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_TORUS_MATERIAL));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TORUS_MATERIAL));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

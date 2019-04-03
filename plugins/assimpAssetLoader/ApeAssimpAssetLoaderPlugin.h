@@ -29,40 +29,39 @@ SOFTWARE.*/
 #include <mutex>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileTexture.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileTexture.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#define THIS_PLUGINNAME "ApeAssimpAssetLoaderPlugin"
+#define THIS_PLUGINNAME "apeAssimpAssetLoaderPlugin"
 
-namespace Ape
+namespace ape
 {
 	struct AssetConfig
 	{
 		std::string file;
-		Ape::Vector3 scale;
-		Ape::Vector3 position;
-		Ape::Quaternion orientation;
+		ape::Vector3 scale;
+		ape::Vector3 position;
+		ape::Quaternion orientation;
 		bool mergeAndExportMeshes;
 		bool regenerateNormals;
 		std::string rootNodeName;
 	};
-	class AssimpAssetLoaderPlugin : public Ape::IPlugin
+	class AssimpAssetLoaderPlugin : public ape::IPlugin
 	{
 	public:
 		AssimpAssetLoaderPlugin();
@@ -83,11 +82,11 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
 		Assimp::Importer* mpAssimpImporter;
 
@@ -101,7 +100,7 @@ namespace Ape
 
 		std::mutex mMutex;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		void createNode(int assimpSceneID, aiNode* assimpNode);
 
@@ -112,14 +111,14 @@ namespace Ape
 		void loadScene(const aiScene* assimpScene, int ID);
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateAssimpAssetLoaderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateAssimpAssetLoaderPlugin()
 	{
-		return new Ape::AssimpAssetLoaderPlugin;
+		return new ape::AssimpAssetLoaderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyAssimpAssetLoaderPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyAssimpAssetLoaderPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::AssimpAssetLoaderPlugin*)plugin;
+		delete (ape::AssimpAssetLoaderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -127,7 +126,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateAssimpAssetLoaderPlugin, DestroyAssimpAssetLoaderPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateAssimpAssetLoaderPlugin, DestroyAssimpAssetLoaderPlugin);
 		return 0;
 	}
 }

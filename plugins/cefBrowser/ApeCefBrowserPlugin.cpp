@@ -1,125 +1,125 @@
-#include "ApeCefBrowserPlugin.h"
+#include "apeCefBrowserPlugin.h"
 
-Ape::CefBrowserPlugin::CefBrowserPlugin()
+ape::CefBrowserPlugin::CefBrowserPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpApeCefRenderHandlerImpl = nullptr;
-	mpApeCefLifeSpanHandlerImpl = nullptr;
-	mpApeCefKeyboardHandlerImpl = nullptr;
-	mApeCefClientImpl = nullptr;
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpapeCefRenderHandlerImpl = nullptr;
+	mpapeCefLifeSpanHandlerImpl = nullptr;
+	mpapeCefKeyboardHandlerImpl = nullptr;
+	mapeCefClientImpl = nullptr;
 	mBrowserCounter = 0;
 	mCefIsInintialzed = false;
 	mBrowserSettings = CefBrowserSettings();
-	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
-	mEventDoubleQueue = Ape::DoubleQueue<Event>();
+	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mEventDoubleQueue = ape::DoubleQueue<Event>();
 	mBrowserIDNames = std::map<std::string, int>();
-	mRayOverlayNode = Ape::NodeWeakPtr();
+	mRayOverlayNode = ape::NodeWeakPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::CefBrowserPlugin::~CefBrowserPlugin()
+ape::CefBrowserPlugin::~CefBrowserPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
-	mApeCefClientImpl = nullptr;
-	delete mpApeCefRenderHandlerImpl;
-	delete mpApeCefLifeSpanHandlerImpl;
+	mpEventManager->disconnectEvent(ape::Event::Group::BROWSER, std::bind(&CefBrowserPlugin::eventCallBack, this, std::placeholders::_1));
+	mapeCefClientImpl = nullptr;
+	delete mpapeCefRenderHandlerImpl;
+	delete mpapeCefLifeSpanHandlerImpl;
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::processEvent(Ape::Event event)
+void ape::CefBrowserPlugin::processEvent(ape::Event event)
 {
-	if (event.group == Ape::Event::Group::BROWSER)
+	if (event.group == ape::Event::Group::BROWSER)
 	{
-		if (auto browser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			switch (event.type)
 			{
-			case Ape::Event::Type::BROWSER_CREATE:
+			case ape::Event::Type::BROWSER_CREATE:
 				break;
-			case Ape::Event::Type::BROWSER_GEOMETRY:
+			case ape::Event::Type::BROWSER_GEOMETRY:
 				{
 					createBrowser(browser);
 				}
 				break;
-			case Ape::Event::Type::BROWSER_OVERLAY:
+			case ape::Event::Type::BROWSER_OVERLAY:
 				{
 					createBrowser(browser);
 				}
 				break;
-			case Ape::Event::Type::BROWSER_ZOOM:
+			case ape::Event::Type::BROWSER_ZOOM:
 				{
 					if (mBrowserIDNames[browser->getName()])
-						mpApeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
+						mpapeCefRenderHandlerImpl->setZoomLevel(mBrowserIDNames[browser->getName()], browser->getZoomLevel());
 				}
 				break;
-			case Ape::Event::Type::BROWSER_URL:
+			case ape::Event::Type::BROWSER_URL:
 				{
 					if (mBrowserIDNames[browser->getName()])
-						mpApeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
+						mpapeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
 				}
 				break;
-			case Ape::Event::Type::BROWSER_MOUSE_MOVED:
-				{
-					if (mBrowserIDNames[browser->getName()])
-					{
-						Ape::Browser::MouseState mouseState = browser->getMouseState();
-						mpApeCefRenderHandlerImpl->mouseMoved(mBrowserIDNames[browser->getName()], mouseState.position.x, mouseState.position.y);
-					}
-				}
-				break;
-			case Ape::Event::Type::BROWSER_MOUSE_SCROLL:
+			case ape::Event::Type::BROWSER_MOUSE_MOVED:
 				{
 					if (mBrowserIDNames[browser->getName()])
 					{
-						Ape::Browser::MouseState mouseState = browser->getMouseState();
-						mpApeCefRenderHandlerImpl->mouseScroll(mBrowserIDNames[browser->getName()], mouseState.scrollDelta.x, mouseState.scrollDelta.y);
+						ape::Browser::MouseState mouseState = browser->getMouseState();
+						mpapeCefRenderHandlerImpl->mouseMoved(mBrowserIDNames[browser->getName()], mouseState.position.x, mouseState.position.y);
 					}
 				}
 				break;
-			case Ape::Event::Type::BROWSER_MOUSE_CLICK:
+			case ape::Event::Type::BROWSER_MOUSE_SCROLL:
 				{
 					if (mBrowserIDNames[browser->getName()])
 					{
-						Ape::Browser::MouseState mouseState = browser->getMouseState();
-						if (mouseState.click == Ape::Browser::MouseClick::LEFT)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_LEFT);
-						else if (mouseState.click == Ape::Browser::MouseClick::RIGHT)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_RIGHT);
-						else if (mouseState.click == Ape::Browser::MouseClick::MIDDLE)
-							mpApeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_MIDDLE);
+						ape::Browser::MouseState mouseState = browser->getMouseState();
+						mpapeCefRenderHandlerImpl->mouseScroll(mBrowserIDNames[browser->getName()], mouseState.scrollDelta.x, mouseState.scrollDelta.y);
 					}
 				}
 				break;
-			case Ape::Event::Type::BROWSER_KEY_VALUE:
+			case ape::Event::Type::BROWSER_MOUSE_CLICK:
 				{
 					if (mBrowserIDNames[browser->getName()])
-						mpApeCefRenderHandlerImpl->keyValue(mBrowserIDNames[browser->getName()], browser->getLastKeyASCIIValue());
+					{
+						ape::Browser::MouseState mouseState = browser->getMouseState();
+						if (mouseState.click == ape::Browser::MouseClick::LEFT)
+							mpapeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_LEFT);
+						else if (mouseState.click == ape::Browser::MouseClick::RIGHT)
+							mpapeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_RIGHT);
+						else if (mouseState.click == ape::Browser::MouseClick::MIDDLE)
+							mpapeCefRenderHandlerImpl->mouseClick(mBrowserIDNames[browser->getName()], mouseState.isClickDown, CefBrowserHost::MouseButtonType::MBT_MIDDLE);
+					}
 				}
 				break;
-			case Ape::Event::Type::BROWSER_DELETE:
+			case ape::Event::Type::BROWSER_KEY_VALUE:
+				{
+					if (mBrowserIDNames[browser->getName()])
+						mpapeCefRenderHandlerImpl->keyValue(mBrowserIDNames[browser->getName()], browser->getLastKeyASCIIValue());
+				}
+				break;
+			case ape::Event::Type::BROWSER_DELETE:
 				;
 				break;
 			}
 		}
 	}
-	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_PARENTNODE)
+	else if (event.type == ape::Event::Type::GEOMETRY_RAY_PARENTNODE)
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			mRayOverlayNode = rayGeometry->getParentNode();
 	}
-	/*else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
+	/*else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTIONQUERY)
 	{
 		if (auto rayOverlayNode = mRayOverlayNode.lock())
 			rayOverlayNode->getPosition();
 	}*/
 }
 
-void Ape::CefBrowserPlugin::processEventDoubleQueue()
+void ape::CefBrowserPlugin::processEventDoubleQueue()
 {
 	mEventDoubleQueue.swap();
 	while (!mEventDoubleQueue.emptyPop())
@@ -129,7 +129,7 @@ void Ape::CefBrowserPlugin::processEventDoubleQueue()
 	}
 }
 
-void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
+void ape::CefBrowserPlugin::eventCallBack(const ape::Event& event)
 {
 	if (!mCefIsInintialzed)
 		mEventDoubleQueue.push(event);
@@ -137,34 +137,34 @@ void Ape::CefBrowserPlugin::eventCallBack(const Ape::Event& event)
 		processEvent(event);
 }
 
-void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
+void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 {
 	std::string browserName = browser->getName();
-	if (auto browserMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		browserMaterial->setEmissiveColor(Ape::Color(1.0f, 1.0f, 1.0f));
-		if (auto browserTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", Ape::Entity::TEXTURE_MANUAL).lock()))
+		browserMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, Ape::Texture::PixelFormat::A8R8G8B8, Ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 			browserMaterial->setPassTexture(browserTexture);
-			browserMaterial->setCullingMode(Ape::Material::CullingMode::CLOCKWISE);
-			browserMaterial->setSceneBlending(Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			browserMaterial->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
+			browserMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
-			mpApeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
-			mpApeCefKeyboardHandlerImpl->registerBrowser(mBrowserCounter, browser);
-			mpApeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+			mpapeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
+			mpapeCefKeyboardHandlerImpl->registerBrowser(mBrowserCounter, browser);
+			mpapeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
 			mBrowserIDNames[browserName] = mBrowserCounter;
 			CefWindowInfo cefWindowInfo;
 			cefWindowInfo.SetAsWindowless(0);
-			CefBrowserHost::CreateBrowser(cefWindowInfo, mApeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
+			CefBrowserHost::CreateBrowser(cefWindowInfo, mapeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
 			if (auto browserGeometry = browser->getGeometry().lock())
 			{
-				if (auto planeGeometry = std::dynamic_pointer_cast<Ape::IPlaneGeometry>(browserGeometry))
+				if (auto planeGeometry = std::dynamic_pointer_cast<ape::IPlaneGeometry>(browserGeometry))
 				{
 					planeGeometry->setMaterial(browserMaterial);
-					browserMaterial->setCullingMode(Ape::Material::CullingMode::NONE_CM);
+					browserMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
 				}
-				else if (auto fileGeometry = std::dynamic_pointer_cast<Ape::IFileGeometry>(browserGeometry))
+				else if (auto fileGeometry = std::dynamic_pointer_cast<ape::IFileGeometry>(browserGeometry))
 				{
 					fileGeometry->setMaterial(browserMaterial);
 				}
@@ -175,27 +175,27 @@ void Ape::CefBrowserPlugin::createBrowser(Ape::BrowserSharedPtr browser)
 	}
 }
 
-void Ape::CefBrowserPlugin::Init()
+void ape::CefBrowserPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	CefSettings settings;
 	settings.ignore_certificate_errors = true;
-	CefString(&settings.browser_subprocess_path).FromASCII("ApeCefSubProcessApp.exe");
+	CefString(&settings.browser_subprocess_path).FromASCII("apeCefSubProcessApp.exe");
 #if defined(OS_WIN)
 	CefMainArgs main_args(::GetModuleHandle(0));
 #endif
 	if (CefInitialize(main_args, settings, nullptr, nullptr))
 	{
-		mpApeCefRenderHandlerImpl = new Ape::CefRenderHandlerImpl();
-		mpApeCefLifeSpanHandlerImpl = new Ape::CefLifeSpanHandlerImpl();
-		mpApeCefKeyboardHandlerImpl = new Ape::CefKeyboardHandlerImpl();
-		mApeCefClientImpl = new Ape::CefClientImpl(mpApeCefRenderHandlerImpl, mpApeCefLifeSpanHandlerImpl, mpApeCefKeyboardHandlerImpl);
+		mpapeCefRenderHandlerImpl = new ape::CefRenderHandlerImpl();
+		mpapeCefLifeSpanHandlerImpl = new ape::CefLifeSpanHandlerImpl();
+		mpapeCefKeyboardHandlerImpl = new ape::CefKeyboardHandlerImpl();
+		mapeCefClientImpl = new ape::CefClientImpl(mpapeCefRenderHandlerImpl, mpapeCefLifeSpanHandlerImpl, mpapeCefKeyboardHandlerImpl);
 		mCefIsInintialzed = true;
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::Run()
+void ape::CefBrowserPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	if (mCefIsInintialzed)
@@ -207,25 +207,25 @@ void Ape::CefBrowserPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::Step()
+void ape::CefBrowserPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::Stop()
+void ape::CefBrowserPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::Suspend()
+void ape::CefBrowserPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::CefBrowserPlugin::Restart()
+void ape::CefBrowserPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

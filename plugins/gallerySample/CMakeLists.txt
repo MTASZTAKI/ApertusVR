@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeGallerySamplePlugin.h
+	apeGallerySamplePlugin.h
 	)
 
 set (SOURCES 
-	ApeGallerySamplePlugin.cpp
+	apeGallerySamplePlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApeGallerySamplePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeGallerySamplePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeGallerySamplePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (apeGallerySamplePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApeGallerySamplePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGallerySamplePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeGallerySamplePlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeGallerySamplePlugin PROPERTY FOLDER "Plugins")
 
 

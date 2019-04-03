@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "enable": true,
-            "name": "ApePresentation",
+            "name": "apePresentation",
             "monitorIndex": 0,
             "resolution": {
                 "width": 1920,

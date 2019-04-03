@@ -23,14 +23,14 @@ SOFTWARE.*/
 #ifndef APE_WATERIMPL_H
 #define APE_WATERIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIWater.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIWater.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class WaterImpl : public IWater, public Ape::Replica
+	class WaterImpl : public IWater, public ape::Replica
 	{
 	public:
 
@@ -38,13 +38,13 @@ namespace Ape
 
 		~WaterImpl();
 
-		void setSky(Ape::SkyWeakPtr sky) override;
+		void setSky(ape::SkyWeakPtr sky) override;
 
-		Ape::SkyWeakPtr getSky() override;
+		ape::SkyWeakPtr getSky() override;
 
-		void setCameras(std::vector<Ape::CameraWeakPtr> cameras) override;
+		void setCameras(std::vector<ape::CameraWeakPtr> cameras) override;
 
-		std::vector<Ape::CameraWeakPtr> getCameras() override;
+		std::vector<ape::CameraWeakPtr> getCameras() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -53,15 +53,15 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::SkyWeakPtr mSky;
+		ape::SkyWeakPtr mSky;
 
 		std::string mSkyName;
 
-		std::vector<Ape::CameraWeakPtr> mCameras;
+		std::vector<ape::CameraWeakPtr> mCameras;
 
 		std::vector<std::string> mCamerasName;
 	};

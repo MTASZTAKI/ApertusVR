@@ -1,0 +1,31 @@
+{
+    "mainWindow": {
+        "name": "ape",
+        "creator": "apeOgreRenderPlugin"
+    },
+    "SceneNetwork": {
+        "participantType": "Local",
+        "uniqueUserNamePrefix": "Local",
+        "sessionGUID": "1013311130628945935",
+        "sessionResourceLocation": [
+        ],
+        "natPunchThroughServer": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+        },
+        "lobbyServer": {
+            "useLobby": false,
+            "ip": "195.111.2.95",
+            "port": "8888",
+            "sessionName": "k508"
+        }
+    },
+    "pluginManager": {
+        "plugins": [
+            "apeNodeJsPlugin",
+            "apeOgreRenderPlugin",
+			"apeOisUserInputPlugin",
+            "apeKinectPlugin"
+        ]
+    }
+}

@@ -23,15 +23,15 @@ SOFTWARE.*/
 #ifndef APE_TEXTGEOMETRYIMPL_H
 #define APE_TEXTGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeINode.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeINode.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class TextGeometryImpl : public Ape::ITextGeometry, public Ape::Replica
+	class TextGeometryImpl : public ape::ITextGeometry, public ape::Replica
 	{
 	public:
 		TextGeometryImpl(std::string name, bool isHostCreated);
@@ -52,7 +52,7 @@ namespace Ape
 
 		bool isShownOnTop() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -61,9 +61,9 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 		std::string mCaption;
 

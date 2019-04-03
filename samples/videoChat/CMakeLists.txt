@@ -23,26 +23,26 @@
 add_subdirectory (configs)
 
 set (SOURCES_LAUNCHER 
-	ApeVideoChatLauncher.cpp
+	apeVideoChatLauncher.cpp
 	)
 
 set (SOURCES
-	ApeVideoChat.cpp
+	apeVideoChat.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeVideoChatLauncher ${SOURCES_LAUNCHER})
-target_link_libraries (ApeVideoChatLauncher)
-set_property (TARGET ApeVideoChatLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeVideoChatLauncher PROPERTY FOLDER "Samples/VideoChat")
+add_executable (apeVideoChatLauncher ${SOURCES_LAUNCHER})
+target_link_libraries (apeVideoChatLauncher)
+set_property (TARGET apeVideoChatLauncher PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeVideoChatLauncher PROPERTY FOLDER "Samples/VideoChat")
 
-add_executable (ApeVideoChat ${SOURCES})
-target_link_libraries (ApeVideoChat ApeSystem ApePluginManager)
-set_property (TARGET ApeVideoChat PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeVideoChat PROPERTY FOLDER "Samples/VideoChat")
+add_executable (apeVideoChat ${SOURCES})
+target_link_libraries (apeVideoChat apeSystem apePluginManager)
+set_property (TARGET apeVideoChat PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeVideoChat PROPERTY FOLDER "Samples/VideoChat")
 
 

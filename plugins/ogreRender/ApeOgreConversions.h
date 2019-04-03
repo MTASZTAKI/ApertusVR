@@ -23,15 +23,15 @@ SOFTWARE.*/
 #ifndef APE_OGRECONVERSIONS_H
 #define APE_OGRECONVERSIONS_H
 
-#include "datatypes/ApeVector3.h"
-#include "datatypes/ApeVector2.h"
-#include "datatypes/ApeVector4.h"
-#include "datatypes/ApeMatrix4.h"
-#include "datatypes/ApeQuaternion.h"
-#include "datatypes/ApeColor.h"
-#include "sceneelements/ApeILight.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIFileGeometry.h"
+#include "datatypes/apeVector3.h"
+#include "datatypes/apeVector2.h"
+#include "datatypes/apeVector4.h"
+#include "datatypes/apeMatrix4.h"
+#include "datatypes/apeQuaternion.h"
+#include "datatypes/apeColor.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIFileGeometry.h"
 #include "OgreVector3.h"
 #include "OgreVector2.h"
 #include "OgreVector4.h"
@@ -40,19 +40,19 @@ SOFTWARE.*/
 #include "OgreLight.h"
 #include "OgreMatrix4.h"
 
-namespace Ape
+namespace ape
 {
-	inline Ogre::Vector3 ConversionToOgre(const Ape::Vector3& p_vec)
+	inline Ogre::Vector3 ConversionToOgre(const ape::Vector3& p_vec)
 	{
 		return Ogre::Vector3(p_vec.x, p_vec.y, p_vec.z);
 	}
 
-	inline Ape::Vector3 ConversionFromOgre(const Ogre::Vector3& p_vec)
+	inline ape::Vector3 ConversionFromOgre(const Ogre::Vector3& p_vec)
 	{
-		return Ape::Vector3(p_vec.x, p_vec.y, p_vec.z);
+		return ape::Vector3(p_vec.x, p_vec.y, p_vec.z);
 	}
 
-	inline Ogre::Matrix4 ConversionToOgre(const Ape::Matrix4& p_mat4)
+	inline Ogre::Matrix4 ConversionToOgre(const ape::Matrix4& p_mat4)
 	{
 		return Ogre::Matrix4(
 			p_mat4.m[0][0], p_mat4.m[0][1], p_mat4.m[0][2], p_mat4.m[0][3],
@@ -62,9 +62,9 @@ namespace Ape
 			);
 	}
 
-	inline Ape::Matrix4 ConversionFromOgre(const Ogre::Matrix4& p_mat4)
+	inline ape::Matrix4 ConversionFromOgre(const Ogre::Matrix4& p_mat4)
 	{
-		return Ape::Matrix4(
+		return ape::Matrix4(
 			p_mat4[0][0], p_mat4[0][1], p_mat4[0][2], p_mat4[0][3],
 			p_mat4[1][0], p_mat4[1][1], p_mat4[1][2], p_mat4[1][3],
 			p_mat4[2][0], p_mat4[2][1], p_mat4[2][2], p_mat4[2][3],
@@ -72,47 +72,47 @@ namespace Ape
 			);
 	}
 
-	inline Ogre::Vector2 ConversionToOgre(const Ape::Vector2& p_vec)
+	inline Ogre::Vector2 ConversionToOgre(const ape::Vector2& p_vec)
 	{
 		return Ogre::Vector2(p_vec.x, p_vec.y);
 	}
 
-	inline Ape::Vector2 ConversionFromOgre(const Ogre::Vector2& p_vec)
+	inline ape::Vector2 ConversionFromOgre(const Ogre::Vector2& p_vec)
 	{
-		return Ape::Vector2(p_vec.x, p_vec.y);
+		return ape::Vector2(p_vec.x, p_vec.y);
 	}
 
-	inline Ogre::Quaternion ConversionToOgre(const Ape::Quaternion& p_q)
+	inline Ogre::Quaternion ConversionToOgre(const ape::Quaternion& p_q)
 	{
 		return Ogre::Quaternion(p_q.w, p_q.x, p_q.y, p_q.z);
 	}
 
-	inline Ape::Quaternion ConversionFromOgre(const Ogre::Quaternion& p_q)
+	inline ape::Quaternion ConversionFromOgre(const Ogre::Quaternion& p_q)
 	{
-		return Ape::Quaternion(p_q.w, p_q.x, p_q.y, p_q.z);
+		return ape::Quaternion(p_q.w, p_q.x, p_q.y, p_q.z);
 	}
 
-	inline Ogre::Vector4 ConversionToOgre(const Ape::Vector4& p_vec)
+	inline Ogre::Vector4 ConversionToOgre(const ape::Vector4& p_vec)
 	{
 		return Ogre::Vector4(p_vec.x, p_vec.y, p_vec.z, p_vec.w);
 	}
 
-	inline Ape::Vector4 ConversionFromOgre(const Ogre::Vector4& p_v4)
+	inline ape::Vector4 ConversionFromOgre(const Ogre::Vector4& p_v4)
 	{
-		return Ape::Vector4(p_v4.x, p_v4.y, p_v4.z, p_v4.w);
+		return ape::Vector4(p_v4.x, p_v4.y, p_v4.z, p_v4.w);
 	}
 
-	inline Ogre::ColourValue ConversionToOgre(const Ape::Color& p_colv)
+	inline Ogre::ColourValue ConversionToOgre(const ape::Color& p_colv)
 	{
 		return Ogre::ColourValue(p_colv.r, p_colv.g, p_colv.b, p_colv.a);
 	}
 
-	inline Ape::Color ConversionFromOgre(const Ogre::ColourValue& p_colv)
+	inline ape::Color ConversionFromOgre(const Ogre::ColourValue& p_colv)
 	{
-		return Ape::Color(p_colv.r, p_colv.g, p_colv.b, p_colv.a);
+		return ape::Color(p_colv.r, p_colv.g, p_colv.b, p_colv.a);
 	}
 
-	inline std::vector<Ogre::ColourValue> ConversionToOgre(const Ape::ColorVector &cList)
+	inline std::vector<Ogre::ColourValue> ConversionToOgre(const ape::ColorVector &cList)
 	{
 		std::vector<Ogre::ColourValue> vec;
 		vec.reserve(cList.size());
@@ -122,9 +122,9 @@ namespace Ape
 		return vec;
 	}
 
-	inline Ape::ColorVector ConversionFromOgre(const std::vector<Ogre::ColourValue> &cVec)
+	inline ape::ColorVector ConversionFromOgre(const std::vector<Ogre::ColourValue> &cVec)
 	{
-		Ape::ColorVector cList;
+		ape::ColorVector cList;
 		cList.reserve(cVec.size());
 		for(auto it : cVec) {
 			cList.push_back(ConversionFromOgre(it));
@@ -132,190 +132,190 @@ namespace Ape
 		return cList;
 	}
 
-	inline Ogre::Degree ConversionToOgre(const Ape::Degree& mwDeg)
+	inline Ogre::Degree ConversionToOgre(const ape::Degree& mwDeg)
 	{
 		return Ogre::Degree(mwDeg.degree);
 	}
 
-	inline Ape::Degree ConversionFromOgre(const Ogre::Degree& oDeg)
+	inline ape::Degree ConversionFromOgre(const Ogre::Degree& oDeg)
 	{
-		return Ape::Degree(oDeg.valueDegrees());
+		return ape::Degree(oDeg.valueDegrees());
 	}
 
-	inline Ogre::ProjectionType ConversionToOgre(const Ape::Camera::ProjectionType type)
+	inline Ogre::ProjectionType ConversionToOgre(const ape::Camera::ProjectionType type)
 	{
-		if (type == Ape::Camera::ProjectionType::ORTHOGRAPHIC)
+		if (type == ape::Camera::ProjectionType::ORTHOGRAPHIC)
 			return Ogre::ProjectionType::PT_ORTHOGRAPHIC;
-		else if (type == Ape::Camera::ProjectionType::PERSPECTIVE)
+		else if (type == ape::Camera::ProjectionType::PERSPECTIVE)
 			return Ogre::ProjectionType::PT_PERSPECTIVE;
 	}
 
-	inline Ape::Camera::ProjectionType ConversionFromOgre(const Ogre::ProjectionType type)
+	inline ape::Camera::ProjectionType ConversionFromOgre(const Ogre::ProjectionType type)
 	{
 		if (type == Ogre::ProjectionType::PT_ORTHOGRAPHIC)
-			return Ape::Camera::ProjectionType::ORTHOGRAPHIC;
+			return ape::Camera::ProjectionType::ORTHOGRAPHIC;
 		else if (type == Ogre::ProjectionType::PT_PERSPECTIVE)
-			return Ape::Camera::ProjectionType::PERSPECTIVE;
+			return ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
-	inline Ogre::SceneBlendType ConversionToOgre(const Ape::Pass::SceneBlendingType type)
+	inline Ogre::SceneBlendType ConversionToOgre(const ape::Pass::SceneBlendingType type)
 	{
-		if (type == Ape::Pass::SceneBlendingType::ADD)
+		if (type == ape::Pass::SceneBlendingType::ADD)
 			return Ogre::SceneBlendType::SBT_ADD;
-		else if (type == Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+		else if (type == ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
-		else if (type == Ape::Pass::SceneBlendingType::REPLACE)
+		else if (type == ape::Pass::SceneBlendingType::REPLACE)
 			return Ogre::SceneBlendType::SBT_REPLACE;
-		else if (type == Ape::Pass::SceneBlendingType::INVALID)
+		else if (type == ape::Pass::SceneBlendingType::INVALID)
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 	}
 
-	inline Ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
+	inline ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
 	{
 		if (type == Ogre::SceneBlendType::SBT_ADD)
-			return Ape::Pass::SceneBlendingType::ADD;
+			return ape::Pass::SceneBlendingType::ADD;
 		else if (type == Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA)
-			return Ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA;
+			return ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA;
 		else if (type == Ogre::SceneBlendType::SBT_REPLACE)
-			return Ape::Pass::SceneBlendingType::REPLACE;
+			return ape::Pass::SceneBlendingType::REPLACE;
 	}
 
-	inline Ogre::CullingMode ConversionToOgre(const Ape::Material::CullingMode type)
+	inline Ogre::CullingMode ConversionToOgre(const ape::Material::CullingMode type)
 	{
-		if (type == Ape::Material::CullingMode::NONE_CM)
+		if (type == ape::Material::CullingMode::NONE_CM)
 			return Ogre::CullingMode::CULL_NONE;
-		else if (type == Ape::Material::CullingMode::CLOCKWISE)
+		else if (type == ape::Material::CullingMode::CLOCKWISE)
 			return Ogre::CullingMode::CULL_CLOCKWISE;
-		else if (type == Ape::Material::CullingMode::ANTICLOCKWISE)
+		else if (type == ape::Material::CullingMode::ANTICLOCKWISE)
 			return Ogre::CullingMode::CULL_ANTICLOCKWISE;
-		else if (type == Ape::Material::CullingMode::INVALID_CM)
+		else if (type == ape::Material::CullingMode::INVALID_CM)
 			return Ogre::CullingMode::CULL_CLOCKWISE;
 	}
 
-	inline Ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)
+	inline ape::Material::CullingMode ConversionFromOgre(const Ogre::CullingMode type)
 	{
 		if (type == Ogre::CullingMode::CULL_NONE)
-			return Ape::Material::CullingMode::NONE_CM;
+			return ape::Material::CullingMode::NONE_CM;
 		else if (type == Ogre::CullingMode::CULL_CLOCKWISE)
-			return Ape::Material::CullingMode::CLOCKWISE;
+			return ape::Material::CullingMode::CLOCKWISE;
 		else if (type == Ogre::CullingMode::CULL_ANTICLOCKWISE)
-			return Ape::Material::CullingMode::ANTICLOCKWISE;
+			return ape::Material::CullingMode::ANTICLOCKWISE;
 	}
 
-	inline Ogre::TextureUnitState::TextureAddressingMode ConversionToOgre(const Ape::Texture::AddressingMode type)
+	inline Ogre::TextureUnitState::TextureAddressingMode ConversionToOgre(const ape::Texture::AddressingMode type)
 	{
-		if (type == Ape::Texture::AddressingMode::BORDER)
+		if (type == ape::Texture::AddressingMode::BORDER)
 			return Ogre::TextureUnitState::TextureAddressingMode::TAM_BORDER;
-		else if (type == Ape::Texture::AddressingMode::CLAMP)
+		else if (type == ape::Texture::AddressingMode::CLAMP)
 			return Ogre::TextureUnitState::TextureAddressingMode::TAM_CLAMP;
-		else if (type == Ape::Texture::AddressingMode::MIRROR)
+		else if (type == ape::Texture::AddressingMode::MIRROR)
 			return Ogre::TextureUnitState::TextureAddressingMode::TAM_MIRROR;
-		else if (type == Ape::Texture::AddressingMode::WRAP)
+		else if (type == ape::Texture::AddressingMode::WRAP)
 			return Ogre::TextureUnitState::TextureAddressingMode::TAM_WRAP;
 	}
 
-	inline Ape::Texture::AddressingMode ConversionFromOgre(const Ogre::TextureUnitState::TextureAddressingMode type)
+	inline ape::Texture::AddressingMode ConversionFromOgre(const Ogre::TextureUnitState::TextureAddressingMode type)
 	{
 		if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_BORDER)
-			return Ape::Texture::AddressingMode::BORDER;
+			return ape::Texture::AddressingMode::BORDER;
 		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_CLAMP)
-			return Ape::Texture::AddressingMode::CLAMP;
+			return ape::Texture::AddressingMode::CLAMP;
 		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_MIRROR)
-			return Ape::Texture::AddressingMode::MIRROR;
+			return ape::Texture::AddressingMode::MIRROR;
 		else if (type == Ogre::TextureUnitState::TextureAddressingMode::TAM_WRAP)
-			return Ape::Texture::AddressingMode::WRAP;
+			return ape::Texture::AddressingMode::WRAP;
 	}
 
-	inline Ogre::FilterOptions ConversionToOgre(const Ape::Texture::Filtering type)
+	inline Ogre::FilterOptions ConversionToOgre(const ape::Texture::Filtering type)
 	{
-		if (type == Ape::Texture::Filtering::ANISOTROPIC)
+		if (type == ape::Texture::Filtering::ANISOTROPIC)
 			return Ogre::FilterOptions::FO_ANISOTROPIC;
-		else if (type == Ape::Texture::Filtering::LINEAR)
+		else if (type == ape::Texture::Filtering::LINEAR)
 			return Ogre::FilterOptions::FO_LINEAR;
-		else if (type == Ape::Texture::Filtering::POINT)
+		else if (type == ape::Texture::Filtering::POINT)
 			return Ogre::FilterOptions::FO_POINT;
 	}
 
-	inline Ape::Texture::Filtering ConversionFromOgre(const Ogre::FilterOptions type)
+	inline ape::Texture::Filtering ConversionFromOgre(const Ogre::FilterOptions type)
 	{
 		if (type == Ogre::FilterOptions::FO_ANISOTROPIC)
-			return Ape::Texture::Filtering::ANISOTROPIC;
+			return ape::Texture::Filtering::ANISOTROPIC;
 		else if (type == Ogre::FilterOptions::FO_LINEAR)
-			return Ape::Texture::Filtering::LINEAR;
+			return ape::Texture::Filtering::LINEAR;
 		else if (type == Ogre::FilterOptions::FO_POINT)
-			return Ape::Texture::Filtering::POINT;
+			return ape::Texture::Filtering::POINT;
 	}
 
-	inline Ogre::PixelFormat ConversionToOgre(const Ape::Texture::PixelFormat type)
+	inline Ogre::PixelFormat ConversionToOgre(const ape::Texture::PixelFormat type)
 	{
-		if (type == Ape::Texture::PixelFormat::A8R8G8B8)
+		if (type == ape::Texture::PixelFormat::A8R8G8B8)
 			return Ogre::PixelFormat::PF_A8R8G8B8;
-		else if (type == Ape::Texture::PixelFormat::R8G8B8)
+		else if (type == ape::Texture::PixelFormat::R8G8B8)
 			return Ogre::PixelFormat::PF_R8G8B8;
-		else if (type == Ape::Texture::PixelFormat::R8G8B8A8)
+		else if (type == ape::Texture::PixelFormat::R8G8B8A8)
 			return Ogre::PixelFormat::PF_R8G8B8A8;
 	}
 
-	inline Ape::Texture::PixelFormat ConversionFromOgre(const Ogre::PixelFormat type)
+	inline ape::Texture::PixelFormat ConversionFromOgre(const Ogre::PixelFormat type)
 	{
 		if (type == Ogre::PixelFormat::PF_A8R8G8B8)
-			return Ape::Texture::PixelFormat::A8R8G8B8;
+			return ape::Texture::PixelFormat::A8R8G8B8;
 		else if (type == Ogre::PixelFormat::PF_R8G8B8)
-			return Ape::Texture::PixelFormat::R8G8B8;
+			return ape::Texture::PixelFormat::R8G8B8;
 	}
 
-	inline Ogre::TextureUsage ConversionToOgre(const Ape::Texture::Usage type)
+	inline Ogre::TextureUsage ConversionToOgre(const ape::Texture::Usage type)
 	{
-		if (type == Ape::Texture::Usage::RENDERTARGET)
+		if (type == ape::Texture::Usage::RENDERTARGET)
 			return Ogre::TextureUsage::TU_RENDERTARGET;
-		else if (type == Ape::Texture::Usage::DYNAMIC_WRITE_ONLY)
+		else if (type == ape::Texture::Usage::DYNAMIC_WRITE_ONLY)
 			return Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY;
 	}
 
-	inline Ape::Texture::Usage ConversionFromOgre(const Ogre::TextureUsage type)
+	inline ape::Texture::Usage ConversionFromOgre(const Ogre::TextureUsage type)
 	{
 		if (type == Ogre::TextureUsage::TU_RENDERTARGET)
-			return Ape::Texture::Usage::RENDERTARGET;
+			return ape::Texture::Usage::RENDERTARGET;
 		else if (type == Ogre::TextureUsage::TU_DYNAMIC_WRITE_ONLY)
-			return Ape::Texture::Usage::DYNAMIC_WRITE_ONLY;
+			return ape::Texture::Usage::DYNAMIC_WRITE_ONLY;
 	}
 
-	inline Ogre::Radian ConversionToOgre(const Ape::Radian& mwRad)
+	inline Ogre::Radian ConversionToOgre(const ape::Radian& mwRad)
 	{
 		return Ogre::Radian(mwRad.radian);
 	}
 
-	inline Ape::Radian ConversionFromOgre(const Ogre::Radian& oRad)
+	inline ape::Radian ConversionFromOgre(const Ogre::Radian& oRad)
 	{
-		return Ape::Radian(oRad.valueRadians());
+		return ape::Radian(oRad.valueRadians());
 	}
 
-	inline Ape::Light::Type ConversionFromOgre(Ogre::Light::LightTypes type)
+	inline ape::Light::Type ConversionFromOgre(Ogre::Light::LightTypes type)
 	{
 		switch (type)
 		{
 		case Ogre::Light::LT_POINT:
-			return Ape::Light::Type::POINT;
+			return ape::Light::Type::POINT;
 		case Ogre::Light::LT_DIRECTIONAL:
-			return Ape::Light::Type::DIRECTIONAL;
+			return ape::Light::Type::DIRECTIONAL;
 		case Ogre::Light::LT_SPOTLIGHT:
-			return Ape::Light::Type::SPOT;
+			return ape::Light::Type::SPOT;
 		default:
-			return Ape::Light::Type::INVALID;
+			return ape::Light::Type::INVALID;
 		}		
 	}
 
-	inline Ogre::Light::LightTypes ConversionToOgre(Ape::Light::Type type)
+	inline Ogre::Light::LightTypes ConversionToOgre(ape::Light::Type type)
 	{
 		switch (type)
 		{
-		case Ape::Light::Type::SPOT:
+		case ape::Light::Type::SPOT:
 			return Ogre::Light::LightTypes::LT_SPOTLIGHT;
-		case Ape::Light::Type::DIRECTIONAL:
+		case ape::Light::Type::DIRECTIONAL:
 			return Ogre::Light::LightTypes::LT_DIRECTIONAL;
-		case Ape::Light::Type::POINT:
+		case ape::Light::Type::POINT:
 			return Ogre::Light::LightTypes::LT_POINT;
-		case Ape::Light::Type::INVALID:
+		case ape::Light::Type::INVALID:
 		default:
 			return Ogre::Light::LightTypes(-1);
 		}

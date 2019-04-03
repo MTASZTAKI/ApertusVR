@@ -23,44 +23,44 @@ SOFTWARE.*/
 #ifndef APE_PBSPASSIMPL_H
 #define APE_PBSPASSIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPbsPass.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPbsPass.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class PbsPassImpl : public Ape::IPbsPass, public Ape::Replica
+	class PbsPassImpl : public ape::IPbsPass, public ape::Replica
 	{
 	public:
 		PbsPassImpl(std::string name, bool isHostCreated);
 
 		~PbsPassImpl();
 		
-		void setAlbedo(Ape::Color albedo) override;
+		void setAlbedo(ape::Color albedo) override;
 
 		void setRoughness(float roughness) override;
 
 		void setLightRoughnessOffset(float lightRoughnessOffset) override;
 
-		void setF0(Ape::Color f0) override;
+		void setF0(ape::Color f0) override;
 
-		Ape::Color getAlbedo() override;
+		ape::Color getAlbedo() override;
 
 		float getRoughness() override;
 
 		float getLightRoughnessOffset() override;
 
-		Ape::Color getF0() override;
+		ape::Color getF0() override;
 
-		void setDiffuseColor(Ape::Color diffuse) override;
+		void setDiffuseColor(ape::Color diffuse) override;
 
-		void setSpecularColor(Ape::Color specular) override;
+		void setSpecularColor(ape::Color specular) override;
 
-		void setAmbientColor(Ape::Color ambient) override;
+		void setAmbientColor(ape::Color ambient) override;
 
-		void setEmissiveColor(Ape::Color emissive) override;
+		void setEmissiveColor(ape::Color emissive) override;
 
 		void setShininess(float shininess) override;
 
@@ -71,17 +71,17 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::Color mAlbedo;
+		ape::Color mAlbedo;
 
 		float mRoughness;
 
 		float mLightRoughnessOffset;
 
-		Ape::Color mF0;
+		ape::Color mF0;
 	};
 }
 

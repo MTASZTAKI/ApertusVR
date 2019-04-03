@@ -22,29 +22,29 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApePresentationScenePlugin.h
+	apePresentationScenePlugin.h
 	)
 
 set (SOURCES 
-	ApePresentationScenePlugin.cpp
+	apePresentationScenePlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApePresentationScenePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apePresentationScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApePresentationScenePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow)
+target_link_libraries (apePresentationScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 if (WIN32)
 	# we have to link to some DirectX libraries 
-	target_link_libraries (ApePresentationScenePlugin dinput8 dxguid)
+	target_link_libraries (apePresentationScenePlugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET ApePresentationScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePresentationScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApePresentationScenePlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apePresentationScenePlugin PROPERTY FOLDER "Plugins")
 
 
 

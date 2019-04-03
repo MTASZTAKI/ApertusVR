@@ -8,7 +8,7 @@
     "renderWindows": [
         {
             "enable": true,
-            "name": "ApeRobotCalibration",
+            "name": "apeRobotCalibration",
             "monitorIndex": 0,
             "resolution": {
                 "width": 1700,

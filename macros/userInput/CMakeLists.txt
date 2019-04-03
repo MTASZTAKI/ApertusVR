@@ -22,22 +22,22 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeUserInputMacro.h
+	apeUserInputMacro.h
 	)
 
 set (SOURCES 
-	ApeUserInputMacro.cpp
+	apeUserInputMacro.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApeUserInputMacro SHARED ${SOURCES} ${HEADERS})
+add_library (apeUserInputMacro SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeUserInputMacro ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (apeUserInputMacro apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApeUserInputMacro PROPERTY COMPILE_DEFINITIONS BUILDING_APE_USERINPUTMACRO_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeUserInputMacro PROPERTY COMPILE_DEFINITIONS BUILDING_APE_USERINPUTMACRO_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeUserInputMacro PROPERTY FOLDER "Macros")
+set_property (TARGET apeUserInputMacro PROPERTY FOLDER "Macros")

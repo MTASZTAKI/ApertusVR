@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeTexasEEG.cpp
+	apeTexasEEG.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeTexasEEG ${SOURCES})
-target_link_libraries (ApeTexasEEG ApeSystem ApePluginManager)
-set_property (TARGET ApeTexasEEG PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeTexasEEG PROPERTY FOLDER "Samples/TexasEEG")
+add_executable (apeTexasEEG ${SOURCES})
+target_link_libraries (apeTexasEEG apeSystem apePluginManager)
+set_property (TARGET apeTexasEEG PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeTexasEEG PROPERTY FOLDER "Samples/TexasEEG")
 
 

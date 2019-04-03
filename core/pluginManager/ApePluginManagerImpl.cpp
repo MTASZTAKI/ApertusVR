@@ -20,35 +20,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePluginManagerImpl.h"
+#include "apePluginManagerImpl.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-Ape::PluginManagerImpl::PluginManagerImpl()
+ape::PluginManagerImpl::PluginManagerImpl()
 {
 	msSingleton = this;
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mPluginThreadVector = std::vector<std::thread>();
-	mPluginVector = std::vector<Ape::IPlugin*>();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mThreadVector = std::vector<std::thread>();
+	mPluginVector = std::vector<ape::IPlugin*>();
 	mPluginCount = 0;
 }
 
-Ape::PluginManagerImpl::~PluginManagerImpl()
+ape::PluginManagerImpl::~PluginManagerImpl()
 {
 	
 }
 
-void Ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
+void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
-	mPluginVector.push_back(Ape::PluginFactory::CreatePlugin(pluginname));
+	mPluginVector.push_back(ape::PluginFactory::CreatePlugin(pluginname));
 }
 
-void Ape::PluginManagerImpl::CreatePlugins()
+void ape::PluginManagerImpl::CreatePlugins()
 {
-	mpInternalPluginManager = &Ape::InternalPluginManager::GetInstance();
-	Ape::PluginManagerConfig pluginManagerConfig = mpSystemConfig->getPluginManagerConfig();
-	std::vector<std::string> pluginNames = pluginManagerConfig.pluginnames;
-	mPluginCount = pluginManagerConfig.pluginnames.size();
+	mpInternalPluginManager = &ape::InternalPluginManager::GetInstance();
+	auto pluginNames = mpCoreConfig->getPluginNames();
+	mPluginCount = pluginNames.size();
 	for (std::vector<std::string>::iterator it = pluginNames.begin(); it != pluginNames.end(); ++it)
 	{
 		if (mpInternalPluginManager->Load((*it)))
@@ -64,30 +63,40 @@ void Ape::PluginManagerImpl::CreatePlugins()
 	}
 }
 
-void Ape::PluginManagerImpl::InitAndRunPlugin(Ape::IPlugin* plugin)
+void ape::PluginManagerImpl::InitAndRunPlugin(ape::IPlugin* plugin)
 {
 	plugin->Init();
 	plugin->Run();
 	//TODO_CORE name
-	//Ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
+	//ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
 }
 
-void Ape::PluginManagerImpl::InitAndRunPlugins()
+void ape::PluginManagerImpl::InitAndRunPlugins()
 {
-	for (std::vector<Ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
+	for (std::vector<ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
 	{
-		mPluginThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
+		mThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
 	}
 }
 
-void Ape::PluginManagerImpl::joinPluginThreads()
+void ape::PluginManagerImpl::registerUserThreadFunction(std::function<void()> userThreadFunction)
 {
-	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::join));
+	mThreadVector.push_back(std::thread(userThreadFunction));
 }
 
-void Ape::PluginManagerImpl::detachPluginThreads()
+void ape::PluginManagerImpl::joinThreads()
 {
-	std::for_each(mPluginThreadVector.begin(), mPluginThreadVector.end(), std::mem_fn(&std::thread::detach));
+	std::for_each(mThreadVector.begin(), mThreadVector.end(), std::mem_fn(&std::thread::join));
+}
+
+void ape::PluginManagerImpl::detachThreads()
+{
+	std::for_each(mThreadVector.begin(), mThreadVector.end(), std::mem_fn(&std::thread::detach));
+}
+
+unsigned int ape::PluginManagerImpl::getPluginCount()
+{
+	return mPluginCount;
 }
 
 

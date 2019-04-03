@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeAudi.cpp
+	apeAudi.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeAudi ${SOURCES})
-target_link_libraries (ApeAudi ApeSystem ApePluginManager)
-set_property (TARGET ApeAudi PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeAudi PROPERTY FOLDER "Samples/Audi")
+add_executable (apeAudi ${SOURCES})
+target_link_libraries (apeAudi apeSystem apePluginManager)
+set_property (TARGET apeAudi PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeAudi PROPERTY FOLDER "Samples/Audi")
 
 

@@ -38,30 +38,31 @@ SOFTWARE.*/
 #include <cstdio>
 #include <cstdlib>
 #include <mutex>
+#include <functional>
 #include <string>
 #include <thread>
-#include "managers/ApeILogManager.h"
-#include "managers/ApeIPluginManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "ApeInternalPluginManager.h"
-#include "ApePluginFactory.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeIPluginManager.h"
+#include "managers/apeICoreConfig.h"
+#include "apeInternalPluginManager.h"
+#include "apePluginFactory.h"
 
-namespace Ape
+namespace ape
 { 
 	class APE_PLUGINMANAGER_DLL_EXPORT PluginManagerImpl : public IPluginManager
 	{	
 	private:
-		std::vector<std::thread> mPluginThreadVector;
+		std::vector<std::thread> mThreadVector;
 
-		std::vector<Ape::IPlugin*> mPluginVector;
-		
+		std::vector<ape::IPlugin*> mPluginVector;
+
 		InternalPluginManager* mpInternalPluginManager;
 
 		void CreatePlugin(std::string pluginname);
 
-		void InitAndRunPlugin(Ape::IPlugin* plugin);
+		void InitAndRunPlugin(ape::IPlugin* plugin);
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		unsigned int mPluginCount;
 
@@ -74,9 +75,13 @@ namespace Ape
 
 		void InitAndRunPlugins();
 
-		void joinPluginThreads();
+		void joinThreads();
 
-		void detachPluginThreads();
+		void registerUserThreadFunction(std::function<void()> userThreadFunction);
+
+		void detachThreads();
+
+		unsigned int getPluginCount();
 	};
 }
 #endif

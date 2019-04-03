@@ -24,27 +24,27 @@ add_subdirectory (configs)
 
 
 set (SOURCES
-	ApeIndustry40.cpp
+	apeIndustry40.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeIndustry40 ${SOURCES})
-target_link_libraries (ApeIndustry40 ApeSystem ApePluginManager)
-set_property (TARGET ApeIndustry40 PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeIndustry40 PROPERTY FOLDER "Samples/Industry40")
+add_executable (apeIndustry40 ${SOURCES})
+target_link_libraries (apeIndustry40 apeSystem apePluginManager)
+set_property (TARGET apeIndustry40 PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeIndustry40 PROPERTY FOLDER "Samples/Industry40")
 
 set (SOURCES_LAUNCHER 
-	ApeIndustry40MultiPlayerTester.cpp
+	apeIndustry40MultiPlayerTester.cpp
 	)
 	
-add_executable (ApeIndustry40MultiPlayerTester ${SOURCES_LAUNCHER})
-target_link_libraries (ApeIndustry40MultiPlayerTester)
-set_property (TARGET ApeIndustry40MultiPlayerTester PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeIndustry40MultiPlayerTester PROPERTY FOLDER "Samples/Industry40")
+add_executable (apeIndustry40MultiPlayerTester ${SOURCES_LAUNCHER})
+target_link_libraries (apeIndustry40MultiPlayerTester)
+set_property (TARGET apeIndustry40MultiPlayerTester PROPERTY COMPILE_DEFINITIONS APE_BIN_DIR="${APE_BIN_DIR}" APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeIndustry40MultiPlayerTester PROPERTY FOLDER "Samples/Industry40")
 
 
 

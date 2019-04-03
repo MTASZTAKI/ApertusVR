@@ -25,20 +25,20 @@ SOFTWARE.*/
 
 #include <vector>
 #include <string>
-#include "datatypes/ApeVector3.h"
-#include "datatypes/ApeQuaternion.h"
-#include "datatypes/ApeDegree.h"
-#include "datatypes/ApeRadian.h"
+#include "datatypes/apeVector3.h"
+#include "datatypes/apeQuaternion.h"
+#include "datatypes/apeDegree.h"
+#include "datatypes/apeRadian.h"
 
-namespace Ape
+namespace ape
 {
 	struct OgreCameraConfig
 	{
 		std::string name;
 
-		Ape::Vector3 positionOffset;
+		ape::Vector3 positionOffset;
 		
-		Ape::Quaternion orientationOffset;
+		ape::Quaternion orientationOffset;
 
 		float nearClip;
 
@@ -51,8 +51,8 @@ namespace Ape
 		OgreCameraConfig()
 		{
 			this->name = std::string();
-			this->positionOffset = Ape::Vector3();
-			this->orientationOffset = Ape::Quaternion();
+			this->positionOffset = ape::Vector3();
+			this->orientationOffset = ape::Quaternion();
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
@@ -61,8 +61,8 @@ namespace Ape
 
 		OgreCameraConfig(
 			std::string name,
-			Ape::Vector3 positionOffset,
-			Ape::Quaternion orientationOffset,
+			ape::Vector3 positionOffset,
+			ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
 			Degree fovY,
@@ -140,7 +140,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::OgreViewPortConfig > OgreViewPortConfigList;
+	typedef std::vector < ape::OgreViewPortConfig > OgreViewPortConfigList;
 
 	struct OgreRenderWindowConfig
 	{
@@ -168,7 +168,7 @@ namespace Ape
 
 		int colorDepth;
 
-		Ape::OgreViewPortConfigList viewportList;
+		ape::OgreViewPortConfigList viewportList;
 
 		std::string windowHandler;
 
@@ -186,7 +186,7 @@ namespace Ape
 			this->fsaa = 0;
 			this->fsaaHint = "";
 			this->colorDepth = 0;
-			this->viewportList = Ape::OgreViewPortConfigList();
+			this->viewportList = ape::OgreViewPortConfigList();
 			this->windowHandler = "";
 		}
 
@@ -202,7 +202,7 @@ namespace Ape
 		int fsaa,
 		int fsaaHint,
 		int colorDepth,
-		Ape::OgreViewPortConfigList viewportList,
+		ape::OgreViewPortConfigList viewportList,
 		std::string windowHandler = "")
 		{
 			this->enable = enable;
@@ -222,7 +222,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
+	typedef std::vector < ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
 
 	struct OgreRenderPluginConfig
 	{

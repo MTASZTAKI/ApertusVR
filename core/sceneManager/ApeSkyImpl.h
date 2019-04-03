@@ -23,14 +23,14 @@ SOFTWARE.*/
 #ifndef APE_SKYIMPL_H
 #define APE_SKYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeISky.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeISky.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class SkyImpl : public ISky, public Ape::Replica
+	class SkyImpl : public ISky, public ape::Replica
 	{
 	public:
 
@@ -40,15 +40,15 @@ namespace Ape
 
 		void setTime(float startTime, float sunRiseTime = 6.0f, float sunSetTime = 18.0f) override;
 
-		Ape::ISky::Time getTime() override;
+		ape::ISky::Time getTime() override;
 
-		void setSunLight(Ape::LightWeakPtr sunLight) override;
+		void setSunLight(ape::LightWeakPtr sunLight) override;
 
-		Ape::LightWeakPtr getSunLight() override;
+		ape::LightWeakPtr getSunLight() override;
 
-		void setSkyLight(Ape::LightWeakPtr skyLight) override;
+		void setSkyLight(ape::LightWeakPtr skyLight) override;
 
-		Ape::LightWeakPtr getSkyLight() override;
+		ape::LightWeakPtr getSkyLight() override;
 
 		void setSize(float size) override;
 
@@ -61,15 +61,15 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::LightWeakPtr mSkyLight;
+		ape::LightWeakPtr mSkyLight;
 
-		Ape::LightWeakPtr mSunLight;
+		ape::LightWeakPtr mSunLight;
 
-		Ape::ISky::Time mTime;
+		ape::ISky::Time mTime;
 
 		float mSize;
 	};

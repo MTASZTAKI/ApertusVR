@@ -22,11 +22,11 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeOculusDK2Plugin.h
+	apeOculusDK2Plugin.h
 	)
 
 set (SOURCES 
-	ApeOculusDK2Plugin.cpp
+	apeOculusDK2Plugin.cpp
 	)
 	
 set(OCULUS_HOME ${CMAKE_SOURCE_DIR}/3rdParty/oculus)
@@ -37,20 +37,20 @@ if (WIN32)
 endif ()	
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	 ${PROJECT_SOURCE_DIR}/macros/userInput 
+	
+	  
 	${OCULUS_HOME}/LibOVR/Include
 	)
 
-add_library (ApeOculusDK2Plugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeOculusDK2Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if (WIN32)
-target_link_libraries (ApeOculusDK2Plugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro OCULUS_LIB winmm.lib)
+target_link_libraries (apeOculusDK2Plugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro OCULUS_LIB winmm.lib)
 endif ()
 
-set_property (TARGET ApeOculusDK2Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeOculusDK2Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeOculusDK2Plugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeOculusDK2Plugin PROPERTY FOLDER "Plugins")
 
 

@@ -1,0 +1,26 @@
+{
+    "plugins": [
+    ],
+    "network": {
+        "user": "polimi",
+        "participant": "none",
+        "internet": {
+            "natPunchThrough": {
+                "ip": "",
+                "port": ""
+            },
+            "lobby": {
+                "ip": "",
+                "port": "",
+                "room": ""
+            }
+        },
+        "lan": {
+            "ip": "",
+            "port": ""
+        },
+        "selected": "none",
+        "resourceLocations": [
+        ]
+    }
+}

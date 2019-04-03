@@ -30,30 +30,30 @@ endfunction ()
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeIndustry40Plugin.h
+	apeIndustry40Plugin.h
 	)
 
 set (SOURCES 
-	ApeIndustry40Plugin.cpp
+	apeIndustry40Plugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	
+	
 	)
 
-add_library (ApeIndustry40Plugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeIndustry40Plugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeIndustry40Plugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeSceneMakerMacro)
+target_link_libraries (apeIndustry40Plugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 if (WIN32)
 	# we have to link to some DirectX libraries
-	target_link_libraries (ApeIndustry40Plugin dinput8 dxguid)
+	target_link_libraries (apeIndustry40Plugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET ApeIndustry40Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeIndustry40Plugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeIndustry40Plugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeIndustry40Plugin PROPERTY FOLDER "Plugins")
 
 
 

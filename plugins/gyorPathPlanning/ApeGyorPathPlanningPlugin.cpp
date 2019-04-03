@@ -1,28 +1,28 @@
-#include "ApeGyorPathPlanningPlugin.h"
+#include "apeGyorPathPlanningPlugin.h"
 
-Ape::ApeGyorPathPlanningPlugin::ApeGyorPathPlanningPlugin()
+ape::apeGyorPathPlanningPlugin::apeGyorPathPlanningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpSceneMakerMacro = new Ape::SceneMakerMacro();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeGyorPathPlanningPlugin::~ApeGyorPathPlanningPlugin()
+ape::apeGyorPathPlanningPlugin::~apeGyorPathPlanningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::eventCallBack(const Ape::Event& event)
+void ape::apeGyorPathPlanningPlugin::eventCallBack(const ape::Event& event)
 {
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Init()
+void ape::apeGyorPathPlanningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -31,7 +31,7 @@ void Ape::ApeGyorPathPlanningPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Run()
+void ape::apeGyorPathPlanningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	//while (!(mGripperRightRootNode.lock() && mGripperLeftRootNode.lock() && mGripperLeftHelperNode.lock() && mGripperRightHelperNode.lock()
@@ -39,34 +39,34 @@ void Ape::ApeGyorPathPlanningPlugin::Run()
 	//{
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	//}
-	//mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
+	//mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPathPlanningPlugin::eventCallBack, this, std::placeholders::_1));
 	//int gripperMaxValue = 255;
 	//int gripperMinValue = 0;
 	//int gripperCurrentValue = gripperMinValue;
 	//float degreeStep = 45.0f / (float)gripperMaxValue; //max degree (the root joint of the gripper) divided by the max value from the gripper
-	//Ape::Vector3 axis(0, 0, 1);
+	//ape::Vector3 axis(0, 0, 1);
 
 	//if (auto node = mpScene->getNode("JOINT(Rotational)(q1)2ur10Gripper").lock())
 	//{
-	//	node->setOrientation(Ape::Quaternion(0.707, 0 , 0.707, 0));
+	//	node->setOrientation(ape::Quaternion(0.707, 0 , 0.707, 0));
 	//}
 	//if (auto node = mpScene->getNode("JOINT(Rotational)(q4)5ur10Gripper").lock())
 	//{
-	//	node->setOrientation(Ape::Quaternion(0.707, 0, 0.707, 0));
+	//	node->setOrientation(ape::Quaternion(0.707, 0, 0.707, 0));
 	//}
 
 	while (true)
 	{
 		//APE_LOG_DEBUG("gripperCurrentValue: " << gripperCurrentValue);
-		/*Ape::Degree degree = gripperCurrentValue * degreeStep;
-		Ape::Quaternion orientation;
-		orientation.FromAngleAxis(Ape::Radian(degree.toRadian()), axis);
+		/*ape::Degree degree = gripperCurrentValue * degreeStep;
+		ape::Quaternion orientation;
+		orientation.FromAngleAxis(ape::Radian(degree.toRadian()), axis);
 		if (auto gripperLeftRootNode = mGripperLeftRootNode.lock())
 		{
 			gripperLeftRootNode->setOrientation(mGripperLeftRootNodeInitialOrientation * orientation);
 			if (auto gripperLeftEndNode = mGripperLeftEndNode.lock())
 			{
-				gripperLeftEndNode->setOrientation((mGripperLeftEndNodeInitialOrientation * Ape::Quaternion(0.9980631, 0, 0, -0.0622098)) * gripperLeftRootNode->getOrientation().Inverse());
+				gripperLeftEndNode->setOrientation((mGripperLeftEndNodeInitialOrientation * ape::Quaternion(0.9980631, 0, 0, -0.0622098)) * gripperLeftRootNode->getOrientation().Inverse());
 			}
 		}
 		if (auto gripperRightRootNode = mGripperRightRootNode.lock())
@@ -74,7 +74,7 @@ void Ape::ApeGyorPathPlanningPlugin::Run()
 			gripperRightRootNode->setOrientation(mGripperRightRootNodeInitialOrientation * orientation);
 			if (auto gripperRightEndNode = mGripperRightEndNode.lock())
 			{
-				gripperRightEndNode->setOrientation((mGripperRightEndNodeInitialOrientation * Ape::Quaternion(0.9980631, 0, 0, -0.0622098)) * gripperRightRootNode->getOrientation().Inverse());
+				gripperRightEndNode->setOrientation((mGripperRightEndNodeInitialOrientation * ape::Quaternion(0.9980631, 0, 0, -0.0622098)) * gripperRightRootNode->getOrientation().Inverse());
 			}
 		}
 		if (auto gripperLeftHelperNode = mGripperLeftHelperNode.lock())
@@ -98,25 +98,25 @@ void Ape::ApeGyorPathPlanningPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Step()
+void ape::apeGyorPathPlanningPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Stop()
+void ape::apeGyorPathPlanningPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Suspend()
+void ape::apeGyorPathPlanningPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeGyorPathPlanningPlugin::Restart()
+void ape::apeGyorPathPlanningPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

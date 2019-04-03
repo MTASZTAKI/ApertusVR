@@ -25,28 +25,28 @@ add_subdirectory (fobLib)
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeFobHeadTrackingPlugin.h
+	apeFobHeadTrackingPlugin.h
 	)
 
 set (SOURCES 
-	ApeFobHeadTrackingPlugin.cpp
+	apeFobHeadTrackingPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	fobLib
-	${PROJECT_SOURCE_DIR}/macros/userInput 
+	 
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
-add_library (ApeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeFobHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeFobHeadTrackingPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro ApeFobHeadTrackingLib)
+target_link_libraries (apeFobHeadTrackingPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeFobHeadTrackingLib)
 
-set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeFobHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeFobHeadTrackingPlugin PROPERTY FOLDER "Plugins/ApeFobHeadTracking")
+set_property (TARGET apeFobHeadTrackingPlugin PROPERTY FOLDER "Plugins/apeFobHeadTracking")
 
 
 

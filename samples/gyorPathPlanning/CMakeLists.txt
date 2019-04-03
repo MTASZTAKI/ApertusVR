@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeGyorPathPlanning.cpp
+	apeGyorPathPlanning.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeGyorPathPlanning ${SOURCES})
-target_link_libraries (ApeGyorPathPlanning ApeSystem ApePluginManager)
-set_property (TARGET ApeGyorPathPlanning PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeGyorPathPlanning PROPERTY FOLDER "Samples/GyorPathPlanning")
+add_executable (apeGyorPathPlanning ${SOURCES})
+target_link_libraries (apeGyorPathPlanning apeSystem apePluginManager)
+set_property (TARGET apeGyorPathPlanning PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGyorPathPlanning PROPERTY FOLDER "Samples/GyorPathPlanning")
 
 

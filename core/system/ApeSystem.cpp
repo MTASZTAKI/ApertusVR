@@ -22,51 +22,43 @@ SOFTWARE.*/
 
 #include <chrono>
 #include <random>
-#include "system/ApePlatform.h"
-#include "system/ApeSystem.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeLogManagerImpl.h"
-#include "ApeMainWindowImpl.h"
-#include "ApePluginManagerImpl.h"
-#include "ApeSceneManagerImpl.h"
-#include "ApeSceneSessionImpl.h"
-#include "ApeSystemConfigImpl.h"
+#include "system/apePlatform.h"
+#include "system/apeSystem.h"
+#include "apeEventManagerImpl.h"
+#include "apeLogManagerImpl.h"
+#include "apePluginManagerImpl.h"
+#include "apeSceneManagerImpl.h"
+#include "apeCoreConfigImpl.h"
 
-Ape::PluginManagerImpl* gpPluginManagerImpl;
-Ape::EventManagerImpl* gpEventManagerImpl;
-Ape::LogManagerImpl* gpLogManagerImpl;
-Ape::SceneManagerImpl* gpSceneManagerImpl;
-Ape::SceneSessionImpl* gpSceneSessionImpl;
-Ape::SystemConfigImpl* gpSystemConfigImpl;
-Ape::MainWindowImpl* gpMainWindowImpl;
+ape::PluginManagerImpl* gpPluginManagerImpl;
+ape::EventManagerImpl* gpEventManagerImpl;
+ape::LogManagerImpl* gpLogManagerImpl;
+ape::SceneManagerImpl* gpSceneManagerImpl;
+ape::CoreConfigImpl* gpCoreConfigImpl;
 
-void Ape::System::Start(const char* configFolderPath, int isBlockingMode)
+void ape::System::Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction)
 {
-	std::cout << "ApertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
+	std::cout << "apertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
-	gpSystemConfigImpl = new SystemConfigImpl(std::string(configFolderPath));
-	gpMainWindowImpl = new MainWindowImpl();
+	gpCoreConfigImpl = new CoreConfigImpl(std::string(configFolderPath));
 	gpEventManagerImpl = new EventManagerImpl();
 	gpLogManagerImpl = new LogManagerImpl();
 	gpPluginManagerImpl = new PluginManagerImpl();
-	gpSceneSessionImpl = new SceneSessionImpl();
 	gpSceneManagerImpl = new SceneManagerImpl();
-	gpSceneSessionImpl->setScene(gpSceneManagerImpl);
 	gpPluginManagerImpl->CreatePlugins();
 	gpPluginManagerImpl->InitAndRunPlugins();
-	if (isBlockingMode)
-		gpPluginManagerImpl->joinPluginThreads();
+	gpPluginManagerImpl->registerUserThreadFunction(userThreadFunction);
+	if (isBlocking)
+		gpPluginManagerImpl->joinThreads();
 	else
-		gpPluginManagerImpl->detachPluginThreads();
+		gpPluginManagerImpl->detachThreads();
 }
 
-void Ape::System::Stop()
+void ape::System::Stop()
 {
 	delete gpEventManagerImpl;
 	delete gpSceneManagerImpl;
-	delete gpSceneSessionImpl;
 	delete gpPluginManagerImpl;
-	delete gpSystemConfigImpl;
-	delete gpMainWindowImpl;
+	delete gpCoreConfigImpl;
 }
 

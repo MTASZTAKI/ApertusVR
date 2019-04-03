@@ -24,7 +24,7 @@
         },
         {
             "enable": true,
-            "name": "Ape360Video",
+            "name": "ape360Video",
             "monitorIndex": 0,
             "resolution": {
                 "width": 1920,

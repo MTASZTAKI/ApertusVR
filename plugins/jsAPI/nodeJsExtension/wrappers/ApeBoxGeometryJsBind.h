@@ -25,69 +25,69 @@ SOFTWARE.*/
 
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "Ape.h"
-#include "sceneelements/ApeIBoxGeometry.h"
-#include "ApeJsBindNodeImpl.h"
-#include "ApeManualMaterialJsBind.h"
+#include "ape.h"
+#include "sceneelements/apeIBoxGeometry.h"
+#include "apeJsBindNodeImpl.h"
+#include "apeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS
 
 class BoxJsPtr
 {
 private:
-	Ape::BoxGeometryWeakPtr mPtr;
+	ape::BoxGeometryWeakPtr mPtr;
 
 public:
-	BoxJsPtr(Ape::BoxGeometryWeakPtr ptr)
+	BoxJsPtr(ape::BoxGeometryWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	BoxJsPtr(Ape::EntityWeakPtr ptr)
+	BoxJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IBoxGeometry>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IBoxGeometry>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::GeometryWeakPtr getGeometryWeakPtr()
+	ape::GeometryWeakPtr getGeometryWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Geometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::Geometry>(mPtr.lock());
 	}
 
-	Ape::GeometrySharedPtr getGeometrySharedPtr()
+	ape::GeometrySharedPtr getGeometrySharedPtr()
 	{
 		return this->getGeometryWeakPtr().lock();
 	}
 
-	Ape::BoxGeometrySharedPtr getBoxGeometrySharedPtr()
+	ape::BoxGeometrySharedPtr getBoxGeometrySharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IBoxGeometry>(mPtr.lock());
+		return std::static_pointer_cast<ape::IBoxGeometry>(mPtr.lock());
 	}
 
-	Ape::BoxGeometryWeakPtr getBoxGeometryWeakPtr()
+	ape::BoxGeometryWeakPtr getBoxGeometryWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -109,19 +109,19 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IBoxGeometry
 
-	Ape::GeometryBoxParameters getParameters()
+	ape::GeometryBoxParameters getParameters()
 	{
 		return mPtr.lock()->getParameters();
 	}
 
-	void setParameters(Ape::Vector3 dimensions)
+	void setParameters(ape::Vector3 dimensions)
 	{
 		mPtr.lock()->setParameters(dimensions);
 	}
@@ -132,7 +132,7 @@ public:
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 NBIND_CLASS(GeometryBoxParameters)
 {
 	construct<>();
@@ -145,8 +145,8 @@ NBIND_CLASS(GeometryBoxParameters)
 
 NBIND_CLASS(BoxJsPtr)
 {
-	construct<Ape::BoxGeometryWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::BoxGeometryWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

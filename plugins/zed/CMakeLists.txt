@@ -27,17 +27,16 @@ IF(NOT WIN32)
 ENDIF()
 find_package(CUDA ${ZED_CUDA_VERSION} EXACT REQUIRED)
 
-#ApeZedPlugin
+#apeZedPlugin
 set (HEADERS
-	ApeZedPlugin.h
+	apeZedPlugin.h
 	)
 
 set (SOURCES 
-	ApeZedPlugin.cpp
+	apeZedPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include  
 	${RAPIDJSON_INCLUDE_DIR}
 	${ZED_INCLUDE_DIRS}
 	${CUDA_INCLUDE_DIRS}
@@ -47,16 +46,16 @@ link_directories(${ZED_LIBRARY_DIR})
 link_directories(${CUDA_LIBRARY_DIRS})
 
 # Add the dinamic library target to the project
-add_library (ApeZedPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeZedPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeZedPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow ${SPECIAL_OS_LIBS}
+target_link_libraries (apeZedPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig ${SPECIAL_OS_LIBS}
                         ${ZED_LIBRARIES}
                         ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_NPP_LIBRARIES_ZED})
 	
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeZedPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeZedPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeZedPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeZedPlugin PROPERTY FOLDER "Plugins")
 
 
 

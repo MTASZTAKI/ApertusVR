@@ -23,14 +23,14 @@ SOFTWARE.*/
 #ifndef APE_BROWSERIMPL_H
 #define APE_BROWSERIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIBrowser.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class BrowserImpl : public IBrowser, public Ape::Replica
+	class BrowserImpl : public IBrowser, public ape::Replica
 	{
 	public:
 
@@ -44,11 +44,11 @@ namespace Ape
 
 		void setResoultion(float vertical, float horizontal) override;
 
-		Ape::Vector2 getResoultion() override;
+		ape::Vector2 getResoultion() override;
 
-		void setGeometry(Ape::GeometryWeakPtr geometry) override;
+		void setGeometry(ape::GeometryWeakPtr geometry) override;
 
-		Ape::GeometryWeakPtr getGeometry() override;
+		ape::GeometryWeakPtr getGeometry() override;
 
 		void showOnOverlay(bool enable, int zOrder) override;
 
@@ -58,13 +58,13 @@ namespace Ape
 
 		int getZOrder() override;
 
-		void mouseClick(Ape::Browser::MouseClick click, bool isClickDown) override;
+		void mouseClick(ape::Browser::MouseClick click, bool isClickDown) override;
 
-		void mouseMoved(Ape::Vector2 position) override;
+		void mouseMoved(ape::Vector2 position) override;
 
-		void mouseScroll(Ape::Vector2 delta) override;
+		void mouseScroll(ape::Vector2 delta) override;
 
-		Ape::Browser::MouseState getMouseState() override;
+		ape::Browser::MouseState getMouseState() override;
 
 		void keyASCIIValue(int keyASCIIValue) override;
 
@@ -81,17 +81,17 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryWeakPtr mGeometry;
+		ape::GeometryWeakPtr mGeometry;
 
 		std::string mGeometryName;
 
 		std::string mURL;
 
-		Ape::Vector2 mResoultion;
+		ape::Vector2 mResoultion;
 
 		int mZoomLevel;
 
@@ -99,13 +99,13 @@ namespace Ape
 
 		unsigned int mID;
 
-		Ape::Browser::MouseClick mMouseLastClick;
+		ape::Browser::MouseClick mMouseLastClick;
 
 		bool mMouseLastClickIsDown;
 
-		Ape::Vector2 mMouseLastPosition;
+		ape::Vector2 mMouseLastPosition;
 
-		Ape::Vector2 mMouseScrollDelta;
+		ape::Vector2 mMouseScrollDelta;
 
 		int mLastKeyValue;
 

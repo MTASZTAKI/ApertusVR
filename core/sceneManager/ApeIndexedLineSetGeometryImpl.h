@@ -23,25 +23,25 @@ SOFTWARE.*/
 #ifndef APE_INDEXEDLINESETGEOMETRYIMPL_H
 #define APE_INDEXEDLINESETGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIIndexedLineSetGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class IndexedLineSetGeometryImpl : public Ape::IIndexedLineSetGeometry, public Ape::Replica
+	class IndexedLineSetGeometryImpl : public ape::IIndexedLineSetGeometry, public ape::Replica
 	{
 	public:
 		IndexedLineSetGeometryImpl(std::string name, bool isHostCreated);
 
 		~IndexedLineSetGeometryImpl();
 
-		void setParameters(Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::Color color) override;
+		void setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color) override;
 
-		Ape::GeometryIndexedLineSetParameters getParameters() override;
+		ape::GeometryIndexedLineSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -50,11 +50,11 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryIndexedLineSetParameters mParameters;
+		ape::GeometryIndexedLineSetParameters mParameters;
 	};
 }
 

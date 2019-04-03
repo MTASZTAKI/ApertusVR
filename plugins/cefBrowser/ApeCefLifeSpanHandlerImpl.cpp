@@ -20,29 +20,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefLifeSpanHandlerImpl.h"
+#include "apeCefLifeSpanHandlerImpl.h"
 
-Ape::CefLifeSpanHandlerImpl::CefLifeSpanHandlerImpl()
+ape::CefLifeSpanHandlerImpl::CefLifeSpanHandlerImpl()
 {
-	mBrowserIDs = std::map<int, Ape::BrowserWeakPtr>();
+	mBrowserIDs = std::map<int, ape::BrowserWeakPtr>();
 }
 
-Ape::CefLifeSpanHandlerImpl::~CefLifeSpanHandlerImpl()
+ape::CefLifeSpanHandlerImpl::~CefLifeSpanHandlerImpl()
 {
 
 }
 
-void Ape::CefLifeSpanHandlerImpl::registerBrowser(int ID, Ape::BrowserWeakPtr browser)
+void ape::CefLifeSpanHandlerImpl::registerBrowser(int ID, ape::BrowserWeakPtr browser)
 {
 	mBrowserIDs[ID] = browser;
 }
 
-void Ape::CefLifeSpanHandlerImpl::OnAfterCreated(CefRefPtr<CefBrowser> browser)
+void ape::CefLifeSpanHandlerImpl::OnAfterCreated(CefRefPtr<CefBrowser> browser)
 {
 
 }
 
-bool Ape::CefLifeSpanHandlerImpl::OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString & target_url,
+bool ape::CefLifeSpanHandlerImpl::OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString & target_url,
 	const CefString & target_frame_name, WindowOpenDisposition target_disposition, bool user_gesture, const CefPopupFeatures & popupFeatures,
 	CefWindowInfo & windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings & settings, bool * no_javascript_access)
 {

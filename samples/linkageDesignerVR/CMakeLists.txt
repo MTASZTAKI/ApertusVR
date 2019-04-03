@@ -23,17 +23,17 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeLinkageDesignerVR.cpp
+	apeLinkageDesignerVR.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeLinkageDesignerVR ${SOURCES})
-target_link_libraries (ApeLinkageDesignerVR ApeSystem ApePluginManager)
-set_property (TARGET ApeLinkageDesignerVR PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeLinkageDesignerVR PROPERTY FOLDER "Samples/LinkageDesignerVR")
+add_executable (apeLinkageDesignerVR ${SOURCES})
+target_link_libraries (apeLinkageDesignerVR apeSystem apePluginManager)
+set_property (TARGET apeLinkageDesignerVR PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeLinkageDesignerVR PROPERTY FOLDER "Samples/LinkageDesignerVR")
 
 

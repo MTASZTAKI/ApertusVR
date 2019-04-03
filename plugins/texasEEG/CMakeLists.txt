@@ -22,36 +22,36 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeTexasEEGPlugin.h
+	apeTexasEEGPlugin.h
 	Bubble.h
 	BubbleManager.h
 	GameManager.h
 	)
 
 set (SOURCES 
-	ApeTexasEEGPlugin.cpp
+	apeTexasEEGPlugin.cpp
 	Bubble.cpp
 	BubbleManager.cpp
 	GameManager.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	${PROJECT_SOURCE_DIR}/macros/userInput 	
+	 
+	 	
 	)
 
-add_library (ApeTexasEEGPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeTexasEEGPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeTexasEEGPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro)
+target_link_libraries (apeTexasEEGPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
 
 if (WIN32)
 	# we have to link to some DirectX libraries 
-	target_link_libraries (ApeTexasEEGPlugin dinput8 dxguid)
+	target_link_libraries (apeTexasEEGPlugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET ApeTexasEEGPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeTexasEEGPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeTexasEEGPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeTexasEEGPlugin PROPERTY FOLDER "Plugins")
 
 

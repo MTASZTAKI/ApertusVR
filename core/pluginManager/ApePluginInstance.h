@@ -25,10 +25,10 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginDefines.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginDefines.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGIN_INTERNAL PluginInstance
 	{

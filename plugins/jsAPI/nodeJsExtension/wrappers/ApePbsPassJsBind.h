@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_PBSPASSJSBIND_H
 #define APE_PBSPASSJSBIND_H
 
-#include "Ape.h"
-#include "datatypes/ApeColor.h"
-#include "sceneelements/ApeIPbsPass.h"
+#include "ape.h"
+#include "datatypes/apeColor.h"
+#include "sceneelements/apeIPbsPass.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -34,60 +34,60 @@ SOFTWARE.*/
 class PbsPassJsPtr
 {
 private:
-	Ape::PbsPassWeakPtr mPtr;
+	ape::PbsPassWeakPtr mPtr;
 
 public:
-	PbsPassJsPtr(Ape::PbsPassWeakPtr ptr)
+	PbsPassJsPtr(ape::PbsPassWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	PbsPassJsPtr(Ape::EntityWeakPtr ptr)
+	PbsPassJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IPbsPass>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IPbsPass>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::PassWeakPtr getPassWeakPtr()
+	ape::PassWeakPtr getPassWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::IPbsPass>(mPtr.lock());
+		return std::static_pointer_cast<ape::IPbsPass>(mPtr.lock());
 	}
 
-	Ape::PassSharedPtr getPassSharedPtr()
+	ape::PassSharedPtr getPassSharedPtr()
 	{
 		return this->getPbsPassWeakPtr().lock();
 	}
 
-	Ape::PbsPassSharedPtr getPbsPassSharedPtr()
+	ape::PbsPassSharedPtr getPbsPassSharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IPbsPass>(mPtr.lock());
+		return std::static_pointer_cast<ape::IPbsPass>(mPtr.lock());
 	}
 
-	Ape::PbsPassWeakPtr getPbsPassWeakPtr()
+	ape::PbsPassWeakPtr getPbsPassWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// Pass
 
-	Ape::Color getDiffuseColor() { return mPtr.lock()->getDiffuseColor(); };
+	ape::Color getDiffuseColor() { return mPtr.lock()->getDiffuseColor(); };
 
-	Ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
+	ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
 
-	Ape::Color getAmbientColor() { return mPtr.lock()->getAmbientColor(); };
+	ape::Color getAmbientColor() { return mPtr.lock()->getAmbientColor(); };
 
-	Ape::Color getEmissiveColor() { return mPtr.lock()->getEmissiveColor(); };
+	ape::Color getEmissiveColor() { return mPtr.lock()->getEmissiveColor(); };
 
 	// Entity
 
@@ -96,29 +96,29 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IPbsPass
 
-	void setDiffuseColor(Ape::Color diffuse)
+	void setDiffuseColor(ape::Color diffuse)
 	{
 		mPtr.lock()->setDiffuseColor(diffuse);
 	}
 
-	void setSpecularColor(Ape::Color specular)
+	void setSpecularColor(ape::Color specular)
 	{
 		mPtr.lock()->setSpecularColor(specular);
 	}
 
-	void setAmbientColor(Ape::Color ambient)
+	void setAmbientColor(ape::Color ambient)
 	{
 		mPtr.lock()->setAmbientColor(ambient);
 	}
 
-	void setEmissiveColor(Ape::Color emissive)
+	void setEmissiveColor(ape::Color emissive)
 	{
 		mPtr.lock()->setEmissiveColor(emissive);
 	}
@@ -129,12 +129,12 @@ public:
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 
 NBIND_CLASS(PbsPassJsPtr)
 {
-	construct<Ape::PbsPassWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::PbsPassWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

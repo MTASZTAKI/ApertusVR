@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeGallery.cpp
+	apeGallery.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeGallery ${SOURCES})
-target_link_libraries (ApeGallery ApeSystem ApePluginManager)
-set_property (TARGET ApeGallery PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeGallery PROPERTY FOLDER "Samples/Gallery")
+add_executable (apeGallery ${SOURCES})
+target_link_libraries (apeGallery apeSystem apePluginManager)
+set_property (TARGET apeGallery PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGallery PROPERTY FOLDER "Samples/Gallery")
 
 

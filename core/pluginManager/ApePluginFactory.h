@@ -26,21 +26,21 @@ SOFTWARE.*/
 
 #include <string>
 #include <map>
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginDefines.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginDefines.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGIN_INTERNAL PluginFactory
 	{
 	public:
 		typedef IPlugin* (*CreateCallback)();
 		
-		typedef void (*DestroyCallback)(Ape::IPlugin *);
+		typedef void (*DestroyCallback)(ape::IPlugin *);
 
 		static void RegisterPlugin(const std::string &type, CreateCallback createCb, DestroyCallback destroyCb);
 
-		static void UnregisterPlugin(const std::string &type, Ape::IPlugin *plugin);
+		static void UnregisterPlugin(const std::string &type, ape::IPlugin *plugin);
 
 		static IPlugin* CreatePlugin(const std::string &type);
 		

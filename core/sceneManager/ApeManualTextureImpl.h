@@ -23,28 +23,28 @@ SOFTWARE.*/
 #ifndef APE_MANUALTEXTUREIMPL_H
 #define APE_MANUALTEXTUREIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class ManualTextureImpl : public Ape::IManualTexture, public Ape::Replica
+	class ManualTextureImpl : public ape::IManualTexture, public ape::Replica
 	{
 	public:
 		ManualTextureImpl(std::string name, bool isHostCreated);
 
 		~ManualTextureImpl();
 
-		void setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage) override;
+		void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage) override;
 
-		Ape::ManualTextureParameters getParameters() override;
+		ape::ManualTextureParameters getParameters() override;
 
-		void setSourceCamera(Ape::CameraWeakPtr camera) override;
+		void setSourceCamera(ape::CameraWeakPtr camera) override;
 
-		Ape::CameraWeakPtr getSourceCamera() override;
+		ape::CameraWeakPtr getSourceCamera() override;
 
 		void setGraphicsApiID(void* id) override;
 
@@ -67,15 +67,15 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ManualTextureParameters mParameters;
+		ape::ManualTextureParameters mParameters;
 
 		std::string mCameraName;
 
-		Ape::CameraWeakPtr mCamera;
+		ape::CameraWeakPtr mCamera;
 
 		const void* mpBuffer;
 

@@ -27,44 +27,44 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "utils/ApeInterpolator.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "utils/apeInterpolator.h"
 
-#define THIS_PLUGINNAME "ApeAvatarPlugin"
+#define THIS_PLUGINNAME "apeAvatarPlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeAvatarPlugin : public Ape::IPlugin
+	class apeAvatarPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::NodeWeakPtr mLeftHandNode;
+		ape::NodeWeakPtr mLeftHandNode;
 
-		Ape::NodeWeakPtr mRightHandNode;
+		ape::NodeWeakPtr mRightHandNode;
 
 	public:
-		ApeAvatarPlugin();
+		apeAvatarPlugin();
 
-		~ApeAvatarPlugin();
+		~apeAvatarPlugin();
 
 		void Init() override;
 
@@ -79,14 +79,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeAvatarPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeAvatarPlugin()
 	{
-		return new Ape::ApeAvatarPlugin;
+		return new ape::apeAvatarPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeAvatarPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeAvatarPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeAvatarPlugin*)plugin;
+		delete (ape::apeAvatarPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -94,7 +94,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeAvatarPlugin, DestroyApeAvatarPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeAvatarPlugin, DestroyapeAvatarPlugin);
 		return 0;
 	}
 }

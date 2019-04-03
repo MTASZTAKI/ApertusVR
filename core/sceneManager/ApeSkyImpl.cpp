@@ -20,76 +20,76 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeSkyImpl.h"
+#include "apeSkyImpl.h"
 
-Ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : Ape::ISky(name), Ape::Replica("Sky", isHostCreated)
+ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : ape::ISky(name), ape::Replica("Sky", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mSkyLight = Ape::LightWeakPtr();
-	mSunLight = Ape::LightWeakPtr();
-	mTime = Ape::ISky::Time();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mSkyLight = ape::LightWeakPtr();
+	mSunLight = ape::LightWeakPtr();
+	mTime = ape::ISky::Time();
 	mSize = 0.0f;
 }
 
-Ape::SkyImpl::~SkyImpl()
+ape::SkyImpl::~SkyImpl()
 {
 	
 }
 
-void Ape::SkyImpl::setTime(float startTime, float sunRiseTime, float sunSetTime)
+void ape::SkyImpl::setTime(float startTime, float sunRiseTime, float sunSetTime)
 {
 	mTime.currentTime = startTime;
 	mTime.sunRiseTime = sunRiseTime;
 	mTime.sunSetTime = sunSetTime;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_TIME));
 }
 
-Ape::ISky::Time Ape::SkyImpl::getTime()
+ape::ISky::Time ape::SkyImpl::getTime()
 {
 	return mTime;
 }
 
-void Ape::SkyImpl::setSunLight(Ape::LightWeakPtr sunLight)
+void ape::SkyImpl::setSunLight(ape::LightWeakPtr sunLight)
 {
 	mSunLight = sunLight;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SUNLIGHT));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SUNLIGHT));
 }
 
-Ape::LightWeakPtr Ape::SkyImpl::getSunLight()
+ape::LightWeakPtr ape::SkyImpl::getSunLight()
 {
 	return mSunLight;
 }
 
-void Ape::SkyImpl::setSkyLight(Ape::LightWeakPtr skyLight)
+void ape::SkyImpl::setSkyLight(ape::LightWeakPtr skyLight)
 {
 	mSkyLight = skyLight;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SKYLIGHT));
 }
 
-Ape::LightWeakPtr Ape::SkyImpl::getSkyLight()
+ape::LightWeakPtr ape::SkyImpl::getSkyLight()
 {
 	return mSkyLight;
 }
 
-void Ape::SkyImpl::setSize(float size)
+void ape::SkyImpl::setSize(float size)
 {
 	mSize = size;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SIZE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SIZE));
 }
 
-float Ape::SkyImpl::getSize()
+float ape::SkyImpl::getSize()
 {
 	return mSize;
 }
 
-void Ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::SkyImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -102,17 +102,17 @@ RakNet::RM3SerializationResult Ape::SkyImpl::Serialize(RakNet::SerializeParamete
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSunLight))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SUNLIGHT));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SUNLIGHT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSkyLight))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SKYLIGHT));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SKYLIGHT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTime))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_TIME));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_TIME));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSize))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::SKY_SIZE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SIZE));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

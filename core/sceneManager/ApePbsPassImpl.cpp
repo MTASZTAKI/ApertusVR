@@ -20,105 +20,105 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApePbsPassImpl.h"
+#include "apePbsPassImpl.h"
 
-Ape::PbsPassImpl::PbsPassImpl(std::string name, bool isHostCreated) : Ape::IPbsPass(name), Ape::Replica("PbsPass", isHostCreated)
+ape::PbsPassImpl::PbsPassImpl(std::string name, bool isHostCreated) : ape::IPbsPass(name), ape::Replica("PbsPass", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mAlbedo = Ape::Color();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mAlbedo = ape::Color();
 	mRoughness = 0.0f;
 	mLightRoughnessOffset = 0.0f;
-	mF0 = Ape::Color();
+	mF0 = ape::Color();
 }
 
-Ape::PbsPassImpl::~PbsPassImpl()
+ape::PbsPassImpl::~PbsPassImpl()
 {
 	
 }
 
-void Ape::PbsPassImpl::setDiffuseColor(Ape::Color diffuse)
+void ape::PbsPassImpl::setDiffuseColor(ape::Color diffuse)
 {
 	mDiffuseColor = diffuse;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_DIFFUSE));
 }
 
-void Ape::PbsPassImpl::setSpecularColor(Ape::Color specular)
+void ape::PbsPassImpl::setSpecularColor(ape::Color specular)
 {
 	mSpecularColor = specular;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SPECULAR));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_SPECULAR));
 }
 
-void Ape::PbsPassImpl::setAmbientColor(Ape::Color ambient)
+void ape::PbsPassImpl::setAmbientColor(ape::Color ambient)
 {
 	mAmbientColor = ambient;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_AMBIENT));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_AMBIENT));
 }
 
-void Ape::PbsPassImpl::setEmissiveColor(Ape::Color emissive)
+void ape::PbsPassImpl::setEmissiveColor(ape::Color emissive)
 {
 	mEmissiveColor = emissive;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_EMISSIVE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_EMISSIVE));
 }
 
-void Ape::PbsPassImpl::setShininess(float shininess)
+void ape::PbsPassImpl::setShininess(float shininess)
 {
 	mShininess = shininess;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SHININESS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_SHININESS));
 }
 
-void Ape::PbsPassImpl::setAlbedo(Ape::Color albedo)
+void ape::PbsPassImpl::setAlbedo(ape::Color albedo)
 {
 	mAlbedo = albedo;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_ALBEDO));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_ALBEDO));
 }
 
-void Ape::PbsPassImpl::setRoughness(float roughness)
+void ape::PbsPassImpl::setRoughness(float roughness)
 {
 	mRoughness = roughness;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_ROUGHNESS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_ROUGHNESS));
 }
 
-void Ape::PbsPassImpl::setLightRoughnessOffset(float lightRoughnessOffset)
+void ape::PbsPassImpl::setLightRoughnessOffset(float lightRoughnessOffset)
 {
 	mLightRoughnessOffset = lightRoughnessOffset;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET));
 }
 
-void Ape::PbsPassImpl::setF0(Ape::Color f0)
+void ape::PbsPassImpl::setF0(ape::Color f0)
 {
 	mF0 = f0;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_F0));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_F0));
 }
 
 
-Ape::Color Ape::PbsPassImpl::getAlbedo()
+ape::Color ape::PbsPassImpl::getAlbedo()
 {
 	return mAlbedo;
 }
 
-float Ape::PbsPassImpl::getRoughness()
+float ape::PbsPassImpl::getRoughness()
 {
 	return mRoughness;
 }
 
-float Ape::PbsPassImpl::getLightRoughnessOffset()
+float ape::PbsPassImpl::getLightRoughnessOffset()
 {
 	return mLightRoughnessOffset;
 }
 
-Ape::Color Ape::PbsPassImpl::getF0()
+ape::Color ape::PbsPassImpl::getF0()
 {
 	return mF0;
 }
 
-void Ape::PbsPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::PbsPassImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::PbsPassImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::PbsPassImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -136,28 +136,28 @@ RakNet::RM3SerializationResult Ape::PbsPassImpl::Serialize(RakNet::SerializePara
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::PbsPassImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::PbsPassImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAmbientColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_AMBIENT));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_AMBIENT));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_DIFFUSE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_DIFFUSE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpecularColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SPECULAR));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_SPECULAR));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mEmissiveColor))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_EMISSIVE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_EMISSIVE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mShininess))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_SHININESS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_SHININESS));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAlbedo))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_ALBEDO));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_ALBEDO));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRoughness))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_ROUGHNESS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_ROUGHNESS));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightRoughnessOffset))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mF0))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::PASS_PBS_F0));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::PASS_PBS_F0));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

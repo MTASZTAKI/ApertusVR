@@ -26,24 +26,23 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeISystemConfig.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeICoreConfig.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
 #include "Leap.h"
 #include "LeapMath.h"
 
-#define THIS_PLUGINNAME "ApeLeapMotionPlugin"
+#define THIS_PLUGINNAME "apeLeapMotionPlugin"
 
-namespace Ape
+namespace ape
 {
-	class LeapMotionPlugin : public Ape::IPlugin, public Leap::Listener 
+	class LeapMotionPlugin : public ape::IPlugin, public Leap::Listener 
 	{
 	public:
 		LeapMotionPlugin();
@@ -84,13 +83,13 @@ namespace Ape
 
 	private:
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		Leap::Controller mLeapController;
 
@@ -108,19 +107,19 @@ namespace Ape
 
 		bool mHandOrientationFlag;
 
-		Ape::NodeWeakPtr mLeftHandNode;
+		ape::NodeWeakPtr mLeftHandNode;
 
-		Ape::NodeWeakPtr mRightHandNode;
+		ape::NodeWeakPtr mRightHandNode;
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateLeapMotionPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateLeapMotionPlugin()
 	{
-		return new Ape::LeapMotionPlugin;
+		return new ape::LeapMotionPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyLeapMotionPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyLeapMotionPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::LeapMotionPlugin*)plugin;
+		delete (ape::LeapMotionPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -128,7 +127,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateLeapMotionPlugin, DestroyLeapMotionPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateLeapMotionPlugin, DestroyLeapMotionPlugin);
 		return 0;
 	}
 }

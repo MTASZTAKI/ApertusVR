@@ -21,13 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
-#include "ApeIndexedFaceSetGeometryImpl.h"
+#include "apeIndexedFaceSetGeometryImpl.h"
 
-Ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool isHostCreated) : Ape::IIndexedFaceSetGeometry(name), Ape::Replica("IndexedFaceSetGeometry", isHostCreated)
+ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool isHostCreated) : ape::IIndexedFaceSetGeometry(name), ape::Replica("IndexedFaceSetGeometry", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::GeometryIndexedFaceSetParameters();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::GeometryIndexedFaceSetParameters();
 	mCoordinatesSize = 0;
 	mIndicesSize = 0;
 	mNormalsSize = 0;
@@ -35,51 +35,51 @@ Ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bo
 	mTextureCoordinatesSize = 0;
 }
 
-Ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
+ape::IndexedFaceSetGeometryImpl::~IndexedFaceSetGeometryImpl()
 {
 	
 }
 
-void Ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material)
+void ape::IndexedFaceSetGeometryImpl::setParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, bool generateNormals, ape::GeometryColors colors, ape::GeometryTextureCoordinates textureCoordinates, ape::MaterialWeakPtr material)
 {
 	mCoordinatesSize = static_cast<int>(coordinates.size());
 	mIndicesSize = static_cast<int>(indices.size());
 	mNormalsSize = static_cast<int>(normals.size());
 	mColorsSize = static_cast<int>(colors.size());
 	mTextureCoordinatesSize = static_cast<int>(textureCoordinates.size());
-	mParameters = Ape::GeometryIndexedFaceSetParameters(groupName, coordinates, indices, normals, generateNormals, colors, textureCoordinates, material);
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
+	mParameters = ape::GeometryIndexedFaceSetParameters(groupName, coordinates, indices, normals, generateNormals, colors, textureCoordinates, material);
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 }
 
-Ape::GeometryIndexedFaceSetParameters Ape::IndexedFaceSetGeometryImpl::getParameters()
+ape::GeometryIndexedFaceSetParameters ape::IndexedFaceSetGeometryImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::IndexedFaceSetGeometryImpl::setParentNode(Ape::NodeWeakPtr parentNode)
+void ape::IndexedFaceSetGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeSP = parentNode.lock())
 	{
 		mParentNode = parentNode;
 		mParentNodeName = parentNodeSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
 	}
 	else
-		mParentNode = Ape::NodeWeakPtr();
+		mParentNode = ape::NodeWeakPtr();
 }
 
-Ape::MaterialWeakPtr Ape::IndexedFaceSetGeometryImpl::getMaterial()
+ape::MaterialWeakPtr ape::IndexedFaceSetGeometryImpl::getMaterial()
 {
 	return mParameters.material;
 }
 
-void Ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::IndexedFaceSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	if (serializeParameters->whenLastSerialized == 0)
 	{
@@ -121,7 +121,7 @@ RakNet::RM3SerializationResult Ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
-void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	APE_LOG_FUNC_ENTER();
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
@@ -181,8 +181,8 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 	{
 		mParameters.materialName = materialName.C_String();
 		if (auto entity = mpSceneManager->getEntity(mParameters.materialName).lock())
-			mParameters.material = std::static_pointer_cast<Ape::Material>(entity);
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
+			mParameters.material = std::static_pointer_cast<ape::Material>(entity);
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
@@ -191,7 +191,7 @@ void Ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 		{
 			mParentNode = parentNode;
 			mParentNodeName = parentName.C_String();
-			mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARENTNODE));
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

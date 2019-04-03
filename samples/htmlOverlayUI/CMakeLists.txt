@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeHtmlOverlayUI.cpp
+	apeHtmlOverlayUI.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeHtmlOverlayUI ${SOURCES})
+add_executable (apeHtmlOverlayUI ${SOURCES})
 
-target_link_libraries (ApeHtmlOverlayUI ApeSystem ApePluginManager)
+target_link_libraries (apeHtmlOverlayUI apeSystem apePluginManager)
 
-set_property (TARGET ApeHtmlOverlayUI PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHtmlOverlayUI PROPERTY FOLDER "Samples/HtmlOverlayUI")
+set_property (TARGET apeHtmlOverlayUI PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHtmlOverlayUI PROPERTY FOLDER "Samples/HtmlOverlayUI")

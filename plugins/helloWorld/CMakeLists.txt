@@ -22,22 +22,22 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeHelloWorldPlugin.h
+	apeHelloWorldPlugin.h
 	)
 
 set (SOURCES 
-	ApeHelloWorldPlugin.cpp
+	apeHelloWorldPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApeHelloWorldPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeHelloWorldPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeHelloWorldPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (apeHelloWorldPlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApeHelloWorldPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHelloWorldPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeHelloWorldPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeHelloWorldPlugin PROPERTY FOLDER "Plugins")

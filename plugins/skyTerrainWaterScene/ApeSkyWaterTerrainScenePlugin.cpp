@@ -1,36 +1,36 @@
-#include "ApeSkyWaterTerrainScenePlugin.h"
+#include "apeSkyWaterTerrainScenePlugin.h"
 
-Ape::ApeSkyWaterTerrainScenePlugin::ApeSkyWaterTerrainScenePlugin()
+ape::apeSkyWaterTerrainScenePlugin::apeSkyWaterTerrainScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mWater = Ape::WaterWeakPtr();
-	mSky = Ape::SkyWeakPtr();
-	mSkyLight = Ape::LightWeakPtr();
-	mSunLight = Ape::LightWeakPtr();
-	mSkyLightNode = Ape::NodeWeakPtr();
-	mCameras = std::vector<Ape::CameraWeakPtr>();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mWater = ape::WaterWeakPtr();
+	mSky = ape::SkyWeakPtr();
+	mSkyLight = ape::LightWeakPtr();
+	mSunLight = ape::LightWeakPtr();
+	mSkyLightNode = ape::NodeWeakPtr();
+	mCameras = std::vector<ape::CameraWeakPtr>();
 	mExpectedCameraCount = 6;
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeSkyWaterTerrainScenePlugin::~ApeSkyWaterTerrainScenePlugin()
+ape::apeSkyWaterTerrainScenePlugin::~apeSkyWaterTerrainScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeSkyWaterTerrainScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
+void ape::apeSkyWaterTerrainScenePlugin::eventCallBack(const ape::Event& event)
 {
 	APE_LOG_FUNC_ENTER();
-	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
+	if (event.type == ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA) //Oculus
 	{
-		if (auto texture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			if (auto camera = texture->getSourceCamera().lock())
 				mCameras.push_back(camera);
@@ -38,30 +38,30 @@ void Ape::ApeSkyWaterTerrainScenePlugin::eventCallBack(const Ape::Event& event)
 		if (event.subjectName == "RiftRenderTextureRight")
 			mExpectedCameraCount = 2; 
 	}
-	else if (event.type == Ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera")  //Monitor
+	else if (event.type == ape::Event::Type::CAMERA_WINDOW && event.subjectName != "OculusRiftExternalCamera")  //Monitor
 	{
-		if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
 			mCameras.push_back(camera);
 		mExpectedCameraCount = 1;
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
+void ape::apeSkyWaterTerrainScenePlugin::createSky()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto sky = std::static_pointer_cast<Ape::ISky>(mpSceneManager->createEntity("sky", Ape::Entity::SKY).lock()))
+	if (auto sky = std::static_pointer_cast<ape::ISky>(mpSceneManager->createEntity("sky", ape::Entity::SKY).lock()))
 	{
 		sky->setSize(9500);
 		sky->setTime(6.00, 4.00, 22.00);
-		if (auto skyLight = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("skylight", Ape::Entity::Type::LIGHT).lock()))
+		if (auto skyLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("skylight", ape::Entity::Type::LIGHT).lock()))
 		{
 			sky->setSkyLight(skyLight);
 			mSkyLight = skyLight;
 		}
-		if (auto sunLight = std::static_pointer_cast<Ape::ILight>(mpSceneManager->createEntity("sunlight", Ape::Entity::Type::LIGHT).lock()))
+		if (auto sunLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("sunlight", ape::Entity::Type::LIGHT).lock()))
 		{
-			sunLight->setLightType(Ape::Light::Type::DIRECTIONAL);
+			sunLight->setLightType(ape::Light::Type::DIRECTIONAL);
 			sky->setSunLight(sunLight);
 			mSunLight = sunLight;
 		}
@@ -70,10 +70,10 @@ void Ape::ApeSkyWaterTerrainScenePlugin::createSky()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::createWater()
+void ape::apeSkyWaterTerrainScenePlugin::createWater()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto water = std::static_pointer_cast<Ape::IWater>(mpSceneManager->createEntity("water", Ape::Entity::WATER).lock()))
+	if (auto water = std::static_pointer_cast<ape::IWater>(mpSceneManager->createEntity("water", ape::Entity::WATER).lock()))
 	{
 		water->setCameras(mCameras);
 		if (auto sky = mSky.lock())
@@ -83,7 +83,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::createWater()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Init()
+void ape::apeSkyWaterTerrainScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("is waiting for the cameras");
@@ -95,7 +95,7 @@ void Ape::ApeSkyWaterTerrainScenePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Run()
+void ape::apeSkyWaterTerrainScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -105,25 +105,25 @@ void Ape::ApeSkyWaterTerrainScenePlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Step()
+void ape::apeSkyWaterTerrainScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Stop()
+void ape::apeSkyWaterTerrainScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Suspend()
+void ape::apeSkyWaterTerrainScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeSkyWaterTerrainScenePlugin::Restart()
+void ape::apeSkyWaterTerrainScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

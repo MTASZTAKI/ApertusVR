@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeHtmlOverlayUIPlugin.h
+	apeHtmlOverlayUIPlugin.h
 	)
 
 set (SOURCES 
-	ApeHtmlOverlayUIPlugin.cpp
+	apeHtmlOverlayUIPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/macros/userInput
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	
+	
+	
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
-add_library (ApeHtmlOverlayUIPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeHtmlOverlayUIPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeHtmlOverlayUIPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro ApeSceneMakerMacro)
+target_link_libraries (apeHtmlOverlayUIPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro apeSceneMakerMacro)
 
-set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHtmlOverlayUIPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeHtmlOverlayUIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHtmlOverlayUIPlugin PROPERTY FOLDER "Plugins")

@@ -28,33 +28,32 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeITubeGeometry.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
 #include <sl/Camera.hpp>
 
-#define THIS_PLUGINNAME "ApeZedPlugin"
+#define THIS_PLUGINNAME "apeZedPlugin"
 
 union dataUnionBytesFloat {
 	float f;
 	char fBuff[sizeof(float)];
 };
 
-namespace Ape
+namespace ape
 {
-	class ZedPlugin : public Ape::IPlugin
+	class ZedPlugin : public ape::IPlugin
 	{
 	public:
 		ZedPlugin();
@@ -74,17 +73,17 @@ namespace Ape
 		void Restart() override;
 
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::NodeWeakPtr mUserNode;
+		ape::NodeWeakPtr mUserNode;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::PointCloudWeakPtr mPointCloud;
+		ape::PointCloudWeakPtr mPointCloud;
 
 		sl::Camera mZed;
 
@@ -98,23 +97,23 @@ namespace Ape
 
 		sl::Mat mZedPointCloud;
 		
-		Ape::PointCloudPoints mApePointCloudPoints;
+		ape::PointCloudPoints mApePointCloudPoints;
 
-		Ape::PointCloudColors mApePointCloudColors;
+		ape::PointCloudColors mApePointCloudColors;
 
-		Ape::NodeWeakPtr mApePointCloudNode;
+		ape::NodeWeakPtr mApePointCloudNode;
 
-		Ape::PointCloudWeakPtr mApePointCloud;
+		ape::PointCloudWeakPtr mApePointCloud;
 	};
 	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateZedPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateZedPlugin()
 	{
-		return new Ape::ZedPlugin;
+		return new ape::ZedPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyZedPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyZedPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ZedPlugin*)plugin;
+		delete (ape::ZedPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -122,7 +121,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateZedPlugin, DestroyZedPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateZedPlugin, DestroyZedPlugin);
 		return 0;
 	}
 }

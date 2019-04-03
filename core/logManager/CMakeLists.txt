@@ -22,21 +22,21 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeLogManagerImpl.h
+	apeLogManagerImpl.h
 )
 set (SOURCES
-	ApeLogManagerImpl.cpp
+	apeLogManagerImpl.cpp
 )
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_library (ApeLogManager SHARED ${SOURCES} ${HEADERS})
+add_library (apeLogManager SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeLogManager)
+target_link_libraries (apeLogManager)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeLogManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_LOGMANAGER_DLL)
-set_property (TARGET ApeLogManager PROPERTY FOLDER "Core")
+set_property (TARGET apeLogManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_LOGMANAGER_DLL)
+set_property (TARGET apeLogManager PROPERTY FOLDER "Core")

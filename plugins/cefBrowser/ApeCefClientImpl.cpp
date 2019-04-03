@@ -20,9 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefClientImpl.h"
+#include "apeCefClientImpl.h"
 
-Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImpl, Ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, Ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl) 
+ape::CefClientImpl::CefClientImpl(ape::CefRenderHandlerImpl* cefRenderHandlerImpl, ape::CefLifeSpanHandlerImpl* cefLifeSpanHandlerImpl, ape::CefKeyboardHandlerImpl* cefKeyboardHandlerImpl) 
 	: mCefRenderHandlerImpl(cefRenderHandlerImpl)
 	, mCefLifeSpanHandlerImpl(cefLifeSpanHandlerImpl)
 	, mCefKeyboardHandlerImpl(cefKeyboardHandlerImpl)
@@ -30,27 +30,27 @@ Ape::CefClientImpl::CefClientImpl(Ape::CefRenderHandlerImpl* cefRenderHandlerImp
 
 }
 
-Ape::CefClientImpl::~CefClientImpl()
+ape::CefClientImpl::~CefClientImpl()
 {
 
 }
 
-CefRefPtr<CefRenderHandler> Ape::CefClientImpl::GetRenderHandler()
+CefRefPtr<CefRenderHandler> ape::CefClientImpl::GetRenderHandler()
 {
 	return mCefRenderHandlerImpl;
 }
 
-CefRefPtr<CefLifeSpanHandler> Ape::CefClientImpl::GetLifeSpanHandler()
+CefRefPtr<CefLifeSpanHandler> ape::CefClientImpl::GetLifeSpanHandler()
 {
 	return mCefLifeSpanHandlerImpl;
 }
 
-CefRefPtr<CefKeyboardHandler> Ape::CefClientImpl::GetKeyboardHandler()
+CefRefPtr<CefKeyboardHandler> ape::CefClientImpl::GetKeyboardHandler()
 {
 	return mCefKeyboardHandlerImpl;
 }
 
-bool Ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
+bool ape::CefClientImpl::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
 	const std::string& message_name = message->GetName();
 	APE_LOG_DEBUG("message name: " << message_name);

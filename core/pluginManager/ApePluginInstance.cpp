@@ -20,14 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
+#include <iostream>
 #if _WIN32
 	#include <windows.h>
 #else
 	#include <dlfcn.h>
 #endif
-#include "ApePluginInstance.h"
+#include "apePluginInstance.h"
 
-class Ape::PluginInstance::Impl
+class ape::PluginInstance::Impl
 {
 public:
 	std::string mFileName;
@@ -40,6 +41,12 @@ public:
 	bool Load()
 	{
 		handle = LoadLibrary(mFileName.c_str());
+		if (handle == NULL)
+		{
+			auto error = GetLastError();
+			std::cout << "An unexpected error while loading library: " << mFileName << " error: " << error << std::endl;
+			std::cout << "Get last error while loading library: " << mFileName << " error : " << GetLastError() << std::endl;
+		}
 		return (handle != NULL);
 	}
 
@@ -88,7 +95,7 @@ public:
 
 };
 
-Ape::PluginInstance::PluginInstance(const std::string &name)
+ape::PluginInstance::PluginInstance(const std::string &name)
 {
 	mImpl = new Impl;
 	mImpl->mDisplayName = name;
@@ -102,23 +109,23 @@ Ape::PluginInstance::PluginInstance(const std::string &name)
 #endif
 }
 
-Ape::PluginInstance::~PluginInstance()
+ape::PluginInstance::~PluginInstance()
 {
 	delete mImpl;
 }
 
-bool Ape::PluginInstance::Load()
+bool ape::PluginInstance::Load()
 {
 	if (! mImpl->Load())
 		return false;
 
-	Impl::PluginFunc init_func = mImpl->GetFunction("ApePluginInit");
+	Impl::PluginFunc init_func = mImpl->GetFunction("apePluginInit");
 	if (!init_func)
 		return false;
 
 	(*init_func)();
 
-	Impl::PluginFunc name_string = mImpl->GetFunction("ApePluginDisplayName");
+	Impl::PluginFunc name_string = mImpl->GetFunction("apePluginDisplayName");
 	if (name_string)
 	{
 		const char **ptr = (const char **) name_string;
@@ -128,22 +135,22 @@ bool Ape::PluginInstance::Load()
 	return true;
 }
 
-bool Ape::PluginInstance::Unload()
+bool ape::PluginInstance::Unload()
 {
 	return mImpl->Unload();
 }
 
-bool Ape::PluginInstance::IsLoaded()
+bool ape::PluginInstance::IsLoaded()
 {
 	return (mImpl->handle != NULL);
 }
 
-std::string Ape::PluginInstance::GetFileName()
+std::string ape::PluginInstance::GetFileName()
 {
 	return mImpl->mFileName;
 }
 
-std::string Ape::PluginInstance::GetDisplayName()
+std::string ape::PluginInstance::GetDisplayName()
 {
 	return mImpl->mDisplayName;
 }

@@ -1,24 +1,24 @@
-#include "Ape360ImagePlugin.h"
+#include "ape360ImagePlugin.h"
 
-Ape::Ape360ImagePlugin::Ape360ImagePlugin()
+ape::ape360ImagePlugin::ape360ImagePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::Ape360ImagePlugin::~Ape360ImagePlugin()
+ape::ape360ImagePlugin::~ape360ImagePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Init()
+void ape::ape360ImagePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
 	{
-		if (auto sphereMeshFile = std::static_pointer_cast<Ape::IFileGeometry>(mpSceneManager->createEntity("sphere.mesh", Ape::Entity::GEOMETRY_FILE).lock()))
+		if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("sphere.mesh", ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			sphereMeshFile->setFileName("sphere.mesh");
 			sphereMeshFile->setParentNode(sphereNode);
@@ -27,31 +27,31 @@ void Ape::Ape360ImagePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Run()
+void ape::ape360ImagePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Step()
+void ape::ape360ImagePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Stop()
+void ape::ape360ImagePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Suspend()
+void ape::ape360ImagePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::Ape360ImagePlugin::Restart()
+void ape::ape360ImagePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

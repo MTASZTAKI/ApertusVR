@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeGyor.cpp
+	apeGyor.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeGyor ${SOURCES})
-target_link_libraries (ApeGyor ApeSystem ApePluginManager)
-set_property (TARGET ApeGyor PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeGyor PROPERTY FOLDER "Samples/Gyor")
+add_executable (apeGyor ${SOURCES})
+target_link_libraries (apeGyor apeSystem apePluginManager)
+set_property (TARGET apeGyor PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGyor PROPERTY FOLDER "Samples/Gyor")
 
 

@@ -1,34 +1,34 @@
 #include <fstream>
-#include "ApeRobotCalibrationPlugin.h"
+#include "apeRobotCalibrationPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-Ape::ApeRobotCalibrationPlugin::ApeRobotCalibrationPlugin()
+ape::apeRobotCalibrationPlugin::apeRobotCalibrationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
-	mpSceneMakerMacro = new Ape::SceneMakerMacro();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeRobotCalibrationPlugin::~ApeRobotCalibrationPlugin()
+ape::apeRobotCalibrationPlugin::~apeRobotCalibrationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::eventCallBack(const Ape::Event& event)
+void ape::apeRobotCalibrationPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::ApeRobotCalibrationPlugin::Init()
+void ape::apeRobotCalibrationPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeOverlayBrowser();
@@ -38,31 +38,31 @@ void Ape::ApeRobotCalibrationPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::Run()
+void ape::apeRobotCalibrationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::Step()
+void ape::apeRobotCalibrationPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::Stop()
+void ape::apeRobotCalibrationPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::Suspend()
+void ape::apeRobotCalibrationPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeRobotCalibrationPlugin::Restart()
+void ape::apeRobotCalibrationPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

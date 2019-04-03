@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include "OgreMaterialManager.h"
 #include "OgreRTShaderSystem.h"
 
-namespace Ape
+namespace ape
 {
     class ShaderGeneratorResolver : public Ogre::MaterialManager::Listener
     {

@@ -23,27 +23,27 @@ SOFTWARE.*/
 #ifndef APE_INDEXEDFACESETGEOMETRYIMPL_H
 #define APE_INDEXEDFACESETGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class IndexedFaceSetGeometryImpl : public Ape::IIndexedFaceSetGeometry, public Ape::Replica
+	class IndexedFaceSetGeometryImpl : public ape::IIndexedFaceSetGeometry, public ape::Replica
 	{
 	public:
 		IndexedFaceSetGeometryImpl(std::string name, bool isHostCreated);
 
 		~IndexedFaceSetGeometryImpl();
 
-		void setParameters(std::string groupName, Ape::GeometryCoordinates coordinates, Ape::GeometryIndices indices, Ape::GeometryNormals normals, bool generateNormals, Ape::GeometryColors colors, Ape::GeometryTextureCoordinates textureCoordinates, Ape::MaterialWeakPtr material) override;
+		void setParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, bool generateNormals, ape::GeometryColors colors, ape::GeometryTextureCoordinates textureCoordinates, ape::MaterialWeakPtr material) override;
 
-		Ape::GeometryIndexedFaceSetParameters getParameters() override;
+		ape::GeometryIndexedFaceSetParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		Ape::MaterialWeakPtr getMaterial() override;
+		ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -52,11 +52,11 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryIndexedFaceSetParameters mParameters;
+		ape::GeometryIndexedFaceSetParameters mParameters;
 
 		int mCoordinatesSize;
 

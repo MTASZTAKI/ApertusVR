@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeRobotCalibrationPlugin.h
+	apeRobotCalibrationPlugin.h
 	)
 
 set (SOURCES 
-	ApeRobotCalibrationPlugin.cpp
+	apeRobotCalibrationPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/macros/userInput
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	
+	
+	
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
-add_library (ApeRobotCalibrationPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeRobotCalibrationPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeRobotCalibrationPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeUserInputMacro ApeSceneMakerMacro)
+target_link_libraries (apeRobotCalibrationPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro apeSceneMakerMacro)
 
-set_property (TARGET ApeRobotCalibrationPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeRobotCalibrationPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeRobotCalibrationPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeRobotCalibrationPlugin PROPERTY FOLDER "Plugins")

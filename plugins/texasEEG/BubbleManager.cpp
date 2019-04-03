@@ -1,7 +1,7 @@
 #include <ctime>
 #include "BubbleManager.h"
 
-TexasEEG::BubbleManager::BubbleManager(Ape::NodeWeakPtr userNode)
+TexasEEG::BubbleManager::BubbleManager(ape::NodeWeakPtr userNode)
 {
 	APE_LOG_TRACE("");
 	mUserNode = userNode;
@@ -80,7 +80,7 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 				newZDist -= mBubbleQueue.back()->getPosition().z;
 			}
 
-			Ape::Vector3 newPos = Ape::Vector3(newXDist, newYDist, newZDist);
+			ape::Vector3 newPos = ape::Vector3(newXDist, newYDist, newZDist);
 			APE_LOG_TRACE("mBubbleQueue.push_back(): " << newPos.toString());
 			mBubbleQueue.push_back(new TexasEEG::Bubble(newPos));
 		}

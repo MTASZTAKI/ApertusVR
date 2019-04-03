@@ -1,9 +1,9 @@
-#include "ApeOgreMovableText.h"
+#include "apeOgreMovableText.h"
 
 #define POS_TEX_BINDING    0
 #define COLOUR_BINDING     1
 
-Ape::OgreMovableText::OgreMovableText(const Ogre::String &name, const Ogre::String &caption, const Ogre::String &fontName, Ogre::Real charHeight, const Ogre::ColourValue &color)
+ape::OgreMovableText::OgreMovableText(const Ogre::String &name, const Ogre::String &caption, const Ogre::String &fontName, Ogre::Real charHeight, const Ogre::ColourValue &color)
 : mpCam(NULL)
 , mpWin(NULL)
 , mpFont(NULL)
@@ -33,7 +33,7 @@ Ape::OgreMovableText::OgreMovableText(const Ogre::String &name, const Ogre::Stri
     this->_setupGeometry();
 }
 
-Ape::OgreMovableText::~OgreMovableText()
+ape::OgreMovableText::~OgreMovableText()
 {
     if (mRenderOp.vertexData)
         delete mRenderOp.vertexData;
@@ -45,7 +45,7 @@ Ape::OgreMovableText::~OgreMovableText()
 	}
 }
 
-void Ape::OgreMovableText::setFontName(const Ogre::String &fontName)
+void ape::OgreMovableText::setFontName(const Ogre::String &fontName)
 {
     if((Ogre::MaterialManager::getSingletonPtr()->resourceExists(mName + "Material"))) 
     { 
@@ -81,7 +81,7 @@ void Ape::OgreMovableText::setFontName(const Ogre::String &fontName)
     }
 }
 
-void Ape::OgreMovableText::setCaption(const Ogre::String &caption)
+void ape::OgreMovableText::setCaption(const Ogre::String &caption)
 {
     if (caption != mCaption)
     {
@@ -90,7 +90,7 @@ void Ape::OgreMovableText::setCaption(const Ogre::String &caption)
     }
 }
 
-void Ape::OgreMovableText::setColor(const Ogre::ColourValue &color)
+void ape::OgreMovableText::setColor(const Ogre::ColourValue &color)
 {
     if (color != mColor)
     {
@@ -99,7 +99,7 @@ void Ape::OgreMovableText::setColor(const Ogre::ColourValue &color)
     }
 }
 
-void Ape::OgreMovableText::setCharacterHeight(Ogre::Real height)
+void ape::OgreMovableText::setCharacterHeight(Ogre::Real height)
 {
     if (height != mCharHeight)
     {
@@ -108,7 +108,7 @@ void Ape::OgreMovableText::setCharacterHeight(Ogre::Real height)
     }
 }
 
-void Ape::OgreMovableText::setSpaceWidth(Ogre::Real width)
+void ape::OgreMovableText::setSpaceWidth(Ogre::Real width)
 {
     if (width != mSpaceWidth)
     {
@@ -117,7 +117,7 @@ void Ape::OgreMovableText::setSpaceWidth(Ogre::Real width)
     }
 }
 
-void Ape::OgreMovableText::setTextAlignment(const HorizontalAlignment& horizontalAlignment, const VerticalAlignment& verticalAlignment)
+void ape::OgreMovableText::setTextAlignment(const HorizontalAlignment& horizontalAlignment, const VerticalAlignment& verticalAlignment)
 {
     if(mHorizontalAlignment != horizontalAlignment)
     {
@@ -131,17 +131,17 @@ void Ape::OgreMovableText::setTextAlignment(const HorizontalAlignment& horizonta
     }
 }
 
-void Ape::OgreMovableText::setGlobalTranslation( Ogre::Vector3 trans )
+void ape::OgreMovableText::setGlobalTranslation( Ogre::Vector3 trans )
 {
     mGlobalTranslation = trans;
 }
 
-void Ape::OgreMovableText::setLocalTranslation( Ogre::Vector3 trans )
+void ape::OgreMovableText::setLocalTranslation( Ogre::Vector3 trans )
 {
     mLocalTranslation = trans;
 }
 
-void Ape::OgreMovableText::showOnTop(bool show)
+void ape::OgreMovableText::showOnTop(bool show)
 {
     if( mOnTop != show && !mpMaterial.isNull() )
     {
@@ -152,7 +152,7 @@ void Ape::OgreMovableText::showOnTop(bool show)
     }
 }
 
-void Ape::OgreMovableText::_setupGeometry()
+void ape::OgreMovableText::_setupGeometry()
 {
     assert(mpFont);
     assert(!mpMaterial.isNull());
@@ -411,7 +411,7 @@ void Ape::OgreMovableText::_setupGeometry()
     mNeedUpdate = false;
 }
 
-void Ape::OgreMovableText::_updateColors(void)
+void ape::OgreMovableText::_updateColors(void)
 {
     assert(mpFont);
     assert(!mpMaterial.isNull());
@@ -426,24 +426,24 @@ void Ape::OgreMovableText::_updateColors(void)
     mUpdateColors = false;
 }
 
-const Ogre::Quaternion& Ape::OgreMovableText::getWorldOrientation(void) const
+const Ogre::Quaternion& ape::OgreMovableText::getWorldOrientation(void) const
 {
     assert(mpCam);
     return const_cast<Ogre::Quaternion&>(mpCam->getDerivedOrientation());
 }
 
-void Ape::OgreMovableText::visitRenderables(Ogre::Renderable::Visitor* visitor, 
+void ape::OgreMovableText::visitRenderables(Ogre::Renderable::Visitor* visitor, 
         bool debugRenderables)
 {
 }
 
-const Ogre::Vector3& Ape::OgreMovableText::getWorldPosition(void) const
+const Ogre::Vector3& ape::OgreMovableText::getWorldPosition(void) const
 {
     assert(mParentNode);
     return mParentNode->_getDerivedPosition();
 }
 
-void Ape::OgreMovableText::getWorldTransforms(Ogre::Matrix4 *xform) const 
+void ape::OgreMovableText::getWorldTransforms(Ogre::Matrix4 *xform) const 
 {
     if (this->isVisible() && mpCam)
     {
@@ -464,7 +464,7 @@ void Ape::OgreMovableText::getWorldTransforms(Ogre::Matrix4 *xform) const
     }
 }
 
-void Ape::OgreMovableText::getRenderOperation(Ogre::RenderOperation &op)
+void ape::OgreMovableText::getRenderOperation(Ogre::RenderOperation &op)
 {
     if (this->isVisible())
     {
@@ -476,12 +476,12 @@ void Ape::OgreMovableText::getRenderOperation(Ogre::RenderOperation &op)
     }
 }
 
-void Ape::OgreMovableText::_notifyCurrentCamera(Ogre::Camera *cam)
+void ape::OgreMovableText::_notifyCurrentCamera(Ogre::Camera *cam)
 {
     mpCam = cam;
 }
 
-void Ape::OgreMovableText::_updateRenderQueue(Ogre::RenderQueue* queue)
+void ape::OgreMovableText::_updateRenderQueue(Ogre::RenderQueue* queue)
 {
     if (this->isVisible())
     {
@@ -495,37 +495,37 @@ void Ape::OgreMovableText::_updateRenderQueue(Ogre::RenderQueue* queue)
 }
 
 
-Ape::OgreMovableTextFactory::OgreMovableTextFactory()
+ape::OgreMovableTextFactory::OgreMovableTextFactory()
 {
 	mTypeName = "MovableText";
 }
 
-Ape::OgreMovableTextFactory::~OgreMovableTextFactory()
+ape::OgreMovableTextFactory::~OgreMovableTextFactory()
 {
 
 }
 
-const Ogre::String& Ape::OgreMovableTextFactory::getType( void ) const
+const Ogre::String& ape::OgreMovableTextFactory::getType( void ) const
 {
 	return mTypeName;
 }
 
-Ogre::MovableObject* Ape::OgreMovableTextFactory::createInstance( const Ogre::String& name, Ogre::SceneManager* manager, const Ogre::NameValuePairList* params /*= 0*/ )
+Ogre::MovableObject* ape::OgreMovableTextFactory::createInstance( const Ogre::String& name, Ogre::SceneManager* manager, const Ogre::NameValuePairList* params /*= 0*/ )
 {
-	return new Ape::OgreMovableText(name, name);
+	return new ape::OgreMovableText(name, name);
 }
 
-void Ape::OgreMovableTextFactory::destroyInstance( Ogre::MovableObject* obj )
+void ape::OgreMovableTextFactory::destroyInstance( Ogre::MovableObject* obj )
 {
 
 }
 
-Ogre::MovableObject* Ape::OgreMovableTextFactory::createInstanceImpl( const Ogre::String& name, const Ogre::NameValuePairList* params /*= 0*/ )
+Ogre::MovableObject* ape::OgreMovableTextFactory::createInstanceImpl( const Ogre::String& name, const Ogre::NameValuePairList* params /*= 0*/ )
 {
 	return NULL;
 }
 
-std::string Ape::OgreMovableText::getMaterialName()
+std::string ape::OgreMovableText::getMaterialName()
 {
 	return mpMaterial->getName();
 }

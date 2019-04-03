@@ -22,26 +22,26 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeTesterPlugin.h
+	apeTesterPlugin.h
 	)
 
 set (SOURCES 
-	ApeTesterPlugin.cpp
+	apeTesterPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 	
+	 
+		
 	)
 
-add_library (ApeTesterPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeTesterPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeTesterPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSceneMakerMacro)
+target_link_libraries (apeTesterPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 
-set_property (TARGET ApeTesterPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeTesterPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeTesterPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeTesterPlugin PROPERTY FOLDER "Plugins")
 
 
 

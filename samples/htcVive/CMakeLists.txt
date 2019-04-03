@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeHtcVive.cpp
+	apeHtcVive.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeHtcVive ${SOURCES})
-target_link_libraries (ApeHtcVive ApeSystem ApePluginManager)
-set_property (TARGET ApeHtcVive PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHtcVive PROPERTY FOLDER "Samples/HtcVive")
+add_executable (apeHtcVive ${SOURCES})
+target_link_libraries (apeHtcVive apeSystem apePluginManager)
+set_property (TARGET apeHtcVive PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHtcVive PROPERTY FOLDER "Samples/HtcVive")
 
 

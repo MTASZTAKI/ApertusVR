@@ -20,28 +20,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefKeyboardHandlerImpl.h"
+#include "apeCefKeyboardHandlerImpl.h"
 
-Ape::CefKeyboardHandlerImpl::CefKeyboardHandlerImpl()
+ape::CefKeyboardHandlerImpl::CefKeyboardHandlerImpl()
 {
 	APE_LOG_FUNC_ENTER();
-	mBrowserIDs = std::map<int, Ape::BrowserWeakPtr>();
+	mBrowserIDs = std::map<int, ape::BrowserWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::CefKeyboardHandlerImpl::~CefKeyboardHandlerImpl()
+ape::CefKeyboardHandlerImpl::~CefKeyboardHandlerImpl()
 {
 
 }
 
-void Ape::CefKeyboardHandlerImpl::registerBrowser(int ID, Ape::BrowserWeakPtr browser)
+void ape::CefKeyboardHandlerImpl::registerBrowser(int ID, ape::BrowserWeakPtr browser)
 {
 	APE_LOG_FUNC_ENTER();
 	mBrowserIDs[ID] = browser;
 	APE_LOG_FUNC_LEAVE();
 }
 
-bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event, bool * is_keyboard_shortcut)
+bool ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event, bool * is_keyboard_shortcut)
 {
 	if (auto apeBrowser = mBrowserIDs[browser->GetIdentifier()].lock())
 	{
@@ -51,7 +51,7 @@ bool Ape::CefKeyboardHandlerImpl::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, c
 	return false;
 }
 
-bool Ape::CefKeyboardHandlerImpl::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event)
+bool ape::CefKeyboardHandlerImpl::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent & event, CefEventHandle os_event)
 {
 	APE_LOG_TRACE("event.focus_on_editable_field: " << event.focus_on_editable_field);
 	return false;

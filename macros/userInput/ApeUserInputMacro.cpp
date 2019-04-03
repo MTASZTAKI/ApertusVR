@@ -1,31 +1,31 @@
 #include <iostream>
-#include "ApeUserInputMacro.h"
+#include "macros/userInput/apeUserInputMacro.h"
 
-Ape::UserInputMacro* Ape::UserInputMacro::mpInstance = 0;
+ape::UserInputMacro* ape::UserInputMacro::mpInstance = 0;
 
-Ape::UserInputMacro::UserInputMacro()
+ape::UserInputMacro::UserInputMacro()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::BROWSER, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_UNIT, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mCameras = std::map<std::string, Ape::CameraWeakPtr>();
-	std::string uniqueUserNamePrefix = mpSystemConfig->getSceneSessionConfig().uniqueUserNamePrefix;
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mCameras = std::map<std::string, ape::CameraWeakPtr>();
+	std::string userName = mpCoreConfig->getNetworkConfig().userName;
 	std::string delimiter = "-";
 	auto tp = std::chrono::system_clock::now();
 	auto dur = tp.time_since_epoch();
 	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
-	mUniqueUserNodeName =  uniqueUserNamePrefix + delimiter + std::to_string(nanoseconds);
+	mUniqueUserNodeName = userName + delimiter + std::to_string(nanoseconds);
 	if (auto userNode = mpSceneManager->createNode(mUniqueUserNodeName).lock())
 	{
 		if (auto headNode = mpSceneManager->createNode(mUniqueUserNodeName + "_HeadNode").lock())
 		{
 			headNode->setParentNode(userNode);
-			if (auto userMaterial = std::static_pointer_cast<Ape::IManualMaterial>(mpSceneManager->createEntity(mUniqueUserNodeName + "_Material", Ape::Entity::MATERIAL_MANUAL).lock()))
+			if (auto userMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(mUniqueUserNodeName + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 			{
 				std::random_device rd;
 				std::mt19937 gen(rd());
@@ -33,18 +33,18 @@ Ape::UserInputMacro::UserInputMacro()
 				std::vector<double> randomColors;
 				for (int i = 0; i < 3; i++)
 					randomColors.push_back(distDouble(gen));
-				userMaterial->setDiffuseColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
-				userMaterial->setSpecularColor(Ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+				userMaterial->setDiffuseColor(ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+				userMaterial->setSpecularColor(ape::Color(randomColors[0], randomColors[1], randomColors[2]));
 				mUserMaterial = userMaterial;
 			}
 			mHeadNode = headNode;
 		}
 		mUserNode = userNode;
 	}
-	mOverlayText = Ape::TextGeometryWeakPtr();
+	mOverlayText = ape::TextGeometryWeakPtr();
 	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUniqueUserNodeName).lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<Ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUniqueUserNodeName, Ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUniqueUserNodeName, ape::Entity::GEOMETRY_RAY).lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -53,41 +53,41 @@ Ape::UserInputMacro::UserInputMacro()
 		rayNode->setParentNode(mUserNode);
 		mRayOverlayNode = rayNode;
 	}
-	mOverlayBrowser = Ape::BrowserWeakPtr();
-	mOverlayMouseTexture = Ape::UnitTextureWeakPtr();
-	mRayGeometry = Ape::RayGeometryWeakPtr();
-	mRayOverlayNode = Ape::NodeWeakPtr();
-	mCursorText = Ape::TextGeometryWeakPtr();
+	mOverlayBrowser = ape::BrowserWeakPtr();
+	mOverlayMouseTexture = ape::UnitTextureWeakPtr();
+	mRayGeometry = ape::RayGeometryWeakPtr();
+	mRayOverlayNode = ape::NodeWeakPtr();
+	mCursorText = ape::TextGeometryWeakPtr();
 	mKeyStringValue = std::string();
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::UserInputMacro::~UserInputMacro()
+ape::UserInputMacro::~UserInputMacro()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
+void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::BROWSER_OVERLAY)
+	if (event.type == ape::Event::Type::BROWSER_OVERLAY)
 	{
-		mOverlayBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock());
+		mOverlayBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock());
 		APE_LOG_DEBUG("overlayBrowser catched");
 	}
-	else if (event.type == Ape::Event::Type::TEXTURE_UNIT_CREATE)
+	else if (event.type == ape::Event::Type::TEXTURE_UNIT_CREATE)
 	{
-		mOverlayMouseTexture = std::static_pointer_cast<Ape::IUnitTexture>(mpSceneManager->getEntity(event.subjectName).lock());
+		mOverlayMouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->getEntity(event.subjectName).lock());
 		APE_LOG_DEBUG("overlayMouseTexture catched");
 	}
-	else if (event.type == Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
+	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
 		APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
 		if (auto overlayBrowser = mOverlayBrowser.lock())
 		{
-			if (auto focusChangedBrowser = std::static_pointer_cast<Ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+			if (auto focusChangedBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
 				APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
@@ -95,7 +95,7 @@ void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
 			}
 		}
 	}
-	else if (event.type == Ape::Event::Type::BROWSER_MOUSE_CLICK)
+	else if (event.type == ape::Event::Type::BROWSER_MOUSE_CLICK)
 	{
 		APE_LOG_DEBUG("BROWSER_MOUSE_CLICK");
 		if (auto overlayBrowser = mOverlayBrowser.lock())
@@ -103,28 +103,28 @@ void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
 			APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
 		}
 	}
-	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_CREATE)
+	else if (event.type == ape::Event::Type::GEOMETRY_RAY_CREATE)
 	{
 		APE_LOG_DEBUG("GEOMETRY_RAY_CREATE");
 	}
-	else if (event.type == Ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
+	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
 		APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
 		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
-			std::list<Ape::EntityWeakPtr> intersectionList;
+			std::list<ape::EntityWeakPtr> intersectionList;
 			std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
 			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size: " << intersectionList.size());
 			bool removeItem = false;
-			std::list<Ape::EntityWeakPtr>::iterator i = intersectionList.begin();
+			std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
 			while (i != intersectionList.end())
 			{
 				removeItem = false;
 				if (auto entity = i->lock())
 				{
 					std::string entityName = entity->getName();
-					Ape::Entity::Type entityType = entity->getType();
+					ape::Entity::Type entityType = entity->getType();
 					//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
 					/*if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
 					removeItem = true;
@@ -157,12 +157,12 @@ void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
 					if (auto entity = intersection.lock())
 					{
 						std::string entityName = entity->getName();
-						Ape::Entity::Type entityType = entity->getType();
+						ape::Entity::Type entityType = entity->getType();
 						APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
 
-						if (entityType >= Ape::Entity::Type::GEOMETRY_FILE && entityType <= Ape::Entity::Type::GEOMETRY_RAY)
+						if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
 						{
-							auto geometry = std::static_pointer_cast<Ape::Geometry>(entity);
+							auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
 							if (auto selectedParentNode = geometry->getParentNode().lock())
 							{
 								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
@@ -181,9 +181,9 @@ void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
 								}
 							}
 						}
-						else if (entityType == Ape::Entity::Type::POINT_CLOUD)
+						else if (entityType == ape::Entity::Type::POINT_CLOUD)
 						{
-							auto pointCloud = std::static_pointer_cast<Ape::IPointCloud>(entity);
+							auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(entity);
 							if (auto selectedParentNode = pointCloud->getParentNode().lock())
 							{
 								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
@@ -206,7 +206,7 @@ void Ape::UserInputMacro::eventCallBack(const Ape::Event& event)
 	}
 }
 
-void Ape::UserInputMacro::updateViewPose(ViewPose pose)
+void ape::UserInputMacro::updateViewPose(ViewPose pose)
 {
 	if (!mEnableOverlayBrowserKeyEvents)
 	{
@@ -223,25 +223,25 @@ void Ape::UserInputMacro::updateViewPose(ViewPose pose)
 	}
 }
 
-void Ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)
+void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)
 {
 	if (!mEnableOverlayBrowserKeyEvents)
 	{
 		if (auto userNode = mUserNode.lock())
 		{
-			auto moveInterpolator = std::make_unique<Ape::Interpolator>(false);
+			auto moveInterpolator = std::make_unique<ape::Interpolator>(false);
 			moveInterpolator->addSection(
 				userNode->getPosition(),
 				pose.userPosition,
 				milliseconds * 1000,
-				[&](Ape::Vector3 pos) { userNode->setPosition(pos); }
+				[&](ape::Vector3 pos) { userNode->setPosition(pos); }
 			);
-			auto rotateInterpolator = std::make_unique<Ape::Interpolator>(false);
+			auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
 			rotateInterpolator->addSection(
 				userNode->getOrientation(),
 				pose.userOrientation,
 				milliseconds * 1000,
-				[&](Ape::Quaternion ori) { userNode->setOrientation(ori); }
+				[&](ape::Quaternion ori) { userNode->setOrientation(ori); }
 			);
 			while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
 			{
@@ -254,20 +254,20 @@ void Ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int millis
 	}
 }
 
-Ape::NodeWeakPtr Ape::UserInputMacro::getUserNode()
+ape::NodeWeakPtr ape::UserInputMacro::getUserNode()
 {
 	return mUserNode;
 }
 
-Ape::NodeWeakPtr Ape::UserInputMacro::getHeadNode()
+ape::NodeWeakPtr ape::UserInputMacro::getHeadNode()
 {
 	return mHeadNode;
 }
 
-Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
+ape::CameraWeakPtr ape::UserInputMacro::createCamera(std::string name)
 {
 	std::string uniqueName = mUniqueUserNodeName + name;
-	if (auto camera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->createEntity(name, Ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity(name, ape::Entity::Type::CAMERA).lock()))
 	{
 		if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
 		{
@@ -275,10 +275,10 @@ Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
 			if (auto cameraConeNode = mpSceneManager->createNode(uniqueName + "_ConeNode").lock())
 			{
 				cameraConeNode->setParentNode(cameraNode);
-				cameraConeNode->rotate(Ape::Degree(90.0f).toRadian(), Ape::Vector3(1, 0, 0), Ape::Node::TransformationSpace::WORLD);
-				if (auto cameraCone = std::static_pointer_cast<Ape::IConeGeometry>(mpSceneManager->createEntity(uniqueName + "_ConeGeometry", Ape::Entity::GEOMETRY_CONE).lock()))
+				cameraConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
+				if (auto cameraCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(uniqueName + "_ConeGeometry", ape::Entity::GEOMETRY_CONE).lock()))
 				{
-					cameraCone->setParameters(10.0f, 30.0f, 1.0f, Ape::Vector2(1, 1));
+					cameraCone->setParameters(10.0f, 30.0f, 1.0f, ape::Vector2(1, 1));
 					cameraCone->setParentNode(cameraConeNode);
 					cameraCone->setMaterial(mUserMaterial);
 				}
@@ -286,8 +286,8 @@ Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
 			if (auto userNameTextNode = mpSceneManager->createNode(uniqueName + "_TextNode").lock())
 			{
 				userNameTextNode->setParentNode(cameraNode);
-				userNameTextNode->setPosition(Ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto userNameText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity(uniqueName + "_TextGeometry", Ape::Entity::GEOMETRY_TEXT).lock()))
+				userNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
+				if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(uniqueName + "_TextGeometry", ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					userNameText->setCaption(uniqueName);
 					userNameText->setParentNode(userNameTextNode);
@@ -300,7 +300,7 @@ Ape::CameraWeakPtr Ape::UserInputMacro::createCamera(std::string name)
 	}
 }
 
-void Ape::UserInputMacro::updateOverLayText(std::string caption)
+void ape::UserInputMacro::updateOverLayText(std::string caption)
 {
 	if (auto overlayText = mOverlayText.lock())
 	{
@@ -308,7 +308,7 @@ void Ape::UserInputMacro::updateOverLayText(std::string caption)
 	}
 }
 
-void Ape::UserInputMacro::saveViewPose()
+void ape::UserInputMacro::saveViewPose()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto userNode = mUserNode.lock())
@@ -323,7 +323,7 @@ void Ape::UserInputMacro::saveViewPose()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::UserInputMacro::createOverLayText(std::string caption)
+void ape::UserInputMacro::createOverLayText(std::string caption)
 {
 	if (mOverlayText.lock())
 	{
@@ -336,8 +336,8 @@ void Ape::UserInputMacro::createOverLayText(std::string caption)
 			if (auto overLayTextNode = mpSceneManager->createNode("overLayTextNode").lock())
 			{
 				overLayTextNode->setParentNode(mUserNode);
-				overLayTextNode->setPosition(Ape::Vector3(0, 17, -50));
-				if (auto overlayText = std::static_pointer_cast<Ape::ITextGeometry>(mpSceneManager->createEntity("overLayText", Ape::Entity::GEOMETRY_TEXT).lock()))
+				overLayTextNode->setPosition(ape::Vector3(0, 17, -50));
+				if (auto overlayText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("overLayText", ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					overlayText->setCaption(caption);
 					overlayText->showOnTop(true);
@@ -349,35 +349,35 @@ void Ape::UserInputMacro::createOverLayText(std::string caption)
 	}
 }
 
-bool Ape::UserInputMacro::isNodeSelected(std::string nodeName)
+bool ape::UserInputMacro::isNodeSelected(std::string nodeName)
 {
 	APE_LOG_TRACE("nodeName: " << nodeName);
-	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
+	std::map<std::string, ape::NodeWeakPtr>::iterator findIt;
 	findIt = mSelectedNodes.find(nodeName);
 	return (findIt != mSelectedNodes.end());
 }
 
-void Ape::UserInputMacro::addNodeSelection(std::string nodeName)
+void ape::UserInputMacro::addNodeSelection(std::string nodeName)
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_TRACE("nodeName: " << nodeName);
 	if (auto findNode = mpSceneManager->getNode(nodeName).lock())
 	{
-		Ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
+		ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
 		APE_LOG_DEBUG("childNodes size: " << childNodes.size());
 		for (auto childNode : childNodes)
 			if (auto childNodeSP = childNode.lock())
 				APE_LOG_DEBUG("childNode: " << childNodeSP->getName());
-		mSelectedNodes.insert(std::pair<std::string, Ape::NodeWeakPtr>(findNode->getName(), findNode));
+		mSelectedNodes.insert(std::pair<std::string, ape::NodeWeakPtr>(findNode->getName(), findNode));
 		findNode->showBoundingBox(true);
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-bool Ape::UserInputMacro::removeNodeSelection(std::string nodeName)
+bool ape::UserInputMacro::removeNodeSelection(std::string nodeName)
 {
 	APE_LOG_TRACE("nodeName: " << nodeName);
-	std::map<std::string, Ape::NodeWeakPtr>::iterator findIt;
+	std::map<std::string, ape::NodeWeakPtr>::iterator findIt;
 	findIt = mSelectedNodes.find(nodeName);
 	if (findIt != mSelectedNodes.end())
 	{
@@ -391,7 +391,7 @@ bool Ape::UserInputMacro::removeNodeSelection(std::string nodeName)
 	return false;
 }
 
-void Ape::UserInputMacro::clearNodeSelection()
+void ape::UserInputMacro::clearNodeSelection()
 {
 	APE_LOG_FUNC_ENTER();
 	auto nodeIt = mSelectedNodes.begin();
@@ -410,12 +410,12 @@ void Ape::UserInputMacro::clearNodeSelection()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::UserInputMacro::keyStringValue(std::string  keyStringValue)
+void ape::UserInputMacro::keyStringValue(std::string  keyStringValue)
 {
 	mKeyStringValue = keyStringValue;
 }
 
-void Ape::UserInputMacro::updateSelectedNodePose(Pose pose)
+void ape::UserInputMacro::updateSelectedNodePose(Pose pose)
 {
 	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
 	{
@@ -441,7 +441,7 @@ void Ape::UserInputMacro::updateSelectedNodePose(Pose pose)
 	}
 }
 
-void Ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor)
+void ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor)
 {
 	if (auto overlayMouseTexture = mOverlayMouseTexture.lock())
 	{
@@ -455,7 +455,7 @@ void Ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overla
 	}
 }
 
-void Ape::UserInputMacro::rayQuery(Ape::Vector3 position)
+void ape::UserInputMacro::rayQuery(ape::Vector3 position)
 {
 	if (auto rayOverlayNode = mRayOverlayNode.lock())
 	{

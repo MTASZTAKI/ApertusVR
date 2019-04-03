@@ -27,11 +27,11 @@ SOFTWARE.*/
 #include <set>
 #include <string>
 #include <vector>
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginDefines.h"
-#include "ApePluginInstance.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginDefines.h"
+#include "apePluginInstance.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_PLUGIN_INTERNAL InternalPluginManager
 	{

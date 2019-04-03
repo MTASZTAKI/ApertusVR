@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeRobotMonitoring.cpp
+	apeRobotMonitoring.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeRobotMonitoring ${SOURCES})
-target_link_libraries (ApeRobotMonitoring ApeSystem ApePluginManager)
-set_property (TARGET ApeRobotMonitoring PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeRobotMonitoring PROPERTY FOLDER "Samples/RobotMonitoring")
+add_executable (apeRobotMonitoring ${SOURCES})
+target_link_libraries (apeRobotMonitoring apeSystem apePluginManager)
+set_property (TARGET apeRobotMonitoring PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeRobotMonitoring PROPERTY FOLDER "Samples/RobotMonitoring")
 
 

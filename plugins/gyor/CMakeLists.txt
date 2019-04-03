@@ -22,27 +22,27 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeGyorPlugin.h
+	apeGyorPlugin.h
 	)
 
 set (SOURCES 
-	ApeGyorPlugin.cpp
+	apeGyorPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-	${PROJECT_SOURCE_DIR}/macros/userInput
-	${PROJECT_SOURCE_DIR}/macros/sceneMaker 
+	
+	
+	
 	)
 
-add_library (ApeGyorPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeGyorPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeGyorPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro ApeSceneMakerMacro)
+target_link_libraries (apeGyorPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
 
-set_property (TARGET ApeGyorPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeGyorPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeGyorPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeGyorPlugin PROPERTY FOLDER "Plugins")
 
 
 

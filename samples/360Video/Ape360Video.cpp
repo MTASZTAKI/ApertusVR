@@ -21,15 +21,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <sstream>
-#include "system/ApeSystem.h"
-#include "system/ApeFileSystem.h"
+#include "system/apeSystem.h"
+#include "system/apeFileSystem.h"
 
 int main(int argc, char** argv)
 {
 	std::stringstream configDir;
 	configDir << APE_SOURCE_DIR << "/samples/360Video/configs/";
-	configDir << Ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
-	Ape::System::Start(configDir.str().c_str(), true);
-	Ape::System::Stop();
+	configDir << ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
+	ape::System::Start(configDir.str().c_str(), true);
+	ape::System::Stop();
 	return 0;
 }

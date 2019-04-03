@@ -20,88 +20,88 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeManualTextureImpl.h"
+#include "apeManualTextureImpl.h"
 
-Ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : Ape::IManualTexture(name), Ape::Replica("ManualTexture", isHostCreated)
+ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : ape::IManualTexture(name), ape::Replica("ManualTexture", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mParameters = Ape::ManualTextureParameters();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParameters = ape::ManualTextureParameters();
 	mCameraName = std::string();
-	mCamera = Ape::CameraWeakPtr();
+	mCamera = ape::CameraWeakPtr();
 	mpBuffer = nullptr;
 	mpGraphicsApiID = nullptr;
 }
 
-Ape::ManualTextureImpl::~ManualTextureImpl()
+ape::ManualTextureImpl::~ManualTextureImpl()
 {
 	
 }
 
-void Ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, Ape::Texture::PixelFormat pixelFormat, Ape::Texture::Usage usage)
+void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage)
 {
 	mParameters.width = width;
 	mParameters.height = height;
 	mParameters.pixelFormat = pixelFormat;
 	mParameters.usage = usage;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
-Ape::ManualTextureParameters Ape::ManualTextureImpl::getParameters()
+ape::ManualTextureParameters ape::ManualTextureImpl::getParameters()
 {
 	return mParameters;
 }
 
-void Ape::ManualTextureImpl::setSourceCamera(Ape::CameraWeakPtr camera)
+void ape::ManualTextureImpl::setSourceCamera(ape::CameraWeakPtr camera)
 {
 	if (auto cameraSP = camera.lock())
 	{
 		mCamera = camera;
 		mCameraName = cameraSP->getName();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA));
 	}
 	else
-		mCamera = Ape::CameraWeakPtr();
+		mCamera = ape::CameraWeakPtr();
 }
 
-Ape::CameraWeakPtr Ape::ManualTextureImpl::getSourceCamera()
+ape::CameraWeakPtr ape::ManualTextureImpl::getSourceCamera()
 {
 	return mCamera;
 }
 
-void Ape::ManualTextureImpl::setGraphicsApiID(void * id)
+void ape::ManualTextureImpl::setGraphicsApiID(void * id)
 {
 	mpGraphicsApiID = id;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID));
 }
 
-void * Ape::ManualTextureImpl::getGraphicsApiID()
+void * ape::ManualTextureImpl::getGraphicsApiID()
 {
 	return mpGraphicsApiID;
 }
 
-void Ape::ManualTextureImpl::setBuffer(const void* buffer)
+void ape::ManualTextureImpl::setBuffer(const void* buffer)
 {
 	mpBuffer = buffer;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::TEXTURE_MANUAL_BUFFER));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_BUFFER));
 }
 
-const void* Ape::ManualTextureImpl::getBuffer()
+const void* ape::ManualTextureImpl::getBuffer()
 {
 	return mpBuffer;
 }
 
-void Ape::ManualTextureImpl::registerFunction(std::function<void()> callback)
+void ape::ManualTextureImpl::registerFunction(std::function<void()> callback)
 {
 	mFunctions.push_back(callback);
 }
 
-std::vector<std::function<void()>> Ape::ManualTextureImpl::getFunctionList()
+std::vector<std::function<void()>> ape::ManualTextureImpl::getFunctionList()
 {
 	return mFunctions;
 }
 
-void Ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
+void ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
 {
 	for (auto it = mFunctions.begin(); it != mFunctions.end();)
 	{
@@ -112,13 +112,13 @@ void Ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
 	}
 }
 
-void Ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::ManualTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::ManualTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -129,18 +129,18 @@ RakNet::RM3SerializationResult Ape::ManualTextureImpl::Serialize(RakNet::Seriali
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
 	RakNet::RakString cameraName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, cameraName))
 	{
 		mCameraName = cameraName.C_String();
-		mCamera = std::static_pointer_cast<Ape::ICamera>(mpSceneManager->getEntity(mCameraName).lock());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::MATERIAL_MANUAL_PASS));
+		mCamera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(mCameraName).lock());
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_PASS));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

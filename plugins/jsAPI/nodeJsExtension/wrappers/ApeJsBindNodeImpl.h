@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_NODEIMPL_H
 #define APE_JSBIND_NODEIMPL_H
 
-#include "datatypes/ApeEuler.h"
-#include "datatypes/ApeMatrix4.h"
-#include "ApeNodeImpl.h"
+#include "datatypes/apeEuler.h"
+#include "datatypes/apeMatrix4.h"
+#include "apeNodeImpl.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -34,34 +34,34 @@ SOFTWARE.*/
 class NodeJsPtr
 {
 private:
-	Ape::NodeWeakPtr mPtr;
+	ape::NodeWeakPtr mPtr;
 
 public:
-	NodeJsPtr(Ape::NodeWeakPtr ptr)
+	NodeJsPtr(ape::NodeWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
 	// Pointers
 
-	const Ape::NodeWeakPtr getNodeWeakPtr()
+	const ape::NodeWeakPtr getNodeWeakPtr()
 	{
 		return mPtr;
 	}
 
-	const Ape::NodeSharedPtr getNodeSharedPtr()
+	const ape::NodeSharedPtr getNodeSharedPtr()
 	{
 		return mPtr.lock();
 	}
 
 	// ParentNode
 
-	Ape::NodeWeakPtr getParentNodeWeakPtr()
+	ape::NodeWeakPtr getParentNodeWeakPtr()
 	{
 		return mPtr.lock()->getParentNode();
 	}
 
-	void setParentNodeWeakPtr(Ape::NodeWeakPtr parentNode)
+	void setParentNodeWeakPtr(ape::NodeWeakPtr parentNode)
 	{
 		mPtr.lock()->setParentNode(parentNode);
 	}
@@ -108,77 +108,77 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Vector3 getPosition()
+	const ape::Vector3 getPosition()
 	{
 		return mPtr.lock()->getPosition();
 	}
 
-	void setPosition(Ape::Vector3 position)
+	void setPosition(ape::Vector3 position)
 	{
 		mPtr.lock()->setPosition(position);
 	}
 
-	const Ape::Vector3 getDerivedPosition()
+	const ape::Vector3 getDerivedPosition()
 	{
 		return mPtr.lock()->getDerivedPosition();
 	}
 
-	const Ape::Quaternion getOrientation()
+	const ape::Quaternion getOrientation()
 	{
 		return mPtr.lock()->getOrientation();
 	}
 
-	void setOrientation(Ape::Quaternion orientation)
+	void setOrientation(ape::Quaternion orientation)
 	{
 		mPtr.lock()->setOrientation(orientation);
 	}
 
-	const Ape::Euler getEuler()
+	const ape::Euler getEuler()
 	{
-		Ape::Quaternion q = mPtr.lock()->getOrientation();
-		return Ape::Euler(q);
+		ape::Quaternion q = mPtr.lock()->getOrientation();
+		return ape::Euler(q);
 	}
 
-	void setEuler(Ape::Euler euler)
+	void setEuler(ape::Euler euler)
 	{
 		mPtr.lock()->setOrientation(euler.toQuaternion());
 	}
 
-	const Ape::Matrix4 getTransformationMatrix()
+	const ape::Matrix4 getTransformationMatrix()
 	{
-		Ape::Matrix4 m;
+		ape::Matrix4 m;
 		m.makeTransform(mPtr.lock()->getScale(),
 						mPtr.lock()->getOrientation(),
 						mPtr.lock()->getPosition());
 		return m;
 	}
 
-	const Ape::Quaternion getDerivedOrientation()
+	const ape::Quaternion getDerivedOrientation()
 	{
 		return mPtr.lock()->getDerivedOrientation();
 	}
 
-	const Ape::Vector3 getScale()
+	const ape::Vector3 getScale()
 	{
 		return mPtr.lock()->getScale();
 	}
 
-	void setScale(Ape::Vector3 scale)
+	void setScale(ape::Vector3 scale)
 	{
 		mPtr.lock()->setScale(scale);
 	}
 
-	const Ape::Vector3 getDerivedScale()
+	const ape::Vector3 getDerivedScale()
 	{
 		return mPtr.lock()->getDerivedScale();
 	}
 
-	void translate(Ape::Vector3 transformVector, Ape::Node::TransformationSpace nodeTransformSpace)
+	void translate(ape::Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace)
 	{
 		mPtr.lock()->translate(transformVector, nodeTransformSpace);
 	}
 
-	void rotate(Ape::Radian angle, Ape::Vector3 axis, Ape::Node::TransformationSpace nodeTransformSpace)
+	void rotate(ape::Radian angle, ape::Vector3 axis, ape::Node::TransformationSpace nodeTransformSpace)
 	{
 		mPtr.lock()->rotate(angle, axis, nodeTransformSpace);
 	}
@@ -191,7 +191,7 @@ public:
 
 NBIND_CLASS(NodeJsPtr)
 {
-	construct<Ape::NodeWeakPtr>();
+	construct<ape::NodeWeakPtr>();
 
 	// Pointers
 

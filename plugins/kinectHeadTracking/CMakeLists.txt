@@ -66,29 +66,29 @@ if (WIN32)
 	set_property(TARGET MY_KINECT PROPERTY IMPORTED_LOCATION_RELEASE ${KINECT_HOME}/v2.0_1409/Lib/x64/Kinect20.lib)
 endif ()
 
-#ApeKinectHeadTrackingPlugin
+#apeKinectHeadTrackingPlugin
 set (HEADERS
-	ApeKinectHeadTrackingPlugin.h
+	apeKinectHeadTrackingPlugin.h
 	resource.h
 	stdafx.h
 	)
 
 set (SOURCES 
-	ApeKinectHeadTrackingPlugin.cpp
+	apeKinectHeadTrackingPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include  
-	${PROJECT_SOURCE_DIR}/macros/userInput 
+	  
+	 
 	${KINECT_HOME}/v2.0_1409/inc
 	)
 
 # Add the dinamic library target to the project
-add_library (ApeKinectHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeKinectHeadTrackingPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeKinectHeadTrackingPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeSystemConfig ApeMainWindow ApeUserInputMacro MY_KINECT)
+target_link_libraries (apeKinectHeadTrackingPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro MY_KINECT)
 	
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeKinectHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeKinectHeadTrackingPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeKinectHeadTrackingPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeKinectHeadTrackingPlugin PROPERTY FOLDER "Plugins")

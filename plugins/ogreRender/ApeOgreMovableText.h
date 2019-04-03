@@ -31,7 +31,7 @@ SOFTWARE.*/
 #include "OgreCamera.h"
 #include "OgreNode.h"
 
-namespace Ape {
+namespace ape {
 
 
 	class OgreMovableTextFactory : public Ogre::MovableObjectFactory

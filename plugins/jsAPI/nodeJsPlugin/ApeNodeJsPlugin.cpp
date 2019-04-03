@@ -21,38 +21,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <fstream>
-#include "ApeNodeJsPlugin.h"
+#include "apeNodeJsPlugin.h"
 #include "node.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-ApeNodeJsPlugin::ApeNodeJsPlugin()
+apeNodeJsPlugin::apeNodeJsPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ApeNodeJsPlugin::~ApeNodeJsPlugin()
+apeNodeJsPlugin::~apeNodeJsPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeNodeJsPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::eventCallBack(const Ape::Event& event)
+void apeNodeJsPlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ApeNodeJsPlugin::parseNodeJsConfig()
+void apeNodeJsPlugin::parseNodeJsConfig()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
-	fileFullPath << mpSystemConfig->getFolderPath() << "/ApeNodeJsPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeNodeJsPlugin.json";
 	FILE* configFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (configFile)
@@ -77,14 +77,14 @@ void ApeNodeJsPlugin::parseNodeJsConfig()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Init()
+void apeNodeJsPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	parseNodeJsConfig();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Run()
+void apeNodeJsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream port;
@@ -107,25 +107,25 @@ void ApeNodeJsPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Step()
+void apeNodeJsPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Stop()
+void apeNodeJsPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Suspend()
+void apeNodeJsPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ApeNodeJsPlugin::Restart()
+void apeNodeJsPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

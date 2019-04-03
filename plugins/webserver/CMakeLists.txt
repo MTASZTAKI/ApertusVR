@@ -103,27 +103,27 @@ set(BOOST_LIB_REGEX_D "${BOOST_LIBRARYDIR}/libboost_regex-vc141-mt-gd-x64-1_67.l
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeWebserverPlugin.h
+	apeWebserverPlugin.h
 	)
 
 set (SOURCES
-	ApeWebserverPlugin.cpp
+	apeWebserverPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${BOOST_ROOT}
 	${PROJECT_SOURCE_DIR}/3rdParty/crow/include
 	)
 
-add_library (ApeWebserverPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeWebserverPlugin SHARED ${SOURCES} ${HEADERS})
 
 #find_package(Boost 1.67.0 REQUIRED COMPONENTS system date_time regex)
 #if(Boost_FOUND)
 #	include_directories(${Boost_INCLUDE_DIR})
 #	link_directories(${Boost_LIBRARY_DIRS})
 	# Link with dependency libraries
-	#target_link_libraries (ApeWebserverPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager Boost::system Boost::date_time Boost::regex)
+	#target_link_libraries (apeWebserverPlugin apePluginManager apeSceneManager apeEventManager apeLogManager Boost::system Boost::date_time Boost::regex)
 #else ()
 	#message(FATAL_ERROR "Boost: missing libraries.")
 #endif()
@@ -146,8 +146,8 @@ if (WIN32)
 	set_property(TARGET MY_BOOST_REGEX PROPERTY IMPORTED_LOCATION_RELEASE ${BOOST_LIB_REGEX})
 endif ()
 
-target_link_libraries (ApeWebserverPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager MY_BOOST_SYSTEM MY_BOOST_DATETIME MY_BOOST_REGEX)
+target_link_libraries (apeWebserverPlugin apePluginManager apeSceneManager apeEventManager apeLogManager MY_BOOST_SYSTEM MY_BOOST_DATETIME MY_BOOST_REGEX)
 
-set_property (TARGET ApeWebserverPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeWebserverPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeWebserverPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeWebserverPlugin PROPERTY FOLDER "Plugins")

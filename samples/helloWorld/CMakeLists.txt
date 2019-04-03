@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeHelloWorld.cpp
+	apeHelloWorld.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeHelloWorld ${SOURCES})
-target_link_libraries (ApeHelloWorld ApeSystem ApePluginManager)
-set_property (TARGET ApeHelloWorld PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeHelloWorld PROPERTY FOLDER "Samples/HelloWorld")
+add_executable (apeHelloWorld ${SOURCES})
+target_link_libraries (apeHelloWorld apeSystem apePluginManager)
+set_property (TARGET apeHelloWorld PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHelloWorld PROPERTY FOLDER "Samples/HelloWorld")
 
 

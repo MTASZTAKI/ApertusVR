@@ -27,27 +27,27 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeINode.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeINode.h"
 
-#define THIS_PLUGINNAME "Ape360VideoPlugin"
+#define THIS_PLUGINNAME "ape360VideoPlugin"
 
-namespace Ape
+namespace ape
 {
-	class Ape360VideoPlugin : public Ape::IPlugin
+	class ape360VideoPlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
-		Ape360VideoPlugin();
+		ape360VideoPlugin();
 
-		~Ape360VideoPlugin();
+		~ape360VideoPlugin();
 
 		void Init() override;
 
@@ -62,14 +62,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360VideoPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* Createape360VideoPlugin()
 	{
-		return new Ape::Ape360VideoPlugin;
+		return new ape::ape360VideoPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApe360VideoPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void Destroyape360VideoPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::Ape360VideoPlugin*)plugin;
+		delete (ape::ape360VideoPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -77,7 +77,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360VideoPlugin, DestroyApe360VideoPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, Createape360VideoPlugin, Destroyape360VideoPlugin);
 		return 0;
 	}
 }

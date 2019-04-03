@@ -27,29 +27,29 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIBrowser.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIPlaneGeometry.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIBrowser.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIPlaneGeometry.h"
 
-#define THIS_PLUGINNAME "ApeGallerySamplePlugin"
+#define THIS_PLUGINNAME "apeGallerySamplePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeGallerySamplePlugin : public Ape::IPlugin
+	class apeGallerySamplePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
-		ApeGallerySamplePlugin();
+		apeGallerySamplePlugin();
 
-		~ApeGallerySamplePlugin();
+		~apeGallerySamplePlugin();
 
 		void Init() override;
 
@@ -64,14 +64,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeGallerySamplePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeGallerySamplePlugin()
 	{
-		return new Ape::ApeGallerySamplePlugin;
+		return new ape::apeGallerySamplePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeGallerySamplePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeGallerySamplePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeGallerySamplePlugin*)plugin;
+		delete (ape::apeGallerySamplePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -79,7 +79,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeGallerySamplePlugin, DestroyApeGallerySamplePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeGallerySamplePlugin, DestroyapeGallerySamplePlugin);
 		return 0;
 	}
 }

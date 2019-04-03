@@ -41,10 +41,10 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <vector>
-#include "system/ApePlatform.h"
-#include "managers/ApeILogManager.h"
+#include "system/apePlatform.h"
+#include "managers/apeILogManager.h"
 
-namespace Ape
+namespace ape
 {
 	class APE_LOGMANAGER_DLL_EXPORT LogManagerImpl : public ILogManager
 	{

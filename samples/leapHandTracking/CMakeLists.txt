@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeLeapHandTracking.cpp
+	apeLeapHandTracking.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeLeapHandTracking ${SOURCES})
-target_link_libraries (ApeLeapHandTracking ApeSystem ApePluginManager)
-set_property (TARGET ApeLeapHandTracking PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeLeapHandTracking PROPERTY FOLDER "Samples/LeapHandTracking")
+add_executable (apeLeapHandTracking ${SOURCES})
+target_link_libraries (apeLeapHandTracking apeSystem apePluginManager)
+set_property (TARGET apeLeapHandTracking PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeLeapHandTracking PROPERTY FOLDER "Samples/LeapHandTracking")
 
 

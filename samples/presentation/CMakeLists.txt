@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApePresentation.cpp
+	apePresentation.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApePresentation ${SOURCES})
-target_link_libraries (ApePresentation ApeSystem ApePluginManager)
-set_property (TARGET ApePresentation PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApePresentation PROPERTY FOLDER "Samples/Presentation")
+add_executable (apePresentation ${SOURCES})
+target_link_libraries (apePresentation apeSystem apePluginManager)
+set_property (TARGET apePresentation PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePresentation PROPERTY FOLDER "Samples/Presentation")
 
 

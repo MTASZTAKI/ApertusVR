@@ -8,7 +8,7 @@
     "renderWindows": [
         {
             "enable": true,
-            "name": "ApeMixedReality",
+            "name": "apeMixedReality",
             "monitorIndex": 0,
             "resolution": {
                 "width": 1920,

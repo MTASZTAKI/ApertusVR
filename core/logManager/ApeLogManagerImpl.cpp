@@ -20,9 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeLogManagerImpl.h"
+#include "apeLogManagerImpl.h"
 
-Ape::LogManagerImpl::LogManagerImpl()
+ape::LogManagerImpl::LogManagerImpl()
 	: mStream(&std::cout)
 {
 	msSingleton = this;
@@ -30,10 +30,10 @@ Ape::LogManagerImpl::LogManagerImpl()
 #if defined(APE_LOG_ENABLE_COLORIZE) && defined(APE_PLATFORM_WIN)
 	system("color 0F");
 #endif
-	mOutFileStream = std::ofstream("ApertusVR.log");
+	mOutFileStream = std::ofstream("apertusVR.log");
 }
 
-Ape::LogManagerImpl::~LogManagerImpl()
+ape::LogManagerImpl::~LogManagerImpl()
 {
 	mOutFileStream.close();
 
@@ -41,23 +41,23 @@ Ape::LogManagerImpl::~LogManagerImpl()
 	mStream = NULL;
 }
 
-std::string Ape::LogManagerImpl::getFileNameFromPath(const std::string& path)
+std::string ape::LogManagerImpl::getFileNameFromPath(const std::string& path)
 {
 	std::size_t found = path.find_last_of("/\\");
 	return path.substr(found + 1);
 }
 
-void Ape::LogManagerImpl::setLevel(int level)
+void ape::LogManagerImpl::setLevel(int level)
 {
 	mLevel = level;
 }
 
-void Ape::LogManagerImpl::registerStream(std::ostream& stream)
+void ape::LogManagerImpl::registerStream(std::ostream& stream)
 {
 	mStream = &stream;
 }
 
-void Ape::LogManagerImpl::log(std::stringstream& ss, int level)
+void ape::LogManagerImpl::log(std::stringstream& ss, int level)
 {
 	std::lock_guard<std::mutex> guard(g_pages_mutex);
 

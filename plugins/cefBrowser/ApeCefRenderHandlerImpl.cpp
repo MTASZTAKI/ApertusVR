@@ -20,21 +20,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeCefRenderHandlerImpl.h"
+#include "apeCefRenderHandlerImpl.h"
 
-Ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
+ape::CefRenderHandlerImpl::CefRenderHandlerImpl()
 {
-	mBrowserIDTextures = std::map<int, Ape::ManualTextureWeakPtr>();
+	mBrowserIDTextures = std::map<int, ape::ManualTextureWeakPtr>();
 	mBrowsers = std::map<int, CefRefPtr<CefBrowser>>();
-	mMouseCurrentPosition = Ape::Vector2();
+	mMouseCurrentPosition = ape::Vector2();
 }
 
-Ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
+ape::CefRenderHandlerImpl::~CefRenderHandlerImpl()
 {
 
 }
 
-bool Ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
+bool ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
 {
 	if (auto texture = mBrowserIDTextures[browser->GetIdentifier()].lock())
 	{
@@ -44,24 +44,24 @@ bool Ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRe
 	return true;
 }
 
-void Ape::CefRenderHandlerImpl::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList & dirtyRects, const void * buffer, int width, int height)
+void ape::CefRenderHandlerImpl::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList & dirtyRects, const void * buffer, int width, int height)
 {
 	if (auto texture = mBrowserIDTextures[browser->GetIdentifier()].lock())
 		texture->setBuffer(buffer);
 }
 
-void Ape::CefRenderHandlerImpl::addTexture(int browserID, Ape::ManualTextureWeakPtr texture)
+void ape::CefRenderHandlerImpl::addTexture(int browserID, ape::ManualTextureWeakPtr texture)
 {
 	mBrowserIDTextures[browserID] = texture;
 }
 
-void Ape::CefRenderHandlerImpl::setZoomLevel(int browserID, int zoomLevel)
+void ape::CefRenderHandlerImpl::setZoomLevel(int browserID, int zoomLevel)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 		mBrowsers[browserID]->GetHost()->SetZoomLevel(zoomLevel);
 }
 
-void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
+void ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
@@ -70,7 +70,7 @@ void Ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 	}
 }
 
-void Ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefBrowserHost::MouseButtonType mouseButtonType)
+void ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefBrowserHost::MouseButtonType mouseButtonType)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
@@ -82,7 +82,7 @@ void Ape::CefRenderHandlerImpl::mouseClick(int browserID, bool isClickDown, CefB
 	}
 }
 
-void Ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int deltaY)
+void ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int deltaY)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
@@ -94,7 +94,7 @@ void Ape::CefRenderHandlerImpl::mouseScroll(int browserID, int deltaX, int delta
 	}
 }
 
-void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
+void ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
@@ -108,7 +108,7 @@ void Ape::CefRenderHandlerImpl::mouseMoved(int browserID, int x, int y)
 	}
 }
 
-void Ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
+void ape::CefRenderHandlerImpl::keyValue(int browserID, int keyASCIIValue)
 {
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{

@@ -23,39 +23,39 @@ SOFTWARE.*/
 #ifndef APE_MANUALMATERIALIMPL_H
 #define APE_MANUALMATERIALIMPL_H
 
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class ManualMaterialImpl : public Ape::IManualMaterial, public Ape::Replica
+	class ManualMaterialImpl : public ape::IManualMaterial, public ape::Replica
 	{
 	public:
 		ManualMaterialImpl(std::string name, bool isHostCreated);
 
 		~ManualMaterialImpl();
 
-		void setDiffuseColor(Ape::Color diffuse) override;
+		void setDiffuseColor(ape::Color diffuse) override;
 
-		void setSpecularColor(Ape::Color specular) override;
+		void setSpecularColor(ape::Color specular) override;
 
-		void setPassTexture(Ape::TextureWeakPtr texture) override;
+		void setPassTexture(ape::TextureWeakPtr texture) override;
 
 		void setAmbientColor(Color ambient) override;
 
 		void setEmissiveColor(Color emissive) override;
 
-		Ape::TextureWeakPtr getPassTexture() override;
+		ape::TextureWeakPtr getPassTexture() override;
 
-		void setPass(Ape::PassWeakPtr pass) override;
+		void setPass(ape::PassWeakPtr pass) override;
 
-		void setCullingMode(Ape::Material::CullingMode cullingMode) override;
+		void setCullingMode(ape::Material::CullingMode cullingMode) override;
 
-		void setSceneBlending(Ape::Pass::SceneBlendingType sceneBlendingType) override;
+		void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) override;
 
 		void setDepthWriteEnabled(bool enable) override;
 
@@ -63,7 +63,7 @@ namespace Ape
 
 		void setLightingEnabled(bool enable) override;
 
-		void setManualCullingMode(Ape::Material::ManualCullingMode manualcullingMode) override;
+		void setManualCullingMode(ape::Material::ManualCullingMode manualcullingMode) override;
 
 		void setDepthBias(float constantBias, float slopeScaleBias) override;
 
@@ -78,11 +78,11 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::TextureWeakPtr mTexture;
+		ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
 

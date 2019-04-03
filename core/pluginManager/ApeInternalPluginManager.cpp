@@ -20,28 +20,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeInternalPluginManager.h"
+#include "apeInternalPluginManager.h"
 
-Ape::InternalPluginManager::InternalPluginManager()
+ape::InternalPluginManager::InternalPluginManager()
 {
 }
 
-Ape::InternalPluginManager::~InternalPluginManager()
+ape::InternalPluginManager::~InternalPluginManager()
 {
 }
 
-Ape::InternalPluginManager &Ape::InternalPluginManager::GetInstance()
+ape::InternalPluginManager &ape::InternalPluginManager::GetInstance()
 {
-	static Ape::InternalPluginManager mgr;
+	static ape::InternalPluginManager mgr;
 	return mgr;
 }
 
-bool Ape::InternalPluginManager::LoadAll()
+bool ape::InternalPluginManager::LoadAll()
 {
 	return false;
 }
 
-bool Ape::InternalPluginManager::Load(const std::string &name)
+bool ape::InternalPluginManager::Load(const std::string &name)
 {
 	static std::set<std::string> loaded;
 	if (loaded.find(name) != loaded.end())
@@ -58,17 +58,17 @@ bool Ape::InternalPluginManager::Load(const std::string &name)
 	return true;
 }
 
-bool Ape::InternalPluginManager::UnloadAll()
+bool ape::InternalPluginManager::UnloadAll()
 {
 	return false;
 }
 
-bool Ape::InternalPluginManager::Unload(const std::string &name)
+bool ape::InternalPluginManager::Unload(const std::string &name)
 {
 	return false;
 }
 
-std::vector<Ape::PluginInstance *> Ape::InternalPluginManager::GetAllPlugins()
+std::vector<ape::PluginInstance *> ape::InternalPluginManager::GetAllPlugins()
 {
 	LoadAll();
 	return mPlugins;

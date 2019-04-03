@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeTester.cpp
+	apeTester.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeTester ${SOURCES})
-target_link_libraries (ApeTester ApeSystem ApePluginManager)
-set_property (TARGET ApeTester PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeTester PROPERTY FOLDER "Samples/Tester")
+add_executable (apeTester ${SOURCES})
+target_link_libraries (apeTester apeSystem)
+set_property (TARGET apeTester PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeTester PROPERTY FOLDER "Samples/Tester")
 
 

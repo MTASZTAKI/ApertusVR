@@ -20,12 +20,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "plugin/ApeIPlugin.h"
-#include "plugin/ApePluginAPI.h"
-#include "ApePluginFactory.h"
+#include "plugin/apeIPlugin.h"
+#include "plugin/apePluginAPI.h"
+#include "apePluginFactory.h"
 
-void ApeRegisterPlugin(const char *type, ApePluginAllocFunc init_cb, ApePluginFreeFunc free_cb)
+void apeRegisterPlugin(const char *type, apePluginAllocFunc init_cb, apePluginFreeFunc free_cb)
 {
-	Ape::PluginFactory::RegisterPlugin(type, init_cb, free_cb);
+	ape::PluginFactory::RegisterPlugin(type, init_cb, free_cb);
 }
 

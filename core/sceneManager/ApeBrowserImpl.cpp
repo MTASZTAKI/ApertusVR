@@ -20,147 +20,147 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "ApeBrowserImpl.h"
+#include "apeBrowserImpl.h"
 
-Ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : Ape::IBrowser(name), Ape::Replica("Browser", isHostCreated)
+ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : ape::IBrowser(name), ape::Replica("Browser", isHostCreated)
 {
-	mpEventManagerImpl = ((Ape::EventManagerImpl*)Ape::IEventManager::getSingletonPtr());
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mGeometry = Ape::GeometryWeakPtr();
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mGeometry = ape::GeometryWeakPtr();
 	mURL = std::string();
-	mResoultion = Ape::Vector2();
+	mResoultion = ape::Vector2();
 	mGeometryName = std::string();
 	mZoomLevel = 0;
 	mZOrder = 0;
-	mMouseLastClick = Ape::Browser::MouseClick::UNKNOWN;
+	mMouseLastClick = ape::Browser::MouseClick::UNKNOWN;
 	mMouseLastClickIsDown = false;
-	mMouseScrollDelta = Ape::Vector2();
-	mMouseLastPosition = Ape::Vector2();
+	mMouseScrollDelta = ape::Vector2();
+	mMouseLastPosition = ape::Vector2();
 	mID = 0;
 	mLastKeyValue = 0;
 	mIsFocusOnEditableField = false;
 }
 
-Ape::BrowserImpl::~BrowserImpl()
+ape::BrowserImpl::~BrowserImpl()
 {
 	
 }
 
-void Ape::BrowserImpl::setURL(std::string url)
+void ape::BrowserImpl::setURL(std::string url)
 {
 	mURL = url;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_URL));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_URL));
 }
 
-std::string Ape::BrowserImpl::getURL()
+std::string ape::BrowserImpl::getURL()
 {
 	return mURL;
 }
 
-void Ape::BrowserImpl::setResoultion(float vertical, float horizontal)
+void ape::BrowserImpl::setResoultion(float vertical, float horizontal)
 {
 	mResoultion.x = vertical;
 	mResoultion.y = horizontal;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RESOLUTION));
 }
 
-Ape::Vector2 Ape::BrowserImpl::getResoultion()
+ape::Vector2 ape::BrowserImpl::getResoultion()
 {
 	return mResoultion;
 }
 
-void Ape::BrowserImpl::setGeometry(Ape::GeometryWeakPtr geometry)
+void ape::BrowserImpl::setGeometry(ape::GeometryWeakPtr geometry)
 {
 	if (auto geometrySP = geometry.lock())
 	{
 		mGeometry = geometry;
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_GEOMETRY));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
 	}
 }
 
-Ape::GeometryWeakPtr Ape::BrowserImpl::getGeometry()
+ape::GeometryWeakPtr ape::BrowserImpl::getGeometry()
 {
 	return mGeometry;
 }
 
-void Ape::BrowserImpl::showOnOverlay(bool enable, int zOrder)
+void ape::BrowserImpl::showOnOverlay(bool enable, int zOrder)
 {
 	if (enable)
 	{
 		mZOrder = zOrder;
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_OVERLAY));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_OVERLAY));
 	}
 }
 
-void Ape::BrowserImpl::setZoomLevel(int level)
+void ape::BrowserImpl::setZoomLevel(int level)
 {
 	mZoomLevel = level;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_ZOOM));
 }
 
-int Ape::BrowserImpl::getZoomLevel()
+int ape::BrowserImpl::getZoomLevel()
 {
 	return mZoomLevel;
 }
 
-int Ape::BrowserImpl::getZOrder()
+int ape::BrowserImpl::getZOrder()
 {
 	return mZOrder;
 }
 
-void Ape::BrowserImpl::mouseClick(Ape::Browser::MouseClick click, bool isClickDown)
+void ape::BrowserImpl::mouseClick(ape::Browser::MouseClick click, bool isClickDown)
 {
 	mMouseLastClick = click;
 	mMouseLastClickIsDown = isClickDown;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_CLICK));
 }
 
-void Ape::BrowserImpl::mouseMoved(Ape::Vector2 position)
+void ape::BrowserImpl::mouseMoved(ape::Vector2 position)
 {
 	mMouseLastPosition = position;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_MOVED));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_MOVED));
 }
 
-void Ape::BrowserImpl::mouseScroll(Ape::Vector2 delta)
+void ape::BrowserImpl::mouseScroll(ape::Vector2 delta)
 {
 	mMouseScrollDelta = delta;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_SCROLL));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_SCROLL));
 }
 
-Ape::Browser::MouseState Ape::BrowserImpl::getMouseState()
+ape::Browser::MouseState ape::BrowserImpl::getMouseState()
 {
-	return Ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick, mMouseLastClickIsDown, mMouseScrollDelta);
+	return ape::Browser::MouseState(mMouseLastPosition, mMouseLastClick, mMouseLastClickIsDown, mMouseScrollDelta);
 }
 
-void Ape::BrowserImpl::keyASCIIValue(int keyASCIIValue)
+void ape::BrowserImpl::keyASCIIValue(int keyASCIIValue)
 {
 	mLastKeyValue = keyASCIIValue;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_KEY_VALUE));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_KEY_VALUE));
 }
 
-int Ape::BrowserImpl::getLastKeyASCIIValue()
+int ape::BrowserImpl::getLastKeyASCIIValue()
 {
 	return mLastKeyValue;
 }
 
-bool Ape::BrowserImpl::isFocusOnEditableField()
+bool ape::BrowserImpl::isFocusOnEditableField()
 {
 	return mIsFocusOnEditableField;
 }
 
-void Ape::BrowserImpl::setFocusOnEditableField(bool enable)
+void ape::BrowserImpl::setFocusOnEditableField(bool enable)
 {
 	mIsFocusOnEditableField = enable;
-	mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD));
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD));
 }
 
-void Ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
 	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
 }
 
-RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult ape::BrowserImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
@@ -178,7 +178,7 @@ RakNet::RM3SerializationResult Ape::BrowserImpl::Serialize(RakNet::SerializePara
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
-void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
@@ -186,27 +186,27 @@ void Ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, url))
 	{
 		mURL = url.C_String();
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_URL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_URL));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mResoultion))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_RESOLUTION));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RESOLUTION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mZoomLevel))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_ZOOM));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_ZOOM));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastPosition))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_MOVED));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_MOVED));
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClickIsDown);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClick))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_CLICK));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_CLICK));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseScrollDelta))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_MOUSE_SCROLL));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_SCROLL));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLastKeyValue))
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_KEY_VALUE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_KEY_VALUE));
 	RakNet::RakString geometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
 	{
 		mGeometryName = geometryName.C_String();
-		mGeometry = std::static_pointer_cast<Ape::Geometry>(mpSceneManager->getEntity(mGeometryName).lock());
-		mpEventManagerImpl->fireEvent(Ape::Event(mName, Ape::Event::Type::BROWSER_GEOMETRY));
+		mGeometry = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(mGeometryName).lock());
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

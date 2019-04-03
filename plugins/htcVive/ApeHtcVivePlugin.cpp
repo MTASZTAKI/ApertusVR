@@ -1,33 +1,33 @@
-#include "ApeHtcVivePlugin.h"
+#include "apeHtcVivePlugin.h"
 
-Ape::ApeHtcVivePlugin::ApeHtcVivePlugin()
+ape::apeHtcVivePlugin::apeHtcVivePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::CAMERA, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(Ape::Event::Group::TEXTURE_MANUAL, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mCameraLeft = Ape::CameraWeakPtr();
-	mCameraRight = Ape::CameraWeakPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mCameraLeft = ape::CameraWeakPtr();
+	mCameraRight = ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
-	mpApeUserInputMacro = Ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = Ape::UserInputMacro::ViewPose();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeHtcVivePlugin::~ApeHtcVivePlugin()
+ape::apeHtcVivePlugin::~apeHtcVivePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::Matrix4 Ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34)
+ape::Matrix4 ape::apeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34)
 {
-	Ape::Matrix4 matrix4(
+	ape::Matrix4 matrix4(
 		ovrMatrix34.m[0][0], ovrMatrix34.m[0][1], ovrMatrix34.m[0][2], ovrMatrix34.m[0][3],
 		ovrMatrix34.m[1][0], ovrMatrix34.m[1][1], ovrMatrix34.m[1][2], ovrMatrix34.m[1][3],
 		ovrMatrix34.m[2][0], ovrMatrix34.m[2][1], ovrMatrix34.m[2][2], ovrMatrix34.m[2][3],
@@ -35,9 +35,9 @@ Ape::Matrix4 Ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix34_t ovrMa
 	return matrix4;
 }
 
-Ape::Matrix4 Ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44)
+ape::Matrix4 ape::apeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44)
 {
-	Ape::Matrix4 matrix4(
+	ape::Matrix4 matrix4(
 		ovrMatrix44.m[0][0], ovrMatrix44.m[0][1], ovrMatrix44.m[0][2], ovrMatrix44.m[0][3],
 		ovrMatrix44.m[1][0], ovrMatrix44.m[1][1], ovrMatrix44.m[1][2], ovrMatrix44.m[1][3],
 		ovrMatrix44.m[2][0], ovrMatrix44.m[2][1], ovrMatrix44.m[2][2], ovrMatrix44.m[2][3],
@@ -45,7 +45,7 @@ Ape::Matrix4 Ape::ApeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMa
 	return matrix4;
 }
 
-void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
+void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
 	vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
 	vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
@@ -58,32 +58,32 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 		if ((controllerPose = mOpenVrTrackedPoses[controllerID]).bPoseIsValid)
 		{
 			auto openVRPose = controllerPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 controllerTrackerScale;
-			Ape::Quaternion controllerTrackerOrientation;
-			Ape::Vector3 controllerTrackerPosition;
-			Ape::Matrix4 controllerTrackerPose = conversionFromOpenVR(openVRPose);
+			ape::Vector3 controllerTrackerScale;
+			ape::Quaternion controllerTrackerOrientation;
+			ape::Vector3 controllerTrackerPosition;
+			ape::Matrix4 controllerTrackerPose = conversionFromOpenVR(openVRPose);
 			controllerTrackerPose.decomposition(controllerTrackerScale, controllerTrackerOrientation, controllerTrackerPosition);
 			controllerTrackerScale = 100;
 			controllerTrackerPosition = controllerTrackerPosition * controllerTrackerScale;
 			vr::VRControllerState_t openVRControllerState;
 			mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
-			mUserInputMacroPose.userPosition += (controllerTrackerOrientation * Ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y));
+			mUserInputMacroPose.userPosition += (controllerTrackerOrientation * ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y));
 		}
 		vr::TrackedDevicePose_t hmdPose;
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		{
 			auto openVRPose = hmdPose.mDeviceToAbsoluteTracking;
-			Ape::Vector3 hmdTrackerScale;
-			Ape::Quaternion hmdTrackerOrientation;
-			Ape::Vector3 hmdTrackerPosition;
-			Ape::Matrix4 hmdTrackerPose = conversionFromOpenVR(openVRPose);
+			ape::Vector3 hmdTrackerScale;
+			ape::Quaternion hmdTrackerOrientation;
+			ape::Vector3 hmdTrackerPosition;
+			ape::Matrix4 hmdTrackerPose = conversionFromOpenVR(openVRPose);
 			hmdTrackerPose.decomposition(hmdTrackerScale, hmdTrackerOrientation, hmdTrackerPosition);
 			hmdTrackerScale = 100;
 			hmdTrackerPosition = hmdTrackerPosition * hmdTrackerScale;
 			mUserInputMacroPose.headPosition = hmdTrackerPosition;
 			mUserInputMacroPose.headOrientation = hmdTrackerOrientation;
 		}
-		mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	else
 	{
@@ -91,33 +91,33 @@ void Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR()
 	}
 }
 
-void Ape::ApeHtcVivePlugin::submitTextureRightToOpenVR()
+void ape::apeHtcVivePlugin::submitTextureRightToOpenVR()
 {
 	//for openVR the only chanche to submit and render the compositor if you doing everything
-	//in only one CB function from the render thread which currently is Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR() function
+	//in only one CB function from the render thread which currently is ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function
 }
 
-void Ape::ApeHtcVivePlugin::eventCallBack(const Ape::Event& event)
+void ape::apeHtcVivePlugin::eventCallBack(const ape::Event& event)
 {
-	if (event.type == Ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
+	if (event.type == ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
 	{
-		if (auto textureManual = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+		if (auto textureManual = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			if (event.subjectName == "OpenVrRenderTextureLeft")
 			{
 				mOpenVrRttTextureIDs[0] = textureManual->getGraphicsApiID();
-				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureLeftToOpenVR, this));
+				textureManual->registerFunction(std::bind(&apeHtcVivePlugin::submitTextureLeftToOpenVR, this));
 			}
 			else if (event.subjectName == "OpenVrRenderTextureRight")
 			{
 				mOpenVrRttTextureIDs[1] = textureManual->getGraphicsApiID();
-				textureManual->registerFunction(std::bind(&ApeHtcVivePlugin::submitTextureRightToOpenVR, this));
+				textureManual->registerFunction(std::bind(&apeHtcVivePlugin::submitTextureRightToOpenVR, this));
 			}
 		}
 	}
 }
 
-void Ape::ApeHtcVivePlugin::Init()
+void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("try to initialize openVR HMD");
@@ -152,18 +152,18 @@ void Ape::ApeHtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	APE_LOG_DEBUG("Recomended Render Target Size : " << width << "x" << height);
 
-	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", Ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
 		mManualTextureLeftEye = manualTexture;
 	}
-	if (auto manualTexture = std::static_pointer_cast<Ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", Ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(width, height, Ape::Texture::PixelFormat::R8G8B8A8, Ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
 		mManualTextureRightEye = manualTexture;
 	}
-	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
-	mCameraRight = mpApeUserInputMacro->createCamera("OpenVRHmdRightCamera");
+	mCameraLeft = mpapeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
+	mCameraRight = mpapeUserInputMacro->createCamera("OpenVRHmdRightCamera");
 	vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
 	vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
 	if (auto cameraLeft = mCameraLeft.lock())
@@ -171,9 +171,9 @@ void Ape::ApeHtcVivePlugin::Init()
 		cameraLeft->setAutoAspectRatio(true);
 		if (auto cameraNode = cameraLeft->getParentNode().lock())
 		{
-			Ape::Vector3 scale;
-			Ape::Quaternion rotation;
-			Ape::Vector3 translate;
+			ape::Vector3 scale;
+			ape::Quaternion rotation;
+			ape::Vector3 translate;
 			conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Left)).makeTransform(scale, rotation, translate);
 			cameraNode->setPosition(translate);
 		}
@@ -186,9 +186,9 @@ void Ape::ApeHtcVivePlugin::Init()
 	    cameraRight->setAutoAspectRatio(true);
 		if (auto cameraNode = cameraRight->getParentNode().lock())
 		{
-			Ape::Vector3 scale;
-			Ape::Quaternion rotation;
-			Ape::Vector3 translate;
+			ape::Vector3 scale;
+			ape::Quaternion rotation;
+			ape::Vector3 translate;
 			conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Right)).makeTransform(scale, rotation, translate);
 			cameraNode->setPosition(translate);
 		}
@@ -223,37 +223,37 @@ void Ape::ApeHtcVivePlugin::Init()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 }
 
-void Ape::ApeHtcVivePlugin::Run()
+void ape::apeHtcVivePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
-		//nothing to do there becuse it is the ApeHtcVivePlugin thread. 
-		//compositor and pose update is done by the Ape::ApeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
+		//nothing to do there becuse it is the apeHtcVivePlugin thread. 
+		//compositor and pose update is done by the ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtcVivePlugin::Step()
+void ape::apeHtcVivePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtcVivePlugin::Stop()
+void ape::apeHtcVivePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtcVivePlugin::Suspend()
+void ape::apeHtcVivePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeHtcVivePlugin::Restart()
+void ape::apeHtcVivePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

@@ -23,14 +23,14 @@ SOFTWARE.*/
 #ifndef APE_TUBEGEOMETRYIMPL_H
 #define APE_TUBEGEOMETRYIMPL_H
 
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "ApeEventManagerImpl.h"
-#include "ApeReplica.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "apeEventManagerImpl.h"
+#include "apeReplica.h"
 
-namespace Ape
+namespace ape
 {
-	class TubeGeometryImpl : public Ape::ITubeGeometry, public Ape::Replica
+	class TubeGeometryImpl : public ape::ITubeGeometry, public ape::Replica
 	{
 	public:
 		TubeGeometryImpl(std::string name, bool isHostCreated);
@@ -39,13 +39,13 @@ namespace Ape
 
 		void setParameters(float height, float tile) override;
 
-		Ape::GeometryTubeParameters getParameters() override;
+		ape::GeometryTubeParameters getParameters() override;
 
-		void setParentNode(Ape::NodeWeakPtr parentNode) override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		void setMaterial(Ape::MaterialWeakPtr material) override;
+		void setMaterial(ape::MaterialWeakPtr material) override;
 
-		Ape::MaterialWeakPtr getMaterial() override;
+		ape::MaterialWeakPtr getMaterial() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -54,13 +54,13 @@ namespace Ape
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
-		Ape::EventManagerImpl* mpEventManagerImpl;
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::GeometryTubeParameters mParameters;
+		ape::GeometryTubeParameters mParameters;
 
-		Ape::MaterialWeakPtr mMaterial;
+		ape::MaterialWeakPtr mMaterial;
 
 		std::string mMaterialName;
 	};

@@ -27,26 +27,26 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeINode.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeINode.h"
 
-#define THIS_PLUGINNAME "Ape360ImagePlugin"
+#define THIS_PLUGINNAME "ape360ImagePlugin"
 
-namespace Ape
+namespace ape
 {
-	class Ape360ImagePlugin : public Ape::IPlugin
+	class ape360ImagePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
 	public:
-		Ape360ImagePlugin();
+		ape360ImagePlugin();
 
-		~Ape360ImagePlugin();
+		~ape360ImagePlugin();
 
 		void Init() override;
 
@@ -61,14 +61,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApe360ImagePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* Createape360ImagePlugin()
 	{
-		return new Ape::Ape360ImagePlugin;
+		return new ape::ape360ImagePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApe360ImagePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void Destroyape360ImagePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::Ape360ImagePlugin*)plugin;
+		delete (ape::ape360ImagePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -76,7 +76,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApe360ImagePlugin, DestroyApe360ImagePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, Createape360ImagePlugin, Destroyape360ImagePlugin);
 		return 0;
 	}
 }

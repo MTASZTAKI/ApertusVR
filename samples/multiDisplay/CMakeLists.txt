@@ -23,17 +23,17 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeMultiDisplay.cpp
+	apeMultiDisplay.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeMultiDisplay ${SOURCES})
-target_link_libraries (ApeMultiDisplay ApeSystem ApePluginManager)
-set_property (TARGET ApeMultiDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay")
+add_executable (apeMultiDisplay ${SOURCES})
+target_link_libraries (apeMultiDisplay apeSystem apePluginManager)
+set_property (TARGET apeMultiDisplay PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeMultiDisplay PROPERTY FOLDER "Samples/MultiDisplay")
 
 

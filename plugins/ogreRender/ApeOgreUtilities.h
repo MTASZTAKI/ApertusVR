@@ -26,9 +26,9 @@ SOFTWARE.*/
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include "ApeOgreRenderPlugin.h"
+#include "apeOgreRenderPlugin.h"
 
-namespace Ape
+namespace ape
 {
 	void SaveVoidBufferToImage(const std::wstring &filename, const void* buffer, int width, int height)
 	{

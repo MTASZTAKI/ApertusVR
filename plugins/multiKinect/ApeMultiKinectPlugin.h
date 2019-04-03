@@ -31,27 +31,26 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "utils/ApeInterpolator.h"
+#include "utils/apeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
-#include "plugin/ApePluginAPI.h"
-#include "plugin/ApeIPlugin.h"
-#include "managers/ApeISystemConfig.h"
-#include "sceneelements/ApeINode.h"
-#include "managers/ApeISceneManager.h"
-#include "system/ApeIMainWindow.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeISphereGeometry.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeITubeGeometry.h"
-#include "sceneelements/ApeIPointCloud.h"
-#include "sceneelements/ApeIFileGeometry.h"
+#include "plugin/apePluginAPI.h"
+#include "plugin/apeIPlugin.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeINode.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "sceneelements/apeIFileGeometry.h"
 #include "libfreenect2\libfreenect2.hpp"
 #include "libfreenect2\frame_listener_impl.h"
 #include "libfreenect2\registration.h"
@@ -59,11 +58,11 @@ SOFTWARE.*/
 #include "libfreenect2\depth_packet_processor.h"
 #include "libfreenect2\logger.h"
 
-#define THIS_PLUGINNAME "ApeMultiKinectPlugin"
+#define THIS_PLUGINNAME "apeMultiKinectPlugin"
 
-namespace Ape
+namespace ape
 {
-	class MultiKinectPlugin : public Ape::IPlugin
+	class MultiKinectPlugin : public ape::IPlugin
 	{
 	public:
 		MultiKinectPlugin();
@@ -82,7 +81,7 @@ namespace Ape
 
 		void Restart() override;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
 		struct Sensor
 		{
@@ -96,12 +95,12 @@ namespace Ape
 			libfreenect2::FrameMap frames;
 			libfreenect2::PacketPipeline* packePipeline;
 			float maxDepth;
-			Ape::PointCloudPoints points;
-			Ape::PointCloudColors colors;
-			Ape::Vector3 position;
-			Ape::Quaternion orientation;
-			Ape::PointCloudWeakPtr pointCloud;
-			Ape::NodeWeakPtr pointCloudNode;
+			ape::PointCloudPoints points;
+			ape::PointCloudColors colors;
+			ape::Vector3 position;
+			ape::Quaternion orientation;
+			ape::PointCloudWeakPtr pointCloud;
+			ape::NodeWeakPtr pointCloudNode;
 			float pointSize;
 			bool pointScale;
 			float pointScaleOffset;
@@ -110,15 +109,15 @@ namespace Ape
 
 			Sensor() : serial(std::string()), id(-1), registration(nullptr), undistorted(nullptr), registered(nullptr), device(nullptr),
 				listener(nullptr),
-				frames(libfreenect2::FrameMap()), packePipeline(nullptr), maxDepth(0.0f), points(Ape::PointCloudPoints()), colors(Ape::PointCloudColors()),
-				position(Ape::Vector3()), orientation(Ape::Quaternion()), pointCloud(Ape::PointCloudWeakPtr()), pointCloudNode(Ape::NodeWeakPtr()), pointSize(0.0f),
+				frames(libfreenect2::FrameMap()), packePipeline(nullptr), maxDepth(0.0f), points(ape::PointCloudPoints()), colors(ape::PointCloudColors()),
+				position(ape::Vector3()), orientation(ape::Quaternion()), pointCloud(ape::PointCloudWeakPtr()), pointCloudNode(ape::NodeWeakPtr()), pointSize(0.0f),
 				pointScale(false), pointScaleOffset(0.0f),
 				unitScaleDistance(0.0f), scaleFactor(0.0f) {}
 
 			Sensor(std::string serial, int id, libfreenect2::Registration* registration, libfreenect2::Frame* undistorted, libfreenect2::Frame* registered,
 				libfreenect2::Freenect2Device* device, libfreenect2::SyncMultiFrameListener* listener, libfreenect2::FrameMap frames, libfreenect2::PacketPipeline* packePipeline, 
-				float maxDepth, Ape::PointCloudPoints points, Ape::PointCloudColors colors,
-			    Ape::Vector3 position, Ape::Quaternion orientation, Ape::PointCloudWeakPtr pointCloud, Ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
+				float maxDepth, ape::PointCloudPoints points, ape::PointCloudColors colors,
+			    ape::Vector3 position, ape::Quaternion orientation, ape::PointCloudWeakPtr pointCloud, ape::NodeWeakPtr pointCloudNode, float pointSize, bool pointScale,
 				float pointScaleOffset, float unitScaleDistance, float scaleFactor)
 			{
 				this->serial = serial;
@@ -154,21 +153,21 @@ namespace Ape
 
 		const unsigned int mHeight = 424;
 
-		Ape::ISceneManager* mpScene;
+		ape::ISceneManager* mpScene;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateMultiKinectPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateMultiKinectPlugin()
 	{
-		return new Ape::MultiKinectPlugin;
+		return new ape::MultiKinectPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyMultiKinectPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyMultiKinectPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::MultiKinectPlugin*)plugin;
+		delete (ape::MultiKinectPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -176,7 +175,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateMultiKinectPlugin, DestroyMultiKinectPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateMultiKinectPlugin, DestroyMultiKinectPlugin);
 		return 0;
 	}
 }

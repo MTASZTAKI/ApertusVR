@@ -30,17 +30,17 @@ SOFTWARE.*/
 #include <string>
 #include <thread>
 #include <vector>
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeEvent.h"
-#include "sceneelements/ApeINode.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeEvent.h"
+#include "sceneelements/apeINode.h"
 
-#define THIS_PLUGINNAME "ApeNodeJsPlugin"
+#define THIS_PLUGINNAME "apeNodeJsPlugin"
 
-class ApeNodeJsPlugin : public Ape::IPlugin
+class apeNodeJsPlugin : public ape::IPlugin
 {
 private:
 	struct NodeJsPluginConfig
@@ -53,22 +53,22 @@ private:
 		}
 	};
 
-	Ape::IEventManager* mpEventManager;
+	ape::IEventManager* mpEventManager;
 
-	Ape::ISceneManager* mpSceneManager;
+	ape::ISceneManager* mpSceneManager;
 
-	Ape::ISystemConfig* mpSystemConfig;
+	ape::ICoreConfig* mpCoreConfig;
 
 	NodeJsPluginConfig mNodeJsPluginConfig;
 
-	void eventCallBack(const Ape::Event& event);
+	void eventCallBack(const ape::Event& event);
 
 	void parseNodeJsConfig();
 
 public:
-	ApeNodeJsPlugin();
+	apeNodeJsPlugin();
 
-	~ApeNodeJsPlugin();
+	~apeNodeJsPlugin();
 
 	void Init() override;
 
@@ -83,14 +83,14 @@ public:
 	void Restart() override;
 };
 
-APE_PLUGIN_FUNC Ape::IPlugin* CreateApeNodeJsPlugin()
+APE_PLUGIN_FUNC ape::IPlugin* CreateapeNodeJsPlugin()
 {
-	return new ApeNodeJsPlugin;
+	return new apeNodeJsPlugin;
 }
 
-APE_PLUGIN_FUNC void DestroyApeNodeJsPlugin(Ape::IPlugin* ApeNodeJsPlugin)
+APE_PLUGIN_FUNC void DestroyapeNodeJsPlugin(ape::IPlugin* apeNodeJsPlugin)
 {
-	delete ApeNodeJsPlugin;
+	delete apeNodeJsPlugin;
 }
 
 APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -98,7 +98,7 @@ APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
 APE_PLUGIN_ALLOC()
 {
 	APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-	ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeNodeJsPlugin, DestroyApeNodeJsPlugin);
+	apeRegisterPlugin(THIS_PLUGINNAME, CreateapeNodeJsPlugin, DestroyapeNodeJsPlugin);
 	return 0;
 }
 

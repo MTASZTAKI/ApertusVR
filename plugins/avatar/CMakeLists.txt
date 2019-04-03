@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeAvatarPlugin.h
+	apeAvatarPlugin.h
 	)
 
 set (SOURCES 
-	ApeAvatarPlugin.cpp
+	apeAvatarPlugin.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include 
+	 
 	)
 
-add_library (ApeAvatarPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeAvatarPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeAvatarPlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager)
+target_link_libraries (apeAvatarPlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET ApeAvatarPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeAvatarPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeAvatarPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeAvatarPlugin PROPERTY FOLDER "Plugins")
 
 

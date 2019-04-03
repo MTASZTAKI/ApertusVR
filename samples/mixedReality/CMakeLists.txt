@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeMixedReality.cpp
+	apeMixedReality.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeMixedReality ${SOURCES})
-target_link_libraries (ApeMixedReality ApeSystem ApePluginManager)
-set_property (TARGET ApeMixedReality PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeMixedReality PROPERTY FOLDER "Samples/MixedReality")
+add_executable (apeMixedReality ${SOURCES})
+target_link_libraries (apeMixedReality apeSystem apePluginManager)
+set_property (TARGET apeMixedReality PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeMixedReality PROPERTY FOLDER "Samples/MixedReality")
 
 

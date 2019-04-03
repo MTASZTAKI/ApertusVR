@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_MANUALMATERIALJSBIND_H
 #define APE_MANUALMATERIALJSBIND_H
 
-#include "Ape.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "ApeManualPassJsBind.h"
-#include "ApePbsPassJsBind.h"
+#include "ape.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "apeManualPassJsBind.h"
+#include "apePbsPassJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -35,54 +35,54 @@ SOFTWARE.*/
 class ManualMaterialJsPtr
 {
 private:
-	Ape::ManualMaterialWeakPtr mPtr;
+	ape::ManualMaterialWeakPtr mPtr;
 
 public:
-	ManualMaterialJsPtr(Ape::ManualMaterialWeakPtr ptr)
+	ManualMaterialJsPtr(ape::ManualMaterialWeakPtr ptr)
 	{
 		mPtr = ptr;
 	}
 
-	ManualMaterialJsPtr(Ape::EntityWeakPtr ptr)
+	ManualMaterialJsPtr(ape::EntityWeakPtr ptr)
 	{
-		mPtr = std::static_pointer_cast<Ape::IManualMaterial>(ptr.lock());
+		mPtr = std::static_pointer_cast<ape::IManualMaterial>(ptr.lock());
 	}
 
 	// Pointers
 
-	const Ape::EntityWeakPtr getEntityWeakPtr()
+	const ape::EntityWeakPtr getEntityWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Entity>(mPtr.lock());
+		return std::static_pointer_cast<ape::Entity>(mPtr.lock());
 	}
 
-	const Ape::EntitySharedPtr getEntitySharedPtr()
+	const ape::EntitySharedPtr getEntitySharedPtr()
 	{
 		return this->getEntityWeakPtr().lock();
 	}
 
-	Ape::MaterialWeakPtr getMaterialWeakPtr()
+	ape::MaterialWeakPtr getMaterialWeakPtr()
 	{
-		return std::static_pointer_cast<Ape::Material>(mPtr.lock());
+		return std::static_pointer_cast<ape::Material>(mPtr.lock());
 	}
 
-	Ape::MaterialSharedPtr getMaterialSharedPtr()
+	ape::MaterialSharedPtr getMaterialSharedPtr()
 	{
 		return this->getMaterialWeakPtr().lock();
 	}
 
-	Ape::ManualMaterialSharedPtr getManualMaterialSharedPtr()
+	ape::ManualMaterialSharedPtr getManualMaterialSharedPtr()
 	{
-		return std::static_pointer_cast<Ape::IManualMaterial>(mPtr.lock());
+		return std::static_pointer_cast<ape::IManualMaterial>(mPtr.lock());
 	}
 
-	Ape::ManualMaterialWeakPtr getManualMaterialWeakPtr()
+	ape::ManualMaterialWeakPtr getManualMaterialWeakPtr()
 	{
 		return mPtr;
 	}
 
 	// Pass
 
-	Ape::PassWeakPtr getPassWeakPtr()
+	ape::PassWeakPtr getPassWeakPtr()
 	{
 		return mPtr.lock()->getPass();
 	}
@@ -99,26 +99,26 @@ public:
 		return mPtr.lock()->getName();
 	}
 
-	const Ape::Entity::Type getType()
+	const ape::Entity::Type getType()
 	{
 		return mPtr.lock()->getType();
 	}
 
 	// IManualMaterial
 
-	void setDiffuseColor(Ape::Color diffuse)
+	void setDiffuseColor(ape::Color diffuse)
 	{
 		mPtr.lock()->setDiffuseColor(diffuse);
 	}
 
-	void setSpecularColor(Ape::Color specular)
+	void setSpecularColor(ape::Color specular)
 	{
 		mPtr.lock()->setSpecularColor(specular);
 	}
 
-	Ape::Color getDiffuseColor() { return mPtr.lock()->getDiffuseColor(); };
+	ape::Color getDiffuseColor() { return mPtr.lock()->getDiffuseColor(); };
 
-	Ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
+	ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
 
 	void setManualPass(ManualPassJsPtr manualPass)
 	{
@@ -131,12 +131,12 @@ public:
 	}
 };
 
-using namespace Ape;
+using namespace ape;
 
 NBIND_CLASS(ManualMaterialJsPtr)
 {
-	construct<Ape::ManualMaterialWeakPtr>();
-	construct<Ape::EntityWeakPtr>();
+	construct<ape::ManualMaterialWeakPtr>();
+	construct<ape::EntityWeakPtr>();
 
 	// Pointers
 

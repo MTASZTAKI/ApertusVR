@@ -23,17 +23,17 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeCaveSystem.cpp
+	apeCaveSystem.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	${RAPIDJSON_INCLUDE_DIR} 
 	)
 
-add_executable (ApeCaveSystem ${SOURCES})
-target_link_libraries (ApeCaveSystem ApeSystem ApePluginManager)
-set_property (TARGET ApeCaveSystem PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeCaveSystem PROPERTY FOLDER "Samples/CaveSystem")
+add_executable (apeCaveSystem ${SOURCES})
+target_link_libraries (apeCaveSystem apeSystem apePluginManager)
+set_property (TARGET apeCaveSystem PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCaveSystem PROPERTY FOLDER "Samples/CaveSystem")
 
 

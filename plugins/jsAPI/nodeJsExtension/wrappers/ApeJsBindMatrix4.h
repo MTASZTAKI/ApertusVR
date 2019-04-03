@@ -23,11 +23,11 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_MATRIX4_H
 #define APE_JSBIND_MATRIX4_H
 
-#include "datatypes/ApeMatrix4.h"
+#include "datatypes/apeMatrix4.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
-using namespace Ape;
+using namespace ape;
 
 #ifdef NBIND_CLASS
 

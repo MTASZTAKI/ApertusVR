@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 cmake_minimum_required(VERSION 3.5)
-project(ApertusVR)
+project(apertusVR)
 
 include("cmake/functions.cmake")
 
@@ -33,9 +33,10 @@ include("cmake/prepare_curl.cmake")
 include("cmake/prepare_raknet.cmake")
 include("cmake/prepare_rapidjson.cmake")
 
-include_directories("common/include")
+include_directories("include")
+include_directories(${PROJECT_SOURCE_DIR})
 
-add_subdirectory(common)
+add_subdirectory(include)
 add_subdirectory(core)
 if (WIN32)
 	add_subdirectory(plugins)

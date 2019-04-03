@@ -22,17 +22,17 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeEventManagerImpl.h
+	apeEventManagerImpl.h
 	)
 set (SOURCES
-	ApeEventManagerImpl.cpp
+	apeEventManagerImpl.cpp
 	)
 
-add_library (ApeEventManager SHARED ${SOURCES} ${HEADERS})
+add_library (apeEventManager SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ApeEventManager)
+target_link_libraries (apeEventManager)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property (TARGET ApeEventManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_EVENTMANAGER_DLL)
-set_property (TARGET ApeEventManager PROPERTY FOLDER "Core")
+set_property (TARGET apeEventManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_EVENTMANAGER_DLL)
+set_property (TARGET apeEventManager PROPERTY FOLDER "Core")

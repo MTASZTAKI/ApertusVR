@@ -27,60 +27,59 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeMatrix4.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "ApeUserInputMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeMatrix4.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #include "OVR.h"
 
-#define THIS_PLUGINNAME "ApeOculusDK2Plugin"
+#define THIS_PLUGINNAME "apeOculusDK2Plugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeOculusDK2Plugin : public Ape::IPlugin
+	class apeOculusDK2Plugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
 		ovrHmd mpHMD;
 
 		ovrFrameTiming mHMDFrameTiming;
 
-		Ape::CameraWeakPtr mCameraLeft;
+		ape::CameraWeakPtr mCameraLeft;
 
-		Ape::CameraWeakPtr mCameraRight;
+		ape::CameraWeakPtr mCameraRight;
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
+		ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);
 
 	public:
-		ApeOculusDK2Plugin();
+		apeOculusDK2Plugin();
 
-		~ApeOculusDK2Plugin();
+		~apeOculusDK2Plugin();
 
 		void Init() override;
 
@@ -95,14 +94,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeOculusDK2Plugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeOculusDK2Plugin()
 	{
-		return new Ape::ApeOculusDK2Plugin;
+		return new ape::apeOculusDK2Plugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeOculusDK2Plugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeOculusDK2Plugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeOculusDK2Plugin*)plugin;
+		delete (ape::apeOculusDK2Plugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -110,7 +109,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeOculusDK2Plugin, DestroyApeOculusDK2Plugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeOculusDK2Plugin, DestroyapeOculusDK2Plugin);
 		return 0;
 	}
 }

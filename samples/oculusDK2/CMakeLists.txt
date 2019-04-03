@@ -23,16 +23,16 @@
 add_subdirectory (configs)
 
 set (SOURCES
-	ApeOculusDK2.cpp
+	apeOculusDK2.cpp
 	)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
+	
 	)
 
-add_executable (ApeOculusDK2 ${SOURCES})
-target_link_libraries (ApeOculusDK2 ApeSystem ApePluginManager)
-set_property (TARGET ApeOculusDK2 PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET ApeOculusDK2 PROPERTY FOLDER "Samples/OculusDK2")
+add_executable (apeOculusDK2 ${SOURCES})
+target_link_libraries (apeOculusDK2 apeSystem apePluginManager)
+set_property (TARGET apeOculusDK2 PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeOculusDK2 PROPERTY FOLDER "Samples/OculusDK2")
 
 

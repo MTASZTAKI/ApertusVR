@@ -22,11 +22,11 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApeHtcVivePlugin.h
+	apeHtcVivePlugin.h
 	)
 
 set (SOURCES 
-	ApeHtcVivePlugin.cpp
+	apeHtcVivePlugin.cpp
 	)
 	
 set(OPENVR_HOME ${CMAKE_SOURCE_DIR}/3rdParty/openvr)
@@ -37,18 +37,18 @@ if (WIN32)
 endif ()	
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/common/include
-    ${PROJECT_SOURCE_DIR}/macros/userInput 	
+	
+     	
 	${OPENVR_HOME}/headers
 	)
 
-add_library (ApeHtcVivePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeHtcVivePlugin SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (ApeHtcVivePlugin ApePluginManager ApeSceneManager ApeEventManager ApeLogManager ApeMainWindow ApeUserInputMacro OPENVR_LIB)
+target_link_libraries (apeHtcVivePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro OPENVR_LIB)
 
-set_property (TARGET ApeHtcVivePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHtcVivePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ApeHtcVivePlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apeHtcVivePlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
 	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/openvr_api.dll)

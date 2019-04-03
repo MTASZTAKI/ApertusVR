@@ -27,49 +27,48 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "system/ApeIMainWindow.h"
-#include "plugin/ApePluginAPI.h"
-#include "managers/ApeIEventManager.h"
-#include "managers/ApeILogManager.h"
-#include "managers/ApeISceneManager.h"
-#include "managers/ApeISystemConfig.h"
-#include "datatypes/ApeMatrix4.h"
-#include "sceneelements/ApeICamera.h"
-#include "sceneelements/ApeIConeGeometry.h"
-#include "sceneelements/ApeIFileGeometry.h"
-#include "sceneelements/ApeIFileMaterial.h"
-#include "sceneelements/ApeIIndexedFaceSetGeometry.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualMaterial.h"
-#include "sceneelements/ApeIManualPass.h"
-#include "sceneelements/ApeIManualTexture.h"
-#include "sceneelements/ApeINode.h"
-#include "sceneelements/ApeITextGeometry.h"
-#include "ApeUserInputMacro.h"
+#include "plugin/apePluginAPI.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeILogManager.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
+#include "datatypes/apeMatrix4.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeINode.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #include "openvr.h"
 #include "openvr_capi.h"
 
 
-#define THIS_PLUGINNAME "ApeHtcVivePlugin"
+#define THIS_PLUGINNAME "apeHtcVivePlugin"
 
-namespace Ape
+namespace ape
 {
-	class ApeHtcVivePlugin : public Ape::IPlugin
+	class apeHtcVivePlugin : public ape::IPlugin
 	{
 	private:
-		Ape::IEventManager* mpEventManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::CameraWeakPtr mCameraLeft;
+		ape::CameraWeakPtr mCameraLeft;
 
-		Ape::CameraWeakPtr mCameraRight;
+		ape::CameraWeakPtr mCameraRight;
 
-		Ape::ManualTextureWeakPtr mManualTextureRightEye;
+		ape::ManualTextureWeakPtr mManualTextureRightEye;
 		
-		Ape::ManualTextureWeakPtr mManualTextureLeftEye;
+		ape::ManualTextureWeakPtr mManualTextureLeftEye;
 
 		vr::IVRSystem* mpOpenVrSystem;
 
@@ -83,24 +82,24 @@ namespace Ape
 
 		vr::TrackedDevicePose_t mOpenVrTrackedPoses[vr::k_unMaxTrackedDeviceCount];
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
+		ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix34_t ovrMatrix34);
 
-		Ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
+		ape::Matrix4 conversionFromOpenVR(vr::HmdMatrix44_t ovrMatrix44);
 
 		void submitTextureLeftToOpenVR();
 
 		void submitTextureRightToOpenVR();
 
-		Ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpapeUserInputMacro;
 
-		Ape::UserInputMacro::ViewPose mUserInputMacroPose;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
-		ApeHtcVivePlugin();
+		apeHtcVivePlugin();
 
-		~ApeHtcVivePlugin();
+		~apeHtcVivePlugin();
 
 		void Init() override;
 
@@ -115,14 +114,14 @@ namespace Ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateApeHtcVivePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeHtcVivePlugin()
 	{
-		return new Ape::ApeHtcVivePlugin;
+		return new ape::apeHtcVivePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyApeHtcVivePlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeHtcVivePlugin(ape::IPlugin *plugin)
 	{
-		delete (Ape::ApeHtcVivePlugin*)plugin;
+		delete (ape::apeHtcVivePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -130,7 +129,7 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateApeHtcVivePlugin, DestroyApeHtcVivePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeHtcVivePlugin, DestroyapeHtcVivePlugin);
 		return 0;
 	}
 }

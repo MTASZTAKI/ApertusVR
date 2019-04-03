@@ -1,0 +1,201 @@
+/*MIT License
+
+Copyright (c) 2018 MTA SZTAKI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/prettywriter.h"
+#include "apeCoreConfigImpl.h"
+
+ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
+{
+	struct stat info;
+	msSingleton = this;
+	mConfigFolderPath = configFolderPath;
+
+	if (stat(mConfigFolderPath.c_str(), &info) != 0)
+	{
+		std::cout << "CoreConfigImpl: cannot access to " << mConfigFolderPath << std::endl;
+	}
+	else if (info.st_mode & S_IFDIR)
+	{
+		std::cout << "CoreConfigImpl: loading config files from " << mConfigFolderPath << std::endl;
+	}
+	else
+	{
+		std::cout << "CoreConfigImpl: no directory at " << mConfigFolderPath << std::endl;
+	}
+
+	std::stringstream fileFullPath; 
+	fileFullPath << mConfigFolderPath << "/apeCore.json";
+	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (apeCoreConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(apeCoreConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& network = jsonDocument["network"];
+			for (rapidjson::Value::MemberIterator networkMemberIterator =
+				network.MemberBegin();
+				networkMemberIterator != network.MemberEnd(); ++networkMemberIterator)
+			{
+				if (networkMemberIterator->name == "user")
+					mNetworkConfig.userName = jsonDocument["network"]["user"].GetString();
+				else if (networkMemberIterator->name == "participant")
+				{
+					std::string participant = jsonDocument["network"]["participant"].GetString();
+					if (participant == "" || participant == "none")
+					{
+						mNetworkConfig.participant = ape::SceneNetwork::ParticipantType::NONE;
+					}
+					else if (participant == "guest")
+					{
+						mNetworkConfig.participant = ape::SceneNetwork::ParticipantType::GUEST;
+					}
+					else if (participant == "host")
+					{
+						mNetworkConfig.participant = ape::SceneNetwork::ParticipantType::HOST;
+					}
+				}
+				else if (networkMemberIterator->name == "natPunchThrough")
+				{
+					rapidjson::Value& natPunchThrough = jsonDocument["network"]["natPunchThrough"];
+					for (rapidjson::Value::MemberIterator natPunchThroughMemberIterator =
+						natPunchThrough.MemberBegin();
+						natPunchThroughMemberIterator != natPunchThrough.MemberEnd(); ++natPunchThroughMemberIterator)
+					{
+						if (natPunchThroughMemberIterator->name == "ip")
+							mNetworkConfig.natPunchThroughConfig.ip = natPunchThroughMemberIterator->value.GetString();
+						else if (natPunchThroughMemberIterator->name == "port")
+							mNetworkConfig.natPunchThroughConfig.port = natPunchThroughMemberIterator->value.GetString();
+					}
+
+				}
+				else if (networkMemberIterator->name == "lobby")
+				{
+					rapidjson::Value& lobby = jsonDocument["network"]["lobby"];
+					for (rapidjson::Value::MemberIterator lobbyMemberIterator =
+						lobby.MemberBegin();
+						lobbyMemberIterator != lobby.MemberEnd(); ++lobbyMemberIterator)
+					{
+						if (lobbyMemberIterator->name == "ip")
+							mNetworkConfig.lanConfig.ip = lobbyMemberIterator->value.GetString();
+						else if (lobbyMemberIterator->name == "port")
+							mNetworkConfig.lanConfig.port = lobbyMemberIterator->value.GetString();
+						else if (lobbyMemberIterator->name == "roomName")
+							mNetworkConfig.lobbyConfig.roomName = lobbyMemberIterator->value.GetString();
+					}
+				}
+				else if (networkMemberIterator->name == "resourceLocations")
+				{
+					for (auto& resourceLocation : jsonDocument["network"]["resourceLocations"].GetArray())
+					{
+						std::stringstream resourceLocationPath;
+						resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
+						mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
+					}
+				}
+				else if (networkMemberIterator->name == "lan")
+				{
+					rapidjson::Value& natPunchThrough = jsonDocument["network"]["lan"];
+					for (rapidjson::Value::MemberIterator natPunchThroughMemberIterator =
+						natPunchThrough.MemberBegin();
+						natPunchThroughMemberIterator != natPunchThrough.MemberEnd(); ++natPunchThroughMemberIterator)
+					{
+						if (natPunchThroughMemberIterator->name == "ip")
+							mNetworkConfig.natPunchThroughConfig.ip = natPunchThroughMemberIterator->value.GetString();
+						else if (natPunchThroughMemberIterator->name == "port")
+							mNetworkConfig.natPunchThroughConfig.port = natPunchThroughMemberIterator->value.GetString();
+					}
+
+				}
+				else if (networkMemberIterator->name == "selected")
+				{
+					std::string selectedNetwork = jsonDocument["network"]["selected"].GetString();
+					if (selectedNetwork == "" || selectedNetwork == "none")
+					{
+						mNetworkConfig.selected = ape::NetworkConfig::Selected::NONE;
+					}
+					else if (selectedNetwork == "internet")
+					{
+						mNetworkConfig.selected = ape::NetworkConfig::Selected::INTERNET;
+					}
+					else if (selectedNetwork == "lan")
+					{
+						mNetworkConfig.selected = ape::NetworkConfig::Selected::LAN;
+					}
+				}
+			}
+			rapidjson::Value& plugins = jsonDocument["plugins"];
+			for (auto& plugin : jsonDocument["plugins"].GetArray())
+			{
+				mPluginNames.push_back(plugin.GetString());
+			}
+		}
+		fclose(apeCoreConfigFile);
+	}
+}
+
+ape::CoreConfigImpl::~CoreConfigImpl()
+{
+
+}
+
+ape::NetworkConfig ape::CoreConfigImpl::getNetworkConfig()
+{
+	return mNetworkConfig;
+}
+
+ape::WindowConfig ape::CoreConfigImpl::getWindowConfig()
+{
+	return mWindowConfig;
+}
+
+void ape::CoreConfigImpl::setWindowConfig(WindowConfig windowConfig)
+{
+	mWindowConfig = windowConfig;
+}
+
+std::vector<std::string> ape::CoreConfigImpl::getPluginNames()
+{
+	return mPluginNames;
+}
+
+std::string ape::CoreConfigImpl::getConfigFolderPath()
+{
+	return mConfigFolderPath;
+}
+
+
+
+
+
+

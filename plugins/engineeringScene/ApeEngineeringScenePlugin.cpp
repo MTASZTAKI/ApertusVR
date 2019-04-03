@@ -1,28 +1,28 @@
-#include "ApeEngineeringScenePlugin.h"
+#include "apeEngineeringScenePlugin.h"
 
-Ape::ApeEngineeringScenePlugin::ApeEngineeringScenePlugin()
+ape::apeEngineeringScenePlugin::apeEngineeringScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSystemConfig = Ape::ISystemConfig::getSingletonPtr();
-	mpEventManager = Ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
-	mpSceneManager = Ape::ISceneManager::getSingletonPtr();
-	mpSceneMakerMacro = new Ape::SceneMakerMacro();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-Ape::ApeEngineeringScenePlugin::~ApeEngineeringScenePlugin()
+ape::apeEngineeringScenePlugin::~apeEngineeringScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::eventCallBack(const Ape::Event& event)
+void ape::apeEngineeringScenePlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void Ape::ApeEngineeringScenePlugin::Init()
+void ape::apeEngineeringScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneMakerMacro->makeLit();
@@ -32,36 +32,36 @@ void Ape::ApeEngineeringScenePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::Run()
+void ape::apeEngineeringScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	mpEventManager->disconnectEvent(Ape::Event::Group::NODE, std::bind(&ApeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeEngineeringScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::Step()
+void ape::apeEngineeringScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::Stop()
+void ape::apeEngineeringScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::Suspend()
+void ape::apeEngineeringScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void Ape::ApeEngineeringScenePlugin::Restart()
+void ape::apeEngineeringScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

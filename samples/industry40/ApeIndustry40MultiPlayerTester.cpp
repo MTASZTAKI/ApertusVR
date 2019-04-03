@@ -35,14 +35,14 @@ SOFTWARE.*/
 void runHost()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeIndustry40.exe host_monitor";
+	exe << "start " << "apeIndustry40.exe host_monitor";
 	std::system(exe.str().c_str());
 }
 
 void runGuest()
 {
 	std::stringstream exe;
-	exe << "start " << "ApeIndustry40.exe guest_monitor";
+	exe << "start " << "apeIndustry40.exe guest_monitor";
 	std::system(exe.str().c_str());
 }
 
@@ -53,48 +53,48 @@ int main (int argc, char** argv)
 
 	std::string hostGUID;
 	std::stringstream hostConfigFilePath;
-	hostConfigFilePath << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_monitor\\ApeSystem.json";
-	FILE* apeHostSystemConfigFile = std::fopen(hostConfigFilePath.str().c_str(), "r");
+	hostConfigFilePath << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\host_monitor\\apeCore.json";
+	FILE* apeHostCoreConfigFile = std::fopen(hostConfigFilePath.str().c_str(), "r");
 	char readBuffer[65536];
-	if (apeHostSystemConfigFile)
+	if (apeHostCoreConfigFile)
 	{
-		rapidjson::FileReadStream jsonFileReaderStream(apeHostSystemConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::FileReadStream jsonFileReaderStream(apeHostCoreConfigFile, readBuffer, sizeof(readBuffer));
 		rapidjson::Document jsonDocument;
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
-			rapidjson::Value& sceneSession = jsonDocument["sceneSession"];
-			for (rapidjson::Value::MemberIterator sceneSessionMemberIterator =
-				sceneSession.MemberBegin();
-				sceneSessionMemberIterator != sceneSession.MemberEnd(); ++sceneSessionMemberIterator)
+			rapidjson::Value& SceneNetwork = jsonDocument["SceneNetwork"];
+			for (rapidjson::Value::MemberIterator SceneNetworkMemberIterator =
+				SceneNetwork.MemberBegin();
+				SceneNetworkMemberIterator != SceneNetwork.MemberEnd(); ++SceneNetworkMemberIterator)
 			{
-				if (sceneSessionMemberIterator->name == "sessionGUID")
-					hostGUID = jsonDocument["sceneSession"]["sessionGUID"].GetString();
+				if (SceneNetworkMemberIterator->name == "sessionGUID")
+					hostGUID = jsonDocument["SceneNetwork"]["sessionGUID"].GetString();
 			}
 		}
-		fclose(apeHostSystemConfigFile);
+		fclose(apeHostCoreConfigFile);
 	}
 	std::stringstream guestConfigFilePath;
-	guestConfigFilePath << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_monitor\\ApeSystem.json";
-	FILE* apeSystemConfigFile = std::fopen(guestConfigFilePath.str().c_str(), "r");
+	guestConfigFilePath << APE_SOURCE_DIR << "\\samples\\industry40\\configs\\guest_monitor\\apeCore.json";
+	FILE* apeCoreConfigFile = std::fopen(guestConfigFilePath.str().c_str(), "r");
 	char readBufferGuest[65536];
 	rapidjson::Document jsonDocument;
-	if (apeSystemConfigFile)
+	if (apeCoreConfigFile)
 	{
-		rapidjson::FileReadStream jsonFileReaderStream(apeSystemConfigFile, readBufferGuest, sizeof(readBufferGuest));
+		rapidjson::FileReadStream jsonFileReaderStream(apeCoreConfigFile, readBufferGuest, sizeof(readBufferGuest));
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
 		{
-			rapidjson::Value& sceneSession = jsonDocument["sceneSession"];
-			for (rapidjson::Value::MemberIterator sceneSessionMemberIterator =
-				sceneSession.MemberBegin();
-				sceneSessionMemberIterator != sceneSession.MemberEnd(); ++sceneSessionMemberIterator)
+			rapidjson::Value& SceneNetwork = jsonDocument["SceneNetwork"];
+			for (rapidjson::Value::MemberIterator SceneNetworkMemberIterator =
+				SceneNetwork.MemberBegin();
+				SceneNetworkMemberIterator != SceneNetwork.MemberEnd(); ++SceneNetworkMemberIterator)
 			{
-				if (sceneSessionMemberIterator->name == "sessionGUID")
-					jsonDocument["sceneSession"]["sessionGUID"].SetString(rapidjson::StringRef(hostGUID.c_str()));
+				if (SceneNetworkMemberIterator->name == "sessionGUID")
+					jsonDocument["SceneNetwork"]["sessionGUID"].SetString(rapidjson::StringRef(hostGUID.c_str()));
 			}
 		}
-		fclose(apeSystemConfigFile);
+		fclose(apeCoreConfigFile);
 	}
 
 	rapidjson::StringBuffer writeBuffer;
@@ -103,10 +103,10 @@ int main (int argc, char** argv)
 	std::stringstream contentSS;
 	contentSS << writeBuffer.GetString();
 	std::string content = contentSS.str();
-	std::ofstream apeSystemConfigFileOut(guestConfigFilePath.str().c_str(), std::ios::binary | std::ios::out);
-	apeSystemConfigFileOut.write(content.c_str(), content.size());
-	apeSystemConfigFileOut.flush();
-	apeSystemConfigFileOut.close();
+	std::ofstream apeCoreConfigFileOut(guestConfigFilePath.str().c_str(), std::ios::binary | std::ios::out);
+	apeCoreConfigFileOut.write(content.c_str(), content.size());
+	apeCoreConfigFileOut.flush();
+	apeCoreConfigFileOut.close();
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 	std::cout << "Please wait until the host is up then press any key to starting the guest" << std::endl;

@@ -247,11 +247,12 @@ function parseData(size, binaryData, header) {
 
 function createApertusPointCloud(pointCloud) {
 	console.log('PcdLoaderPlugin createApertusPointCloud begin...');
-	var apeNode = ape.nbind.JsBindManager().createNode(asset.file);
+	console.log(ape.bindManager());
+	var apeNode = ape.bindManager().createNode(asset.file);
 	apeNode.setScale(new ape.nbind.Vector3(asset.scale[0], asset.scale[1], asset.scale[2]));
 	apeNode.setOrientation(new ape.nbind.Quaternion(asset.orientation[0], asset.orientation[1], asset.orientation[2], asset.orientation[3]));
 	apeNode.setPosition(new ape.nbind.Vector3(asset.position[0], asset.position[1], asset.position[2]));
-	var apePointCloud = ape.nbind.JsBindManager().createPointCloud(asset.file);
+	var apePointCloud = ape.bindManager().createPointCloud(asset.file);
 	apePointCloud.setParameters(pointCloud.position, pointCloud.color, 100000, 1.0, true, 500.0, 500.0, 3.0);
 	if (apeNode) {
 		apePointCloud.setParentNodeJsPtr(apeNode);
@@ -284,7 +285,7 @@ var asset;
 
 exports.loadFiles = function() {
 	console.log("PcdLoaderPlugin.loadFiles()");
-	var configFolderPath = ape.nbind.JsBindManager().getFolderPath();
+	var configFolderPath = ape.bindManager().getFolderPath();
 	console.log('PcdLoaderPlugin configFolderPath: ' + configFolderPath);
 	config = require(configFolderPath + '\\ApePcdLoaderPlugin.json');
 	asyncFunctions = new Array();
