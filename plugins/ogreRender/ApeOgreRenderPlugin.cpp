@@ -1835,47 +1835,47 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						if (auto ogreCamera = mpOgreSceneManager->getCamera(event.subjectName))
 						{
-							//TODO_apeOgreRenderPlugin wait for ape::IViewPort definiton
-							//begin: cave mosaic case :), for sure, waiting for apeViewport class :)
-							//int zorder = (mOgreCameras.size() - 1);
-							/*float width = 1;
-							float height = 1;
-							float left = 0;
-							float top = 0;
-							APE_LOG_DEBUG("camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder);*/
-							//if (mCameraCountFromConfig > 2) 
-							//{
-							//	width = 1.0f / (float)mCameraCountFromConfig;
-							//	left = zorder * width;
-							//	APE_LOG_DEBUG("camera: " << ogreCamera->getName() << " left: " << left << " width: " << width << " top: " << top << " zorder: " << zorder);
-							//}
-							//if (auto viewPort = mRenderWindows[mpMainWindow->getName()]->addViewport(ogreCamera, zorder, left, top, width, height))
-							//end: cave mosaic case :), for sure, waiting for apeViewport class :)
-
-							if (auto viewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera))
+							for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 							{
-								APE_LOG_DEBUG("ogreCamera->setAspectRatio: width: " << viewPort->getActualWidth() << " height: " << viewPort->getActualHeight() << " left: " << viewPort->getActualLeft());
-								ogreCamera->setAspectRatio(Ogre::Real(viewPort->getActualWidth()) / Ogre::Real(viewPort->getActualHeight()));
-								if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+								for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 								{
-									if (mOgreCameras.size() == 1) //because Ogre::RTShader init needed only once and this is the right time to do this :)
+									auto renderWindowSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i];
+									auto viewportSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j];
+									auto cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
+									if (cameraSetting.name == camera->getName())
 									{
-										if (Ogre::RTShader::ShaderGenerator::initialize())
+										int zorder = viewportSetting.zOrder;
+										float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
+										float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
+										float left = (float)viewportSetting.left / (float)renderWindowSetting.width;;
+										float top = (float)viewportSetting.top / (float)renderWindowSetting.height;;
+										if (auto ogreViewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera, zorder, left, top, width, height))
 										{
-											mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-											mpShaderGenerator->addSceneManager(mpOgreSceneManager);
-											mpShaderGeneratorResolver = new ape::ShaderGeneratorResolver(mpShaderGenerator);
-											mpShaderGeneratorResolver->appendIgnoreList("FlatVertexColorLighting");
-											Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-											Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-											pMainRenderState->reset();
-											pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-											mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+											APE_LOG_DEBUG("ogreViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
+											ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
+											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+											{
+												if (mOgreCameras.size() == 1) //because Ogre::RTShader init needed only once and this is the right time to do this :)
+												{
+													if (Ogre::RTShader::ShaderGenerator::initialize())
+													{
+														mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+														mpShaderGenerator->addSceneManager(mpOgreSceneManager);
+														mpShaderGeneratorResolver = new ape::ShaderGeneratorResolver(mpShaderGenerator);
+														mpShaderGeneratorResolver->appendIgnoreList("FlatVertexColorLighting");
+														Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+														Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+														pMainRenderState->reset();
+														pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+														mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+													}
+													else
+														APE_LOG_DEBUG("Problem in the RTSS init");
+												}
+												ogreViewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+											}
 										}
-										else
-											APE_LOG_DEBUG("Problem in the RTSS init");
 									}
-									viewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 								}
 							}
 						}
@@ -1994,10 +1994,7 @@ bool ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	//if (mRenderWindows.size() > 0)
-	//{
-	//	APE_LOG_DEBUG("FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
-	//}
+	//std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount() << std::endl;
 	processEventDoubleQueue();
 	if (mpHydrax && mpSkyxSkylight)
 	{

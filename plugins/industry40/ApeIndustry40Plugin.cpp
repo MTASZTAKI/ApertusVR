@@ -28,7 +28,21 @@ void ape::apeIndustry40Plugin::eventCallBack(const ape::Event& event)
 void ape::apeIndustry40Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSceneMakerMacro->makeLit();
+	//mpSceneMakerMacro->makeLit();
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(ape::Vector3(1, -1, 0));
+		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+	}
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT).lock()))
+	{
+		light->setLightType(ape::Light::Type::DIRECTIONAL);
+		light->setLightDirection(ape::Vector3(0, -1, 1));
+		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
+		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+	}
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeGround();
 	APE_LOG_FUNC_LEAVE();
@@ -39,43 +53,6 @@ void ape::apeIndustry40Plugin::Run()
 	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
-		/*if (auto pointCloud = mPointCloud.lock())
-		{
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			std::uniform_int_distribution<> distInt(-5, 3);
-			std::vector<double> randomPoints;
-			for (int i = 0; i < 9; i++)
-				randomPoints.push_back(distInt(gen));
-			ape::PointCloudPoints points = {
-				(float)randomPoints[0], 0, 0,
-				(float)randomPoints[1], 0, 0,
-				(float)randomPoints[2], 0, 0,
-				(float)randomPoints[3], 0, 0,
-				(float)randomPoints[4], 0, 0,
-				(float)randomPoints[5], 0, 0,
-				(float)randomPoints[6], 0, 0,
-				(float)randomPoints[7], 0, 0,
-				(float)randomPoints[8], 0, 0
-				};
-			std::uniform_real_distribution<double> distDouble(0.0, 1.0);
-			std::vector<double> randomRedColors;
-			for (int i = 0; i < 9; i++)
-				randomRedColors.push_back(distDouble(gen));
-			ape::PointCloudColors colors = {
-				(float)randomRedColors[0], 0, 0,
-				(float)randomRedColors[1], 0, 0,
-				(float)randomRedColors[2], 0, 0,
-				(float)randomRedColors[3], 0, 0,
-				(float)randomRedColors[4], 0, 0,
-				(float)randomRedColors[5], 0, 0,
-				(float)randomRedColors[6], 0, 0,
-				(float)randomRedColors[7], 0, 0,
-				(float)randomRedColors[8], 0, 0
-				};
-			pointCloud->updatePoints(points);
-			pointCloud->updateColors(colors);
-		}*/
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();

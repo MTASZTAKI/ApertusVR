@@ -69,15 +69,15 @@ void ape::OISUserInputPlugin::Init()
 					}
 				}
 			}
-			if (jsonDocument.HasMember("userPoses"))
+			if (jsonDocument.HasMember("cameraPoses"))
 			{
-				rapidjson::Value& userPoses = jsonDocument["userPoses"];
-				if (userPoses.IsArray())
+				rapidjson::Value& cameraPoses = jsonDocument["cameraPoses"];
+				if (cameraPoses.IsArray())
 				{
-					for (auto& userPose : userPoses.GetArray())
+					for (auto& cameraPose : cameraPoses.GetArray())
 					{
-						ape::Vector3 position(userPose[0].GetFloat(), userPose[1].GetFloat(), userPose[2].GetFloat());
-						ape::Quaternion orientation(userPose[3].GetFloat(), userPose[4].GetFloat(), userPose[5].GetFloat(), userPose[6].GetFloat());
+						ape::Vector3 position(cameraPose[0].GetFloat(), cameraPose[1].GetFloat(), cameraPose[2].GetFloat());
+						ape::Quaternion orientation(cameraPose[3].GetFloat(), cameraPose[4].GetFloat(), cameraPose[5].GetFloat(), cameraPose[6].GetFloat());
 						ape::UserInputMacro::ViewPose userInputMacroPose;
 						userInputMacroPose.userPosition = position;
 						userInputMacroPose.userOrientation = orientation;
@@ -335,6 +335,8 @@ void ape::OISUserInputPlugin::toggleViewPoses(bool isInterpolated)
 {
 	if (mViewPoses.size() > 0 && mViewPosesToggleIndex < mViewPoses.size())
 	{
+		mUserInputMacroPose.userPosition = mViewPoses[mViewPosesToggleIndex].userPosition;
+		mUserInputMacroPose.userOrientation = mViewPoses[mViewPosesToggleIndex].userOrientation;
 		if (!isInterpolated)
 		{
 			mpapeUserInputMacro->updateViewPose(mViewPoses[mViewPosesToggleIndex]);
@@ -392,7 +394,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		ape::Quaternion qnorm;
 		qnorm.FromAngleAxis(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
 		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
 		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
@@ -400,7 +402,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		ape::Quaternion qnorm;
 		qnorm.FromAngleAxis(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
 		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
+		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
 		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_UP])
@@ -462,6 +464,7 @@ void ape::OISUserInputPlugin::updateViewPoseByMouse()
 void ape::OISUserInputPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	toggleViewPoses(false);
 	while (true)
 	{
 		if (mpKeyboard)

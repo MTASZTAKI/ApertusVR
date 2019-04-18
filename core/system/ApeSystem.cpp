@@ -47,7 +47,8 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
 	gpSceneManagerImpl = new SceneManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();
 	gpPluginManagerImpl->InitAndRunPlugins();
-	gpPluginManagerImpl->registerUserThreadFunction(userThreadFunction);
+	if (userThreadFunction)
+		gpPluginManagerImpl->registerUserThreadFunction(userThreadFunction);
 	if (isBlocking)
 		gpPluginManagerImpl->joinThreads();
 	else

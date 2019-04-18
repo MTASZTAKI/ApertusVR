@@ -92,7 +92,12 @@ namespace ape
 
 			ape::Vector3 scale;
 
-			Pose() {}
+			Pose() 
+			{
+				this->position = ape::Vector3(0, 0, 0);
+				this->orientation = ape::Quaternion(1, 0, 0, 0);
+				this->scale = ape::Vector3(1, 1, 1);
+			}
 
 			Pose(ape::Vector3 position, ape::Quaternion orientation, ape::Vector3 scale)
 			{
@@ -148,6 +153,8 @@ namespace ape
 
 		ape::TextGeometryWeakPtr mOverlayText;
 
+		ape::NodeWeakPtr mOverlayTextNode;
+
 		std::map<std::string, ape::CameraWeakPtr> mCameras;
 
 		ape::ManualMaterialWeakPtr mUserMaterial;
@@ -193,6 +200,8 @@ namespace ape
 		void createOverLayText(std::string caption);
 
 		void updateOverLayText(std::string caption);
+
+		void updateOverLayTextPose(ape::UserInputMacro::Pose pose);
 
 		void saveViewPose();
 

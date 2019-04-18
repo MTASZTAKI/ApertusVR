@@ -1,6 +1,5 @@
 #include "apeKinectHeadTrackingPlugin.h"
 
-
 ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 {
 	APE_LOG_FUNC_ENTER();
@@ -68,7 +67,7 @@ void ape::KinectHeadTrackingPlugin::setCameraConfigByName(std::string cameraName
 
 void ape::KinectHeadTrackingPlugin::eventCallBack(const ape::Event& event)
 {
-	if (event.type == ape::Event::Type::CAMERA_CREATE)
+	if (event.type == ape::Event::Type::CAMERA_FOVY) //beacuse this is the last event before every property is set up
 	{
 		if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
@@ -129,6 +128,9 @@ void ape::KinectHeadTrackingPlugin::Init()
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
 	mpapeUserInputMacro->createOverLayText("userPosition");
+	ape::UserInputMacro::Pose overLayTextPose;
+	overLayTextPose.position = ape::Vector3(0, -100, -50);
+	mpapeUserInputMacro->updateOverLayTextPose(overLayTextPose);
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeKinectHeadTrackingPlugin.json";
 	FILE* apeKinectHeadTrackingPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -434,12 +436,12 @@ void ape::KinectHeadTrackingPlugin::Run()
 		{
 			if (auto camera = mCameraDoubleQueue.front().lock())
 			{
-				APE_LOG_DEBUG("camera: " << camera->getName());
 				setCameraConfigByName(camera->getName(), camera);
 				mNearClip = camera->getNearClipDistance();
 				mFarClip = camera->getFarClipDistance();
 				mC = -(mFarClip + mNearClip) / (mFarClip - mNearClip);
 				mD = -(2.0f * mFarClip * mNearClip) / (mFarClip - mNearClip);
+				APE_LOG_DEBUG("camera: " << camera->getName() << " nearClip: " << mNearClip << " farClip: " << mFarClip);
 				cameraCount++;
 			}
 			mCameraDoubleQueue.pop();
