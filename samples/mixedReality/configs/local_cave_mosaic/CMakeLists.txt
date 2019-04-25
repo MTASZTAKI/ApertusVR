@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,18 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local_monitor)
-add_subdirectory (host_monitor)
-add_subdirectory (guest_monitor)
-add_subdirectory (guest_cave)
-add_subdirectory (local_cave_3RenderWindow)
-add_subdirectory (local_cave_mosaic)
-add_subdirectory (guest_oculusDK2)
-add_subdirectory (local_htcVive)
-add_subdirectory (local_htcVive_multiKinect)
+set (CONFIGS
+	apeOgreRenderPlugin.json
+	apeNodeJsPlugin.json
+	apeOisUserInputPlugin.json
+	apeX3DLoaderPlugin.json
+	apeKinectHeadTrackingPlugin.json
+	apeCore.json
+	)
+
+add_custom_target(
+    Configs_mixedReality_local_cave_mosaic ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_mixedReality_local_cave_mosaic PROPERTY FOLDER "Samples/MixedReality/Configs")

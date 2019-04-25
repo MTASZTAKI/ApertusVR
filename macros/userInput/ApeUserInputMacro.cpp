@@ -42,6 +42,7 @@ ape::UserInputMacro::UserInputMacro()
 		mUserNode = userNode;
 	}
 	mOverlayText = ape::TextGeometryWeakPtr();
+	mOverlayTextNode = ape::NodeWeakPtr();
 	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUniqueUserNodeName).lock())
 	{
 		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUniqueUserNodeName, ape::Entity::GEOMETRY_RAY).lock()))
@@ -308,6 +309,16 @@ void ape::UserInputMacro::updateOverLayText(std::string caption)
 	}
 }
 
+void ape::UserInputMacro::updateOverLayTextPose(ape::UserInputMacro::Pose pose)
+{
+	if (auto overlayTextNode = mOverlayTextNode.lock())
+	{
+		overlayTextNode->setPosition(pose.position);
+		overlayTextNode->setOrientation(pose.orientation);
+		overlayTextNode->setScale(pose.scale);
+	}
+}
+
 void ape::UserInputMacro::saveViewPose()
 {
 	APE_LOG_FUNC_ENTER();
@@ -336,13 +347,13 @@ void ape::UserInputMacro::createOverLayText(std::string caption)
 			if (auto overLayTextNode = mpSceneManager->createNode("overLayTextNode").lock())
 			{
 				overLayTextNode->setParentNode(mUserNode);
-				overLayTextNode->setPosition(ape::Vector3(0, 17, -50));
 				if (auto overlayText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("overLayText", ape::Entity::GEOMETRY_TEXT).lock()))
 				{
 					overlayText->setCaption(caption);
 					overlayText->showOnTop(true);
 					overlayText->setParentNode(overLayTextNode);
 					mOverlayText = overlayText;
+					mOverlayTextNode = overLayTextNode;
 				}
 			}
 		}
