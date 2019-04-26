@@ -4,22 +4,22 @@
     "autoGenerateAndSave": false,
     "bias": 0.5
   },
-  "shading": "perPixel",
   "renderWindows": [
     {
       "name": "local",
       "monitorIndex": 0,
+      "hidden": false,
       "resolution": {
         "width": 1512,
         "height": 1680,
         "fullScreen": false
       },
       "miscParams": {
-        "vSync": false,
-        "vSyncInterval": 0,
+        "vSync": true,
+        "vSyncInterval": 1,
         "colorDepth": 32,
-        "FSAA": 16,
-        "FSAAHint": "Quality"
+        "FSAA": 0,
+        "FSAAHint": ""
       },
       "viewports": [
         {
@@ -29,10 +29,10 @@
           "width": 1512,
           "height": 1680,
           "camera": {
+            "name": "OpenVRCamera",
             "nearClip": 1.0,
             "farClip": 10000.0,
-            "fovY": 45.0,
-            "parentNodeName": "cameraNode"
+            "fovY": 45.0
           }
         }
       ]

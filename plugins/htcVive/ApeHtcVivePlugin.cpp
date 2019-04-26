@@ -9,6 +9,7 @@ ape::apeHtcVivePlugin::apeHtcVivePlugin()
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mCamera = ape::CameraWeakPtr();
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
@@ -47,9 +48,11 @@ ape::Matrix4 ape::apeHtcVivePlugin::conversionFromOpenVR(vr::HmdMatrix44_t ovrMa
 
 void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
-	vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
-	vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
 	vr::EVRCompositorError error;
+	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
+	//APE_LOG_DEBUG("Error Submit(vr::Eye_Left:" << error);
+	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
+	//APE_LOG_DEBUG("Error Submit(vr::Eye_Right:" << error);
 	error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	if (!error)
 	{
@@ -120,6 +123,10 @@ void ape::apeHtcVivePlugin::eventCallBack(const ape::Event& event)
 void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("waiting for main window");
+	while (mpCoreConfig->getWindowConfig().handle == nullptr)
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	APE_LOG_DEBUG("main window was found");
 	APE_LOG_DEBUG("try to initialize openVR HMD");
 	mpOpenVrSystem = vr::VR_Init(&mOpenVrHmdError, vr::EVRApplicationType::VRApplication_Scene);
 	if (mOpenVrHmdError != vr::VRInitError_None)
@@ -152,6 +159,7 @@ void ape::apeHtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	APE_LOG_DEBUG("Recomended Render Target Size : " << width << "x" << height);
 
+	mCamera = mpapeUserInputMacro->createCamera("OpenVRCamera");
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
@@ -199,7 +207,7 @@ void ape::apeHtcVivePlugin::Init()
 	APE_LOG_DEBUG("Wait while RTT textures are created...");
 	while (true)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		if (mOpenVrRttTextureIDs[0] != nullptr && mOpenVrRttTextureIDs[1] != nullptr)
 		{
 			break;
@@ -230,7 +238,7 @@ void ape::apeHtcVivePlugin::Run()
 	{
 		//nothing to do there becuse it is the apeHtcVivePlugin thread. 
 		//compositor and pose update is done by the ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 	APE_LOG_FUNC_LEAVE();
 }

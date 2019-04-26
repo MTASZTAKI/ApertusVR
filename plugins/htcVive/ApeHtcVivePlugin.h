@@ -62,6 +62,8 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
+		ape::CameraWeakPtr mCamera;
+
 		ape::CameraWeakPtr mCameraLeft;
 
 		ape::CameraWeakPtr mCameraRight;

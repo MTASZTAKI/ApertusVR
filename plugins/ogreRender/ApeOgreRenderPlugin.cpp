@@ -2337,6 +2337,7 @@ void ape::OgreRenderPlugin::Init()
 			APE_LOG_DEBUG("winDesc:" << " name=" << winDesc.name << " width=" << winDesc.width << " height=" << winDesc.height << " fullScreen=" << winDesc.useFullScreen);
 			mRenderWindows[winDesc.name] = mpRoot->createRenderWindow(winDesc.name, winDesc.width, winDesc.height, winDesc.useFullScreen, &winDesc.miscParams);
 			mRenderWindows[winDesc.name]->setDeactivateOnFocusChange(false);
+			mRenderWindows[winDesc.name]->setHidden(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].hidden);
 		}
 	}
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();

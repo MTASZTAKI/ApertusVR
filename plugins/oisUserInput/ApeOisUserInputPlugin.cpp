@@ -99,10 +99,10 @@ void ape::OISUserInputPlugin::Init()
 		}
 		fclose(apeOisUserInputConfigFile);
 	}
-	APE_LOG_DEBUG("OISUserInputPlugin waiting for main window");
+	APE_LOG_DEBUG("waiting for main window");
 	while (mpCoreConfig->getWindowConfig().handle == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("OisUserInputPlugin main window was found");
+	APE_LOG_DEBUG("main window was found");
 	std::stringstream hwndStrStream;
 	hwndStrStream << mpCoreConfig->getWindowConfig().handle;
 	std::stringstream windowHndStr;
