@@ -38,7 +38,7 @@ void ape::AssimpAssetLoaderPlugin::Run()
 	loadConfig();
 	while (true)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
@@ -73,9 +73,21 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-			//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
-
+			APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+			APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+			AssetConfig assetConfig;
+			assetConfig.mergeAndExportMeshes = false;
+			assetConfig.regenerateNormals = false;
+			if (auto rootNode = fileGeometry->getParentNode().lock())
+			{
+				assetConfig.rootNodeName = rootNode->getName();
+				APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+				assetConfig.scale = rootNode->getScale();
+				assetConfig.position = rootNode->getPosition();
+				assetConfig.orientation = rootNode->getOrientation();
+			}
+			assetConfig.file = fileGeometry->getFileName();
+			mAssimpAssetConfigs.push_back(assetConfig);
 			readFile(fileGeometry->getFileName());
 		}
 	}
