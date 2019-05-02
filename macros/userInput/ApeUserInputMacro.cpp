@@ -270,32 +270,33 @@ ape::CameraWeakPtr ape::UserInputMacro::createCamera(std::string name)
 	std::string uniqueName = mUniqueUserNodeName + name;
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity(name, ape::Entity::Type::CAMERA).lock()))
 	{
-		if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
-		{
-			cameraNode->setParentNode(mHeadNode);
-			if (auto cameraConeNode = mpSceneManager->createNode(uniqueName + "_ConeNode").lock())
-			{
-				cameraConeNode->setParentNode(cameraNode);
-				cameraConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
-				if (auto cameraCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(uniqueName + "_ConeGeometry", ape::Entity::GEOMETRY_CONE).lock()))
-				{
-					cameraCone->setParameters(10.0f, 30.0f, 1.0f, ape::Vector2(1, 1));
-					cameraCone->setParentNode(cameraConeNode);
-					cameraCone->setMaterial(mUserMaterial);
-				}
-			}
-			if (auto userNameTextNode = mpSceneManager->createNode(uniqueName + "_TextNode").lock())
-			{
-				userNameTextNode->setParentNode(cameraNode);
-				userNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(uniqueName + "_TextGeometry", ape::Entity::GEOMETRY_TEXT).lock()))
-				{
-					userNameText->setCaption(uniqueName);
-					userNameText->setParentNode(userNameTextNode);
-				}
-			}
-			camera->setParentNode(cameraNode);
-		}
+		camera->setParentNode(mHeadNode);
+		//if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
+		//{
+		//	cameraNode->setParentNode(mHeadNode);
+		//	/*if (auto cameraConeNode = mpSceneManager->createNode(uniqueName + "_ConeNode").lock())
+		//	{
+		//		cameraConeNode->setParentNode(cameraNode);
+		//		cameraConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
+		//		if (auto cameraCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(uniqueName + "_ConeGeometry", ape::Entity::GEOMETRY_CONE).lock()))
+		//		{
+		//			cameraCone->setParameters(10.0f, 30.0f, 1.0f, ape::Vector2(1, 1));
+		//			cameraCone->setParentNode(cameraConeNode);
+		//			cameraCone->setMaterial(mUserMaterial);
+		//		}
+		//	}
+		//	if (auto userNameTextNode = mpSceneManager->createNode(uniqueName + "_TextNode").lock())
+		//	{
+		//		userNameTextNode->setParentNode(cameraNode);
+		//		userNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
+		//		if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(uniqueName + "_TextGeometry", ape::Entity::GEOMETRY_TEXT).lock()))
+		//		{
+		//			userNameText->setCaption(uniqueName);
+		//			userNameText->setParentNode(userNameTextNode);
+		//		}
+		//	}*/
+		//	camera->setParentNode(cameraNode);
+		//}
 		mCameras[uniqueName] = camera;
 		return camera;
 	}

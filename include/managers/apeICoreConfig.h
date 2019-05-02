@@ -169,6 +169,8 @@ namespace ape
 	{
 		std::string name;
 
+		std::string renderSystem;
+
 		void* handle;
 
 		unsigned int width;
@@ -178,6 +180,7 @@ namespace ape
 		WindowConfig()
 		{
 			this->name = std::string();
+			this->renderSystem = std::string();
 			this->handle = nullptr;
 			this->width = unsigned int();
 			this->height = unsigned int();
@@ -185,12 +188,14 @@ namespace ape
 
 		WindowConfig(
 		    std::string name,
+			std::string renderSystem,
 			void* handle,
 			unsigned int width,
 			unsigned int height
 		)
 		{
 			this->name = name;
+			this->renderSystem = renderSystem;
 			this->handle = handle;
 			this->width = width;
 			this->height = height;

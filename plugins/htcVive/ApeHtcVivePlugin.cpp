@@ -50,9 +50,9 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
 	vr::EVRCompositorError error;
 	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
-	//APE_LOG_DEBUG("Error Submit(vr::Eye_Left:" << error);
+	APE_LOG_DEBUG("Error Submit(vr::Eye_Left:" << error);
 	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
-	//APE_LOG_DEBUG("Error Submit(vr::Eye_Right:" << error);
+	APE_LOG_DEBUG("Error Submit(vr::Eye_Right:" << error);
 	error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	if (!error)
 	{
@@ -204,6 +204,12 @@ void ape::apeHtcVivePlugin::Init()
 			texture->setSourceCamera(cameraRight);
 		cameraRight->setProjection(conversionFromOpenVR(projectionRight));
 	}
+	
+}
+
+void ape::apeHtcVivePlugin::Run()
+{
+	APE_LOG_FUNC_ENTER();
 	APE_LOG_DEBUG("Wait while RTT textures are created...");
 	while (true)
 	{
@@ -215,25 +221,37 @@ void ape::apeHtcVivePlugin::Init()
 	}
 	APE_LOG_DEBUG("RTT textures are successfully created...");
 	mOpenVrTextures[0].handle = mOpenVrRttTextureIDs[0];
-	mOpenVrTextures[0].eType = vr::ETextureType::TextureType_OpenGL;
 	mOpenVrTextures[0].eColorSpace = vr::ColorSpace_Gamma;
 	mOpenVrTextures[1].handle = mOpenVrRttTextureIDs[1];
-	mOpenVrTextures[1].eType = vr::ETextureType::TextureType_OpenGL;
 	mOpenVrTextures[1].eColorSpace = vr::ColorSpace_Gamma;
-	mOpenVrTextureBounds[0].uMin = 0;
-	mOpenVrTextureBounds[0].uMax = 1;
-	mOpenVrTextureBounds[0].vMin = 1;
-	mOpenVrTextureBounds[0].vMax = 0;
-	mOpenVrTextureBounds[1].uMin = 0;
-	mOpenVrTextureBounds[1].uMax = 1;
-	mOpenVrTextureBounds[1].vMin = 1;
-	mOpenVrTextureBounds[1].vMax = 0;
+	if (mpCoreConfig->getWindowConfig().renderSystem == "OGL")
+	{
+		mOpenVrTextures[0].eType = vr::ETextureType::TextureType_OpenGL;
+		mOpenVrTextures[1].eType = vr::ETextureType::TextureType_OpenGL;
+		mOpenVrTextureBounds[0].uMin = 0;
+		mOpenVrTextureBounds[0].uMax = 1;
+		mOpenVrTextureBounds[0].vMin = 1;
+		mOpenVrTextureBounds[0].vMax = 0;
+		mOpenVrTextureBounds[1].uMin = 0;
+		mOpenVrTextureBounds[1].uMax = 1;
+		mOpenVrTextureBounds[1].vMin = 1;
+		mOpenVrTextureBounds[1].vMax = 0;
+	}
+	if (mpCoreConfig->getWindowConfig().renderSystem == "DX11")
+	{
+		mOpenVrTextures[0].eType = vr::ETextureType::TextureType_DirectX;
+		mOpenVrTextures[1].eType = vr::ETextureType::TextureType_DirectX;
+		//TODO_apeHtcVivePlugin bounds for DX11 and crash beacuse of no shader for DX11 texture RTSS?
+		/*mOpenVrTextureBounds[0].uMin = 0;
+		mOpenVrTextureBounds[0].uMax = 1;
+		mOpenVrTextureBounds[0].vMin = 1;
+		mOpenVrTextureBounds[0].vMax = 0;
+		mOpenVrTextureBounds[1].uMin = 0;
+		mOpenVrTextureBounds[1].uMax = 1;
+		mOpenVrTextureBounds[1].vMin = 1;
+		mOpenVrTextureBounds[1].vMax = 0;*/
+	}
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
-}
-
-void ape::apeHtcVivePlugin::Run()
-{
-	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		//nothing to do there becuse it is the apeHtcVivePlugin thread. 

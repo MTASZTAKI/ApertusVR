@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeIndustry40Plugin",
     "apeHtcVivePlugin"

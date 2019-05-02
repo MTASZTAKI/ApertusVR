@@ -111,6 +111,9 @@ SOFTWARE.*/
 #include <OgreGLTextureManager.h>
 #include <OgreGLRenderSystem.h>
 #include <OgreGLTexture.h>
+#include "OgreD3D11RenderSystem.h"
+#include "OgreD3D11Texture.h"
+#include "D3D11.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "Hydrax.h"

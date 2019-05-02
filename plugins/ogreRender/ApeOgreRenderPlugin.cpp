@@ -1388,6 +1388,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							textureManual->setGraphicsApiID((void*)glid);*/
 							textureManual->setGraphicsApiID((void*)static_cast<Ogre::GLTexture*>(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer())->getGLID());
 						}
+						if (mOgreRenderPluginConfig.renderSystem == "DX11")
+						{
+							textureManual->setGraphicsApiID((void*)static_cast<Ogre::D3D11Texture*>(Ogre::TextureManager::getSingleton().getByName(textureManualName).getPointer())->GetTex2D());
+						}
 					}
 					break;
 				case ape::Event::Type::TEXTURE_MANUAL_BUFFER:
@@ -2355,7 +2359,7 @@ void ape::OgreRenderPlugin::Init()
 	std::ostringstream windowHndStr;
 	windowHndStr << mainWindowHnd;
 	mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].windowHandler = windowHndStr.str();
-	ape::WindowConfig windowConfig(mainWindowDesc.name, mainWindowHnd, mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width,
+	ape::WindowConfig windowConfig(mainWindowDesc.name, mOgreRenderPluginConfig.renderSystem, mainWindowHnd, mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width,
 		mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height);
 	mpCoreConfig->setWindowConfig(windowConfig);
 	APE_LOG_FUNC_LEAVE();
