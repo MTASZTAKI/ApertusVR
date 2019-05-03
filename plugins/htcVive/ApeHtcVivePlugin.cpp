@@ -50,9 +50,9 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 {
 	vr::EVRCompositorError error;
 	error = vr::VRCompositor()->Submit(vr::Eye_Left, &mOpenVrTextures[0], &mOpenVrTextureBounds[0]);
-	APE_LOG_DEBUG("Error Submit(vr::Eye_Left:" << error);
+	//APE_LOG_DEBUG("Error Submit(vr::Eye_Left:" << error);
 	error = vr::VRCompositor()->Submit(vr::Eye_Right, &mOpenVrTextures[1], &mOpenVrTextureBounds[1]);
-	APE_LOG_DEBUG("Error Submit(vr::Eye_Right:" << error);
+	//APE_LOG_DEBUG("Error Submit(vr::Eye_Right:" << error);
 	error = vr::VRCompositor()->WaitGetPoses(mOpenVrTrackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	if (!error)
 	{

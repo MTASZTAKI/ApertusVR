@@ -18,7 +18,7 @@
         "vSync": false,
         "vSyncInterval": 0,
         "colorDepth": 32,
-        "FSAA": 0,
+        "FSAA": 2,
         "FSAAHint": ""
       },
       "viewports": [
