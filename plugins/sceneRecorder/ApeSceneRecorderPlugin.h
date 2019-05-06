@@ -88,9 +88,13 @@ namespace ape
 
 		float fck;
 
-		void readEvent();
+		long mDelayToNextEvent;
+
+		ape::Event readEventHeader();
 
 		void writeEvent(ape::Event event);
+
+		void writeEventHeader(ape::Event event);
 
 		void fireEvent(unsigned int millisceonds, ape::Event event);
 

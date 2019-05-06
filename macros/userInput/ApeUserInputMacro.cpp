@@ -270,7 +270,6 @@ ape::CameraWeakPtr ape::UserInputMacro::createCamera(std::string name)
 	std::string uniqueName = mUniqueUserNodeName + name;
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity(name, ape::Entity::Type::CAMERA).lock()))
 	{
-		//camera->setParentNode(mHeadNode);
 		if (auto cameraNode = mpSceneManager->createNode(uniqueName + "_Node").lock())
 		{
 			cameraNode->setParentNode(mHeadNode);

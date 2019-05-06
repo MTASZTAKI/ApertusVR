@@ -1,10 +1,8 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apeIndustry40Plugin",
-    "apeKinectPlugin"
+    "apeSceneRecorderPlugin"
   ],
   "network": {
     "user": "cave",
