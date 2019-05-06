@@ -1429,7 +1429,9 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 											//ogreViewport->setClearEveryFrame(true);
 											//ogreViewport->setAutoUpdated(true);
 											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+											{
 												ogreViewport->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+											}
 											mRttList.push_back(textureManual);
 										}
 									}
@@ -1859,23 +1861,6 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 											ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
 											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
 											{
-												if (mOgreCameras.size() == 1) //because Ogre::RTShader init needed only once and this is the right time to do this :)
-												{
-													if (Ogre::RTShader::ShaderGenerator::initialize())
-													{
-														mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-														mpShaderGenerator->addSceneManager(mpOgreSceneManager);
-														mpShaderGeneratorResolver = new ape::ShaderGeneratorResolver(mpShaderGenerator);
-														mpShaderGeneratorResolver->appendIgnoreList("FlatVertexColorLighting");
-														Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
-														Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
-														pMainRenderState->reset();
-														pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
-														mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
-													}
-													else
-														APE_LOG_DEBUG("Problem in the RTSS init");
-												}
 												ogreViewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 											}
 										}
@@ -2353,6 +2338,24 @@ void ape::OgreRenderPlugin::Init()
 	mpMeshLodGenerator = new  Ogre::MeshLodGenerator();
 	mpMeshLodGenerator->_initWorkQueue();
 	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(this);
+	if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+	{
+		if (Ogre::RTShader::ShaderGenerator::initialize())
+		{
+			mpShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+			mpShaderGenerator->addSceneManager(mpOgreSceneManager);
+			mpShaderGeneratorResolver = new ape::ShaderGeneratorResolver(mpShaderGenerator);
+			mpShaderGeneratorResolver->appendIgnoreList("FlatVertexColorLighting");
+			Ogre::MaterialManager::getSingleton().addListener(mpShaderGeneratorResolver);
+			Ogre::RTShader::RenderState* pMainRenderState = mpShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
+			pMainRenderState->reset();
+			pMainRenderState->addTemplateSubRenderState(mpShaderGenerator->createSubRenderState(Ogre::RTShader::PerPixelLighting::Type));
+			mpShaderGenerator->invalidateScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+		}
+		else
+			APE_LOG_DEBUG("Problem in the RTSS init");
+	}
+
 	int mainWindowID = 0; //first window will be the main window
 	Ogre::RenderWindowDescription mainWindowDesc = winDescList[mainWindowID];
 	mRenderWindows[mainWindowDesc.name]->getCustomAttribute("WINDOW", &mainWindowHnd);
