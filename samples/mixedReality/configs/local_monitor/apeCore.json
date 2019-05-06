@@ -3,7 +3,8 @@
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apeIndustry40Plugin"
+    "apeIndustry40Plugin",
+    "apeKinectPlugin"
   ],
   "network": {
     "user": "cave",

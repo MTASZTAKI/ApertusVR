@@ -70,7 +70,7 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 			controllerTrackerPosition = controllerTrackerPosition * controllerTrackerScale;
 			vr::VRControllerState_t openVRControllerState;
 			mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
-			mUserInputMacroPose.userPosition += (controllerTrackerOrientation * ape::Vector3(0, 0, 5 * -openVRControllerState.rAxis[0].y));
+			mUserInputMacroPose.userPosition += (controllerTrackerOrientation * ape::Vector3(5 * openVRControllerState.rAxis[0].x, 0, 5 * -openVRControllerState.rAxis[0].y));
 		}
 		vr::TrackedDevicePose_t hmdPose;
 		if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
@@ -159,7 +159,6 @@ void ape::apeHtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	APE_LOG_DEBUG("Recomended Render Target Size : " << width << "x" << height);
 
-	mCamera = mpapeUserInputMacro->createCamera("OpenVRCamera");
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);

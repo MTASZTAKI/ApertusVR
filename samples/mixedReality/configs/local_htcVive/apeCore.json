@@ -3,7 +3,8 @@
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeIndustry40Plugin",
-    "apeHtcVivePlugin"
+    "apeHtcVivePlugin",
+    "apeKinectPlugin"
   ],
   "network": {
     "user": "htc",
