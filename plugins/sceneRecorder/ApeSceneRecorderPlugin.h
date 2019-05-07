@@ -90,13 +90,11 @@ namespace ape
 
 		long mDelayToNextEvent;
 
-		ape::Event readEventHeader();
+		void readEventAndFire();
+
+		void writeEventHeader(ape::Event& event);
 
 		void writeEvent(ape::Event event);
-
-		void writeEventHeader(ape::Event event);
-
-		void fireEvent(unsigned int millisceonds, ape::Event event);
 
 	public:
 		apeSceneRecorderPlugin();

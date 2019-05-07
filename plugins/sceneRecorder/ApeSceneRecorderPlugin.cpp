@@ -37,7 +37,7 @@ ape::apeSceneRecorderPlugin::apeSceneRecorderPlugin()
 	mIsPlayer = true;
 	mIsLooping = false;
 	mFileName = "scene.bin";
-	if (mIsRecorder)
+	if (mIsRecorder) 
 		mFileStreamOut.open(mFileName, std::ios::out | std::ios::binary);
 	else if (mIsPlayer)
 	{
@@ -53,98 +53,80 @@ ape::apeSceneRecorderPlugin::~apeSceneRecorderPlugin()
 	if (mFileStreamOut.is_open())
 	{
 		mFileStreamOut.close();
+		APE_LOG_DEBUG("fileStreamOut closed ");
 	}
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeSceneRecorderPlugin::fireEvent(unsigned int milliseconds, ape::Event event)
+void ape::apeSceneRecorderPlugin::readEventAndFire()
 {
-	if (milliseconds)
-		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+	ape::Event event;
+	mFileStreamIn.read(reinterpret_cast<char*>(&mDelayToNextEvent), sizeof(long));
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
+	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
+	unsigned int subjectNameSize = 0;
+	mFileStreamIn.read(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
+	event.subjectName.resize(subjectNameSize);
+	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
+	APE_LOG_DEBUG("mDelayToNextEvent: " << mDelayToNextEvent << " event.subjectName: " << event.subjectName << " event.type:" << event.type);
+	if (mDelayToNextEvent)
+		std::this_thread::sleep_for(std::chrono::milliseconds(mDelayToNextEvent));
 	if (event.group == ape::Event::Group::NODE)
 	{
 		if (event.type == ape::Event::Type::NODE_CREATE)
 		{
 			mpScene->createNode(event.subjectName);
 		}
-		else if (auto node = mpScene->getNode(event.subjectName).lock())
-		{
+		/*else if (auto node = mpScene->getNode(event.subjectName).lock())
+		{*/
 			if (event.type == ape::Event::Type::NODE_POSITION)
 			{
 				ape::Vector3 position;
-				//position.read(mFileStreamIn);
+				position.read(mFileStreamIn);
 				//node->setPosition(position);
 			}
-			else if (event.type == ape::Event::Type::NODE_ORIENTATION)
-			{
-
-			}
-		}
-	}
-	else if (event.group == ape::Event::Group::POINT_CLOUD)
-	{
-
+		//}
 	}
 }
 
-ape::Event ape::apeSceneRecorderPlugin::readEventHeader()
+void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
 {
-	ape::Event event;
-	mFileStreamIn.read(reinterpret_cast<char*>(&mDelayToNextEvent), sizeof(long));
-	unsigned int subjectNameSize = 0;
-	mFileStreamIn.read(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
-	event.subjectName.resize(subjectNameSize);
-	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
-	/*mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
-	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));*/
-	APE_LOG_DEBUG("subjectNameSize: " << subjectNameSize << " delayToNextEvent: " << mDelayToNextEvent << " name:" << event.subjectName);
-	return event;
+	auto timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	long timeToCallEventInMilliseconds = timeStamp.count() - mLastEventTimeStamp.count();
+	mLastEventTimeStamp = timeStamp;
+	mFileStreamOut.write(reinterpret_cast<char*>(&timeToCallEventInMilliseconds), sizeof(long));
+	mFileStreamOut.write(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
+	mFileStreamOut.write(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
+	unsigned int subjectNameSize = event.subjectName.size();
+	mFileStreamOut.write(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
+	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
 }
 
 void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 {
 	if (event.group == ape::Event::Group::NODE)
 	{
-		if (auto node = mpScene->getNode(event.subjectName).lock())
+		if (event.type == ape::Event::Type::NODE_CREATE)
+		{
+			writeEventHeader(event);
+		}
+		else if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
 			if (event.type == ape::Event::Type::NODE_POSITION)
 			{
 				writeEventHeader(event);
 				ape::Vector3 position = node->getPosition();
-				//position.write(mFileStreamOut);
-			}
-			else if (event.type == ape::Event::Type::NODE_ORIENTATION)
-			{
-
+				position.write(mFileStreamOut);
 			}
 		}
 	}
-	else if (event.group == ape::Event::Group::POINT_CLOUD)
-	{
-
-	}
-}
-
-void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event event)
-{
-	auto timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-	long timeToCallEventInMilliseconds = timeStamp.count() - mLastEventTimeStamp.count();
-	mLastEventTimeStamp = timeStamp;
-	mFileStreamOut.write(reinterpret_cast<char*>(&timeToCallEventInMilliseconds), sizeof(long));
-	unsigned int subjectNameSize = event.subjectName.size();
-	mFileStreamOut.write(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
-	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
-	//mFileStreamOut.write(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
-	//mFileStreamOut.write(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
-	APE_LOG_DEBUG("subjectNameSize" << subjectNameSize << " timeToCallEventInMilliseconds: " << timeToCallEventInMilliseconds << " name:" << event.subjectName);
 }
 
 void ape::apeSceneRecorderPlugin::eventCallBack(const ape::Event& event)
 {
 	if (mIsRecorder)
 	{
-		auto writeEventThread = std::thread(&apeSceneRecorderPlugin::writeEvent, this, event);
-		writeEventThread.detach();
+		writeEvent(event);
 	}
 }
 
@@ -161,8 +143,7 @@ void ape::apeSceneRecorderPlugin::Run()
 	{
 		if (mIsPlayer)
 		{
-			auto event = readEventHeader();
-			fireEvent(mDelayToNextEvent, event);
+			readEventAndFire();
 			if (!mFileStreamIn.good() && mIsLooping)
 			{
 				mFileStreamIn.close();
