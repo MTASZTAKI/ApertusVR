@@ -33,7 +33,7 @@ config.file.filename = path.join(moduleManager.configurationPath, config.file.fi
 // const tsFormat = () => (new Date()).toLocaleTimeString();
 var logger = new winston.Logger({
 	transports: [
-		new winston.transports.Console(config.console),
+		//new winston.transports.Console(config.console),
 		new winston.transports.File(config.file)
 	],
 	exitOnError: config.exitOnError

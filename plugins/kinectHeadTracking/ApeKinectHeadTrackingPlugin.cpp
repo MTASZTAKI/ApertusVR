@@ -22,8 +22,6 @@ ape::KinectHeadTrackingPlugin::KinectHeadTrackingPlugin()
 	mFarClip = 0.0f;
 	mC = 0.0f;
 	mD = 0.0f;
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -124,6 +122,8 @@ ape::Matrix4 ape::KinectHeadTrackingPlugin::calculateCameraProjection(ape::HeadT
 void ape::KinectHeadTrackingPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_DEBUG("Sensor init begin");
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");

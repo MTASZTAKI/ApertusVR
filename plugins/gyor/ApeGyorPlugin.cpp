@@ -8,9 +8,6 @@ ape::apeGyorPlugin::apeGyorPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeGyorPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -29,6 +26,9 @@ void ape::apeGyorPlugin::eventCallBack(const ape::Event& event)
 void ape::apeGyorPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mpSceneMakerMacro->makeBackground();
 	APE_LOG_FUNC_LEAVE();
 }

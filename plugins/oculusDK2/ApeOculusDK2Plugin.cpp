@@ -11,8 +11,6 @@ ape::apeOculusDK2Plugin::apeOculusDK2Plugin()
 	mpHMD = NULL;
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -42,6 +40,8 @@ void ape::apeOculusDK2Plugin::eventCallBack(const ape::Event& event)
 void ape::apeOculusDK2Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	ovr_Initialize();
 	mpHMD = ovrHmd_Create(0);
 	if (!mpHMD)

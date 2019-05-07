@@ -10,9 +10,6 @@ ape::apeRobotCalibrationPlugin::apeRobotCalibrationPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeRobotCalibrationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -31,6 +28,9 @@ void ape::apeRobotCalibrationPlugin::eventCallBack(const ape::Event& event)
 void ape::apeRobotCalibrationPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mpSceneMakerMacro->makeOverlayBrowser();
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeLit();

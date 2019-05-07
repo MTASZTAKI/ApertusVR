@@ -8,8 +8,6 @@ ape::apeTexasEEGPlugin::apeTexasEEGPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mScore = 0;
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -33,6 +31,9 @@ void ape::apeTexasEEGPlugin::eventCallBack(const ape::Event& event)
 void ape::apeTexasEEGPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+
 	mGameManager = new TexasEEG::GameManager(mpapeUserInputMacro->getUserNode());
 	mGameManager->Start();
 

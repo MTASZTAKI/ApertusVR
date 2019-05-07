@@ -77,15 +77,15 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 		{
 			mpScene->createNode(event.subjectName);
 		}
-		/*else if (auto node = mpScene->getNode(event.subjectName).lock())
-		{*/
+		else if (auto node = mpScene->getNode(event.subjectName).lock())
+		{
 			if (event.type == ape::Event::Type::NODE_POSITION)
 			{
 				ape::Vector3 position;
 				position.read(mFileStreamIn);
-				//node->setPosition(position);
+				node->setPosition(position);
 			}
-		//}
+		}
 	}
 }
 

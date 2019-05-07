@@ -10,9 +10,6 @@ ape::apeHtmlOverlayUIPlugin::apeHtmlOverlayUIPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHtmlOverlayUIPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -31,6 +28,9 @@ void ape::apeHtmlOverlayUIPlugin::eventCallBack(const ape::Event& event)
 void ape::apeHtmlOverlayUIPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mpSceneMakerMacro->makeOverlayBrowser();
 	APE_LOG_FUNC_LEAVE();
 }

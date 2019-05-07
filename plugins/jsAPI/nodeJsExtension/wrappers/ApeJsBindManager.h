@@ -67,14 +67,12 @@ public:
 	JsBindManager()
 	{
 		APE_LOG_FUNC_ENTER();
-		std::cout << "JsBindManager: " << std::endl;
+		//std::cout << "JsBindManager: " << std::endl;
 		mpSceneManager = ape::ISceneManager::getSingletonPtr();
 		mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 		mpEventManager = ape::IEventManager::getSingletonPtr();
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
-		mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-		mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 		APE_LOG_FUNC_LEAVE();
 	}
 
@@ -155,7 +153,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
-		auto nodeWeakPtr = mpapeUserInputMacro->getUserNode();
+		auto nodeWeakPtr = ape::UserInputMacro::getSingletonPtr()->getUserNode();
 		if (auto node = nodeWeakPtr.lock())
 		{
 			success = true;
@@ -521,8 +519,6 @@ private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ICoreConfig* mpCoreConfig;
 	ape::IEventManager* mpEventManager;
-	ape::UserInputMacro* mpapeUserInputMacro;
-	ape::UserInputMacro::ViewPose mUserInputMacroPose;
 	std::map<int, nbind::cbFunction*> mEventMap;
 };
 

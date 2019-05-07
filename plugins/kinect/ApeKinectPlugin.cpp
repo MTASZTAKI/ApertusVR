@@ -21,8 +21,6 @@ ape::KinectPlugin::KinectPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	RootNode = mpSceneManager->createNode("KinectRootNode").lock();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -64,6 +62,8 @@ void ape::KinectPlugin::eventCallBack(const ape::Event& event)
 void ape::KinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");

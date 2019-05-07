@@ -61,8 +61,6 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
 	mCameraCountFromConfig = 0;
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -2067,7 +2065,8 @@ void ape::OgreRenderPlugin::Step()
 void ape::OgreRenderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");

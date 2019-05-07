@@ -14,8 +14,6 @@ ape::apeHtcVivePlugin::apeHtcVivePlugin()
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;
 	mOpenVrRttTextureIDs[1] = nullptr;
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -113,6 +111,8 @@ void ape::apeHtcVivePlugin::eventCallBack(const ape::Event& event)
 void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_DEBUG("waiting for main window");
 	while (mpCoreConfig->getWindowConfig().handle == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

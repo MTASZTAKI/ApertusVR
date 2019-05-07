@@ -21,9 +21,6 @@ ape::OISUserInputPlugin::OISUserInputPlugin()
 	mViewPoses = std::vector<ape::UserInputMacro::ViewPose>();
 	mViewPosesToggleIndex = 0;
 	mIsKeyPressed = false;
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -46,6 +43,9 @@ void ape::OISUserInputPlugin::eventCallBack(const ape::Event& event)
 void ape::OISUserInputPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	ape::OisWindowConfig oisWindowConfig;
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeOisUserInputPlugin.json";
