@@ -87,24 +87,24 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 			}
 		}
 	}
-	//else if (event.group == ape::Event::Group::MATERIAL_FILE)
-	//{
-	//	if (event.type == ape::Event::Type::MATERIAL_FILE_CREATE)
-	//	{
-	//		//mpScene->createEntity(event.subjectName, ape::Entity::Type::MATERIAL_FILE);
-	//	}
-	//	//else if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
-	//	//{
-	//	//	if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
-	//	//	{
-	//	//		//materialFile->setFileName(readString());
-	//	//	}
-	//	//	else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
-	//	//	{
-	//	//		materialFile->setAsSkyBox();
-	//	//	}
-	//	//}
-	//}
+	else if (event.group == ape::Event::Group::MATERIAL_FILE)
+	{
+		if (event.type == ape::Event::Type::MATERIAL_FILE_CREATE)
+		{
+			mpScene->createEntity(event.subjectName, ape::Entity::Type::MATERIAL_FILE);
+		}
+		else if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
+			{
+				materialFile->setFileName(readString());
+			}
+			else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
+			{
+				materialFile->setAsSkyBox();
+			}
+		}
+	}
 }
 
 void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
@@ -145,21 +145,16 @@ void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 			}
 		}
 	}
-	//else if (event.group == ape::Event::Group::MATERIAL_FILE)
-	//{
-	//	//if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
-	//	//{
-	//	//	if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
-	//	//	{
-	//	//		writeEventHeader(event);
-	//	//		//writeString(materialFile->getfFileName());
-	//	//	}
-	//	//	else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
-	//	//	{
-	//	//		writeEventHeader(event);
-	//	//	}
-	//	//}
-	//}
+	else if (event.group == ape::Event::Group::MATERIAL_FILE)
+	{
+		if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
+			{
+				writeString(materialFile->getfFileName());
+			}
+		}
+	}
 }
 
 void ape::apeSceneRecorderPlugin::writeString(std::string string)
