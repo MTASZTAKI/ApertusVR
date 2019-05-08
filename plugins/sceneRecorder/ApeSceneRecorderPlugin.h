@@ -92,9 +92,15 @@ namespace ape
 
 		void readEventAndFire();
 
+		void readEventHeader(ape::Event& event);
+
 		void writeEventHeader(ape::Event& event);
 
 		void writeEvent(ape::Event event);
+
+		void writeString(std::string string);
+
+		std::string readString();
 
 	public:
 		apeSceneRecorderPlugin();

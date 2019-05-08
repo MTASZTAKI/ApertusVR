@@ -8,28 +8,11 @@ ape::apeSceneRecorderPlugin::apeSceneRecorderPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TUBE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_PBS, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::SKY, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpScene = ape::ISceneManager::getSingletonPtr();
 	mLastEventTimeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
@@ -58,9 +41,8 @@ ape::apeSceneRecorderPlugin::~apeSceneRecorderPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeSceneRecorderPlugin::readEventAndFire()
+void ape::apeSceneRecorderPlugin::readEventHeader(ape::Event& event)
 {
-	ape::Event event;
 	mFileStreamIn.read(reinterpret_cast<char*>(&mDelayToNextEvent), sizeof(long));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
@@ -69,6 +51,12 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 	event.subjectName.resize(subjectNameSize);
 	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
 	APE_LOG_DEBUG("mDelayToNextEvent: " << mDelayToNextEvent << " event.subjectName: " << event.subjectName << " event.type:" << event.type);
+}
+
+void ape::apeSceneRecorderPlugin::readEventAndFire()
+{
+	ape::Event event;
+	readEventHeader(event);
 	if (mDelayToNextEvent)
 		std::this_thread::sleep_for(std::chrono::milliseconds(mDelayToNextEvent));
 	if (event.group == ape::Event::Group::NODE)
@@ -85,8 +73,38 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 				position.read(mFileStreamIn);
 				node->setPosition(position);
 			}
+			else if (event.type == ape::Event::Type::NODE_ORIENTATION)
+			{
+				ape::Quaternion orientation;
+				orientation.read(mFileStreamIn);
+				node->setOrientation(orientation);
+			}
+			else if (event.type == ape::Event::Type::NODE_SCALE)
+			{
+				ape::Vector3 scale;
+				scale.read(mFileStreamIn);
+				node->setScale(scale);
+			}
 		}
 	}
+	//else if (event.group == ape::Event::Group::MATERIAL_FILE)
+	//{
+	//	if (event.type == ape::Event::Type::MATERIAL_FILE_CREATE)
+	//	{
+	//		//mpScene->createEntity(event.subjectName, ape::Entity::Type::MATERIAL_FILE);
+	//	}
+	//	//else if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
+	//	//{
+	//	//	if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
+	//	//	{
+	//	//		//materialFile->setFileName(readString());
+	//	//	}
+	//	//	else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
+	//	//	{
+	//	//		materialFile->setAsSkyBox();
+	//	//	}
+	//	//}
+	//}
 }
 
 void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
@@ -100,26 +118,65 @@ void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
 	unsigned int subjectNameSize = event.subjectName.size();
 	mFileStreamOut.write(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
 	mFileStreamOut.write(event.subjectName.c_str(), subjectNameSize);
+	//APE_LOG_DEBUG(" event.subjectName: " << event.subjectName << " event.type:" << event.type);
 }
 
 void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 {
+	writeEventHeader(event);
 	if (event.group == ape::Event::Group::NODE)
 	{
-		if (event.type == ape::Event::Type::NODE_CREATE)
-		{
-			writeEventHeader(event);
-		}
-		else if (auto node = mpScene->getNode(event.subjectName).lock())
+		if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
 			if (event.type == ape::Event::Type::NODE_POSITION)
 			{
-				writeEventHeader(event);
 				ape::Vector3 position = node->getPosition();
 				position.write(mFileStreamOut);
 			}
+			else if (event.type == ape::Event::Type::NODE_ORIENTATION)
+			{
+				ape::Quaternion orientation = node->getOrientation();
+				orientation.write(mFileStreamOut);
+			}
+			else if (event.type == ape::Event::Type::NODE_SCALE)
+			{
+				ape::Vector3 scale = node->getScale();
+				scale.write(mFileStreamOut);
+			}
 		}
 	}
+	//else if (event.group == ape::Event::Group::MATERIAL_FILE)
+	//{
+	//	//if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
+	//	//{
+	//	//	if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
+	//	//	{
+	//	//		writeEventHeader(event);
+	//	//		//writeString(materialFile->getfFileName());
+	//	//	}
+	//	//	else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
+	//	//	{
+	//	//		writeEventHeader(event);
+	//	//	}
+	//	//}
+	//}
+}
+
+void ape::apeSceneRecorderPlugin::writeString(std::string string)
+{
+	unsigned int stringSize = string.size();
+	mFileStreamOut.write(reinterpret_cast<char *>(&stringSize), sizeof(stringSize));
+	mFileStreamOut.write(string.c_str(), stringSize);
+}
+
+std::string ape::apeSceneRecorderPlugin::readString()
+{
+	std::string string;
+	unsigned int stringSize = 0;
+	mFileStreamIn.read(reinterpret_cast<char *>(&stringSize), sizeof(stringSize));
+	string.resize(stringSize);
+	mFileStreamIn.read(&string[0], stringSize);
+	return string;
 }
 
 void ape::apeSceneRecorderPlugin::eventCallBack(const ape::Event& event)

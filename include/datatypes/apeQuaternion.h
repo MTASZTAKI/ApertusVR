@@ -290,6 +290,22 @@ namespace ape
 			std::vector<float> vec{ w, x, y, z };
 			return vec;
 		}
+
+		void write(std::ofstream& fileStreamOut)
+		{
+			fileStreamOut.write(reinterpret_cast<char*>(&w), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&z), sizeof(float));
+		}
+
+		void read(std::ifstream& fileStreamIn)
+		{
+			fileStreamIn.read(reinterpret_cast<char*>(&w), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&x), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&y), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&z), sizeof(float));
+		}
 	};
 }
 
