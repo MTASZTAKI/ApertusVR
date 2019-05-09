@@ -142,6 +142,8 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 	std::string browserName = browser->getName();
 	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 	{
+		browserMaterial->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
+		browserMaterial->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 		browserMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 		{

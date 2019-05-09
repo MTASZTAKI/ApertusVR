@@ -44,15 +44,26 @@ class HttpSimulator {
 
 		this.fileName = moduleManager.pluginPath + args.fileName || moduleManager.pluginPath + 'apertusvr.log';
 		this.delay = args.delay || 20;
+
 		this.lr = new LineByLineReader(this.fileName);
 		
 		this.lr.on('error', function (err) {
 			console.log('line-reader: error: ', err);
+			self.lr = {};
+			self.done(args);
 		});
 
 		this.lr.on('line', function (line) {
 			self.lr.pause();
-			self.options.json = JSON.parse(line);
+			try{
+				self.options.json = JSON.parse(line);
+			}
+			catch (error) {
+				console.log('line-reader, wrong line, re-read the file');
+				self.lr = {};
+				self.done(args);
+			}
+
 			// this.lineNumber++;
 			// console.log('line-reader: line> ', this.lineNumber);
 			request.post(self.options, function (error, response, body) {
@@ -68,7 +79,7 @@ class HttpSimulator {
 		});
 
 		this.lr.on('end', function () {
-			// console.log('line-reader: all lines are read.');
+			console.log('line-reader: all lines are read.');
 			self.lr = {};
 			self.done(args);
 		});
