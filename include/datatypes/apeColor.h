@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include <sstream>
 #include <vector>
+#include <fstream>
 
 namespace ape
 {
@@ -78,6 +79,28 @@ namespace ape
 		{
 			return a;
 		}
+
+		void write(std::ofstream& fileStreamOut, bool writeSize = true)
+		{
+			if (writeSize)
+			{
+				long sizeInBytes = 16;
+				fileStreamOut.write(reinterpret_cast<char*>(&sizeInBytes), sizeof(long));
+			}
+			fileStreamOut.write(reinterpret_cast<char*>(&r), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&g), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&b), sizeof(float));
+			fileStreamOut.write(reinterpret_cast<char*>(&a), sizeof(float));
+		}
+
+		void read(std::ifstream& fileStreamIn)
+		{
+			fileStreamIn.read(reinterpret_cast<char*>(&r), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&g), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&b), sizeof(float));
+			fileStreamIn.read(reinterpret_cast<char*>(&a), sizeof(float));
+		}
+
 	};
 
 	typedef std::vector < ape::Color > ColorVector;

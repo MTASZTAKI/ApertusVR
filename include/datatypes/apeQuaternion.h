@@ -291,8 +291,13 @@ namespace ape
 			return vec;
 		}
 
-		void write(std::ofstream& fileStreamOut)
+		void write(std::ofstream& fileStreamOut, bool writeSize = true)
 		{
+			if (writeSize)
+			{
+				long sizeInBytes = 16;
+				fileStreamOut.write(reinterpret_cast<char*>(&sizeInBytes), sizeof(long));
+			}
 			fileStreamOut.write(reinterpret_cast<char*>(&w), sizeof(float));
 			fileStreamOut.write(reinterpret_cast<char*>(&x), sizeof(float));
 			fileStreamOut.write(reinterpret_cast<char*>(&y), sizeof(float));

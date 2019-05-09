@@ -47,8 +47,13 @@ namespace ape
 			x(_d), y(_d), z(_d)
 		{}
 
-		void write(std::ofstream& fileStreamOut)
+		void write(std::ofstream& fileStreamOut, bool writeSize = true)
 		{
+			if (writeSize)
+			{
+				long sizeInBytes = 12;
+				fileStreamOut.write(reinterpret_cast<char*>(&sizeInBytes), sizeof(long));
+			}
 			fileStreamOut.write(reinterpret_cast<char*>(&x), sizeof(float));
 			fileStreamOut.write(reinterpret_cast<char*>(&y), sizeof(float));
 			fileStreamOut.write(reinterpret_cast<char*>(&z), sizeof(float));

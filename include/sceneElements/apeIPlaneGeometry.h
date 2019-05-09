@@ -54,6 +54,25 @@ namespace ape
 			this->size = size;
 			this->tile = tile;
 		}
+
+		void write(std::ofstream& fileStreamOut, bool writeSize = true)
+		{
+			if (writeSize)
+			{
+				long sizeInBytes = 24;
+				fileStreamOut.write(reinterpret_cast<char*>(&sizeInBytes), sizeof(long));
+			}
+			this->numSeg.write(fileStreamOut, false);
+			this->size.write(fileStreamOut, false);
+			this->tile.write(fileStreamOut, false);
+		}
+
+		void read(std::ifstream& fileStreamIn)
+		{
+			this->numSeg.read(fileStreamIn);
+			this->size.read(fileStreamIn);
+			this->tile.read(fileStreamIn);
+		}
 	};
 
 	class IPlaneGeometry : public ape::Geometry

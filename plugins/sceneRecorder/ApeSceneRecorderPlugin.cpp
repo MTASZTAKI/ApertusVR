@@ -9,7 +9,9 @@ ape::apeSceneRecorderPlugin::apeSceneRecorderPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&apeSceneRecorderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -36,9 +38,16 @@ ape::apeSceneRecorderPlugin::~apeSceneRecorderPlugin()
 	if (mFileStreamOut.is_open())
 	{
 		mFileStreamOut.close();
-		APE_LOG_DEBUG("fileStreamOut closed ");
 	}
 	APE_LOG_FUNC_LEAVE();
+}
+
+
+void ape::apeSceneRecorderPlugin::readEventData()
+{
+	mCurrentEventDataSizeInBytes = 0;
+	mFileStreamIn.read(reinterpret_cast<char*>(&mCurrentEventDataSizeInBytes), sizeof(long));
+	APE_LOG_DEBUG("currentEventDataSizeInBytes: " << mCurrentEventDataSizeInBytes);
 }
 
 void ape::apeSceneRecorderPlugin::readEventHeader(ape::Event& event)
@@ -47,7 +56,7 @@ void ape::apeSceneRecorderPlugin::readEventHeader(ape::Event& event)
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.group), sizeof(unsigned int));
 	mFileStreamIn.read(reinterpret_cast<char*>(&event.type), sizeof(unsigned int));
 	unsigned int subjectNameSize = 0;
-	mFileStreamIn.read(reinterpret_cast<char *>(&subjectNameSize), sizeof(subjectNameSize));
+	mFileStreamIn.read(reinterpret_cast<char*>(&subjectNameSize), sizeof(subjectNameSize));
 	event.subjectName.resize(subjectNameSize);
 	mFileStreamIn.read(&event.subjectName[0], subjectNameSize);
 	APE_LOG_DEBUG("mDelayToNextEvent: " << mDelayToNextEvent << " event.subjectName: " << event.subjectName << " event.type:" << event.type);
@@ -57,6 +66,7 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 {
 	ape::Event event;
 	readEventHeader(event);
+	readEventData();
 	if (mDelayToNextEvent)
 		std::this_thread::sleep_for(std::chrono::milliseconds(mDelayToNextEvent));
 	if (event.group == ape::Event::Group::NODE)
@@ -105,6 +115,58 @@ void ape::apeSceneRecorderPlugin::readEventAndFire()
 			}
 		}
 	}
+	else if (event.group == ape::Event::Group::GEOMETRY_PLANE)
+	{
+		if (event.type == ape::Event::Type::GEOMETRY_PLANE_CREATE)
+		{
+			mpScene->createEntity(event.subjectName, ape::Entity::Type::GEOMETRY_PLANE);
+		}
+		else if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::GEOMETRY_PLANE_PARENTNODE)
+			{
+				if (auto parentNode = mpScene->getNode(readString()).lock())
+				{
+					planeGeometry->setParentNode(parentNode);
+				}
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_PLANE_PARAMETERS)
+			{
+				ape::GeometryPlaneParameters geometryPlaneParameters;
+				geometryPlaneParameters.read(mFileStreamIn);
+				planeGeometry->setParameters(geometryPlaneParameters.numSeg, geometryPlaneParameters.size, geometryPlaneParameters.tile);
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_PLANE_MATERIAL)
+			{
+				if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpScene->getEntity(readString()).lock()))
+				{
+					//planeGeometry->setMaterial(material);
+				}
+			}
+		}
+	}
+	else if (event.group == ape::Event::Group::MATERIAL_MANUAL)
+	{
+		if (event.type == ape::Event::Type::MATERIAL_MANUAL_CREATE)
+		{
+			mpScene->createEntity(event.subjectName, ape::Entity::Type::MATERIAL_MANUAL);
+		}
+		else if (auto manualMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::MATERIAL_MANUAL_DIFFUSE)
+			{
+				ape::Color color;
+				color.read(mFileStreamIn);
+				manualMaterial->setDiffuseColor(color);
+			}
+			else if (event.type == ape::Event::Type::MATERIAL_MANUAL_SPECULAR)
+			{
+				ape::Color color;
+				color.read(mFileStreamIn);
+				manualMaterial->setSpecularColor(color);
+			}
+		}
+	}
 }
 
 void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
@@ -123,23 +185,30 @@ void ape::apeSceneRecorderPlugin::writeEventHeader(ape::Event& event)
 
 void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 {
-	writeEventHeader(event);
 	if (event.group == ape::Event::Group::NODE)
 	{
-		if (auto node = mpScene->getNode(event.subjectName).lock())
+		if (event.type == ape::Event::Type::NODE_CREATE)
+		{
+			writeEventHeader(event);
+			writeZeroEventDataSize();
+		}
+		else if (auto node = mpScene->getNode(event.subjectName).lock())
 		{
 			if (event.type == ape::Event::Type::NODE_POSITION)
 			{
+				writeEventHeader(event);
 				ape::Vector3 position = node->getPosition();
 				position.write(mFileStreamOut);
 			}
 			else if (event.type == ape::Event::Type::NODE_ORIENTATION)
 			{
+				writeEventHeader(event);
 				ape::Quaternion orientation = node->getOrientation();
 				orientation.write(mFileStreamOut);
 			}
 			else if (event.type == ape::Event::Type::NODE_SCALE)
 			{
+				writeEventHeader(event);
 				ape::Vector3 scale = node->getScale();
 				scale.write(mFileStreamOut);
 			}
@@ -147,11 +216,78 @@ void ape::apeSceneRecorderPlugin::writeEvent(ape::Event event)
 	}
 	else if (event.group == ape::Event::Group::MATERIAL_FILE)
 	{
-		if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
+		if (event.type == ape::Event::Type::MATERIAL_FILE_CREATE)
+		{
+			writeEventHeader(event);
+			writeZeroEventDataSize();
+		}
+		else if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpScene->getEntity(event.subjectName).lock()))
 		{
 			if (event.type == ape::Event::Type::MATERIAL_FILE_FILENAME)
 			{
+				writeEventHeader(event);
 				writeString(materialFile->getfFileName());
+			}
+			else if (event.type == ape::Event::Type::MATERIAL_FILE_SETASSKYBOX)
+			{
+				writeEventHeader(event);
+				writeZeroEventDataSize();
+			}
+		}
+	}
+	else if (event.group == ape::Event::Group::GEOMETRY_PLANE)
+	{
+		if (event.type == ape::Event::Type::GEOMETRY_PLANE_CREATE)
+		{
+			writeEventHeader(event);
+			writeZeroEventDataSize();
+		}
+		else if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::GEOMETRY_PLANE_PARENTNODE)
+			{
+				if (auto parentNode = planeGeometry->getParentNode().lock())
+				{
+					writeEventHeader(event);
+					writeString(parentNode->getName());
+				}
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_PLANE_PARAMETERS)
+			{
+				writeEventHeader(event);
+				ape::GeometryPlaneParameters geometryPlaneParameters = planeGeometry->getParameters();
+				geometryPlaneParameters.write(mFileStreamOut);
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_PLANE_MATERIAL)
+			{
+				if (auto material = planeGeometry->getMaterial().lock())
+				{
+					writeEventHeader(event);
+					writeString(material->getName());
+				}
+			}
+		}
+	}
+	else if (event.group == ape::Event::Group::MATERIAL_MANUAL)
+	{
+		if (event.type == ape::Event::Type::MATERIAL_MANUAL_CREATE)
+		{
+			writeEventHeader(event);
+			writeZeroEventDataSize();
+		}
+		else if (auto manualMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpScene->getEntity(event.subjectName).lock()))
+		{
+			if (event.type == ape::Event::Type::MATERIAL_MANUAL_DIFFUSE)
+			{
+				writeEventHeader(event);
+				ape::Color color = manualMaterial->getDiffuseColor();
+				color.write(mFileStreamOut);
+			}
+			else if (event.type == ape::Event::Type::MATERIAL_MANUAL_SPECULAR)
+			{
+				writeEventHeader(event);
+				ape::Color color = manualMaterial->getSpecularColor();
+				color.write(mFileStreamOut);
 			}
 		}
 	}
@@ -164,13 +300,17 @@ void ape::apeSceneRecorderPlugin::writeString(std::string string)
 	mFileStreamOut.write(string.c_str(), stringSize);
 }
 
+void ape::apeSceneRecorderPlugin::writeZeroEventDataSize()
+{
+	long eventDataSizeInBytes = 0;
+	mFileStreamOut.write(reinterpret_cast<char*>(&eventDataSizeInBytes), sizeof(long));
+}
+
 std::string ape::apeSceneRecorderPlugin::readString()
 {
 	std::string string;
-	unsigned int stringSize = 0;
-	mFileStreamIn.read(reinterpret_cast<char *>(&stringSize), sizeof(stringSize));
-	string.resize(stringSize);
-	mFileStreamIn.read(&string[0], stringSize);
+	string.resize(mCurrentEventDataSizeInBytes);
+	mFileStreamIn.read(&string[0], mCurrentEventDataSizeInBytes);
 	return string;
 }
 
@@ -191,7 +331,8 @@ void ape::apeSceneRecorderPlugin::Init()
 void ape::apeSceneRecorderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	while (true)
+	bool isRun = true;
+	while (isRun)
 	{
 		if (mIsPlayer)
 		{
@@ -207,6 +348,19 @@ void ape::apeSceneRecorderPlugin::Run()
 			{
 				mIsPlayer = false;
 				APE_LOG_DEBUG("end of the file");
+			}
+		}
+		else if (mIsRecorder)
+		{
+			APE_LOG_DEBUG("press any key to stop recording the scene");
+			std::cin.get();
+			isRun = false;
+			APE_LOG_DEBUG("scene recording was stopped, flush into scene.bin file");
+			if (mFileStreamOut.is_open())
+			{
+				mFileStreamOut.flush();
+				mFileStreamOut.close();
+				APE_LOG_DEBUG("scene.bin was closed");
 			}
 		}
 	}

@@ -84,6 +84,8 @@ namespace ape
 
 		std::ifstream mFileStreamIn;
 
+		long mCurrentEventDataSizeInBytes;
+
 		std::chrono::milliseconds mLastEventTimeStamp;
 
 		float fck;
@@ -92,6 +94,8 @@ namespace ape
 
 		void readEventAndFire();
 
+		void readEventData();
+
 		void readEventHeader(ape::Event& event);
 
 		void writeEventHeader(ape::Event& event);
@@ -99,6 +103,8 @@ namespace ape
 		void writeEvent(ape::Event event);
 
 		void writeString(std::string string);
+
+		void writeZeroEventDataSize();
 
 		std::string readString();
 
