@@ -2,8 +2,10 @@
   "plugins": [
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
+    "apeHtcVivePlugin",
     "apeIndustry40Plugin",
-    "apeHtcVivePlugin"
+    "ape360VideoPlugin",
+    "apeCefBrowserPlugin"
   ],
   "network": {
     "user": "htc",
@@ -25,8 +27,10 @@
     },
     "selected": "none",
     "resourceLocations": [
-      "/macros/sceneMaker/resources"
+      "/macros/sceneMaker/resources",
+      "/plugins/360Video/resources"
     ]
   }
 }
+
 
