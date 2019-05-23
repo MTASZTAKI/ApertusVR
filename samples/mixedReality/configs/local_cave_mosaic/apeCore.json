@@ -4,7 +4,9 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeIndustry40Plugin",
-    "apeKinectHeadTrackingPlugin"
+    "apeKinectHeadTrackingPlugin",
+    "ape360VideoPlugin",
+    "apeCefBrowserPlugin"
   ],
   "network": {
     "user": "cave",
@@ -26,7 +28,8 @@
     },
     "selected": "none",
     "resourceLocations": [
-      "/macros/sceneMaker/resources"
+      "/macros/sceneMaker/resources",
+      "/plugins/360Video/resources"
     ]
   }
 }
