@@ -337,7 +337,23 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					if (assetMemberIterator->name == "file")
 					{
 						std::stringstream assimpAssetFileNamePath;
-						assimpAssetFileNamePath << APE_SOURCE_DIR << assetMemberIterator->value.GetString();
+						std::string resourceLocationStr = assetMemberIterator->value.GetString();
+						std::size_t found = resourceLocationStr.find(":");
+						if (found != std::string::npos)
+						{
+							assimpAssetFileNamePath << resourceLocationStr;
+						}
+						found = resourceLocationStr.find("./");
+						if (found != std::string::npos)
+						{
+							assimpAssetFileNamePath << resourceLocationStr;
+						}
+						else
+						{
+							std::stringstream resourceLocationPath;
+							resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
+							assimpAssetFileNamePath << resourceLocationStr;
+						}
 						assetConfig.file = assimpAssetFileNamePath.str();
 						std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
 						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
