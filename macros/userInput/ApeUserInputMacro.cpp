@@ -1,12 +1,13 @@
 #include <iostream>
 #include "macros/userInput/apeUserInputMacro.h"
 
+std::mutex ape::UserInputMacro::mpInstanceMutex;
 ape::UserInputMacro* ape::UserInputMacro::mpInstance = 0;
 
 ape::UserInputMacro::UserInputMacro()
 {
-	mpInstance = this;
 	APE_LOG_FUNC_ENTER();
+	mpInstance = this;
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));

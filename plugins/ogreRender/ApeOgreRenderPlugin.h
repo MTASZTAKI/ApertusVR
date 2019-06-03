@@ -218,7 +218,7 @@ namespace ape
 
 		std::map<std::string, ape::OgrePointCloud*> mOgrePointCloudMeshes;
 
-		ape::UserInputMacro* mpapeUserInputMacro;
+		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 

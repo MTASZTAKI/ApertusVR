@@ -38,6 +38,7 @@ SOFTWARE.*/
 #include <chrono>
 #include <random>
 #include <memory>
+#include <mutex>
 #include <list>
 #include "plugin/apePluginAPI.h"
 #include "managers/apeIEventManager.h"
@@ -131,9 +132,10 @@ namespace ape
 			}
 		};
 
-
 	private:
 		static UserInputMacro* mpInstance;
+
+		static std::mutex mpInstanceMutex;
 
 		UserInputMacro();
 
@@ -180,8 +182,10 @@ namespace ape
 	public:
 		static UserInputMacro* getSingletonPtr()
 		{
+			mpInstanceMutex.lock();
 			if (mpInstance == nullptr)
 				mpInstance = new UserInputMacro();
+			mpInstanceMutex.unlock();
 			return mpInstance;
 		}
 

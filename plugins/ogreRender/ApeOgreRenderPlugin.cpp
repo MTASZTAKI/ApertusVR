@@ -1751,7 +1751,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					float* points = &pointCloudParameters.points[0];
 					float* colors = &pointCloudParameters.colors[0];
 					if (auto ogrePointCloudMesh = new ape::OgrePointCloud(pointCloudName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-						size, points, colors, pointCloudParameters.boundigSphereRadius, mpapeUserInputMacro->getHeadNode(), pointCloud->getParentNode(), pointCloudParameters.pointSize,
+						size, points, colors, pointCloudParameters.boundigSphereRadius, mpUserInputMacro->getHeadNode(), pointCloud->getParentNode(), pointCloudParameters.pointSize,
 						pointCloudParameters.pointScale, pointCloudParameters.pointScaleOffset, pointCloudParameters.unitScaleDistance, pointCloudParameters.scaleFactor))
 					{
 						if (auto ogreEntity = mpOgreSceneManager->createEntity(pointCloudName, pointCloudName + "Mesh"))
@@ -2065,7 +2065,7 @@ void ape::OgreRenderPlugin::Step()
 void ape::OgreRenderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeOgreRenderPlugin.json";

@@ -43,7 +43,7 @@ void ape::OISUserInputPlugin::eventCallBack(const ape::Event& event)
 void ape::OISUserInputPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	ape::OisWindowConfig oisWindowConfig;
@@ -92,7 +92,8 @@ void ape::OISUserInputPlugin::Init()
 				{
 					for (auto& cameraName : cameraNames.GetArray())
 					{
-						mpapeUserInputMacro->createCamera(cameraName.GetString());
+						std::string cameraNameSTR = cameraName.GetString();
+						mpUserInputMacro->createCamera(cameraNameSTR);
 					}
 				}
 			}
@@ -146,7 +147,7 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	mKeyCodeMap[e.key] = true;
 	if (e.key == OIS::KeyCode::KC_C)
 	{
-		mpapeUserInputMacro->saveViewPose();
+		mpUserInputMacro->saveViewPose();
 	}
 	if (e.key == OIS::KeyCode::KC_T)
 	{
@@ -165,7 +166,7 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	//if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
 	APE_LOG_TRACE("keyAsString:" << keyAsString);
-	mpapeUserInputMacro->keyStringValue(keyAsString);
+	mpUserInputMacro->keyStringValue(keyAsString);
 	//TODO_OISUserInputPlugin
 	//std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
 	//if (e.key == OIS::KeyCode::KC_BACK)
@@ -231,7 +232,7 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			mMouseState.isDragModeLeft = true;
 			ape::UserInputMacro::Pose pose;
 			pose.position += ape::Vector3((mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs), 0, 0);
-			mpapeUserInputMacro->updateSelectedNodePose(pose);
+			mpUserInputMacro->updateSelectedNodePose(pose);
 		}
 		if (mKeyCodeMap[OIS::KeyCode::KC_LCONTROL] || mKeyCodeMap[OIS::KeyCode::KC_RCONTROL])
 		{
@@ -239,7 +240,7 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			mMouseState.isDragModeLeft = true;
 			ape::UserInputMacro::Pose pose;
 			pose.position += ape::Vector3(0, -(mMouseState.posCurrent.Y.abs - mMouseState.posPrevious.Y.abs), 0);
-			mpapeUserInputMacro->updateSelectedNodePose(pose);
+			mpUserInputMacro->updateSelectedNodePose(pose);
 		}
 		if (mKeyCodeMap[OIS::KeyCode::KC_LMENU] || mKeyCodeMap[OIS::KeyCode::KC_RMENU])
 		{
@@ -247,7 +248,7 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			mMouseState.isDragModeLeft = true;
 			ape::UserInputMacro::Pose pose;
 			pose.position += ape::Vector3(0, 0, -(mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs));
-			mpapeUserInputMacro->updateSelectedNodePose(pose);
+			mpUserInputMacro->updateSelectedNodePose(pose);
 		}
 		if (mKeyCodeMap[OIS::KeyCode::KC_SPACE])
 		{
@@ -258,7 +259,7 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 			qnorm.FromAngleAxis(ape::Degree(mMouseState.posCurrent.X.abs - mMouseState.posPrevious.X.abs).toRadian(), ape::Vector3(0, 1, 0));
 			qnorm.normalise();
 			pose.orientation = pose.orientation * qnorm;
-			mpapeUserInputMacro->updateSelectedNodePose(pose);
+			mpUserInputMacro->updateSelectedNodePose(pose);
 		}
 	}
 	if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle])
@@ -281,7 +282,7 @@ bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 	mOverlayBrowserCursor.cursorTexturePosition = cursorTexturePosition;
 	mOverlayBrowserCursor.cursorScrollPosition = ape::Vector2(0, e.state.Z.rel);
 	mOverlayBrowserCursor.cursorClick = false;
-	mpapeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+	mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
 	//APE_LOG_DEBUG("cursorTexturePosition:" << cursorTexturePosition.x << ";" << cursorTexturePosition.y);
 	//APE_LOG_DEBUG("cursorBrowserPosition:" << cursorBrowserPosition.x << ";" << cursorBrowserPosition.y);
 	return true;
@@ -295,7 +296,7 @@ bool ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseB
 	{
 		mOverlayBrowserCursor.cursorClick = true;
 		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
-		mpapeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+		mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
 	}
 	return true;
 }
@@ -312,11 +313,11 @@ bool ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::Mouse
 	{
 		mOverlayBrowserCursor.cursorClick = false;
 		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
-		mpapeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+		mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
 
 		if (!mMouseState.isDragModeLeft)
 		{
-			mpapeUserInputMacro->rayQuery(ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
+			mpUserInputMacro->rayQuery(ape::Vector3(e.state.X.abs, e.state.Y.abs, 0));
 		}
 		mMouseState.isDragModeLeft = false;
 	}
@@ -339,11 +340,11 @@ void ape::OISUserInputPlugin::toggleViewPoses(bool isInterpolated)
 		mUserInputMacroPose.userOrientation = mViewPoses[mViewPosesToggleIndex].userOrientation;
 		if (!isInterpolated)
 		{
-			mpapeUserInputMacro->updateViewPose(mViewPoses[mViewPosesToggleIndex]);
+			mpUserInputMacro->updateViewPose(mViewPoses[mViewPosesToggleIndex]);
 		}
 		else
 		{
-			mpapeUserInputMacro->interpolateViewPose(mViewPoses[mViewPosesToggleIndex], 5000);
+			mpUserInputMacro->interpolateViewPose(mViewPoses[mViewPosesToggleIndex], 5000);
 		}
 		APE_LOG_DEBUG("View pose is toggled: " << mUserInputMacroPose.userPosition.toString() << " | " << mUserInputMacroPose.userOrientation.toString());
 		mViewPosesToggleIndex++;
@@ -362,32 +363,32 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, +transScalar, 0);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, -transScalar, 0);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_D])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(+transScalar, 0, 0);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_A])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(-transScalar, 0, 0);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_W])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, -transScalar);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_S])
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, +transScalar);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
 	{
@@ -395,7 +396,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		qnorm.FromAngleAxis(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
 		qnorm.normalise();
 		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
 	{
@@ -403,7 +404,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		qnorm.FromAngleAxis(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
 		qnorm.normalise();
 		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_UP])
 	{
@@ -411,7 +412,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		qnorm.FromAngleAxis(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0));
 		qnorm.normalise();
 		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
 	{
@@ -419,7 +420,7 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 		qnorm.FromAngleAxis(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0));
 		qnorm.normalise();
 		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 	}
 }
 
@@ -433,18 +434,18 @@ void ape::OISUserInputPlugin::updateViewPoseByMouse()
 			qnorm.FromAngleAxis(ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(1, 0, 0));
 			qnorm.normalise();
 			mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-			mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 			qnorm.FromAngleAxis(ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(0, 1, 0));
 			qnorm.normalise();
 			mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-			mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 		}
 		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle] && mMouseState.isDragModeMiddle)
 		{
 			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse);
-			mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse);
-			mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 		}
 		if (mMouseState.scrollVelocity != 0)
 		{
@@ -455,7 +456,7 @@ void ape::OISUserInputPlugin::updateViewPoseByMouse()
 			if (transScalar > 0)
 				transScalar += mGeneralSpeedFactor;
 			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, -transScalar);
-			mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
 		}
 		mMouseState.isMouseMoved = false;
 	}

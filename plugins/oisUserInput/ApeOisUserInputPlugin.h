@@ -115,7 +115,7 @@ namespace ape
 
 		bool mIsKeyPressed;
 
-		ape::UserInputMacro* mpapeUserInputMacro;
+		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
