@@ -23,11 +23,11 @@ void ape::apeHelloWorldPlugin::eventCallBack(const ape::Event& event)
 void ape::apeHelloWorldPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
+	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe.material");
 		universeSkyBoxMaterial->setAsSkyBox();
-	}
+	}*/
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
