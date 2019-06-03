@@ -5,6 +5,7 @@ ape::UserInputMacro* ape::UserInputMacro::mpInstance = 0;
 
 ape::UserInputMacro::UserInputMacro()
 {
+	mpInstance = this;
 	APE_LOG_FUNC_ENTER();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();

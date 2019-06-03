@@ -317,8 +317,12 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 		{
 			case ID_NEW_INCOMING_CONNECTION:
 			{
-				APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION"); 
-				if (mParticipantType == ape::SceneNetwork::HOST)
+				if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
+				{
+					APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString());
+				}
+				//TODO_CORE revise lan connection or stream?
+				/*if (mParticipantType == ape::SceneNetwork::HOST)
 				{
 					RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 					if (mpReplicaManager3->PushConnection(connection))
@@ -330,7 +334,7 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 						mpReplicaManager3->DeallocConnection(connection);
 						APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 					}
-				}
+				}*/
 			}
 				break;
 			case ID_DISCONNECTION_NOTIFICATION:
@@ -364,7 +368,8 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 							}
 						}
 					}
-					else if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
+					//TODO_CORE revise lan connection or stream?
+					/*else if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
 					{
 						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 						if (mpReplicaManager3->PushConnection(connection))
@@ -376,7 +381,7 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 							mpReplicaManager3->DeallocConnection(connection);
 							APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
 						}
-					}
+					}*/
 				}
 				break;
 			case ID_ALREADY_CONNECTED:
@@ -400,24 +405,10 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 				}
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
-					unsigned char weAreTheSender = packet->data[1];
-					APE_LOG_DEBUG("ID_NAT_PUNCHTHROUGH_SUCCEEDED: weAreTheSender=" << weAreTheSender);
-					if (mParticipantType == ape::SceneNetwork::ParticipantType::HOST)
+					if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 					{
-						mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
-						RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
-						if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
-						{
-							APE_LOG_DEBUG("Failed connect call to " << packet->systemAddress.ToString(true) << ". Code=" << car);
-						}
-						else
-						{
-							APE_LOG_DEBUG("NAT punch success from remote system " << packet->systemAddress.ToString(true));
-						}
-					}
-					else if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
-					{
-						if (!weAreTheSender)
+						unsigned char weAreTheSender = packet->data[1];
+						if (mParticipantType == ape::SceneNetwork::ParticipantType::HOST)
 						{
 							mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
 							RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
@@ -430,17 +421,33 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 								APE_LOG_DEBUG("NAT punch success from remote system " << packet->systemAddress.ToString(true));
 							}
 						}
-						else
+						else if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
 						{
-							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
-							if (mpReplicaManager3->PushConnection(connection))
+							if (!weAreTheSender)
 							{
-								APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+								mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
+								RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
+								if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
+								{
+									APE_LOG_DEBUG("Failed connect call to " << packet->systemAddress.ToString(true) << ". Code=" << car);
+								}
+								else
+								{
+									APE_LOG_DEBUG("NAT punch success from remote system " << packet->systemAddress.ToString(true));
+								}
 							}
 							else
 							{
-								mpReplicaManager3->DeallocConnection(connection);
-								APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+								RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+								if (mpReplicaManager3->PushConnection(connection))
+								{
+									APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+								}
+								else
+								{
+									mpReplicaManager3->DeallocConnection(connection);
+									APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+								}
 							}
 						}
 					}
@@ -451,14 +458,14 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
+						//TODO_CORE revise the streaming feature e.g. for big data like point cloud
+						/*if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
 						{
 							mIsConnectedToHost = true;
 							mHostAddress = packet->systemAddress;
-							//TODO_CORE revise the streaming feature e.g. for big data like point cloud
-							/*APE_LOG_DEBUG("Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
-							mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);*/
-						}
+							APE_LOG_DEBUG("Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << STREAM_PORT);
+							mpRakStreamPeer->Connect(mHostAddress.ToString(false), STREAM_PORT, 0, 0);
+						}*/
 					}
 					break;
 				}
