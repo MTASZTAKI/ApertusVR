@@ -40,11 +40,11 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
 {
 	std::cout << "apertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
+	gpLogManagerImpl = new LogManagerImpl();
 	gpCoreConfigImpl = new CoreConfigImpl(std::string(configFolderPath));
 	gpEventManagerImpl = new EventManagerImpl();
-	gpLogManagerImpl = new LogManagerImpl();
-	gpPluginManagerImpl = new PluginManagerImpl();
 	gpSceneManagerImpl = new SceneManagerImpl();
+	gpPluginManagerImpl = new PluginManagerImpl();
 	gpPluginManagerImpl->CreatePlugins();
 	gpPluginManagerImpl->InitAndRunPlugins();
 	if (userThreadFunction)

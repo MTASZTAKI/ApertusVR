@@ -85,9 +85,9 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						mNetworkConfig.participant = ape::SceneNetwork::ParticipantType::HOST;
 					}
 				}
-				else if (networkMemberIterator->name == "natPunchThrough")
+				else if (networkMemberIterator->name == "internet")
 				{
-					rapidjson::Value& natPunchThrough = jsonDocument["network"]["natPunchThrough"];
+					rapidjson::Value& natPunchThrough = jsonDocument["network"]["internet"]["natPunchThrough"];
 					for (rapidjson::Value::MemberIterator natPunchThroughMemberIterator =
 						natPunchThrough.MemberBegin();
 						natPunchThroughMemberIterator != natPunchThrough.MemberEnd(); ++natPunchThroughMemberIterator)
@@ -97,22 +97,19 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						else if (natPunchThroughMemberIterator->name == "port")
 							mNetworkConfig.natPunchThroughConfig.port = natPunchThroughMemberIterator->value.GetString();
 					}
-
-				}
-				else if (networkMemberIterator->name == "lobby")
-				{
-					rapidjson::Value& lobby = jsonDocument["network"]["lobby"];
+					rapidjson::Value& lobby = jsonDocument["network"]["internet"]["lobby"];
 					for (rapidjson::Value::MemberIterator lobbyMemberIterator =
 						lobby.MemberBegin();
 						lobbyMemberIterator != lobby.MemberEnd(); ++lobbyMemberIterator)
 					{
 						if (lobbyMemberIterator->name == "ip")
-							mNetworkConfig.lanConfig.ip = lobbyMemberIterator->value.GetString();
+							mNetworkConfig.lobbyConfig.ip = lobbyMemberIterator->value.GetString();
 						else if (lobbyMemberIterator->name == "port")
-							mNetworkConfig.lanConfig.port = lobbyMemberIterator->value.GetString();
-						else if (lobbyMemberIterator->name == "roomName")
+							mNetworkConfig.lobbyConfig.port = lobbyMemberIterator->value.GetString();
+						else if (lobbyMemberIterator->name == "room")
 							mNetworkConfig.lobbyConfig.roomName = lobbyMemberIterator->value.GetString();
 					}
+
 				}
 				else if (networkMemberIterator->name == "resourceLocations")
 				{
@@ -138,15 +135,15 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 				}
 				else if (networkMemberIterator->name == "lan")
 				{
-					rapidjson::Value& natPunchThrough = jsonDocument["network"]["lan"];
-					for (rapidjson::Value::MemberIterator natPunchThroughMemberIterator =
-						natPunchThrough.MemberBegin();
-						natPunchThroughMemberIterator != natPunchThrough.MemberEnd(); ++natPunchThroughMemberIterator)
+					rapidjson::Value& lan = jsonDocument["network"]["lan"];
+					for (rapidjson::Value::MemberIterator lanMemberIterator =
+						lan.MemberBegin();
+						lanMemberIterator != lan.MemberEnd(); ++lanMemberIterator)
 					{
-						if (natPunchThroughMemberIterator->name == "ip")
-							mNetworkConfig.natPunchThroughConfig.ip = natPunchThroughMemberIterator->value.GetString();
-						else if (natPunchThroughMemberIterator->name == "port")
-							mNetworkConfig.natPunchThroughConfig.port = natPunchThroughMemberIterator->value.GetString();
+						if (lanMemberIterator->name == "ip")
+							mNetworkConfig.lanConfig.ip = lanMemberIterator->value.GetString();
+						else if (lanMemberIterator->name == "port")
+							mNetworkConfig.lanConfig.port = lanMemberIterator->value.GetString();
 					}
 
 				}

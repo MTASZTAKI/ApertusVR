@@ -7,11 +7,11 @@
     "renderWindows": [
       {
         "enable": true,
-        "name": "apeMultiPlayer - Guest",
         "monitorIndex": 0,
+        "name": "MultiPlayer_Guest",
         "resolution": {
-          "width": 960,
-          "height": 540,
+          "width": 1400,
+          "height": 1050,
           "fullScreen": false
         },
         "miscParams": {
@@ -26,13 +26,13 @@
             "zOrder": 0,
             "left": 0,
             "top": 0,
-            "width": 960,
-            "height": 540,
+            "width": 1400,
+            "height": 1050,
             "camera": {
-              "name": "1",
-              "nearClip": 1.0,
-              "farClip": 10000.0,
-              "fovY": 45.0
+              "name": "camera1",
+              "nearClip": 1,
+              "farClip": 10000,
+              "fovY": 45
             }
           }
         ]
