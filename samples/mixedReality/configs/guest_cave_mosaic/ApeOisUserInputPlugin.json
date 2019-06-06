@@ -1,0 +1,14 @@
+{
+  "inputs": [
+    "keyboard",
+    "mouse"
+  ],
+  "cameraNames": [
+    "camera1",
+    "camera2",
+    "camera3"
+  ],
+  "cameraPoses": [
+    [ -25.8943, 228, -217.47, -0.0526787, 0, 0.998611, 0 ]
+  ]
+}
