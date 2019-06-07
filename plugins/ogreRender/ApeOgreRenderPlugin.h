@@ -214,8 +214,6 @@ namespace ape
 
 		std::vector<ape::ManualTextureWeakPtr> mRttList;
 
-		int mCameraCountFromConfig;
-
 		std::map<std::string, ape::OgrePointCloud*> mOgrePointCloudMeshes;
 
 		ape::UserInputMacro* mpUserInputMacro;

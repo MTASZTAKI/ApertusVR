@@ -59,7 +59,6 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxSkylight = nullptr;
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
-	mCameraCountFromConfig = 0;
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -1820,14 +1819,17 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						for (int j = 0; j < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
 						{
-							OgreCameraConfig cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
-							if (cameraSetting.name == camera->getName())
+							for (int k = 0; k < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
 							{
-								camera->setWindow(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name);
-								camera->setFocalLength(1.0f);
-								camera->setNearClipDistance(cameraSetting.nearClip);
-								camera->setFarClipDistance(cameraSetting.farClip);
-								camera->setFOVy(cameraSetting.fovY.toRadian());
+								auto cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].cameras[k];
+								if (cameraSetting.name == camera->getName())
+								{
+									camera->setWindow(mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].name);
+									camera->setFocalLength(1.0f);
+									camera->setNearClipDistance(cameraSetting.nearClip);
+									camera->setFarClipDistance(cameraSetting.farClip);
+									camera->setFOVy(cameraSetting.fovY.toRadian());
+								}
 							}
 						}
 					}
@@ -1845,21 +1847,37 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									auto renderWindowSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i];
 									auto viewportSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j];
-									auto cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].camera;
-									if (cameraSetting.name == camera->getName())
+									for (int k = 0; k < mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
 									{
-										int zorder = viewportSetting.zOrder;
-										float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
-										float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
-										float left = (float)viewportSetting.left / (float)renderWindowSetting.width;;
-										float top = (float)viewportSetting.top / (float)renderWindowSetting.height;;
-										if (auto ogreViewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera, zorder, left, top, width, height))
+										auto cameraSetting = mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].viewportList[j].cameras[k];
+										if (cameraSetting.name == camera->getName())
 										{
-											APE_LOG_DEBUG("ogreViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
-											ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
-											if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+											int zorder = viewportSetting.zOrder;
+											float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
+											float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
+											float left = (float)viewportSetting.left / (float)renderWindowSetting.width;
+											float top = (float)viewportSetting.top / (float)renderWindowSetting.height;
+											if (!mRenderWindows[camera->getWindow()]->hasViewportWithZOrder(zorder))
 											{
-												ogreViewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+												if (auto ogreViewPort = mRenderWindows[camera->getWindow()]->addViewport(ogreCamera, zorder, left, top, width, height))
+												{
+													APE_LOG_DEBUG("ogreViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
+													ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
+													if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+													{
+														ogreViewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+													}
+												}
+											}
+											else if(auto ogreViewPort = mRenderWindows[camera->getWindow()]->getViewportByZOrder(zorder))
+											{
+												APE_LOG_DEBUG("ogreViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
+												ogreViewPort->setCamera(ogreCamera);
+												ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
+												if (mOgreRenderPluginConfig.shading == "perPixel" || mOgreRenderPluginConfig.shading == "")
+												{
+													ogreViewPort->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+												}
 											}
 										}
 									}
@@ -2161,61 +2179,66 @@ void ape::OgreRenderPlugin::Init()
 									ogreViewPortConfig.width = viewportMemberIterator->value.GetInt();
 								else if (viewportMemberIterator->name == "height")
 									ogreViewPortConfig.height = viewportMemberIterator->value.GetInt();
-								else if (viewportMemberIterator->name == "camera")
+								else if (viewportMemberIterator->name == "cameras")
 								{
-									for (rapidjson::Value::MemberIterator cameraMemberIterator =
-										viewport[viewportMemberIterator->name].MemberBegin();
-										cameraMemberIterator != viewport[viewportMemberIterator->name].MemberEnd(); ++cameraMemberIterator)
+									rapidjson::Value& cameras = viewport[viewportMemberIterator->name];
+									for (auto& camera : cameras.GetArray())
 									{
-										if (cameraMemberIterator->name == "name")
-											ogreViewPortConfig.camera.name = cameraMemberIterator->value.GetString();
-										else if (cameraMemberIterator->name == "nearClip")
-											ogreViewPortConfig.camera.nearClip = cameraMemberIterator->value.GetFloat();
-										else if (cameraMemberIterator->name == "farClip")
-											ogreViewPortConfig.camera.farClip = cameraMemberIterator->value.GetFloat();
-										else if (cameraMemberIterator->name == "fovY")
-											ogreViewPortConfig.camera.fovY = cameraMemberIterator->value.GetFloat();
-										else if (cameraMemberIterator->name == "positionOffset")
+										ape::OgreCameraConfig ogreCameraConfig;
+										for (rapidjson::Value::MemberIterator cameraMemberIterator =
+											camera.MemberBegin();
+											cameraMemberIterator != camera.MemberEnd(); ++cameraMemberIterator)
 										{
-											for (rapidjson::Value::MemberIterator elementMemberIterator =
-												viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
-												elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+											if (cameraMemberIterator->name == "name")
+												ogreCameraConfig.name = cameraMemberIterator->value.GetString();
+											else if (cameraMemberIterator->name == "nearClip")
+												ogreCameraConfig.nearClip = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "farClip")
+												ogreCameraConfig.farClip = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "fovY")
+												ogreCameraConfig.fovY = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "positionOffset")
 											{
-												if (elementMemberIterator->name == "x")
-													ogreViewPortConfig.camera.positionOffset.x = elementMemberIterator->value.GetFloat();
-												else if (elementMemberIterator->name == "y")
-													ogreViewPortConfig.camera.positionOffset.y = elementMemberIterator->value.GetFloat();
-												else if (elementMemberIterator->name == "z")
-													ogreViewPortConfig.camera.positionOffset.z = elementMemberIterator->value.GetFloat();
+												for (rapidjson::Value::MemberIterator elementMemberIterator =
+													viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
+													elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+												{
+													if (elementMemberIterator->name == "x")
+														ogreCameraConfig.positionOffset.x = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "y")
+														ogreCameraConfig.positionOffset.y = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "z")
+														ogreCameraConfig.positionOffset.z = elementMemberIterator->value.GetFloat();
+												}
+											}
+											else if (cameraMemberIterator->name == "orientationOffset")
+											{
+												Ogre::Quaternion orientationOffset;
+												Ogre::Degree angle;
+												Ogre::Vector3 axis;
+												for (rapidjson::Value::MemberIterator elementMemberIterator =
+													viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
+													elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+												{
+													if (elementMemberIterator->name == "angle")
+														angle = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "x")
+														axis.x = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "y")
+														axis.y = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "z")
+														axis.z = elementMemberIterator->value.GetFloat();
+												}
+												orientationOffset.FromAngleAxis(angle, axis);
+												ogreCameraConfig.orientationOffset = ape::ConversionFromOgre(orientationOffset);
+											}
+											else if (cameraMemberIterator->name == "parentNodeName")
+											{
+												ogreCameraConfig.parentNodeName = cameraMemberIterator->value.GetString();
 											}
 										}
-										else if (cameraMemberIterator->name == "orientationOffset")
-										{
-											Ogre::Quaternion orientationOffset;
-											Ogre::Degree angle;
-											Ogre::Vector3 axis;
-											for (rapidjson::Value::MemberIterator elementMemberIterator =
-												viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
-												elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
-											{
-												if (elementMemberIterator->name == "angle")
-													angle = elementMemberIterator->value.GetFloat();
-												else if (elementMemberIterator->name == "x")
-													axis.x = elementMemberIterator->value.GetFloat();
-												else if (elementMemberIterator->name == "y")
-													axis.y = elementMemberIterator->value.GetFloat();
-												else if (elementMemberIterator->name == "z")
-													axis.z = elementMemberIterator->value.GetFloat();
-											}
-											orientationOffset.FromAngleAxis(angle, axis);
-											ogreViewPortConfig.camera.orientationOffset = ape::ConversionFromOgre(orientationOffset);
-										}
-										else if (cameraMemberIterator->name == "parentNodeName")
-										{
-											ogreViewPortConfig.camera.parentNodeName = cameraMemberIterator->value.GetString();
-										}
+										ogreViewPortConfig.cameras.push_back(ogreCameraConfig);
 									}
-									mCameraCountFromConfig++;
 								}
 							}
 							ogreRenderWindowConfig.viewportList.push_back(ogreViewPortConfig);

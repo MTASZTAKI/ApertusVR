@@ -28,12 +28,14 @@
                     "top": 0,
                     "width": 1400,
                     "height": 1050,
-                    "camera": {
-                        "name": "camera1",
-                        "nearClip": 1,
-                        "farClip": 10000,
-                        "fovY": 45
+                  "cameras": [
+                    {
+                      "name": "camera1",
+                      "nearClip": 1,
+                      "farClip": 10000,
+                      "fovY": 45
                     }
+                  ]
                 },
                 {
                     "zOrder": 1,
@@ -41,12 +43,14 @@
                     "top": 0,
                     "width": 1400,
                     "height": 1050,
-                    "camera": {
-                        "name": "camera2",
-                        "nearClip": 1,
-                        "farClip": 10000,
-                        "fovY": 45
+                  "cameras": [
+                    {
+                      "name": "camera2",
+                      "nearClip": 1,
+                      "farClip": 10000,
+                      "fovY": 45
                     }
+                  ]
                 },
                 {
                     "zOrder": 2,
@@ -54,12 +58,14 @@
                     "top": 0,
                     "width": 1400,
                     "height": 1050,
-                    "camera": {
-                        "name": "camera3",
-                        "nearClip": 1,
-                        "farClip": 10000,
-                        "fovY": 45
+                  "cameras": [
+                    {
+                      "name": "camera3",
+                      "nearClip": 1,
+                      "farClip": 10000,
+                      "fovY": 45
                     }
+                  ]
                 }
             ]
         }

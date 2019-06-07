@@ -101,7 +101,7 @@ namespace ape
 
 	struct OgreViewPortConfig
 	{
-		OgreCameraConfig camera;
+		std::vector<OgreCameraConfig> cameras;
 
 		int zOrder;
 
@@ -115,7 +115,7 @@ namespace ape
 
 		OgreViewPortConfig()
 		{
-			this->camera = OgreCameraConfig();
+			this->cameras = std::vector<OgreCameraConfig>();
 			this->zOrder = 0;
 			this->left = 0;
 			this->top = 0;
@@ -124,14 +124,14 @@ namespace ape
 		}
 
 		OgreViewPortConfig(
-		OgreCameraConfig camera,
+			std::vector<OgreCameraConfig> cameras,
 		int zOrder,
 		int left,
 		int top,
 		int width,
 		int height)
 		{
-			this->camera = camera;
+			this->cameras = cameras;
 			this->zOrder = zOrder;
 			this->left = left;
 			this->top = top;
