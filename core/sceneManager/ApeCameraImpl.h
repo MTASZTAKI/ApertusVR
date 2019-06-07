@@ -84,6 +84,10 @@ namespace ape
 
 		std::string getWindow() override;
 
+		void setVisibilityMask(unsigned int mask) override;
+
+		unsigned int getVisibilityMask() override;
+
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -112,6 +116,8 @@ namespace ape
 		ape::Vector2 mOrthoWindowSize;
 
 		std::string mWindow;
+
+		unsigned int mVisibilityMask;
 	};
 }
 

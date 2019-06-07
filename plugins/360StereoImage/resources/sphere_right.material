@@ -11,7 +11,7 @@ material sphere_right
 
 			texture_unit sphere_right
 			{
-				texture sphere_right.png
+				texture sphere_right_right.png
 				tex_coord_set 0
 				colour_op modulate
 			}

@@ -53,6 +53,10 @@ namespace ape
 		virtual void mergeSubMeshes() = 0;
 
 		virtual bool isMergeSubMeshes() = 0;
+
+		virtual void setVisibilityFlag(unsigned int flag) = 0;
+
+		virtual unsigned int getVisibilityFlag() = 0;
 	};
 }
 

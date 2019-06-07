@@ -39,6 +39,7 @@ ape::CameraImpl::CameraImpl(std::string name) : ape::ICamera(name)
 	mProjectionType = ape::Camera::ProjectionType::INVALID;
 	mOrthoWindowSize = ape::Vector2();
 	mWindow = std::string();
+	mVisibilityMask = 0;
 }
 
 ape::CameraImpl::~CameraImpl()
@@ -182,5 +183,16 @@ void ape::CameraImpl::setWindow(std::string window)
 std::string ape::CameraImpl::getWindow()
 {
 	return mWindow;
+}
+
+void ape::CameraImpl::setVisibilityMask(unsigned int mask)
+{
+	mVisibilityMask = mask;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::CAMERA_VISIBILITY));
+}
+
+unsigned int ape::CameraImpl::getVisibilityMask()
+{
+	return mVisibilityMask;
 }
 

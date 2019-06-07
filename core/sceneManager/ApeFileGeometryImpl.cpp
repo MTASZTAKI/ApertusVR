@@ -30,6 +30,7 @@ ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool isHostCreated) : 
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mIsExportMesh = false;
 	mIsSubMeshesMerged = false;
+	mVisibilityFlag = 0;
 }
 
 ape::FileGeometryImpl::~FileGeometryImpl()
@@ -99,6 +100,17 @@ bool ape::FileGeometryImpl::isMergeSubMeshes()
 	return mIsSubMeshesMerged;
 }
 
+void ape::FileGeometryImpl::setVisibilityFlag(unsigned int flag)
+{
+	mVisibilityFlag = flag;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_VISIBILITY));
+}
+
+unsigned int ape::FileGeometryImpl::getVisibilityFlag()
+{
+	return mVisibilityFlag;
+}
+
 void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -155,5 +167,7 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
+
+
 
 

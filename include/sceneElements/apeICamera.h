@@ -100,6 +100,10 @@ namespace ape
 		virtual void setWindow(std::string window) = 0;
 
 		virtual std::string getWindow() = 0;
+
+		virtual void setVisibilityMask(unsigned int mask) = 0;
+
+		virtual unsigned int getVisibilityMask() = 0;
 	};
 
 	typedef std::shared_ptr<ape::ICamera> CameraSharedPtr;

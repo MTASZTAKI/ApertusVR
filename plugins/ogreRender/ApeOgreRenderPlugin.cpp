@@ -314,21 +314,32 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 				break;
 				case ape::Event::Type::GEOMETRY_FILE_MATERIAL:
-				{
-					if (mpOgreSceneManager->hasEntity(geometryName))
 					{
-						if (auto ogreEntity = mpOgreSceneManager->getEntity(geometryName))
+						if (mpOgreSceneManager->hasEntity(geometryName))
 						{
-							if (auto material = geometryFile->getMaterial().lock())
+							if (auto ogreEntity = mpOgreSceneManager->getEntity(geometryName))
 							{
-								auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
-								if (!ogreMaterial.isNull())
-									ogreEntity->setMaterial(ogreMaterial);
+								if (auto material = geometryFile->getMaterial().lock())
+								{
+									auto ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName());
+									if (!ogreMaterial.isNull())
+										ogreEntity->setMaterial(ogreMaterial);
+								}
 							}
 						}
 					}
-				}
-				break;
+					break;
+				case ape::Event::Type::GEOMETRY_FILE_VISIBILITY:
+					{
+						if (mpOgreSceneManager->hasEntity(geometryName))
+						{
+							if (auto ogreEntity = mpOgreSceneManager->getEntity(geometryName))
+							{
+								ogreEntity->setVisibilityFlags(geometryFile->getVisibilityFlag());
+							}
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -1964,11 +1975,21 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 					break;
 				case ape::Event::Type::CAMERA_ORTHOWINDOWSIZE:
-				{
-					if (mpOgreSceneManager->hasCamera(event.subjectName))
-						mpOgreSceneManager->getCamera(event.subjectName)->setOrthoWindow(camera->getOrthoWindowSize().x, camera->getOrthoWindowSize().y);
-				}
-				break;
+					{
+						if (mpOgreSceneManager->hasCamera(event.subjectName))
+							mpOgreSceneManager->getCamera(event.subjectName)->setOrthoWindow(camera->getOrthoWindowSize().x, camera->getOrthoWindowSize().y);
+					}
+					break;
+				case ape::Event::Type::CAMERA_VISIBILITY:
+					{
+						if (mpOgreSceneManager->hasCamera(event.subjectName))
+						{
+							Ogre::Viewport* ogreViewport = mpOgreSceneManager->getCamera(event.subjectName)->getViewport();
+							if (ogreViewport)
+								ogreViewport->setVisibilityMask(camera->getVisibilityMask());
+						}
+					}
+					break;
 				}
 			}
 		}

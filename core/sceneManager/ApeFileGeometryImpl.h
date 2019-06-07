@@ -62,6 +62,10 @@ namespace ape
 
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
+		void setVisibilityFlag(unsigned int flag) override;
+
+		unsigned int getVisibilityFlag() override;
+
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;
 
@@ -76,6 +80,8 @@ namespace ape
 		bool mIsExportMesh;
 
 		bool mIsSubMeshesMerged;
+
+		unsigned int mVisibilityFlag;
 	};
 }
 

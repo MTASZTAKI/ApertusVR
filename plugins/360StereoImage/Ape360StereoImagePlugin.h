@@ -52,6 +52,8 @@ namespace ape
 
 		~ape360StereoImagePlugin();
 
+		void createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
+
 		void eventCallBack(const ape::Event& event);
 
 		void Init() override;
