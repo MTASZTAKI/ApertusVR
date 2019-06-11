@@ -6,6 +6,7 @@ ape::ape360StereoImagePlugin::ape360StereoImagePlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ape360StereoImagePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&ape360StereoImagePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -36,8 +37,6 @@ void ape::ape360StereoImagePlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::CAMERA_WINDOW)
 	{
-		//TODO_ape360StereoImagePlugin ignoring the position movement only orientatios is allowed? What is the desired?
-		//TODO_ape360StereoImagePlugin somehow not rendering (camera ignore list) the sphere of the other eye. GetVisibilityType and SetVisibilityType function for ape::ICamera and ape::Geometry
 		std::size_t found = event.subjectName.find("Left");
 		if (found != std::string::npos)
 		{
@@ -47,6 +46,26 @@ void ape::ape360StereoImagePlugin::eventCallBack(const ape::Event & event)
 		if (found != std::string::npos)
 		{
 			createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
+		}
+	}
+	else if (event.type == ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA)
+	{
+		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			if (auto camera = manualTexture->getSourceCamera().lock())
+			{
+				std::string cameraName = camera->getName();
+				std::size_t found = cameraName.find("Left");
+				if (found != std::string::npos)
+				{
+					createSphere(cameraName, "sphereNodeLeft", "sphere_left.mesh", 1);
+				}
+				found = cameraName.find("Right");
+				if (found != std::string::npos)
+				{
+					createSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
+				}
+			}
 		}
 	}
 }

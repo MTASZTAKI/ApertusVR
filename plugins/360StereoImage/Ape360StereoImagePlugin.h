@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include "sceneelements/apeIFileMaterial.h"
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIManualTexture.h"
 
 #define THIS_PLUGINNAME "ape360StereoImagePlugin"
 

@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeHtcVivePlugin",
+    "ape360StereoImagePlugin"
+  ],
+  "network": {
+    "user": "htc",
+    "participant": "none",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "none",
+    "resourceLocations": [
+      "/plugins/360StereoImage/resources"
+    ]
+  }
+}
+
+
