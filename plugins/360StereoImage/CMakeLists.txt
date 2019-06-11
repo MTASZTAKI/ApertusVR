@@ -36,7 +36,7 @@ include_directories(
 add_library (ape360StereoImagePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ape360StereoImagePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
+target_link_libraries (ape360StereoImagePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro)
 
 set_property (TARGET ape360StereoImagePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -79,7 +79,7 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 		mUserInputMacroPose.headPosition = hmdTrackerPosition;
 		mUserInputMacroPose.headOrientation = hmdTrackerOrientation;
 	}
-	mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+	mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
 }
 
 void ape::apeHtcVivePlugin::submitTextureRightToOpenVR()
@@ -111,7 +111,7 @@ void ape::apeHtcVivePlugin::eventCallBack(const ape::Event& event)
 void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_DEBUG("waiting for main window");
 	while (mpCoreConfig->getWindowConfig().handle == nullptr)
@@ -159,8 +159,8 @@ void ape::apeHtcVivePlugin::Init()
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
 		mManualTextureRightEye = manualTexture;
 	}
-	mCameraLeft = mpapeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
-	mCameraRight = mpapeUserInputMacro->createCamera("OpenVRHmdRightCamera");
+	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
+	mCameraRight = mpApeUserInputMacro->createCamera("OpenVRHmdRightCamera");
 	vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
 	vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
 	if (auto cameraLeft = mCameraLeft.lock())

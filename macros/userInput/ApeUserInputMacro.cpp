@@ -64,6 +64,7 @@ ape::UserInputMacro::UserInputMacro()
 	mKeyStringValue = std::string();
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
+	mIsLockHeadNodePosition = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -220,10 +221,23 @@ void ape::UserInputMacro::updateViewPose(ViewPose pose)
 		}
 		if (auto headNode = mHeadNode.lock())
 		{
-			headNode->setPosition(pose.headPosition);
+			if (!mIsLockHeadNodePosition)
+			{
+				headNode->setPosition(pose.headPosition);
+			}
 			headNode->setOrientation(pose.headOrientation);
 		}
 	}
+}
+
+void ape::UserInputMacro::setHeadNodePositionLock(bool lock)
+{
+	mIsLockHeadNodePosition = lock;
+}
+
+bool ape::UserInputMacro::getHeadNodePositionLock()
+{
+	return mIsLockHeadNodePosition;
 }
 
 void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)

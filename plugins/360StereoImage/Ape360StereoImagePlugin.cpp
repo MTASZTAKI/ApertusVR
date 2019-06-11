@@ -64,6 +64,10 @@ void ape::ape360StereoImagePlugin::eventCallBack(const ape::Event & event)
 				if (found != std::string::npos)
 				{
 					createSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
+					mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+					mUserInputMacroPose.headPosition = ape::Vector3(0, 0, 0);
+					mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+					mpApeUserInputMacro->setHeadNodePositionLock(true);
 				}
 			}
 		}
@@ -73,6 +77,7 @@ void ape::ape360StereoImagePlugin::eventCallBack(const ape::Event & event)
 void ape::ape360StereoImagePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 

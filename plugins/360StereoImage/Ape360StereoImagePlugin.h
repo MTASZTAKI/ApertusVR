@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeICamera.h"
 #include "sceneelements/apeIManualTexture.h"
+#include "macros/userInput/apeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "ape360StereoImagePlugin"
 
@@ -47,6 +48,10 @@ namespace ape
 		ape::ISceneManager* mpSceneManager;
 
 		ape::IEventManager* mpEventManager;
+
+		ape::UserInputMacro* mpApeUserInputMacro;
+
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 	public:
 		ape360StereoImagePlugin();

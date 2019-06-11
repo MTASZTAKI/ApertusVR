@@ -179,6 +179,8 @@ namespace ape
 
 		bool mIsNewKeyEvent;
 
+		bool mIsLockHeadNodePosition;
+
 	public:
 		static UserInputMacro* getSingletonPtr()
 		{
@@ -192,6 +194,10 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 		void updateViewPose(ViewPose pose);
+
+		void setHeadNodePositionLock(bool lock);
+
+		bool getHeadNodePositionLock();
 
 		void interpolateViewPose(ViewPose pose, unsigned int milliseconds);
 

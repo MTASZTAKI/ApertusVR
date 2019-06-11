@@ -94,7 +94,7 @@ namespace ape
 
 		void submitTextureRightToOpenVR();
 
-		ape::UserInputMacro* mpapeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
