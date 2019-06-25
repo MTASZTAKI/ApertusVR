@@ -343,18 +343,14 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 						{
 							assimpAssetFileNamePath << resourceLocationStr;
 						}
-						found = resourceLocationStr.find("./");
-						if (found != std::string::npos)
-						{
-							assimpAssetFileNamePath << resourceLocationStr;
-						}
 						else
 						{
 							std::stringstream resourceLocationPath;
 							resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
-							assimpAssetFileNamePath << resourceLocationStr;
+							assimpAssetFileNamePath << resourceLocationPath.str();
 						}
 						assetConfig.file = assimpAssetFileNamePath.str();
+						APE_LOG_DEBUG("assetConfig.file " << assetConfig.file);
 						std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
 						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
 						if (fileExtension == ".mesh")

@@ -120,17 +120,13 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						if (found != std::string::npos)
 						{
 							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
-							break;
 						}
-						found = resourceLocationStr.find("./");
-						if (found != std::string::npos)
+						else
 						{
-							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
-							break;
+							std::stringstream resourceLocationPath;
+							resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
+							mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
 						}
-						std::stringstream resourceLocationPath;
-						resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
-						mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
 					}
 				}
 				else if (networkMemberIterator->name == "lan")

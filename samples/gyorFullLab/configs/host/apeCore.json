@@ -1,0 +1,37 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeNodeJsPlugin",
+    "apeKinectPlugin",
+    "apeAssimpAssetLoaderPlugin",
+    "apeIndustry40Plugin"
+  ],
+  "network": {
+    "user": "gyorFullLab_Host",
+    "participant": "host",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "10.1.0.30",
+      "port": "3005",
+      "streamPort":  "3010"
+    },
+    "selected": "lan",
+    "resourceLocations": [
+      "/plugins/gyor/resources",
+      "/macros/sceneMaker/resources"
+    ]
+  }
+}
+
+

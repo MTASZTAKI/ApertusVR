@@ -185,6 +185,11 @@ if (${APE_SAMPLES_Gyor})
 	add_subdirectory (gyor)
 endif ()
 
+option(APE_SAMPLES_GyorFullLab "APE_SAMPLES_GyorFullLab?" ON )
+if (${APE_SAMPLES_GyorFullLab})
+	add_subdirectory (gyorFullLab)
+endif ()
+
 option(APE_SAMPLES_GyorPathPlanning "APE_SAMPLES_GyorPathPlanning?" ON )
 if (${APE_SAMPLES_GyorPathPlanning})
 	add_subdirectory (gyorPathPlanning)
