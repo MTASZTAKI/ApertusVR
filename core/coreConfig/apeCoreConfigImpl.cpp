@@ -144,6 +144,8 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 							mNetworkConfig.lanConfig.ip = lanMemberIterator->value.GetString();
 						else if (lanMemberIterator->name == "port")
 							mNetworkConfig.lanConfig.port = lanMemberIterator->value.GetString();
+						else if (lanMemberIterator->name == "streamPort")
+							mNetworkConfig.lanConfig.streamPort = lanMemberIterator->value.GetString();
 					}
 
 				}

@@ -104,19 +104,24 @@ namespace ape
 
 			std::string port;
 
+			std::string streamPort;
+
 			LanConfig()
 			{
 				this->ip = std::string();
 				this->port = std::string();
+				this->streamPort = std::string();
 			}
 
 			LanConfig(
 				std::string ip,
-				std::string port
+				std::string port,
+				std::string streamPort
 			)
 			{
 				this->ip = ip;
 				this->port = port;
+				this->streamPort = streamPort;
 			}
 		};
 
