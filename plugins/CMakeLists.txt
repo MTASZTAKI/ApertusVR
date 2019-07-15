@@ -128,6 +128,13 @@ if (${APE_PLUGIN_Ogre21Render})
 	add_subdirectory (ogre21Render)
 endif ()
 
+# Physics
+
+option(APE_PLUGIN_BulletPhysics "Use BulletPhysicsPlugin?" ON )
+if (${APE_PLUGIN_BulletPhysics})
+	add_subdirectory (bulletPhysics)
+endif ()
+
 # Input handlers
 
 option(APE_PLUGIN_OisUserInput "Use OisUserInputPlugin?" ON )
