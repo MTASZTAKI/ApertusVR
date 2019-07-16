@@ -34,6 +34,8 @@ SOFTWARE.*/
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
 
+// for bullet
+#include "btBulletDynamicsCommon.h"
 
 #define THIS_PLUGINNAME "apeBulletPhysicsPlugin"
 
@@ -67,6 +69,21 @@ namespace ape
 		ape::IEventManager* mpEventManager;
 
 		void eventCallBack(const ape::Event& event);
+
+
+
+		// physics 
+		btDefaultCollisionConfiguration* collisionConfiguration;
+
+		btCollisionDispatcher* dispatcher;
+
+		btBroadphaseInterface* overlappingPairCache;
+
+		btSequentialImpulseConstraintSolver* solver;
+
+		btDiscreteDynamicsWorld* dynamicsWorld;
+
+		btAlignedObjectArray<btCollisionShape*> collisionShapes;
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()
