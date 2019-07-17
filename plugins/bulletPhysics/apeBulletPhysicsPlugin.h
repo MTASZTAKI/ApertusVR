@@ -27,12 +27,29 @@ SOFTWARE.*/
 #include <list>
 #include <string>
 #include <thread>
+
 #include "plugin/apeIPlugin.h"
 #include "plugin/apePluginAPI.h"
 #include "managers/apeIEventManager.h"
 #include "managers/apeILogManager.h"
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
+
+#include "sceneelements/apeIBoxGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeICylinderGeometry.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITorusGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+
+
+/*
+// geometry implementations
+#include "core/sceneManager/ApeBoxGeometryImpl.h"
+#include "core/sceneManager/ApeSphereGeometryImpl.h"*/
 
 // for bullet
 #include "btBulletDynamicsCommon.h"
@@ -72,18 +89,31 @@ namespace ape
 
 
 
-		// physics 
-		btDefaultCollisionConfiguration* collisionConfiguration;
+		/// member pointers for bullet3
+		btDefaultCollisionConfiguration* m_collisionConfiguration;
 
-		btCollisionDispatcher* dispatcher;
+		btCollisionDispatcher* m_dispatcher;
 
-		btBroadphaseInterface* overlappingPairCache;
+		btBroadphaseInterface* m_overlappingPairCache;
 
-		btSequentialImpulseConstraintSolver* solver;
+		btSequentialImpulseConstraintSolver* m_solver;
 
-		btDiscreteDynamicsWorld* dynamicsWorld;
+		btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-		btAlignedObjectArray<btCollisionShape*> collisionShapes;
+
+		std::map<std::string, btCollisionShape*> m_collisionShapes;
+		std::map<std::string, btCollisionObject*> m_collisionObjects;
+
+		std::map<std::string, NodeWeakPtr> m_nodes;
+
+	public:
+
+		/// conversion between bullet3 and ape
+		ape::Vector3 fromBullet(const btVector3& btVec);
+		ape::Quaternion fromBullet(const btQuaternion& btQuat);
+		btVector3 fromApe(const ape::Vector3& apeVec);
+		btQuaternion fromApe(const ape::Quaternion& apeQuat);
+
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()
