@@ -103,10 +103,8 @@ namespace ape
 
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
 		std::map<std::string, btCollisionObject*> m_collisionObjects;
-
-		std::map<std::string, NodeWeakPtr> m_nodes;
-
-	public:
+		
+		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
 
 		/// conversion between bullet3 and ape
 		ape::Vector3 fromBullet(const btVector3& btVec);
@@ -114,6 +112,11 @@ namespace ape
 		btVector3 fromApe(const ape::Vector3& apeVec);
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
 
+		/// functions for cleaner code in the eventCallBac
+		void setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position);
+		void deleteObject(std::string geometryName);
+		void setShape(std::string geometryName, btCollisionShape* colShape);
+		void createObject(std::string geometryName, btTransform trans, btScalar mass, btCollisionShape* shape);
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()

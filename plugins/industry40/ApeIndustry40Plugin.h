@@ -54,6 +54,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITubeGeometry.h"
 #include "utils/apeInterpolator.h"
 #include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "sceneelements/apeIBoxGeometry.h"
 
 #define THIS_PLUGINNAME "apeIndustry40Plugin"
 

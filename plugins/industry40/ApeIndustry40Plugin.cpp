@@ -44,7 +44,55 @@ void ape::apeIndustry40Plugin::Init()
 		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
 	}
 	mpSceneMakerMacro->makeBackground();
+	mpSceneMakerMacro->makeCoordinateSystem();
 	mpSceneMakerMacro->makeGround();
+	//mpSceneMakerMacro->makeBox("a1");
+
+	// create box geometry
+	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	{
+		// material for box
+		std::shared_ptr<ape::IManualMaterial> boxMaterial;
+		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			boxMaterial->setDiffuseColor(ape::Color(0.5f, 0.5f, 0.0f));
+			boxMaterial->setSpecularColor(ape::Color(0.5f, 0.5f, 0.0f));
+		}
+
+
+
+		boxNode->setPosition(ape::Vector3(0, 2000, 0));
+		// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
+		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
+		{
+			box->setParameters(ape::Vector3(10, 10, 10));
+			box->setParentNode(boxNode);
+			box->setMaterial(boxMaterial);
+		}
+	}
+
+	// create sphere geometry
+	if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
+	{
+		// material for sphere 
+		std::shared_ptr<ape::IManualMaterial> sphereMaterial;
+		if (sphereMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("sphere1111Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			sphereMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
+			sphereMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
+		}
+
+
+
+		sphereNode->setPosition(ape::Vector3(10, 150, 0));
+		if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("sphere1111", ape::Entity::GEOMETRY_SPHERE).lock()))
+		{
+			sphere->setParameters(10.0f, ape::Vector2(1, 1));
+			sphere->setParentNode(sphereNode);
+			sphere->setMaterial(sphereMaterial);
+		}
+	}
+
 	APE_LOG_FUNC_LEAVE();
 }
 
