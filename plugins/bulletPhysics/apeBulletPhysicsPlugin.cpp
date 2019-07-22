@@ -3,6 +3,10 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif // !M_PI
+
 
 ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 {
@@ -28,7 +32,7 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
 
 
-	m_dynamicsWorld->setGravity(btVector3(0., -100., 0.));
+	m_dynamicsWorld->setGravity(btVector3(0., -15., 0.));
 
 	APE_LOG_FUNC_LEAVE();
 }
@@ -58,6 +62,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 			}*/
 
 		}
+		
 	}
 	else if (event.group == ape::Event::Group::GEOMETRY_BOX)
 	{
@@ -80,10 +85,13 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 				{
 					m_parentNodes[geometryName] = parentNode;
 
-					btTransform trans = btTransform(fromApe(parentNode->getOrientation()),
+					btQuaternion quat;
+					quat.setEulerZYX(45.f, 0.f, 0.f);
+
+					btTransform trans = btTransform(fromApe(parentNode->getOrientation())*quat,
 													fromApe(parentNode->getPosition()));
 
-					createObject(geometryName, trans, 0.0f, colShape);
+					createObject(geometryName, trans, 1.0f, colShape);
 				}
 				else
 				{
@@ -117,8 +125,11 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 					{					
 						m_parentNodes[geometryName] = parentNode;
 
+						//for testing
+						btQuaternion quat; quat.setEulerZYX(M_PI/8.f, 0, 0);
+
 						setTransform(geometryName,
-									fromApe(parentNode->getOrientation()),
+									fromApe(parentNode->getOrientation())*quat,
 									fromApe(parentNode->getPosition()));
 					}
 				}
@@ -148,7 +159,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 
 					btTransform trans = btTransform(fromApe(parentNode->getOrientation()),
 													fromApe(parentNode->getPosition()));
-					createObject(geometryName, trans, 0.0f, colShape);
+					createObject(geometryName, trans, 1.0f, colShape);
 				}
 				else
 				{
@@ -215,7 +226,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 					m_parentNodes[geometryName] = parentNode;
 
 					btTransform trans = btTransform(fromApe(parentNode->getOrientation()),
-													fromApe(parentNode->getPosition()));
+													fromApe(parentNode->getPosition())-btVector3(0,0.5,0));
 					createObject(geometryName, trans, 0.0f, colShape);
 				}
 				else
@@ -223,7 +234,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 					/// making the object with default transformation
 					btTransform trans;
 					trans.setIdentity();
-					trans.setOrigin(btVector3(0, 0, 0));
+					trans.setOrigin(btVector3(0, -0.5f, 0));
 
 					createObject(geometryName, trans, 0.0f, colShape);
 				}
@@ -237,7 +248,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 				/// set new shape for the plane
 				ape::Vector2 size = primitive->getParameters().size;
 
-				btCollisionShape* colShape = new btBoxShape(btVector3(size.x,1.0f,size.y));
+				btCollisionShape* colShape = new btBoxShape(btVector3(size.x *0.5,1.0f,size.y * 0.5));
 
 				setShape(geometryName, colShape);
 			}
@@ -250,7 +261,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 
 					setTransform(geometryName,
 								 fromApe(parentNode->getOrientation()),
-								 fromApe(parentNode->getPosition()));
+								 fromApe(parentNode->getPosition())-btVector3(0,-0.5f,0));
 				}
 			}
 		}
@@ -259,24 +270,94 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 
 
 
+void ape::BulletPhysicsPlugin::Init()
+{
+	APE_LOG_FUNC_ENTER();
+
+	APE_LOG_FUNC_LEAVE();
+}
+
+void ape::BulletPhysicsPlugin::Run()
+{
+	APE_LOG_FUNC_ENTER();
+	while (true)
+	{
+		/// takes one step of the simulation in the physics engine
+		m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+
+		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
+		{
+			std::string geometryName = it->first;
+			btRigidBody* body = btRigidBody::upcast(it->second);
+			
+			btTransform trans;
+
+			if (body && body->getMotionState())
+			{
+				body->getMotionState()->getWorldTransform(trans);
+			}
+			else
+				trans = (it->second)->getWorldTransform();
+
+			if (auto parentNode = m_parentNodes[geometryName].lock())
+			{
+				btQuaternion rotation = trans.getRotation();
+
+				parentNode->setPosition(fromBullet(trans.getOrigin()));
+				parentNode->setOrientation(fromBullet(trans.getRotation()));
+			}
+
+		}
+
+		
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+	APE_LOG_FUNC_LEAVE();
+}
+
+
+/// conversion between bullet3 and ape
+
+ape::Vector3 ape::BulletPhysicsPlugin::fromBullet(const btVector3& btVec)
+{
+	return ape::Vector3(btVec.getX(), btVec.getY(), btVec.getZ());
+}
+
+ape::Quaternion ape::BulletPhysicsPlugin::fromBullet(const btQuaternion& btQuat)
+{
+	return ape::Quaternion(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
+}
+
+btVector3 ape::BulletPhysicsPlugin::fromApe(const ape::Vector3& apeVec)
+{
+	return btVector3(apeVec.x, apeVec.y, apeVec.z);
+}
+
+btQuaternion ape::BulletPhysicsPlugin::fromApe(const ape::Quaternion& apeQuat)
+{
+	return btQuaternion(apeQuat.x, apeQuat.y, apeQuat.z, apeQuat.w);
+}
+
+
 /// sets the transform of a geometry in the physics world
 void ape::BulletPhysicsPlugin::setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position)
 {
-	btTransform trans(new_orientation,new_position);
+
+	btTransform trans(new_orientation, new_position);
 
 	if (auto obj = m_collisionObjects[geometryName])
 	{
-		btDefaultMotionState* motionState = new btDefaultMotionState(trans);
 		btRigidBody* body = btRigidBody::upcast(m_collisionObjects[geometryName]);
 		if (body && body->getMotionState())
 		{
-			delete body->getMotionState();
-			body->setMotionState(motionState);
+			body->setCenterOfMassTransform(trans);
 		}
 		else
 		{
 			obj->setWorldTransform(trans);
 		}
+
 	}
 	/// else: error...?
 }
@@ -315,8 +396,23 @@ void ape::BulletPhysicsPlugin::setShape(std::string geometryName, btCollisionSha
 
 	m_collisionShapes[geometryName] = colShape;
 
-	if (m_collisionObjects[geometryName])
-		m_collisionObjects[geometryName]->setCollisionShape(colShape);
+	if (auto obj = m_collisionObjects[geometryName])
+	{
+		obj->setCollisionShape(colShape);
+
+		btRigidBody* body = btRigidBody::upcast(obj);
+
+		if (body)
+		{
+			btVector3 localInertia;
+			btScalar mass = 1.f / body->getInvMass();
+			colShape->calculateLocalInertia(mass, localInertia);
+			body->setMassProps(mass, localInertia);
+		}
+
+	}
+	
+
 }
 
 /// creates objects in the physics world
@@ -329,108 +425,32 @@ void ape::BulletPhysicsPlugin::createObject(std::string geometryName, btTransfor
 
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(trans);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
+	
 	btRigidBody* body = new btRigidBody(rbInfo);
+
+
+	// for testing
+	if (geometryName == "plane")
+	{
+		body->setRestitution(0.6f); 
+		
+	}
+	else if(geometryName == "sphere1111")
+	{
+		body->setRestitution(2.0f);
+		
+	}
+	else if (geometryName == "box")
+	{
+		body->setRestitution(1.0f);
+		
+		
+	}
+
 
 	m_collisionObjects[geometryName] = body;
 
 	m_dynamicsWorld->addRigidBody(body);
-}
-
-
-
-void ape::BulletPhysicsPlugin::Init()
-{
-	APE_LOG_FUNC_ENTER();
-
-	APE_LOG_FUNC_LEAVE();
-}
-
-void ape::BulletPhysicsPlugin::Run()
-{
-	APE_LOG_FUNC_ENTER();
-	while (true)
-	{
-		/// takes one step of the simulation in the physics engine
-		m_dynamicsWorld->stepSimulation(1.f / 60.f, 1);
-
-		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
-		{
-			std::string geometryName = it->first;
-			btRigidBody* body = btRigidBody::upcast(it->second);
-
-			btTransform trans;
-
-			if (body && body->getMotionState())
-			{
-				body->getMotionState()->getWorldTransform(trans);
-			}
-			else
-				trans = (it->second)->getWorldTransform();
-
-			/*printf("%s position: %f,%f,%f \n", geometryName, trans.getOrigin().getX(),
-				trans.getOrigin().getY(),
-				trans.getOrigin().getZ());*/
-
-			if (auto parentNode = m_parentNodes[geometryName].lock())
-			{
-				
-				parentNode->setPosition(fromBullet(trans.getOrigin()));
-				parentNode->setOrientation(fromBullet(trans.getRotation()));
-			}
-
-		}
-
-
-		/*
-		for (int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); i++)
-		{
-			btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-			btRigidBody* body = btRigidBody::upcast(obj);
-			
-			btTransform trans;
-
-			if (body && body->getMotionState())
-				body->getMotionState()->getWorldTransform(trans);
-			else
-				trans = obj->getWorldTransform();
-
-			btVector3 pos = trans.getOrigin();
-			btQuaternion rotate = trans.getRotation();
-
-
-			printf("%d position: %f,%f,%f \n", i, trans.getOrigin().getX(),
-				trans.getOrigin().getY(),
-				trans.getOrigin().getZ());
-			/// do some rendering with pos and rotate...?
-		}*/
-		
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	}
-	APE_LOG_FUNC_LEAVE();
-}
-
-
-/// conversion between bullet3 and ape
-
-ape::Vector3 ape::BulletPhysicsPlugin::fromBullet(const btVector3& btVec)
-{
-	return ape::Vector3(btVec.getX(), btVec.getY(), btVec.getZ());
-}
-
-ape::Quaternion ape::BulletPhysicsPlugin::fromBullet(const btQuaternion& btQuat)
-{
-	return ape::Quaternion(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
-}
-
-btVector3 ape::BulletPhysicsPlugin::fromApe(const ape::Vector3& apeVec)
-{
-	return btVector3(apeVec.x, apeVec.y, apeVec.z);
-}
-
-btQuaternion ape::BulletPhysicsPlugin::fromApe(const ape::Quaternion& apeQuat)
-{
-	return btQuaternion(apeQuat.x, apeQuat.y, apeQuat.z, apeQuat.w);
 }
 
 

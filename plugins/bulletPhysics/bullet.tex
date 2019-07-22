@@ -1,0 +1,136 @@
+\documentclass[12p,a4paper,notitlepage]{scrartcl}
+\usepackage[magyar]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage{amsmath} %matek
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{verbatim} %komment miatt
+\usepackage{multicol}
+\usepackage{struktex}
+\usepackage{listings}
+\usepackage{sectsty}
+\usepackage[mathscr]{euscript}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{contour}
+\usepackage{abc}
+\usepackage{enumerate}
+
+
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=10mm,
+ right=10mm,
+ top=15mm,
+ }
+ 
+
+ 
+ \title{Bullet rigidBody táblázat}
+ \subtitle{}
+ \date{}
+\begin{document}
+\maketitle
+
+Egy rigidBody lehet:
+\begin{itemize}
+\item Dynamic
+\begin{itemize}
+\item mass > 0.0f
+\end{itemize}
+\item Static
+\begin{itemize}
+\item mass == 0.0f
+\end{itemize}
+\item Kinematic
+\begin{itemize}
+\item mass == 0.0f
+\end{itemize}
+\end{itemize}
+
+
+\begin{tabular}{|p{65mm}|p{85mm}|p{20mm}|}
+\hline
+Tagfüggvény & Leírás & alapérték \\
+\hline 
+\hline 
+applyForce( \newline
+btVector3 $force$, \newline
+btVector3 $rel\_pos$) & A $rel\_pos$-ba mér egy $force$ erőt & - \\
+\hline
+applyCentralForce( \newline
+btVector3 $force$) & Tömeggközépontbeli erő hatás & - \\
+\hline
+applyImpulse( \newline 
+btVector3 $impulse$, \newline
+btVector3 $rel\_pos$) & Adott $rel\_pos$-ba hat $impulse$ impulzussal. & -\\
+\hline
+applyCentralImpulse(\newline 
+btVector3 $impulse$, \newline 
+btVector3 $rel\_pos$) & Értelemszerűen... & - \\
+\hline
+applyTorque(\newline 
+btVector3 $torque$) & Forgatónyomaték adás a testnek. & - \\
+\hline
+applyTorqueImpulse( \newline
+btVector3 $torqueImpulse$) & Forgatónyomaték impulzus adás a testnek. & - \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|p{65mm}|p{85mm}|p{20mm}|}
+\hline
+setFriction(\newline
+btScalar $frict$) & A test ,,súrlódási együtthatója''. \newline
+A valóságban ilyen nem létezik, csak különböző felülettípusú párokra adható együttható.
+A bullet a két test együtthatóiból ($frict$ paraméterek) számolja ezt az elméletben létező együtthatót. & 0.5f \\
+\hline
+setRollingFriction(\newline
+btScalar $frict$) & A test gurulásnál létrejövő súrlódásának együtthatója. \newline
+Akkor van hatása, ha egy valamilyen guruló test (gömb, henger, stb..) egy felületen gurul. & 0.0f \\
+\hline
+setAnisotropicFriction(\newline
+btVector3 $anisFrict$, \newline
+int $frictMode$) & A bullet lehetőséget ad arra, hogy különböző irányokban/tengelyek mentén különböző legyen a súrlódás. Az első paraméter az irányt/tengelyt adja meg a második paraméter a súrlódás típusát: 0 - ansiotropic friction kikapcsolva, 1 - anisotropic friction, 2 - anisiotropic rolling friction & $frictMode = 0$ \\
+\hline
+setSpinningFriction(\newline 
+btScalar $frict$) & Spinning friction akkor keletkezik, ha a test egy felületen a pörög úgy, hogy a forgás tengelye a
+a felületnek az érintési pontjában vett normálisa. & 0.0f \\
+\hline
+setRestitution(\newline
+btScalar $rest$) & Coefficient of Restitution. Azt határozza meg, hogy az adott test, valamely másik testtel való ütközés után milyen sebességgel pattanjon vissza a közeledési vektorral ellentétes irányban. Ha pld. $rest == 0$, akkor ,,hozzátapad'' a másik testhez. & 0.0f\\
+\hline
+setDamping(\newline
+btScalar $lin\_damp$, \newline
+btScalar $ang\_damp$) & Az adott lineáris vagy anguláris mozgás csillapítása (közegellenállás). 0.0f-től 1.0f-ig állítható. Pld. 0.01f azt jelenti, hogy minden időegységben-ben a sebességvektorból levonódik annak 1\%-a. 1.0f-ra állítva a test nem mozdul. & $lin\_damp = 0$, $\ ang\_damp = 0$ \\
+\hline
+setLinearFactor(\newline
+btVector3 $factor$) & A $factor$ paraméter megadja, hogy a testre ható adott $(x,y,z)$ irányú erő esetén mekkora legyen a testre ható erő az egyes irányokban. Pld., ha $factor = (2.0,0,0)$, akkor a testre $(2 x,0,0)$ erő hat. (=> y,z irányokban fix a pozíciója). & $(1,1,1)$ \\
+\hline
+setAngularFactor(\newline
+btVector3 $factor$) & Ld. linearFactor, csak szögekre. & $(1,1,1)$ \\
+\hline
+setContactStiffnessAndDamping(\newline
+btScalar $stiffness$, \newline
+btScalar $damping$) &
+A test merevségét állítja be. Minél kisebb a stiffness, erő hatására annál könnyebben nyomható össze a test az ütközések hatására. A damping mondja meg, hogy az ütközést követő összenyomódás során, mennyi legyen a sebesség csillapítása.
+Nyilván ez hatással van a restitutionra-ra is. & $stiffness = 1e+18$, $damping = 1.0f$ \\
+\hline
+setSleepingThreshold(\newline
+btScalar $linear$, \newline
+btScalar $angular$) &
+??? & $linear = 0.8f$, $angular = 1.0f$ \\
+\hline
+
+
+
+
+
+
+\end{tabular}
+
+
+
+\end{document}
