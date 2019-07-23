@@ -25,7 +25,7 @@
       "ip": "10.1.0.30",
       "port": "61116"
     },
-    "selected": "lan",
+    "selected": "none",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
       "/plugins/gyor/resources"
