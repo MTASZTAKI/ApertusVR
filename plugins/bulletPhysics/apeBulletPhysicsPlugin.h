@@ -46,11 +46,6 @@ SOFTWARE.*/
 #include "sceneelements/apeITubeGeometry.h"
 
 
-/*
-// geometry implementations
-#include "core/sceneManager/ApeBoxGeometryImpl.h"
-#include "core/sceneManager/ApeSphereGeometryImpl.h"*/
-
 // for bullet
 #include "btBulletDynamicsCommon.h"
 
@@ -88,7 +83,6 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 
-
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
 
@@ -100,23 +94,33 @@ namespace ape
 
 		btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-
+		/// maps for shapes, objects, bodies, nodes...
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
+
 		std::map<std::string, btCollisionObject*> m_collisionObjects;
 		
 		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
 
 		/// conversion between bullet3 and ape
 		ape::Vector3 fromBullet(const btVector3& btVec);
+
 		ape::Quaternion fromBullet(const btQuaternion& btQuat);
+
 		btVector3 fromApe(const ape::Vector3& apeVec);
+
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
 
-		/// functions for cleaner code in the eventCallBac
+		/// functions for cleaner code in the eventCallBack
 		void setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position);
+
 		void deleteObject(std::string geometryName);
-		void setShape(std::string geometryName, btCollisionShape* colShape);
-		void createObject(std::string geometryName, btTransform trans, btScalar mass, btCollisionShape* shape);
+
+		void setCollisionShape(std::string geometryName, btCollisionShape* colShape);
+
+		void createRigidBody(std::string geometryName, btTransform trans, btScalar mass, btCollisionShape* shape);
+
+		void createCollisionObject(std::string geometryName, btTransform trans, btCollisionShape * shape);
+
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()

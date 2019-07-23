@@ -29,28 +29,39 @@
  
 
  
- \title{Bullet rigidBody táblázat}
+ \title{Bullet btRigidBody tudnivalók}
  \subtitle{}
  \date{}
 \begin{document}
 \maketitle
+
+\section*{Típusok}
 
 Egy rigidBody lehet:
 \begin{itemize}
 \item Dynamic
 \begin{itemize}
 \item mass > 0.0f
+\item minden frameben frissül a pozíciója, erő/impulzus/forgatónyomaték hatására elmozdul, forog, stb..
 \end{itemize}
 \item Static
 \begin{itemize}
 \item mass == 0.0f
+\item nem mozog, de ütközik
 \end{itemize}
 \item Kinematic
 \begin{itemize}
 \item mass == 0.0f
+\item user által mozgatható kézzel (pld. setVelocity(...)). Nem hat rá a külvilág, de ő hat külvilágra (ellökhet más dinamikus objektumokat, de ha ütközik rá nem hat impulzus).
 \end{itemize}
 \end{itemize}
 
+\section*{btCollisionObject és btRigidBody}
+A btRigidBody a btCollisionObject-ből származik. A btCollisionObject tehát tulajdonképpen egy nem mozdítható rigidbody, azaz nem hat rá erő/impulzus/forgatónyomaték, nincs sebessége, nincs gyorsulása, és nincs tömege sem. Ugyanakkor lehet vele ütközni, van súrlódása, vissza lehet róla pattanni, stb. \newline
+Különbség a static rigidbody-hoz képest, hogy nem lehet hozzá megszorításokat csatolni. (Megszorítás --> két btRigidBody egymáshoz képesti pozíciójára tett megkötés).
+
+
+\section*{Tagfüggvények}
 
 \begin{tabular}{|p{65mm}|p{85mm}|p{20mm}|}
 \hline
@@ -59,10 +70,10 @@ Tagfüggvény & Leírás & alapérték \\
 \hline 
 applyForce( \newline
 btVector3 $force$, \newline
-btVector3 $rel\_pos$) & A $rel\_pos$-ba mér egy $force$ erőt & - \\
+btVector3 $rel\_pos$) & A $rel\_pos$-ba mér egy $force$ erőt. & - \\
 \hline
 applyCentralForce( \newline
-btVector3 $force$) & Tömeggközépontbeli erő hatás & - \\
+btVector3 $force$) & Tömeggközépontbeli erő hatás. & - \\
 \hline
 applyImpulse( \newline 
 btVector3 $impulse$, \newline
@@ -118,19 +129,69 @@ btScalar $damping$) &
 A test merevségét állítja be. Minél kisebb a stiffness, erő hatására annál könnyebben nyomható össze a test az ütközések hatására. A damping mondja meg, hogy az ütközést követő összenyomódás során, mennyi legyen a sebesség csillapítása.
 Nyilván ez hatással van a restitutionra-ra is. & $stiffness = 1e+18$, $damping = 1.0f$ \\
 \hline
-setSleepingThreshold(\newline
-btScalar $linear$, \newline
-btScalar $angular$) &
-??? & $linear = 0.8f$, $angular = 1.0f$ \\
+\end{tabular}
+
+\begin{tabular}{|p{65mm}|p{85mm}|p{20mm}|}
 \hline
-
-
-
-
-
+clearForces() &
+A meghívás pillanatában a testre ható erők (btVector3 $m\_totalForce$) és forgatónyomatékok (btVector3 $m\_totalTorque$) lenullázása. & - \\
+\hline
+setMassProps( \newline
+btScalar $mass$, \newline
+btVector3 $inertia$) &
+A test tömegének és tehetetlenségi nyomatékának beállítása. A bullet a teljes inertia tensor helyett csak a diagonális elemeket tárolja, tehát csak egy Vector3-t kell megadni mx helyett. Ha a test alakja (btCollisionShape) és tömege adott , akkor az intertia-t automatikusan ki tudja számolni, tehát általában nem érdemes külön megadni, de van rá lehetőség. Továbbá ezek nélkül az adatok nélkül a btRigidBody-t létre sem lehet hozni, tehát ezeket már a konstruktorban be kell állítani, de utána módosíthatóak.
+&
+ld. előző mondat \\
+\hline
+translate(\newline
+btVector3 $v$)
+&
+Eltolja a testet az aktuális helyzetéből egy $v$ vektorral. \newline
+Megj.: ehhez hasonló tagfgv. a forgatáshoz nincs, viszont nem lehetetlen interface-t adni arra, hogy kézzel is lehessen forgatni egy btRigidBody-t, ha kell.
+&
+- \\
+\hline
+setCenterOfMassTransform(\newline
+btTransform $xform$)
+&
+A test tömegközéppontjának világkordinátarendszerben vett helyzetének (transzformációjának) beállítása. Egy transzformációt egy eltolás és egy forgatás határoz meg (skálázás nem!).
+&
+- \\
+\hline
+setWorldTransform(\newline
+btTransform $xform$)
+&
+Ez a btCollisionObject-ből örökölt tagfüggvény a transzformáció állítására.
+&
+\\
+\hline
 
 \end{tabular}
 
+\bigskip
 
+Ezek közül a következők vannak meg a btCollisionObject-ben is:
+
+\smallskip
+
+\renewcommand{\arraystretch}{1.5}
+
+\begin{tabular}{|l|}
+\hline
+setFriction(btScalar frict) \\
+\hline
+setRollingFriction(btScalar frict) \\
+\hline
+setAnisotropicFriction(btVector3 anisFrict, int frictMode) \\
+\hline
+setSpinningFriction(btScalar frict) \\
+\hline
+setRestitution(btScalar rest) \\
+\hline
+setContactStiffnessAndDamping(btScalar stiffness, btScalar damping) \\
+\hline
+setWorldTransform(btTransform xform) \\
+\hline
+\end{tabular}
 
 \end{document}
