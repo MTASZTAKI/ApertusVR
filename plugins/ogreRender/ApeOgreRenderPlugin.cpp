@@ -60,6 +60,8 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxBasicController = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -1083,11 +1085,11 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 		{
 			if (auto materialFile = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
-				std::string materialName = materialFile->getName();
+				std::string materialFileName = materialFile->getfFileName();
 				Ogre::MaterialPtr ogreMaterial;
-				if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
+				if (Ogre::MaterialManager::getSingleton().resourceExists(materialFileName))
 				{
-					ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					ogreMaterial = Ogre::MaterialManager::getSingleton().getByName(materialFileName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 				}
 				switch (event.type)
 				{
@@ -1102,8 +1104,8 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::MATERIAL_FILE_SETASSKYBOX:
 				{
-					if (Ogre::MaterialManager::getSingleton().resourceExists(materialName))
-						mpOgreSceneManager->setSkyBox(true, materialName);
+					if (Ogre::MaterialManager::getSingleton().resourceExists(materialFileName))
+						mpOgreSceneManager->setSkyBox(true, materialFileName);
 				}
 					break;
 				case ape::Event::Type::MATERIAL_FILE_TEXTURE:
@@ -2211,7 +2213,7 @@ void ape::OgreRenderPlugin::Init()
 											cameraMemberIterator != camera.MemberEnd(); ++cameraMemberIterator)
 										{
 											if (cameraMemberIterator->name == "name")
-												ogreCameraConfig.name = cameraMemberIterator->value.GetString();
+												ogreCameraConfig.name = cameraMemberIterator->value.GetString() + mUniqueID;
 											else if (cameraMemberIterator->name == "nearClip")
 												ogreCameraConfig.nearClip = cameraMemberIterator->value.GetFloat();
 											else if (cameraMemberIterator->name == "farClip")

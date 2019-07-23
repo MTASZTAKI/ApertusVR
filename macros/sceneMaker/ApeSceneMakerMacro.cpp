@@ -98,7 +98,7 @@ void ape::SceneMakerMacro::makeBackground()
 	APE_LOG_FUNC_ENTER();
 	if (auto skyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", ape::Entity::MATERIAL_FILE).lock()))
 	{
-		skyBoxMaterial->setFileName("skyBox.material");
+		skyBoxMaterial->setFileName("skyBox");
 		skyBoxMaterial->setAsSkyBox();
 	}
 	APE_LOG_FUNC_LEAVE();

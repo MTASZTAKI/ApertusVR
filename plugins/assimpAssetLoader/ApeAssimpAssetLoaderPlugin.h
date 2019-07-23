@@ -94,6 +94,8 @@ namespace ape
 
 		std::vector<AssetConfig> mAssimpAssetConfigs;
 
+		std::string mUniqueID;
+
 		int mObjectCount;
 
 		int mAssetCount;

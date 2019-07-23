@@ -208,6 +208,8 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
+		std::string mUniqueID;
+
 		ape::DoubleQueue<Event> mEventDoubleQueue;
 
 		ape::OgreRenderPluginConfig mOgreRenderPluginConfig;

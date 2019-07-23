@@ -74,6 +74,8 @@ namespace ape
 		ape::ICoreConfig* mpCoreConfig;
 
 		ape::ISceneNetwork* mpSceneNetwork;
+
+		std::string mUniqueID;
 	};
 }
 #endif

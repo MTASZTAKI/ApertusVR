@@ -136,6 +136,13 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 
 void ape::SceneNetworkImpl::init()
 {
+	auto tp = std::chrono::system_clock::now();
+	auto dur = tp.time_since_epoch();
+	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
+	std::string uniqueID = std::to_string(nanoseconds);
+	ape::NetworkConfig networkConfig = mpCoreConfig->getNetworkConfig();
+	networkConfig.uniqueID = uniqueID;
+	mpCoreConfig->setNetworkConfig(networkConfig);
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
@@ -164,11 +171,7 @@ void ape::SceneNetworkImpl::init()
 	{
 		if (mParticipantType == ape::SceneNetwork::HOST)
 		{
-			sd.port = atoi(localNetworkConfig.port.c_str());
-		}
-		else if (mParticipantType == ape::SceneNetwork::GUEST)
-		{
-			sd.port = atoi(localNetworkConfig.port.c_str());
+			sd.port = atoi(localNetworkConfig.hostReplicaPort.c_str());
 		}
 	}
 	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
@@ -205,7 +208,7 @@ void ape::SceneNetworkImpl::init()
 		if (mParticipantType == ape::SceneNetwork::HOST)
 		{
 			mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-			RakNet::SocketDescriptor socketDescriptor(atoi(mpCoreConfig->getNetworkConfig().lanConfig.streamPort.c_str()), 0);
+			RakNet::SocketDescriptor socketDescriptor(atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0);
 			socketDescriptor.socketFamily = socketFamily;
 			mpRakStreamPeer->SetMaximumIncomingConnections(4);
 			RakNet::StartupResult sr;
@@ -219,7 +222,7 @@ void ape::SceneNetworkImpl::init()
 		else if (mParticipantType == ape::SceneNetwork::GUEST)
 		{
 			mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-			RakNet::SocketDescriptor socketDescriptor(atoi(mpCoreConfig->getNetworkConfig().lanConfig.streamPort.c_str()), 0);
+			RakNet::SocketDescriptor socketDescriptor(0, 0);
 			socketDescriptor.socketFamily = socketFamily;
 			RakNet::StartupResult sr;
 			sr = mpRakStreamPeer->Startup(4, &socketDescriptor, 1);
@@ -252,15 +255,15 @@ void ape::SceneNetworkImpl::connect(std::string guid)
 	}
 	else if ((mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN))
 	{
-		APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.ip << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.port);
-		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.ip.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.port.c_str()), 0, 0);
+		APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.hostIP << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort.c_str()), 0, 0);
 		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		{
-			APE_LOG_DEBUG("Failed connect call to " << mpCoreConfig->getNetworkConfig().lanConfig.ip << ". Code=" << car);
+			APE_LOG_DEBUG("Failed connect call to " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort << ". Code=" << car);
 		}
 		else
 		{
-			APE_LOG_DEBUG("Connection attempt was successful to remote system " << mpCoreConfig->getNetworkConfig().lanConfig.ip);
+			APE_LOG_DEBUG("Connection attempt was successful to remote system " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
 		}
 	}
 }
@@ -375,7 +378,20 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					}
 					else if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
 					{
-						if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
+						if (mParticipantType == ape::SceneNetwork::ParticipantType::HOST)
+						{
+							mpRakReplicaPeer->GetConnectionState(packet->systemAddress);
+							RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(packet->systemAddress.ToString(false), packet->systemAddress.GetPort(), 0, 0);
+							if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
+							{
+								APE_LOG_DEBUG("Failed connect call to " << packet->systemAddress.ToString(true) << ". Code=" << car);
+							}
+							else
+							{
+								APE_LOG_DEBUG("Connection success from remote system " << packet->systemAddress.ToString(true));
+							}
+						}
+						else if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
 						{
 							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
 							if (mpReplicaManager3->PushConnection(connection))
@@ -465,16 +481,16 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
+						/*if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
 						{
 							if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
 							{
 								mIsConnectedToHost = true;
 								mHostAddress = packet->systemAddress;
-								APE_LOG_DEBUG("Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << atoi(mpCoreConfig->getNetworkConfig().lanConfig.streamPort.c_str()));
-								mpRakStreamPeer->Connect(mHostAddress.ToString(false), atoi(mpCoreConfig->getNetworkConfig().lanConfig.streamPort.c_str()), 0, 0);
+								APE_LOG_DEBUG("Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()));
+								mpRakStreamPeer->Connect(mHostAddress.ToString(false), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
 							}
-						}
+						}*/
 					}
 					break;
 				}

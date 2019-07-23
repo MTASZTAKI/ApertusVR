@@ -100,32 +100,34 @@ namespace ape
 
 		struct LanConfig
 		{
-			std::string ip;
+			std::string hostIP;
 
-			std::string port;
+			std::string hostReplicaPort;
 
-			std::string streamPort;
+			std::string hostStreamPort;
 
 			LanConfig()
 			{
-				this->ip = std::string();
-				this->port = std::string();
-				this->streamPort = std::string();
+				this->hostIP = std::string();
+				this->hostReplicaPort = std::string();
+				this->hostStreamPort = std::string();
 			}
 
 			LanConfig(
-				std::string ip,
-				std::string port,
-				std::string streamPort
+				std::string hostIP,
+				std::string hostReplicaPort,
+				std::string hostStreamPort
 			)
 			{
-				this->ip = ip;
-				this->port = port;
-				this->streamPort = streamPort;
+				this->hostIP = hostIP;
+				this->hostReplicaPort = hostReplicaPort;
+				this->hostStreamPort = hostStreamPort;
 			}
 		};
 
 		std::string userName;
+
+		std::string uniqueID;
 
 		Selected selected;
 
@@ -142,6 +144,7 @@ namespace ape
 		NetworkConfig()
 		{
 			this->userName = std::string();
+			this->uniqueID = std::string();
 			this->natPunchThroughConfig = NatPunchThroughConfig();
 			this->lanConfig = LanConfig();
 			this->resourceLocations = std::vector<std::string>();
@@ -152,6 +155,7 @@ namespace ape
 
 		NetworkConfig(
 			std::string userName,
+			std::string uniqueID,
 			NatPunchThroughConfig natPunchThroughConfig,
 			LanConfig lanConfig,
 			std::vector<std::string> resourceLocations,
@@ -161,6 +165,7 @@ namespace ape
 		)
 		{
 			this->userName = userName;
+			this->uniqueID = uniqueID;
 			this->natPunchThroughConfig = natPunchThroughConfig;
 			this->lanConfig = lanConfig;
 			this->resourceLocations = resourceLocations;
@@ -220,6 +225,8 @@ namespace ape
 		virtual WindowConfig getWindowConfig() = 0;
 
 		virtual void setWindowConfig(WindowConfig windowConfig) = 0;
+
+		virtual void setNetworkConfig(NetworkConfig networkConfig) = 0;
 
 		virtual std::string getConfigFolderPath() = 0;
 	};

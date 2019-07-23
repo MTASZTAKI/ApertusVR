@@ -8,6 +8,7 @@ ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	mpAssimpImporter = nullptr;
 	mAssimpScenes = std::vector<const aiScene*>();
 	mAssimpAssetConfigs = std::vector<AssetConfig>();
@@ -67,6 +68,7 @@ void ape::AssimpAssetLoaderPlugin::Restart()
 	APE_LOG_FUNC_LEAVE();
 }
 
+
 void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
@@ -114,7 +116,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 		auto parentNode = ape::NodeWeakPtr();
 		if (assimpNode->mParent)
 		{
-			parentNode = mpSceneManager->getNode(assimpNode->mParent->mName.C_Str());
+			parentNode = mpSceneManager->getNode(assimpNode->mParent->mName.C_Str() + mUniqueID);
 			if (parentNode.lock())
 				node->setParentNode(parentNode);
 		}
@@ -161,6 +163,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), ','), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '<'), modifiedMaterialName.end());
 				modifiedMaterialName.erase(std::remove(modifiedMaterialName.begin(), modifiedMaterialName.end(), '>'), modifiedMaterialName.end());
+				modifiedMaterialName += mUniqueID;
 
 				auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(modifiedMaterialName).lock());
 				std::string diffuseTextureFileName = std::string();
@@ -409,7 +412,7 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 	{
 		//APE_LOG_DEBUG("mNumMeshes: " << assimpScene->mNumMeshes);
 		createNode(ID, assimpScene->mRootNode);
-		if (auto assimpSceneRootNode = mpSceneManager->getNode(assimpScene->mRootNode->mName.C_Str()).lock())
+		if (auto assimpSceneRootNode = mpSceneManager->getNode(assimpScene->mRootNode->mName.C_Str() + mUniqueID).lock())
 		{
 			APE_LOG_DEBUG("assimpSceneRootNode: " << assimpSceneRootNode->getName());
 			if (mAssimpAssetConfigs[ID].mergeAndExportMeshes)
@@ -424,7 +427,7 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 			}
 			else
 			{
-				if (auto rootNode = mpSceneManager->getNode(mAssimpAssetConfigs[ID].rootNodeName).lock())
+				if (auto rootNode = mpSceneManager->getNode(mAssimpAssetConfigs[ID].rootNodeName + mUniqueID).lock())
 				{
 					APE_LOG_DEBUG("setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
 						<< " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());

@@ -62,6 +62,8 @@ namespace ape
 
 		void setWindowConfig(WindowConfig windowConfig) override;
 
+		void setNetworkConfig(NetworkConfig networkConfig) override;
+
 		std::string getConfigFolderPath() override;
 	};
 }

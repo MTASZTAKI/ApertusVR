@@ -60,6 +60,7 @@ ape::SceneManagerImpl::SceneManagerImpl()
 	mNodes = ape::NodeSharedPtrNameMap();
 	mEntities = ape::EntitySharedPtrNameMap();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -87,14 +88,14 @@ ape::NodeWeakPtr ape::SceneManagerImpl::getNode(std::string name)
 
 ape::NodeWeakPtr ape::SceneManagerImpl::createNode(std::string name)
 {
-	//APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_ENTER();
+	name = name + mUniqueID;
 	auto node = std::make_shared<ape::NodeImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isHost());
 	mNodes.insert(std::make_pair(name, node));
 	((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::NODE_CREATE));
 	if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
 		replicaManager->Reference(node.get());
-
-	//APE_LOG_FUNC_LEAVE();
+	APE_LOG_FUNC_LEAVE();
 	return node;
 }
 
@@ -123,6 +124,7 @@ ape::EntityWeakPtr ape::SceneManagerImpl::getEntity(std::string name)
 ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::Entity::Type type)
 {
 	APE_LOG_FUNC_ENTER();
+	name = name + mUniqueID;
 	switch (type) 
 	{
 		case ape::Entity::LIGHT:

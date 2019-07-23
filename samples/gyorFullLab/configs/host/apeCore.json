@@ -1,11 +1,8 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apeGyorPlugin",
-    "apeAssimpAssetLoaderPlugin",
-    "apeKinectPlugin"
+    "apeGyorPlugin"
   ],
   "network": {
     "user": "gyorFullLab_host",
@@ -22,10 +19,11 @@
       }
     },
     "lan": {
-      "ip": "10.1.0.30",
-      "port": "61116"
+      "hostIP": "10.1.0.30",
+      "hostReplicaPort": "61116",
+      "hostStreamPort": "61117"
     },
-    "selected": "none",
+    "selected": "lan",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
       "/plugins/gyor/resources"

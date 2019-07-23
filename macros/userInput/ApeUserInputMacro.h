@@ -149,7 +149,7 @@ namespace ape
 
 		ape::NodeWeakPtr mUserNode;
 
-		std::string mUniqueUserNodeName;
+		std::string mUserNodeName;
 
 		ape::NodeWeakPtr mHeadNode;
 
