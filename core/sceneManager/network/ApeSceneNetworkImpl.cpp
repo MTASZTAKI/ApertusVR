@@ -65,11 +65,12 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 			std::string name = mpCoreConfig->getNetworkConfig().lobbyConfig.roomName;
 			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
 			APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
-			if (getSessionRes && !uuid.empty())
-			{
-				connect(uuid);
-			}
+			//if (getSessionRes && !uuid.empty())
+			//{
+				//connect(uuid);
+			//}
 		}
+		connect(uuid);
 	}
 }
 
