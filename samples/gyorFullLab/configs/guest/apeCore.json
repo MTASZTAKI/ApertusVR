@@ -1,11 +1,11 @@
 {
   "plugins": [
     "apeNodeJsPlugin",
-    "apeKinectPlugin",
-    "apeAssimpAssetLoaderPlugin"
+    "apeAssimpAssetLoaderPlugin",
+    "apeKinectPlugin"
   ],
   "network": {
-    "user": "gyorFullLab_Guest",
+    "user": "gyorFullLab_guest",
     "participant": "guest",
     "internet": {
       "natPunchThrough": {
@@ -19,16 +19,13 @@
       }
     },
     "lan": {
-      "ip": "10.1.0.31",
-      "port": "3005",
-      "streamPort": "3010"
+      "ip": "10.1.0.39",
+      "port": "61116"
     },
     "selected": "lan",
     "resourceLocations": [
-      "/plugins/gyorPathPlanning/resources",
-      "/macros/sceneMaker/resources"
+      "/plugins/gyor/resources"
     ]
   }
 }
-
 

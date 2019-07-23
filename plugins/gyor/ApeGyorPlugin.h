@@ -70,7 +70,7 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
-		ape::UserInputMacro* mpapeUserInputMacro;
+		ape::UserInputMacro* mpApeUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
