@@ -36,7 +36,6 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 
 	m_dynamicsWorld->setGravity(btVector3(0., -15., 0.));
-
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -65,7 +64,6 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 			}*/
 
 		}
-		
 	}
 	else if (event.group == ape::Event::Group::GEOMETRY_BOX)
 	{
@@ -108,7 +106,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 			}
 			else if (event.type == ape::Event::Type::GEOMETRY_BOX_DELETE)
 			{
-				deleteObject(geometryName);
+				deleteCollisionObject(geometryName);
 			}
 			else if (event.type == ape::Event::Type::GEOMETRY_BOX_PARAMETERS)
 			{
@@ -186,7 +184,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 			}
 			else if (event.type == ape::Event::Type::GEOMETRY_SPHERE_DELETE)
 			{
-				deleteObject(geometryName);
+				deleteCollisionObject(geometryName);
 
 			}
 			else if (event.type == ape::Event::Type::GEOMETRY_SPHERE_PARENTNODE)
@@ -249,7 +247,7 @@ void ape::BulletPhysicsPlugin::eventCallBack(const ape::Event& event)
 			}
 			else if (event.type == ape::Event::GEOMETRY_PLANE_DELETE)
 			{
-				deleteObject(geometryName);
+				deleteCollisionObject(geometryName);
 			}
 			else if (event.type == ape::Event::GEOMETRY_PLANE_PARAMETERS)
 			{
@@ -288,9 +286,7 @@ void ape::BulletPhysicsPlugin::Init()
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	time_t t = clock();
 	
-	printf("\nNum of collision objects: %d\n", m_dynamicsWorld->getNumCollisionObjects());
 	while (true)
 	{
 		/// takes one step of the simulation in the physics engine
@@ -304,7 +300,7 @@ void ape::BulletPhysicsPlugin::Run()
 			
 			btTransform trans;
 
-			if (body && body->getMotionState() && body->getInvMass() != 0)
+			if (body && body->getMotionState() && !(body->isStaticObject()))
 			{
 				body->getMotionState()->getWorldTransform(trans);
 			}
@@ -319,14 +315,7 @@ void ape::BulletPhysicsPlugin::Run()
 				parentNode->setOrientation(fromBullet(trans.getRotation()));
 			}
 			
-			
-
-			if (float(clock() - t) > 2000)
-				printf("%s %f, %f, %f, mass: %f\n", geometryName, trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ());
 		}
-
-		if (float(clock() - t) > 2000)
-			t = clock();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		
@@ -336,7 +325,6 @@ void ape::BulletPhysicsPlugin::Run()
 
 
 /// conversion between bullet3 and ape
-
 ape::Vector3 ape::BulletPhysicsPlugin::fromBullet(const btVector3& btVec)
 {
 	return ape::Vector3(btVec.getX(), btVec.getY(), btVec.getZ());
@@ -358,7 +346,7 @@ btQuaternion ape::BulletPhysicsPlugin::fromApe(const ape::Quaternion& apeQuat)
 }
 
 
-/// sets the transform of a geometry in the physics world
+/// sets the transform of a geometry's btCollisionObject in the physics world
 void ape::BulletPhysicsPlugin::setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position)
 {
 
@@ -384,7 +372,7 @@ void ape::BulletPhysicsPlugin::setTransform(std::string geometryName, btQuaterni
 
 
 /// delte object from dynamisWorld
-void ape::BulletPhysicsPlugin::deleteObject(std::string geometryName)
+void ape::BulletPhysicsPlugin::deleteCollisionObject(std::string geometryName)
 {
 	if (m_collisionShapes[geometryName])
 	{
@@ -425,7 +413,7 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string geometryName, btCol
 		if (body)
 		{
 			btVector3 localInertia;
-			btScalar mass = 1.f / body->getInvMass();
+			btScalar mass = (body->getInvMass() == 0.0f) ? 0.0f : 1.0f / body->getInvMass();
 			colShape->calculateLocalInertia(mass, localInertia);
 			body->setMassProps(mass, localInertia);
 		}
@@ -453,32 +441,18 @@ void ape::BulletPhysicsPlugin::createRigidBody(std::string geometryName, btTrans
 	// for testing
 	if (geometryName == "plane")
 	{
-		body->setRestitution(0.3f); 
-		//body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		//body->setActivationState(DISABLE_DEACTIVATION);
-
-		//body->setLinearVelocity(btVector3(0, 10, 0));
-
-		
+		body->setRestitution(0.5f); 
 	}
 	else if(geometryName == "sphere1111")
 	{
-		body->setRestitution(0.7f);
+		body->setRestitution(1.1f);
 		body->setDamping(0.02f, 0.01f);
-
-		//body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		//body->setActivationState(DISABLE_DEACTIVATION);
-		//btTransform tr;
-		//tr.setIdentity();
-		//tr.setOrigin(btVector3(0, 100, 0));
-		//body->setCenterOfMassTransform(tr);
-		//body->getMotionState()->setWorldTransform(tr);
+		
 		
 	}
 	else if (geometryName == "box")
 	{
 		body->setRestitution(0.7f);
-		
 		
 	}
 
