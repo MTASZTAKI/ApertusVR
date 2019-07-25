@@ -65,7 +65,7 @@ namespace ape
 
 		virtual float getRestitution() override;
 
-		virtual ape::RigidBodyType getType() override;
+		virtual ape::RigidBodyType getRBType() override;
 
 		/// Parent node and geometry shape
 
@@ -89,8 +89,6 @@ namespace ape
 		ape::EventManagerImpl* mpEventManagerImpl;
 
 		ape::ISceneManager* mpSceneManager;
-
-		//ape::RigidBodyParameters mParameters;
 
 		/// Physics parameters
 

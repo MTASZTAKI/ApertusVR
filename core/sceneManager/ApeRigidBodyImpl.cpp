@@ -27,7 +27,14 @@ ape::RigidBodyImpl::RigidBodyImpl(std::string name,bool isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	//mParameters = ape::RigidBodyParameters();
+	mMass = 1.0f;
+	mLinearFriction = 0.5f;
+	mRollingFriction = 0.0f;
+	mSpinningFriction = 0.0f;
+	mLinearDamping = 0.0f;
+	mAngularDamping = 0.0f;
+	mRestitution = 0.0f;
+	mRBType = ape::RigidBodyType::DYNAMIC;
 	mGeometry = ape::GeometryWeakPtr();
 	mGeometryName = std::string();
 }
@@ -41,7 +48,7 @@ ape::RigidBodyImpl::~RigidBodyImpl()
 
 void ape::RigidBodyImpl::setMass(float mass)
 {
-	if (mRBType == ape::RigidBodyType::DYNAMIC)
+	if (mRBType == ape::RigidBodyType::DYNAMIC && mass > 0.0f)
 	{
 		mMass = mass;
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
@@ -69,9 +76,13 @@ void ape::RigidBodyImpl::setRestitution(float rest)
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_RESTITUTION));
 }
 
-void ape::RigidBodyImpl::setType(ape::RigidBodyType RBtype)
+void ape::RigidBodyImpl::setType(ape::RigidBodyType RBType)
 {
-	mRBType = RBtype;
+	mRBType = RBType;
+	if (RBType == ape::RigidBodyType::STATIC)
+		mMass = 0.0f;
+	else if (RBType == ape::RigidBodyType::DYNAMIC && mMass == 0.0f)
+		mMass = 1.0f;
 }
 
 /// Physics parameter getters
@@ -111,7 +122,7 @@ float ape::RigidBodyImpl::getRestitution()
 	return mRestitution;
 }
 
-ape::RigidBodyType ape::RigidBodyImpl::getType()
+ape::RigidBodyType ape::RigidBodyImpl::getRBType()
 {
 	return mRBType;
 }

@@ -81,7 +81,7 @@ namespace ape
 
 		virtual float getRestitution() = 0;
 
-		virtual RigidBodyType getType() = 0;
+		virtual RigidBodyType getRBType() = 0;
 
 		/// Parent node and geometry (for shape)
         
