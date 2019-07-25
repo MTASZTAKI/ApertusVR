@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIRigidBody.h"
 
 
 // for bullet
@@ -82,6 +83,8 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
+		float timeStep;
+
 
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
@@ -94,14 +97,17 @@ namespace ape
 
 		btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-		/// maps for shapes, objects, bodies, nodes...
+		/// maps for shapes, objects, bodies, nodes...,
+		/// the std::string key is the geometryName of the geometry
+
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
 
-		std::map<std::string, btCollisionObject*> m_collisionObjects;
+		std::map<std::string, btRigidBody*> m_rigidBodies;
 		
 		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
 
 		/// conversion between bullet3 and ape
+
 		ape::Vector3 fromBullet(const btVector3& btVec);
 
 		ape::Quaternion fromBullet(const btQuaternion& btQuat);
@@ -111,11 +117,12 @@ namespace ape
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
 
 		/// functions for cleaner code in the eventCallBack
+
 		void setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position);
 
-		void deleteObject(std::string geometryName);
+		void deleteCollisionObject(std::string geometryName);
 
-		void setCollisionShape(std::string geometryName, btCollisionShape* colShape);
+		void setCollisionShape(std::string geometryName, btCollisionShape* colShape, btScalar mass);
 
 		void createRigidBody(std::string geometryName, btTransform trans, btScalar mass, btCollisionShape* shape);
 
