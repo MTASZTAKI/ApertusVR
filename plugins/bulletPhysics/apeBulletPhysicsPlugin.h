@@ -45,6 +45,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
+#include "utils/apeDoubleQueue.h"
 
 
 // for bullet
@@ -85,7 +86,6 @@ namespace ape
 
 		float timeStep;
 
-
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
 
@@ -102,9 +102,14 @@ namespace ape
 
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
 
-		std::map<std::string, btRigidBody*> m_rigidBodies;
+		std::map<std::string, btCollisionObject*> m_collisionObjects;
 		
 		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
+
+		
+		ape::DoubleQueue<Event> m_eventDoubleQueue;
+
+		void processEventDoubleQueue();
 
 		/// conversion between bullet3 and ape
 
@@ -115,6 +120,8 @@ namespace ape
 		btVector3 fromApe(const ape::Vector3& apeVec);
 
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
+
+		std::string toString(btVector3 vec);
 
 		/// functions for cleaner code in the eventCallBack
 
