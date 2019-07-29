@@ -63,7 +63,9 @@ namespace ape
 
 		virtual void setRestitution(float rest) = 0;
 
-		virtual void setType(RigidBodyType type) = 0;
+		virtual void setToDynamic(float mass) = 0;
+
+		virtual void setToStatic() = 0;
 
 		/// Physics parameter getters
 

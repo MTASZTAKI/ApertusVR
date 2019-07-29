@@ -47,7 +47,9 @@ namespace ape
 
 		virtual void setRestitution(float rest) override;
 
-		virtual void setType(ape::RigidBodyType RBtype) override;
+		virtual void setToDynamic(float mass) override;
+
+		virtual void setToStatic() override;
 
 		/// Physics parameter getters
 

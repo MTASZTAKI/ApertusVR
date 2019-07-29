@@ -41,18 +41,18 @@ ape::RigidBodyImpl::RigidBodyImpl(std::string name,bool isHostCreated)
 
 ape::RigidBodyImpl::~RigidBodyImpl()
 {
-
 }
 
 /// Physics parameter setters
 
 void ape::RigidBodyImpl::setMass(float mass)
 {
-	if (mRBType == ape::RigidBodyType::DYNAMIC && mass > 0.0f)
-	{
-		mMass = mass;
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
-	}
+	if (mRBType == ape::RigidBodyType::DYNAMIC)
+		mMass = mass > 0.0f ? mass : 1.0f;
+	else if (mRBType == ape::RigidBodyType::STATIC)
+		mMass = 0.0f;
+	this;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
 }
 
 void ape::RigidBodyImpl::setFriction(float linearFric, float rollingFric, float spinningFric)
@@ -76,13 +76,16 @@ void ape::RigidBodyImpl::setRestitution(float rest)
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_RESTITUTION));
 }
 
-void ape::RigidBodyImpl::setType(ape::RigidBodyType RBType)
+void ape::RigidBodyImpl::setToDynamic(float mass)
 {
-	mRBType = RBType;
-	if (RBType == ape::RigidBodyType::STATIC)
-		mMass = 0.0f;
-	else if (RBType == ape::RigidBodyType::DYNAMIC && mMass == 0.0f)
-		mMass = 1.0f;
+	mRBType = ape::RigidBodyType::DYNAMIC;
+	this->setMass(mass);
+}
+
+void ape::RigidBodyImpl::setToStatic()
+{
+	mRBType = ape::RigidBodyType::STATIC;
+	this->setMass(0.0f);
 }
 
 /// Physics parameter getters
@@ -223,8 +226,8 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters *deserializeP
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRestitution))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_RESTITUTION));
 
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRBType))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_TYPE));
+	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRBType))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_TYPE));*/
 	
 	
 	RakNet::RakString parentName;

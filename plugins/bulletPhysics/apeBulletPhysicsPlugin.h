@@ -84,7 +84,13 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		float timeStep;
+		/// for stepSimulation
+
+		float m_fixedTimeStep;
+
+		int m_maxSubSteps;
+
+		btVector3 m_gravity;
 
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;

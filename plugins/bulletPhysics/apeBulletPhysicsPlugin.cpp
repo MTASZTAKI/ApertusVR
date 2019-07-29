@@ -31,7 +31,7 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
-	m_dynamicsWorld->setGravity(btVector3(0., -9.8, 0.));
+	//m_dynamicsWorld->setGravity(btVector3(0., -980, 0.));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -115,7 +115,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							if (auto plane = std::static_pointer_cast<IPlaneGeometry>(geometry))
 							{
 								ape::Vector2 planeSize = plane->getParameters().size;
-								btCollisionShape* planeShape = new btBoxShape(btVector3(planeSize.x * 0.5f, 1.0f, planeSize.y * 0.5f));
+								btCollisionShape* planeShape = new btBoxShape(btVector3(planeSize.x * 0.5f, 0.0f, planeSize.y * 0.5f));
 								btScalar mass = apeBody->getMass();
 								setCollisionShape(apeBodyName, planeShape, mass);
 							}
@@ -126,21 +126,17 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						}
 					}
 				}
-				if (event.type == ape::Event::Type::RIGIDBODY_MASS)
+				else if (event.type == ape::Event::Type::RIGIDBODY_MASS)
 				{
 					btScalar mass = apeBody->getMass();
 					btCollisionObject* btObj = m_collisionObjects[apeBodyName];
 					btRigidBody* btBody = btRigidBody::upcast(btObj);
 
-					if (btBody && mass > 0.0f && btBody->getCollisionShape())
+					if (btBody && btBody->getCollisionShape())
 					{
 						btVector3 localInertia;
 						btBody->getCollisionShape()->calculateLocalInertia(mass, localInertia);
 						btBody->setMassProps(mass, localInertia);
-					}
-					else
-					{
-						btBody->setMassProps(0.0f, btVector3(0, 0, 0));
 					}
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_FRICTION)
@@ -165,23 +161,6 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					btRigidBody* btBody = btRigidBody::upcast(btObj);
 
 					btBody->setRestitution(apeBody->getRestitution());
-				}
-				else if (event.type == ape::Event::Type::RIGIDBODY_TYPE)
-				{
-					btCollisionObject* btObj = m_collisionObjects[apeBodyName];
-					btRigidBody* btBody = btRigidBody::upcast(btObj);
-
-					switch (apeBody->getRBType())
-					{
-					case ape::RigidBodyType::DYNAMIC:
-						//btBody->setCollisionFlags(btBody->getCollisionFlags() & ~btCollisionObject::CF_STATIC_OBJECT);
-						break;
-					case ape::RigidBodyType::STATIC:
-						//btBody->setCollisionFlags(btBody->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
-						break;
-					default:
-						break;
-					}
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_PARENTNODE)
 				{
@@ -212,21 +191,69 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 void ape::BulletPhysicsPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeBulletPlugin.json";
+	
+	FILE* apeBulletConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (apeBulletConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(apeBulletConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			if (jsonDocument.HasMember("maxSubSteps"))
+			{
+				rapidjson::Value& input = jsonDocument["maxSubSteps"];
+				m_maxSubSteps = input.GetInt();
+			}
+			if (jsonDocument.HasMember("fixedTimeStep"))
+			{
+				rapidjson::Value& input = jsonDocument["fixedTimeStep"];
+				m_fixedTimeStep = input.GetInt();
+			}
+			if (jsonDocument.HasMember("gravity"))
+			{
+				rapidjson::Value& input = jsonDocument["gravity"];
+		
+				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				{
+					if (it->name == "x")
+						m_gravity.setX(it->value.GetFloat());
+					else if (it->name == "y")
+						m_gravity.setY(it->value.GetFloat());
+					else if (it->name == "z")
+						m_gravity.setZ(it->value.GetFloat());
+				}
+			}
+		}
+	}
 
+	m_dynamicsWorld->setGravity(m_gravity);
 	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	btClock clock;
 	while (true)
 	{
 		/// takes one step of the simulation in the physics engine
 		
 		processEventDoubleQueue();
 
-		m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+		btScalar dtSec = btScalar(clock.getTimeSeconds());
 		
+
+		///stepTime < maxNumSubSteps * internalTimeStep
+
+		m_dynamicsWorld->stepSimulation(dtSec,100);
+		clock.reset();
+
+
 		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
 		{
 			std::string rbName = it->first;
