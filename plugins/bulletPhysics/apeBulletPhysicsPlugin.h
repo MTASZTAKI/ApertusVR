@@ -45,7 +45,10 @@ SOFTWARE.*/
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
+#include "sceneElements/apeIIndexedFaceSetGeometry.h"
+
 #include "utils/apeDoubleQueue.h"
+
 
 
 // for bullet
@@ -84,13 +87,15 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		/// for stepSimulation
+		/// for config
 
 		float m_fixedTimeStep;
 
 		int m_maxSubSteps;
 
 		btVector3 m_gravity;
+
+		float plainHeight;
 
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
@@ -112,6 +117,7 @@ namespace ape
 		
 		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
 
+		std::map<std::string, ape::Vector3> m_offsets;
 		
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 
