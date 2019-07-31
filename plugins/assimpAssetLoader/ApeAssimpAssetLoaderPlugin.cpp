@@ -119,6 +119,9 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			parentNode = mpSceneManager->getNode(assimpNode->mParent->mName.C_Str() + mUniqueID);
 			if (parentNode.lock())
 				node->setParentNode(parentNode);
+
+			
+
 		}
 		node->setPosition(ape::Vector3(position.x, position.y, position.z));
 		node->setOrientation(ape::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
@@ -277,6 +280,16 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
 				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
+
+				if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY).lock()))
+				{
+					body->setParentNode(node);
+					body->setGeometry(mesh);
+					body->setToDynamic(3.0f);
+					body->setRestitution(0.0f);
+					body->setFriction(0.5, 0.3, 0.3);
+
+				}
 			}
 		}
 	}

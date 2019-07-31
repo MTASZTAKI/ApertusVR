@@ -58,6 +58,34 @@ SOFTWARE.*/
 
 namespace ape
 {
+	struct InstanceVertex
+	{
+		float xyzw[4];
+		float normal[3];
+		float uv[2];
+	};
+
+	struct InstanceGraphicShape
+	{
+		btAlignedObjectArray<InstanceVertex>* m_vertices;
+		int m_numvertices;
+		btAlignedObjectArray<int>* m_indices;
+		int m_numIndices;
+		float m_scaling[4];
+
+		InstanceGraphicShape()
+			: m_vertices(0),
+			m_indices(0)
+		{
+		}
+
+		virtual ~InstanceGraphicShape()
+		{
+			delete m_vertices;
+			delete m_indices;
+		}
+	};
+
 	class BulletPhysicsPlugin : public ape::IPlugin
 	{
 	public:

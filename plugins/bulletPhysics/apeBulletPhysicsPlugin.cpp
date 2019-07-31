@@ -158,20 +158,18 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						case ape::Entity::Type::GEOMETRY_INDEXEDFACESET:
 							if (auto faceSet = std::static_pointer_cast<IIndexedFaceSetGeometry>(geometry))
 							{
-								const ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
 								const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();						
-
-								/*btAlignedObjectArray<btScalar> btCoordinates;
-								for (size_t i = 0; i < indices.size(); i = i+4)
-								{
-									btCoordinates.push_back(coordinates[indices[i]]);
-									btCoordinates.push_back(coordinates[indices[i+1]]);
-									btCoordinates.push_back(coordinates[indices[i+2]]);
-								}*/
-
-
-								btCollisionShape* convexHullShape = new btConvexHullShape((const btScalar*) (&(coordinates[0])),coordinates.size()*sizeof(float),sizeof(float));
 								
+								btConvexHullShape* convexHullShape = new btConvexHullShape();
+
+								for (size_t i = 0; i < coordinates.size(); i = i+3)
+								{
+									btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+									convexHullShape->addPoint(v,false);
+								}
+								convexHullShape->recalcLocalAabb();						
+
+								setCollisionShape(apeBodyName, convexHullShape, apeBody->getMass());
 							}
 							break;
 
@@ -227,11 +225,16 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						if (auto geometry = apeBody->getGeometry().lock())
 							gType = geometry->getType();
 
-						
+						btVector3 scale = fromApe(parentNode->getDerivedScale());
+
+						if (m_collisionShapes[apeBodyName])
+							m_collisionShapes[apeBodyName]->setLocalScaling(scale);
+
 						setTransform(apeBodyName,
-							fromApe(parentNode->getOrientation()),
-							fromApe(parentNode->getPosition()) - 
+							fromApe(parentNode->getDerivedOrientation()),
+							fromApe(parentNode->getDerivedPosition()) - 
 							fromApe(m_offsets[apeBodyName]));
+
 					}
 				}
 			}
@@ -286,24 +289,25 @@ void ape::BulletPhysicsPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
+clock_t t = clock();
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-	btClock clock;
+	btClock btclock;
 	while (true)
 	{
 		/// takes one step of the simulation in the physics engine
 		
 		processEventDoubleQueue();
 
-		btScalar dtSec = btScalar(clock.getTimeSeconds());
+		btScalar dtSec = btScalar(btclock.getTimeSeconds());
 		
 
 		///stepTime < maxNumSubSteps * internalTimeStep
 
 		m_dynamicsWorld->stepSimulation(dtSec,100);
-		clock.reset();
+		btclock.reset();
 
 
 		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
@@ -329,10 +333,16 @@ void ape::BulletPhysicsPlugin::Run()
 				
 				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
+				
+
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
 			}
+			if (float(clock()) - float(t) > 1000.0 && rbName == "nodes_2_3Body")
+				printf("%s pos: %s\n",rbName.c_str(),toString(trans.getOrigin()).c_str());
 		}
+		if (float(clock()) - float(t) > 1000.0)
+			t = clock();
 
 		//std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
@@ -391,6 +401,8 @@ void ape::BulletPhysicsPlugin::setTransform(std::string apeBodyName, btQuaternio
 			body->setWorldTransform(trans);
 	}
 
+	//printf("%s start pos %s\n", apeBodyName.c_str(),toString(trans.getOrigin()).c_str());
+
 	/// else: error...?
 }
 
@@ -428,7 +440,8 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 	
 	btCollisionObject* obj = m_collisionObjects[apeBodyName];
 
-	
+	if(oldShape)
+		colShape->setLocalScaling(oldShape->getLocalScaling());
 
 	if (auto body = btRigidBody::upcast(obj))
 	{
@@ -438,12 +451,10 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 		//btScalar mass = (body->getInvMass() == 0.0f) ? 0.0f : 1.0f / body->getInvMass();
 		colShape->calculateLocalInertia(mass, localInertia);
 		body->setMassProps(mass, localInertia);
-
-		if (oldShape)
-			delete oldShape;
-
-		
 	}
+
+	if (oldShape)
+		delete oldShape;
 }
 
 /// creates a rigidbody in the physics world
