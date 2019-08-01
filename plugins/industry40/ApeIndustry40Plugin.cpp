@@ -45,45 +45,45 @@ void ape::apeIndustry40Plugin::Init()
 	}
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeCoordinateSystem();
-	mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
+	//mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
+
+	
+
+	//mpSceneMakerMacro->makeBox("a1");
+
+	 // create box geometry
+	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	{
+		// material for box
+		std::shared_ptr<ape::IManualMaterial> boxMaterial;
+		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			boxMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
+			boxMaterial->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
+		}
 
 
 
-	mpSceneMakerMacro->makeBox("a1");
+		boxNode->setPosition(ape::Vector3(0, -1500.f, 0));
 
-	// create box geometry
-	//if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
-	//{
-	//	// material for box
-	//	std::shared_ptr<ape::IManualMaterial> boxMaterial;
-	//	if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
-	//	{
-	//		boxMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
-	//		boxMaterial->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
-	//	}
+		// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
+		ape::BoxGeometrySharedPtr box;
+		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
+		{
+			box->setParameters(ape::Vector3(3000, 3000, 3000));
+			box->setParentNode(boxNode);
+			box->setMaterial(boxMaterial);
+		}
 
-
-
-	//	boxNode->setPosition(ape::Vector3(0, -1500.f, 0));
-
-	//	// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-	//	ape::BoxGeometrySharedPtr box;
-	//	if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
-	//	{
-	//		box->setParameters(ape::Vector3(3000, 3000, 3000));
-	//		box->setParentNode(boxNode);
-	//		box->setMaterial(boxMaterial);
-	//	}
-
-	//	if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody", ape::Entity::RIGIDBODY).lock()))
-	//	{
-	//		boxBody->setToStatic();
-	//		boxBody->setParentNode(boxNode);
-	//		boxBody->setGeometry(box);
-	//		boxBody->setRestitution(0.8f);
-	//	}
-	//	
-	//}
+		if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody", ape::Entity::RIGIDBODY).lock()))
+		{
+			boxBody->setToStatic();
+			boxBody->setParentNode(boxNode);
+			boxBody->setGeometry(box);
+			boxBody->setRestitution(0.8f);
+		}
+		
+	}
 
 	// create sphere geometry
 	/*if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
@@ -144,7 +144,7 @@ void ape::apeIndustry40Plugin::Init()
 					}
 
 
-					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ 300, float(k * 10 - array_size * 10 / 2 + 5)));
+					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ 10, float(k * 10 - array_size * 10 / 2 + 5)));
 
 					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
@@ -159,8 +159,8 @@ void ape::apeIndustry40Plugin::Init()
 							boxBody->setToStatic();
 							boxBody->setGeometry(box);
 							boxBody->setParentNode(boxNode);
-							boxBody->setRestitution(1.1f);
-							boxBody->setDamping(0.1, 0.1);
+							boxBody->setRestitution(1.0f);
+							boxBody->setDamping(0.2, 0.1);
 							
 							bodies.push_back(boxBody);
 						}
@@ -252,7 +252,7 @@ void ape::apeIndustry40Plugin::Init()
 	{
 		if (auto boxBody = bodies[i].lock())
 		{
-			boxBody->setToDynamic(1.0f);
+			boxBody->setToDynamic(0.8f);
 		}
 	}
 

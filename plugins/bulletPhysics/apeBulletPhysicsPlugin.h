@@ -49,41 +49,18 @@ SOFTWARE.*/
 
 #include "utils/apeDoubleQueue.h"
 
-
-
-// for bullet
+/// inlcude bullet
 #include "btBulletDynamicsCommon.h"
 
 #define THIS_PLUGINNAME "apeBulletPhysicsPlugin"
 
 namespace ape
 {
-	struct InstanceVertex
+	struct aabbProps
 	{
-		float xyzw[4];
-		float normal[3];
-		float uv[2];
-	};
-
-	struct InstanceGraphicShape
-	{
-		btAlignedObjectArray<InstanceVertex>* m_vertices;
-		int m_numvertices;
-		btAlignedObjectArray<int>* m_indices;
-		int m_numIndices;
-		float m_scaling[4];
-
-		InstanceGraphicShape()
-			: m_vertices(0),
-			m_indices(0)
-		{
-		}
-
-		virtual ~InstanceGraphicShape()
-		{
-			delete m_vertices;
-			delete m_indices;
-		}
+		btVector3 aabbMin;
+		btVector3 aabbMax;
+		btTransform tr;
 	};
 
 	class BulletPhysicsPlugin : public ape::IPlugin
@@ -146,6 +123,10 @@ namespace ape
 		std::map<std::string, ape::NodeWeakPtr> m_parentNodes;
 
 		std::map<std::string, ape::Vector3> m_offsets;
+
+		std::map<std::string, ape::BoxGeometryWeakPtr> m_boundingBoxes;
+
+		std::map<std::string, btVector3> m_shapeScales;
 		
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 
@@ -165,15 +146,19 @@ namespace ape
 
 		/// functions for cleaner code in the eventCallBack
 
-		void setTransform(std::string geometryName, btQuaternion new_orientation, btVector3 new_position);
+		void setTransform(std::string apeBodyName, btQuaternion new_orientation, btVector3 new_position);
 
-		void deleteCollisionObject(std::string geometryName);
+		void deleteCollisionObject(std::string apeBodyName);
 
-		void setCollisionShape(std::string geometryName, btCollisionShape* colShape, btScalar mass);
+		void setCollisionShape(std::string apeBodyName, btCollisionShape* colShape, btScalar mass);
 
-		void createRigidBody(std::string geometryName, btTransform trans, btScalar mass, btCollisionShape* shape);
+		void createRigidBody(std::string apeBodyName, btTransform trans, btScalar mass, btCollisionShape* shape);
 
-		void createCollisionObject(std::string geometryName, btTransform trans, btCollisionShape * shape);
+		void createCollisionObject(std::string apeBodyName, btTransform trans, btCollisionShape * shape);
+
+		btVector3 calculateCenterOfMass(const ape::GeometryCoordinates& coordinates);
+
+		void updateShapeScale(std::string apeBodyname);
 
 	};
 	

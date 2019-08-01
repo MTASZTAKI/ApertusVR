@@ -119,9 +119,6 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			parentNode = mpSceneManager->getNode(assimpNode->mParent->mName.C_Str() + mUniqueID);
 			if (parentNode.lock())
 				node->setParentNode(parentNode);
-
-			
-
 		}
 		node->setPosition(ape::Vector3(position.x, position.y, position.z));
 		node->setOrientation(ape::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
@@ -285,10 +282,13 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				{
 					body->setParentNode(node);
 					body->setGeometry(mesh);
-					body->setToDynamic(3.0f);
-					body->setRestitution(0.0f);
-					body->setFriction(0.5, 0.3, 0.3);
-
+					body->setToDynamic(1.0f);
+					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
+					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
+									  mPhysicsConfigs[assimpSceneID].rollingFriction,
+									  mPhysicsConfigs[assimpSceneID].spinningFriction);
+					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
+									 mPhysicsConfigs[assimpSceneID].angularDamping);
 				}
 			}
 		}
@@ -385,6 +385,40 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 								}
 							}
 						}
+					}
+					if (assetMemberIterator->name == "physics")
+					{
+						rapidjson::Value& input = jsonDocument["physics"];
+
+						PhysicsConfig physicsConfig;
+						for (auto physicsMemberIt = input.MemberBegin(); physicsMemberIt != input.MemberEnd(); physicsMemberIt++)
+						{
+							if (physicsMemberIt->name == "restitution")
+							{
+								physicsConfig.restitution = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "friction")
+							{
+								physicsConfig.friction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "rolling friction")
+							{
+								physicsConfig.rollingFriction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "spinning friction")
+							{
+								physicsConfig.spinningFriction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "linear damping")
+							{
+								physicsConfig.linearDamping = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "angular damping")
+							{
+								physicsConfig.angularDamping = physicsMemberIt->value.GetFloat();
+							}
+						}
+						mPhysicsConfigs.push_back(physicsConfig);
 					}
 				}
 				mAssimpAssetConfigs.push_back(assetConfig);

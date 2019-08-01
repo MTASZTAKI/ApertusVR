@@ -49,6 +49,7 @@ SOFTWARE.*/
 #include "managers/apeICoreConfig.h"
 #include "utils/apeInterpolator.h"
 #include "utils/apeSingleton.h"
+#include "sceneelements/apeIRigidBody.h"
 
 namespace ape
 {
@@ -70,7 +71,7 @@ namespace ape
 
 		void makeLit();
 
-		void makeGround();
+		void makeGround(std::string name = "plane", ape::Vector2 size = ape::Vector2(1000,1000));
 
 		void makeModel(std::string fileName);
 

@@ -76,7 +76,7 @@ void ape::SceneMakerMacro::makeGround(std::string name, ape::Vector2 size)
 					planeBody->setGeometry(plane);
 					planeBody->setParentNode(planeNode);
 					planeBody->setToStatic();
-					planeBody->setRestitution(0.4f);
+					planeBody->setRestitution(0.7f);
 				}
 			}
 		}
@@ -284,18 +284,32 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 		material->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
-			node->setPosition(ape::Vector3(0, 100, 0));
+			node->setPosition(ape::Vector3(0, 300, 0));
+			node->setScale(ape::Vector3(1.5,1.5,1.5));
+			float size = 20;
+
 			if (auto box = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
 				ape::GeometryCoordinates coordinates = {
-					50,  50, -50,
-					50, -50, -50,
-					-50, -50, -50,
-					-50,  50, -50,
-					50,  50,  50,
-					50, -50,  50,
-					-50, -50,  50,
-					-50,  50,  50
+					2*size,  2*size, 0,
+					2*size, 0, 0,
+					0, 0, 0,
+					0,  2*size, 0,
+					2*size,  2*size,  2*size,
+					2*size, 0,  2*size,
+					0, 0,  2*size,
+					0,  2*size,  2*size
+
+
+
+					/*size,  size, -size,
+					size, -size, -size,
+					-size, -size, -size,
+					-size,  size, -size,
+					size,  size,  size,
+					size, -size,  size,
+					-size, -size,  size,
+					-size,  size,  size*/
 
 				};
 				ape::GeometryIndices indices = {
@@ -307,13 +321,15 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 					4, 0, 3, 7, -1 };
 				box->setParameters("", coordinates, indices, ape::GeometryNormals(), true, ape::GeometryColors(), ape::GeometryTextureCoordinates(), material);
 				box->setParentNode(node);
+				
 
 				if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
 				{
 					boxBody->setParentNode(node);
 					boxBody->setGeometry(box);
-					boxBody->setToDynamic(1.0f);
-					boxBody->setRestitution(1.0f);
+					boxBody->setToDynamic(1.2f);
+					boxBody->setRestitution(1.2f);
+					boxBody->setFriction(0.5, 0.1, 0.3);
 
 				}
 			}

@@ -261,7 +261,6 @@ namespace ape
 			RIGIDBODY_RESTITUTION,
 			RIGIDBODY_PARENTNODE,
 			RIGIDBODY_SHAPE,
-			RIGIDBODY_TYPE
 		};
 
 		std::string subjectName;

@@ -62,6 +62,17 @@ namespace ape
 		bool regenerateNormals;
 		std::string rootNodeName;
 	};
+
+	struct PhysicsConfig
+	{
+		float friction;
+		float rollingFriction;
+		float spinningFriction;
+		float linearDamping;
+		float angularDamping;
+		float restitution;
+	};
+
 	class AssimpAssetLoaderPlugin : public ape::IPlugin
 	{
 	public:
@@ -96,6 +107,8 @@ namespace ape
 		std::vector<AssetConfig> mAssimpAssetConfigs;
 
 		std::string mUniqueID;
+
+		std::vector<PhysicsConfig> mPhysicsConfigs;
 
 		int mObjectCount;
 

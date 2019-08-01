@@ -76,6 +76,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					trans.setOrigin(btVector3(0, 0, 0));
 					btScalar mass = 1.0f;
 
+					m_shapeScales[apeBodyName] = btVector3(1, 1, 1);
+
 					createRigidBody(apeBodyName, trans, mass, sphereShape);
 
 				}
@@ -160,16 +162,29 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							{
 								const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();						
 								
+								btVector3 centerOfMass = calculateCenterOfMass(coordinates);
+
 								btConvexHullShape* convexHullShape = new btConvexHullShape();
 
 								for (size_t i = 0; i < coordinates.size(); i = i+3)
 								{
-									btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
-									convexHullShape->addPoint(v,false);
+									btVector3 coordinateVec(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+									convexHullShape->addPoint(coordinateVec,false);
 								}
-								convexHullShape->recalcLocalAabb();						
+								convexHullShape->recalcLocalAabb();	
 
-								setCollisionShape(apeBodyName, convexHullShape, apeBody->getMass());
+								btCompoundShape* compShape = new btCompoundShape();
+
+								btTransform tr;
+								tr.setIdentity();
+								tr.setOrigin(-centerOfMass);
+
+								compShape->addChildShape(tr,convexHullShape);
+								
+
+								m_offsets[apeBodyName] = fromBullet(-centerOfMass);
+
+								setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 							}
 							break;
 
@@ -221,19 +236,19 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						m_parentNodes[apeBodyName] = parentNode;
 
-						ape::Entity::Type gType;
-						if (auto geometry = apeBody->getGeometry().lock())
-							gType = geometry->getType();
-
-						btVector3 scale = fromApe(parentNode->getDerivedScale());
-
-						if (m_collisionShapes[apeBodyName])
-							m_collisionShapes[apeBodyName]->setLocalScaling(scale);
+						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
+						updateShapeScale(apeBodyName);
+								
+						//m_collisionShapes[apeBodyName]->setLocalScaling(scale);
 
 						setTransform(apeBodyName,
 							fromApe(parentNode->getDerivedOrientation()),
-							fromApe(parentNode->getDerivedPosition()) - 
-							fromApe(m_offsets[apeBodyName]));
+							fromApe(parentNode->getDerivedPosition()));
+
+						while (auto parentParentNode = parentNode->getParentNode().lock())
+							parentNode = parentParentNode;
+
+						m_parentNodes[apeBodyName] = parentNode; //!
 
 					}
 				}
@@ -327,19 +342,27 @@ void ape::BulletPhysicsPlugin::Run()
 
 			if (auto parentNode = m_parentNodes[rbName].lock())
 			{
+
 				ape::Quaternion orientation = fromBullet(trans.getRotation());
 
 				btVector3 rotated_offset = fromApe(m_offsets[rbName]);
-				
+
 				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
-				
 
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
+
+				if (float(clock()) - float(t) > 1000.0)
+				{
+					/*btVector3 parentTr = fromApe(parentNode->getParentNode().lock()->getPosition());
+					btVector3 parentParentTr = fromApe(parentNode->getParentNode().lock()->getParentNode().lock()->getPosition());*/
+
+					printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
+					/*printf("%s pos: %s\n", "parent ", toString(parentTr).c_str());
+					printf("%s pos: %s\n", "parent parent ", toString(parentParentTr).c_str());*/
+				}
 			}
-			if (float(clock()) - float(t) > 1000.0 && rbName == "nodes_2_3Body")
-				printf("%s pos: %s\n",rbName.c_str(),toString(trans.getOrigin()).c_str());
 		}
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();
@@ -440,8 +463,8 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 	
 	btCollisionObject* obj = m_collisionObjects[apeBodyName];
 
-	if(oldShape)
-		colShape->setLocalScaling(oldShape->getLocalScaling());
+	/*if (oldShape)
+		colShape->setLocalScaling(oldShape->getLocalScaling());*/
 
 	if (auto body = btRigidBody::upcast(obj))
 	{
@@ -452,6 +475,8 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 		colShape->calculateLocalInertia(mass, localInertia);
 		body->setMassProps(mass, localInertia);
 	}
+
+	updateShapeScale(apeBodyName);
 
 	if (oldShape)
 		delete oldShape;
@@ -485,13 +510,55 @@ void ape::BulletPhysicsPlugin::createCollisionObject(std::string geometryName, b
 	m_collisionShapes[geometryName] = shape;
 	m_collisionObjects[geometryName] = obj;
 
-	if (geometryName == "plane")
-	{
-		obj->setRestitution(0.6f);
-		obj->setFriction(1.f);
-	}
-
 	m_dynamicsWorld->addCollisionObject(obj);
+}
+
+/// calculate center of mass for indexed facesets
+
+btVector3 ape::BulletPhysicsPlugin::calculateCenterOfMass(const ape::GeometryCoordinates& coordinates)
+{
+	float M = coordinates.size() / 3;
+	btVector3 com(0, 0, 0);
+	for (size_t i = 0; i < coordinates.size(); i = i+3)
+	{
+		btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+		com += v;
+	}
+	com = com / M;
+
+	return com;
+}
+
+void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
+{
+	btCollisionShape* colShape = m_collisionShapes[apeBodyName];
+	btVector3 scale = m_shapeScales[apeBodyName];
+	
+	if (colShape->isCompound())
+	{
+		btCompoundShape* compShape = static_cast<btCompoundShape*>(colShape);
+		if (compShape->getNumChildShapes() > 0)
+		{
+			btCollisionShape* childShape = compShape->getChildShape(0);
+			btVector3 negCenterOfMass = compShape->getChildTransform(0).getOrigin();
+
+			negCenterOfMass = btVector3(negCenterOfMass.getX() * scale.getX(),
+				negCenterOfMass.getY() * scale.getY(),
+				negCenterOfMass.getZ() * scale.getZ());
+			btTransform newChildTr;
+			newChildTr.setIdentity();
+			newChildTr.setOrigin(negCenterOfMass);
+
+			compShape->updateChildTransform(0, newChildTr);
+			childShape->setLocalScaling(scale);
+
+			m_offsets[apeBodyName] = fromBullet(negCenterOfMass);
+		}
+	}
+	else
+	{
+		colShape->setLocalScaling(scale);
+	}
 }
 
 
