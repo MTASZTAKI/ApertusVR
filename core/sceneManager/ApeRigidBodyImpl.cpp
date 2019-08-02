@@ -130,6 +130,11 @@ ape::RigidBodyType ape::RigidBodyImpl::getRBType()
 	return mRBType;
 }
 
+bool ape::RigidBodyImpl::isStatic()
+{
+	return mRBType == ape::RigidBodyType::STATIC;
+}
+
 /// Parent node and geometry
 
 void ape::RigidBodyImpl::setParentNode(ape::NodeWeakPtr parentNode)

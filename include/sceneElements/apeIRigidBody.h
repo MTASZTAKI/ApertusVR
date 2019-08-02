@@ -85,6 +85,8 @@ namespace ape
 
 		virtual RigidBodyType getRBType() = 0;
 
+		virtual bool isStatic() = 0;
+
 		/// Parent node and geometry (for shape)
         
         virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;

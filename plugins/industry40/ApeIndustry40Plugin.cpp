@@ -64,13 +64,13 @@ void ape::apeIndustry40Plugin::Init()
 
 
 
-		boxNode->setPosition(ape::Vector3(0, -1500.f, 0));
+		boxNode->setPosition(ape::Vector3(0, -2500.f, 0));
 
 		// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 		ape::BoxGeometrySharedPtr box;
 		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
 		{
-			box->setParameters(ape::Vector3(3000, 3000, 3000));
+			box->setParameters(ape::Vector3(5000, 5000,5000));
 			box->setParentNode(boxNode);
 			box->setMaterial(boxMaterial);
 		}
@@ -80,7 +80,7 @@ void ape::apeIndustry40Plugin::Init()
 			boxBody->setToStatic();
 			boxBody->setParentNode(boxNode);
 			boxBody->setGeometry(box);
-			boxBody->setRestitution(0.8f);
+			boxBody->setRestitution(0.6f);
 		}
 		
 	}
@@ -119,12 +119,12 @@ void ape::apeIndustry40Plugin::Init()
 	
 	
 	std::vector< RigidBodyWeakPtr> bodies;
-	const int array_size = 0;
+	const int array_size = 6;
 	for (int i = 0; i < array_size; i++)
 	{
 		std::stringstream ssi;
 		ssi << i;
-		for (int j = 0; j < 2; j++)
+		for (int j = 0; j < 1; j++)
 		{
 			std::stringstream ssj;
 			ssj << j;
@@ -144,7 +144,7 @@ void ape::apeIndustry40Plugin::Init()
 					}
 
 
-					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ 10, float(k * 10 - array_size * 10 / 2 + 5)));
+					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ 1000, float(k * 10 - array_size * 10 / 2 + 5)));
 
 					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
@@ -159,7 +159,7 @@ void ape::apeIndustry40Plugin::Init()
 							boxBody->setToStatic();
 							boxBody->setGeometry(box);
 							boxBody->setParentNode(boxNode);
-							boxBody->setRestitution(1.0f);
+							boxBody->setRestitution(0.8f);
 							boxBody->setDamping(0.2, 0.1);
 							
 							bodies.push_back(boxBody);
@@ -252,7 +252,7 @@ void ape::apeIndustry40Plugin::Init()
 	{
 		if (auto boxBody = bodies[i].lock())
 		{
-			boxBody->setToDynamic(0.8f);
+			boxBody->setToDynamic(0.3f);
 		}
 	}
 

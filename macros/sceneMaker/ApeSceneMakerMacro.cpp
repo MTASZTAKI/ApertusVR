@@ -284,7 +284,7 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 		material->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
-			node->setPosition(ape::Vector3(0, 300, 0));
+			node->setPosition(ape::Vector3(0, 20, 0));
 			node->setScale(ape::Vector3(1.5,1.5,1.5));
 			float size = 20;
 
@@ -327,7 +327,6 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 				{
 					boxBody->setParentNode(node);
 					boxBody->setGeometry(box);
-					boxBody->setToDynamic(1.2f);
 					boxBody->setRestitution(1.2f);
 					boxBody->setFriction(0.5, 0.1, 0.3);
 

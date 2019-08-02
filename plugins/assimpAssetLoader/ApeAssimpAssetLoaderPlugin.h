@@ -65,6 +65,7 @@ namespace ape
 
 	struct PhysicsConfig
 	{
+		float mass;
 		float friction;
 		float rollingFriction;
 		float spinningFriction;

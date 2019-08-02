@@ -278,11 +278,17 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					mesh->setParentNode(node);
 				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
 
+
+				/// setting physics body to the asset
 				if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY).lock()))
-				{
+				{	
+					if (mPhysicsConfigs[assimpSceneID].mass > 0.0f)
+						body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
+					else
+						body->setToStatic();
+
 					body->setParentNode(node);
 					body->setGeometry(mesh);
-					body->setToDynamic(1.0f);
 					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
 					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
 									  mPhysicsConfigs[assimpSceneID].rollingFriction,
@@ -388,11 +394,15 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					}
 					if (assetMemberIterator->name == "physics")
 					{
-						rapidjson::Value& input = jsonDocument["physics"];
-
 						PhysicsConfig physicsConfig;
-						for (auto physicsMemberIt = input.MemberBegin(); physicsMemberIt != input.MemberEnd(); physicsMemberIt++)
+
+						for (auto physicsMemberIt = assetMemberIterator->value.MemberBegin();
+							physicsMemberIt != assetMemberIterator->value.MemberEnd(); physicsMemberIt++)
 						{
+							if (physicsMemberIt->name == "mass")
+							{
+								physicsConfig.mass = physicsMemberIt->value.GetFloat();
+							}
 							if (physicsMemberIt->name == "restitution")
 							{
 								physicsConfig.restitution = physicsMemberIt->value.GetFloat();

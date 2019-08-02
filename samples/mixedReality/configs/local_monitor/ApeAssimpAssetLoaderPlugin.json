@@ -1,21 +1,22 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/duck.gltf",
+      "file": "/plugins/assimpAssetLoader/resources/Duck.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [ 1, 1, 1 ],
-      "position": [ 0, 200, 0 ],
+      "scale": [ 2, 2, 2 ],
+      "position": [ 0, 600, 0 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
       "rootNodeName": "duck",
       "physics": {
-        "restitution": 2.0,
+        "mass": 0.0,
+        "restitution": 0.4,
         "friction": 0.5,
         "rolling friction": 0.1,
         "spinning friction": 0.1,
         "linear damping": 0.01,
-        "angular damping": 0.01
+        "angular damping": 0.02
       }
-    }
+    } 
   ]
 }

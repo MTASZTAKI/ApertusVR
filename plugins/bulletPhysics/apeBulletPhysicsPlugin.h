@@ -46,6 +46,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITubeGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeIIndexedFaceSetGeometry.h"
+#include "sceneElements/apeIManualMaterial.h"
 
 #include "utils/apeDoubleQueue.h"
 
@@ -101,6 +102,8 @@ namespace ape
 		btVector3 m_gravity;
 
 		float plainHeight;
+
+		bool showBoundingBox;
 
 		/// member pointers for bullet3
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
@@ -159,6 +162,8 @@ namespace ape
 		btVector3 calculateCenterOfMass(const ape::GeometryCoordinates& coordinates);
 
 		void updateShapeScale(std::string apeBodyname);
+
+		void setBoundingBoxForDebug(std::string apeBodyName,btCollisionShape* colShape);
 
 	};
 	

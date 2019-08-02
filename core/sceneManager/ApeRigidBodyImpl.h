@@ -69,6 +69,8 @@ namespace ape
 
 		virtual ape::RigidBodyType getRBType() override;
 
+		virtual bool isStatic() override;
+
 		/// Parent node and geometry shape
 
 		void setParentNode(ape::NodeWeakPtr parentNode) override;
