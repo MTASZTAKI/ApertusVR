@@ -45,6 +45,7 @@ void ape::apeIndustry40Plugin::Init()
 	}
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeCoordinateSystem();
+	mpSceneMakerMacro->makeTerrain("terrain");
 	//mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
 
 	
@@ -52,38 +53,39 @@ void ape::apeIndustry40Plugin::Init()
 	//mpSceneMakerMacro->makeBox("a1");
 
 	 // create box geometry
-	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
-	{
-		// material for box
-		std::shared_ptr<ape::IManualMaterial> boxMaterial;
-		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
-		{
-			boxMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
-			boxMaterial->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
-		}
+	//if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	//{
+	//	// material for box
+	//	std::shared_ptr<ape::IManualMaterial> boxMaterial;
+	//	if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+	//	{
+	//		boxMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
+	//		boxMaterial->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
+	//	}
 
 
 
-		boxNode->setPosition(ape::Vector3(0, -2500.f, 0));
+	//	boxNode->setPosition(ape::Vector3(0, -2500.f, 0));
 
-		// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-		ape::BoxGeometrySharedPtr box;
-		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
-		{
-			box->setParameters(ape::Vector3(5000, 5000,5000));
-			box->setParentNode(boxNode);
-			box->setMaterial(boxMaterial);
-		}
+	//	// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
+	//	ape::BoxGeometrySharedPtr box;
+	//	if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
+	//	{
+	//		box->setParameters(ape::Vector3(5000, 5000,5000));
+	//		box->setParentNode(boxNode);
+	//		box->setMaterial(boxMaterial);
+	//	}
 
-		if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody", ape::Entity::RIGIDBODY).lock()))
-		{
-			boxBody->setToStatic();
-			boxBody->setParentNode(boxNode);
-			boxBody->setGeometry(box);
-			boxBody->setRestitution(0.6f);
-		}
-		
-	}
+	//	if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody", ape::Entity::RIGIDBODY).lock()))
+	//	{
+	//		boxBody->setToStatic();
+	//		boxBody->setParentNode(boxNode);
+	//		boxBody->setGeometry(box);
+	//		boxBody->setRestitution(0.6f);
+	//	}
+	//	
+	//}
+
 
 	// create sphere geometry
 	/*if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
@@ -119,7 +121,8 @@ void ape::apeIndustry40Plugin::Init()
 	
 	
 	std::vector< RigidBodyWeakPtr> bodies;
-	const int array_size = 6;
+	const int array_size = 12;
+	float height = 1000;
 	for (int i = 0; i < array_size; i++)
 	{
 		std::stringstream ssi;
@@ -144,7 +147,7 @@ void ape::apeIndustry40Plugin::Init()
 					}
 
 
-					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ 1000, float(k * 10 - array_size * 10 / 2 + 5)));
+					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ height, float(k * 10 - array_size * 10 / 2 + 5)));
 
 					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))

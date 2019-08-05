@@ -336,6 +336,98 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 	}
 }
 
+void ape::SceneMakerMacro::makeTerrain(std::string name)
+{
+	if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
+	{
+		material->setDiffuseColor(ape::Color(0.5f, 0.5f, 0.5f));
+		material->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
+		//material->setCullingMode(ape::Material::CullingMode::NONE_CM);
+
+		if (auto node = mpSceneManager->createNode(name + "Node").lock())
+		{
+			node->setPosition(ape::Vector3(0, 0, 0));
+			node->setScale(ape::Vector3(1,1,1));
+
+			if (auto terrain = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			{
+				int i;
+				int j;
+
+				const int NUM_VERTS_X = 30;
+				const int NUM_VERTS_Y = 30;
+				const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y;
+				const int totalTriangles = 2 * (NUM_VERTS_X -1) * (NUM_VERTS_Y -1);
+				const float TRIANGLE_SIZE = 50.f;
+
+				float offset = -50;
+				const float waveheight = 30.f;
+
+				ape::GeometryCoordinates coordinates;
+				ape::GeometryIndices indices;
+
+				coordinates.resize(totalVerts * 3);
+				indices.resize(totalTriangles * 4);
+
+				int index = 0;
+				for (j = 0; j < NUM_VERTS_Y; j++)
+				{
+					for (i = 0; i < NUM_VERTS_X; i++)
+					{
+						coordinates[index++] = (i - NUM_VERTS_X * 0.5f) * TRIANGLE_SIZE;
+						coordinates[index++] =  waveheight * sinf((float)i) * cosf((float)j);
+						coordinates[index++] = (j - NUM_VERTS_Y * 0.5f) * TRIANGLE_SIZE;
+					}
+				}
+
+				index = 0;
+				for (j = 0; j < NUM_VERTS_Y -1; j++)
+				{
+					for (i = 0; i < NUM_VERTS_X -1; i++)
+					{
+						/*indices[index++] = j * NUM_VERTS_X + i;
+						indices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+						indices[index++] = j * NUM_VERTS_X + i + 1;
+						indices[index++] = -1;
+
+						indices[index++] = j * NUM_VERTS_X + i;
+						indices[index++] = (j + 1) * NUM_VERTS_X + i;
+						indices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+						indices[index++] = -1;*/
+						
+							
+						indices[index++] = i + j * NUM_VERTS_Y;
+						indices[index++] = i + (j + 1) * NUM_VERTS_Y;
+						indices[index++] = (i + 1) + j * NUM_VERTS_Y;
+						indices[index++] = -1;
+
+						indices[index++] = (i + 1) + j * NUM_VERTS_Y;
+						indices[index++] = i + (j + 1) * NUM_VERTS_Y;
+						indices[index++] = (i + 1) + (j + 1) * NUM_VERTS_Y;
+						indices[index++] = -1;
+					}
+				}
+				
+
+				terrain->setParameters("", coordinates, indices, ape::GeometryNormals(), true, ape::GeometryColors(), ape::GeometryTextureCoordinates(), material);
+				terrain->setParentNode(node);
+				
+
+
+				if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
+				{
+					boxBody->setToStatic();
+					boxBody->setParentNode(node);
+					boxBody->setGeometry(terrain);
+					boxBody->setRestitution(0.6f);
+					boxBody->setFriction(0.5, 0.3, 0.3);
+
+				}
+			}
+		}
+	}
+}
+
 void ape::SceneMakerMacro::makeOverlayBrowser()
 {
 	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER).lock()))

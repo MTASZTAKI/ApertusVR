@@ -3,6 +3,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
+// for debug 
 #include <time.h>
 #include <ctime>
 
@@ -187,60 +188,51 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
-								else
+								else if(true)
 								{
 									ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 									ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
 
-									btVector3* shapeVertices = new btVector3[coordinates.size()/3];
-									int* triangleIndices = new int[(indices.size()*3)/4];
+									int numVertices = coordinates.size() / 3;
+									int numTriangles = indices.size() / 4;
+									int vertStride = sizeof(btVector3);
+									int indexStride = 3 * sizeof(int);
 
-									for (size_t i = 0; i < coordinates.size()/3; i = i++)
+									btVector3* shapeVertices = new btVector3[numVertices];
+									int* triangleIndices = new int[numTriangles * 3];
+
+									for (int i = 0; i < numVertices; i = i++)
 									{
 										shapeVertices[i].setValue(
 											coordinates[i * 3],
 											coordinates[i * 3 + 1],
 											coordinates[i * 3 + 2]
 										);
-									}
+									}	
 
 									int index = 0;
-									for (size_t i = 0; i < indices.size(); i = i+4)
+									for (int i = 0; i < indices.size(); i = i+4)
 									{
 										triangleIndices[index++] = indices[i];
-										triangleIndices[index++] = indices[i+1];
-										triangleIndices[index++] = indices[i+2];
+										triangleIndices[index++] = indices[i + 1];
+										triangleIndices[index++] = indices[i + 2];									
 									}
 
-
-									
-
+									/// numTriangles, triangleIndexBase, triangleIndexStride, numVertices, vertexBase, vertexStride
 									btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
-										index/3,
+										numTriangles,
 										triangleIndices,
-										3*sizeof(int),
-										coordinates.size(),
+										indexStride,
+										numVertices,
 										(btScalar*)&shapeVertices[0].x(),
-										sizeof(Vector3)
+										vertStride
 									);
 									
 									btCollisionShape* colShape = new btBvhTriangleMeshShape(indexVertexArrays, true);
 
-									colShape->setLocalScaling(btVector3(2,2,2));
+									colShape->setMargin(0.5f);
 
-									btCompoundShape* compShape = new btCompoundShape();
-
-									btVector3 centerOfMass = calculateCenterOfMass(coordinates);
-
-									btTransform tr;
-									tr.setIdentity();
-									tr.setOrigin(-centerOfMass);
-
-									compShape->addChildShape(tr, colShape);
-
-									m_offsets[apeBodyName] = fromBullet(-centerOfMass);
-
-									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
+									setCollisionShape(apeBodyName, colShape, apeBody->getMass());
 								}
 							}
 							break;

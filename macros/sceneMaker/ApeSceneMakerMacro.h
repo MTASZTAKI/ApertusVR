@@ -89,6 +89,8 @@ namespace ape
 
 		void makeBox(std::string name);
 
+		void makeTerrain(std::string name);
+
 		void makeOverlayBrowser();
 
 		void interpolate(ape::NodeWeakPtr node, ape::Vector3 position, ape::Quaternion orientation, unsigned int milliseconds);
