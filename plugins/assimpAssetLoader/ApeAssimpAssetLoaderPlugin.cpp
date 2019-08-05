@@ -295,6 +295,10 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 									  mPhysicsConfigs[assimpSceneID].spinningFriction);
 					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
 									 mPhysicsConfigs[assimpSceneID].angularDamping);
+
+					/*body->setRestitution(1.0f);
+					body->setFriction(0.5, 0.3, 0.3);
+					body->setDamping(0.01, 0.01);*/
 				}
 			}
 		}

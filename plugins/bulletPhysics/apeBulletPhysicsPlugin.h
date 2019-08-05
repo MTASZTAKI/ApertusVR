@@ -130,6 +130,8 @@ namespace ape
 		std::map<std::string, ape::BoxGeometryWeakPtr> m_boundingBoxes;
 
 		std::map<std::string, btVector3> m_shapeScales;
+
+		std::map<std::string, btVector3> m_shapeCenterOfMasses;
 		
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 

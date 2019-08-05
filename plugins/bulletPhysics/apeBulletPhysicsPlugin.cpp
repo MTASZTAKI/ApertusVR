@@ -3,7 +3,6 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-// for debug 
 #include <time.h>
 #include <ctime>
 
@@ -57,8 +56,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 	while (!m_eventDoubleQueue.emptyPop())
 	{
 		ape::Event event = m_eventDoubleQueue.front();
-		if (event.group == ape::Event::Group::PHYSICS) 
-		{	
+		if (event.group == ape::Event::Group::PHYSICS)
+		{
 			if (auto apeBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string apeBodyName = apeBody->getName();
@@ -76,7 +75,6 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					trans.setIdentity();
 					trans.setOrigin(btVector3(0, 0, 0));
 					btScalar mass = 1.0f;
-
 					m_shapeScales[apeBodyName] = btVector3(1, 1, 1);
 
 					createRigidBody(apeBodyName, trans, mass, sphereShape);
@@ -127,10 +125,10 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						case ape::Entity::Type::GEOMETRY_CONE:
 							if (auto cone = std::static_pointer_cast<IConeGeometry>(geometry))
 							{
-								
+
 								btCollisionShape* coneShape = new btConeShape(cone->getParameters().radius,
-																			 cone->getParameters().height);
-								m_offsets[apeBodyName] = ape::Vector3(0,-cone->getParameters().height/2.0f,0);
+									cone->getParameters().height);
+								m_offsets[apeBodyName] = ape::Vector3(0, -cone->getParameters().height / 2.0f, 0);
 								btScalar mass = apeBody->getMass();
 								setCollisionShape(apeBodyName, coneShape, mass);
 							}
@@ -149,13 +147,13 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						case ape::Entity::Type::GEOMETRY_TORUS:
 							if (auto torus = std::static_pointer_cast<ITorusGeometry>(geometry))
 							{
-								
+
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_TUBE:
 							if (auto tube = std::static_pointer_cast<ITubeGeometry>(geometry))
 							{
-								
+
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_INDEXEDFACESET:
@@ -165,30 +163,32 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								{
 									const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 
-									btVector3 centerOfMass = calculateCenterOfMass(coordinates);
-
+									/// creating convex hull shape
 									btConvexHullShape* convexHullShape = new btConvexHullShape();
 
 									for (size_t i = 0; i < coordinates.size(); i = i + 3)
 									{
-										btVector3 coordinateVec(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
-										convexHullShape->addPoint(coordinateVec, false);
+										btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+										convexHullShape->addPoint(v, false);
 									}
 									convexHullShape->recalcLocalAabb();
 
+
+									/// positioning it to the center of mass
 									btCompoundShape* compShape = new btCompoundShape();
+									btVector3 centerOfMass = calculateCenterOfMass(coordinates);
+									m_shapeCenterOfMasses[apeBodyName] = centerOfMass;
 
 									btTransform tr;
 									tr.setIdentity();
 									tr.setOrigin(-centerOfMass);
 
 									compShape->addChildShape(tr, convexHullShape);
-
 									m_offsets[apeBodyName] = fromBullet(-centerOfMass);
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
-								else if(true)
+								else
 								{
 									ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 									ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
@@ -208,14 +208,14 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 											coordinates[i * 3 + 1],
 											coordinates[i * 3 + 2]
 										);
-									}	
+									}
 
 									int index = 0;
-									for (int i = 0; i < indices.size(); i = i+4)
+									for (int i = 0; i < indices.size(); i = i + 4)
 									{
 										triangleIndices[index++] = indices[i];
 										triangleIndices[index++] = indices[i + 1];
-										triangleIndices[index++] = indices[i + 2];									
+										triangleIndices[index++] = indices[i + 2];
 									}
 
 									/// numTriangles, triangleIndexBase, triangleIndexStride, numVertices, vertexBase, vertexStride
@@ -227,7 +227,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 										(btScalar*)&shapeVertices[0].x(),
 										vertStride
 									);
-									
+
 									btCollisionShape* colShape = new btBvhTriangleMeshShape(indexVertexArrays, true);
 
 									colShape->setMargin(0.5f);
@@ -247,14 +247,14 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					btScalar mass = apeBody->getMass();
 					btCollisionObject* btObj = m_collisionObjects[apeBodyName];
 					btRigidBody* btBody = btRigidBody::upcast(btObj);
-					
+
 					if (btBody && btBody->getCollisionShape())
 					{
 						btVector3 localInertia;
 						btBody->getCollisionShape()->calculateLocalInertia(mass, localInertia);
 						btBody->setMassProps(mass, localInertia);
 					}
-					
+
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_FRICTION)
 				{
@@ -285,8 +285,12 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						m_parentNodes[apeBodyName] = parentNode;
 
+						/*m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
+						updateShapeScale(apeBodyName);*/
+
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
+
 
 						setTransform(apeBodyName,
 							fromApe(parentNode->getDerivedOrientation()),
@@ -296,6 +300,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							parentNode = parentParentNode;
 
 						m_parentNodes[apeBodyName] = parentNode; //!
+
 					}
 				}
 			}
@@ -309,7 +314,7 @@ void ape::BulletPhysicsPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeBulletPlugin.json";
-	
+
 	FILE* apeBulletConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeBulletConfigFile)
@@ -332,7 +337,7 @@ void ape::BulletPhysicsPlugin::Init()
 			if (jsonDocument.HasMember("gravity"))
 			{
 				rapidjson::Value& input = jsonDocument["gravity"];
-		
+
 				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
 				{
 					if (it->name == "x")
@@ -359,15 +364,15 @@ void ape::BulletPhysicsPlugin::Run()
 	while (true)
 	{
 		/// takes one step of the simulation in the physics engine
-		
+
 		processEventDoubleQueue();
 
 		btScalar dtSec = btScalar(btclock.getTimeSeconds());
-		
+
 
 		///stepTime < maxNumSubSteps * internalTimeStep
 
-		m_dynamicsWorld->stepSimulation(dtSec,100);
+		m_dynamicsWorld->stepSimulation(dtSec, 100);
 		btclock.reset();
 
 
@@ -394,19 +399,13 @@ void ape::BulletPhysicsPlugin::Run()
 
 				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
+
+
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
-
-				if (float(clock()) - float(t) > 1000.0)
-				{
-					/*btVector3 parentTr = fromApe(parentNode->getParentNode().lock()->getPosition());
-					btVector3 parentParentTr = fromApe(parentNode->getParentNode().lock()->getParentNode().lock()->getPosition());*/
-
-					printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
-					/*printf("%s pos: %s\n", "parent ", toString(parentTr).c_str());
-					printf("%s pos: %s\n", "parent parent ", toString(parentParentTr).c_str());*/
-				}
 			}
+			if (float(clock()) - float(t) > 1000.0)
+				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
 		}
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();
@@ -504,23 +503,23 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 	btCollisionShape* oldShape = m_collisionShapes[apeBodyName];
 
 	m_collisionShapes[apeBodyName] = colShape;
-	
+
 	btCollisionObject* obj = m_collisionObjects[apeBodyName];
 
+	if (oldShape)
+		colShape->setLocalScaling(oldShape->getLocalScaling());
 
 	if (auto body = btRigidBody::upcast(obj))
 	{
 		body->setCollisionShape(colShape);
-
-		btVector3 localInertia;
-		//btScalar mass = (body->getInvMass() == 0.0f) ? 0.0f : 1.0f / body->getInvMass();
-		colShape->calculateLocalInertia(mass, localInertia);
-		body->setMassProps(mass, localInertia);
-
 		updateShapeScale(apeBodyName);
 
-		m_dynamicsWorld->updateSingleAabb(body);
+		btVector3 localInertia;
+		if(body->getInvMass() > 0.0f)
+			colShape->calculateLocalInertia(mass, localInertia);
+			body->setMassProps(mass, localInertia);
 	}
+
 
 	if (oldShape)
 		delete oldShape;
@@ -554,16 +553,20 @@ void ape::BulletPhysicsPlugin::createCollisionObject(std::string geometryName, b
 	m_collisionShapes[geometryName] = shape;
 	m_collisionObjects[geometryName] = obj;
 
+	if (geometryName == "plane")
+	{
+		obj->setRestitution(0.6f);
+		obj->setFriction(1.f);
+	}
+
 	m_dynamicsWorld->addCollisionObject(obj);
 }
-
-/// calculate center of mass for indexed facesets
 
 btVector3 ape::BulletPhysicsPlugin::calculateCenterOfMass(const ape::GeometryCoordinates& coordinates)
 {
 	float M = coordinates.size() / 3;
 	btVector3 com(0, 0, 0);
-	for (size_t i = 0; i < coordinates.size(); i = i+3)
+	for (size_t i = 0; i < coordinates.size(); i = i + 3)
 	{
 		btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
 		com += v;
@@ -584,15 +587,10 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 		if (compShape->getNumChildShapes() > 0)
 		{
 			btCollisionShape* childShape = compShape->getChildShape(0);
-			
-			btVector3 negCenterOfMass = compShape->getChildTransform(0).getOrigin();
-			negCenterOfMass = btVector3(negCenterOfMass.getX() * scale.getX(),
-				negCenterOfMass.getY() * scale.getY(),
-				negCenterOfMass.getZ() * scale.getZ());
-			
+			btVector3 scaledCenterOfMass = m_shapeCenterOfMasses[apeBodyName] * scale;
 			compShape->setLocalScaling(scale);
-			m_offsets[apeBodyName] = fromBullet(negCenterOfMass);
-		}	
+			m_offsets[apeBodyName] = fromBullet(-scaledCenterOfMass);
+		}
 	}
 	else
 	{
@@ -600,66 +598,6 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 	}
 }
 
-// don't use this, it's not working
-void ape::BulletPhysicsPlugin::setBoundingBoxForDebug(std::string apeBodyName, btCollisionShape* colShape)
-{
-	btVector3 aabbMin;
-	btVector3 aabbMax;
-	btTransform tr;
-
-	tr.setIdentity();
-	tr.setOrigin(btVector3(0, 0, 0));
-
-	colShape->getAabb(tr, aabbMin, aabbMax);
-
-	if (auto boundBox = m_boundingBoxes[apeBodyName].lock())
-	{
-		/*boundBox->setParameters(ape::Vector3(
-			aabbMax.getX() - aabbMin.getX(),
-			aabbMax.getY() - aabbMin.getY(),
-			aabbMax.getZ() - aabbMin.getZ()));*/
-
-		boundBox->setParameters(ape::Vector3(300, 300, 300));
-	}
-	else
-	{
-		if (auto boundBoxNode = mpSceneManager->createNode(apeBodyName + "boundBoxNode").lock())
-		{
-			if (auto bodyParentNode = m_parentNodes[apeBodyName].lock())
-			{
-				boundBoxNode->setParentNode(bodyParentNode);
-			}
-
-
-			// material for box
-			std::shared_ptr<ape::IManualMaterial> boxMaterial;
-			if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(apeBodyName + "boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
-			{
-				boxMaterial->setDiffuseColor(ape::Color(0.5f, 0.0f, 0.0f));
-				boxMaterial->setSpecularColor(ape::Color(0.5f, 0.0f, 0.0f));
-			}
-
-
-			// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-			if (auto boundBox = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(apeBodyName + "boundBox", ape::Entity::GEOMETRY_BOX).lock()))
-			{
-				/*boundBox->setParameters(ape::Vector3(
-					aabbMax.getX() - aabbMin.getX(),
-					aabbMax.getY() - aabbMin.getY(),
-					aabbMax.getZ() - aabbMin.getZ()));*/
-				boundBox->setParameters(ape::Vector3(300, 300, 300));
-				boundBox->setParentNode(boundBoxNode);
-
-				boundBox->setMaterial(boxMaterial);
-
-
-				m_boundingBoxes[apeBodyName] = boundBox;
-			}
-
-		}
-	}
-	
-}
 
 /// this functions don't work yet
 

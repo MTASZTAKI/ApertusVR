@@ -284,9 +284,9 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 		material->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
-			node->setPosition(ape::Vector3(0, 20, 0));
-			node->setScale(ape::Vector3(1.5,1.5,1.5));
-			float size = 20;
+			node->setPosition(ape::Vector3(0, 3000, 0));
+			node->setScale(ape::Vector3(1000,1000,1000));
+			float size = 1;
 
 			if (auto box = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
@@ -347,7 +347,7 @@ void ape::SceneMakerMacro::makeTerrain(std::string name)
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
 			node->setPosition(ape::Vector3(0, 0, 0));
-			node->setScale(ape::Vector3(1,1,1));
+			node->setScale(ape::Vector3(3,3,3));
 
 			if (auto terrain = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
@@ -356,8 +356,8 @@ void ape::SceneMakerMacro::makeTerrain(std::string name)
 
 				const int NUM_VERTS_X = 30;
 				const int NUM_VERTS_Y = 30;
-				const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y;
-				const int totalTriangles = 2 * (NUM_VERTS_X -1) * (NUM_VERTS_Y -1);
+				const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
+				const int totalTriangles = 2 * (NUM_VERTS_X -1) * (NUM_VERTS_Y -1) + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
 				const float TRIANGLE_SIZE = 50.f;
 
 				float offset = -50;
