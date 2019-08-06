@@ -1,9 +1,9 @@
 {
-    "maxSubSteps" : 100,
-    "fixedTimeStep" : 0.016,
+    "maxSubSteps" : 1000,
+    "fixedTimeStep" : 0.0046,
     "gravity" : {
         "x" :  0,
-        "y" : -1000,
+        "y" : -100,
         "z" : 0
     }
 }

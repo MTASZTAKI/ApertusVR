@@ -64,6 +64,14 @@ namespace ape
 		btTransform tr;
 	};
 
+	struct bouyancyProps
+	{
+		btVector3 force;
+		float waterHeight;
+		float liquidDensity;
+		float volume;
+	};
+
 	class BulletPhysicsPlugin : public ape::IPlugin
 	{
 	public:
@@ -132,6 +140,10 @@ namespace ape
 		std::map<std::string, btVector3> m_shapeScales;
 
 		std::map<std::string, btVector3> m_shapeCenterOfMasses;
+
+		std::map<std::string, bool> m_bouyancyEnabled;
+
+		std::map<std::string, bouyancyProps> m_bouyancyProps;
 		
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 
@@ -165,7 +177,7 @@ namespace ape
 
 		void updateShapeScale(std::string apeBodyname);
 
-		void setBoundingBoxForDebug(std::string apeBodyName,btCollisionShape* colShape);
+		void updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr);
 
 	};
 	

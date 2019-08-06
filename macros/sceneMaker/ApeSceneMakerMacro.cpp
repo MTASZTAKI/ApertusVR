@@ -58,7 +58,7 @@ void ape::SceneMakerMacro::makeGround(std::string name, ape::Vector2 size)
 	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		planeNode->setPosition(ape::Vector3(0, 0, 0));
+		planeNode->setPosition(ape::Vector3(0, -30, 0));
 		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
@@ -347,18 +347,18 @@ void ape::SceneMakerMacro::makeTerrain(std::string name)
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
 			node->setPosition(ape::Vector3(0, 0, 0));
-			node->setScale(ape::Vector3(3,3,3));
+			node->setScale(ape::Vector3(1,1,1));
 
 			if (auto terrain = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
 				int i;
 				int j;
 
-				const int NUM_VERTS_X = 30;
-				const int NUM_VERTS_Y = 30;
+				const int NUM_VERTS_X = 40;
+				const int NUM_VERTS_Y = 40;
 				const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
 				const int totalTriangles = 2 * (NUM_VERTS_X -1) * (NUM_VERTS_Y -1) + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
-				const float TRIANGLE_SIZE = 50.f;
+				const float TRIANGLE_SIZE = 35.f;
 
 				float offset = -50;
 				const float waveheight = 30.f;

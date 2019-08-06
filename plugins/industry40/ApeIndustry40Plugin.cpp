@@ -45,10 +45,27 @@ void ape::apeIndustry40Plugin::Init()
 	}
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeCoordinateSystem();
-	mpSceneMakerMacro->makeTerrain("terrain");
-	//mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
+	//mpSceneMakerMacro->makeTerrain("terrain");
+	mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
 
-	
+	// water surface
+	if (auto planeNode = mpSceneManager->createNode("waterNode").lock())
+	{
+
+		planeNode->setPosition(ape::Vector3(0, 300, 0));
+		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("waterMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			planeMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
+			planeMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
+			planeMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
+			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("water", ape::Entity::GEOMETRY_PLANE).lock()))
+			{
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(3000,3000), ape::Vector2(1, 1));
+				plane->setParentNode(planeNode);
+				plane->setMaterial(planeMaterial);
+			}
+		}
+	}
 
 	//mpSceneMakerMacro->makeBox("a1");
 
@@ -88,7 +105,7 @@ void ape::apeIndustry40Plugin::Init()
 */
 
 	// create sphere geometry
-	/*if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
+	if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
 	{
 		// material for sphere 
 		std::shared_ptr<ape::IManualMaterial> sphereMaterial;
@@ -100,10 +117,10 @@ void ape::apeIndustry40Plugin::Init()
 
 
 
-		sphereNode->setPosition(ape::Vector3(0.f, 200.f, 0.f));
+		sphereNode->setPosition(ape::Vector3(0.f, 350.f, 0.f));
 		if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("sphere1111", ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			sphere->setParameters(15.f, ape::Vector2(1, 1));
+			sphere->setParameters(30.f, ape::Vector2(1, 1));
 			sphere->setParentNode(sphereNode);
 			sphere->setMaterial(sphereMaterial);
 
@@ -111,12 +128,12 @@ void ape::apeIndustry40Plugin::Init()
 			{
 				sphereBody->setGeometry(sphere);
 				sphereBody->setParentNode(sphereNode);
-				sphereBody->setType(ape::RigidBodyType::DYNAMIC);
 				sphereBody->setMass(1.0f);
 				sphereBody->setRestitution(0.8f);
+				sphereBody->setBouyancy(true, 300,10);
 			}
 		}
-	}*/
+	}
 
 	
 	
@@ -162,7 +179,7 @@ void ape::apeIndustry40Plugin::Init()
 							boxBody->setToStatic();
 							boxBody->setGeometry(box);
 							boxBody->setParentNode(boxNode);
-							boxBody->setRestitution(0.8f);
+							boxBody->setRestitution(1.0f);
 							boxBody->setDamping(0.2, 0.1);
 							
 							bodies.push_back(boxBody);

@@ -76,6 +76,9 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					trans.setOrigin(btVector3(0, 0, 0));
 					btScalar mass = 1.0f;
 					m_shapeScales[apeBodyName] = btVector3(1, 1, 1);
+					m_offsets[apeBodyName] = ape::Vector3(0, 0, 0);
+					m_bouyancyEnabled[apeBodyName] = false;
+
 
 					createRigidBody(apeBodyName, trans, mass, sphereShape);
 
@@ -188,7 +191,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
-								else
+								else if(true)
 								{
 									ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 									ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
@@ -233,6 +236,65 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 									colShape->setMargin(0.5f);
 
 									setCollisionShape(apeBodyName, colShape, apeBody->getMass());
+								}
+								else
+								{
+									int i;
+									int j;
+
+									const int NUM_VERTS_X = 40;
+									const int NUM_VERTS_Y = 40;
+									const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
+									const int totalTriangles = 2 * (NUM_VERTS_X - 1) * (NUM_VERTS_Y - 1) + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
+									const float TRIANGLE_SIZE = 35.f;
+
+									float offset = -50;
+									const float waveheight = 30.f;
+
+									btVector3* gGroundVertices = new btVector3[totalVerts];;
+									int* gGroundIndices = new int[totalTriangles * 3];
+
+									for (j = 0; j < NUM_VERTS_Y; j++)
+									{
+										for (i = 0; i < NUM_VERTS_X; i++)
+										{
+											gGroundVertices[i + j * NUM_VERTS_X].setValue((i - NUM_VERTS_X * 0.5f) * TRIANGLE_SIZE,
+												//0.f,
+												waveheight * sinf((float)i) * cosf((float)j + offset),
+												(j - NUM_VERTS_Y * 0.5f) * TRIANGLE_SIZE);
+										}
+									}
+
+									int vertStride = sizeof(btVector3);
+									int indexStride = 3 * sizeof(int);
+
+									int index = 0;
+									for (j = 0; j < NUM_VERTS_Y - 1; j++)
+									{
+										for (int i = 0; i < NUM_VERTS_X - 1; i++)
+										{
+											gGroundIndices[index++] = j * NUM_VERTS_X + i;
+											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+											gGroundIndices[index++] = j * NUM_VERTS_X + i + 1;
+											;
+
+											gGroundIndices[index++] = j * NUM_VERTS_X + i;
+											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i;
+											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+										}
+									}
+
+									btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(totalTriangles,
+										gGroundIndices,
+										indexStride,
+										totalVerts, (btScalar*)&gGroundVertices[0].x(), vertStride);
+
+									bool useQuantizedAabbCompression = true;
+
+									btCollisionShape* groundShape = new btBvhTriangleMeshShape(indexVertexArrays, useQuantizedAabbCompression);
+									groundShape->setMargin(0.5);
+
+									setCollisionShape(apeBodyName, groundShape, apeBody->getMass());
 								}
 							}
 							break;
@@ -279,14 +341,20 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 					btBody->setRestitution(apeBody->getRestitution());
 				}
+				else if(event.type == ape::Event::Type::RIGIDBODY_BOUYANCY)
+				{
+					if(m_bouyancyEnabled[apeBodyName] = apeBody->bouyancyEnabled())
+					{
+						m_bouyancyProps[apeBodyName].waterHeight = apeBody->getBouyancyProps().x;
+						m_bouyancyProps[apeBodyName].liquidDensity = apeBody->getBouyancyProps().y;
+						//m_bouyancyProps[apeBodyName].volume = 10.0f;
+					}
+				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_PARENTNODE)
 				{
 					if (auto parentNode = mpSceneManager->getNode(parentNodeName).lock())
 					{
 						m_parentNodes[apeBodyName] = parentNode;
-
-						/*m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
-						updateShapeScale(apeBodyName);*/
 
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
@@ -387,6 +455,10 @@ void ape::BulletPhysicsPlugin::Run()
 			if (body && body->getMotionState() && body->getInvMass() != 0.0f)
 			{
 				body->getMotionState()->getWorldTransform(trans);
+				
+				if (m_bouyancyEnabled[rbName])
+					updateBouyancy(rbName, body, trans);
+
 			}
 			else
 				trans = body->getWorldTransform();
@@ -405,7 +477,15 @@ void ape::BulletPhysicsPlugin::Run()
 				parentNode->setPosition(position);
 			}
 			if (float(clock()) - float(t) > 1000.0)
+			{
 				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
+				btVector3 aabbMin;
+				btVector3 aabbMax;
+
+				body->getAabb(aabbMin, aabbMax);
+				printf("%s aabb: %s\n", rbName.c_str(), toString(aabbMax - aabbMin).c_str());
+			}
+
 		}
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();
@@ -598,6 +678,29 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 	}
 }
 
+void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr)
+{
+	btVector3 aabbMin;
+	btVector3 aabbMax;
+	body->getAabb(aabbMin, aabbMax);
+	float maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
+	float depth = tr.getOrigin().getY();
+	float waterHeight = m_bouyancyProps[apeBodyName].waterHeight;
+	float volume = (aabbMax - aabbMin).getX() * (aabbMax - aabbMin).getY() * (aabbMax - aabbMin).getZ() / 2000.0f;
+	float liquidDensity = m_bouyancyProps[apeBodyName].liquidDensity;
+	btVector3& bouyancyForce = m_bouyancyProps[apeBodyName].force;
+
+	if (depth >= waterHeight + maxDepth)
+	{
+		bouyancyForce = btVector3(0, 0, 0);
+	}
+	else if (depth <= waterHeight - maxDepth)
+		bouyancyForce = btVector3(0, liquidDensity*volume, 0);
+	else
+		bouyancyForce = btVector3(0, liquidDensity*volume * (depth - maxDepth - waterHeight) / (2 * maxDepth), 0);
+
+	body->applyCentralForce(bouyancyForce);
+}
 
 /// this functions don't work yet
 

@@ -1,32 +1,32 @@
 {
-    "mainWindow": {
-        "name": "ape",
-        "creator": "apeOgreRenderPlugin"
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeSkyWaterTerrainScenePlugin",
+    "apeTexasEEGPlugin"
+  ],
+  "network": {
+    "user": "cave",
+    "participant": "none",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
     },
-    "SceneNetwork": {
-        "participantType": "Local",
-        "uniqueUserNamePrefix": "",
-        "sessionGUID": "UNASSIGNED_RAKNET_GUID",
-        "sessionResourceLocation": [
-            "/plugins/texasEEG/resources"
-        ],
-        "natPunchThroughServer": {
-            "ip": "195.111.2.95",
-            "port": "61666"
-        },
-        "lobbyServer": {
-            "useLobby": false,
-            "ip": "195.111.2.95",
-            "port": "8888",
-            "sessionName": "test"
-        }
+    "lan": {
+      "ip": "",
+      "port": ""
     },
-    "pluginManager": {
-        "plugins": [
-            "apeOgreRenderPlugin",
-            "apeSkyWaterTerrainScenePlugin",
-            "apeOisUserInputPlugin",
-            "apeTexasEEGPlugin"
-        ]
-    }
+    "selected": "none",
+    "resourceLocations": [
+      "/macros/sceneMaker/resources",
+      "/plugins/texasEEG/resources"
+    ]
+  }
 }
