@@ -58,9 +58,10 @@ void ape::apeIndustry40Plugin::Init()
 			planeMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
 			planeMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
 			planeMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
+			
 			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("water", ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(3000,3000), ape::Vector2(1, 1));
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(200,400), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
 				plane->setMaterial(planeMaterial);
 			}
@@ -117,10 +118,10 @@ void ape::apeIndustry40Plugin::Init()
 
 
 
-		sphereNode->setPosition(ape::Vector3(0.f, 350.f, 0.f));
+		sphereNode->setPosition(ape::Vector3(0.f, 500.f, 0.f));
 		if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("sphere1111", ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
-			sphere->setParameters(30.f, ape::Vector2(1, 1));
+			sphere->setParameters(25.f, ape::Vector2(1, 1));
 			sphere->setParentNode(sphereNode);
 			sphere->setMaterial(sphereMaterial);
 
@@ -130,11 +131,40 @@ void ape::apeIndustry40Plugin::Init()
 				sphereBody->setParentNode(sphereNode);
 				sphereBody->setMass(1.0f);
 				sphereBody->setRestitution(0.8f);
-				sphereBody->setBouyancy(true, 300,10);
+				sphereBody->setBouyancy(true, 300, 1);
 			}
 		}
 	}
 
+	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	{
+		// material for box 
+		std::shared_ptr<ape::IManualMaterial> boxMaterial;
+		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("box1111Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		{
+			boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
+			boxMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
+		}
+
+
+
+		boxNode->setPosition(ape::Vector3(-100.f, 360.f, 0.f));
+		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box1111", ape::Entity::GEOMETRY_BOX).lock()))
+		{
+			box->setParameters(ape::Vector3(35, 35, 35));
+			box->setParentNode(boxNode);
+			box->setMaterial(boxMaterial);
+
+			if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("box1111Body", ape::Entity::RIGIDBODY).lock()))
+			{
+				boxBody->setGeometry(box);
+				boxBody->setParentNode(boxNode);
+				boxBody->setMass(1.0f);
+				boxBody->setRestitution(0.8f);
+				boxBody->setBouyancy(true, 300, 1);
+			}
+		}
+	}
 	
 	
 	std::vector< RigidBodyWeakPtr> bodies;

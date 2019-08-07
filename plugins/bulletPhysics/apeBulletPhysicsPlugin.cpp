@@ -31,7 +31,6 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
-	plainHeight = 10.0f;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -103,6 +102,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								ape::Vector3 boxDims = box->getParameters().getDimensions();
 								btCollisionShape* boxShape = new btBoxShape(fromApe(boxDims) * 0.5f);
 								btScalar mass = apeBody->getMass();
+								m_bouyancyProps[apeBodyName].volume = boxDims.getX() * boxDims.getY() * boxDims.getZ();
+
 								setCollisionShape(apeBodyName, boxShape, mass);
 							}
 							break;
@@ -112,6 +113,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								btScalar radius = sphere->getParameters().radius;
 								btCollisionShape* sphereShape = new btSphereShape(radius);
 								btScalar mass = apeBody->getMass();
+								m_bouyancyProps[apeBodyName].volume = radius * radius * radius * M_PI * 4.0f / 3.0f;
+
 								setCollisionShape(apeBodyName, sphereShape, mass);
 							}
 							break;
@@ -144,6 +147,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								btCollisionShape* cylinderShape = new btCylinderShape(btVector3(radius, height*0.5, radius));
 								m_offsets[apeBodyName] = ape::Vector3(0, -height * 0.5, 0);
 								btScalar mass = apeBody->getMass();
+								m_bouyancyProps[apeBodyName].volume = radius * radius * M_PI * height;
+
 								setCollisionShape(apeBodyName, cylinderShape, mass);
 							}
 							break;
@@ -188,6 +193,12 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 									compShape->addChildShape(tr, convexHullShape);
 									m_offsets[apeBodyName] = fromBullet(-centerOfMass);
+									
+									btVector3 bSphereCenter;
+									btScalar bSphereRadius;
+									convexHullShape->getBoundingSphere(bSphereCenter, bSphereRadius);
+									m_bouyancyProps[apeBodyName].volume = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
+									// TODO: handling the scaling for the volume!
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
@@ -416,6 +427,20 @@ void ape::BulletPhysicsPlugin::Init()
 						m_gravity.setZ(it->value.GetFloat());
 				}
 			}
+			if (jsonDocument.HasMember("waterWave"))
+			{
+				rapidjson::Value& input = jsonDocument["waterWave"];
+
+				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				{
+					if (it->name == "x")
+						m_wave.setX(it->value.GetFloat());
+					else if (it->name == "y")
+						m_wave.setY(it->value.GetFloat());
+					else if (it->name == "z")
+						m_wave.setZ(it->value.GetFloat());
+				}
+			}
 		}
 	}
 
@@ -471,19 +496,15 @@ void ape::BulletPhysicsPlugin::Run()
 
 				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
-
-
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
 			}
 			if (float(clock()) - float(t) > 1000.0)
 			{
 				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
-				btVector3 aabbMin;
-				btVector3 aabbMax;
 
-				body->getAabb(aabbMin, aabbMax);
-				printf("%s aabb: %s\n", rbName.c_str(), toString(aabbMax - aabbMin).c_str());
+				btVector3 force = body->getTotalForce();
+				printf("%s total force: %s\n", rbName.c_str(),toString(force).c_str());
 			}
 
 		}
@@ -680,24 +701,49 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 
 void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr)
 {
-	btVector3 aabbMin;
-	btVector3 aabbMax;
+	btVector3 aabbMin, aabbMax;
 	body->getAabb(aabbMin, aabbMax);
 	float maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
 	float depth = tr.getOrigin().getY();
 	float waterHeight = m_bouyancyProps[apeBodyName].waterHeight;
-	float volume = (aabbMax - aabbMin).getX() * (aabbMax - aabbMin).getY() * (aabbMax - aabbMin).getZ() / 2000.0f;
-	float liquidDensity = m_bouyancyProps[apeBodyName].liquidDensity;
+	float volume = m_bouyancyProps[apeBodyName].volume;
+	float liquidDensity = m_bouyancyProps[apeBodyName].liquidDensity / 20;
 	btVector3& bouyancyForce = m_bouyancyProps[apeBodyName].force;
 
+	static btClock clock;
+	btScalar dTime = btScalar(clock.getTimeSeconds());
+
+	/// out of water
 	if (depth >= waterHeight + maxDepth)
 	{
 		bouyancyForce = btVector3(0, 0, 0);
+
+		// TODO: make it more realistic
+		/// "colliding with water"
+		if (abs(depth - waterHeight - maxDepth) < 0.1 && body->getLinearVelocity().getY()<0)
+			body->setLinearVelocity(body->getLinearVelocity() / 2.0f);
+		
+		body->setDamping(0.1, 0.1);
 	}
+	/// fully submerged
 	else if (depth <= waterHeight - maxDepth)
+	{
 		bouyancyForce = btVector3(0, liquidDensity*volume, 0);
+		body->setDamping(0.5, 0.5);
+	}
+	/// partly submerged
 	else
-		bouyancyForce = btVector3(0, liquidDensity*volume * (depth - maxDepth - waterHeight) / (2 * maxDepth), 0);
+	{
+		float submerged = waterHeight - depth + maxDepth;
+		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *liquidDensity*volume, 0);
+		body->setDamping(0.5, 0.5);
+		/// waves
+		if (dTime > 5.0f && dTime <= 6.0f)
+			body->applyCentralForce(m_wave);
+		else if (dTime > 6.f)
+			clock.reset();
+
+	}
 
 	body->applyCentralForce(bouyancyForce);
 }

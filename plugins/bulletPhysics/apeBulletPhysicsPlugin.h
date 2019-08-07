@@ -70,6 +70,7 @@ namespace ape
 		float waterHeight;
 		float liquidDensity;
 		float volume;
+		static btVector3 wave;
 	};
 
 	class BulletPhysicsPlugin : public ape::IPlugin
@@ -109,11 +110,14 @@ namespace ape
 
 		btVector3 m_gravity;
 
-		float plainHeight;
+		float m_plainHeight;
 
-		bool showBoundingBox;
+		bool m_showBoundingBox;
+
+		btVector3 m_wave;
 
 		/// member pointers for bullet3
+
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
 
 		btCollisionDispatcher* m_dispatcher;
@@ -149,7 +153,7 @@ namespace ape
 
 		void processEventDoubleQueue();
 
-		/// conversion between bullet3 and ape
+		/// conversion between bullet and ape
 
 		ape::Vector3 fromBullet(const btVector3& btVec);
 
