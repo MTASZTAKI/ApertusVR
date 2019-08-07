@@ -37,6 +37,30 @@ void ape::apeTexasEEGPlugin::Init()
 
 
 	mGameManager = new TexasEEG::GameManager(mpapeUserInputMacro->getUserNode());
+
+	if (auto userNode = mpapeUserInputMacro->getUserNode().lock())
+	{
+		if (auto userBodyNode = mpSceneManager->createNode("userBodyNode").lock())
+		{
+			userBodyNode->setPosition(userNode->getPosition());
+			userBodyNode->setOrientation(userNode->getOrientation());
+			userNode->setParentNode(userBodyNode);
+
+
+			if (auto userGeometry = std::static_pointer_cast<ISphereGeometry>(mpSceneManager->createEntity("userGeometrySphere", ape::Entity::Type::GEOMETRY_SPHERE).lock()))
+			{
+				userGeometry->setParameters(35.0f, ape::Vector2(1, 1));
+				if (auto userBody = std::static_pointer_cast<IRigidBody>(mpSceneManager->createEntity("userBody", ape::Entity::Type::RIGIDBODY).lock()))
+				{
+					userBody->setParentNode(userBodyNode);
+					userBody->setToDynamic(1.0f);
+					userBody->setBouyancy(true, 0.0f, 1.0f);
+					userBody->setGeometry(userGeometry);
+				}
+			}
+		}
+	}
+
 	mGameManager->Start();
 
 	APE_LOG_FUNC_LEAVE();

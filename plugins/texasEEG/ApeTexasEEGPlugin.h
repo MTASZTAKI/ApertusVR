@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITextGeometry.h"
 #include "macros/userInput/apeUserInputMacro.h"
 #include "GameManager.h"
+#include "sceneElements/apeIRigidBody.h"
 
 #define THIS_PLUGINNAME "apeTexasEEGPlugin"
 

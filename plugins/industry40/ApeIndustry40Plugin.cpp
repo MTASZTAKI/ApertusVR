@@ -46,7 +46,7 @@ void ape::apeIndustry40Plugin::Init()
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeCoordinateSystem();
 	//mpSceneMakerMacro->makeTerrain("terrain");
-	mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
+	//mpSceneMakerMacro->makeGround("plane",ape::Vector2(3000,3000));
 
 	// water surface
 	if (auto planeNode = mpSceneManager->createNode("waterNode").lock())
@@ -61,7 +61,7 @@ void ape::apeIndustry40Plugin::Init()
 			
 			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("water", ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(200,400), ape::Vector2(1, 1));
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(200,1000), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
 				plane->setMaterial(planeMaterial);
 			}
@@ -130,7 +130,7 @@ void ape::apeIndustry40Plugin::Init()
 				sphereBody->setGeometry(sphere);
 				sphereBody->setParentNode(sphereNode);
 				sphereBody->setMass(1.0f);
-				sphereBody->setRestitution(0.8f);
+				sphereBody->setRestitution(1.0f);
 				sphereBody->setBouyancy(true, 300, 1);
 			}
 		}
@@ -148,10 +148,10 @@ void ape::apeIndustry40Plugin::Init()
 
 
 
-		boxNode->setPosition(ape::Vector3(-100.f, 360.f, 0.f));
+		boxNode->setPosition(ape::Vector3(-10.f,1000.f, 0.f));
 		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box1111", ape::Entity::GEOMETRY_BOX).lock()))
 		{
-			box->setParameters(ape::Vector3(35, 35, 35));
+			box->setParameters(ape::Vector3(50,50,50));
 			box->setParentNode(boxNode);
 			box->setMaterial(boxMaterial);
 
@@ -160,7 +160,7 @@ void ape::apeIndustry40Plugin::Init()
 				boxBody->setGeometry(box);
 				boxBody->setParentNode(boxNode);
 				boxBody->setMass(1.0f);
-				boxBody->setRestitution(0.8f);
+				boxBody->setRestitution(0.3f);
 				boxBody->setBouyancy(true, 300, 1);
 			}
 		}
