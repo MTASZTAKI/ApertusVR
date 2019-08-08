@@ -146,12 +146,14 @@ include_directories(
 add_library (apeBulletPhysicsPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeBulletPhysicsPlugin
+target_link_libraries (
+			apeBulletPhysicsPlugin
 			apePluginManager
 			apeSceneManager
 			apeEventManager
 			apeLogManager
 			apeCoreConfig
+			apeUserInputMacro
 			BULLET_DYNAMICS
 			BULLET_COLLISION
 			BULLET_LINMATH

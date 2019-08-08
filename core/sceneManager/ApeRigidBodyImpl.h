@@ -128,6 +128,10 @@ namespace ape
 
 		std::string mParentNodeName;
 
+		ape::NodeWeakPtr mUserNode;
+
+		std::string mUserNodeName;
+
 		ape::GeometryWeakPtr mGeometry;
 
 		std::string mGeometryName;

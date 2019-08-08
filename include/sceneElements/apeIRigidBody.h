@@ -67,7 +67,7 @@ namespace ape
 
 		virtual void setToStatic() = 0;
 
-		virtual void setBouyancy(bool enable, float waterHeight = 0, float liquidDensity = 100.f) = 0;
+		virtual void setBouyancy(bool enable, float waterHeight = 0, float liquidDensity = 1.f) = 0;
 
 		/// Physics parameter getters
 

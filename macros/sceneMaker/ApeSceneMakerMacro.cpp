@@ -76,7 +76,7 @@ void ape::SceneMakerMacro::makeGround(std::string name, ape::Vector2 size)
 					planeBody->setGeometry(plane);
 					planeBody->setParentNode(planeNode);
 					planeBody->setToStatic();
-					planeBody->setRestitution(0.7f);
+					planeBody->setRestitution(0.0f);
 				}
 			}
 		}

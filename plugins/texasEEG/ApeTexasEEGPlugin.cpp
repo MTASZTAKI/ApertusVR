@@ -42,10 +42,7 @@ void ape::apeTexasEEGPlugin::Init()
 	{
 		if (auto userBodyNode = mpSceneManager->createNode("userBodyNode").lock())
 		{
-			userBodyNode->setPosition(userNode->getPosition());
-			userBodyNode->setOrientation(userNode->getOrientation());
 			userNode->setParentNode(userBodyNode);
-
 
 			if (auto userGeometry = std::static_pointer_cast<ISphereGeometry>(mpSceneManager->createEntity("userGeometrySphere", ape::Entity::Type::GEOMETRY_SPHERE).lock()))
 			{

@@ -17,6 +17,7 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 
+
 	/// event connecting
 	mpEventManager->connectEvent(ape::Event::Group::PHYSICS, std::bind(&BulletPhysicsPlugin::eventCallBack, this, std::placeholders::_1));
 
@@ -55,7 +56,22 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 	while (!m_eventDoubleQueue.emptyPop())
 	{
 		ape::Event event = m_eventDoubleQueue.front();
-		if (event.group == ape::Event::Group::PHYSICS)
+		if (event.group == ape::Event::Group::NODE)
+		{
+			if (auto node = mpSceneManager->getNode(event.subjectName).lock())
+			{
+				std::string nodeName = node->getName();
+				if (event.type == ape::Event::Type::NODE_CREATE)
+				{
+					
+				}
+				else if (event.type == ape::Event::Type::NODE_PARENTNODE)
+				{
+					//if(node->getName() == mpUserInputMacro->getUserNode().lock()->getName())
+				}
+			}
+		}
+		else if (event.group == ape::Event::Group::PHYSICS)
 		{
 			if (auto apeBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
@@ -367,6 +383,21 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						m_parentNodes[apeBodyName] = parentNode;
 
+						/// user
+						std::string userNodeName = mpUserInputMacro->getUserNode().lock()->getName();
+						std::vector<ape::NodeWeakPtr>& childNodes = parentNode->getChildNodes();
+						for (size_t i = 0; i < childNodes.size(); i++)
+						{
+							if (childNodes[i].lock()->getName() == userNodeName)
+							{
+								m_userProps.apeBodyName = apeBodyName;
+								m_userProps.userNode = childNodes[i];
+								m_userProps.position = fromApe(childNodes[i].lock()->getPosition());
+								m_userProps.userExists = true;
+								break;
+							}
+						}
+
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
 
@@ -376,9 +407,12 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							fromApe(parentNode->getDerivedPosition()));
 
 						while (auto parentParentNode = parentNode->getParentNode().lock())
+						{
 							parentNode = parentParentNode;
+						}
+						
 
-						m_parentNodes[apeBodyName] = parentNode; //!
+						//m_parentNodes[apeBodyName] = parentNode; //!
 
 					}
 				}
@@ -393,6 +427,8 @@ void ape::BulletPhysicsPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeBulletPlugin.json";
+
+	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 
 	FILE* apeBulletConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
@@ -452,7 +488,7 @@ clock_t t = clock();
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	btClock btclock;
 	while (true)
 	{
@@ -461,7 +497,6 @@ void ape::BulletPhysicsPlugin::Run()
 		processEventDoubleQueue();
 
 		btScalar dtSec = btScalar(btclock.getTimeSeconds());
-
 
 		///stepTime < maxNumSubSteps * internalTimeStep
 
@@ -496,15 +531,37 @@ void ape::BulletPhysicsPlugin::Run()
 
 				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
+				//setTransform(rbName, fromApe(parentNode->getOrientation()), fromApe(parentNode->getPosition()));
+				
+
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
 			}
+			
 			if (float(clock()) - float(t) > 1000.0)
 			{
 				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
 
 				btVector3 force = body->getTotalForce();
 				printf("%s total force: %s\n", rbName.c_str(),toString(force).c_str());
+			}
+
+			if (m_userProps.userExists && rbName == m_userProps.apeBodyName)
+			{
+				if (auto userNode = m_userProps.userNode.lock())
+				{
+					btVector3 velocity = body->getLinearVelocity();
+					btScalar dtSec = btScalar(m_userProps.userClock.getTimeNanoseconds());
+					btVector3 offset = (fromApe(userNode->getPosition()) - m_userProps.position);
+					m_userProps.position = fromApe(userNode->getPosition());
+					body->translate(offset);
+					
+					if (float(clock()) - float(t) > 1000.0)
+						printf("userNode pos: %s\n", userNode->getDerivedPosition().toString().c_str());
+
+					userNode->translate(fromBullet(-offset),ape::Node::TransformationSpace::WORLD);
+					//body->setCenterOfMassTransform(btTransform(fromApe(userNode->getOrientation()),fromApe(userNode->getPosition())));
+				}
 			}
 
 		}
@@ -720,9 +777,12 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 
 		// TODO: make it more realistic
 		/// "colliding with water"
-		if (abs(depth - waterHeight - maxDepth) < 0.1 && body->getLinearVelocity().getY()<0)
-			body->setLinearVelocity(body->getLinearVelocity() / 2.0f);
-		
+		if (abs(depth - waterHeight - maxDepth) < 0.1 && body->getLinearVelocity().getY() < 0)
+		{
+			btVector3 vel = body->getLinearVelocity();
+			vel.setY(vel.getY() / 2.0f);
+			body->setLinearVelocity(vel);
+		}
 		body->setDamping(0.1, 0.1);
 	}
 	/// fully submerged

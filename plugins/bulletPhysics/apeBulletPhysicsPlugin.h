@@ -47,6 +47,7 @@ SOFTWARE.*/
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeIIndexedFaceSetGeometry.h"
 #include "sceneElements/apeIManualMaterial.h"
+#include "macros/userInput/ApeUserInputMacro.h"
 
 #include "utils/apeDoubleQueue.h"
 
@@ -71,6 +72,15 @@ namespace ape
 		float liquidDensity;
 		float volume;
 		static btVector3 wave;
+	};
+
+	struct userProps
+	{
+		std::string apeBodyName;
+		btVector3 position;
+		btClock userClock;
+		ape::NodeWeakPtr userNode;
+		bool userExists;
 	};
 
 	class BulletPhysicsPlugin : public ape::IPlugin
@@ -102,7 +112,9 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		/// for config
+		ape::UserInputMacro* mpUserInputMacro;
+
+		/// config variables
 
 		float m_fixedTimeStep;
 
@@ -116,7 +128,7 @@ namespace ape
 
 		btVector3 m_wave;
 
-		/// member pointers for bullet3
+		/// member pointers for bullet
 
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
 
@@ -127,6 +139,7 @@ namespace ape
 		btSequentialImpulseConstraintSolver* m_solver;
 
 		btDiscreteDynamicsWorld* m_dynamicsWorld;
+
 
 		/// maps for shapes, objects, bodies, nodes...,
 		/// the std::string key is the geometryName of the geometry
@@ -149,6 +162,8 @@ namespace ape
 
 		std::map<std::string, bouyancyProps> m_bouyancyProps;
 		
+		userProps m_userProps;
+
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 
 		void processEventDoubleQueue();

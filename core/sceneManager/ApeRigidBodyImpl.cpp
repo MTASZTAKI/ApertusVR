@@ -215,9 +215,10 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyEnabled);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyProps);
 	
-	/// ParentNode and Geometry serialization
+	/// ParentNode, userNode and Geometry serialization
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mUserNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
@@ -278,5 +279,6 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters *deserializeP
 			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_SHAPE));
 		}
 	}
+	
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

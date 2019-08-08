@@ -261,7 +261,7 @@ namespace ape
 			RIGIDBODY_BOUYANCY,
 			RIGIDBODY_RESTITUTION,
 			RIGIDBODY_PARENTNODE,
-			RIGIDBODY_SHAPE,
+			RIGIDBODY_SHAPE
 		};
 
 		std::string subjectName;
