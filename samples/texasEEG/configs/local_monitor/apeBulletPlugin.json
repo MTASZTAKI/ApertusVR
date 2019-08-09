@@ -1,14 +1,17 @@
 {
-  "maxSubSteps" : 1000,
-  "fixedTimeStep" : 0.0046,
+  "maxSubSteps": 1000,
+  "fixedTimeStep": 0.0046,
+  "forceScale": 100,
   "gravity": {
     "x": 0,
-    "y": -1000,
+    "y": -10,
     "z": 0
   },
   "waterWave": {
-    "x": 0,
-    "y": -400,
-    "z": 0
+    "x": -1,
+    "y": -40,
+    "z": 0,
+    "freq" : 5.0,
+    "duration" : 1.0
   }
 }

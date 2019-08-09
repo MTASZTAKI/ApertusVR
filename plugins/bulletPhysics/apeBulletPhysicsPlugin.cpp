@@ -67,13 +67,10 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 				std::string nodeName = node->getName();
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
-					if (node->getName() == mpUserInputMacro->getUserNode().lock()->getName())
+					if (nodeName == mpUserInputMacro->getUserNode().lock()->getName())
 					{
 						m_userProps.userNode = node;
-						m_userProps.userNodePosition = fromApe(node->getPosition());
 					}
-					else if (node->getName() == "userBodyNode")
-						m_userProps.userBodyNode = node;
 				}
 				else if (event.type == ape::Event::Type::NODE_PARENTNODE)
 				{
@@ -413,8 +410,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						if (parentNode->getName() == "userBodyNode")
 						{
 							m_userProps.apeBodyName = apeBodyName;
-							m_userProps.userExists = bool(m_userProps.userNode.lock()) && bool(m_userProps.userBodyNode.lock());
-							m_userProps.userBodyPosition = parentNode->getDerivedPosition();
+							m_userProps.userPosition = fromApe(parentNode->getPosition());
+							m_userProps.userExists = bool(m_userProps.userNode.lock());
 						}
 					}
 				}
@@ -472,17 +469,26 @@ void ape::BulletPhysicsPlugin::Init()
 				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
 				{
 					if (it->name == "x")
-						m_wave.setX(it->value.GetFloat());
+						m_waveDirection.setX(it->value.GetFloat());
 					else if (it->name == "y")
-						m_wave.setY(it->value.GetFloat());
+						m_waveDirection.setY(it->value.GetFloat());
 					else if (it->name == "z")
-						m_wave.setZ(it->value.GetFloat());
+						m_waveDirection.setZ(it->value.GetFloat());
+					else if (it->name == "freq")
+						m_waveFreq = it->value.GetFloat();
+					else if (it->name == "duration")
+						m_waveDuration = it->value.GetFloat();
 				}
+			}
+			if (jsonDocument.HasMember("forceScale"))
+			{
+				rapidjson::Value& input = jsonDocument["forceScale"];
+				m_forceScale = input.GetFloat();
 			}
 		}
 	}
 
-	m_dynamicsWorld->setGravity(m_gravity);
+	m_dynamicsWorld->setGravity(m_gravity * m_forceScale);
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -492,11 +498,6 @@ void ape::BulletPhysicsPlugin::Run()
 	APE_LOG_FUNC_ENTER();
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-	if (m_userProps.userExists)
-	{
-		m_userProps.bodyTranslate = btVector3(0, 0, 0);
-		m_userProps.nodeTranslate = ape::Vector3(0, 0, 0);
-	}
 
 	btClock btclock;
 	while (true)
@@ -509,7 +510,7 @@ void ape::BulletPhysicsPlugin::Run()
 
 		///stepTime < maxNumSubSteps * internalTimeStep
 
-		m_dynamicsWorld->stepSimulation(dtSec, 100);
+		m_dynamicsWorld->stepSimulation(dtSec,m_maxSubSteps,m_fixedTimeStep);
 		btclock.reset();
 
 
@@ -559,34 +560,20 @@ void ape::BulletPhysicsPlugin::Run()
 			/// USER
 			if (m_userProps.userExists && m_userProps.apeBodyName == rbName)
 			{
-				btVector3 userNodeNewPosition;
-				ape::Vector3 userBodyNewPosition;
-				btVector3 bodyNewTranslate(0, 0, 0);
-				ape::Vector3 nodeNewTranslate(0, 0, 0);
-
+				btVector3 translateVec;
+				static bool b = false;
 				if (auto userNode = m_userProps.userNode.lock())
 				{
-					userNodeNewPosition = fromApe(userNode->getPosition());
-					bodyNewTranslate = userNodeNewPosition - m_userProps.userNodePosition - fromApe(m_userProps.nodeTranslate);
-					m_userProps.userNodePosition = userNodeNewPosition;
-					m_userProps.bodyTranslate = bodyNewTranslate;
+					btVector3 newUserPosition = fromApe(userNode->getPosition());
+					translateVec = newUserPosition - m_userProps.userPosition;
+					m_userProps.userPosition = newUserPosition;
 
-					if (float(clock()) - float(t) > 1000.0)
-						printf("userNode pos: %s\n", toString(userNodeNewPosition).c_str());
+					body->translate(translateVec);
+
+					trans = body->getWorldTransform();
+					trans.setRotation(fromApe(userNode->getOrientation()));
+					body->setWorldTransform(trans);
 				}
-
-				if (auto userBodyNode = m_userProps.userBodyNode.lock())
-				{
-					userBodyNewPosition = fromBullet(trans.getOrigin());
-					nodeNewTranslate = userBodyNewPosition - m_userProps.userBodyPosition - fromBullet(m_userProps.bodyTranslate);
-					m_userProps.userBodyPosition = userBodyNewPosition;
-					m_userProps.nodeTranslate = nodeNewTranslate;
-				}
-
-				body->translate(bodyNewTranslate);
-				if (auto userNode = m_userProps.userNode.lock())
-					userNode->translate(nodeNewTranslate,ape::Node::TransformationSpace::LOCAL);
-
 			}
 		}
 		if (float(clock()) - float(t) > 1000.0)
@@ -787,7 +774,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	float maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
 	float depth = tr.getOrigin().getY();
 	float waterHeight = m_bouyancyProps[apeBodyName].waterHeight;
-	float volume = m_bouyancyProps[apeBodyName].volume;
+	float volume = m_bouyancyProps[apeBodyName].volume / 100;
 	float liquidDensity = m_bouyancyProps[apeBodyName].liquidDensity / 20;
 	btVector3& bouyancyForce = m_bouyancyProps[apeBodyName].force;
 
@@ -801,10 +788,15 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 
 		// TODO: make it more realistic
 		/// "colliding with water"
-		if (abs(depth - waterHeight - maxDepth) < 0.1 && body->getLinearVelocity().getY() < 0)
+		if (abs(depth - waterHeight - maxDepth) < 0.1)
 		{
 			btVector3 vel = body->getLinearVelocity();
-			vel.setY(vel.getY() / 2.0f);
+			
+			if (vel.getY() < 0)
+				vel.setY(vel.getY() * 0.7f);
+			else
+				vel.setY(vel.getY() * 0.4);
+
 			body->setLinearVelocity(vel);
 		}
 		body->setDamping(0.1, 0.1);
@@ -813,7 +805,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	else if (depth <= waterHeight - maxDepth)
 	{
 		bouyancyForce = btVector3(0, liquidDensity*volume, 0);
-		body->setDamping(0.5, 0.5);
+		body->setDamping(0.7, 0.7);
 	}
 	/// partly submerged
 	else
@@ -822,14 +814,14 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *liquidDensity*volume, 0);
 		body->setDamping(0.5, 0.5);
 		/// waves
-		if (dTime > 5.0f && dTime <= 6.0f)
-			body->applyCentralForce(m_wave);
-		else if (dTime > 6.f)
+		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)
+			body->applyCentralForce(m_waveDirection * m_forceScale);
+		else if (dTime > m_waveFreq + m_waveDuration)
 			clock.reset();
 
 	}
 
-	body->applyCentralForce(bouyancyForce);
+	body->applyCentralForce(bouyancyForce * m_forceScale);
 }
 
 /// this functions don't work yet

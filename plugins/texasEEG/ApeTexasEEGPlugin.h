@@ -68,6 +68,8 @@ namespace ape
 
 		ape::EntityWeakPtr mScoreText;
 
+		ape::NodeWeakPtr mUserBodyNode;
+
 		TexasEEG::GameManager* mGameManager;
 
 		TexasEEG::BubbleManager* mBubbleManager;

@@ -49,6 +49,7 @@ SOFTWARE.*/
 #include "sceneElements/apeIManualMaterial.h"
 #include "macros/userInput/ApeUserInputMacro.h"
 
+//#define APE_DOUBLEQUEUE_UNIQUE
 #include "utils/apeDoubleQueue.h"
 
 /// inlcude bullet
@@ -77,13 +78,8 @@ namespace ape
 	struct userProps
 	{
 		std::string apeBodyName;
-		btVector3 userNodePosition;
-		ape::Vector3 userBodyPosition;
-		btVector3 bodyTranslate;
-		ape::Vector3 nodeTranslate;
-		btClock userClock;
+		btVector3 userPosition;
 		ape::NodeWeakPtr userNode;
-		ape::NodeWeakPtr userBodyNode;
 		bool userExists;
 	};
 
@@ -130,7 +126,13 @@ namespace ape
 
 		bool m_showBoundingBox;
 
-		btVector3 m_wave;
+		btVector3 m_waveDirection;
+
+		float m_waveFreq;
+
+		float m_waveDuration;
+
+		btScalar m_forceScale;
 
 		/// member pointers for bullet
 
