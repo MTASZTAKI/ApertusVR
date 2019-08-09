@@ -20,6 +20,7 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 	/// event connecting
 	mpEventManager->connectEvent(ape::Event::Group::PHYSICS, std::bind(&BulletPhysicsPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&BulletPhysicsPlugin::eventCallBack, this, std::placeholders::_1));
 
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 
@@ -29,6 +30,8 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 	m_overlappingPairCache = new btDbvtBroadphase();
 	m_solver = new btSequentialImpulseConstraintSolver();
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
+
+	m_userProps.userExists = false;
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
@@ -40,6 +43,7 @@ ape::BulletPhysicsPlugin::~BulletPhysicsPlugin()
 	APE_LOG_FUNC_ENTER();
 	/// diconnecting from events
 	mpEventManager->disconnectEvent(ape::Event::Group::PHYSICS, std::bind(&BulletPhysicsPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&BulletPhysicsPlugin::eventCallBack, this, std::placeholders::_1));
 
 	APE_LOG_FUNC_LEAVE();
 }
@@ -63,11 +67,17 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 				std::string nodeName = node->getName();
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
-					
+					if (node->getName() == mpUserInputMacro->getUserNode().lock()->getName())
+					{
+						m_userProps.userNode = node;
+						m_userProps.userNodePosition = fromApe(node->getPosition());
+					}
+					else if (node->getName() == "userBodyNode")
+						m_userProps.userBodyNode = node;
 				}
 				else if (event.type == ape::Event::Type::NODE_PARENTNODE)
 				{
-					//if(node->getName() == mpUserInputMacro->getUserNode().lock()->getName())
+					
 				}
 			}
 		}
@@ -383,23 +393,9 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						m_parentNodes[apeBodyName] = parentNode;
 
-						/// user
-						std::string userNodeName = mpUserInputMacro->getUserNode().lock()->getName();
-						std::vector<ape::NodeWeakPtr>& childNodes = parentNode->getChildNodes();
-						for (size_t i = 0; i < childNodes.size(); i++)
-						{
-							if (childNodes[i].lock()->getName() == userNodeName)
-							{
-								m_userProps.apeBodyName = apeBodyName;
-								m_userProps.userNode = childNodes[i];
-								m_userProps.position = fromApe(childNodes[i].lock()->getPosition());
-								m_userProps.userExists = true;
-								break;
-							}
-						}
-
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
+
 
 
 						setTransform(apeBodyName,
@@ -411,9 +407,15 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							parentNode = parentParentNode;
 						}
 						
+						m_parentNodes[apeBodyName] = parentNode; //!
 
-						//m_parentNodes[apeBodyName] = parentNode; //!
-
+						/// user 
+						if (parentNode->getName() == "userBodyNode")
+						{
+							m_userProps.apeBodyName = apeBodyName;
+							m_userProps.userExists = bool(m_userProps.userNode.lock()) && bool(m_userProps.userBodyNode.lock());
+							m_userProps.userBodyPosition = parentNode->getDerivedPosition();
+						}
 					}
 				}
 			}
@@ -489,6 +491,13 @@ void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+	if (m_userProps.userExists)
+	{
+		m_userProps.bodyTranslate = btVector3(0, 0, 0);
+		m_userProps.nodeTranslate = ape::Vector3(0, 0, 0);
+	}
+
 	btClock btclock;
 	while (true)
 	{
@@ -538,32 +547,47 @@ void ape::BulletPhysicsPlugin::Run()
 				parentNode->setPosition(position);
 			}
 			
+			/// debug
 			if (float(clock()) - float(t) > 1000.0)
 			{
 				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
 
 				btVector3 force = body->getTotalForce();
-				printf("%s total force: %s\n", rbName.c_str(),toString(force).c_str());
+				//printf("%s total force: %s\n", rbName.c_str(),toString(force).c_str());
 			}
 
-			if (m_userProps.userExists && rbName == m_userProps.apeBodyName)
+			/// USER
+			if (m_userProps.userExists && m_userProps.apeBodyName == rbName)
 			{
+				btVector3 userNodeNewPosition;
+				ape::Vector3 userBodyNewPosition;
+				btVector3 bodyNewTranslate(0, 0, 0);
+				ape::Vector3 nodeNewTranslate(0, 0, 0);
+
 				if (auto userNode = m_userProps.userNode.lock())
 				{
-					btVector3 velocity = body->getLinearVelocity();
-					btScalar dtSec = btScalar(m_userProps.userClock.getTimeNanoseconds());
-					btVector3 offset = (fromApe(userNode->getPosition()) - m_userProps.position);
-					m_userProps.position = fromApe(userNode->getPosition());
-					body->translate(offset);
-					
+					userNodeNewPosition = fromApe(userNode->getPosition());
+					bodyNewTranslate = userNodeNewPosition - m_userProps.userNodePosition - fromApe(m_userProps.nodeTranslate);
+					m_userProps.userNodePosition = userNodeNewPosition;
+					m_userProps.bodyTranslate = bodyNewTranslate;
+
 					if (float(clock()) - float(t) > 1000.0)
-						printf("userNode pos: %s\n", userNode->getDerivedPosition().toString().c_str());
-
-					userNode->translate(fromBullet(-offset),ape::Node::TransformationSpace::WORLD);
-					//body->setCenterOfMassTransform(btTransform(fromApe(userNode->getOrientation()),fromApe(userNode->getPosition())));
+						printf("userNode pos: %s\n", toString(userNodeNewPosition).c_str());
 				}
-			}
 
+				if (auto userBodyNode = m_userProps.userBodyNode.lock())
+				{
+					userBodyNewPosition = fromBullet(trans.getOrigin());
+					nodeNewTranslate = userBodyNewPosition - m_userProps.userBodyPosition - fromBullet(m_userProps.bodyTranslate);
+					m_userProps.userBodyPosition = userBodyNewPosition;
+					m_userProps.nodeTranslate = nodeNewTranslate;
+				}
+
+				body->translate(bodyNewTranslate);
+				if (auto userNode = m_userProps.userNode.lock())
+					userNode->translate(nodeNewTranslate,ape::Node::TransformationSpace::LOCAL);
+
+			}
 		}
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();

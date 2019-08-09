@@ -77,9 +77,13 @@ namespace ape
 	struct userProps
 	{
 		std::string apeBodyName;
-		btVector3 position;
+		btVector3 userNodePosition;
+		ape::Vector3 userBodyPosition;
+		btVector3 bodyTranslate;
+		ape::Vector3 nodeTranslate;
 		btClock userClock;
 		ape::NodeWeakPtr userNode;
+		ape::NodeWeakPtr userBodyNode;
 		bool userExists;
 	};
 
