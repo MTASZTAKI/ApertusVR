@@ -72,6 +72,7 @@ namespace ape
 		float linearDamping;
 		float angularDamping;
 		float restitution;
+		bool bouyancyEnable;
 	};
 
 	class AssimpAssetLoaderPlugin : public ape::IPlugin

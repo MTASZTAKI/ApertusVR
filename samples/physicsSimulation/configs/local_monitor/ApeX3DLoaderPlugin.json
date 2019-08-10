@@ -1,0 +1,17 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/x3dLoader/samples/cell.x3d",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 85, 0 ],
+      "orientation": [ 0.7071, -0.7071, 0, 0 ]
+    },
+    {
+      "file": "/plugins/x3dLoader/samples/TwoUR5.x3d",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 151, 0, -185 ],
+      "orientation": [ 0.5, -0.5, -0.5, -0.5 ]
+    }
+  ]
+}
+

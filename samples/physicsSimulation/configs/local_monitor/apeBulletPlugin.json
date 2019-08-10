@@ -9,7 +9,7 @@
   },
   "bouyancy": {
     "liquidHeight": 300.0,
-    "liquidDensity" : 1.0
+    "liquidDensity": 1.0
   },
   "waterWave": {
     "x": 0.1,

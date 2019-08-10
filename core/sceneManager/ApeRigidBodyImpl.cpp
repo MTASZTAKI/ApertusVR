@@ -89,10 +89,9 @@ void ape::RigidBodyImpl::setToStatic()
 	this->setMass(0.0f);
 }
 
-void ape::RigidBodyImpl::setBouyancy(bool enable, float waterHeight, float liquidDensity)
+void ape::RigidBodyImpl::setBouyancy(bool enable)
 {
 	mBouyancyEnabled = enable;
-	mBouyancyProps = ape::Vector2(waterHeight, liquidDensity);
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
 }
 
@@ -101,10 +100,6 @@ bool ape::RigidBodyImpl::bouyancyEnabled()
 	return mBouyancyEnabled;
 }
 
-ape::Vector2 ape::RigidBodyImpl::getBouyancyProps()
-{
-	return mBouyancyProps;
-}
 
 /// Physics parameter getters
 
@@ -213,7 +208,6 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRestitution);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRBType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyEnabled);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyProps);
 	
 	/// ParentNode, userNode and Geometry serialization
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
@@ -256,9 +250,6 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters *deserializeP
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_TYPE));*/
 
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBouyancyEnabled))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
-
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBouyancyProps))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
 	
 	

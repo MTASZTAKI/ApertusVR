@@ -1,31 +1,30 @@
-#include "apeIndustry40Plugin.h"
+#include "ApePhysicsSimulationPlugin.h"
 
-ape::apeIndustry40Plugin::apeIndustry40Plugin()
+ape::apePhysicsSimulationPlugin::apePhysicsSimulationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apePhysicsSimulationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apePhysicsSimulationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::apeIndustry40Plugin::~apeIndustry40Plugin()
+ape::apePhysicsSimulationPlugin::~apePhysicsSimulationPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apePhysicsSimulationPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apePhysicsSimulationPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::eventCallBack(const ape::Event& event)
+void ape::apePhysicsSimulationPlugin::eventCallBack(const ape::Event& event)
 {
-
 }
 
-void ape::apeIndustry40Plugin::Init()
+void ape::apePhysicsSimulationPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	//mpSceneMakerMacro->makeLit();
@@ -58,10 +57,10 @@ void ape::apeIndustry40Plugin::Init()
 			planeMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
 			planeMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
 			planeMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
-			
+
 			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("water", ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(500,1000), ape::Vector2(1, 1));
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(500, 1000), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
 				plane->setMaterial(planeMaterial);
 			}
@@ -101,11 +100,11 @@ void ape::apeIndustry40Plugin::Init()
 			boxBody->setGeometry(box);
 			boxBody->setRestitution(0.6f);
 		}
-		
+
 	}
 */
 
-	// create sphere geometry
+// create sphere geometry
 	if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
 	{
 		// material for sphere 
@@ -148,10 +147,10 @@ void ape::apeIndustry40Plugin::Init()
 
 
 
-		boxNode->setPosition(ape::Vector3(-10.f,1000.f, 0.f));
+		boxNode->setPosition(ape::Vector3(-10.f, 1000.f, 0.f));
 		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box1111", ape::Entity::GEOMETRY_BOX).lock()))
 		{
-			box->setParameters(ape::Vector3(50,50,50));
+			box->setParameters(ape::Vector3(50, 50, 50));
 			box->setParentNode(boxNode);
 			box->setMaterial(boxMaterial);
 
@@ -165,8 +164,8 @@ void ape::apeIndustry40Plugin::Init()
 			}
 		}
 	}
-	
-	
+
+
 	std::vector< RigidBodyWeakPtr> bodies;
 	const int array_size = 0;
 	float height = 1000;
@@ -189,29 +188,29 @@ void ape::apeIndustry40Plugin::Init()
 					std::shared_ptr<ape::IManualMaterial> boxMaterial;
 					if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
 					{
-						boxMaterial->setDiffuseColor(ape::Color(float(i+1) / float(array_size), float(j+1) / float(array_size), float(k+1) / float(array_size)));
-						boxMaterial->setSpecularColor(ape::Color(float(i) / float(array_size-1), float(j) / float(array_size-1), float(k) / float(array_size-1)));
+						boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(array_size), float(j + 1) / float(array_size), float(k + 1) / float(array_size)));
+						boxMaterial->setSpecularColor(ape::Color(float(i) / float(array_size - 1), float(j) / float(array_size - 1), float(k) / float(array_size - 1)));
 					}
 
 
-					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size*10/2 +5), float(j * 10 )+ height, float(k * 10 - array_size * 10 / 2 + 5)));
+					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size * 10 / 2 + 5), float(j * 10) + height, float(k * 10 - array_size * 10 / 2 + 5)));
 
 					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
 					{
-						box->setParameters(ape::Vector3(10,10,10));
+						box->setParameters(ape::Vector3(10, 10, 10));
 						box->setParentNode(boxNode);
 						box->setMaterial(boxMaterial);
 
 
 						if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
-						{	
+						{
 							boxBody->setToStatic();
 							boxBody->setGeometry(box);
 							boxBody->setParentNode(boxNode);
 							boxBody->setRestitution(1.0f);
 							boxBody->setDamping(0.2, 0.1);
-							
+
 							bodies.push_back(boxBody);
 						}
 					}
@@ -220,7 +219,7 @@ void ape::apeIndustry40Plugin::Init()
 			}
 		}
 	}
-	
+
 	// cone
 	//if (auto coneNode = mpSceneManager->createNode("coneNode").lock())
 	//{
@@ -308,12 +307,12 @@ void ape::apeIndustry40Plugin::Init()
 
 	// bodies[bodies.size() - 1].lock()->setToDynamic(1.2f);
 
-	
-	
+
+
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Run()
+void ape::apePhysicsSimulationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -323,25 +322,25 @@ void ape::apeIndustry40Plugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Step()
+void ape::apePhysicsSimulationPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Stop()
+void ape::apePhysicsSimulationPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Suspend()
+void ape::apePhysicsSimulationPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Restart()
+void ape::apePhysicsSimulationPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

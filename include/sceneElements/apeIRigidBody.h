@@ -67,7 +67,7 @@ namespace ape
 
 		virtual void setToStatic() = 0;
 
-		virtual void setBouyancy(bool enable, float waterHeight = 0, float liquidDensity = 1.f) = 0;
+		virtual void setBouyancy(bool enable) = 0;
 
 		/// Physics parameter getters
 
@@ -90,8 +90,6 @@ namespace ape
 		virtual bool isStatic() = 0;
 
 		virtual bool bouyancyEnabled() = 0;
-		
-		virtual ape::Vector2 getBouyancyProps() = 0;
 
 		/// Parent node and geometry (for shape)
         

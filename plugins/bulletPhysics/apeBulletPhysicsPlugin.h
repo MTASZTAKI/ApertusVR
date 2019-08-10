@@ -69,10 +69,7 @@ namespace ape
 	struct bouyancyProps
 	{
 		btVector3 force;
-		float waterHeight;
-		float liquidDensity;
 		float volume;
-		static btVector3 wave;
 	};
 
 	struct userProps
@@ -122,17 +119,21 @@ namespace ape
 
 		btVector3 m_gravity;
 
-		float m_plainHeight;
+		btScalar m_plainHeight;
 
 		bool m_showBoundingBox;
 
 		btVector3 m_waveDirection;
 
-		float m_waveFreq;
+		btScalar m_waveFreq;
 
-		float m_waveDuration;
+		btScalar m_waveDuration;
 
 		btScalar m_forceScale;
+
+		btScalar m_liquidHeight;
+
+		btScalar m_liquidDensity;
 
 		/// member pointers for bullet
 

@@ -51,7 +51,7 @@ namespace ape
 
 		virtual void setToStatic() override;
 
-		virtual void setBouyancy(bool enable, float waterHeight = 0, float liquidDensity = 10.f) override;
+		virtual void setBouyancy(bool enable) override;
 
 		/// Physics parameter getters
 
@@ -74,8 +74,6 @@ namespace ape
 		virtual bool isStatic() override;
 
 		virtual bool bouyancyEnabled() override;
-
-		virtual ape::Vector2 getBouyancyProps() override;
 
 		/// Parent node and geometry shape
 
@@ -119,8 +117,6 @@ namespace ape
 		ape::RigidBodyType mRBType;
 
 		bool mBouyancyEnabled;
-
-		ape::Vector2 mBouyancyProps;
 
 		/// Parent node and geometry shape
 

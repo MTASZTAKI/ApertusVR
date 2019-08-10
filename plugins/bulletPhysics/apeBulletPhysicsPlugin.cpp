@@ -379,9 +379,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 				{
 					if(m_bouyancyEnabled[apeBodyName] = apeBody->bouyancyEnabled())
 					{
-						m_bouyancyProps[apeBodyName].waterHeight = apeBody->getBouyancyProps().x;
-						m_bouyancyProps[apeBodyName].liquidDensity = apeBody->getBouyancyProps().y;
-						//m_bouyancyProps[apeBodyName].volume = 10.0f;
+					
 					}
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_PARENTNODE)
@@ -485,6 +483,18 @@ void ape::BulletPhysicsPlugin::Init()
 				rapidjson::Value& input = jsonDocument["forceScale"];
 				m_forceScale = input.GetFloat();
 			}
+			if (jsonDocument.HasMember("bouyancy"))
+			{
+				rapidjson::Value& input = jsonDocument["bouyancy"];
+
+				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				{
+					if (it->name == "liquidHeight")
+						m_liquidHeight = it->value.GetFloat();
+					else if (it->name == "liquidDensity")
+						m_liquidDensity = it->value.GetFloat();
+				}
+			}
 		}
 	}
 
@@ -496,7 +506,7 @@ clock_t t = clock();
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
 
 	btClock btclock;
@@ -773,27 +783,28 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	body->getAabb(aabbMin, aabbMax);
 	float maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
 	float depth = tr.getOrigin().getY();
-	float waterHeight = m_bouyancyProps[apeBodyName].waterHeight;
-	float volume = m_bouyancyProps[apeBodyName].volume / 100;
-	float liquidDensity = m_bouyancyProps[apeBodyName].liquidDensity / 20;
+
+	float volumeScale = m_shapeScales[apeBodyName].getX() * m_shapeScales[apeBodyName].getY() * m_shapeScales[apeBodyName].getZ();
+	float volume = m_bouyancyProps[apeBodyName].volume * volumeScale;
+	volume = (2 * atan(volume) / M_PI * 500 + 500)/20;
 	btVector3& bouyancyForce = m_bouyancyProps[apeBodyName].force;
 
 	static btClock clock;
 	btScalar dTime = btScalar(clock.getTimeSeconds());
 
 	/// out of water
-	if (depth >= waterHeight + maxDepth)
+	if (depth >= m_liquidHeight + maxDepth)
 	{
 		bouyancyForce = btVector3(0, 0, 0);
 
 		// TODO: make it more realistic
 		/// "colliding with water"
-		if (abs(depth - waterHeight - maxDepth) < 0.1)
+		if (abs(depth - m_liquidHeight - maxDepth) < 0.5)
 		{
 			btVector3 vel = body->getLinearVelocity();
 			
 			if (vel.getY() < 0)
-				vel.setY(vel.getY() * 0.7f);
+				vel.setY(vel.getY() * 0.5f);
 			else
 				vel.setY(vel.getY() * 0.4);
 
@@ -802,16 +813,16 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 		body->setDamping(0.1, 0.1);
 	}
 	/// fully submerged
-	else if (depth <= waterHeight - maxDepth)
+	else if (depth <= m_liquidHeight - maxDepth)
 	{
-		bouyancyForce = btVector3(0, liquidDensity*volume, 0);
+		bouyancyForce = btVector3(0, m_liquidDensity*volume, 0);
 		body->setDamping(0.7, 0.7);
 	}
 	/// partly submerged
 	else
 	{
-		float submerged = waterHeight - depth + maxDepth;
-		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *liquidDensity*volume, 0);
+		float submerged = m_liquidHeight - depth + maxDepth;
+		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *m_liquidDensity*volume, 0);
 		body->setDamping(0.5, 0.5);
 		/// waves
 		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)

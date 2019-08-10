@@ -295,7 +295,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 									  mPhysicsConfigs[assimpSceneID].spinningFriction);
 					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
 									 mPhysicsConfigs[assimpSceneID].angularDamping);
-
+					body->setBouyancy(mPhysicsConfigs[assimpSceneID].bouyancyEnable);
 					/*body->setRestitution(1.0f);
 					body->setFriction(0.5, 0.3, 0.3);
 					body->setDamping(0.01, 0.01);*/
@@ -430,6 +430,10 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 							if (physicsMemberIt->name == "angular damping")
 							{
 								physicsConfig.angularDamping = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "bouyancyEnabled")
+							{
+								physicsConfig.bouyancyEnable = physicsMemberIt->value.GetBool();
 							}
 						}
 						mPhysicsConfigs.push_back(physicsConfig);

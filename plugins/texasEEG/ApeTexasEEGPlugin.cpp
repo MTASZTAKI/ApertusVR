@@ -54,7 +54,7 @@ void ape::apeTexasEEGPlugin::Init()
 				{
 					userBody->setParentNode(userBodyNode);
 					userBody->setToDynamic(1.0f);
-					userBody->setBouyancy(true, 0.0f, 1.0f);
+					userBody->setBouyancy(true);
 					userBody->setGeometry(userGeometry);
 				}
 			}
