@@ -22,12 +22,10 @@
 
 set (CONFIGS
 	apeOgreRenderPlugin.json
-	apeAssimpAssetLoaderPlugin.json
 	apeOisUserInputPlugin.json
 	apeNodeJsPlugin.json
 	apeX3DLoaderPlugin.json
 	apeKinectPlugin.json
-	apeBulletPlugin.json
 	apeCore.json
 	)
 

@@ -125,7 +125,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								ape::Vector3 boxDims = box->getParameters().getDimensions();
 								btCollisionShape* boxShape = new btBoxShape(fromApe(boxDims) * 0.5f);
 								btScalar mass = apeBody->getMass();
-								m_bouyancyProps[apeBodyName].volume = boxDims.getX() * boxDims.getY() * boxDims.getZ();
+								m_volumes[apeBodyName] = boxDims.getX() * boxDims.getY() * boxDims.getZ();
 
 								setCollisionShape(apeBodyName, boxShape, mass);
 							}
@@ -136,7 +136,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								btScalar radius = sphere->getParameters().radius;
 								btCollisionShape* sphereShape = new btSphereShape(radius);
 								btScalar mass = apeBody->getMass();
-								m_bouyancyProps[apeBodyName].volume = radius * radius * radius * M_PI * 4.0f / 3.0f;
+								m_volumes[apeBodyName] = radius * radius * radius * M_PI * 4.0f / 3.0f;
 
 								setCollisionShape(apeBodyName, sphereShape, mass);
 							}
@@ -170,7 +170,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								btCollisionShape* cylinderShape = new btCylinderShape(btVector3(radius, height*0.5, radius));
 								m_offsets[apeBodyName] = ape::Vector3(0, -height * 0.5, 0);
 								btScalar mass = apeBody->getMass();
-								m_bouyancyProps[apeBodyName].volume = radius * radius * M_PI * height;
+								m_volumes[apeBodyName] = radius * radius * M_PI * height;
 
 								setCollisionShape(apeBodyName, cylinderShape, mass);
 							}
@@ -220,7 +220,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 									btVector3 bSphereCenter;
 									btScalar bSphereRadius;
 									convexHullShape->getBoundingSphere(bSphereCenter, bSphereRadius);
-									m_bouyancyProps[apeBodyName].volume = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
+									m_volumes[apeBodyName] = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
 									// TODO: handling the scaling for the volume!
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
@@ -365,6 +365,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 				{
 					btCollisionObject* btObj = m_collisionObjects[apeBodyName];
 					btRigidBody* btBody = btRigidBody::upcast(btObj);
+					m_dampings[apeBodyName] = ape::Vector2(apeBody->getLinearDamping(), apeBody->getAngularDamping());
+
 
 					btBody->setDamping(apeBody->getLinearDamping(), apeBody->getAngularDamping());
 				}
@@ -390,8 +392,6 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
-
-
 
 						setTransform(apeBodyName,
 							fromApe(parentNode->getDerivedOrientation()),
@@ -777,17 +777,19 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 	}
 }
 
+/// Function for bouyancy force generating by hand
 void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr)
 {
 	btVector3 aabbMin, aabbMax;
 	body->getAabb(aabbMin, aabbMax);
-	float maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
-	float depth = tr.getOrigin().getY();
+	btScalar maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
+	btScalar depth = tr.getOrigin().getY();
 
-	float volumeScale = m_shapeScales[apeBodyName].getX() * m_shapeScales[apeBodyName].getY() * m_shapeScales[apeBodyName].getZ();
-	float volume = m_bouyancyProps[apeBodyName].volume * volumeScale;
-	volume = (2 * atan(volume) / M_PI * 500 + 500)/20;
-	btVector3& bouyancyForce = m_bouyancyProps[apeBodyName].force;
+	btScalar volumeScale = m_shapeScales[apeBodyName].getX() * m_shapeScales[apeBodyName].getY() * m_shapeScales[apeBodyName].getZ();
+	btScalar volume = m_volumes[apeBodyName] * volumeScale;
+	/// scaling the volume (a rude solution to deal with big objects)
+	volume = (2 * atan(volume) / M_PI * 500 + 500) / 50;
+	btVector3 bouyancyForce;
 
 	static btClock clock;
 	btScalar dTime = btScalar(clock.getTimeSeconds());
@@ -797,20 +799,19 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	{
 		bouyancyForce = btVector3(0, 0, 0);
 
-		// TODO: make it more realistic
-		/// "colliding with water"
-		if (abs(depth - m_liquidHeight - maxDepth) < 0.5)
+		/// This is a fully arbitrary solution for contacting with the water surface
+		if (abs(depth - m_liquidHeight - maxDepth) < 0.1)
 		{
 			btVector3 vel = body->getLinearVelocity();
-			
+		
 			if (vel.getY() < 0)
-				vel.setY(vel.getY() * 0.5f);
+				vel.setY(vel.getY() * 0.3f);
 			else
-				vel.setY(vel.getY() * 0.4);
+				vel.setY(vel.getY() * 0.3f);
 
 			body->setLinearVelocity(vel);
 		}
-		body->setDamping(0.1, 0.1);
+		body->setDamping(m_dampings[apeBodyName].x,m_dampings[apeBodyName].y);
 	}
 	/// fully submerged
 	else if (depth <= m_liquidHeight - maxDepth)
@@ -823,13 +824,12 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	{
 		float submerged = m_liquidHeight - depth + maxDepth;
 		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *m_liquidDensity*volume, 0);
-		body->setDamping(0.5, 0.5);
+		body->setDamping(0.7, 0.7);
 		/// waves
 		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)
 			body->applyCentralForce(m_waveDirection * m_forceScale);
 		else if (dTime > m_waveFreq + m_waveDuration)
 			clock.reset();
-
 	}
 
 	body->applyCentralForce(bouyancyForce * m_forceScale);

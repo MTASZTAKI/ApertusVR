@@ -2,7 +2,7 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apePhysicsSimulationPlugin",
+    "apePhysicsSimulationScenePlugin",
     "apeBulletPhysicsPlugin",
     "apeAssimpAssetLoaderPlugin"
   ],

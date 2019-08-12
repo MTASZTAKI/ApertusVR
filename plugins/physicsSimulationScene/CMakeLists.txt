@@ -22,22 +22,32 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ApePhysicsSimulationPlugin.h
+	ApePhysicsSimulationScenePlugin.h
 	)
 
 set (SOURCES 
-	ApePhysicsSimulationPlugin.cpp
+	ApePhysicsSimulationScenePlugin.cpp
 	)
 
 include_directories(
+	${RAPIDJSON_INCLUDE_DIR}
 	${PROJECT_SOURCE_DIR}/common/include 
 	)
 
-add_library (apePhysicsSimulationPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apePhysicsSimulationScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apePhysicsSimulationPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
+target_link_libraries (
+	apePhysicsSimulationScenePlugin
+	apePluginManager
+	apeSceneManager
+	apeEventManager
+	apeLogManager
+	apeSceneMakerMacro
+	apeCoreConfig
+	apeUserInputMacro
+	)
 
-set_property (TARGET apePhysicsSimulationPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apePhysicsSimulationScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET apePhysicsSimulationPlugin PROPERTY FOLDER "Plugins")
+set_property (TARGET apePhysicsSimulationScenePlugin PROPERTY FOLDER "Plugins")

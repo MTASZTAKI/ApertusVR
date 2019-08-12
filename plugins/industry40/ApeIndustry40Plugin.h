@@ -54,17 +54,8 @@ SOFTWARE.*/
 #include "sceneelements/apeITubeGeometry.h"
 #include "utils/apeInterpolator.h"
 #include "macros/sceneMaker/apeSceneMakerMacro.h"
-#include "sceneelements/apeIBoxGeometry.h"
-#include "sceneelements/apeIRigidBody.h"
-#include "sceneElements/apeICylinderGeometry.h"
 
 #define THIS_PLUGINNAME "apeIndustry40Plugin"
-
-
-#ifndef M_PI
-#define M_PI 3.14159265359
-#endif // !M_PI
-
 
 namespace ape
 {

@@ -59,18 +59,6 @@ SOFTWARE.*/
 
 namespace ape
 {
-	struct aabbProps
-	{
-		btVector3 aabbMin;
-		btVector3 aabbMax;
-		btTransform tr;
-	};
-
-	struct bouyancyProps
-	{
-		btVector3 force;
-		float volume;
-	};
 
 	struct userProps
 	{
@@ -159,15 +147,15 @@ namespace ape
 
 		std::map<std::string, ape::Vector3> m_offsets;
 
-		std::map<std::string, ape::BoxGeometryWeakPtr> m_boundingBoxes;
-
 		std::map<std::string, btVector3> m_shapeScales;
 
 		std::map<std::string, btVector3> m_shapeCenterOfMasses;
 
 		std::map<std::string, bool> m_bouyancyEnabled;
 
-		std::map<std::string, bouyancyProps> m_bouyancyProps;
+		std::map<std::string, btScalar> m_volumes;
+
+		std::map<std::string, ape::Vector2> m_dampings;
 		
 		userProps m_userProps;
 

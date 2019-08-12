@@ -52,32 +52,21 @@ void ape::SceneMakerMacro::makeLit()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::SceneMakerMacro::makeGround(std::string name, ape::Vector2 size)
+void ape::SceneMakerMacro::makeGround()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
+	if (auto planeNode = mpSceneManager->createNode("planeNode").lock())
 	{
-
-		planeNode->setPosition(ape::Vector3(0, -30, 0));
-		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		planeNode->setPosition(ape::Vector3(0, -20, 0));
+		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("planeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
 			planeMaterial->setSpecularColor(ape::Color(0.3f, 0.3f, 0.2f));
-			planeMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
-			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_PLANE).lock()))
+			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("plane", ape::Entity::GEOMETRY_PLANE).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), size, ape::Vector2(1, 1));
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(1000, 1000), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
 				plane->setMaterial(planeMaterial);
-				
-
-				if (auto planeBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
-				{
-					planeBody->setGeometry(plane);
-					planeBody->setParentNode(planeNode);
-					planeBody->setToStatic();
-					planeBody->setRestitution(1.0f);
-				}
 			}
 		}
 	}
@@ -284,33 +273,17 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 		material->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
-			node->setPosition(ape::Vector3(0, 3000, 0));
-			node->setScale(ape::Vector3(1000,1000,1000));
-			float size = 1;
-
 			if (auto box = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
 				ape::GeometryCoordinates coordinates = {
-					2*size,  2*size, 0,
-					2*size, 0, 0,
-					0, 0, 0,
-					0,  2*size, 0,
-					2*size,  2*size,  2*size,
-					2*size, 0,  2*size,
-					0, 0,  2*size,
-					0,  2*size,  2*size
-
-
-
-					/*size,  size, -size,
-					size, -size, -size,
-					-size, -size, -size,
-					-size,  size, -size,
-					size,  size,  size,
-					size, -size,  size,
-					-size, -size,  size,
-					-size,  size,  size*/
-
+					10,  10, -10,
+					10, -10, -10,
+					-10, -10, -10,
+					-10,  10, -10,
+					10,  10,  10,
+					10, -10,  10,
+					-10, -10,  10,
+					-10,  10,  10
 				};
 				ape::GeometryIndices indices = {
 					0, 1, 2, 3, -1,
@@ -321,108 +294,6 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 					4, 0, 3, 7, -1 };
 				box->setParameters("", coordinates, indices, ape::GeometryNormals(), true, ape::GeometryColors(), ape::GeometryTextureCoordinates(), material);
 				box->setParentNode(node);
-				
-
-				if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
-				{
-					boxBody->setParentNode(node);
-					boxBody->setGeometry(box);
-					boxBody->setRestitution(1.2f);
-					boxBody->setFriction(0.5, 0.1, 0.3);
-
-				}
-			}
-		}
-	}
-}
-
-void ape::SceneMakerMacro::makeTerrain(std::string name)
-{
-	if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
-	{
-		material->setDiffuseColor(ape::Color(0.5f, 0.5f, 0.5f));
-		material->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
-		//material->setCullingMode(ape::Material::CullingMode::NONE_CM);
-
-		if (auto node = mpSceneManager->createNode(name + "Node").lock())
-		{
-			node->setPosition(ape::Vector3(0, 0, 0));
-			node->setScale(ape::Vector3(1,1,1));
-
-			if (auto terrain = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
-			{
-				int i;
-				int j;
-
-				const int NUM_VERTS_X = 40;
-				const int NUM_VERTS_Y = 40;
-				const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
-				const int totalTriangles = 2 * (NUM_VERTS_X -1) * (NUM_VERTS_Y -1) + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
-				const float TRIANGLE_SIZE = 35.f;
-
-				float offset = -50;
-				const float waveheight = 30.f;
-
-				ape::GeometryCoordinates coordinates;
-				ape::GeometryIndices indices;
-
-				coordinates.resize(totalVerts * 3);
-				indices.resize(totalTriangles * 4);
-
-				int index = 0;
-				for (j = 0; j < NUM_VERTS_Y; j++)
-				{
-					for (i = 0; i < NUM_VERTS_X; i++)
-					{
-						coordinates[index++] = (i - NUM_VERTS_X * 0.5f) * TRIANGLE_SIZE;
-						coordinates[index++] =  waveheight * sinf((float)i) * cosf((float)j);
-						coordinates[index++] = (j - NUM_VERTS_Y * 0.5f) * TRIANGLE_SIZE;
-					}
-				}
-
-				index = 0;
-				for (j = 0; j < NUM_VERTS_Y -1; j++)
-				{
-					for (i = 0; i < NUM_VERTS_X -1; i++)
-					{
-						/*indices[index++] = j * NUM_VERTS_X + i;
-						indices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-						indices[index++] = j * NUM_VERTS_X + i + 1;
-						indices[index++] = -1;
-
-						indices[index++] = j * NUM_VERTS_X + i;
-						indices[index++] = (j + 1) * NUM_VERTS_X + i;
-						indices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-						indices[index++] = -1;*/
-						
-							
-						indices[index++] = i + j * NUM_VERTS_Y;
-						indices[index++] = i + (j + 1) * NUM_VERTS_Y;
-						indices[index++] = (i + 1) + j * NUM_VERTS_Y;
-						indices[index++] = -1;
-
-						indices[index++] = (i + 1) + j * NUM_VERTS_Y;
-						indices[index++] = i + (j + 1) * NUM_VERTS_Y;
-						indices[index++] = (i + 1) + (j + 1) * NUM_VERTS_Y;
-						indices[index++] = -1;
-					}
-				}
-				
-
-				terrain->setParameters("", coordinates, indices, ape::GeometryNormals(), true, ape::GeometryColors(), ape::GeometryTextureCoordinates(), material);
-				terrain->setParentNode(node);
-				
-
-
-				if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
-				{
-					boxBody->setToStatic();
-					boxBody->setParentNode(node);
-					boxBody->setGeometry(terrain);
-					boxBody->setRestitution(0.6f);
-					boxBody->setFriction(0.5, 0.3, 0.3);
-
-				}
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 {
   "plugins": [
+    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeIndustry40Plugin",
-    "apeBulletPhysicsPlugin",
-    "apeAssimpAssetLoaderPlugin"
+    "ape360VideoPlugin"
   ],
   "network": {
     "user": "cave",
@@ -27,7 +27,7 @@
     "selected": "none",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
-      "/plugins/assimpAssetLoader/resources"
+      "/plugins/360Video/resources"
     ]
   }
 }

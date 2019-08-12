@@ -28,6 +28,7 @@ set (CONFIGS
 	apeX3DLoaderPlugin.json
 	apeKinectPlugin.json
 	apeBulletPlugin.json
+	apePhysicsSimulationScenePlugin.json
 	apeCore.json
 	)
 
