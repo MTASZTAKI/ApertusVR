@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "sceneelements/apeIManualMaterial.h"
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeITextGeometry.h"
+#include "sceneElements/apeIRigidBody.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -61,6 +62,19 @@ namespace ape
 		bool regenerateNormals;
 		std::string rootNodeName;
 	};
+
+	struct PhysicsConfig
+	{
+		float mass;
+		float friction;
+		float rollingFriction;
+		float spinningFriction;
+		float linearDamping;
+		float angularDamping;
+		float restitution;
+		bool bouyancyEnable;
+	};
+
 	class AssimpAssetLoaderPlugin : public ape::IPlugin
 	{
 	public:
@@ -95,6 +109,8 @@ namespace ape
 		std::vector<AssetConfig> mAssimpAssetConfigs;
 
 		std::string mUniqueID;
+
+		std::vector<PhysicsConfig> mPhysicsConfigs;
 
 		int mObjectCount;
 

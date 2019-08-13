@@ -277,6 +277,29 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
 				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
+
+
+				/// setting physics body to the asset
+				if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY).lock()))
+				{	
+					if (mPhysicsConfigs[assimpSceneID].mass > 0.0f)
+						body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
+					else
+						body->setToStatic();
+
+					body->setParentNode(node);
+					body->setGeometry(mesh);
+					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
+					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
+									  mPhysicsConfigs[assimpSceneID].rollingFriction,
+									  mPhysicsConfigs[assimpSceneID].spinningFriction);
+					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
+									 mPhysicsConfigs[assimpSceneID].angularDamping);
+					body->setBouyancy(mPhysicsConfigs[assimpSceneID].bouyancyEnable);
+					/*body->setRestitution(1.0f);
+					body->setFriction(0.5, 0.3, 0.3);
+					body->setDamping(0.01, 0.01);*/
+				}
 			}
 		}
 	}
@@ -372,6 +395,48 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 								}
 							}
 						}
+					}
+					if (assetMemberIterator->name == "physics")
+					{
+						PhysicsConfig physicsConfig;
+
+						for (auto physicsMemberIt = assetMemberIterator->value.MemberBegin();
+							physicsMemberIt != assetMemberIterator->value.MemberEnd(); physicsMemberIt++)
+						{
+							if (physicsMemberIt->name == "mass")
+							{
+								physicsConfig.mass = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "restitution")
+							{
+								physicsConfig.restitution = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "friction")
+							{
+								physicsConfig.friction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "rolling friction")
+							{
+								physicsConfig.rollingFriction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "spinning friction")
+							{
+								physicsConfig.spinningFriction = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "linear damping")
+							{
+								physicsConfig.linearDamping = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "angular damping")
+							{
+								physicsConfig.angularDamping = physicsMemberIt->value.GetFloat();
+							}
+							if (physicsMemberIt->name == "bouyancyEnabled")
+							{
+								physicsConfig.bouyancyEnable = physicsMemberIt->value.GetBool();
+							}
+						}
+						mPhysicsConfigs.push_back(physicsConfig);
 					}
 				}
 				mAssimpAssetConfigs.push_back(assetConfig);

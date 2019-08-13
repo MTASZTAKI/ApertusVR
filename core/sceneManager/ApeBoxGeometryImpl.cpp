@@ -76,6 +76,7 @@ ape::MaterialWeakPtr ape::BoxGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+
 void ape::BoxGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);

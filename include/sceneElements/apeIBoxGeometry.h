@@ -76,6 +76,7 @@ namespace ape
 		virtual void setMaterial(ape::MaterialWeakPtr material) = 0;
 
 		virtual ape::MaterialWeakPtr getMaterial() = 0;
+
 	};
 }
 

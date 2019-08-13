@@ -1,12 +1,13 @@
 #include "GameManager.h"
 
-TexasEEG::GameManager::GameManager(ape::NodeWeakPtr userNode)
+TexasEEG::GameManager::GameManager(ape::NodeWeakPtr userNode , ape::NodeWeakPtr userBodyNode)
 {
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mTime = 0;
 	mScore = 0;
 	mUserNode = userNode;
-	mBubbleManager = new TexasEEG::BubbleManager(userNode);
+	mUserBodyNode = userBodyNode;
+	mBubbleManager = new TexasEEG::BubbleManager(userNode,userBodyNode);
 
 	Init();
 }
@@ -20,8 +21,8 @@ void TexasEEG::GameManager::Init()
 	APE_LOG_TRACE("timeText create");
 	if (auto timerNode = mpSceneManager->createNode("timerNode").lock())
 	{
-		timerNode->setParentNode(mUserNode);
-		timerNode->setPosition(ape::Vector3(-18, 10, -30));
+		timerNode->setParentNode(mUserBodyNode);
+		timerNode->setPosition(ape::Vector3(-18, 10, -40));
 
 		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", ape::Entity::GEOMETRY_TEXT);
 		if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
@@ -36,8 +37,8 @@ void TexasEEG::GameManager::Init()
 	APE_LOG_TRACE("scoreText create");
 	if (auto scoreNode = mpSceneManager->createNode("scoreNode").lock())
 	{
-		scoreNode->setParentNode(mUserNode);
-		scoreNode->setPosition(ape::Vector3(18, 10, -30));
+		scoreNode->setParentNode(mUserBodyNode);
+		scoreNode->setPosition(ape::Vector3(18, 10, -40));
 
 		mScoreText = mpSceneManager->createEntity("scoreText", ape::Entity::GEOMETRY_TEXT);
 		if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
@@ -66,11 +67,11 @@ void TexasEEG::GameManager::Run()
 {
 	while (mBubbleManager->isGameOver() == false)
 	{
-		if (auto userNode = mUserNode.lock())
+		if (auto userBodyNode = mUserBodyNode.lock())
 		{
 			for (int i = 0; i < mBubbleManager->getAvtivatedBubblesQueue()->size(); i++)
 			{
-				if (userNode->getPosition().distance(mBubbleManager->getAvtivatedBubblesQueue()->at(i)->getPosition()) < 30)
+				if (userBodyNode->getPosition().distance(mBubbleManager->getAvtivatedBubblesQueue()->at(i)->getPosition()) < 30)
 				{					
 					std::lock_guard<std::mutex> lock(lockMutex);
 

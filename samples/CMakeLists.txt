@@ -214,3 +214,8 @@ option(APE_SAMPLES_Polimi "APE_SAMPLES_Polimi?" ON )
 if (${APE_SAMPLES_Polimi})
 	add_subdirectory (polimi)
 endif ()
+
+option(APE_SAMPLES_PhysicsSimulation "APE_SAMPLES_PhysicsSimulation?" ON)
+if(${APE_SAMPLES_PhysicsSimulation})
+	add_subdirectory(physicsSimulation)
+endif()

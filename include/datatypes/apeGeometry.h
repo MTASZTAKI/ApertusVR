@@ -44,6 +44,7 @@ namespace ape
 
 	typedef std::vector<float> GeometryTextureCoordinates;
 
+
 	class Geometry : public Entity
 	{
 	protected:
@@ -60,6 +61,7 @@ namespace ape
 
 		std::vector<ape::EntityWeakPtr> mIntersections;
 
+
 	public:
 		ape::NodeWeakPtr getParentNode()
 		{
@@ -75,6 +77,7 @@ namespace ape
 		{
 			return mIntersections;
 		};
+
 	};
 }
 

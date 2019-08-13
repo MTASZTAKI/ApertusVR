@@ -4,8 +4,7 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeIndustry40Plugin",
-    "ape360VideoPlugin",
-    "apeCefBrowserPlugin"
+    "ape360VideoPlugin"
   ],
   "network": {
     "user": "cave",

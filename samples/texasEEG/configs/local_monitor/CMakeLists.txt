@@ -22,7 +22,9 @@
 
 set (CONFIGS
 	apeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
 	apeCore.json
+	apeBulletPlugin.json
 	)
 
 add_custom_target(

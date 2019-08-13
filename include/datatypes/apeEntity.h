@@ -60,7 +60,8 @@ namespace ape
 			WATER,
 			SKY,
 			POINT_CLOUD,
-			INVALID
+			INVALID,
+			RIGIDBODY
 		};
 
 	protected:

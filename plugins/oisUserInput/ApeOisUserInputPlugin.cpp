@@ -384,6 +384,9 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 	{
 		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, -transScalar);
 		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+
+		//mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -4 ), ape::Node::TransformationSpace::LOCAL);
+		
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_S])
 	{

@@ -50,6 +50,7 @@ set(HEADERS
 	apeWaterImpl.h
 	apeSkyImpl.h
 	apePointCloudImpl.h
+	apeRigidBodyImpl.h
 	network/apeReplica.h
 	network/apeSceneNetworkImpl.h
 	network/apeReplicaManagerConnection.h
@@ -86,6 +87,7 @@ set(SOURCES
 	apeWaterImpl.cpp
 	apeSkyImpl.cpp
 	apePointCloudImpl.cpp
+	apeRigidBodyImpl.cpp
 	network/apeReplica.cpp
 	network/apeSceneNetworkImpl.cpp
 	network/apeReplicaManagerConnection.cpp

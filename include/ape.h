@@ -177,6 +177,12 @@ namespace ape
 	typedef std::weak_ptr<IPointCloud> PointCloudWeakPtr;
 
 	typedef std::shared_ptr<IPointCloud> PointCloudSharedPtr;
+
+	class IRigidBody;
+
+	typedef std::weak_ptr<IRigidBody> RigidBodyWeakPtr;
+
+	typedef std::shared_ptr<IRigidBody> RigidBodySharedPtr;
 }
 
 #endif

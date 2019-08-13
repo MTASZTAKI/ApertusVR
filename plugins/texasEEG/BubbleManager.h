@@ -37,6 +37,8 @@ namespace TexasEEG
 	private:
 		ape::NodeWeakPtr mUserNode;
 
+		ape::NodeWeakPtr mUserBodyNode;
+
 		std::thread* mTimerThread;
 
 		std::deque<TexasEEG::Bubble*> mBubbleQueue;
@@ -54,7 +56,7 @@ namespace TexasEEG
 		void UpdateTimers();
 
 	public:
-		BubbleManager(ape::NodeWeakPtr userNode);
+		BubbleManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode);
 
 		~BubbleManager();
 

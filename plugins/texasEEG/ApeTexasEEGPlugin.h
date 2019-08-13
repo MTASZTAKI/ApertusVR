@@ -43,6 +43,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITextGeometry.h"
 #include "macros/userInput/apeUserInputMacro.h"
 #include "GameManager.h"
+#include "sceneElements/apeIRigidBody.h"
 
 #define THIS_PLUGINNAME "apeTexasEEGPlugin"
 
@@ -66,6 +67,8 @@ namespace ape
 		ape::EntityWeakPtr mStatusText;
 
 		ape::EntityWeakPtr mScoreText;
+
+		ape::NodeWeakPtr mUserBodyNode;
 
 		TexasEEG::GameManager* mGameManager;
 

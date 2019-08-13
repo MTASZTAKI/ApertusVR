@@ -40,6 +40,7 @@ set (HEADERS
 	apeIPlaneGeometry.h
 	apeIPointCloud.h
 	apeIRayGeometry.h
+	apeIRigidBody.h
 	apeISky.h
 	apeISphereGeometry.h
 	apeITextGeometry.h

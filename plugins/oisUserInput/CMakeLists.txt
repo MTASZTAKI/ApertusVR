@@ -35,6 +35,7 @@ function (reportError what and when)
 		message (${${what}})
 	endif ()
 endfunction ()
+
 #find ois
 if(EXISTS ${OIS_HOME}/Debug/OIS.lib AND EXISTS ${OIS_HOME}/Release/OIS.lib)
 	set(OIS_READY TRUE)
@@ -80,9 +81,7 @@ set (SOURCES
 	apeOisUserInputPlugin.cpp
 	)
 
-include_directories(
-	 
-	 	
+include_directories(	
 	${OIS_HOME}/includes
 	${RAPIDJSON_INCLUDE_DIR}
 	)

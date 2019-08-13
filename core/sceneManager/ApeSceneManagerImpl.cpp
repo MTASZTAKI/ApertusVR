@@ -50,6 +50,7 @@ SOFTWARE.*/
 #include "apeFileTextureImpl.h"
 #include "apeSceneNetworkImpl.h"
 #include "apeEventManagerImpl.h"
+#include "apeRigidBodyImpl.h"
 
 ape::SceneManagerImpl::SceneManagerImpl()
 {
@@ -365,6 +366,14 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::WATER_CREATE));
 			return entity;
 		}
+		case ape::Entity::RIGIDBODY:
+		{
+			APE_LOG_TRACE("type: RIGIDBODY");
+			auto entity = std::make_shared<ape::RigidBodyImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_CREATE));
+			return entity;
+		}
 		case ape::Entity::INVALID:
 		{
 			APE_LOG_TRACE("type: INVALID");
@@ -456,6 +465,9 @@ void ape::SceneManagerImpl::deleteEntity(std::string name)
 			break;
 		case ape::Entity::CAMERA:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::CAMERA_DELETE));
+			break;
+		case ape::Entity::RIGIDBODY:
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_DELETE));
 			break;
 		case ape::Entity::INVALID:
 			break;
