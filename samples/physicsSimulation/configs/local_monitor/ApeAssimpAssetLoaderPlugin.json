@@ -1,22 +1,22 @@
 {
   "assets": [
     //{
-    //  "file": "/plugins/assimpAssetLoader/resources/Duck.gltf",
+    //  "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
     //  "mergeAndExportMeshes": false,
-    //  "scale": [ 2, 2, 2 ],
-    //  "position": [ 0, 100, -100 ],
+    //  "scale": [10,10,10],
+    //  "position": [ 0, 0, 0 ],
     //  "orientation": [ 1, 0, 0, 0 ],
     //  "regenerateNormals": true,
-    //  "rootNodeName": "duck",
+    //  "rootNodeName": "monster",
     //  "physics": {
-    //    "mass": 1.0,
-    //    "restitution": 0.6,
+    //    "mass": 0.0,
+    //    "restitution": 0.1,
     //    "friction": 0.5,
     //    "rolling friction": 0.1,
     //    "spinning friction": 0.1,
     //    "linear damping": 0.01,
     //    "angular damping": 0.05,
-    //    "bouyancyEnabled": true
+    //    "bouyancyEnabled": false
     //  }
     //}
   ]

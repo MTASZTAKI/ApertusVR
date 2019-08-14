@@ -27,5 +27,6 @@ int main(int argc, char** argv)
 	configDir << ape::FileSystem::getConfigFromCmdArgs(argc, argv, configDir.str());
 	ape::System::Start(configDir.str().c_str(), true);
 	ape::System::Stop();
+	std::getchar();
 	return 0;
 }

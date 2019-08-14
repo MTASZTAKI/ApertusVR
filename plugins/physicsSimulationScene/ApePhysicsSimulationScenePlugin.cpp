@@ -77,32 +77,34 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 
 	// water surface
 
-	
-	if (m_waterEnabled)
+	if (true)
 	{
-		makeWater("water", ape::Vector2(3000, 3000), ape::Vector3(0, 300, 0));
+		if (m_waterEnabled)
+		{
+			makeWater("water", ape::Vector2(3000, 3000), ape::Vector3(0, 300, 0));
+		}
+		else if (m_groundIsWavy)
+		{
+			makeTerrain("terrain", ape::Vector3(1, 1, 1));
+		}
+		else
+		{
+			makeGround("ground", ape::Vector2(3000, 3000));
+		}
 	}
-	else if (m_groundIsWavy)
-	{
-		makeTerrain("terrain", ape::Vector3(1, 1, 1));
-	}
-	else
-	{
-		makeGround("ground", ape::Vector2(3000, 3000));
-	}
 
 
-	makeSphere("sphere11", 25.f, { 0.,50.,0 });
+	 //makeSphere("sphere11", 25.f, {+50.,300., -300.});
 
-	makeBox("box111", ape::Vector3(50, 50, 50), ape::Vector3(-100.f, 400.f, 0.f));
+	// makeBox("box111", ape::Vector3(50, 50, 50), ape::Vector3(-100.f, 400.f, 0.f));
 
-	const int array_size = 5;
-	float height = 400;
+	const int array_size = 10;
+	ape::Vector3 initPos(50, 400, -200);
 	for (int i = 0; i < array_size; i++)
 	{
 		std::stringstream ssi;
 		ssi << i;
-		for (int j = 0; j < array_size; j++)
+		for (int j = 0; j < 1; j++)
 		{
 			std::stringstream ssj;
 			ssj << j;
@@ -122,7 +124,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 					}
 
 
-					boxNode->setPosition(ape::Vector3(float(i * 10 - array_size * 10 / 2 + 5), float(j * 10) + height, float(k * 10 - array_size * 10 / 2 + 5)));
+					boxNode->setPosition(initPos + ape::Vector3(float(i * 10 - array_size * 10 / 2 + 5), float(j * 10), float(k * 10 - array_size * 10 / 2 + 5)));
 
 					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
@@ -137,7 +139,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 							boxBody->setToStatic();
 							boxBody->setGeometry(box);
 							boxBody->setParentNode(boxNode);
-							boxBody->setRestitution(1.0f);
+							boxBody->setRestitution(0.6f);
 							boxBody->setDamping(0.01, 0.01);
 							boxBody->setBouyancy(m_waterEnabled);
 							boxBody->setToDynamic(1.0f);
@@ -291,7 +293,7 @@ void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vec
 					planeBody->setGeometry(plane);
 					planeBody->setParentNode(planeNode);
 					planeBody->setToStatic();
-					planeBody->setRestitution(0.4f);
+					planeBody->setRestitution(1.0f);
 				}
 			}
 		}

@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "managers/apeICoreConfig.h"
 #include "sceneelements/apeIBoxGeometry.h"
 #include "sceneelements/apeICamera.h"
+#include "sceneelements/apeICloneGeometry.h"
 #include "sceneelements/apeIConeGeometry.h"
 #include "sceneelements/apeICylinderGeometry.h"
 #include "sceneelements/apeIFileGeometry.h"

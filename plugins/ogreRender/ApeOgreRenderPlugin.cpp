@@ -27,6 +27,7 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -1076,6 +1077,35 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(geometryName).lock()))
 							ogreText->setCaption(textGeometry->getCaption());
 					}
+				}
+					break;
+				}
+			}
+		}
+		else if (event.group == ape::Event::Group::GEOMETRY_CLONE)
+		{
+			if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+			{
+				std::string geometryName = geometryClone->getName();
+				std::string parentNodeName = "";
+				if (auto parentNode = geometryClone->getParentNode().lock())
+					parentNodeName = parentNode->getName();
+				switch (event.type)
+				{
+				case ape::Event::Type::GEOMETRY_CLONE_CREATE:
+				{
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_CLONE_PARENTGEOMETRY:
+				{
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
+				{
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_CLONE_DELETE:
+				{
 				}
 					break;
 				}

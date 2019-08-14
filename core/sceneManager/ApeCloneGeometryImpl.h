@@ -20,71 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_CLONEGEOMETRYIMPL_H
+#define APE_CLONEGEOMETRYIMPL_H
 
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
+#include "managers/apeISceneManager.h"
+#include "sceneElements/apeICloneGeometry.h"
+#include "sceneElements/apeINode.h"
+#include "ApeEventManagerImpl.h"
+#include "apeReplica.h"
 
 namespace ape
 {
-	class Entity
+	class CloneGeometryImpl : public ape::ICloneGeometry, public ape::Replica
 	{
 	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			GEOMETRY_CLONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_FILE,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID,
-			RIGIDBODY
-		};
+		CloneGeometryImpl(std::string name, bool isHostCreated);
 
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+		~CloneGeometryImpl();
 
-		virtual ~Entity() {};
+		void setParentGeometry(ape::GeometryWeakPtr parentGeometry) override;
 
-		std::string mName;
+		ape::GeometryWeakPtr getParentGeometry() override;
 
-		Type mType;
+		std::string getParentGeometryName() override;
 
-	public:
-		std::string getName()
-		{
-			return mName;
-		};
+	private:
+		ape::EventManagerImpl* mpEventManagerImpl;
 
-		Type getType()
-		{
-			return mType;
-		};
+		ape::ISceneManager* mpSceneManager;
+
+		std::string mParentGeometryName;
+
+		ape::GeometryWeakPtr mpParentGeometry;
+
 	};
 }
-
 #endif

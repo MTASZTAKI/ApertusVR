@@ -105,6 +105,8 @@ namespace ape
 
 		int m_maxSubSteps;
 
+		btScalar m_dtSec;
+
 		btVector3 m_gravity;
 
 		btScalar m_plainHeight;
@@ -139,6 +141,8 @@ namespace ape
 		/// maps for shapes, objects, bodies, nodes...,
 		/// the std::string key is the geometryName of the geometry
 
+		// std::map<std::string, std::string> m_rigidBodyShapes;
+
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
 
 		std::map<std::string, btCollisionObject*> m_collisionObjects;
@@ -172,6 +176,8 @@ namespace ape
 		btVector3 fromApe(const ape::Vector3& apeVec);
 
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
+
+		btTransform fromApe(ape::NodeWeakPtr node);
 
 		std::string toString(btVector3 vec);
 

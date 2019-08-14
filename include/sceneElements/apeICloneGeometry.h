@@ -20,71 +20,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
+#ifndef APE_ICLONEGEOMETRY_H
+#define APE_ICLONEGEOMETRY_H
 
-#include <map>
-#include <memory>
 #include <string>
 #include <vector>
+#include "../ape.h"
+#include "../datatypes/apeGeometry.h"
+#include "../datatypes/apeEntity.h"
+#include "../datatypes/apeVector3.h"
+#include "apeINode.h"
 
 namespace ape
 {
-	class Entity
+	struct GeometryCloneParameters
 	{
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			GEOMETRY_CLONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_FILE,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID,
-			RIGIDBODY
-		};
 
+	};
+
+	class ICloneGeometry : public Geometry
+	{
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+		ICloneGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_CLONE) {}
 
-		virtual ~Entity() {};
-
-		std::string mName;
-
-		Type mType;
+		virtual ~ICloneGeometry() {}
 
 	public:
-		std::string getName()
-		{
-			return mName;
-		};
+		virtual void setParentGeometry(ape::GeometryWeakPtr parentGeometry) = 0;
+		
+		virtual ape::GeometryWeakPtr getParentGeometry() = 0;
 
-		Type getType()
-		{
-			return mType;
-		};
+		virtual std::string getParentGeometryName() = 0;
 	};
 }
 
-#endif
+#endif // !APE_ICLONEGEOMETRY_H

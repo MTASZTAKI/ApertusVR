@@ -510,6 +510,9 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var geometryName = use + currentlyLoadingFileName;
 				var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(itemName);
 				fileGeometryObj.setFileName(geometryName);
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				
+
 				log('USE: ' + fileGeometryObj.getName());
 
 				if (parentNodeObj) {
@@ -535,6 +538,12 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var colors = self.parseColorRGBAs(currentItem);
 				var matItem = currentItem.siblings('Appearance').first().children('Material').first();
 				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
+
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
+				rigidBodyObj.setToStatic();
+
+				// var ribidBodyObj = ape.nbind.JsBindManager().createRigidBody();
 				if (utils.isDefined(materialObj)) {
 					log('setParametersWithMaterial is called');
 					indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
@@ -543,6 +552,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				if (lastGroupNodeObjName != groupNodeObjName) {
 					if (groupNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
+						rigidBodyObj.setParentNodeJsPtr(groupNodeObj);
 						log('- groupNodeObj:' + groupNodeObjName);
 					}
 					lastGroupNodeObjName = groupNodeObjName;
@@ -550,6 +560,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				if (!grouped) {
 					if (parentNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+						rigidBodyObj.setParentNodeJsPtr(parentNodeObj);
 						log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 					} else
 						log('no parent, no group -> no node to attach the geometry');

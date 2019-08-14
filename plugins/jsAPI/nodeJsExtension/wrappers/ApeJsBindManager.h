@@ -37,6 +37,7 @@ SOFTWARE.*/
 #include "apeJsBindDegree.h"
 #include "apeJsBindEuler.h"
 #include "apeJsBindIndexedFaceSetGeometryImpl.h"
+#include "ApeJsBindRigidBodyImpl.h"
 #include "apeJsBindLightImpl.h"
 #include "apeJsBindMatrix4.h"
 #include "apeJsBindNodeImpl.h"
@@ -259,6 +260,40 @@ public:
 			{
 				success = true;
 				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
+	RigidBodyJsPtr createRigidBody(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY));
+	}
+
+	bool getRigidBody(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
+		{
+			if (auto rigidBody = std::dynamic_pointer_cast<ape::IRigidBody>(entity))
+			{
+				success = true;
+				done(!success, RigidBodyJsPtr(entityWeakPtr));
 			}
 			else
 			{
@@ -616,6 +651,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createIndexedFaceSet);
 	method(getIndexedFaceSet);
+
+	method(createRigidBody);
+	method(getRigidBody);
 
 	method(createBox);
 	method(getBox);

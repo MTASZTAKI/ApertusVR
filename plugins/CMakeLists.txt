@@ -267,7 +267,7 @@ if (${APE_PLUGIN_PolimiPlugin})
 	add_subdirectory (polimi)
 endif ()
 
-option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationScenePlugin?" ON )
+option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationPlugin?" ON )
 if (${APE_PLUGIN_PhysicsSimulationScene})
 	add_subdirectory (physicsSimulationScene)
 endif ()

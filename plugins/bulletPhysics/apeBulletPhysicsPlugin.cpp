@@ -59,6 +59,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 	while (!m_eventDoubleQueue.emptyPop())
 	{
+		//printf("processEventDoubleQueue start");
 		ape::Event event = m_eventDoubleQueue.front();
 		if (event.group == ape::Event::Group::NODE)
 		{
@@ -225,7 +226,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
-								else if(true)
+								else
 								{
 									ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 									ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
@@ -271,67 +272,9 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 									setCollisionShape(apeBodyName, colShape, apeBody->getMass());
 								}
-								else
-								{
-									int i;
-									int j;
-
-									const int NUM_VERTS_X = 40;
-									const int NUM_VERTS_Y = 40;
-									const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
-									const int totalTriangles = 2 * (NUM_VERTS_X - 1) * (NUM_VERTS_Y - 1) + 2 * (NUM_VERTS_X + NUM_VERTS_Y) - 4;
-									const float TRIANGLE_SIZE = 35.f;
-
-									float offset = -50;
-									const float waveheight = 30.f;
-
-									btVector3* gGroundVertices = new btVector3[totalVerts];;
-									int* gGroundIndices = new int[totalTriangles * 3];
-
-									for (j = 0; j < NUM_VERTS_Y; j++)
-									{
-										for (i = 0; i < NUM_VERTS_X; i++)
-										{
-											gGroundVertices[i + j * NUM_VERTS_X].setValue((i - NUM_VERTS_X * 0.5f) * TRIANGLE_SIZE,
-												//0.f,
-												waveheight * sinf((float)i) * cosf((float)j + offset),
-												(j - NUM_VERTS_Y * 0.5f) * TRIANGLE_SIZE);
-										}
-									}
-
-									int vertStride = sizeof(btVector3);
-									int indexStride = 3 * sizeof(int);
-
-									int index = 0;
-									for (j = 0; j < NUM_VERTS_Y - 1; j++)
-									{
-										for (int i = 0; i < NUM_VERTS_X - 1; i++)
-										{
-											gGroundIndices[index++] = j * NUM_VERTS_X + i;
-											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-											gGroundIndices[index++] = j * NUM_VERTS_X + i + 1;
-											;
-
-											gGroundIndices[index++] = j * NUM_VERTS_X + i;
-											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i;
-											gGroundIndices[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-										}
-									}
-
-									btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(totalTriangles,
-										gGroundIndices,
-										indexStride,
-										totalVerts, (btScalar*)&gGroundVertices[0].x(), vertStride);
-
-									bool useQuantizedAabbCompression = true;
-
-									btCollisionShape* groundShape = new btBvhTriangleMeshShape(indexVertexArrays, useQuantizedAabbCompression);
-									groundShape->setMargin(0.5);
-
-									setCollisionShape(apeBodyName, groundShape, apeBody->getMass());
-								}
 							}
 							break;
+						
 
 						default:
 							break;
@@ -396,27 +339,42 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						setTransform(apeBodyName,
 							fromApe(parentNode->getDerivedOrientation()),
 							fromApe(parentNode->getDerivedPosition()));
+						
+						/*setTransform(apeBodyName,
+							fromApe(parentNode->getOrientation()),
+							fromApe(parentNode->getPosition()));*/
 
 						while (auto parentParentNode = parentNode->getParentNode().lock())
 						{
 							parentNode = parentParentNode;
 						}
 						
-						m_parentNodes[apeBodyName] = parentNode; //!
+						// m_parentNodes[apeBodyName] = parentNode; //!
 
 						/// user 
 						if (parentNode->getName() == "userBodyNode")
 						{
 							m_userProps.apeBodyName = apeBodyName;
-							m_userProps.userPosition = fromApe(parentNode->getPosition());
+							m_userProps.userPosition = fromApe(parentNode->getDerivedPosition());
 							m_userProps.userExists = bool(m_userProps.userNode.lock());
 						}
 					}
 				}
 			}
 		}
+		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
+		{
+			if(event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
+			{
+				if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+				{
+					geometryFile->getFileName();
+				}
+			}
+		}
 		m_eventDoubleQueue.pop();
 	}
+	//printf("processEventDoubleQueue end");
 }
 
 void ape::BulletPhysicsPlugin::Init()
@@ -512,21 +470,18 @@ void ape::BulletPhysicsPlugin::Run()
 	btClock btclock;
 	while (true)
 	{
-		/// takes one step of the simulation in the physics engine
-
 		processEventDoubleQueue();
 
-		btScalar dtSec = btScalar(btclock.getTimeSeconds());
+		m_dtSec = btScalar(btclock.getTimeSeconds());
 
+		/// takes one step of the simulation in the physics engine
 		///stepTime < maxNumSubSteps * internalTimeStep
-
-		m_dynamicsWorld->stepSimulation(dtSec,m_maxSubSteps,m_fixedTimeStep);
+		m_dynamicsWorld->stepSimulation(m_dtSec,m_maxSubSteps,m_fixedTimeStep);
 		btclock.reset();
-
 
 		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
 		{
-			std::string rbName = it->first;
+			std::string apeBodyName = it->first;
 			btCollisionObject* obj = it->second;
 			btRigidBody* body = btRigidBody::upcast(obj);
 
@@ -535,40 +490,41 @@ void ape::BulletPhysicsPlugin::Run()
 			if (body && body->getMotionState() && body->getInvMass() != 0.0f)
 			{
 				body->getMotionState()->getWorldTransform(trans);
-				
-				if (m_bouyancyEnabled[rbName])
-					updateBouyancy(rbName, body, trans);
+
+				if (m_bouyancyEnabled[apeBodyName])
+					updateBouyancy(apeBodyName, body, trans);
 
 			}
 			else
 				trans = body->getWorldTransform();
 
-			if (auto parentNode = m_parentNodes[rbName].lock())
+			if (auto parentNode = m_parentNodes[apeBodyName].lock())
 			{
-				ape::Quaternion orientation = fromBullet(trans.getRotation());
+				ape::Quaternion worldOrientation = fromBullet(trans.getRotation());
 
-				btVector3 rotated_offset = fromApe(m_offsets[rbName]);
+				btVector3 rotated_offset = fromApe(m_offsets[apeBodyName]);
 
-				ape::Vector3 position = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
+				ape::Vector3 worldPosition = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
 
-				//setTransform(rbName, fromApe(parentNode->getOrientation()), fromApe(parentNode->getPosition()));
-				
+				ape::Quaternion orientation = (parentNode->getDerivedOrientation() * parentNode->getOrientation().Inverse()).Inverse()* worldOrientation;
+				ape::Vector3 position = parentNode->getPosition() - parentNode->getDerivedPosition() + worldPosition;
 
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);
 			}
-			
+
 			/// debug
 			if (float(clock()) - float(t) > 1000.0)
 			{
-				printf("%s pos: %s\n", rbName.c_str(), toString(trans.getOrigin()).c_str());
-
-				btVector3 force = body->getTotalForce();
-				//printf("%s total force: %s\n", rbName.c_str(),toString(force).c_str());
+				printf("%s pos: %s\n", apeBodyName.c_str(), toString(trans.getOrigin()).c_str());
+				//printf("%s mass: %f\n", apeBodyName.c_str(), body->getInvMass());
+				//btVector3 force = body->getTotalForce();
+				//printf("%s total force: %s\n", apeBodyName.c_str(),toString(force).c_str());
+				//printf("%s gravity: %s\n", apeBodyName.c_str(), toString(body->getGravity()).c_str());
 			}
 
 			/// USER
-			if (m_userProps.userExists && m_userProps.apeBodyName == rbName)
+			if (m_userProps.userExists && m_userProps.apeBodyName == apeBodyName)
 			{
 				btVector3 translateVec;
 				static bool b = false;
@@ -589,7 +545,7 @@ void ape::BulletPhysicsPlugin::Run()
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();
 
-		//std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
 	}
 	APE_LOG_FUNC_LEAVE();
@@ -615,6 +571,17 @@ btVector3 ape::BulletPhysicsPlugin::fromApe(const ape::Vector3& apeVec)
 btQuaternion ape::BulletPhysicsPlugin::fromApe(const ape::Quaternion& apeQuat)
 {
 	return btQuaternion(apeQuat.x, apeQuat.y, apeQuat.z, apeQuat.w);
+}
+
+btTransform ape::BulletPhysicsPlugin::fromApe(ape::NodeWeakPtr nodeWeak)
+{
+	btTransform trans;
+	if (auto nodeShared = nodeWeak.lock())
+	{
+		trans.setOrigin(fromApe(nodeShared->getPosition()));
+		trans.setRotation(fromApe(nodeShared->getOrientation()));
+	}
+	return trans;
 }
 
 // for debug
@@ -743,16 +710,16 @@ void ape::BulletPhysicsPlugin::createCollisionObject(std::string geometryName, b
 
 btVector3 ape::BulletPhysicsPlugin::calculateCenterOfMass(const ape::GeometryCoordinates& coordinates)
 {
-	float M = coordinates.size() / 3;
-	btVector3 com(0, 0, 0);
+	float Mass = coordinates.size() / 3;
+	btVector3 centerOfMass(0, 0, 0);
 	for (size_t i = 0; i < coordinates.size(); i = i + 3)
 	{
-		btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
-		com += v;
+		btVector3 vertex(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+		centerOfMass += vertex;
 	}
-	com = com / M;
+	centerOfMass = centerOfMass / Mass;
 
-	return com;
+	return centerOfMass;
 }
 
 void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)

@@ -24,6 +24,7 @@ set (HEADERS
 	apeIBoxGeometry.h
 	apeIBrowser.h
 	apeICamera.h
+	apeICloneGeometry.h
 	apeIConeGeometry.h
 	apeICylinderGeometry.h
 	apeIFileGeometry.h

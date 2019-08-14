@@ -54,6 +54,7 @@ set (HEADERS
 	wrappers/apeFileTextureJsBind.h
 	wrappers/apePlaneGeometryJsBind.h
 	wrappers/apePointCloudJsBind.h
+	wrappers/apeJsBindRigidBodyImpl.h
 	)
 
 set (SOURCES

@@ -1,3 +1,4 @@
+#include "ApeCloneGeometryImpl.h"
 /*MIT License
 
 Copyright (c) 2018 MTA SZTAKI
@@ -20,71 +21,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_ENTITY_H
-#define APE_ENTITY_H
-
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
-namespace ape
+ape::CloneGeometryImpl::CloneGeometryImpl(std::string name, bool isHostCreated)
+: ape::ICloneGeometry(name), ape::Replica("CloneGeometry",isHostCreated)
 {
-	class Entity
-	{
-	public:
-		enum Type
-		{
-			LIGHT,
-			CAMERA,
-			GEOMETRY_FILE,
-			GEOMETRY_INDEXEDFACESET,
-			GEOMETRY_INDEXEDLINESET,
-			GEOMETRY_TEXT,
-			GEOMETRY_BOX,
-			GEOMETRY_PLANE,
-			GEOMETRY_TUBE,
-			GEOMETRY_CYLINDER,
-			GEOMETRY_SPHERE,
-			GEOMETRY_TORUS,
-			GEOMETRY_CONE,
-			GEOMETRY_RAY,
-			GEOMETRY_CLONE,
-			MATERIAL_MANUAL,
-			MATERIAL_FILE,
-			PASS_PBS,
-			PASS_MANUAL,
-			TEXTURE_MANUAL,
-			TEXTURE_FILE,
-			TEXTURE_UNIT,
-			BROWSER,
-			WATER,
-			SKY,
-			POINT_CLOUD,
-			INVALID,
-			RIGIDBODY
-		};
-
-	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
-
-		virtual ~Entity() {};
-
-		std::string mName;
-
-		Type mType;
-
-	public:
-		std::string getName()
-		{
-			return mName;
-		};
-
-		Type getType()
-		{
-			return mType;
-		};
-	};
+	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mParentGeometryName = std::string();
 }
 
-#endif
+ape::CloneGeometryImpl::~CloneGeometryImpl()
+{
+}
+
+void ape::CloneGeometryImpl::setParentGeometry(ape::GeometryWeakPtr parentGeometry)
+{
+	if (auto parentGeometryShared = parentGeometry.lock())
+	{
+		mpParentGeometry = parentGeometry;
+		mParentGeometryName = parentGeometryShared->getName();
+	}
+}
+
+ape::GeometryWeakPtr ape::CloneGeometryImpl::getParentGeometry()
+{
+	return mpParentGeometry;
+}
+
+std::string ape::CloneGeometryImpl::getParentGeometryName()
+{
+	return mParentGeometryName;
+}
