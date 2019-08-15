@@ -32,6 +32,7 @@ include("cmake/prepare_ape.cmake")
 include("cmake/prepare_curl.cmake")
 include("cmake/prepare_raknet.cmake")
 include("cmake/prepare_rapidjson.cmake")
+include("cmake/prepare_nlohmann.cmake")
 
 include_directories("include")
 include_directories(${PROJECT_SOURCE_DIR})
