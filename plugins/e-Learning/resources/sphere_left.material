@@ -1,0 +1,20 @@
+material sphere_left
+{
+	technique sphere_left
+	{
+		pass sphere_left
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 1 1 1 1
+
+			texture_unit sphere_left
+			{
+				texture sphere_left.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

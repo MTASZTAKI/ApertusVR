@@ -1,0 +1,30 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeELearningPlugin"
+  ],
+  "network": {
+    "user": "ELearning",
+    "participant": "none",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "none",
+    "resourceLocations": [
+      "/plugins/e-Learning/resources"
+    ]
+  }
+}

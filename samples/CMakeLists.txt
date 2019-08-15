@@ -62,6 +62,11 @@ if (${APE_SAMPLES_360StereoImage})
 	add_subdirectory (360StereoImage)
 endif ()
 
+option(APE_SAMPLES_E-Learning "APE_SAMPLES_E-Learning?" ON )
+if (${APE_SAMPLES_E-Learning})
+	add_subdirectory (e-Learning)
+endif ()
+
 option(APE_SAMPLES_360Video "APE_SAMPLES_360Video?" ON )
 if (${APE_SAMPLES_360Video})
 	add_subdirectory (360Video)

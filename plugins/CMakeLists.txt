@@ -68,6 +68,11 @@ if (${APE_PLUGIN_360StereoImage})
 	add_subdirectory (360StereoImage)
 endif ()
 
+option(APE_PLUGIN_E-Learning "Use E-LearningPlugin?" ON )
+if (${APE_PLUGIN_E-Learning})
+	add_subdirectory (e-Learning)
+endif ()
+
 option(APE_PLUGIN_360Video "Use 360VideoPlugin?" ON )
 if (${APE_PLUGIN_360Video})
 	add_subdirectory (360Video)
