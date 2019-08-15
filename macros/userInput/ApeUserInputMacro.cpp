@@ -38,8 +38,6 @@ ape::UserInputMacro::UserInputMacro()
 		}
 		mUserNode = userNode;
 	}
-	mOverlayText = ape::TextGeometryWeakPtr();
-	mOverlayTextNode = ape::NodeWeakPtr();
 	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUserNodeName).lock())
 	{
 		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUserNodeName, ape::Entity::GEOMETRY_RAY).lock()))
@@ -51,10 +49,10 @@ ape::UserInputMacro::UserInputMacro()
 		rayNode->setParentNode(mUserNode);
 		mRayOverlayNode = rayNode;
 	}
+	mOverlayText = ape::TextGeometryWeakPtr();
+	mOverlayTextNode = ape::NodeWeakPtr();
 	mOverlayBrowser = ape::BrowserWeakPtr();
 	mOverlayMouseTexture = ape::UnitTextureWeakPtr();
-	mRayGeometry = ape::RayGeometryWeakPtr();
-	mRayOverlayNode = ape::NodeWeakPtr();
 	mCursorText = ape::TextGeometryWeakPtr();
 	mKeyStringValue = std::string();
 	mIsNewKeyEvent = false;
@@ -484,5 +482,10 @@ void ape::UserInputMacro::rayQuery(ape::Vector3 position)
 		if (auto rayGeomtery = mRayGeometry.lock())
 			rayGeomtery->fireIntersectionQuery();
 	}
+}
+
+ape::RayGeometryWeakPtr ape::UserInputMacro::getRayGeometry()
+{
+	return mRayGeometry;
 }
 

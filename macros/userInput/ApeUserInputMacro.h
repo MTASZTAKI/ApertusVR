@@ -230,6 +230,8 @@ namespace ape
 		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
 
 		void rayQuery(ape::Vector3 position);
+
+		ape::RayGeometryWeakPtr getRayGeometry();
     };
 }
 

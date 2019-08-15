@@ -33,10 +33,13 @@ SOFTWARE.*/
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
 #include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPlaneGeometry.h"
 #include "sceneelements/apeIFileMaterial.h"
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeICamera.h"
 #include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeIFileTexture.h"
+#include "sceneelements/apeIManualMaterial.h"
 #include "macros/userInput/apeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "apeELearningPlugin"

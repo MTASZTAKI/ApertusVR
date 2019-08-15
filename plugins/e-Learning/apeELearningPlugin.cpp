@@ -11,6 +11,7 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -77,6 +78,33 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 			}
 		}
 	}
+	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
+	{
+		if (auto rayGeometry = mpApeUserInputMacro->getRayGeometry().lock())
+		{
+			auto intersections = rayGeometry->getIntersections();
+			std::list<ape::EntityWeakPtr> intersectionList;
+			std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
+			bool removeItem = false;
+			std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
+			for (auto intersection : intersectionList)
+			{
+				if (auto entity = intersection.lock())
+				{
+					std::string entityName = entity->getName();
+					ape::Entity::Type entityType = entity->getType();
+					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
+					{
+						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
+						if (auto selectedParentNode = geometry->getParentNode().lock())
+						{
+							;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void ape::apeELearningPlugin::Init()
@@ -87,12 +115,53 @@ void ape::apeELearningPlugin::Init()
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeELearningPlugin.json";
 	FILE* apeELearningConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	quicktype::Welcome config = nlohmann::json::parse(apeELearningConfigFile);
+	for(auto const& room: config.get_rooms())
+	{
+		std::weak_ptr<std::vector<quicktype::Hotspot>> hotspots = room.get_hotspots();
+		if (hotspots.lock())
+		{
+			for (auto const& hotspot : *room.get_hotspots())
+			{
+				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
+				{
+					node->setPosition(ape::Vector3(hotspot.get_h(), hotspot.get_v(), hotspot.get_z()));
+					node->setOrientation(ape::Quaternion(1, 0, 0, 0));
+					if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+					{
+						material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
+						material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
+						material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+						std::string textureFileName;
+						auto pos = hotspot.get_textures()[0].find("/") + 1;
+						textureFileName = hotspot.get_textures()[0].substr(pos);
+						if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(textureFileName, ape::Entity::TEXTURE_FILE).lock()))
+						{
+							texture->setFileName(textureFileName);
+							material->setPassTexture(texture);
+							material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
+							material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id(), ape::Entity::Type::GEOMETRY_PLANE).lock()))
+							{
+								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(1000, 1000), ape::Vector2(1, 1));
+								planeGeometry->setParentNode(node);
+								planeGeometry->setMaterial(material);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::apeELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 
