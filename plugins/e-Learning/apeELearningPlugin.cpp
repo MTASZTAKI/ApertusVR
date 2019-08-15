@@ -2,7 +2,6 @@
 #include "apeELearningPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
-#include "apeELearningPluginConfig.h"
 
 ape::apeELearningPlugin::apeELearningPlugin()
 {
@@ -13,6 +12,8 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mNodeNamesHotSpots = std::map<std::string, quicktype::Hotspot>();
+	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -96,9 +97,18 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
 					{
 						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
-						if (auto selectedParentNode = geometry->getParentNode().lock())
+						if (auto clickedNode = geometry->getParentNode().lock())
 						{
-							;
+							std::map<std::string, quicktype::Hotspot>::iterator it;
+							for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
+							{
+								if (clickedNode->getName() == it->first)
+								{
+									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
+									//mpSceneMakerMacro->makeOverlayBrowser(it->second.get_url());
+									mpSceneMakerMacro->makeOverlayBrowser("https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c");
+								}
+							}
 						}
 					}
 				}
@@ -120,7 +130,7 @@ void ape::apeELearningPlugin::Init()
 		std::weak_ptr<std::vector<quicktype::Hotspot>> hotspots = room.get_hotspots();
 		if (hotspots.lock())
 		{
-			for (auto const& hotspot : *room.get_hotspots())
+			for (auto hotspot : *room.get_hotspots())
 			{
 				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
 				{
@@ -148,6 +158,7 @@ void ape::apeELearningPlugin::Init()
 							}
 						}
 					}
+					mNodeNamesHotSpots[node->getName()] = hotspot;
 				}
 			}
 		}

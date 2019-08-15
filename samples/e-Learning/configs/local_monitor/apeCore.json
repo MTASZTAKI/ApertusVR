@@ -2,6 +2,7 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
+    "apeCefBrowserPlugin",
     "apeELearningPlugin"
   ],
   "network": {
@@ -24,7 +25,8 @@
     },
     "selected": "none",
     "resourceLocations": [
-      "/plugins/e-Learning/resources"
+      "/plugins/e-Learning/resources",
+      "/macros/sceneMaker/resources"
     ]
   }
 }

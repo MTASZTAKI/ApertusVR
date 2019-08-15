@@ -31,7 +31,7 @@ void ape::apeHtmlOverlayUIPlugin::Init()
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	mpSceneMakerMacro->makeOverlayBrowser();
+	mpSceneMakerMacro->makeOverlayBrowser("");
 	APE_LOG_FUNC_LEAVE();
 }
 

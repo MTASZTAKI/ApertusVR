@@ -38,7 +38,7 @@ include_directories(
 add_library (apeELearningPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeELearningPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro)
+target_link_libraries (apeELearningPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
 
 set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

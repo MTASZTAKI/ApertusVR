@@ -31,7 +31,7 @@ void ape::apeRobotCalibrationPlugin::Init()
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	mpSceneMakerMacro->makeOverlayBrowser();
+	mpSceneMakerMacro->makeOverlayBrowser("");
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeLit();
 	mpSceneMakerMacro->makeCoordinateSystem();

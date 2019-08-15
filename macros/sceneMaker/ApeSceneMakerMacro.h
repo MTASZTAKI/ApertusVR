@@ -74,7 +74,7 @@ namespace ape
 
 		void makeModel(std::string fileName);
 
-		void makeBrowser();
+		void createBrowser();
 
 		void makeSky();
 
@@ -88,7 +88,7 @@ namespace ape
 
 		void makeBox(std::string name);
 
-		void makeOverlayBrowser();
+		void makeOverlayBrowser(std::string url);
 
 		void interpolate(ape::NodeWeakPtr node, ape::Vector3 position, ape::Quaternion orientation, unsigned int milliseconds);
 

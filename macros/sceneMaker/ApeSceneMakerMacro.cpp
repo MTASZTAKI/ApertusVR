@@ -85,8 +85,9 @@ void ape::SceneMakerMacro::makeModel(std::string fileName)
 	}
 }
 
-void ape::SceneMakerMacro::makeBrowser()
+void ape::SceneMakerMacro::createBrowser()
 {
+	
 }
 
 void ape::SceneMakerMacro::makeSky()
@@ -299,16 +300,15 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 	}
 }
 
-void ape::SceneMakerMacro::makeOverlayBrowser()
+void ape::SceneMakerMacro::makeOverlayBrowser(std::string url)
 {
+	APE_LOG_FUNC_ENTER();
 	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER).lock()))
 	{
 		browser->setResoultion(1280, 720);
-		std::stringstream url;
-		APE_LOG_FUNC_ENTER();
 		//TODO_SystemJson
 		//url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/robotCalibration/public/";
-		browser->setURL(url.str());
+		browser->setURL(url);
 		browser->showOnOverlay(true, 0);
 		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{

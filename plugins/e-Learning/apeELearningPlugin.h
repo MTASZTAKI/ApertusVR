@@ -41,6 +41,8 @@ SOFTWARE.*/
 #include "sceneelements/apeIFileTexture.h"
 #include "sceneelements/apeIManualMaterial.h"
 #include "macros/userInput/apeUserInputMacro.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "apeELearningPluginConfig.h"
 
 #define THIS_PLUGINNAME "apeELearningPlugin"
 
@@ -57,7 +59,11 @@ namespace ape
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
+		ape::SceneMakerMacro* mpSceneMakerMacro;
+
 		ape::ICoreConfig* mpCoreConfig;
+
+		std::map<std::string, quicktype::Hotspot> mNodeNamesHotSpots;
 
 	public:
 		apeELearningPlugin();
