@@ -38,20 +38,28 @@ namespace ape
 
 		~CloneGeometryImpl();
 
-		void setParentGeometry(ape::GeometryWeakPtr parentGeometry) override;
+		void setSourceGeometry(ape::GeometryWeakPtr sourceGeometry) override;
 
-		ape::GeometryWeakPtr getParentGeometry() override;
+		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
-		std::string getParentGeometryName() override;
+		ape::GeometryWeakPtr getSourceGeometry() override;
+
+		std::string getSourceGeometryName() override;
+
+		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
+
+		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
+
+		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;
 
 		ape::ISceneManager* mpSceneManager;
 
-		std::string mParentGeometryName;
+		std::string mSourceGeometryName;
 
-		ape::GeometryWeakPtr mpParentGeometry;
+		ape::GeometryWeakPtr mSourceGeometry;
 
 	};
 }

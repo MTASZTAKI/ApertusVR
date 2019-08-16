@@ -55,6 +55,7 @@ set (HEADERS
 	wrappers/apePlaneGeometryJsBind.h
 	wrappers/apePointCloudJsBind.h
 	wrappers/apeJsBindRigidBodyImpl.h
+	wrappers/apeJsBindCloneGeometryImpl.h
 	)
 
 set (SOURCES

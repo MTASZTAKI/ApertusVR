@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include "apeTextGeometryImpl.h" 
 #include "apeIndexedFaceSetGeometryImpl.h" 
 #include "apeIndexedLineSetGeometryImpl.h" 
+#include "apeCloneGeometryImpl.h"
 #include "apeFileMaterialImpl.h"
 #include "apeCameraImpl.h"
 #include "apeManualMaterialImpl.h"
@@ -246,6 +247,16 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
+		case ape::Entity::GEOMETRY_CLONE:
+		{
+			APE_LOG_TRACE("type: GEOMETRY_CLONE");
+			auto entity = std::make_shared<ape::CloneGeometryImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isHost());
+			mEntities.insert(std::make_pair(name, entity));
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CLONE_CREATE));
+			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
 		case ape::Entity::MATERIAL_FILE:
 		{
 			APE_LOG_TRACE("type: MATERIAL_FILE");
@@ -427,6 +438,9 @@ void ape::SceneManagerImpl::deleteEntity(std::string name)
 			break;
 		case ape::Entity::GEOMETRY_INDEXEDLINESET:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE));
+			break;
+		case ape::Entity::GEOMETRY_CLONE:
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CLONE_DELETE));
 			break;
 		case ape::Entity::MATERIAL_FILE:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::MATERIAL_FILE_DELETE));

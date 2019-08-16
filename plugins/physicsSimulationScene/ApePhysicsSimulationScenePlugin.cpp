@@ -71,7 +71,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
 	}
 	mpSceneMakerMacro->makeBackground();
-	mpSceneMakerMacro->makeCoordinateSystem();
+	//mpSceneMakerMacro->makeCoordinateSystem();
 	//mpSceneMakerMacro->makeTerrain("terrain");
 	//mpSceneMakerMacro->makeBox("a1");
 
@@ -89,16 +89,66 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		}
 		else
 		{
-			makeGround("ground", ape::Vector2(3000, 3000));
+			makeGround("ground", ape::Vector2(10000, 10000));
 		}
 	}
 
 
-	 //makeSphere("sphere11", 25.f, {+50.,300., -300.});
+	// makeSphere("sphere11", 25.f, {+50.,300., -300.});
 
 	// makeBox("box111", ape::Vector3(50, 50, 50), ape::Vector3(-100.f, 400.f, 0.f));
 
-	const int array_size = 10;
+	ape::BoxGeometrySharedPtr box;
+
+	
+	//mpSceneMakerMacro->makeModel("Sinbad.mesh");
+
+	/*if (auto meshNode = mpSceneManager->createNode("mesh11Node").lock())
+	{
+		meshNode->setPosition({0, 30, 0});
+		meshNode->setScale({ 10, 10, 10 });
+		if (auto mesh = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("Sinbad.mesh", ape::Entity::GEOMETRY_FILE).lock()))
+		{
+			mesh->setFileName("Sinbad.mesh");
+			mesh->setParentNode(meshNode);
+		}
+	}
+	*/
+
+	//if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	//{
+	//	// material for box
+	//	std::shared_ptr<ape::IManualMaterial> boxMaterial;
+	//	if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+	//	{
+	//		boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
+	//		boxMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
+	//	}
+
+	//	boxNode->setPosition({0.,50.,0.});
+
+
+	//	if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
+	//	{
+	//		box->setParameters({20.,20.,20.});
+	//		box->setParentNode(boxNode);
+	//		box->setMaterial(boxMaterial);
+	//	}
+
+	//	
+	//}
+
+	/*if (auto boxCopyNode = mpSceneManager->createNode("boxCopyNode").lock())
+	{
+		boxCopyNode->setPosition({0.,50.,-50.});
+		if (auto boxCopy = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("boxCopy", ape::Entity::GEOMETRY_CLONE).lock()))
+		{
+			boxCopy->setParentGeometry(box);
+			boxCopy->setParentNode(boxCopyNode);
+		}
+	}*/
+
+	const int array_size = 0;
 	ape::Vector3 initPos(50, 400, -200);
 	for (int i = 0; i < array_size; i++)
 	{

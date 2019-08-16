@@ -111,6 +111,12 @@ namespace ape
 
 	typedef std::shared_ptr<IIndexedLineSetGeometry> IndexedLineSetGeometrySharedPtr;
 
+	class ICloneGeometry;
+
+	typedef std::weak_ptr<ICloneGeometry> CloneGeometryWeakPtr;
+
+	typedef std::shared_ptr<ICloneGeometry> CloneGeometrySharedPtr;
+
 	class IManualMaterial;
 
 	typedef std::weak_ptr<IManualMaterial> ManualMaterialWeakPtr;

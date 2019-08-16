@@ -274,10 +274,15 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								}
 							}
 							break;
-						
-
-						default:
+						case ape::Entity::Type::GEOMETRY_CLONE:
 							break;
+						case ape::Entity::Type::GEOMETRY_FILE:
+							if (auto fileGeometry = std::static_pointer_cast<IFileGeometry>(geometry))
+							{
+								
+							}
+							break;
+							
 						}
 					}
 				}
@@ -344,10 +349,10 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							fromApe(parentNode->getOrientation()),
 							fromApe(parentNode->getPosition()));*/
 
-						while (auto parentParentNode = parentNode->getParentNode().lock())
+						/*while (auto parentParentNode = parentNode->getParentNode().lock())
 						{
 							parentNode = parentParentNode;
-						}
+						}*/
 						
 						// m_parentNodes[apeBodyName] = parentNode; //!
 
@@ -505,9 +510,24 @@ void ape::BulletPhysicsPlugin::Run()
 				btVector3 rotated_offset = fromApe(m_offsets[apeBodyName]);
 
 				ape::Vector3 worldPosition = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
+				
 
-				ape::Quaternion orientation = (parentNode->getDerivedOrientation() * parentNode->getOrientation().Inverse()).Inverse()* worldOrientation;
-				ape::Vector3 position = parentNode->getPosition() - parentNode->getDerivedPosition() + worldPosition;
+				ape::Vector3 inheritedTranslate{0, 0, 0};
+				ape::Quaternion inheritedOrientation{ 1,0,0,0 };
+				ape::NodeSharedPtr nodeIt = parentNode;
+
+
+				while (auto parentParentNode = nodeIt->getParentNode().lock())
+				{
+					nodeIt = parentParentNode;
+					inheritedTranslate += nodeIt->getPosition() /*/ nodeIt->getScale()*/;
+					inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+				}
+
+
+				ape::Vector3 position = worldPosition /*/ parentNode->getDerivedScale()*/ - inheritedTranslate;
+				ape::Quaternion orientation{ 1,0,0,0 };/* = worldOrientation * inheritedOrientation.Inverse();*/
+
 
 				parentNode->setOrientation(orientation);
 				parentNode->setPosition(position);

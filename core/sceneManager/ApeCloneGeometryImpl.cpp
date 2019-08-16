@@ -22,32 +22,95 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 ape::CloneGeometryImpl::CloneGeometryImpl(std::string name, bool isHostCreated)
-: ape::ICloneGeometry(name), ape::Replica("CloneGeometry",isHostCreated)
+	: ape::ICloneGeometry(name), ape::Replica("CloneGeometry", isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mParentGeometryName = std::string();
+	mSourceGeometryName = std::string();
+	mParentNodeName = std::string();
 }
 
 ape::CloneGeometryImpl::~CloneGeometryImpl()
 {
 }
 
-void ape::CloneGeometryImpl::setParentGeometry(ape::GeometryWeakPtr parentGeometry)
+void ape::CloneGeometryImpl::setSourceGeometry(ape::GeometryWeakPtr sourceGeometryWeak)
 {
-	if (auto parentGeometryShared = parentGeometry.lock())
+	printf("SET SOURCE GEOMETRY\n");
+	if (auto sourceGeometryShared = sourceGeometryWeak.lock())
 	{
-		mpParentGeometry = parentGeometry;
-		mParentGeometryName = parentGeometryShared->getName();
+		mSourceGeometry = sourceGeometryWeak;
+		mSourceGeometryName = sourceGeometryShared->getName();
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY));
 	}
+	else
+		mSourceGeometry = ape::GeometryWeakPtr();
 }
 
-ape::GeometryWeakPtr ape::CloneGeometryImpl::getParentGeometry()
+void ape::CloneGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
-	return mpParentGeometry;
+	if (auto parentNodeShared = parentNode.lock())
+	{
+		mParentNode = parentNode;
+		mParentNodeName = parentNodeShared->getName();
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_PARENTNODE));
+	}
+	else
+		mParentNode = ape::NodeWeakPtr();
 }
 
-std::string ape::CloneGeometryImpl::getParentGeometryName()
+ape::GeometryWeakPtr ape::CloneGeometryImpl::getSourceGeometry()
 {
-	return mParentGeometryName;
+	return mSourceGeometry;
+}
+
+std::string ape::CloneGeometryImpl::getSourceGeometryName()
+{
+	return mSourceGeometryName;
+}
+
+void ape::CloneGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+{
+	allocationIdBitstream->Write(mObjectType);
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+}
+
+RakNet::RM3SerializationResult ape::CloneGeometryImpl::Serialize(RakNet::SerializeParameters * serializeParameters)
+{
+	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSourceGeometryName.c_str()));
+	mVariableDeltaSerializer.EndSerialize(&serializationContext);
+
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+}
+
+void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deserializeParameters)
+{
+	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
+	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+
+	RakNet::RakString parentNodeName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))
+	{
+		mParentNodeName = parentNodeName.C_String();
+		mParentNode = mpSceneManager->getNode(mParentNodeName);
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_PARENTNODE));
+	}
+
+	RakNet::RakString sourceGeometryName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, sourceGeometryName))
+	{
+		if (auto sourceGeometry = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(sourceGeometryName.C_String()).lock()))
+		{
+			mSourceGeometry = sourceGeometry;
+			mSourceGeometryName = sourceGeometry->getName();
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY));
+		}
+	}
+
+	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

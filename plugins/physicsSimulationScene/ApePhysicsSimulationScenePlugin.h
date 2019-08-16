@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_PHYSICSSIMULATIONPLUGIN_H
 #define APE_PHYSICSSIMULATIONPLUGIN_H
 
+/// std lib
 #include <chrono>
 #include <iostream>
 #include <list>
@@ -31,12 +32,17 @@ SOFTWARE.*/
 #include <random>
 #include <thread>
 #include <vector>
+
 #include "plugin/apePluginAPI.h"
+
+/// managers
 #include "managers/apeIEventManager.h"
 #include "managers/apeILogManager.h"
 #include "managers/apeISceneManager.h"
 #include "managers/apeISceneNetwork.h"
 #include "managers/apeICoreConfig.h"
+
+/// sceneelements
 #include "sceneelements/apeICamera.h"
 #include "sceneelements/apeIConeGeometry.h"
 #include "sceneelements/apeIFileGeometry.h"
@@ -52,11 +58,14 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITextGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
-#include "utils/apeInterpolator.h"
-#include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "sceneelements/apeICloneGeometry.h"
 #include "sceneelements/apeIBoxGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeICylinderGeometry.h"
+
+/// utils, macros
+#include "utils/apeInterpolator.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 #include "macros/userInput/ApeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "apePhysicsSimulationScenePlugin"

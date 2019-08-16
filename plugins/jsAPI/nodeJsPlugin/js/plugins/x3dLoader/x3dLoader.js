@@ -508,23 +508,42 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			var use = currentItem.attr('USE');
 			if (utils.isDefined(use)) {
 				var geometryName = use + currentlyLoadingFileName;
-				var fileGeometryObj = ape.nbind.JsBindManager().createFileGeometry(itemName);
-				fileGeometryObj.setFileName(geometryName);
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				var cloneGeometryObj = ape.nbind.JsBindManager().createCloneGeometry(itemName);
+
+				/*ape.nbind.JsBindManager().createNode("fck");
+				ape.nbind.JsBindManager().getNode("fck", function(error, object) {
+					if (error) {
+						log(error);
+						return;
+					}
+					log('????1.5');
+				});*/
+				log('SHAPE: ' + geometryName + ' - ' + itemNamesMap.get(geometryName) + ' - ' + itemName);
+				ape.nbind.JsBindManager().getIndexedFaceSet(itemNamesMap.get(geometryName), function(error, object) {
+					if (error) {
+						log(error);
+						return;
+					}
+					log('GET_INDEXEDFACESET');
+					cloneGeometryObj.setSourceIndexedFaceSetJsPtr(object);
+					log('!!!! - this: ' + cloneGeometryObj.getName() + ' - parentNode: !!!!');
+				});
+				log('GOT_INDEXEDFACESET?');
+				//var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
 				
 
-				log('USE: ' + fileGeometryObj.getName());
+				log('USE: ' + cloneGeometryObj.getName());
 
 				if (parentNodeObj) {
-					fileGeometryObj.setParentNodeJsPtr(parentNodeObj);
-					log(' - this: ' + fileGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+					cloneGeometryObj.setParentNodeJsPtr(parentNodeObj);
+					log(' - this: ' + cloneGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
 				}
 			}
 		} else if (tagName == 'indexedfaceset') {
 			var grouped = false;
 			var groupNodeObjName = itemName;
 			if (groupNodeObj) {
-				groupNodeObjName = groupNodeObj.getName();
+				groupNodeObjName = groupNodeObj.getName() + currentlyLoadingFileName;
 				grouped = true;
 			}
 			log('- indexedfaceset:' + groupNodeObjName);
@@ -543,6 +562,8 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
 				rigidBodyObj.setToStatic();
 
+				log('INDEXEDFACESET: ' + groupNodeObjName + ' - ' + itemName);
+				itemNamesMap.set(groupNodeObjName,itemName);
 				// var ribidBodyObj = ape.nbind.JsBindManager().createRigidBody();
 				if (utils.isDefined(materialObj)) {
 					log('setParametersWithMaterial is called');
@@ -693,6 +714,7 @@ var loopAnimation = false;
 var cycleIntervalAnimation = 1;
 var keyIndex = 0;
 var currentlyLoadingFileName = '';
+var itemNamesMap = new Map();
 var currentlyLoadingPosition = new Array();
 var currentlyLoadingScale = new Array();
 var currentlyLoadingOrientation = new Array();

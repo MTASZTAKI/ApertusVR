@@ -46,11 +46,14 @@ namespace ape
 		virtual ~ICloneGeometry() {}
 
 	public:
-		virtual void setParentGeometry(ape::GeometryWeakPtr parentGeometry) = 0;
-		
-		virtual ape::GeometryWeakPtr getParentGeometry() = 0;
+		virtual void setSourceGeometry(ape::GeometryWeakPtr sourceGeometry) = 0;
 
-		virtual std::string getParentGeometryName() = 0;
+		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
+
+		virtual ape::GeometryWeakPtr getSourceGeometry() = 0;
+
+		virtual std::string getSourceGeometryName() = 0;
+
 	};
 }
 
