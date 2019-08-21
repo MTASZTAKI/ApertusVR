@@ -111,7 +111,7 @@ namespace ape
 
 		void makeTerrain(std::string name, ape::Vector3 scale);
 
-		void makeGround(std::string name, ape::Vector2 size);
+		void makeGround(std::string name, ape::Vector2 size, float height);
 
 		void makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos);
 

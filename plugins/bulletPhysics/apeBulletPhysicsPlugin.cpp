@@ -503,34 +503,54 @@ void ape::BulletPhysicsPlugin::Run()
 			else
 				trans = body->getWorldTransform();
 
-			if (auto parentNode = m_parentNodes[apeBodyName].lock())
+			/*auto parentNode = m_parentNodes[apeBodyName].lock();
+			if (parentNode&& !body->isStaticObject())*/
+			if(auto parentNode = m_parentNodes[apeBodyName].lock())
 			{
 				ape::Quaternion worldOrientation = fromBullet(trans.getRotation());
 
 				btVector3 rotated_offset = fromApe(m_offsets[apeBodyName]);
 
-				ape::Vector3 worldPosition = fromBullet(trans.getOrigin() + (trans.getBasis() * rotated_offset));
+				ape::Vector3 worldPosition = fromBullet(trans.getOrigin() + trans.getBasis() * rotated_offset);
 				
-
-				ape::Vector3 inheritedTranslate{0, 0, 0};
-				ape::Quaternion inheritedOrientation{ 1,0,0,0 };
-				ape::NodeSharedPtr nodeIt = parentNode;
-
-
-				while (auto parentParentNode = nodeIt->getParentNode().lock())
+				if (true)
 				{
-					nodeIt = parentParentNode;
-					inheritedTranslate += nodeIt->getPosition() /*/ nodeIt->getScale()*/;
-					inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+					ape::Vector3 inheritedTranslate{0, 0, 0};
+					ape::Quaternion inheritedOrientation{ 1,0,0,0 };
+					ape::NodeSharedPtr nodeIt = parentNode;
+					
+					/// debug
+					std::string parentNodeName = parentNode->getName();
+					ape::Vector3 curr_pos = parentNode->getPosition();
+
+
+					while (auto parentParentNode = nodeIt->getParentNode().lock())
+					{
+						nodeIt = parentParentNode;
+						std::string parentParentNodeName = nodeIt->getName();
+						ape::Vector3 parentParentNodePos = nodeIt->getPosition();
+ 						inheritedTranslate += nodeIt->getPosition() /*/ nodeIt->getScale()*/;
+						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+					}
+
+
+					ape::Vector3 position = Rotate(worldPosition /*/ parentNode->getDerivedScale()*/ - inheritedTranslate,inheritedOrientation);
+					ape::Quaternion orientation = inheritedOrientation.Inverse() * worldOrientation;
+
+					
+					parentNode->setOrientation(orientation);
+					parentNode->setPosition(position);
+					
+					
 				}
+				else
+				{
+					ape::Quaternion orientation = parentNode->getOrientation() * parentNode->getDerivedOrientation().Inverse() * worldOrientation;
+					ape::Vector3 position = - parentNode->getDerivedPosition() + parentNode->getPosition() + worldPosition;
 
-
-				ape::Vector3 position = worldPosition /*/ parentNode->getDerivedScale()*/ - inheritedTranslate;
-				ape::Quaternion orientation{ 1,0,0,0 };/* = worldOrientation * inheritedOrientation.Inverse();*/
-
-
-				parentNode->setOrientation(orientation);
-				parentNode->setPosition(position);
+					parentNode->setOrientation(orientation);
+					parentNode->setPosition(position);
+				}
 			}
 
 			/// debug
@@ -565,7 +585,7 @@ void ape::BulletPhysicsPlugin::Run()
 		if (float(clock()) - float(t) > 1000.0)
 			t = clock();
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		/*std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
 
 	}
 	APE_LOG_FUNC_LEAVE();
@@ -820,6 +840,20 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	}
 
 	body->applyCentralForce(bouyancyForce * m_forceScale);
+}
+
+ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion quat)
+{
+	ape::Quaternion vecAsQuat(
+		0,
+		vec.x,
+		vec.y,
+		vec.z
+	);
+
+	ape::Quaternion resultAsQuat = quat * vecAsQuat * quat.Inverse();
+
+	return ape::Vector3(resultAsQuat.x,resultAsQuat.y,resultAsQuat.z);
 }
 
 /// this functions don't work yet

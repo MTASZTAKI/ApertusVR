@@ -199,6 +199,8 @@ namespace ape
 
 		void updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr);
 
+		ape::Vector3 Rotate(ape::Vector3, ape::Quaternion);
+
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()

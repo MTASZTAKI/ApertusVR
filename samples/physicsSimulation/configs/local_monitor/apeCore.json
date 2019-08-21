@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apePhysicsSimulationScenePlugin",

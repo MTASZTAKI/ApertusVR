@@ -71,7 +71,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
 	}
 	mpSceneMakerMacro->makeBackground();
-	//mpSceneMakerMacro->makeCoordinateSystem();
+	mpSceneMakerMacro->makeCoordinateSystem();
 	//mpSceneMakerMacro->makeTerrain("terrain");
 	//mpSceneMakerMacro->makeBox("a1");
 
@@ -89,7 +89,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		}
 		else
 		{
-			makeGround("ground", ape::Vector2(10000, 10000));
+			makeGround("ground", ape::Vector2(10000, 10000),0);
 		}
 	}
 
@@ -149,7 +149,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	}*/
 
 	const int array_size = 0;
-	ape::Vector3 initPos(50, 400, -200);
+	ape::Vector3 initPos(0, 1000,0);
 	for (int i = 0; i < array_size; i++)
 	{
 		std::stringstream ssi;
@@ -320,12 +320,12 @@ void ape::apePhysicsSimulationScenePlugin::makeTerrain(std::string name, ape::Ve
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vector2 size)
+void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vector2 size, float height)
 {
 	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		planeNode->setPosition(ape::Vector3(0, -30, 0));
+		planeNode->setPosition(ape::Vector3(0, height-30, 0));
 		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));

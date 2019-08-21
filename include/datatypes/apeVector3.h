@@ -185,6 +185,11 @@ namespace ape
 			           z - rkVector.z);
 		}
 
+		Vector3 operator - () const
+		{
+			return Vector3(-x, -y, -z);
+		}
+
 		void operator += (const Vector3& rkVector)
 		{
 			x += rkVector.x;
