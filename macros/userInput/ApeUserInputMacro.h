@@ -165,6 +165,8 @@ namespace ape
 
 		ape::BrowserWeakPtr mOverlayBrowser;
 
+		ape::ManualMaterialWeakPtr mOverlayBrowserMaterial;
+
 		ape::UnitTextureWeakPtr mOverlayMouseTexture;
 
 		ape::RayGeometryWeakPtr mRayGeometry;
@@ -228,6 +230,12 @@ namespace ape
 		void updateSelectedNodePose(Pose pose);
 
 		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
+
+		void showOverlayBrowser(bool show);
+
+		void setOverlayBrowserURL(std::string url);
+
+		std::string getOverlayBrowserURL();
 
 		void rayQuery(ape::Vector3 position);
 

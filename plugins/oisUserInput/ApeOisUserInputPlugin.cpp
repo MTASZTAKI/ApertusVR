@@ -162,6 +162,11 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	{
 		mGeneralSpeedFactor = 2;
 	}
+	if (e.key == OIS::KeyCode::KC_ESCAPE)
+	{
+		mpUserInputMacro->setOverlayBrowserURL("");
+		mpUserInputMacro->showOverlayBrowser(false);
+	}
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	//if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);

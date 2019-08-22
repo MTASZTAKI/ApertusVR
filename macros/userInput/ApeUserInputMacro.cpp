@@ -13,6 +13,7 @@ ape::UserInputMacro::UserInputMacro()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, ape::CameraWeakPtr>();
@@ -54,6 +55,7 @@ ape::UserInputMacro::UserInputMacro()
 	mOverlayBrowser = ape::BrowserWeakPtr();
 	mOverlayMouseTexture = ape::UnitTextureWeakPtr();
 	mCursorText = ape::TextGeometryWeakPtr();
+	mOverlayBrowserMaterial = ape::ManualMaterialWeakPtr();
 	mKeyStringValue = std::string();
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
@@ -73,6 +75,21 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	{
 		mOverlayBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock());
 		APE_LOG_DEBUG("overlayBrowser catched");
+	}
+	else if (event.type == ape::Event::Type::MATERIAL_MANUAL_OVERLAY)
+	{
+		if (auto overlayBrowser = mOverlayBrowser.lock())
+		{
+			if (!mOverlayBrowserMaterial.lock())
+			{
+				if (event.subjectName == overlayBrowser->getName() + "_Material")
+				{
+					mOverlayBrowserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(event.subjectName).lock());
+					APE_LOG_DEBUG("mOverlayBrowserMaterial catched");
+
+				}
+			}
+		}
 	}
 	else if (event.type == ape::Event::Type::TEXTURE_UNIT_CREATE)
 	{
@@ -471,6 +488,38 @@ void ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overla
 			overlayBrowser->mouseScroll(overlayBrowserCursor.cursorScrollPosition);
 			overlayBrowser->mouseClick(overlayBrowserCursor.cursorClickType, overlayBrowserCursor.cursorClick);
 		}
+	}
+}
+
+void ape::UserInputMacro::showOverlayBrowser(bool show)
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		while (!mOverlayBrowserMaterial.lock())
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+		if (auto browserMaterial = mOverlayBrowserMaterial.lock())
+		{
+			APE_LOG_DEBUG("showOverlayBrowser: " << show);
+			browserMaterial->showOnOverlay(show, 0);
+		}
+	}
+}
+
+void ape::UserInputMacro::setOverlayBrowserURL(std::string url)
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		overlayBrowser->setURL(url);
+	}
+}
+
+std::string ape::UserInputMacro::getOverlayBrowserURL()
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		return overlayBrowser->getURL();
 	}
 }
 

@@ -40,6 +40,7 @@ bool ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRe
 	{
 		rect = CefRect(0, 0, texture->getParameters().width, texture->getParameters().height);
 		mBrowsers[browser->GetIdentifier()] = browser;
+		APE_LOG_DEBUG("GetViewRect: " << browser->GetIdentifier());
 	}
 	return true;
 }
@@ -66,7 +67,7 @@ void ape::CefRenderHandlerImpl::setURL(int browserID, std::string url)
 	if (mBrowsers.size() && mBrowsers[browserID])
 	{
 		mBrowsers[browserID]->GetMainFrame()->LoadURL(url);
-		//APE_LOG_DEBUG("browser id: " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url)
+		APE_LOG_DEBUG("browser id: " << mBrowsers[browserID]->GetIdentifier() << " go to:" << url)
 	}
 }
 

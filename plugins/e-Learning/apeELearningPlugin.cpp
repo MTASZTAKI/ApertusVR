@@ -14,6 +14,7 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mNodeNamesHotSpots = std::map<std::string, quicktype::Hotspot>();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
+	mGameURLResourcePath = std::map<std::string, std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -47,12 +48,12 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 		std::size_t found = event.subjectName.find("Left");
 		if (found != std::string::npos)
 		{
-			createSphere(event.subjectName, "sphereNodeLeft", "sphere_left.mesh", 1);
+			//createSphere(event.subjectName, "sphereNodeLeft", "sphere_left.mesh", 1);
 		}
 		found = event.subjectName.find("Right");
 		if (found != std::string::npos)
 		{
-			createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
+			//createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
 		}
 	}
 	else if (event.type == ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA)
@@ -105,8 +106,10 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 								if (clickedNode->getName() == it->first)
 								{
 									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
-									//mpSceneMakerMacro->makeOverlayBrowser(it->second.get_url());
-									mpSceneMakerMacro->makeOverlayBrowser("https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c");
+									mpApeUserInputMacro->setOverlayBrowserURL(mGameURLResourcePath[it->second.get_gameurl()]);
+									mpApeUserInputMacro->showOverlayBrowser(true);
+									//mpSceneMakerMacro->makeOverlayBrowser("https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c");
+									//mpSceneMakerMacro->makeOverlayBrowser(mGameURLResourcePath[it->second.get_gameurl()]);
 								}
 							}
 						}
@@ -152,7 +155,7 @@ void ape::apeELearningPlugin::Init()
 							material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id(), ape::Entity::Type::GEOMETRY_PLANE).lock()))
 							{
-								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(1000, 1000), ape::Vector2(1, 1));
+								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * 10, hotspot.get_src_width() * 10), ape::Vector2(1, 1));
 								planeGeometry->setParentNode(node);
 								planeGeometry->setMaterial(material);
 							}
@@ -163,12 +166,29 @@ void ape::apeELearningPlugin::Init()
 			}
 		}
 	}
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+	{
+		auto found = resourceLocation.find("/plugins/e-Learning/");
+		if (found != std::string::npos)
+		{
+			std::map<std::string, quicktype::Hotspot>::iterator it;
+			for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
+			{
+				auto pos = it->second.get_gameurl().find("/") + 1;
+				auto htmlName = it->second.get_gameurl().substr(pos);
+				std::string resourcePath = "file:///" + resourceLocation + "/" + htmlName;
+				mGameURLResourcePath[it->second.get_gameurl()] = resourcePath;
+			}
+		}
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::apeELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	mpSceneMakerMacro->makeOverlayBrowser("http://www.apertusvr.org");
+	mpApeUserInputMacro->showOverlayBrowser(false);
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));

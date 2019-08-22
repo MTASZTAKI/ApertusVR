@@ -65,6 +65,8 @@ namespace ape
 
 		std::map<std::string, quicktype::Hotspot> mNodeNamesHotSpots;
 
+		std::map<std::string, std::string> mGameURLResourcePath;
+
 	public:
 		apeELearningPlugin();
 

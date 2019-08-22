@@ -46,4 +46,6 @@ set_property (TARGET apeELearningPlugin PROPERTY FOLDER "Plugins")
 
 set_property (TARGET apeELearningPlugin PROPERTY CXX_STANDARD 17)
 
+set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
 
