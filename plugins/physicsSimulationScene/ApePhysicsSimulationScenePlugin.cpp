@@ -325,7 +325,7 @@ void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vec
 	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		planeNode->setPosition(ape::Vector3(0, height-30, 0));
+		planeNode->setPosition(ape::Vector3(0, height, 0));
 		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));

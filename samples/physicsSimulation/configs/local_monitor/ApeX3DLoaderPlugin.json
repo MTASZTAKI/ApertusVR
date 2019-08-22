@@ -3,9 +3,8 @@
     {
       "file": "/plugins/x3dLoader/samples/TwoUR5.x3d",
       "scale": [ 0.1, 0.1, 0.1 ],
-      "position": [100, 0, 50],
+      "position": [ 100, 0, 50 ],
       "orientation": [ 0.5, -0.5, -0.5, -0.5 ]
     }
   ]
 }
-

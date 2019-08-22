@@ -1,13 +1,13 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
+      "file": "/plugins/assimpAssetLoader/resources/Lantern.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [ 2, 2, 2 ],
-      "position": [ 0, 300, 0 ],
+      "scale": [ 10,10,10 ],
+      "position": [ 0, 400, 0 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
-      "rootNodeName": "suzanne",
+      "rootNodeName": "lantern",
       "physics": {
         "mass": 1.0,
         "restitution": 1.0,

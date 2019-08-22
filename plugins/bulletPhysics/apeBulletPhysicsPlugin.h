@@ -169,9 +169,9 @@ namespace ape
 
 		/// conversion between bullet and ape
 
-		ape::Vector3 fromBullet(const btVector3& btVec);
+		ape::Vector3 fromBt(const btVector3& btVec);
 
-		ape::Quaternion fromBullet(const btQuaternion& btQuat);
+		ape::Quaternion fromBt(const btQuaternion& btQuat);
 
 		btVector3 fromApe(const ape::Vector3& apeVec);
 
@@ -199,7 +199,9 @@ namespace ape
 
 		void updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr);
 
-		ape::Vector3 Rotate(ape::Vector3, ape::Quaternion);
+		ape::Vector3 Rotate(ape::Vector3 vec, ape::Quaternion quat);
+
+		void setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec);
 
 	};
 	

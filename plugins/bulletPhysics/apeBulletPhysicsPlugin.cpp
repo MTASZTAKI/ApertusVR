@@ -148,7 +148,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								ape::Vector2 planeSize = plane->getParameters().size;
 								btCollisionShape* planeShape = new btBoxShape(btVector3(planeSize.x * 0.5f, 30.0f, planeSize.y * 0.5f));
 								btScalar mass = apeBody->getMass();
-								m_offsets[apeBodyName] = ape::Vector3(0, 30, 0);
+								setOffsetVector(apeBodyName, ape::Vector3(0, 30, 0));
+								//m_offsets[apeBodyName] = ape::Vector3(0, 30, 0);
 								setCollisionShape(apeBodyName, planeShape, mass);
 							}
 							break;
@@ -158,7 +159,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 								btCollisionShape* coneShape = new btConeShape(cone->getParameters().radius,
 									cone->getParameters().height);
-								m_offsets[apeBodyName] = ape::Vector3(0, -cone->getParameters().height / 2.0f, 0);
+								setOffsetVector(apeBodyName, ape::Vector3(0, -cone->getParameters().height / 2.0f, 0));
+								//m_offsets[apeBodyName] = ape::Vector3(0, -cone->getParameters().height / 2.0f, 0);
 								btScalar mass = apeBody->getMass();
 								setCollisionShape(apeBodyName, coneShape, mass);
 							}
@@ -169,7 +171,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 								btScalar height = cylinder->getParameters().height;
 								btScalar radius = cylinder->getParameters().radius;
 								btCollisionShape* cylinderShape = new btCylinderShape(btVector3(radius, height*0.5, radius));
-								m_offsets[apeBodyName] = ape::Vector3(0, -height * 0.5, 0);
+								setOffsetVector(apeBodyName, ape::Vector3(0, -height * 0.5, 0));
+								//m_offsets[apeBodyName] = ape::Vector3(0, -height * 0.5, 0);
 								btScalar mass = apeBody->getMass();
 								m_volumes[apeBodyName] = radius * radius * M_PI * height;
 
@@ -216,13 +219,13 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 									tr.setOrigin(-centerOfMass);
 
 									compShape->addChildShape(tr, convexHullShape);
-									m_offsets[apeBodyName] = fromBullet(-centerOfMass);
+									setOffsetVector(apeBodyName, fromBt(-centerOfMass));
+									//m_offsets[apeBodyName] = fromBullet(-centerOfMass);
 									
 									btVector3 bSphereCenter;
 									btScalar bSphereRadius;
 									convexHullShape->getBoundingSphere(bSphereCenter, bSphereRadius);
 									m_volumes[apeBodyName] = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
-									// TODO: handling the scaling for the volume!
 
 									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
@@ -345,9 +348,6 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							fromApe(parentNode->getDerivedOrientation()),
 							fromApe(parentNode->getDerivedPosition()));
 						
-						/*setTransform(apeBodyName,
-							fromApe(parentNode->getOrientation()),
-							fromApe(parentNode->getPosition()));*/
 
 						/*while (auto parentParentNode = parentNode->getParentNode().lock())
 						{
@@ -484,7 +484,7 @@ void ape::BulletPhysicsPlugin::Run()
 		m_dynamicsWorld->stepSimulation(m_dtSec,m_maxSubSteps,m_fixedTimeStep);
 		btclock.reset();
 
-		for (auto it = m_collisionObjects.begin(); it != m_collisionObjects.end(); it++)
+		for (auto it = m_collisionObjects.rbegin(); it != m_collisionObjects.rend(); it++)
 		{
 			std::string apeBodyName = it->first;
 			btCollisionObject* obj = it->second;
@@ -507,34 +507,36 @@ void ape::BulletPhysicsPlugin::Run()
 			if (parentNode&& !body->isStaticObject())*/
 			if(auto parentNode = m_parentNodes[apeBodyName].lock())
 			{
-				ape::Quaternion worldOrientation = fromBullet(trans.getRotation());
+				ape::Quaternion worldOrientation = fromBt(trans.getRotation());
 
 				btVector3 rotated_offset = fromApe(m_offsets[apeBodyName]);
 
-				ape::Vector3 worldPosition = fromBullet(trans.getOrigin() + trans.getBasis() * rotated_offset);
+				ape::Vector3 worldPosition = fromBt(trans.getOrigin() + trans.getBasis() * rotated_offset);
 				
-				if (true)
+				if (body && !body->isStaticObject())
 				{
-					ape::Vector3 inheritedTranslate{0, 0, 0};
-					ape::Quaternion inheritedOrientation{ 1,0,0,0 };
+					ape::Vector3 inheritedPosition{0, 0, 0};
+					ape::Quaternion inheritedOrientation{1, 0, 0, 0};
+					ape::Vector3 inheritedScale{1, 1, 1};
 					ape::NodeSharedPtr nodeIt = parentNode;
 					
 					/// debug
-					std::string parentNodeName = parentNode->getName();
-					ape::Vector3 curr_pos = parentNode->getPosition();
-
+					/*std::string parentNodeName = parentNode->getName();
+					ape::Vector3 nodePos = parentNode->getPosition();
+					ape::Vector3 derPos = parentNode->getDerivedPosition();*/
 
 					while (auto parentParentNode = nodeIt->getParentNode().lock())
 					{
 						nodeIt = parentParentNode;
-						std::string parentParentNodeName = nodeIt->getName();
-						ape::Vector3 parentParentNodePos = nodeIt->getPosition();
- 						inheritedTranslate += nodeIt->getPosition() /*/ nodeIt->getScale()*/;
-						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+						/*std::string parentParentNodeName = nodeIt->getName();
+						ape::Vector3 parentParentNodePos = nodeIt->getPosition();*/
+ 						inheritedPosition += Rotate(nodeIt->getPosition() / inheritedScale, inheritedOrientation);
+  						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+						inheritedScale = inheritedScale * nodeIt->getScale();
 					}
 
 
-					ape::Vector3 position = Rotate(worldPosition /*/ parentNode->getDerivedScale()*/ - inheritedTranslate,inheritedOrientation);
+					ape::Vector3 position = Rotate((worldPosition - inheritedPosition)/inheritedScale,inheritedOrientation);
 					ape::Quaternion orientation = inheritedOrientation.Inverse() * worldOrientation;
 
 					
@@ -546,7 +548,10 @@ void ape::BulletPhysicsPlugin::Run()
 				else
 				{
 					ape::Quaternion orientation = parentNode->getOrientation() * parentNode->getDerivedOrientation().Inverse() * worldOrientation;
-					ape::Vector3 position = - parentNode->getDerivedPosition() + parentNode->getPosition() + worldPosition;
+					
+					ape::Vector3 scale = parentNode->getScale();
+					ape::Vector3 pos = parentNode->getPosition();
+					ape::Vector3 position = parentNode->getPosition()-parentNode->getDerivedPosition() + worldPosition;
 
 					parentNode->setOrientation(orientation);
 					parentNode->setPosition(position);
@@ -593,12 +598,12 @@ void ape::BulletPhysicsPlugin::Run()
 
 
 /// conversion between bullet3 and ape
-ape::Vector3 ape::BulletPhysicsPlugin::fromBullet(const btVector3& btVec)
+ape::Vector3 ape::BulletPhysicsPlugin::fromBt(const btVector3& btVec)
 {
 	return ape::Vector3(btVec.getX(), btVec.getY(), btVec.getZ());
 }
 
-ape::Quaternion ape::BulletPhysicsPlugin::fromBullet(const btQuaternion& btQuat)
+ape::Quaternion ape::BulletPhysicsPlugin::fromBt(const btQuaternion& btQuat)
 {
 	return ape::Quaternion(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
 }
@@ -651,6 +656,8 @@ void ape::BulletPhysicsPlugin::setTransform(std::string apeBodyName, btQuaternio
 		}
 		else
 			body->setWorldTransform(trans);
+
+		body->translate(fromApe(-m_offsets[apeBodyName]));
 	}
 
 	//printf("%s start pos %s\n", apeBodyName.c_str(),toString(trans.getOrigin()).c_str());
@@ -775,7 +782,7 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 			btCollisionShape* childShape = compShape->getChildShape(0);
 			btVector3 scaledCenterOfMass = m_shapeCenterOfMasses[apeBodyName] * scale;
 			compShape->setLocalScaling(scale);
-			m_offsets[apeBodyName] = fromBullet(-scaledCenterOfMass);
+			m_offsets[apeBodyName] = fromBt(-scaledCenterOfMass);
 		}
 	}
 	else
@@ -854,6 +861,17 @@ ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion 
 	ape::Quaternion resultAsQuat = quat * vecAsQuat * quat.Inverse();
 
 	return ape::Vector3(resultAsQuat.x,resultAsQuat.y,resultAsQuat.z);
+}
+
+void ape::BulletPhysicsPlugin::setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec)
+{
+	if (auto body = btRigidBody::upcast(m_collisionObjects[apeBodyName]))
+	{
+		//body->translate(fromApe(m_offsets[apeBodyName]));
+		btTransform tr(body->getWorldTransform());
+		body->translate(tr.getBasis() * fromApe(-offsetVec));
+	}
+	m_offsets[apeBodyName] = offsetVec;
 }
 
 /// this functions don't work yet

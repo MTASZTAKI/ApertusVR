@@ -1,7 +1,7 @@
 {
   "maxSubSteps": 1000,
   "fixedTimeStep": 0.0046,
-  "forceScale": 1,
+  "forceScale": 100,
   "gravity": {
     "x": 0,
     "y": -10,
