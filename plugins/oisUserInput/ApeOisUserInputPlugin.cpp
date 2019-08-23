@@ -143,7 +143,7 @@ void ape::OISUserInputPlugin::Init()
 
 bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
-	APE_LOG_TRACE("OIS::KeyCode: " << (OIS::KeyCode)e.key);
+	APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	mKeyCodeMap[e.key] = true;
 	if (e.key == OIS::KeyCode::KC_C)
 	{
@@ -170,7 +170,7 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	//if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	APE_LOG_TRACE("keyAsString:" << keyAsString);
+	APE_LOG_DEBUG("keyAsString:" << keyAsString);
 	mpUserInputMacro->keyStringValue(keyAsString);
 	//TODO_OISUserInputPlugin
 	//std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());

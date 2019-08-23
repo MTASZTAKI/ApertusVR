@@ -65,16 +65,36 @@ namespace ape
 
 		std::map<std::string, quicktype::Hotspot> mNodeNamesHotSpots;
 
+		std::vector<quicktype::Room> mRooms;
+
 		std::map<std::string, std::string> mGameURLResourcePath;
+
+		ape::Vector3 mUserDeadZone;
+
+		ape::FileGeometryWeakPtr mSphereGeometryLeft;
+
+		ape::FileGeometryWeakPtr mSphereGeometryRight;
+
+		int mCurrentRoomID;
 
 	public:
 		apeELearningPlugin();
 
 		~apeELearningPlugin();
 
-		void createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
+		ape::FileGeometryWeakPtr createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
+
+		void loadFirstRoomTextures();
+
+		void loadNextRoom();
+
+		void loadHotSpots();
+
+		void loadRoomTextures();
 
 		void eventCallBack(const ape::Event& event);
+
+		void keyStringEventCallback(const std::string& keyValue);
 
 		void Init() override;
 

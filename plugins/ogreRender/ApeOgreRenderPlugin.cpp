@@ -1412,7 +1412,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						//APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin");
 						Ogre::HardwarePixelBufferSharedPtr texBuf = ogreTexture->getBuffer();
 						texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
-						memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
+						if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::A8R8G8B8)
+							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
+						else if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::R8G8B8)
+							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 3);
 						texBuf->unlock();
 						/*static int s = 1;
 						std::wostringstream oss;

@@ -183,6 +183,10 @@ namespace ape
 
 		bool mIsLockHeadNodePosition;
 
+		bool mIsLocUserNodePosition;
+
+		std::vector<std::function<void(const std::string&)>> mKeyStringFunctions;
+
 	public:
 		static UserInputMacro* getSingletonPtr()
 		{
@@ -199,7 +203,11 @@ namespace ape
 
 		void setHeadNodePositionLock(bool lock);
 
+		void setUserNodePositionLock(bool lock);
+
 		bool getHeadNodePositionLock();
+
+		bool getUserNodePositionLock();
 
 		void interpolateViewPose(ViewPose pose, unsigned int milliseconds);
 
@@ -226,6 +234,8 @@ namespace ape
 		void clearNodeSelection();
 
 		void keyStringValue(std::string keyStringValue);
+
+		void registerCallbackForKeyStringValue(std::function<void(const std::string&)> callback);
 
 		void updateSelectedNodePose(Pose pose);
 
