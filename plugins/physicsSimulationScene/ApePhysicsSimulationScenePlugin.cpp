@@ -148,17 +148,19 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		}
 	}*/
 
-	const int array_size = 0;
-	ape::Vector3 initPos(0, 1000,0);
-	for (int i = 0; i < array_size; i++)
+	const int array_size = 6;
+	const int size_x = array_size, size_y = array_size, size_z = array_size;
+
+	ape::Vector3 initPos(0, 500, 0);
+	for (int i = 0; i < size_x; i++)
 	{
 		std::stringstream ssi;
 		ssi << i;
-		for (int j = 0; j < 1; j++)
+		for (int j = 0; j < size_y; j++)
 		{
 			std::stringstream ssj;
 			ssj << j;
-			for (int k = 0; k < array_size; k++)
+			for (int k = 0; k < size_z; k++)
 			{
 				std::stringstream ssk;
 				ssk << k;

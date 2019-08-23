@@ -51,6 +51,8 @@ namespace ape
 
 		virtual void setToStatic() override;
 
+		virtual void setToKinematic() override;
+
 		virtual void setBouyancy(bool enable) override;
 
 		/// Physics parameter getters
@@ -73,7 +75,11 @@ namespace ape
 
 		virtual bool isStatic() override;
 
+		virtual bool isKinematic() override;
+
 		virtual bool bouyancyEnabled() override;
+
+		virtual ape::RigidBodyColliderType getColliderType() override;
 
 		/// Parent node and geometry shape
 
@@ -81,7 +87,7 @@ namespace ape
 
 		ape::NodeWeakPtr getParentNode() override;
 
-		void setGeometry(ape::GeometryWeakPtr geometry) override;
+		void setGeometry(ape::GeometryWeakPtr geometry, ape::RigidBodyColliderType colliderType) override;
 
 		ape::GeometryWeakPtr getGeometry() override;
 
@@ -117,6 +123,8 @@ namespace ape
 		ape::RigidBodyType mRBType;
 
 		bool mBouyancyEnabled;
+
+		ape::RigidBodyColliderType mColliderType;
 
 		/// Parent node and geometry shape
 

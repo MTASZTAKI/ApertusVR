@@ -196,84 +196,40 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							{
 								if (!(apeBody->isStatic()))
 								{
-									const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
-
-									/// creating convex hull shape
-									btConvexHullShape* convexHullShape = new btConvexHullShape();
-
-									for (size_t i = 0; i < coordinates.size(); i = i + 3)
+									if (apeBody->getColliderType() == ape::RigidBodyColliderType::AUTO ||
+										apeBody->getColliderType() == ape::RigidBodyColliderType::CONVEX_HULL)
 									{
-										btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
-										convexHullShape->addPoint(v, false);
+										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
+										createConvexHullShape(
+											apeBodyName,
+											coordinates,
+											apeBody->getMass()
+										);
 									}
-									convexHullShape->recalcLocalAabb();
-
-
-									/// positioning it to the center of mass
-									btCompoundShape* compShape = new btCompoundShape();
-									btVector3 centerOfMass = calculateCenterOfMass(coordinates);
-									m_shapeCenterOfMasses[apeBodyName] = centerOfMass;
-
-									btTransform tr;
-									tr.setIdentity();
-									tr.setOrigin(-centerOfMass);
-
-									compShape->addChildShape(tr, convexHullShape);
-									setOffsetVector(apeBodyName, fromBt(-centerOfMass));
-									//m_offsets[apeBodyName] = fromBullet(-centerOfMass);
-									
-									btVector3 bSphereCenter;
-									btScalar bSphereRadius;
-									convexHullShape->getBoundingSphere(bSphereCenter, bSphereRadius);
-									m_volumes[apeBodyName] = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
-
-									setCollisionShape(apeBodyName, compShape, apeBody->getMass());
 								}
 								else
 								{
-									ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
-									ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
-
-									int numVertices = coordinates.size() / 3;
-									int numTriangles = indices.size() / 4;
-									int vertStride = sizeof(btVector3);
-									int indexStride = 3 * sizeof(int);
-
-									btVector3* shapeVertices = new btVector3[numVertices];
-									int* triangleIndices = new int[numTriangles * 3];
-
-									for (int i = 0; i < numVertices; i = i++)
+									if (apeBody->getColliderType() == ape::RigidBodyColliderType::AUTO ||
+										apeBody->getColliderType() == ape::RigidBodyColliderType::TRIANGLE_MESH)
 									{
-										shapeVertices[i].setValue(
-											coordinates[i * 3],
-											coordinates[i * 3 + 1],
-											coordinates[i * 3 + 2]
+										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
+										const ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
+										createTriangleMeshShape(
+											apeBodyName,
+											coordinates,
+											indices,
+											apeBody->getMass()
 										);
 									}
-
-									int index = 0;
-									for (int i = 0; i < indices.size(); i = i + 4)
+									else if (apeBody->getColliderType() == ape::RigidBodyColliderType::CONVEX_HULL)
 									{
-										triangleIndices[index++] = indices[i];
-										triangleIndices[index++] = indices[i + 1];
-										triangleIndices[index++] = indices[i + 2];
+										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
+										createConvexHullShape(
+											apeBodyName,
+											coordinates,
+											apeBody->getMass()
+										);
 									}
-
-									/// numTriangles, triangleIndexBase, triangleIndexStride, numVertices, vertexBase, vertexStride
-									btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
-										numTriangles,
-										triangleIndices,
-										indexStride,
-										numVertices,
-										(btScalar*)&shapeVertices[0].x(),
-										vertStride
-									);
-
-									btCollisionShape* colShape = new btBvhTriangleMeshShape(indexVertexArrays, true);
-
-									colShape->setMargin(0.5f);
-
-									setCollisionShape(apeBodyName, colShape, apeBody->getMass());
 								}
 							}
 							break;
@@ -300,6 +256,13 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						btVector3 localInertia;
 						btBody->getCollisionShape()->calculateLocalInertia(mass, localInertia);
 						btBody->setMassProps(mass, localInertia);
+					}
+
+					if (apeBody->isKinematic())
+					{
+						btBody->setCollisionFlags(btBody->getCollisionFlags() |
+							btCollisionObject::CF_KINEMATIC_OBJECT);
+						btBody->setActivationState(DISABLE_DEACTIVATION);
 					}
 
 				}
@@ -503,8 +466,6 @@ void ape::BulletPhysicsPlugin::Run()
 			else
 				trans = body->getWorldTransform();
 
-			/*auto parentNode = m_parentNodes[apeBodyName].lock();
-			if (parentNode&& !body->isStaticObject())*/
 			if(auto parentNode = m_parentNodes[apeBodyName].lock())
 			{
 				ape::Quaternion worldOrientation = fromBt(trans.getRotation());
@@ -513,48 +474,38 @@ void ape::BulletPhysicsPlugin::Run()
 
 				ape::Vector3 worldPosition = fromBt(trans.getOrigin() + trans.getBasis() * rotated_offset);
 				
-				if (body && !body->isStaticObject())
+				if (body && !body->isStaticObject() && !body->isKinematicObject())
 				{
 					ape::Vector3 inheritedPosition{0, 0, 0};
 					ape::Quaternion inheritedOrientation{1, 0, 0, 0};
 					ape::Vector3 inheritedScale{1, 1, 1};
 					ape::NodeSharedPtr nodeIt = parentNode;
 					
-					/// debug
-					/*std::string parentNodeName = parentNode->getName();
-					ape::Vector3 nodePos = parentNode->getPosition();
-					ape::Vector3 derPos = parentNode->getDerivedPosition();*/
 
 					while (auto parentParentNode = nodeIt->getParentNode().lock())
 					{
 						nodeIt = parentParentNode;
-						/*std::string parentParentNodeName = nodeIt->getName();
-						ape::Vector3 parentParentNodePos = nodeIt->getPosition();*/
  						inheritedPosition += Rotate(nodeIt->getPosition() / inheritedScale, inheritedOrientation);
   						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
 						inheritedScale = inheritedScale * nodeIt->getScale();
 					}
 
-
 					ape::Vector3 position = Rotate((worldPosition - inheritedPosition)/inheritedScale,inheritedOrientation);
 					ape::Quaternion orientation = inheritedOrientation.Inverse() * worldOrientation;
 
-					
 					parentNode->setOrientation(orientation);
 					parentNode->setPosition(position);
-					
-					
 				}
 				else
 				{
-					ape::Quaternion orientation = parentNode->getOrientation() * parentNode->getDerivedOrientation().Inverse() * worldOrientation;
+					/*ape::Quaternion orientation = parentNode->getOrientation() * parentNode->getDerivedOrientation().Inverse() * worldOrientation;
 					
 					ape::Vector3 scale = parentNode->getScale();
 					ape::Vector3 pos = parentNode->getPosition();
 					ape::Vector3 position = parentNode->getPosition()-parentNode->getDerivedPosition() + worldPosition;
 
 					parentNode->setOrientation(orientation);
-					parentNode->setPosition(position);
+					parentNode->setPosition(position);*/
 				}
 			}
 
@@ -872,6 +823,98 @@ void ape::BulletPhysicsPlugin::setOffsetVector(std::string apeBodyName, ape::Vec
 		body->translate(tr.getBasis() * fromApe(-offsetVec));
 	}
 	m_offsets[apeBodyName] = offsetVec;
+}
+
+void ape::BulletPhysicsPlugin::createConvexHullShape(
+	std::string apeBodyName,
+	const ape::GeometryCoordinates & coordinates,
+	btScalar mass)
+{
+	/// creating convex hull shape
+	btConvexHullShape* convexHullShape = new btConvexHullShape();
+
+	for (size_t i = 0; i < coordinates.size(); i = i + 3)
+	{
+		btVector3 v(coordinates[i], coordinates[i + 1], coordinates[i + 2]);
+		convexHullShape->addPoint(v, false);
+	}
+	convexHullShape->recalcLocalAabb();
+
+	/// setting the volume for bouyancy generator
+	btVector3 bSphereCenter;
+	btScalar bSphereRadius;
+	convexHullShape->getBoundingSphere(bSphereCenter, bSphereRadius);
+	m_volumes[apeBodyName] = bSphereRadius * bSphereRadius * bSphereRadius * M_PI * 4.0f / 3.0f;
+
+	if (mass > 0.0f)
+	{
+		/// positioning it to the center of mass
+		btCompoundShape* compShape = new btCompoundShape();
+		btVector3 centerOfMass = calculateCenterOfMass(coordinates);
+		m_shapeCenterOfMasses[apeBodyName] = centerOfMass;
+
+		btTransform tr;
+		tr.setIdentity();
+		tr.setOrigin(-centerOfMass);
+
+		compShape->addChildShape(tr, convexHullShape);
+		setOffsetVector(apeBodyName, fromBt(-centerOfMass));
+		//m_offsets[apeBodyName] = fromBullet(-centerOfMass);
+
+		setCollisionShape(apeBodyName, compShape, mass);
+	}
+	else
+	{
+		setCollisionShape(apeBodyName, convexHullShape, mass);
+	}
+}
+
+void ape::BulletPhysicsPlugin::createTriangleMeshShape(
+	std::string apeBodyName,
+	const ape::GeometryCoordinates & coordinates,
+	const ape::GeometryIndices & indices,
+	btScalar mass)
+{
+	int numVertices = coordinates.size() / 3;
+	int numTriangles = indices.size() / 4;
+	int vertStride = sizeof(btVector3);
+	int indexStride = 3 * sizeof(int);
+
+	btVector3* shapeVertices = new btVector3[numVertices];
+	int* triangleIndices = new int[numTriangles * 3];
+
+	for (int i = 0; i < numVertices; i = i++)
+	{
+		shapeVertices[i].setValue(
+			coordinates[i * 3],
+			coordinates[i * 3 + 1],
+			coordinates[i * 3 + 2]
+		);
+	}
+
+	int index = 0;
+	for (int i = 0; i < indices.size(); i = i + 4)
+	{
+		triangleIndices[index++] = indices[i];
+		triangleIndices[index++] = indices[i + 1];
+		triangleIndices[index++] = indices[i + 2];
+	}
+
+	/// numTriangles, triangleIndexBase, triangleIndexStride, numVertices, vertexBase, vertexStride
+	btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
+		numTriangles,
+		triangleIndices,
+		indexStride,
+		numVertices,
+		(btScalar*)&shapeVertices[0].x(),
+		vertStride
+	);
+
+	btCollisionShape* colShape = new btBvhTriangleMeshShape(indexVertexArrays, true);
+
+	colShape->setMargin(0.5f);
+
+	setCollisionShape(apeBodyName, colShape, mass);
 }
 
 /// this functions don't work yet

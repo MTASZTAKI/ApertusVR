@@ -309,7 +309,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						body->setToStatic();
 
 					body->setParentNode(node);
-					body->setGeometry(mesh);
+					body->setGeometry(mesh,mPhysicsConfigs[assimpSceneID].colliderType);
 					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
 					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
 									  mPhysicsConfigs[assimpSceneID].rollingFriction,
@@ -317,9 +317,6 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
 									 mPhysicsConfigs[assimpSceneID].angularDamping);
 					body->setBouyancy(mPhysicsConfigs[assimpSceneID].bouyancyEnable);
-					/*body->setRestitution(1.0f);
-					body->setFriction(0.5, 0.3, 0.3);
-					body->setDamping(0.01, 0.01);*/
 				}
 			}
 		}
@@ -455,6 +452,18 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 							if (physicsMemberIt->name == "bouyancyEnabled")
 							{
 								physicsConfig.bouyancyEnable = physicsMemberIt->value.GetBool();
+							}
+							if (physicsMemberIt->name == "colliderType")
+							{
+								std::string colliderType = physicsMemberIt->value.GetString();
+								if (colliderType == "convexhull")
+								{
+									physicsConfig.colliderType = ape::RigidBodyColliderType::CONVEX_HULL;
+								}
+								else if (colliderType == "trianglemesh")
+								{
+									physicsConfig.colliderType = ape::RigidBodyColliderType::TRIANGLE_MESH;
+								}
 							}
 						}
 						mPhysicsConfigs.push_back(physicsConfig);

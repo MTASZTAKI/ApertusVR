@@ -65,6 +65,17 @@ namespace ape
 
 	struct PhysicsConfig
 	{
+		PhysicsConfig() :
+			mass(1.0f),
+			friction(0.5f),
+			rollingFriction(0.0f),
+			spinningFriction(0.0f),
+			linearDamping(0.0f),
+			angularDamping(0.0f),
+			bouyancyEnable(false),
+			colliderType(ape::RigidBodyColliderType::AUTO)
+		{}
+
 		float mass;
 		float friction;
 		float rollingFriction;
@@ -73,6 +84,7 @@ namespace ape
 		float angularDamping;
 		float restitution;
 		bool bouyancyEnable;
+		ape::RigidBodyColliderType colliderType;
 	};
 
 	class AssimpAssetLoaderPlugin : public ape::IPlugin

@@ -203,6 +203,19 @@ namespace ape
 
 		void setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec);
 
+		void createConvexHullShape(
+			std::string apeBodyName,
+			const ape::GeometryCoordinates& coordinates,
+			btScalar mass
+		);
+
+		void createTriangleMeshShape(
+			std::string apeBodyname,
+			const ape::GeometryCoordinates& coordinates,
+			const ape::GeometryIndices& indices,
+			btScalar mass
+		);
+
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateBulletPhysicsPlugin()

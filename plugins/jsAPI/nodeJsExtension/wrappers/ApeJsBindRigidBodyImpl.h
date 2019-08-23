@@ -116,26 +116,6 @@ public:
 		mPtr.lock()->setGeometry(geometry.getGeometryWeakPtr());
 	}
 
-	/// Box geometry
-
-	/*ape::BoxGeometryWeakPtr getBoxGeometryWeakPtr()
-	{
-		return std::static_pointer_cast<IBoxGeometry>(mPtr.lock()->getGeometry().lock());
-	}
-
-	void setBoxGeometryWeakPtr(ape::BoxGeometryWeakPtr geometry)
-	{
-		mPtr.lock()->setGeometry(geometry);
-	}
-
-	BoxJsPtr getBoxGeometryJsPtr()
-	{
-		if (mPtr.lock()->getGeometry().lock()->getType() == ape::Entity::Type::GEOMETRY_BOX)
-			return BoxJsPtr(mPtr.lock()->getGeometry());
-		else
-			return BoxJsPtr(ape::BoxGeometryWeakPtr);
-	}*/
-
 	/// Entity
 
 	const std::string getName()
