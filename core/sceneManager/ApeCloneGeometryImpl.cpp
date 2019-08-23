@@ -47,6 +47,13 @@ void ape::CloneGeometryImpl::setSourceGeometry(ape::GeometryWeakPtr sourceGeomet
 		mSourceGeometry = ape::GeometryWeakPtr();
 }
 
+void ape::CloneGeometryImpl::setSourceGeometryGroupName(std::string sourceGeometryName)
+{
+	printf("SET SOURCE GEOMETRY GROUP NAME\n");
+	mSourceGeometryGroupName = sourceGeometryName;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
+}
+
 void ape::CloneGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 {
 	if (auto parentNodeShared = parentNode.lock())
@@ -69,6 +76,11 @@ std::string ape::CloneGeometryImpl::getSourceGeometryName()
 	return mSourceGeometryName;
 }
 
+std::string ape::CloneGeometryImpl::getSourceGeometryGroupName()
+{
+	return mSourceGeometryGroupName;
+}
+
 void ape::CloneGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -83,6 +95,7 @@ RakNet::RM3SerializationResult ape::CloneGeometryImpl::Serialize(RakNet::Seriali
 
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSourceGeometryName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSourceGeometryGroupName);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
@@ -92,6 +105,9 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSourceGeometryGroupName))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
 
 	RakNet::RakString parentNodeName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))

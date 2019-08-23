@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
+#include "sceneElements/apeICloneGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeIIndexedFaceSetGeometry.h"
 #include "sceneElements/apeIManualMaterial.h"
@@ -141,8 +142,6 @@ namespace ape
 		/// maps for shapes, objects, bodies, nodes...,
 		/// the std::string key is the geometryName of the geometry
 
-		// std::map<std::string, std::string> m_rigidBodyShapes;
-
 		std::map<std::string, btCollisionShape*> m_collisionShapes;
 
 		std::map<std::string, btCollisionObject*> m_collisionObjects;
@@ -160,12 +159,13 @@ namespace ape
 		std::map<std::string, btScalar> m_volumes;
 
 		std::map<std::string, ape::Vector2> m_dampings;
-		
+
+		std::map<std::string, std::string> m_geometryNameBodyNameMap;
+
+
 		userProps m_userProps;
 
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
-
-		void processEventDoubleQueue();
 
 		/// conversion between bullet and ape
 
@@ -182,6 +182,8 @@ namespace ape
 		std::string toString(btVector3 vec);
 
 		/// functions for cleaner code in the eventCallBack
+
+		void processEventDoubleQueue();
 
 		void setTransform(std::string apeBodyName, btQuaternion new_orientation, btVector3 new_position);
 

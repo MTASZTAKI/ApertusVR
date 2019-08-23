@@ -121,7 +121,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						switch (geometry->getType())
 						{
 						case ape::Entity::Type::GEOMETRY_BOX:
-							if (auto box = std::static_pointer_cast<IBoxGeometry>(geometry))
+							if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(geometry))
 							{
 								ape::Vector3 boxDims = box->getParameters().getDimensions();
 								btCollisionShape* boxShape = new btBoxShape(fromApe(boxDims) * 0.5f);
@@ -132,7 +132,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_SPHERE:
-							if (auto sphere = std::static_pointer_cast<ISphereGeometry>(geometry))
+							if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(geometry))
 							{
 								btScalar radius = sphere->getParameters().radius;
 								btCollisionShape* sphereShape = new btSphereShape(radius);
@@ -143,7 +143,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_PLANE:
-							if (auto plane = std::static_pointer_cast<IPlaneGeometry>(geometry))
+							if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(geometry))
 							{
 								ape::Vector2 planeSize = plane->getParameters().size;
 								btCollisionShape* planeShape = new btBoxShape(btVector3(planeSize.x * 0.5f, 30.0f, planeSize.y * 0.5f));
@@ -154,7 +154,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_CONE:
-							if (auto cone = std::static_pointer_cast<IConeGeometry>(geometry))
+							if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(geometry))
 							{
 
 								btCollisionShape* coneShape = new btConeShape(cone->getParameters().radius,
@@ -166,7 +166,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_CYLINDER:
-							if (auto cylinder = std::static_pointer_cast<ICylinderGeometry>(geometry))
+							if (auto cylinder = std::static_pointer_cast<ape::ICylinderGeometry>(geometry))
 							{
 								btScalar height = cylinder->getParameters().height;
 								btScalar radius = cylinder->getParameters().radius;
@@ -180,19 +180,19 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_TORUS:
-							if (auto torus = std::static_pointer_cast<ITorusGeometry>(geometry))
+							if (auto torus = std::static_pointer_cast<ape::ITorusGeometry>(geometry))
 							{
 
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_TUBE:
-							if (auto tube = std::static_pointer_cast<ITubeGeometry>(geometry))
+							if (auto tube = std::static_pointer_cast<ape::ITubeGeometry>(geometry))
 							{
 
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_INDEXEDFACESET:
-							if (auto faceSet = std::static_pointer_cast<IIndexedFaceSetGeometry>(geometry))
+							if (auto faceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(geometry))
 							{
 								if (!(apeBody->isStatic()))
 								{
@@ -200,6 +200,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 										apeBody->getColliderType() == ape::RigidBodyColliderType::CONVEX_HULL)
 									{
 										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
+										m_geometryNameBodyNameMap[apeBody->getGeometryName()] = apeBodyName;
 										createConvexHullShape(
 											apeBodyName,
 											coordinates,
@@ -214,6 +215,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 									{
 										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
 										const ape::GeometryIndices& indices = faceSet->getParameters().getIndices();
+										m_geometryNameBodyNameMap[apeBody->getGeometryName()] = apeBodyName;
 										createTriangleMeshShape(
 											apeBodyName,
 											coordinates,
@@ -224,6 +226,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 									else if (apeBody->getColliderType() == ape::RigidBodyColliderType::CONVEX_HULL)
 									{
 										const ape::GeometryCoordinates& coordinates = faceSet->getParameters().getCoordinates();
+										m_geometryNameBodyNameMap[apeBody->getGeometryName()] = apeBodyName;
 										createConvexHullShape(
 											apeBodyName,
 											coordinates,
@@ -234,14 +237,12 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							}
 							break;
 						case ape::Entity::Type::GEOMETRY_CLONE:
-							break;
-						case ape::Entity::Type::GEOMETRY_FILE:
-							if (auto fileGeometry = std::static_pointer_cast<IFileGeometry>(geometry))
+							if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(geometry))
 							{
+								std::string sourceGeometryName = cloneGeometry->getSourceGeometryName();
 								
 							}
 							break;
-							
 						}
 					}
 				}

@@ -148,7 +148,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 		}
 	}*/
 
-	const int array_size = 6;
+	const int array_size = 0;
 	const int size_x = array_size, size_y = array_size, size_z = array_size;
 
 	ape::Vector3 initPos(0, 500, 0);

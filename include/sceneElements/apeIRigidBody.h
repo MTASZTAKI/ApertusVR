@@ -117,6 +117,8 @@ namespace ape
 		) = 0;
 
         virtual ape::GeometryWeakPtr getGeometry() = 0; 
+
+		virtual std::string getGeometryName() = 0;
 	};
 }
 

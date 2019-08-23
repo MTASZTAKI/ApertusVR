@@ -526,6 +526,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 					}
 					log('GET_INDEXEDFACESET');
 					cloneGeometryObj.setSourceIndexedFaceSetJsPtr(object);
+					cloneGeometryObj.setSourceGeometryGroupName(geometryName);
 					log('!!!! - this: ' + cloneGeometryObj.getName() + ' - parentNode: !!!!');
 				});
 				log('GOT_INDEXEDFACESET?');
@@ -543,7 +544,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			var grouped = false;
 			var groupNodeObjName = itemName;
 			if (groupNodeObj) {
-				groupNodeObjName = groupNodeObj.getName() + currentlyLoadingFileName;
+				groupNodeObjName = groupNodeObj.getName() /*+ currentlyLoadingFileName*/;
 				grouped = true;
 			}
 			log('- indexedfaceset:' + groupNodeObjName);

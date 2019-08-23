@@ -33,11 +33,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	struct GeometryCloneParameters
-	{
-
-	};
-
+	
 	class ICloneGeometry : public Geometry
 	{
 	protected:
@@ -48,11 +44,15 @@ namespace ape
 	public:
 		virtual void setSourceGeometry(ape::GeometryWeakPtr sourceGeometry) = 0;
 
+		virtual void setSourceGeometryGroupName(std::string groupGeometryName) = 0;
+
 		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
 		virtual ape::GeometryWeakPtr getSourceGeometry() = 0;
 
 		virtual std::string getSourceGeometryName() = 0;
+
+		virtual std::string getSourceGeometryGroupName() = 0;
 
 	};
 }

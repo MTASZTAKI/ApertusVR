@@ -1,12 +1,19 @@
 {
-    "httpServer": {
-        "port":  3000
-    },
-    "pluginManager": {
-      "plugins": [
-        {
-          "file": "x3dLoader/x3dLoader.js"
+  "httpServer": {
+    "port": 3000
+  },
+  "pluginManager": {
+    "plugins": [
+      {
+        "file": "httpSimulator/httpSimulator.js",
+        "args": {
+          "fileName": "httpSimulator/ur5.jsonlist",
+          "delay": 60
         }
-      ]
-    }
+      },
+      {
+        "file": "x3dLoader/x3dLoader.js"
+      }
+    ]
+  }
 }

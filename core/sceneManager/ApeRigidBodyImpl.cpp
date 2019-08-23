@@ -204,6 +204,11 @@ ape::GeometryWeakPtr ape::RigidBodyImpl::getGeometry()
 	return mGeometry;
 }
 
+std::string ape::RigidBodyImpl::getGeometryName()
+{
+	return mGeometryName;
+}
+
 /// Replica
 
 void ape::RigidBodyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

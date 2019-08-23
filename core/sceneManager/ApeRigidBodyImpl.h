@@ -91,6 +91,8 @@ namespace ape
 
 		ape::GeometryWeakPtr getGeometry() override;
 
+		std::string getGeometryName() override;
+
 		/// Replica
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;

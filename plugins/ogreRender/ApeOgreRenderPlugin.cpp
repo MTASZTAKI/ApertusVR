@@ -1089,12 +1089,30 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY:
 				{
-					printf("SETTING SOURCE GEOMETRY IN OGRE");
 					if (mpOgreSceneManager->hasManualObject(sourceGeometryName))
 					{
 						auto ogreManual = mpOgreSceneManager->getManualObject(sourceGeometryName);
 						std::stringstream meshName;
 						meshName << sourceGeometryName << ".mesh";
+						if (Ogre::MeshManager::getSingleton().getByName(meshName.str()).isNull())
+						{
+							ogreManual->convertToMesh(meshName.str());
+						}
+						if (!mpOgreSceneManager->hasEntity(geometryName))
+						{
+							mpOgreSceneManager->createEntity(geometryName, meshName.str());
+						}
+					}
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
+				{
+					std::string geometryGroupName = geometryClone->getSourceGeometryGroupName();
+					if (mpOgreSceneManager->hasManualObject(geometryGroupName))
+					{
+						auto ogreManual = mpOgreSceneManager->getManualObject(geometryGroupName);
+						std::stringstream meshName;
+						meshName << geometryGroupName << ".mesh";
 						if (Ogre::MeshManager::getSingleton().getByName(meshName.str()).isNull())
 						{
 							ogreManual->convertToMesh(meshName.str());

@@ -145,11 +145,20 @@ public:
 
 	void setSourceIndexedFaceSetJsPtr(IndexedFaceSetJsPtr parentIfs)
 	{
-		printf("SET SOURCE INDEXED FACE SET JS PTR");
 		mPtr.lock()->setSourceGeometry(parentIfs.getIndexedFaceSetGeometryWeakPtr());
 	}
 
+	/// SourceGeometryGroup
 
+	void setSourceGeometryGroupName(std::string geometryGroupName)
+	{
+		mPtr.lock()->setSourceGeometryGroupName(geometryGroupName);
+	}
+
+	std::string getSourceGeometryGroupName()
+	{
+		return mPtr.lock()->getSourceGeometryGroupName();
+	}
 
 };
 
@@ -188,6 +197,11 @@ NBIND_CLASS(CloneGeometryJsPtr)
 	method(getSourceIndexedFaceSetGeometrySharedPtr);
 	method(getSourceIndexedFaceSetJsPtr);
 	method(setSourceIndexedFaceSetJsPtr);
+
+	/// SourceGeometryGroup
+
+	method(setSourceGeometryGroupName);
+	method(getSourceGeometryGroupName);
 
 }
 

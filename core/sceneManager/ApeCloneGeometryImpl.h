@@ -40,11 +40,15 @@ namespace ape
 
 		void setSourceGeometry(ape::GeometryWeakPtr sourceGeometry) override;
 
+		void setSourceGeometryGroupName(std::string groupGeometryName) override;
+
 		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
 		ape::GeometryWeakPtr getSourceGeometry() override;
 
 		std::string getSourceGeometryName() override;
+
+		std::string getSourceGeometryGroupName() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -60,6 +64,8 @@ namespace ape
 		std::string mSourceGeometryName;
 
 		ape::GeometryWeakPtr mSourceGeometry;
+
+		std::string mSourceGeometryGroupName;
 
 	};
 }
