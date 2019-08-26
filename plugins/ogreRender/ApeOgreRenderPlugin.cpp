@@ -1409,19 +1409,23 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(textureManualName);
 					if (!ogreTexture.isNull())
 					{
-						//APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin");
 						Ogre::HardwarePixelBufferSharedPtr texBuf = ogreTexture->getBuffer();
 						texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 						if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::A8R8G8B8)
+						{
 							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
+							APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
+						}
 						else if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::R8G8B8)
+						{
+							APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
 							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 3);
+						}
 						texBuf->unlock();
 						/*static int s = 1;
 						std::wostringstream oss;
 						oss << std::setw(4) << std::setfill(L'0') << s++ << L".bmp";
 						ape::SaveVoidBufferToImage(oss.str(), textureManual->getBuffer(), textureManual->getParameters().width, textureManual->getParameters().height);*/
-						//APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write end");
 					}
 				}
 				break;

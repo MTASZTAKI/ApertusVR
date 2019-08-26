@@ -84,7 +84,11 @@ namespace ape
 
 		ape::FileGeometryWeakPtr createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
 
-		void loadFirstRoomTextures();
+		void createRoomTextures();
+
+		void createHotSpots();
+
+		void createOverlayBrowser();
 
 		void loadNextRoom();
 

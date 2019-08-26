@@ -56,7 +56,7 @@ namespace ape
 		if (bitmap == NULL)
 			return;
 
-		memcpy(bits, buffer, width * height * 4);
+		memcpy(bits, buffer, width * height * 3);
 
 		// Populate the bitmap file header.
 		BITMAPFILEHEADER file;
