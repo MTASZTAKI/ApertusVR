@@ -1,0 +1,45 @@
+{
+  "environment": "ground",
+  "cubes": {
+    "enable": false,
+    "arraySize": [ 6, 1, 6 ],
+    "initPos": [0, 250, 0 ]
+  },
+  "assets": [
+    {
+      "name": "sphere01",
+      "shape": "sphere",
+      "radius": 10.0,
+      "position": [ 0, 100, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "red"
+    },
+    {
+      "name": "cone01",
+      "shape": "cone",
+      "radius": 20.0,
+      "height": 30.0,
+      "position": [ 0, 100, 20 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
+    },
+    {
+      "name": "cylinder01",
+      "shape": "cylinder",
+      "radius": 10.0,
+      "height": 20.0,
+      "position": [ -20, 100, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "yellow"
+    },
+    {
+      "name": "sphere02",
+      "shape": "sphere",
+      "radius": 10.0,
+      "height": 20.0,
+      "position": [ -50, 100, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "green"
+    }
+  ]
+}

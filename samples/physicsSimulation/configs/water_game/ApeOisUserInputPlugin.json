@@ -1,0 +1,12 @@
+{
+  "inputs": [
+    "keyboard",
+    "mouse"
+  ],
+  "cameraNames": [
+    "camera1"
+  ],
+  "cameraPoses": [
+    [ 0, 0, 0, 1, 0, 0, 0 ]
+  ]
+}

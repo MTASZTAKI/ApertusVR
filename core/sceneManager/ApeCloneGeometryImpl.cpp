@@ -36,7 +36,7 @@ ape::CloneGeometryImpl::~CloneGeometryImpl()
 
 void ape::CloneGeometryImpl::setSourceGeometry(ape::GeometryWeakPtr sourceGeometryWeak)
 {
-	printf("SET SOURCE GEOMETRY\n");
+	/*printf("SET SOURCE GEOMETRY\n");*/
 	if (auto sourceGeometryShared = sourceGeometryWeak.lock())
 	{
 		mSourceGeometry = sourceGeometryWeak;
@@ -49,7 +49,7 @@ void ape::CloneGeometryImpl::setSourceGeometry(ape::GeometryWeakPtr sourceGeomet
 
 void ape::CloneGeometryImpl::setSourceGeometryGroupName(std::string sourceGeometryName)
 {
-	printf("SET SOURCE GEOMETRY GROUP NAME\n");
+	/*printf("SET SOURCE GEOMETRY GROUP NAME\n");*/
 	mSourceGeometryGroupName = sourceGeometryName;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
 }

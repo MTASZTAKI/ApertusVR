@@ -504,6 +504,55 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			}
 		} else if (tagName == 'viewpoint') {
 			//
+		} else if (tagName == 'indexedfaceset') {
+			var grouped = false;
+			var groupNodeObjName = itemName;
+			if (groupNodeObj) {
+				groupNodeObjName = groupNodeObj.getName() /*+ currentlyLoadingFileName*/;
+				grouped = true;
+			}
+			log('- indexedfaceset:' + groupNodeObjName);
+			var HANDLING = groupNodeObjName.indexOf("handling");
+			var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
+			if (HANDLING < 0 && FIXTURE < 0) {
+				var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(itemName);
+				var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
+				var coordIndexArr = self.parseCoordIndexAttr(currentItem);
+				var normals = self.parseNormals(currentItem);
+				var colors = self.parseColorRGBAs(currentItem);
+				var matItem = currentItem.siblings('Appearance').first().children('Material').first();
+				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
+
+				/// RigidBody
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
+				rigidBodyObj.setToStatic();
+
+				log('INDEXEDFACESET: ' + groupNodeObjName + ' - ' + itemName);
+				itemNamesMap.set(groupNodeObjName,itemName);
+
+				if (utils.isDefined(materialObj)) {
+					log('setParametersWithMaterial is called');
+					indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
+				} else
+					indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
+				if (lastGroupNodeObjName != groupNodeObjName) {
+					if (groupNodeObj) {
+						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
+						rigidBodyObj.setParentNodeJsPtr(groupNodeObj);
+						log('- groupNodeObj:' + groupNodeObjName);
+					}
+					lastGroupNodeObjName = groupNodeObjName;
+				}
+				if (!grouped) {
+					if (parentNodeObj) {
+						indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
+						rigidBodyObj.setParentNodeJsPtr(parentNodeObj);
+						log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
+					} else
+						log('no parent, no group -> no node to attach the geometry');
+				}
+			}
 		} else if (tagName == 'shape') {
 			var use = currentItem.attr('USE');
 			if (utils.isDefined(use)) {
@@ -530,62 +579,18 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 					log('!!!! - this: ' + cloneGeometryObj.getName() + ' - parentNode: !!!!');
 				});
 				log('GOT_INDEXEDFACESET?');
-				//var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
-				
+
+				/// RigidBody
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				rigidBodyObj.setCloneGeometryJsPtr(cloneGeometryObj);
+				rigidBodyObj.setToStatic();
 
 				log('USE: ' + cloneGeometryObj.getName());
 
 				if (parentNodeObj) {
 					cloneGeometryObj.setParentNodeJsPtr(parentNodeObj);
+					rigidBodyObj.setParentNodeJsPtr(parentNodeObj);
 					log(' - this: ' + cloneGeometryObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
-				}
-			}
-		} else if (tagName == 'indexedfaceset') {
-			var grouped = false;
-			var groupNodeObjName = itemName;
-			if (groupNodeObj) {
-				groupNodeObjName = groupNodeObj.getName() /*+ currentlyLoadingFileName*/;
-				grouped = true;
-			}
-			log('- indexedfaceset:' + groupNodeObjName);
-			var HANDLING = groupNodeObjName.indexOf("handling");
-			var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
-			if (HANDLING < 0 && FIXTURE < 0) {
-				var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(itemName);
-				var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
-				var coordIndexArr = self.parseCoordIndexAttr(currentItem);
-				var normals = self.parseNormals(currentItem);
-				var colors = self.parseColorRGBAs(currentItem);
-				var matItem = currentItem.siblings('Appearance').first().children('Material').first();
-				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
-
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
-				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
-				rigidBodyObj.setToStatic();
-
-				log('INDEXEDFACESET: ' + groupNodeObjName + ' - ' + itemName);
-				itemNamesMap.set(groupNodeObjName,itemName);
-				// var ribidBodyObj = ape.nbind.JsBindManager().createRigidBody();
-				if (utils.isDefined(materialObj)) {
-					log('setParametersWithMaterial is called');
-					indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
-				} else
-					indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
-				if (lastGroupNodeObjName != groupNodeObjName) {
-					if (groupNodeObj) {
-						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
-						rigidBodyObj.setParentNodeJsPtr(groupNodeObj);
-						log('- groupNodeObj:' + groupNodeObjName);
-					}
-					lastGroupNodeObjName = groupNodeObjName;
-				}
-				if (!grouped) {
-					if (parentNodeObj) {
-						indexedFaceSetObj.setParentNodeJsPtr(parentNodeObj);
-						rigidBodyObj.setParentNodeJsPtr(parentNodeObj);
-						log(' - this: ' + indexedFaceSetObj.getName() + ' - parentNode: ' + parentNodeObj.getName());
-					} else
-						log('no parent, no group -> no node to attach the geometry');
 				}
 			}
 		} else if (tagName == 'box') {

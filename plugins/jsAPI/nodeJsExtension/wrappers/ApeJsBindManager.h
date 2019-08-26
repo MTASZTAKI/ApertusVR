@@ -256,14 +256,14 @@ public:
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
- 		printf("\nname: %s\n",name.c_str());
+ 		/*printf("\nname: %s\n",name.c_str());*/
 		if (auto entity = entityWeakPtr.lock())
 		{
-			printf("\nauto entity = entityWeakPtr.lock()\n");
+			/*printf("\nauto entity = entityWeakPtr.lock()\n");*/
 			if (auto indexedFaceSet = std::dynamic_pointer_cast<ape::IIndexedFaceSetGeometry>(entity))
 			{
 				success = true;
-				printf("\nsuccess = true\n");
+				/*printf("\nsuccess = true\n");*/
 				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
 			}
 			else

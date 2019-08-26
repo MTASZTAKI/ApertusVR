@@ -109,23 +109,37 @@ namespace ape
 
 	private:
 
+		enum shapeColors
+		{
+			BLUE,
+			RED,
+			GREEN,
+			YELLOW
+		};
+
 		void makeTerrain(std::string name, ape::Vector3 scale);
 
 		void makeGround(std::string name, ape::Vector2 size, float height);
 
 		void makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos);
 
-		void makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos);
+		void makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient, shapeColors color);
 		
-		void makeSphere(std::string name, float radius, ape::Vector3 pos);
+		void makeSphere(std::string name, float radius, ape::Vector3 pos, ape::Quaternion orient, shapeColors color);
 
-		void makeCone(std::string name, float radius, float height, ape::Vector3 pos);
+		void makeCone(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient, shapeColors color);
 
-		void makeCylinder(std::string name, float radius, float height, ape::Vector3 pos);
+		void makeCylinder(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient, shapeColors color);
 
 		bool m_waterEnabled;
 
 		bool m_groundIsWavy;
+
+		bool m_cubes;
+
+		int m_cubesArraySize[3];
+
+		ape::Vector3 m_cubesInitPos;
 
 		std::vector<RigidBodyWeakPtr> m_bodies;
 	};

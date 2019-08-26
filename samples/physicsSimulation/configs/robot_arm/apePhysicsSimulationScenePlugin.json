@@ -1,0 +1,8 @@
+{
+  "environment": "ground",
+  "cubes": {
+    "enable": false,
+    "arraySize": [ 6, 1, 6 ],
+    "initPos": [ -60, 85, -120 ]
+  }
+}

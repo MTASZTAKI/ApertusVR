@@ -10,7 +10,7 @@
       "rootNodeName": "lantern",
       "physics": {
         "mass": 1.0,
-        "restitution": 0.2,
+        "restitution": 0.8,
         "friction": 0.5,
         "rolling friction": 0.1,
         "spinning friction": 0.1,

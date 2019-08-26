@@ -52,6 +52,104 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 				m_waterEnabled = environment == "water";
 				m_groundIsWavy = environment == "terrain";
 			}
+
+			if (jsonDocument.HasMember("cubes"))
+			{
+				rapidjson::Value& input = jsonDocument["cubes"];
+
+				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				{
+					if (it->name == "enable")
+						m_cubes = it->value.GetBool();
+					if (it->name == "arraySize")
+					{
+						m_cubesArraySize[0] = it->value.GetArray()[0].GetInt();
+						m_cubesArraySize[1] = it->value.GetArray()[1].GetInt();
+						m_cubesArraySize[2] = it->value.GetArray()[2].GetInt();
+					}
+					if (it->name == "initPos")
+					{
+						m_cubesInitPos.x = it->value.GetArray()[0].GetFloat();
+						m_cubesInitPos.y = it->value.GetArray()[1].GetFloat();
+						m_cubesInitPos.z = it->value.GetArray()[2].GetFloat();
+					}
+				}
+			}
+
+			if (jsonDocument.HasMember("assets"))
+			{
+				rapidjson::Value& input = jsonDocument["assets"];
+
+				for (auto& asset : input.GetArray())
+				{
+					std::string shape, name;
+					float radius, height;
+					ape::Vector3 dims, position;
+					ape::Quaternion orientatioin;
+					shapeColors color;
+					for (rapidjson::Value::MemberIterator assetMemberIterator = asset.MemberBegin(); assetMemberIterator != asset.MemberEnd(); ++assetMemberIterator)
+					{
+						if (assetMemberIterator->name == "name")
+							name = assetMemberIterator->value.GetString();
+						else if (assetMemberIterator->name == "shape")
+							shape = assetMemberIterator->value.GetString();
+						else if (assetMemberIterator->name == "radius")
+							radius = assetMemberIterator->value.GetFloat();
+						else if (assetMemberIterator->name == "height")
+							height = assetMemberIterator->value.GetFloat();
+						else if (assetMemberIterator->name == "dims")
+						{
+							dims.x = assetMemberIterator->value.GetArray()[0].GetFloat();
+							dims.y = assetMemberIterator->value.GetArray()[1].GetFloat();
+							dims.z = assetMemberIterator->value.GetArray()[2].GetFloat();
+						}
+						else if (assetMemberIterator->name == "position")
+						{
+							position.x = assetMemberIterator->value.GetArray()[0].GetFloat();
+							position.y = assetMemberIterator->value.GetArray()[1].GetFloat();
+							position.z = assetMemberIterator->value.GetArray()[2].GetFloat();
+						}
+						else if (assetMemberIterator->name == "orientation")
+						{
+							orientatioin.w = assetMemberIterator->value.GetArray()[0].GetFloat();
+							orientatioin.x = assetMemberIterator->value.GetArray()[1].GetFloat();
+							orientatioin.y = assetMemberIterator->value.GetArray()[2].GetFloat();
+							orientatioin.z = assetMemberIterator->value.GetArray()[3].GetFloat();
+						}
+						else if (assetMemberIterator->name == "color")
+						{
+							std::string colorStr = assetMemberIterator->value.GetString();
+							if (colorStr == "blue")
+								color = BLUE;
+							else if (colorStr == "red")
+								color = RED;
+							else if (colorStr == "green")
+								color = GREEN;
+							else if (colorStr == "yellow")
+								color = YELLOW;
+						}
+					}
+
+					if (shape == "sphere")
+					{
+						makeSphere(name, radius, position, orientatioin,color);
+					}
+					else if (shape == "cone")
+					{
+						makeCone(name, radius, height, position, orientatioin,color);
+					}
+					else if (shape == "cylinder")
+					{
+						makeCylinder(name, radius, height, position, orientatioin,color);
+					}
+					else if (shape == "box")
+					{
+						makeBox(name, dims, position, orientatioin,color);
+					}
+				}
+			}
+
+
 		}
 	}
 
@@ -75,8 +173,6 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	//mpSceneMakerMacro->makeTerrain("terrain");
 	//mpSceneMakerMacro->makeBox("a1");
 
-	// water surface
-
 	if (true)
 	{
 		if (m_waterEnabled)
@@ -98,105 +194,57 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 
 	// makeBox("box111", ape::Vector3(50, 50, 50), ape::Vector3(-100.f, 400.f, 0.f));
 
-	ape::BoxGeometrySharedPtr box;
+	//makeCone("cone11", 10.f, 15.f, { 0,200,0 });
 
-	
-	//mpSceneMakerMacro->makeModel("Sinbad.mesh");
 
-	/*if (auto meshNode = mpSceneManager->createNode("mesh11Node").lock())
+	if (m_cubes)
 	{
-		meshNode->setPosition({0, 30, 0});
-		meshNode->setScale({ 10, 10, 10 });
-		if (auto mesh = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("Sinbad.mesh", ape::Entity::GEOMETRY_FILE).lock()))
+		for (int i = 0; i < m_cubesArraySize[0]; i++)
 		{
-			mesh->setFileName("Sinbad.mesh");
-			mesh->setParentNode(meshNode);
-		}
-	}
-	*/
-
-	//if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
-	//{
-	//	// material for box
-	//	std::shared_ptr<ape::IManualMaterial> boxMaterial;
-	//	if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
-	//	{
-	//		boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
-	//		boxMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
-	//	}
-
-	//	boxNode->setPosition({0.,50.,0.});
-
-
-	//	if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
-	//	{
-	//		box->setParameters({20.,20.,20.});
-	//		box->setParentNode(boxNode);
-	//		box->setMaterial(boxMaterial);
-	//	}
-
-	//	
-	//}
-
-	/*if (auto boxCopyNode = mpSceneManager->createNode("boxCopyNode").lock())
-	{
-		boxCopyNode->setPosition({0.,50.,-50.});
-		if (auto boxCopy = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("boxCopy", ape::Entity::GEOMETRY_CLONE).lock()))
-		{
-			boxCopy->setParentGeometry(box);
-			boxCopy->setParentNode(boxCopyNode);
-		}
-	}*/
-
-	const int array_size = 0;
-	const int size_x = array_size, size_y = array_size, size_z = array_size;
-
-	ape::Vector3 initPos(0, 500, 0);
-	for (int i = 0; i < size_x; i++)
-	{
-		std::stringstream ssi;
-		ssi << i;
-		for (int j = 0; j < size_y; j++)
-		{
-			std::stringstream ssj;
-			ssj << j;
-			for (int k = 0; k < size_z; k++)
+			std::stringstream ssi;
+			ssi << i;
+			for (int j = 0; j < m_cubesArraySize[1]; j++)
 			{
-				std::stringstream ssk;
-				ssk << k;
-
-				if (auto boxNode = mpSceneManager->createNode("boxNode" + ssi.str() + ssj.str() + ssk.str()).lock())
+				std::stringstream ssj;
+				ssj << j;
+				for (int k = 0; k < m_cubesArraySize[2]; k++)
 				{
-					// material for box
-					std::shared_ptr<ape::IManualMaterial> boxMaterial;
-					if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
+					std::stringstream ssk;
+					ssk << k;
+
+					if (auto boxNode = mpSceneManager->createNode("boxNode" + ssi.str() + ssj.str() + ssk.str()).lock())
 					{
-						boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(array_size), float(j + 1) / float(array_size), float(k + 1) / float(array_size)));
-						boxMaterial->setSpecularColor(ape::Color(float(i) / float(array_size - 1), float(j) / float(array_size - 1), float(k) / float(array_size - 1)));
-					}
-
-
-					boxNode->setPosition(initPos + ape::Vector3(float(i * 10 - array_size * 10 / 2 + 5), float(j * 10), float(k * 10 - array_size * 10 / 2 + 5)));
-
-					// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
-					{
-						box->setParameters(ape::Vector3(10, 10, 10));
-						box->setParentNode(boxNode);
-						box->setMaterial(boxMaterial);
-
-
-						if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
+						// material for box
+						std::shared_ptr<ape::IManualMaterial> boxMaterial;
+						if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
 						{
-							boxBody->setToStatic();
-							boxBody->setGeometry(box);
-							boxBody->setParentNode(boxNode);
-							boxBody->setRestitution(0.6f);
-							boxBody->setDamping(0.01, 0.01);
-							boxBody->setBouyancy(m_waterEnabled);
-							boxBody->setToDynamic(1.0f);
+							boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));
+							boxMaterial->setSpecularColor(ape::Color(float(i) / float(m_cubesArraySize[0] - 1), float(j) / float(m_cubesArraySize[1] - 1), float(k) / float(m_cubesArraySize[2] - 1)));
+						}
 
-							m_bodies.push_back(boxBody);
+
+						boxNode->setPosition(m_cubesInitPos + ape::Vector3(float(i * 10 - m_cubesArraySize[0] * 10 / 2 + 5), float(j * 10), float(k * 10 - m_cubesArraySize[2] * 10 / 2 + 5)));
+
+						// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
+						if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
+						{
+							box->setParameters(ape::Vector3(10, 10, 10));
+							box->setParentNode(boxNode);
+							box->setMaterial(boxMaterial);
+
+
+							if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
+							{
+								boxBody->setToStatic();
+								boxBody->setGeometry(box);
+								boxBody->setParentNode(boxNode);
+								boxBody->setRestitution(0.6f);
+								boxBody->setDamping(0.01, 0.01);
+								boxBody->setBouyancy(m_waterEnabled);
+								boxBody->setToDynamic(1.0f);
+
+								m_bodies.push_back(boxBody);
+							}
 						}
 					}
 				}
@@ -327,7 +375,7 @@ void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vec
 	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		planeNode->setPosition(ape::Vector3(0, height, 0));
+		planeNode->setPosition(ape::Vector3(0, 0, 0));
 		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
@@ -354,27 +402,29 @@ void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vec
 
 void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos)
 {
-	if (auto planeNode = mpSceneManager->createNode(name + "Node").lock())
+	if (auto boxNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		planeNode->setPosition(pos);
-		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		boxNode->setPosition(pos/2.0f);
+		if (auto boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			planeMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
-			planeMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.1f, 0.7f));
-			planeMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
+			boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.2f, 0.7f));
+			boxMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.2f, 0.7f));
+			boxMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
+			boxMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 
-			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_PLANE).lock()))
+
+			if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(3000, 3000), ape::Vector2(1, 1));
-				plane->setParentNode(planeNode);
-				plane->setMaterial(planeMaterial);
+				box->setParameters(ape::Vector3(3000.f, pos.y, 3000.f));
+				box->setParentNode(boxNode);
+				box->setMaterial(boxMaterial);
 			}
 		}
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos)
+void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
 {
 	// create box geometry
 	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
@@ -383,11 +433,31 @@ void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector
 		std::shared_ptr<ape::IManualMaterial> boxMaterial;
 		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
-			boxMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
+			switch (color)
+			{
+			case ape::apePhysicsSimulationScenePlugin::BLUE:
+				boxMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
+				boxMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::RED:
+				boxMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
+				boxMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::GREEN:
+				boxMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
+				boxMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::YELLOW:
+				boxMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
+				boxMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
+				break;
+			default:
+				break;
+			}
 		}
 
 		boxNode->setPosition(pos);
+		boxNode->setOrientation(orient);
 
 		ape::BoxGeometrySharedPtr box;
 		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
@@ -409,7 +479,7 @@ void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float radius, ape::Vector3 pos)
+void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float radius, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
 {
 	if (auto sphereNode = mpSceneManager->createNode(name + "Node").lock())
 	{
@@ -417,11 +487,32 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 		std::shared_ptr<ape::IManualMaterial> sphereMaterial;
 		if (sphereMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			sphereMaterial->setDiffuseColor(ape::Color(0.0f, 0.5f, 0.5f));
-			sphereMaterial->setSpecularColor(ape::Color(0.0f, 0.5f, 0.5f));
+			switch (color)
+			{
+			case ape::apePhysicsSimulationScenePlugin::BLUE:
+				sphereMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
+				sphereMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::RED:
+				sphereMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
+				sphereMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::GREEN:
+				sphereMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
+				sphereMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::YELLOW:
+				sphereMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
+				sphereMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
+				break;
+			default:
+				break;
+			}
 		}
 
 		sphereNode->setPosition(pos);
+		sphereNode->setOrientation(orient);
+
 		if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_SPHERE).lock()))
 		{
 			sphere->setParameters(radius, ape::Vector2(1, 1));
@@ -433,7 +524,8 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 				sphereBody->setGeometry(sphere);
 				sphereBody->setParentNode(sphereNode);
 				sphereBody->setToDynamic(1.0f);
-				sphereBody->setRestitution(1.2f);
+				sphereBody->setRestitution(0.8f);
+				sphereBody->setDamping(0.05, 0.05);
 				sphereBody->setFriction(0.5, 0.3, 0.3);
 				sphereBody->setBouyancy(m_waterEnabled);
 			}
@@ -441,7 +533,7 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radius, float height, ape::Vector3 pos)
+void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
 {
 	if (auto coneNode = mpSceneManager->createNode("coneNode").lock())
 	{
@@ -449,11 +541,29 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 		std::shared_ptr<ape::IManualMaterial> coneMaterial;
 		if (coneMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coneMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			coneMaterial->setDiffuseColor(ape::Color(.5, .5, .5));
-			coneMaterial->setSpecularColor(ape::Color(.2, .5, .2));
+			switch (color)
+			{
+			case ape::apePhysicsSimulationScenePlugin::BLUE:
+				coneMaterial->setDiffuseColor(ape::Color(0.0, 0.0,1.0));
+				coneMaterial->setSpecularColor(ape::Color(0.0, 0.0,1.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::RED:
+				coneMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
+				coneMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::GREEN:
+				coneMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
+				coneMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::YELLOW:
+				coneMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
+				coneMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
+				break;
+			}
 		}
 
 		coneNode->setPosition(pos);
+		coneNode->setOrientation(orient);
 
 		if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("cone", ape::Entity::GEOMETRY_CONE).lock()))
 		{
@@ -469,8 +579,8 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 				coneBody->setGeometry(cone);
 				coneBody->setParentNode(coneNode);
 				coneBody->setRestitution(0.8f);
-				coneBody->setDamping(0.1, 0.1);
-				//coneBody->setFriction(0.5, 0.3, 0.3);
+				coneBody->setDamping(0.05, 0.05);
+				coneBody->setFriction(0.5, 0.3, 0.3);
 				coneBody->setBouyancy(m_waterEnabled);
 
 				m_bodies.push_back(coneBody);
@@ -480,7 +590,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float radius, float height, ape::Vector3 pos)
+void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
 {
 	if (auto cylinderNode = mpSceneManager->createNode("cylinderNode").lock())
 	{
@@ -488,8 +598,27 @@ void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float 
 		std::shared_ptr<ape::IManualMaterial> cylinderMaterial;
 		if (cylinderMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("cylinderMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			cylinderMaterial->setDiffuseColor(ape::Color(.5, .5, .5));
-			cylinderMaterial->setSpecularColor(ape::Color(.2, .5, .2));
+			switch (color)
+			{
+			case ape::apePhysicsSimulationScenePlugin::BLUE:
+				cylinderMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
+				cylinderMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::RED:
+				cylinderMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
+				cylinderMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::GREEN:
+				cylinderMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
+				cylinderMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
+				break;
+			case ape::apePhysicsSimulationScenePlugin::YELLOW:
+				cylinderMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
+				cylinderMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
+				break;
+			default:
+				break;
+			}
 		}
 
 

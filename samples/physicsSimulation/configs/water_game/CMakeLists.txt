@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,16 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (terrain)
-add_subdirectory (liquid)
-add_subdirectory (robot_arm)
-add_subdirectory (water_game)
+set (CONFIGS
+	apeOgreRenderPlugin.json
+	ApeOisUserInputPlugin.json
+	apeCore.json
+	apeBulletPlugin.json
+	)
+
+add_custom_target(
+    Configs_physicsSimulation_water_game ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET Configs_physicsSimulation_water_game PROPERTY FOLDER "Samples/PhysicsSimulation/Configs")

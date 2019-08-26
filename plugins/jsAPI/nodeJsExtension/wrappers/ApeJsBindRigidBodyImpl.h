@@ -25,10 +25,14 @@ SOFTWARE.*/
 
 #include "ape.h"
 #include "sceneelements/apeIRigidBody.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeICloneGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "apeRigidBodyImpl.h"
 #include "apeJsBindNodeImpl.h"
+#include "apeJsBindCloneGeometryImpl.h"
+#include "ApeIndexedFaceSetGeometryImpl.h"
 #include "apeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS
@@ -116,6 +120,27 @@ public:
 		mPtr.lock()->setGeometry(geometry.getGeometryWeakPtr());
 	}
 
+	/// CloneGeometry
+
+	ape::CloneGeometryWeakPtr getCloneGeometryWeakPtr()
+	{
+		return std::static_pointer_cast<ICloneGeometry>(mPtr.lock()->getGeometry().lock());
+	}
+
+	void setCloneGeometryWeakPtr(ape::CloneGeometryWeakPtr geometry)
+	{
+		mPtr.lock()->setGeometry(geometry);
+	}
+
+	CloneGeometryJsPtr getCloneGeometryJsPtr()
+	{
+		return CloneGeometryJsPtr(mPtr.lock()->getGeometry());
+	}
+
+	void setCloneGeometryJsPtr(CloneGeometryJsPtr geometry)
+	{
+		mPtr.lock()->setGeometry(geometry.getGeometryWeakPtr());
+	}
 	/// Entity
 
 	const std::string getName()
@@ -175,6 +200,11 @@ public:
 		return mPtr.lock()->isStatic();
 	}
 
+	bool isKinematic()
+	{
+		return mPtr.lock()->isKinematic();
+	}
+
 	bool bouyancyEnabled()
 	{
 		return mPtr.lock()->bouyancyEnabled();
@@ -212,6 +242,11 @@ public:
 		mPtr.lock()->setToStatic();
 	}
 
+	void setToKinematic()
+	{
+		mPtr.lock()->setToKinematic();
+	}
+
 	void setBouyancy(bool enable)
 	{
 		mPtr.lock()->setBouyancy(enable);
@@ -246,6 +281,11 @@ NBIND_CLASS(RigidBodyJsPtr)
 	method(getIndexedFaceSetGeometryJsPtr);
 	method(setIndexedFaceSetGeometryJsPtr);
 
+	method(getCloneGeometryWeakPtr);
+	method(setCloneGeometryWeakPtr);
+	method(getCloneGeometryJsPtr);
+	method(setCloneGeometryJsPtr);
+
 	/// Entity
 
 	method(getName);
@@ -262,6 +302,7 @@ NBIND_CLASS(RigidBodyJsPtr)
 	method(getRestitution);
 	method(getRBType);
 	method(isStatic);
+	method(isKinematic);
 	method(bouyancyEnabled);
 
 	/// IRigidBody setters
@@ -272,6 +313,7 @@ NBIND_CLASS(RigidBodyJsPtr)
 	method(setRestitution);
 	method(setToDynamic);
 	method(setToStatic);
+	method(setToKinematic);
 	method(setBouyancy);
 }
 

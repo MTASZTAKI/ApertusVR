@@ -1,9 +1,9 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apePhysicsSimulationScenePlugin",
+    "apeSkyWaterTerrainScenePlugin",
+    "apeTexasEEGPlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {
@@ -27,7 +27,7 @@
     "selected": "none",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
-      "/plugins/assimpAssetLoader/resources"
+      "/plugins/texasEEG/resources"
     ]
   }
 }
