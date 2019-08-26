@@ -20,16 +20,28 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	apeOgreRenderPlugin.json
-	apeViewPointManagerPlugin.json
-	apeCore.json
-	apeELearningPlugin.json
+#apeViewPointManagerPlugin
+set (HEADERS
+	apeViewPointManagerPlugin.h
 	)
 
-add_custom_target(
-    Configs_ELearning_local_monitor ALL
-    SOURCES ${CONFIGS}
-)
+set (SOURCES 
+	apeViewPointManagerPlugin.cpp
+	)
 
-set_property (TARGET Configs_ELearning_local_monitor PROPERTY FOLDER "Samples/ELearning/Configs")
+include_directories(	
+	${RAPIDJSON_INCLUDE_DIR}
+	)
+
+# Add the dinamic library target to the project
+add_library (apeViewPointManagerPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeViewPointManagerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
+
+# Place target xxx into the specified folder in IDEs supporting it
+set_property (TARGET apeViewPointManagerPlugin PROPERTY FOLDER "Plugins")
+
+
+
+

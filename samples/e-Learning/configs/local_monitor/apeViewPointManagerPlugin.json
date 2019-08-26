@@ -1,8 +1,4 @@
 {
-  "inputs": [
-    "keyboard",
-    "mouse"
-  ],
   "cameraNames": [
     "cameraLeft"
   ],

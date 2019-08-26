@@ -87,9 +87,14 @@ endif ()
 
 # UI
 
-option(APE_PLUGIN_HtmlOverlayUI "Use HtmlOverlayUIPlugin?" ON )
-if (${APE_PLUGIN_HtmlOverlayUI})
-	add_subdirectory (htmlOverlayUI)
+option(APE_PLUGIN_htmlOverlayUiManager "Use htmlOverlayUiManagerPlugin?" ON )
+if (${APE_PLUGIN_htmlOverlayUiManager})
+	add_subdirectory (htmlOverlayUiManager)
+endif ()
+
+option(APE_PLUGIN_viewPointManager "Use viewPointManagerPlugin?" ON )
+if (${APE_PLUGIN_viewPointManager})
+	add_subdirectory (viewPointManager)
 endif ()
 
 option(APE_PLUGIN_Avatar "Use AvatarPlugin?" ON )

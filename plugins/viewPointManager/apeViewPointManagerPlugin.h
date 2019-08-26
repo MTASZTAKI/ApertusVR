@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OISUSERINPUTPLUGIN_H
-#define APE_OISUSERINPUTPLUGIN_H
+#ifndef APE_VIEWPOINTMANAGERPLUGIN_H
+#define APE_VIEWPOINTMANAGERPLUGIN_H
 
 #include <iostream>
 #include <list>
@@ -34,18 +34,19 @@ SOFTWARE.*/
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
 #include "macros/userInput/apeUserInputMacro.h"
-#include "OIS.h"
 
-#define THIS_PLUGINNAME "apeOisUserInputPlugin"
+#define THIS_PLUGINNAME "apeViewPointManagerPlugin"
 
 namespace ape
 {
-	class OISUserInputPlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class ViewPointManagerPlugin : public ape::IPlugin
 	{
 	public:
-		OISUserInputPlugin();
+		ViewPointManagerPlugin();
 
-		~OISUserInputPlugin();
+		~ViewPointManagerPlugin();
+
+		void keyStringEventCallback(const std::string& keyValue);
 
 		void Init() override;
 
@@ -59,60 +60,48 @@ namespace ape
 
 		void Restart() override;
 
-		bool keyPressed(const OIS::KeyEvent& e) override;
-
-		bool keyReleased(const OIS::KeyEvent& e) override;
-
-		bool mouseMoved(const OIS::MouseEvent& e) override;
-
-		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
 	private:
-		struct MouseState
-		{
-			OIS::MouseState posStart;
-			OIS::MouseState posEnd;
-			OIS::MouseState posPrevious;
-			OIS::MouseState posCurrent;
-			std::map<OIS::MouseButtonID, bool> buttonDownMap;
-			bool isDragModeLeft = false;
-			bool isDragModeMiddle = false;
-			bool isDragModeRight = false;
-			bool isMouseMoved = false;
-			int scrollVelocity = 0;
-		};
-
-		OIS::Keyboard* mpKeyboard; 
-
-		OIS::Mouse* mpMouse;
-
 		ape::ISceneManager* mpSceneManager;
-
-		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
 
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+		std::vector<ape::UserInputMacro::ViewPose> mViewPoses;
 
-		MouseState mMouseState;
+		int mViewPosesToggleIndex;
 
-		bool mIsKeyPressed;
+		float mTranslateSpeedFactorKeyboard;
+
+		float mRotateSpeedFactorKeyboard;
+
+		float mTranslateSpeedFactorMouse;
+
+		float mRotateSpeedFactorMouse;
+
+		float mGeneralSpeedFactor;
+
+		ape::UserInputMacro* mpUserInputMacro;
+
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
+
+		void updateViewPoseByKeyBoard(const std::string& keyValue);
+
+		void updateViewPoseByMouse();
+
+		void toggleViewPoses(bool isInterpolated);
 
 		void eventCallBack(const ape::Event& event);
 	};
 	
-	APE_PLUGIN_FUNC ape::IPlugin* CreateOISUserInputPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateViewPointManagerPlugin()
 	{
-		return new ape::OISUserInputPlugin;
+		return new ape::ViewPointManagerPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyViewPointManagerPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::OISUserInputPlugin*)plugin;
+		delete (ape::ViewPointManagerPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -120,7 +109,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateViewPointManagerPlugin, DestroyViewPointManagerPlugin);
 		return 0;
 	}
 }

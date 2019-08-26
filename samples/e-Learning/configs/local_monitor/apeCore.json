@@ -2,6 +2,7 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
     "apeCefBrowserPlugin",
     "apeELearningPlugin"
   ],

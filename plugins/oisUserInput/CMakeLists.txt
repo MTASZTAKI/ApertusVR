@@ -74,7 +74,6 @@ endif ()
 #apeOisUserInputPlugin
 set (HEADERS
 	apeOisUserInputPlugin.h
-	apeOisUserInputPluginConfigs.h
 	)
 
 set (SOURCES 

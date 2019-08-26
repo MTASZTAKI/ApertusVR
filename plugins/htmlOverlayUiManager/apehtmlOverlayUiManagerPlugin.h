@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OISUSERINPUTPLUGIN_H
-#define APE_OISUSERINPUTPLUGIN_H
+#ifndef APE_HTMLOVERLAYUIMANAGERPLUGIN_H
+#define APE_HTMLOVERLAYUIMANAGERPLUGIN_H
 
 #include <iostream>
 #include <list>
@@ -34,18 +34,17 @@ SOFTWARE.*/
 #include "managers/apeISceneManager.h"
 #include "managers/apeICoreConfig.h"
 #include "macros/userInput/apeUserInputMacro.h"
-#include "OIS.h"
 
-#define THIS_PLUGINNAME "apeOisUserInputPlugin"
+#define THIS_PLUGINNAME "apeHtmlOverlayUiManagerPlugin"
 
 namespace ape
 {
-	class OISUserInputPlugin : public ape::IPlugin, public OIS::KeyListener, public OIS::MouseListener
+	class HtmlOverlayUiManagerPlugin : public ape::IPlugin
 	{
 	public:
-		OISUserInputPlugin();
+		HtmlOverlayUiManagerPlugin();
 
-		~OISUserInputPlugin();
+		~HtmlOverlayUiManagerPlugin();
 
 		void Init() override;
 
@@ -59,60 +58,30 @@ namespace ape
 
 		void Restart() override;
 
-		bool keyPressed(const OIS::KeyEvent& e) override;
-
-		bool keyReleased(const OIS::KeyEvent& e) override;
-
-		bool mouseMoved(const OIS::MouseEvent& e) override;
-
-		bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
-		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
-
 	private:
-		struct MouseState
-		{
-			OIS::MouseState posStart;
-			OIS::MouseState posEnd;
-			OIS::MouseState posPrevious;
-			OIS::MouseState posCurrent;
-			std::map<OIS::MouseButtonID, bool> buttonDownMap;
-			bool isDragModeLeft = false;
-			bool isDragModeMiddle = false;
-			bool isDragModeRight = false;
-			bool isMouseMoved = false;
-			int scrollVelocity = 0;
-		};
-
-		OIS::Keyboard* mpKeyboard; 
-
-		OIS::Mouse* mpMouse;
-
 		ape::ISceneManager* mpSceneManager;
-
-		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
 
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
+		ape::UserInputMacro* mpUserInputMacro;
 
-		MouseState mMouseState;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		bool mIsKeyPressed;
+		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
 		void eventCallBack(const ape::Event& event);
 	};
 	
-	APE_PLUGIN_FUNC ape::IPlugin* CreateOISUserInputPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateHtmlOverlayUiManagerPlugin()
 	{
-		return new ape::OISUserInputPlugin;
+		return new ape::HtmlOverlayUiManagerPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyOISUserInputPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyHtmlOverlayUiManagerPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::OISUserInputPlugin*)plugin;
+		delete (ape::HtmlOverlayUiManagerPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -120,7 +89,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateOISUserInputPlugin, DestroyOISUserInputPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateHtmlOverlayUiManagerPlugin, DestroyHtmlOverlayUiManagerPlugin);
 		return 0;
 	}
 }

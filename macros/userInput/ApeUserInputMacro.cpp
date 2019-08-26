@@ -101,22 +101,34 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
 		APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
-		if (auto overlayBrowser = mOverlayBrowser.lock())
+		if (auto overlayBrowserMaterial = mOverlayBrowserMaterial.lock())
 		{
-			if (auto focusChangedBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+			if (overlayBrowserMaterial->isShowOnOverlay())
 			{
-				mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
-				APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
-				mIsNewKeyEvent = true;
+				if (auto overlayBrowser = mOverlayBrowser.lock())
+				{
+					if (auto focusChangedBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+					{
+						mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
+						APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
+						mIsNewKeyEvent = true;
+					}
+				}
 			}
 		}
 	}
 	else if (event.type == ape::Event::Type::BROWSER_MOUSE_CLICK)
 	{
 		APE_LOG_DEBUG("BROWSER_MOUSE_CLICK");
-		if (auto overlayBrowser = mOverlayBrowser.lock())
+		if (auto overlayBrowserMaterial = mOverlayBrowserMaterial.lock())
 		{
-			APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
+			if (overlayBrowserMaterial->isShowOnOverlay())
+			{
+				if (auto overlayBrowser = mOverlayBrowser.lock())
+				{
+					APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
+				}
+			}
 		}
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_CREATE)
@@ -125,99 +137,105 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
-		APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
-		if (auto rayGeometry = mRayGeometry.lock())
+		if (auto overlayBrowserMaterial = mOverlayBrowserMaterial.lock())
 		{
-			auto intersections = rayGeometry->getIntersections();
-			std::list<ape::EntityWeakPtr> intersectionList;
-			std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
-			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size: " << intersectionList.size());
-			bool removeItem = false;
-			std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
-			while (i != intersectionList.end())
+			if (!overlayBrowserMaterial->isShowOnOverlay())
 			{
-				removeItem = false;
-				if (auto entity = i->lock())
+				APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
+				if (auto rayGeometry = mRayGeometry.lock())
 				{
-					std::string entityName = entity->getName();
-					ape::Entity::Type entityType = entity->getType();
-					//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
-					/*if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
-					removeItem = true;
-					else if (entityName.find("coord") != std::string::npos)
-					removeItem = true;
-					else if (entityName.find("cursor") != std::string::npos)
-					removeItem = true;*/
-				}
-				if (removeItem)
-					i = intersectionList.erase(i);
-				else
-					i++;
-			}
-			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size after erase: " << intersectionList.size());
-
-			bool intersectionHandled = false;
-			if (intersectionList.empty())
-			{
-				if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-				{
-					clearNodeSelection();
-					intersectionHandled = true;
-				}
-			}
-			else
-			{
-				APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: -------------------------------------");
-				for (auto intersection : intersectionList)
-				{
-					if (auto entity = intersection.lock())
+					auto intersections = rayGeometry->getIntersections();
+					std::list<ape::EntityWeakPtr> intersectionList;
+					std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
+					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size: " << intersectionList.size());
+					bool removeItem = false;
+					std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
+					while (i != intersectionList.end())
 					{
-						std::string entityName = entity->getName();
-						ape::Entity::Type entityType = entity->getType();
-						APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
-
-						if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
+						removeItem = false;
+						if (auto entity = i->lock())
 						{
-							auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
-							if (auto selectedParentNode = geometry->getParentNode().lock())
-							{
-								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-								if (auto cursorText = mCursorText.lock())
-								{
-									cursorText->setCaption(entityName);
-								}
-								if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-								{
-									if (isNodeSelected(selectedParentNode->getName()))
-										removeNodeSelection(selectedParentNode->getName());
-									else
-										addNodeSelection(selectedParentNode->getName());
-									intersectionHandled = true;
-									break;
-								}
-							}
+							std::string entityName = entity->getName();
+							ape::Entity::Type entityType = entity->getType();
+							//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
+							/*if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
+							removeItem = true;
+							else if (entityName.find("coord") != std::string::npos)
+							removeItem = true;
+							else if (entityName.find("cursor") != std::string::npos)
+							removeItem = true;*/
 						}
-						else if (entityType == ape::Entity::Type::POINT_CLOUD)
+						if (removeItem)
+							i = intersectionList.erase(i);
+						else
+							i++;
+					}
+					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size after erase: " << intersectionList.size());
+
+					bool intersectionHandled = false;
+					if (intersectionList.empty())
+					{
+						if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
 						{
-							auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(entity);
-							if (auto selectedParentNode = pointCloud->getParentNode().lock())
+							clearNodeSelection();
+							intersectionHandled = true;
+						}
+					}
+					else
+					{
+						APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: -------------------------------------");
+						for (auto intersection : intersectionList)
+						{
+							if (auto entity = intersection.lock())
 							{
-								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-								if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
+								std::string entityName = entity->getName();
+								ape::Entity::Type entityType = entity->getType();
+								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
+
+								if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
 								{
-									if (isNodeSelected(selectedParentNode->getName()))
-										removeNodeSelection(selectedParentNode->getName());
-									else
-										addNodeSelection(selectedParentNode->getName());
-									intersectionHandled = true;
-									break;
+									auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
+									if (auto selectedParentNode = geometry->getParentNode().lock())
+									{
+										APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+										if (auto cursorText = mCursorText.lock())
+										{
+											cursorText->setCaption(entityName);
+										}
+										if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
+										{
+											if (isNodeSelected(selectedParentNode->getName()))
+												removeNodeSelection(selectedParentNode->getName());
+											else
+												addNodeSelection(selectedParentNode->getName());
+											intersectionHandled = true;
+											break;
+										}
+									}
+								}
+								else if (entityType == ape::Entity::Type::POINT_CLOUD)
+								{
+									auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(entity);
+									if (auto selectedParentNode = pointCloud->getParentNode().lock())
+									{
+										APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
+										if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
+										{
+											if (isNodeSelected(selectedParentNode->getName()))
+												removeNodeSelection(selectedParentNode->getName());
+											else
+												addNodeSelection(selectedParentNode->getName());
+											intersectionHandled = true;
+											break;
+										}
+									}
 								}
 							}
 						}
 					}
+					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections handled: " << intersectionHandled);
 				}
 			}
-			APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections handled: " << intersectionHandled);
 		}
 	}
 }

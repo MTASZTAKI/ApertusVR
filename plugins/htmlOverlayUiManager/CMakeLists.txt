@@ -20,26 +20,28 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Add all header and cpp files in the directory to the project
+#apeHtmlOverlayUiManagerPlugin
 set (HEADERS
-	apeHtmlOverlayUIPlugin.h
+	apeHtmlOverlayUiManagerPlugin.h
 	)
 
 set (SOURCES 
-	apeHtmlOverlayUIPlugin.cpp
+	apeHtmlOverlayUiManagerPlugin.cpp
 	)
 
-include_directories(
-	
-	
-	
+include_directories(	
 	${RAPIDJSON_INCLUDE_DIR}
 	)
 
-add_library (apeHtmlOverlayUIPlugin SHARED ${SOURCES} ${HEADERS})
+# Add the dinamic library target to the project
+add_library (apeHtmlOverlayUiManagerPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeHtmlOverlayUIPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro apeSceneMakerMacro)
+target_link_libraries (apeHtmlOverlayUiManagerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
 
-set_property (TARGET apeHtmlOverlayUIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET apeHtmlOverlayUIPlugin PROPERTY FOLDER "Plugins")
+# Place target xxx into the specified folder in IDEs supporting it
+set_property (TARGET apeHtmlOverlayUiManagerPlugin PROPERTY FOLDER "Plugins")
+
+
+
+

@@ -309,10 +309,11 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 
 void ape::apeELearningPlugin::keyStringEventCallback(const std::string & keyValue)
 {
-	/*if (keyValue == "r")
+	if (keyValue == "esc")
 	{
-		loadNextRoom();
-	}*/
+		mpApeUserInputMacro->setOverlayBrowserURL("");
+		mpApeUserInputMacro->showOverlayBrowser(false);
+	}
 }
 
 void ape::apeELearningPlugin::Init()
