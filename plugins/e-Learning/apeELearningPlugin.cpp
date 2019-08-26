@@ -116,7 +116,7 @@ void ape::apeELearningPlugin::createHotSpots()
 							material->setPassTexture(texture);
 							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id(), ape::Entity::Type::GEOMETRY_PLANE).lock()))
 							{
-								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * 10, hotspot.get_src_width() * 10), ape::Vector2(1, 1));
+								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height(), hotspot.get_src_width()), ape::Vector2(1, 1));
 								planeGeometry->setParentNode(node);
 								planeGeometry->setMaterial(material);
 							}
@@ -149,7 +149,7 @@ void ape::apeELearningPlugin::createHotSpots()
 void ape::apeELearningPlugin::createOverlayBrowser()
 {
 	mpSceneMakerMacro->makeOverlayBrowser("http://www.apertusvr.org");
-	mpApeUserInputMacro->showOverlayBrowser(false);
+	//mpApeUserInputMacro->showOverlayBrowser(false);
 }
 
 void ape::apeELearningPlugin::loadNextRoom()
@@ -158,7 +158,7 @@ void ape::apeELearningPlugin::loadNextRoom()
 	if (mCurrentRoomID == mRooms.size())
 		mCurrentRoomID = 0;
 	loadRoomTextures();
-	//loadHotSpots();
+	loadHotSpots();
 }
 
 void ape::apeELearningPlugin::loadHotSpots()
@@ -318,11 +318,11 @@ void ape::apeELearningPlugin::Init()
 void ape::apeELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	//createOverlayBrowser();
-	while (!(mSphereGeometryLeft.lock() && mSphereGeometryRight.lock()))
+	while (!mSphereGeometryLeft.lock())
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
+	createOverlayBrowser();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));

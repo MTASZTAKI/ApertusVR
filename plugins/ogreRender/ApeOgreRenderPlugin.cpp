@@ -1424,11 +1424,11 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::A8R8G8B8 || textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::R8G8B8A8)
 						{
 							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 4);
-							APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
+							//APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
 						}
 						else if (textureManual->getParameters().pixelFormat == ape::Texture::PixelFormat::R8G8B8)
 						{
-							APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
+							//APE_LOG_DEBUG("TEXTURE_MANUAL_BUFFER write begin: " << textureManualName);
 							memcpy(texBuf->getCurrentLock().data, textureManual->getBuffer(), textureManual->getParameters().width * textureManual->getParameters().height * 3);
 						}
 						texBuf->unlock();

@@ -26,26 +26,11 @@
           "zOrder": 0,
           "left": 0,
           "top": 0,
-          "width": 960,
+          "width": 1920,
           "height": 1080,
           "cameras": [
             {
               "name": "cameraLeft",
-              "nearClip": 1,
-              "farClip": 10000,
-              "fovY": 45
-            }
-          ]
-        },
-        {
-          "zOrder": 1,
-          "left": 960,
-          "top": 0,
-          "width": 960,
-          "height": 1080,
-          "cameras": [
-            {
-              "name": "cameraRight",
               "nearClip": 1,
               "farClip": 10000,
               "fovY": 45
