@@ -367,68 +367,43 @@ void ape::OISUserInputPlugin::updateViewPoseByKeyBoard()
 	int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGUP])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, +transScalar, 0);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_PGDOWN])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, -transScalar, 0);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_D])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(+transScalar, 0, 0);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(+transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_A])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(-transScalar, 0, 0);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(-transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_W])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, -transScalar);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-
-		//mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -4 ), ape::Node::TransformationSpace::LOCAL);
-		
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -transScalar ), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_S])
 	{
-		mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, +transScalar);
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, +transScalar), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_LEFT])
 	{
-		ape::Quaternion qnorm;
-		qnorm.FromAngleAxis(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
-		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_RIGHT])
 	{
-		ape::Quaternion qnorm;
-		qnorm.FromAngleAxis(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0));
-		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = qnorm * mUserInputMacroPose.userOrientation;
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_UP])
 	{
-		ape::Quaternion qnorm;
-		qnorm.FromAngleAxis(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0));
-		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 	if (mKeyCodeMap[OIS::KeyCode::KC_DOWN])
 	{
-		ape::Quaternion qnorm;
-		qnorm.FromAngleAxis(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0));
-		qnorm.normalise();
-		mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-		mpUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
 	}
 }
 

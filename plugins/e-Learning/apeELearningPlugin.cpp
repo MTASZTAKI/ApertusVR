@@ -20,7 +20,7 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mGameURLResourcePath = std::map<std::string, std::string>();
 	mRooms = std::vector<quicktype::Room>();
-	mUserDeadZone = ape::Vector3(10, 10, 10);
+	mUserDeadZone = ape::Vector3(20, 20, 20);
 	mSphereGeometryLeft = ape::FileGeometryWeakPtr();
 	mSphereGeometryRight = ape::FileGeometryWeakPtr();
 	mCurrentRoomID = -1;
@@ -149,7 +149,7 @@ void ape::apeELearningPlugin::createHotSpots()
 void ape::apeELearningPlugin::createOverlayBrowser()
 {
 	mpSceneMakerMacro->makeOverlayBrowser("http://www.apertusvr.org");
-	//mpApeUserInputMacro->showOverlayBrowser(false);
+	mpApeUserInputMacro->showOverlayBrowser(false);
 }
 
 void ape::apeELearningPlugin::loadNextRoom()
@@ -225,6 +225,14 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	}
 }
 
+void ape::apeELearningPlugin::resetUserNodePosition()
+{
+	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+	{
+		userNode->setPosition(ape::Vector3(0, 0, 0));
+	}
+}
+
 void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::CAMERA_CREATE)
@@ -281,28 +289,30 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 			}
 		}
 	}
-	/*else if (event.type == ape::Event::Type::NODE_POSITION)
+	else if (event.type == ape::Event::Type::NODE_POSITION)
 	{
 		if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 		{
 			if (event.subjectName == userNode->getName())
 			{
 				ape::Vector3 position = userNode->getPosition();
-				if (position.x > mUserDeadZone.x)
+				APE_LOG_DEBUG("position.length()" << position.length() << " mUserDeadZone.length()" << mUserDeadZone.length());
+				if (position.length() > mUserDeadZone.length())
 				{
-					;
+					loadNextRoom();
+					resetUserNodePosition();
 				}
 			}
 		}
-	}*/
+	}
 }
 
 void ape::apeELearningPlugin::keyStringEventCallback(const std::string & keyValue)
 {
-	if (keyValue == "r")
+	/*if (keyValue == "r")
 	{
 		loadNextRoom();
-	}
+	}*/
 }
 
 void ape::apeELearningPlugin::Init()
@@ -323,6 +333,7 @@ void ape::apeELearningPlugin::Run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 	createOverlayBrowser();
+	loadNextRoom();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));

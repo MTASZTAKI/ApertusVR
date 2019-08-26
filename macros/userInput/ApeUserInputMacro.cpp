@@ -60,7 +60,7 @@ ape::UserInputMacro::UserInputMacro()
 	mIsNewKeyEvent = false;
 	mEnableOverlayBrowserKeyEvents = false;
 	mIsLockHeadNodePosition = false;
-	mIsLocUserNodePosition = false;
+	mIsLockUserNodePosition = false;
 	mKeyStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -228,7 +228,7 @@ void ape::UserInputMacro::updateViewPose(ViewPose pose)
 	{
 		if (auto userNode = mUserNode.lock())
 		{
-			if (!mIsLocUserNodePosition)
+			if (!mIsLockUserNodePosition)
 			{
 				userNode->setPosition(pose.userPosition);
 			}
@@ -252,7 +252,7 @@ void ape::UserInputMacro::setHeadNodePositionLock(bool lock)
 
 void ape::UserInputMacro::setUserNodePositionLock(bool lock)
 {
-	mIsLocUserNodePosition = lock;
+	mIsLockUserNodePosition = lock;
 }
 
 bool ape::UserInputMacro::getHeadNodePositionLock()
@@ -262,7 +262,7 @@ bool ape::UserInputMacro::getHeadNodePositionLock()
 
 bool ape::UserInputMacro::getUserNodePositionLock()
 {
-	return mIsLocUserNodePosition;
+	return mIsLockUserNodePosition;
 }
 
 void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)

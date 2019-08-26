@@ -96,6 +96,8 @@ namespace ape
 
 		void loadRoomTextures();
 
+		void resetUserNodePosition();
+
 		void eventCallBack(const ape::Event& event);
 
 		void keyStringEventCallback(const std::string& keyValue);

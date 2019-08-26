@@ -183,7 +183,7 @@ namespace ape
 
 		bool mIsLockHeadNodePosition;
 
-		bool mIsLocUserNodePosition;
+		bool mIsLockUserNodePosition;
 
 		std::vector<std::function<void(const std::string&)>> mKeyStringFunctions;
 
