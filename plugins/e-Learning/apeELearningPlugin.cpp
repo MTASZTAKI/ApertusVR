@@ -60,11 +60,9 @@ void ape::apeELearningPlugin::createRoomTextures()
 			material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
 			material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			auto pos = mRooms[0].get_texture().find_last_of("_") + 1;
-			std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[0].get_texture().substr(0, pos) + "Top.jpg";
 			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 				material->setPassTexture(texture);
 				//material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
 				//material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
@@ -81,7 +79,7 @@ void ape::apeELearningPlugin::createRoomTextures()
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
 				material->setPassTexture(texture);
 				//material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
 				//material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
@@ -204,11 +202,11 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
 		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.jpg";
+		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
 		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Texture").lock()))
 		{
 			int width, height, channels;
-			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb);
+			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 			if (rgb_image)
 			{
 				texture->setBuffer(rgb_image);
@@ -219,11 +217,11 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	if (auto sphereGeometryRight = mSphereGeometryRight.lock())
 	{
 		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.jpg";
+		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
 		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Texture").lock()))
 		{
 			int width, height, channels;
-			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb);
+			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 			if (rgb_image)
 			{
 				texture->setBuffer(rgb_image);
