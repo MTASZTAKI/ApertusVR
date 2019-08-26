@@ -147,7 +147,7 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 		browserMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
 			browserMaterial->setPassTexture(browserTexture);
 			browserMaterial->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
 			browserMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);

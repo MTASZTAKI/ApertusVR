@@ -75,7 +75,7 @@ void ape::apeOculusDK2Plugin::Init()
 		fileMaterialLeftEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET);
+			manualTexture->setParameters(recommendedTex0Size.w, recommendedTex0Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET, true, true);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureLeftEye = manualTexture;
 		}
@@ -85,7 +85,7 @@ void ape::apeOculusDK2Plugin::Init()
 		fileMaterialRightEye = fileMaterial;
 		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("RiftRenderTextureRight", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET);
+			manualTexture->setParameters(recommendedTex1Size.w, recommendedTex1Size.h, ape::Texture::PixelFormat::R8G8B8, ape::Texture::Usage::RENDERTARGET, true, true);
 			fileMaterial->setPassTexture(manualTexture);
 			manualTextureRightEye = manualTexture;
 		}

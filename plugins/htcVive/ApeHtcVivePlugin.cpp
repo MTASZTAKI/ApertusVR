@@ -151,12 +151,12 @@ void ape::apeHtcVivePlugin::Init()
 
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true);
 		mManualTextureLeftEye = manualTexture;
 	}
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", ape::Entity::TEXTURE_MANUAL).lock()))
 	{
-		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET);
+		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true);
 		mManualTextureRightEye = manualTexture;
 	}
 	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");

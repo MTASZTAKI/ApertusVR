@@ -38,7 +38,7 @@ namespace ape
 
 		~ManualTextureImpl();
 
-		void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage) override;
+		void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa) override;
 
 		ape::ManualTextureParameters getParameters() override;
 

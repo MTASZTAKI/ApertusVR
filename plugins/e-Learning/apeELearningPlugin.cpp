@@ -62,10 +62,8 @@ void ape::apeELearningPlugin::createRoomTextures()
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
 				material->setPassTexture(texture);
-				//material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
-				//material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 				sphereGeometryLeft->setMaterial(material);
 			}
 		}
@@ -79,10 +77,8 @@ void ape::apeELearningPlugin::createRoomTextures()
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
 				material->setPassTexture(texture);
-				//material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
-				//material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 				sphereGeometryRight->setMaterial(material);
 			}
 		}
@@ -118,8 +114,6 @@ void ape::apeELearningPlugin::createHotSpots()
 						{
 							texture->setFileName(textureFileName);
 							material->setPassTexture(texture);
-							//material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
-							//material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id(), ape::Entity::Type::GEOMETRY_PLANE).lock()))
 							{
 								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * 10, hotspot.get_src_width() * 10), ape::Vector2(1, 1));
@@ -279,8 +273,6 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
 									mpApeUserInputMacro->setOverlayBrowserURL(mGameURLResourcePath[it->second.get_gameurl()]);
 									mpApeUserInputMacro->showOverlayBrowser(true);
-									//mpSceneMakerMacro->makeOverlayBrowser("https://www.youtube.com/embed/eVV5tUmky6c?vq=hd480&autoplay=1&loop=1&playlist=eVV5tUmky6c");
-									//mpSceneMakerMacro->makeOverlayBrowser(mGameURLResourcePath[it->second.get_gameurl()]);
 								}
 							}
 						}

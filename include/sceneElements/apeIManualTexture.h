@@ -39,6 +39,8 @@ namespace ape
 		unsigned int width;
 		ape::Texture::PixelFormat pixelFormat;
 		ape::Texture::Usage usage;
+		bool gammaCorrection;
+		bool useFsaa;
 
 		ManualTextureParameters()
 		{
@@ -46,14 +48,18 @@ namespace ape
 			this->width = 0;
 			pixelFormat = ape::Texture::PixelFormat::PF_INVALID;
 			usage = ape::Texture::Usage::U_INVALID;
+			this->gammaCorrection = false;
+			this->useFsaa = false;
 		}
 
-		ManualTextureParameters(unsigned int height, unsigned int width, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage)
+		ManualTextureParameters(unsigned int height, unsigned int width, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa)
 		{
 			this->height = height;
 			this->width = width;
 			this->pixelFormat = pixelFormat;
 			this->usage = usage;
+			this->gammaCorrection = gammaCorrection;
+			this->useFsaa = useFsaa;
 		}
 	};
 
@@ -65,7 +71,7 @@ namespace ape
 		virtual ~IManualTexture() {};
 
 	public:
-		virtual void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage) = 0;
+		virtual void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa) = 0;
 
 		virtual ape::ManualTextureParameters getParameters() = 0;
 

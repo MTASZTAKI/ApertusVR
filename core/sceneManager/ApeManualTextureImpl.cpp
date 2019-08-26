@@ -38,12 +38,14 @@ ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage)
+void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa)
 {
 	mParameters.width = width;
 	mParameters.height = height;
 	mParameters.pixelFormat = pixelFormat;
 	mParameters.usage = usage;
+	mParameters.gammaCorrection = gammaCorrection;
+	mParameters.useFsaa = useFsaa;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
