@@ -61,7 +61,12 @@ ape::UserInputMacro::UserInputMacro()
 	mEnableOverlayBrowserKeyEvents = false;
 	mIsLockHeadNodePosition = false;
 	mIsLockUserNodePosition = false;
-	mKeyStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mKeyPressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mKeyReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mMousePressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mMouseReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&)>>();
+	mMouseScrolledFunctions = std::vector<std::function<void(const int&)>>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -479,19 +484,128 @@ void ape::UserInputMacro::clearNodeSelection()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::UserInputMacro::keyStringValue(std::string  keyStringValue)
+void ape::UserInputMacro::mouseMovedValue(ape::Vector2 mouseMovedValue)
 {
-	mKeyStringValue = keyStringValue;
-	auto functionList = mKeyStringFunctions;
+	auto functionList = mMouseMovedFunctions;
 	for (auto it : functionList)
 	{
-		it(mKeyStringValue);
+		it(mouseMovedValue);
 	}
 }
 
-void ape::UserInputMacro::registerCallbackForKeyStringValue(std::function<void(const std::string&)> callback)
+void ape::UserInputMacro::mouseScrolledValue(int mouseScrolledValue)
 {
-	mKeyStringFunctions.push_back(callback);
+	auto functionList = mMouseScrolledFunctions;
+	for (auto it : functionList)
+	{
+		it(mouseScrolledValue);
+	}
+}
+
+void ape::UserInputMacro::mousePressedStringValue(std::string mousePressedStringValue)
+{
+	auto functionList = mMousePressedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(mousePressedStringValue);
+	}
+}
+
+void ape::UserInputMacro::mouseReleasedStringValue(std::string mouseReleasedStringValue)
+{
+	auto functionList = mMouseReleasedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(mouseReleasedStringValue);
+	}
+}
+
+void ape::UserInputMacro::keyReleasedStringValue(std::string keyReleasedStringValue)
+{
+	auto functionList = mKeyReleasedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(keyReleasedStringValue);
+	}
+}
+
+void ape::UserInputMacro::keyPressedStringValue(std::string keyPressedStringValue)
+{
+	mKeyStringValue = keyPressedStringValue;
+	auto functionList = mKeyPressedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(keyPressedStringValue);
+	}
+	//std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
+	//if (e.key == OIS::KeyCode::KC_BACK)
+	//	keyAsWString = 8;
+	//else if (e.key == OIS::KeyCode::KC_TAB)
+	//	keyAsWString = 9;
+	//else if (e.key == OIS::KeyCode::KC_RETURN)
+	//	keyAsWString = 13;
+	//else if (e.key == OIS::KeyCode::KC_LSHIFT || e.key == OIS::KeyCode::KC_RSHIFT)
+	//	keyAsWString = 14;
+	//else if (e.key == OIS::KeyCode::KC_SPACE)
+	//	keyAsWString = 32;
+	//else if (e.key == OIS::KeyCode::KC_END)
+	//	keyAsWString = 35;
+	//else if (e.key == OIS::KeyCode::KC_HOME)
+	//	keyAsWString = 36;
+	//else if (e.key == OIS::KeyCode::KC_LEFT)
+	//	keyAsWString = 37;
+	//else if (e.key == OIS::KeyCode::KC_UP)
+	//	keyAsWString = 38;
+	//else if (e.key == OIS::KeyCode::KC_RIGHT)
+	//	keyAsWString = 39;
+	//else if (e.key == OIS::KeyCode::KC_DOWN)
+	//	keyAsWString = 40;
+	//else if (e.key == OIS::KeyCode::KC_DELETE)
+	//	keyAsWString = 46;
+	//else if (e.key == OIS::KeyCode::KC_PERIOD)
+	//	keyAsWString = 1046;
+
+	//	mIsNewKeyEvent = false;
+	//	overlayBrowser->keyASCIIValue(keyAsWString[0]);
+
+	//	APE_LOG_TRACE("Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent);
+	//	while (!mIsNewKeyEvent)
+	//	{
+	//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	//	}
+	//	mIsNewKeyEvent = false;
+	//	APE_LOG_TRACE("After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
+	//}
+}
+
+void ape::UserInputMacro::registerCallbackForKeyPressedStringValue(std::function<void(const std::string&)> callback)
+{
+	mKeyPressedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForKeyReleasedStringValue(std::function<void(const std::string&)> callback)
+{
+	mKeyReleasedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForMouseReleasedStringValue(std::function<void(const std::string&)> callback)
+{
+	mMouseReleasedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForMousePressedStringValue(std::function<void(const std::string&)> callback)
+{
+	mMouseReleasedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&)> callback)
+{
+	mMouseMovedFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForMouseScrolledValue(std::function<void(const int&)> callback)
+{
+	mMouseScrolledFunctions.push_back(callback);
 }
 
 void ape::UserInputMacro::updateSelectedNodePose(Pose pose)

@@ -185,7 +185,17 @@ namespace ape
 
 		bool mIsLockUserNodePosition;
 
-		std::vector<std::function<void(const std::string&)>> mKeyStringFunctions;
+		std::vector<std::function<void(const std::string&)>> mKeyPressedStringFunctions;
+
+		std::vector<std::function<void(const std::string&)>> mKeyReleasedStringFunctions;
+
+		std::vector<std::function<void(const std::string&)>> mMousePressedStringFunctions;
+
+		std::vector<std::function<void(const std::string&)>> mMouseReleasedStringFunctions;
+
+		std::vector<std::function<void(const ape::Vector2&)>> mMouseMovedFunctions;
+
+		std::vector<std::function<void(const int&)>> mMouseScrolledFunctions;
 
 	public:
 		static UserInputMacro* getSingletonPtr()
@@ -233,9 +243,29 @@ namespace ape
 
 		void clearNodeSelection();
 
-		void keyStringValue(std::string keyStringValue);
+		void keyPressedStringValue(std::string keyPressedStringValue);
 
-		void registerCallbackForKeyStringValue(std::function<void(const std::string&)> callback);
+		void keyReleasedStringValue(std::string keyReleasedStringValue);
+
+		void mousePressedStringValue(std::string mousePressedStringValue);
+
+		void mouseReleasedStringValue(std::string mouseReleasedStringValue);
+
+		void mouseMovedValue(ape::Vector2 mouseMovedValue);
+
+		void mouseScrolledValue(int mouseSrcolledValue);
+
+		void registerCallbackForKeyPressedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForKeyReleasedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForMousePressedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForMouseReleasedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&)> callback);
+
+		void registerCallbackForMouseScrolledValue(std::function<void(const int&)> callback);
 
 		void updateSelectedNodePose(Pose pose);
 

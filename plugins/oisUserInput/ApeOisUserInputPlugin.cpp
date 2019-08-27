@@ -12,8 +12,6 @@ ape::OISUserInputPlugin::OISUserInputPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&OISUserInputPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mKeyCodeMap = std::map<OIS::KeyCode, bool>();
-	mIsKeyPressed = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -57,7 +55,7 @@ void ape::OISUserInputPlugin::Init()
 		mpKeyboard = keyboard;
 		mpKeyboard->setEventCallback(this);
 	}
-	else if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
+	if (inputManager->getNumberOfDevices(OIS::OISMouse) > 0)
 	{
 		OIS::Mouse* mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 		mpMouse = mouse;
@@ -71,74 +69,55 @@ void ape::OISUserInputPlugin::Init()
 
 bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 {
-	APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
-	mKeyCodeMap[e.key] = true;
+	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
-	//if (!mKeyCodeMap[OIS::KeyCode::KC_LSHIFT] && !mKeyCodeMap[OIS::KeyCode::KC_RSHIFT])
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	APE_LOG_DEBUG("keyAsString:" << keyAsString);
-	mpUserInputMacro->keyStringValue(keyAsString);
-	//TODO_OISUserInputPlugin
-	//std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
-	//if (e.key == OIS::KeyCode::KC_BACK)
-	//	keyAsWString = 8;
-	//else if (e.key == OIS::KeyCode::KC_TAB)
-	//	keyAsWString = 9;
-	//else if (e.key == OIS::KeyCode::KC_RETURN)
-	//	keyAsWString = 13;
-	//else if (e.key == OIS::KeyCode::KC_LSHIFT || e.key == OIS::KeyCode::KC_RSHIFT)
-	//	keyAsWString = 14;
-	//else if (e.key == OIS::KeyCode::KC_SPACE)
-	//	keyAsWString = 32;
-	//else if (e.key == OIS::KeyCode::KC_END)
-	//	keyAsWString = 35;
-	//else if (e.key == OIS::KeyCode::KC_HOME)
-	//	keyAsWString = 36;
-	//else if (e.key == OIS::KeyCode::KC_LEFT)
-	//	keyAsWString = 37;
-	//else if (e.key == OIS::KeyCode::KC_UP)
-	//	keyAsWString = 38;
-	//else if (e.key == OIS::KeyCode::KC_RIGHT)
-	//	keyAsWString = 39;
-	//else if (e.key == OIS::KeyCode::KC_DOWN)
-	//	keyAsWString = 40;
-	//else if (e.key == OIS::KeyCode::KC_DELETE)
-	//	keyAsWString = 46;
-	//else if (e.key == OIS::KeyCode::KC_PERIOD)
-	//	keyAsWString = 1046;
-
-	//	mIsNewKeyEvent = false;
-	//	overlayBrowser->keyASCIIValue(keyAsWString[0]);
-
-	//	APE_LOG_TRACE("Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent);
-	//	while (!mIsNewKeyEvent)
-	//	{
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	//	}
-	//	mIsNewKeyEvent = false;
-	//	APE_LOG_TRACE("After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
-	//}
+	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	mpUserInputMacro->keyPressedStringValue(keyAsString);
 	return true;
 }
 
 bool ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 {
-	mKeyCodeMap[e.key] = false;
+	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
+	std::string keyAsString = mpKeyboard->getAsString(e.key);
+	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
+	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	mpUserInputMacro->keyReleasedStringValue(keyAsString);
 	return true;
 }
 
 bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
+	ape::Vector2 pos = ape::Vector2(e.state.X.rel, e.state.Y.rel);
+	mpUserInputMacro->mouseMovedValue(pos);
+	mpUserInputMacro->mouseScrolledValue(e.state.Z.rel);
 	return true;
 }
 
 bool ape::OISUserInputPlugin::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	std::string mouseAsString;
+	if (id == OIS::MouseButtonID::MB_Left)
+		mouseAsString = "left";
+	else if (id == OIS::MouseButtonID::MB_Right)
+		mouseAsString = "right";
+	else if (id == OIS::MouseButtonID::MB_Middle)
+		mouseAsString = "middle";
+	mpUserInputMacro->mousePressedStringValue(mouseAsString);
 	return true;
 }
 
 bool ape::OISUserInputPlugin::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+	std::string mouseAsString;
+	if (id == OIS::MouseButtonID::MB_Left)
+		mouseAsString = "left";
+	else if (id == OIS::MouseButtonID::MB_Right)
+		mouseAsString = "right";
+	else if (id == OIS::MouseButtonID::MB_Middle)
+		mouseAsString = "middle";
+	mpUserInputMacro->mouseReleasedStringValue(mouseAsString);
 	return true;
 }
 

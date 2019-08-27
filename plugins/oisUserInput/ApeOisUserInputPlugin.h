@@ -70,19 +70,6 @@ namespace ape
 		bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id) override;
 
 	private:
-		struct MouseState
-		{
-			OIS::MouseState posStart;
-			OIS::MouseState posEnd;
-			OIS::MouseState posPrevious;
-			OIS::MouseState posCurrent;
-			std::map<OIS::MouseButtonID, bool> buttonDownMap;
-			bool isDragModeLeft = false;
-			bool isDragModeMiddle = false;
-			bool isDragModeRight = false;
-			bool isMouseMoved = false;
-			int scrollVelocity = 0;
-		};
 
 		OIS::Keyboard* mpKeyboard; 
 
@@ -95,12 +82,6 @@ namespace ape
 		ape::ICoreConfig* mpCoreConfig;
 
 		ape::IEventManager* mpEventManager;
-
-		std::map<OIS::KeyCode, bool> mKeyCodeMap;
-
-		MouseState mMouseState;
-
-		bool mIsKeyPressed;
 
 		void eventCallBack(const ape::Event& event);
 	};

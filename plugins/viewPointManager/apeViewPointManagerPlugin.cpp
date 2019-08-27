@@ -17,6 +17,10 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	mGeneralSpeedFactor = 0;
 	mViewPoses = std::vector<ape::UserInputMacro::ViewPose>();
 	mViewPosesToggleIndex = 0;
+	mIsKeyReleased = false;
+	mIsMouseReleased = false;
+	mMouseMovedValue = ape::Vector2();
+	mMouseScrolledValue = 0;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -27,8 +31,9 @@ ape::ViewPointManagerPlugin::~ViewPointManagerPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ViewPointManagerPlugin::keyStringEventCallback(const std::string& keyValue)
+void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::string& keyValue)
 {
+	mIsKeyReleased = false;
 	if (keyValue == "r")
 	{
 		mpUserInputMacro->saveViewPose();
@@ -44,13 +49,35 @@ void ape::ViewPointManagerPlugin::keyStringEventCallback(const std::string& keyV
 		toggleViewPoses(true);
 		return;
 	}
-	else if (keyValue == "space")
-	{
-		mGeneralSpeedFactor = 2;
-		return;
-	}
-	updateViewPoseByKeyBoard(keyValue);
-	//updateViewPoseByMouse();
+	std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
+	updateViewPoseByKeyBoardThread.detach();
+}
+
+void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
+{
+	mIsKeyReleased = true;
+}
+
+void ape::ViewPointManagerPlugin::mousePressedStringEventCallback(const std::string & mouseValue)
+{
+	mIsMouseReleased = false;
+	std::thread updateViewPoseByMouseThread(&ViewPointManagerPlugin::updateViewPoseByMouse, this, mouseValue);
+	updateViewPoseByMouseThread.detach();
+}
+
+void ape::ViewPointManagerPlugin::mouseReleasedStringEventCallback(const std::string & mouseValue)
+{
+	mIsMouseReleased = true;
+}
+
+void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2 & mouseValue)
+{
+	mMouseMovedValue = mouseValue;
+}
+
+void ape::ViewPointManagerPlugin::mouseScrolledEventCallback(const int & mouseValue)
+{
+	mMouseScrolledValue = mouseValue;
 }
 
 void ape::ViewPointManagerPlugin::eventCallBack(const ape::Event& event)
@@ -62,7 +89,12 @@ void ape::ViewPointManagerPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-	mpUserInputMacro->registerCallbackForKeyStringValue(std::bind(&ViewPointManagerPlugin::keyStringEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&ViewPointManagerPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForKeyReleasedStringValue(std::bind(&ViewPointManagerPlugin::keyReleasedStringEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&ViewPointManagerPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&ViewPointManagerPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&ViewPointManagerPlugin::mouseMovedEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&ViewPointManagerPlugin::mouseScrolledEventCallback, this, std::placeholders::_1));
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
 	FILE* apeOisUserInputConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -131,89 +163,72 @@ void ape::ViewPointManagerPlugin::toggleViewPoses(bool isInterpolated)
 
 void ape::ViewPointManagerPlugin::updateViewPoseByKeyBoard(const std::string& keyValue)
 {
-	if (keyValue == "space")
+	while (!mIsKeyReleased)
 	{
-		mGeneralSpeedFactor += 3;
-	}
-	int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
-	if (keyValue == "pgup")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "pgdown")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "d")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(+transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "a")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(-transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "w")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -transScalar ), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "s")
-	{
-		mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, +transScalar), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "left")
-	{
-		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-	}
-	if (keyValue == "right")
-	{
-		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-	}
-	if (keyValue == "up")
-	{
-		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
-	}
-	if (keyValue == "down")
-	{
-		mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		if (keyValue == "space")
+		{
+			mGeneralSpeedFactor += 3;
+		}
+		int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
+		if (keyValue == "pgup")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "pgdown")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "d")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(+transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "a")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(-transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "w")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -transScalar), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "s")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, +transScalar), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "left")
+		{
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+		}
+		if (keyValue == "right")
+		{
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+		}
+		if (keyValue == "up")
+		{
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (keyValue == "down")
+		{
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }
 
-void ape::ViewPointManagerPlugin::updateViewPoseByMouse()
+void ape::ViewPointManagerPlugin::updateViewPoseByMouse(const std::string& mouseValue)
 {
-//	if (mMouseState.isMouseMoved)
-//	{
-//		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Right] && mMouseState.isDragModeRight)
-//		{
-//			ape::Quaternion qnorm;
-//			qnorm.FromAngleAxis(ape::Degree(-mMouseState.posCurrent.Y.rel).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(1, 0, 0));
-//			qnorm.normalise();
-//			mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-//			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-//			qnorm.FromAngleAxis(ape::Degree(-mMouseState.posCurrent.X.rel).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(0, 1, 0));
-//			qnorm.normalise();
-//			mUserInputMacroPose.userOrientation = mUserInputMacroPose.userOrientation * qnorm;
-//			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-//		}
-//		if (mMouseState.buttonDownMap[OIS::MouseButtonID::MB_Middle] && mMouseState.isDragModeMiddle)
-//		{
-//			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(1, 0, 0) * -(mMouseState.posCurrent.X.rel * mTranslateSpeedFactorMouse);
-//			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-//			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 1, 0) * +(mMouseState.posCurrent.Y.rel * mTranslateSpeedFactorMouse);
-//			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-//		}
-//		if (mMouseState.scrollVelocity != 0)
-//		{
-//			APE_LOG_TRACE("z: " << mMouseState.scrollVelocity);
-//			int transScalar = (mMouseState.scrollVelocity / 3) * mTranslateSpeedFactorMouse;
-//			if (transScalar < 0)
-//				transScalar -= mGeneralSpeedFactor;
-//			if (transScalar > 0)
-//				transScalar += mGeneralSpeedFactor;
-//			mUserInputMacroPose.userPosition += mUserInputMacroPose.userOrientation * ape::Vector3(0, 0, -transScalar);
-//			mpUserInputMacro->updateViewPose(mUserInputMacroPose);
-//		}
-//		mMouseState.isMouseMoved = false;
-//	}
+	while (!mIsMouseReleased)
+	{
+		if (mouseValue == "right")
+		{
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mMouseMovedValue.x), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::LOCAL);
+			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mMouseMovedValue.y), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (mouseValue == "middle")
+		{
+			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -mMouseScrolledValue), ape::Node::TransformationSpace::LOCAL);;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 }
 
 void ape::ViewPointManagerPlugin::Run()

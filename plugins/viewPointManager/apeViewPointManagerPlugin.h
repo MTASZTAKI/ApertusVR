@@ -46,7 +46,17 @@ namespace ape
 
 		~ViewPointManagerPlugin();
 
-		void keyStringEventCallback(const std::string& keyValue);
+		void keyPressedStringEventCallback(const std::string& keyValue);
+
+		void keyReleasedStringEventCallback(const std::string& keyValue);
+
+		void mousePressedStringEventCallback(const std::string& mouseValue);
+
+		void mouseReleasedStringEventCallback(const std::string& mouseValue);
+
+		void mouseMovedEventCallback(const ape::Vector2& mouseValue);
+
+		void mouseScrolledEventCallback(const int& mouseValue);
 
 		void Init() override;
 
@@ -81,13 +91,21 @@ namespace ape
 
 		float mGeneralSpeedFactor;
 
+		bool mIsKeyReleased;
+
+		bool mIsMouseReleased;
+
+		ape::Vector2 mMouseMovedValue;
+
+		int mMouseScrolledValue;
+
 		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
 		void updateViewPoseByKeyBoard(const std::string& keyValue);
 
-		void updateViewPoseByMouse();
+		void updateViewPoseByMouse(const std::string& mouseValue);
 
 		void toggleViewPoses(bool isInterpolated);
 

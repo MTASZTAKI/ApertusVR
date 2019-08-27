@@ -100,7 +100,7 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		void keyStringEventCallback(const std::string& keyValue);
+		void keyPressedStringEventCallback(const std::string& keyValue);
 
 		void Init() override;
 

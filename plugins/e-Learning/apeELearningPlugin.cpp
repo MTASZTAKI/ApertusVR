@@ -307,7 +307,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 	}
 }
 
-void ape::apeELearningPlugin::keyStringEventCallback(const std::string & keyValue)
+void ape::apeELearningPlugin::keyPressedStringEventCallback(const std::string & keyValue)
 {
 	if (keyValue == "esc")
 	{
@@ -320,7 +320,7 @@ void ape::apeELearningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mpApeUserInputMacro->registerCallbackForKeyStringValue(std::bind(&apeELearningPlugin::keyStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&apeELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	createHotSpots();
 	createRoomTextures();
 	APE_LOG_FUNC_LEAVE();
