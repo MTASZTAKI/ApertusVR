@@ -72,7 +72,7 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	APE_LOG_DEBUG("keyAsString:" << keyAsString);
 	mpUserInputMacro->keyPressedStringValue(keyAsString);
 	return true;
 }
@@ -82,15 +82,16 @@ bool ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	APE_LOG_DEBUG("keyAsString:" << keyAsString);
 	mpUserInputMacro->keyReleasedStringValue(keyAsString);
 	return true;
 }
 
 bool ape::OISUserInputPlugin::mouseMoved(const OIS::MouseEvent& e)
 {
-	ape::Vector2 pos = ape::Vector2(e.state.X.rel, e.state.Y.rel);
-	mpUserInputMacro->mouseMovedValue(pos);
+	ape::Vector2 posRel = ape::Vector2(e.state.X.rel, e.state.Y.rel);
+	ape::Vector2 posAbs = ape::Vector2(e.state.X.abs, e.state.Y.abs);
+	mpUserInputMacro->mouseMovedValue(posRel, posAbs);
 	mpUserInputMacro->mouseScrolledValue(e.state.Z.rel);
 	return true;
 }

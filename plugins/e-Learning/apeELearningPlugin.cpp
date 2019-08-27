@@ -20,10 +20,11 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mGameURLResourcePath = std::map<std::string, std::string>();
 	mRooms = std::vector<quicktype::Room>();
-	mUserDeadZone = ape::Vector3(20, 20, 20);
+	mUserDeadZone = ape::Vector3(30, 30, 30);
 	mSphereGeometryLeft = ape::FileGeometryWeakPtr();
 	mSphereGeometryRight = ape::FileGeometryWeakPtr();
 	mCurrentRoomID = -1;
+	mMouseMovedValueAbs = ape::Vector2();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -110,11 +111,11 @@ void ape::apeELearningPlugin::createHotSpots()
 						std::string textureFileName;
 						auto pos = hotspot.get_textures()[0].find("/") + 1;
 						textureFileName = hotspot.get_textures()[0].substr(pos);
-						if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(textureFileName, ape::Entity::TEXTURE_FILE).lock()))
+						if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
 						{
 							texture->setFileName(textureFileName);
 							material->setPassTexture(texture);
-							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id(), ape::Entity::Type::GEOMETRY_PLANE).lock()))
+							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE).lock()))
 							{
 								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height(), hotspot.get_src_width()), ape::Vector2(1, 1));
 								planeGeometry->setParentNode(node);
@@ -225,11 +226,13 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	}
 }
 
-void ape::apeELearningPlugin::resetUserNodePosition()
+void ape::apeELearningPlugin::resetUserNodePose()
 {
 	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
 		userNode->setPosition(ape::Vector3(0, 0, 0));
+		userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+		APE_LOG_DEBUG("resetUserNodePose");
 	}
 }
 
@@ -276,7 +279,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 							std::map<std::string, quicktype::Hotspot>::iterator it;
 							for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
 							{
-								if (clickedNode->getName() == it->first)
+								if (clickedNode->getName() == it->first && clickedNode->getChildrenVisibility())
 								{
 									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
 									mpApeUserInputMacro->setOverlayBrowserURL(mGameURLResourcePath[it->second.get_gameurl()]);
@@ -300,7 +303,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 				if (position.length() > mUserDeadZone.length())
 				{
 					loadNextRoom();
-					resetUserNodePosition();
+					resetUserNodePose();
 				}
 			}
 		}
@@ -316,11 +319,26 @@ void ape::apeELearningPlugin::keyPressedStringEventCallback(const std::string & 
 	}
 }
 
+void ape::apeELearningPlugin::mousePressedStringEventCallback(const std::string & keyValue)
+{
+	if (keyValue == "left")
+	{
+		mpApeUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
+	}
+}
+
+void ape::apeELearningPlugin::mouseMovedCallback(const ape::Vector2 & mouseMovedValueRel, const ape::Vector2 & mouseMovedValueAbs)
+{
+	mMouseMovedValueAbs = mouseMovedValueAbs;
+}
+
 void ape::apeELearningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&apeELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&apeELearningPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&apeELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
 	createHotSpots();
 	createRoomTextures();
 	APE_LOG_FUNC_LEAVE();

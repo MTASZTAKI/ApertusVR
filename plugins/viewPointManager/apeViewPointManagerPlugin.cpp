@@ -19,7 +19,7 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	mViewPosesToggleIndex = 0;
 	mIsKeyReleased = false;
 	mIsMouseReleased = false;
-	mMouseMovedValue = ape::Vector2();
+	mMouseMovedRelValue = ape::Vector2();
 	mMouseScrolledValue = 0;
 	APE_LOG_FUNC_LEAVE();
 }
@@ -33,6 +33,7 @@ ape::ViewPointManagerPlugin::~ViewPointManagerPlugin()
 
 void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::string& keyValue)
 {
+	APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 	mIsKeyReleased = false;
 	if (keyValue == "r")
 	{
@@ -51,7 +52,6 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 	}
 	std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
 	updateViewPoseByKeyBoardThread.detach();
-	APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 }
 
 void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
@@ -74,9 +74,9 @@ void ape::ViewPointManagerPlugin::mouseReleasedStringEventCallback(const std::st
 	//APE_LOG_DEBUG("mouseReleasedStringEventCallback: " << mouseValue);
 }
 
-void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2 & mouseValue)
+void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2& mouseValueRel, const ape::Vector2& mouseValueAbs)
 {
-	mMouseMovedValue = mouseValue;
+	mMouseMovedRelValue = mouseValueRel;
 }
 
 void ape::ViewPointManagerPlugin::mouseScrolledEventCallback(const int & mouseValue)
@@ -97,7 +97,7 @@ void ape::ViewPointManagerPlugin::Init()
 	mpUserInputMacro->registerCallbackForKeyReleasedStringValue(std::bind(&ViewPointManagerPlugin::keyReleasedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&ViewPointManagerPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&ViewPointManagerPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
-	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&ViewPointManagerPlugin::mouseMovedEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&ViewPointManagerPlugin::mouseMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2));
 	mpUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&ViewPointManagerPlugin::mouseScrolledEventCallback, this, std::placeholders::_1));
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
@@ -229,8 +229,8 @@ void ape::ViewPointManagerPlugin::updateViewPoseByMouse(const std::string& mouse
 		{
 			if (mouseValue == "right")
 			{
-				userNode->rotate(ape::Degree(-mMouseMovedValue.x).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-				userNode->rotate(ape::Degree(-mMouseMovedValue.y).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+				userNode->rotate(ape::Degree(-mMouseMovedRelValue.x).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+				userNode->rotate(ape::Degree(-mMouseMovedRelValue.y).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));

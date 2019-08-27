@@ -54,7 +54,7 @@ namespace ape
 
 		void mouseReleasedStringEventCallback(const std::string& mouseValue);
 
-		void mouseMovedEventCallback(const ape::Vector2& mouseValue);
+		void mouseMovedEventCallback(const ape::Vector2& mouseValueRel, const ape::Vector2& mouseValueAbs);
 
 		void mouseScrolledEventCallback(const int& mouseValue);
 
@@ -95,7 +95,7 @@ namespace ape
 
 		bool mIsMouseReleased;
 
-		ape::Vector2 mMouseMovedValue;
+		ape::Vector2 mMouseMovedRelValue;
 
 		int mMouseScrolledValue;
 

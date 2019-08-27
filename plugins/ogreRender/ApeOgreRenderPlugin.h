@@ -56,6 +56,7 @@ SOFTWARE.*/
 #include "sceneelements/apeITextGeometry.h"
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIFileTexture.h"
 #include "sceneelements/apeIUnitTexture.h"
 #include "sceneelements/apeIWater.h"
 #include "macros/userInput/apeUserInputMacro.h"

@@ -65,7 +65,7 @@ ape::UserInputMacro::UserInputMacro()
 	mKeyReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mMousePressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mMouseReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
-	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&)>>();
+	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&, const ape::Vector2&)>>();
 	mMouseScrolledFunctions = std::vector<std::function<void(const int&)>>();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -484,12 +484,12 @@ void ape::UserInputMacro::clearNodeSelection()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::UserInputMacro::mouseMovedValue(ape::Vector2 mouseMovedValue)
+void ape::UserInputMacro::mouseMovedValue(ape::Vector2 mouseMovedValueRel, ape::Vector2 mouseMovedValueAbs)
 {
 	auto functionList = mMouseMovedFunctions;
 	for (auto it : functionList)
 	{
-		it(mouseMovedValue);
+		it(mouseMovedValueRel, mouseMovedValueAbs);
 	}
 }
 
@@ -531,6 +531,7 @@ void ape::UserInputMacro::keyReleasedStringValue(std::string keyReleasedStringVa
 
 void ape::UserInputMacro::keyPressedStringValue(std::string keyPressedStringValue)
 {
+	APE_LOG_DEBUG("keyPressedStringValue: " << keyPressedStringValue);
 	mKeyStringValue = keyPressedStringValue;
 	auto functionList = mKeyPressedStringFunctions;
 	for (auto it : functionList)
@@ -598,7 +599,7 @@ void ape::UserInputMacro::registerCallbackForMousePressedStringValue(std::functi
 	mMousePressedStringFunctions.push_back(callback);
 }
 
-void ape::UserInputMacro::registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&)> callback)
+void ape::UserInputMacro::registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&, const ape::Vector2&)> callback)
 {
 	mMouseMovedFunctions.push_back(callback);
 }

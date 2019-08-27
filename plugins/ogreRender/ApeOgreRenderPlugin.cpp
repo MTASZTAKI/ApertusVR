@@ -1358,16 +1358,16 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::TEXTURE_FILE)
 		{
-			if (auto textureManual = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+			if (auto textureFile = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
-				std::string textureManualName = textureManual->getName();
 				switch (event.type)
 				{
 				case ape::Event::Type::TEXTURE_FILE_CREATE:
 					break;
 				case ape::Event::Type::TEXTURE_FILE_FILENAME:
 				{
-					auto ogreTexture = Ogre::TextureManager::getSingleton().createOrRetrieve(textureManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+					std::string textureFilelName = textureFile->getFileName();
+					auto ogreTexture = Ogre::TextureManager::getSingleton().createOrRetrieve(textureFilelName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 				}
 				break;
 				case ape::Event::Type::TEXTURE_FILE_DELETE:

@@ -75,6 +75,8 @@ namespace ape
 
 		ape::FileGeometryWeakPtr mSphereGeometryRight;
 
+		ape::Vector2 mMouseMovedValueAbs;
+
 		int mCurrentRoomID;
 
 	public:
@@ -96,11 +98,15 @@ namespace ape
 
 		void loadRoomTextures();
 
-		void resetUserNodePosition();
+		void resetUserNodePose();
 
 		void eventCallBack(const ape::Event& event);
 
 		void keyPressedStringEventCallback(const std::string& keyValue);
+
+		void mousePressedStringEventCallback(const std::string& keyValue);
+
+		void mouseMovedCallback(const ape::Vector2& mouseMovedValueRel, const ape::Vector2& mouseMovedValueAbs);
 
 		void Init() override;
 

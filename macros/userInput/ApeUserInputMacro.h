@@ -193,7 +193,7 @@ namespace ape
 
 		std::vector<std::function<void(const std::string&)>> mMouseReleasedStringFunctions;
 
-		std::vector<std::function<void(const ape::Vector2&)>> mMouseMovedFunctions;
+		std::vector<std::function<void(const ape::Vector2&, const ape::Vector2&)>> mMouseMovedFunctions;
 
 		std::vector<std::function<void(const int&)>> mMouseScrolledFunctions;
 
@@ -251,7 +251,7 @@ namespace ape
 
 		void mouseReleasedStringValue(std::string mouseReleasedStringValue);
 
-		void mouseMovedValue(ape::Vector2 mouseMovedValue);
+		void mouseMovedValue(ape::Vector2 mouseMovedValueRel, ape::Vector2 mouseMovedValueAbs);
 
 		void mouseScrolledValue(int mouseSrcolledValue);
 
@@ -263,7 +263,7 @@ namespace ape
 
 		void registerCallbackForMouseReleasedStringValue(std::function<void(const std::string&)> callback);
 
-		void registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&)> callback);
+		void registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&, const ape::Vector2&)> callback);
 
 		void registerCallbackForMouseScrolledValue(std::function<void(const int&)> callback);
 
