@@ -25,6 +25,8 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mSphereGeometryRight = ape::FileGeometryWeakPtr();
 	mCurrentRoomID = -1;
 	mMouseMovedValueAbs = ape::Vector2();
+	mMouseScrolledValue = 0;
+	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -323,13 +325,51 @@ void ape::apeELearningPlugin::mousePressedStringEventCallback(const std::string 
 {
 	if (keyValue == "left")
 	{
-		mpApeUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
+		if (mpApeUserInputMacro->isOverlayBrowserShowed())
+		{
+			mOverlayBrowserCursor.cursorClick = true;
+			mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
+			mpApeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+		}
+		else
+		{
+			mpApeUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
+		}
+	}
+}
+
+void ape::apeELearningPlugin::mouseReleasedStringEventCallback(const std::string & keyValue)
+{
+	if (mpApeUserInputMacro->isOverlayBrowserShowed())
+	{
+		mOverlayBrowserCursor.cursorClick = false;
+		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
+		mpApeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
 	}
 }
 
 void ape::apeELearningPlugin::mouseMovedCallback(const ape::Vector2 & mouseMovedValueRel, const ape::Vector2 & mouseMovedValueAbs)
 {
 	mMouseMovedValueAbs = mouseMovedValueAbs;
+	if (mpApeUserInputMacro->isOverlayBrowserShowed())
+	{
+		ape::Vector2 cursorTexturePosition;
+		cursorTexturePosition.x = (float)-mMouseMovedValueAbs.x / (float)mpCoreConfig->getWindowConfig().width;
+		cursorTexturePosition.y = (float)-mMouseMovedValueAbs.y / (float)mpCoreConfig->getWindowConfig().height;
+		ape::Vector2 cursorBrowserPosition;
+		cursorBrowserPosition.x = (float)mMouseMovedValueAbs.x / (float)mpCoreConfig->getWindowConfig().width;
+		cursorBrowserPosition.y = (float)mMouseMovedValueAbs.y / (float)mpCoreConfig->getWindowConfig().height;
+		mOverlayBrowserCursor.cursorBrowserPosition = cursorBrowserPosition;
+		mOverlayBrowserCursor.cursorTexturePosition = cursorTexturePosition;
+		mOverlayBrowserCursor.cursorScrollPosition = ape::Vector2(0, mMouseScrolledValue);
+		mOverlayBrowserCursor.cursorClick = false;
+		mpApeUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+	}
+}
+
+void ape::apeELearningPlugin::mouseScrolledCallback(const int & mouseScrolledValue)
+{
+	mMouseScrolledValue = mMouseScrolledValue;
 }
 
 void ape::apeELearningPlugin::Init()
@@ -338,7 +378,9 @@ void ape::apeELearningPlugin::Init()
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&apeELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&apeELearningPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&apeELearningPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&apeELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
+	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&apeELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
 	createHotSpots();
 	createRoomTextures();
 	APE_LOG_FUNC_LEAVE();

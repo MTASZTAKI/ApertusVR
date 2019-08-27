@@ -649,6 +649,17 @@ void ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overla
 	}
 }
 
+bool ape::UserInputMacro::isOverlayBrowserShowed()
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		if (auto browserMaterial = mOverlayBrowserMaterial.lock())
+		{
+			return browserMaterial->isShowOnOverlay();
+		}
+	}
+}
+
 void ape::UserInputMacro::showOverlayBrowser(bool show)
 {
 	if (auto overlayBrowser = mOverlayBrowser.lock())

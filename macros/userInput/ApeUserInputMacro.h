@@ -273,6 +273,8 @@ namespace ape
 
 		void showOverlayBrowser(bool show);
 
+		bool isOverlayBrowserShowed();
+
 		void setOverlayBrowserURL(std::string url);
 
 		std::string getOverlayBrowserURL();

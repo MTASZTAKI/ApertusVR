@@ -77,7 +77,11 @@ namespace ape
 
 		ape::Vector2 mMouseMovedValueAbs;
 
+		int mMouseScrolledValue;
+
 		int mCurrentRoomID;
+
+		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
 	public:
 		apeELearningPlugin();
@@ -106,7 +110,11 @@ namespace ape
 
 		void mousePressedStringEventCallback(const std::string& keyValue);
 
+		void mouseReleasedStringEventCallback(const std::string& keyValue);
+
 		void mouseMovedCallback(const ape::Vector2& mouseMovedValueRel, const ape::Vector2& mouseMovedValueAbs);
+
+		void mouseScrolledCallback(const int& mouseScrolledValue);
 
 		void Init() override;
 
