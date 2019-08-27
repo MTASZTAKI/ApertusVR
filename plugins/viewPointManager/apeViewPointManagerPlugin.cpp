@@ -51,16 +51,19 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 	}
 	std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
 	updateViewPoseByKeyBoardThread.detach();
+	APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 }
 
 void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
 {
 	mIsKeyReleased = true;
+	APE_LOG_DEBUG("keyReleasedStringEventCallback: " << keyValue);
 }
 
 void ape::ViewPointManagerPlugin::mousePressedStringEventCallback(const std::string & mouseValue)
 {
 	mIsMouseReleased = false;
+	//APE_LOG_DEBUG("mousePressedStringEventCallback: " << mouseValue);
 	std::thread updateViewPoseByMouseThread(&ViewPointManagerPlugin::updateViewPoseByMouse, this, mouseValue);
 	updateViewPoseByMouseThread.detach();
 }
@@ -68,6 +71,7 @@ void ape::ViewPointManagerPlugin::mousePressedStringEventCallback(const std::str
 void ape::ViewPointManagerPlugin::mouseReleasedStringEventCallback(const std::string & mouseValue)
 {
 	mIsMouseReleased = true;
+	//APE_LOG_DEBUG("mouseReleasedStringEventCallback: " << mouseValue);
 }
 
 void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2 & mouseValue)
@@ -165,50 +169,53 @@ void ape::ViewPointManagerPlugin::updateViewPoseByKeyBoard(const std::string& ke
 {
 	while (!mIsKeyReleased)
 	{
-		if (keyValue == "space")
+		if (auto userNode = mpUserInputMacro->getUserNode().lock())
 		{
-			mGeneralSpeedFactor += 3;
-		}
-		int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
-		if (keyValue == "pgup")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "pgdown")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "d")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(+transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "a")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(-transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "w")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -transScalar), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "s")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, +transScalar), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "left")
-		{
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-		}
-		if (keyValue == "right")
-		{
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-		}
-		if (keyValue == "up")
-		{
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (keyValue == "down")
-		{
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			if (keyValue == "space")
+			{
+				mGeneralSpeedFactor += 3;
+			}
+			int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
+			if (keyValue == "pgup")
+			{
+				userNode->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "pgdown")
+			{
+				userNode->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "d")
+			{
+				userNode->translate(ape::Vector3(+transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "a")
+			{
+				userNode->translate(ape::Vector3(-transScalar, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "w")
+			{
+				userNode->translate(ape::Vector3(0, 0, -transScalar), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "s")
+			{
+				userNode->translate(ape::Vector3(0, 0, +transScalar), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "left")
+			{
+				userNode->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+			}
+			if (keyValue == "right")
+			{
+				userNode->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+			}
+			if (keyValue == "up")
+			{
+				userNode->rotate(ape::Radian(0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			}
+			if (keyValue == "down")
+			{
+				userNode->rotate(ape::Radian(-0.017f * mRotateSpeedFactorKeyboard), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
@@ -218,16 +225,16 @@ void ape::ViewPointManagerPlugin::updateViewPoseByMouse(const std::string& mouse
 {
 	while (!mIsMouseReleased)
 	{
-		if (mouseValue == "right")
+		if (auto userNode = mpUserInputMacro->getUserNode().lock())
 		{
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mMouseMovedValue.x), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::LOCAL);
-			mpUserInputMacro->getUserNode().lock()->rotate(ape::Radian(-0.017f * mMouseMovedValue.y), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
-		}
-		if (mouseValue == "middle")
-		{
-			mpUserInputMacro->getUserNode().lock()->translate(ape::Vector3(0, 0, -mMouseScrolledValue), ape::Node::TransformationSpace::LOCAL);;
+			if (mouseValue == "right")
+			{
+				userNode->rotate(ape::Degree(-mMouseMovedValue.x).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+				userNode->rotate(ape::Degree(-mMouseMovedValue.y).toRadian() * mRotateSpeedFactorMouse, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		//APE_LOG_DEBUG("updateViewPoseByMouse: " << mouseValue << " mIsMouseReleased: " << mIsMouseReleased);
 	}
 }
 

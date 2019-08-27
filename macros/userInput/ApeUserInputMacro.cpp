@@ -595,7 +595,7 @@ void ape::UserInputMacro::registerCallbackForMouseReleasedStringValue(std::funct
 
 void ape::UserInputMacro::registerCallbackForMousePressedStringValue(std::function<void(const std::string&)> callback)
 {
-	mMouseReleasedStringFunctions.push_back(callback);
+	mMousePressedStringFunctions.push_back(callback);
 }
 
 void ape::UserInputMacro::registerCallbackForMouseMovedValue(std::function<void(const ape::Vector2&)> callback)

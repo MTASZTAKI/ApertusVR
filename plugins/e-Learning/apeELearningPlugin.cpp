@@ -100,8 +100,8 @@ void ape::apeELearningPlugin::createHotSpots()
 			{
 				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
 				{
-					node->setPosition(ape::Vector3(hotspot.get_h(), hotspot.get_v(), hotspot.get_z()));
-					node->setOrientation(ape::Quaternion(1, 0, 0, 0));
+					node->setPosition(ape::Vector3(0, 0, -20));
+					node->setOrientation(ape::Quaternion(0.707, 0.707, 0, 0));
 					if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 					{
 						material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
