@@ -2124,7 +2124,6 @@ void ape::OgreRenderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeOgreRenderPlugin.json";
 	FILE* apeOgreRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");

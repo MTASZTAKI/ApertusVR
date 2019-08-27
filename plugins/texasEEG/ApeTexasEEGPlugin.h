@@ -76,8 +76,6 @@ namespace ape
 
 		ape::UserInputMacro* mpapeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 	public:
 		apeTexasEEGPlugin();
 

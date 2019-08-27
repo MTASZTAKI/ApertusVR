@@ -29,7 +29,6 @@ void ape::apeRobotCalibrationPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mpSceneMakerMacro->makeOverlayBrowser("");
 	mpSceneMakerMacro->makeBackground();

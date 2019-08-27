@@ -161,8 +161,6 @@ namespace ape
 
 		ape::ManualMaterialWeakPtr mUserMaterial;
 
-		std::map<std::string, ape::NodeWeakPtr> mSelectedNodes;
-
 		ape::BrowserWeakPtr mOverlayBrowser;
 
 		ape::ManualMaterialWeakPtr mOverlayBrowserMaterial;
@@ -174,12 +172,6 @@ namespace ape
 		ape::NodeWeakPtr mRayOverlayNode;
 
 		ape::TextGeometryWeakPtr mCursorText;
-
-		std::string mKeyStringValue;
-
-		bool mEnableOverlayBrowserKeyEvents;
-
-		bool mIsNewKeyEvent;
 
 		bool mIsLockHeadNodePosition;
 
@@ -197,6 +189,14 @@ namespace ape
 
 		std::vector<std::function<void(const int&)>> mMouseScrolledFunctions;
 
+		std::vector<std::function<void(const std::string&)>> mControllerPressedStringFunctions;
+
+		std::vector<std::function<void(const std::string&)>> mControllerReleasedStringFunctions;
+
+		std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>> mControllerMovedFunctions;
+
+		std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>> mHmdMovedFunctions;
+
 	public:
 		static UserInputMacro* getSingletonPtr()
 		{
@@ -208,8 +208,6 @@ namespace ape
 		}
 
 		void eventCallBack(const ape::Event& event);
-
-		void updateViewPose(ViewPose pose);
 
 		void setHeadNodePositionLock(bool lock);
 
@@ -235,14 +233,6 @@ namespace ape
 
 		void saveViewPose();
 
-		bool isNodeSelected(std::string nodeName);
-
-		void addNodeSelection(std::string nodeName);
-
-		bool removeNodeSelection(std::string nodeName);
-
-		void clearNodeSelection();
-
 		void keyPressedStringValue(std::string keyPressedStringValue);
 
 		void keyReleasedStringValue(std::string keyReleasedStringValue);
@@ -254,6 +244,14 @@ namespace ape
 		void mouseMovedValue(ape::Vector2 mouseMovedValueRel, ape::Vector2 mouseMovedValueAbs);
 
 		void mouseScrolledValue(int mouseSrcolledValue);
+
+		void controllerPressedStringValue(std::string controllerPressedStringValue);
+
+		void controllerReleasedStringValue(std::string controllerReleasedStringValue);
+
+		void controllerMovedValue(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
+
+		void hmdMovedValue(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
 
 		void registerCallbackForKeyPressedStringValue(std::function<void(const std::string&)> callback);
 
@@ -267,7 +265,13 @@ namespace ape
 
 		void registerCallbackForMouseScrolledValue(std::function<void(const int&)> callback);
 
-		void updateSelectedNodePose(Pose pose);
+		void registerCallbackForControllerPressedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForControllerReleasedStringValue(std::function<void(const std::string&)> callback);
+
+		void registerCallbackForControllerMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback);
+
+		void registerCallbackForHmdMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback);
 
 		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
 

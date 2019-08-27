@@ -118,8 +118,6 @@ namespace ape
 
 		ape::UserInputMacro* mpapeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		void eventCallBack(const ape::Event& event);
 
 		void setCameraConfigByName(std::string cameraName, ape::CameraWeakPtr cameraWkPtr);

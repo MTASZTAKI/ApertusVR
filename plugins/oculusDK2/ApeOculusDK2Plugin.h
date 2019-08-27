@@ -70,8 +70,6 @@ namespace ape
 
 		ape::UserInputMacro* mpapeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		void eventCallBack(const ape::Event& event);
 
 		ape::Matrix4 conversionFromOVR(ovrMatrix4f ovrMatrix4);

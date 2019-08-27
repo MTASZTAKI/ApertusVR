@@ -27,7 +27,6 @@ void ape::apeGyorPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeLit();

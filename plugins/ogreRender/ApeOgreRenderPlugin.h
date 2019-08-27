@@ -221,8 +221,6 @@ namespace ape
 
 		ape::UserInputMacro* mpUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);

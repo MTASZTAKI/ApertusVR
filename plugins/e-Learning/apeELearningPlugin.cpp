@@ -251,9 +251,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 		if (found != std::string::npos)
 		{
 			mSphereGeometryRight = createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
-			mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-			mUserInputMacroPose.headPosition = ape::Vector3(0, 0, 0);
-			mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+			mpApeUserInputMacro->getUserNode().lock()->setPosition(ape::Vector3(0, 0, 0));
 			//mpApeUserInputMacro->setUserNodePositionLock(true);
 			mpApeUserInputMacro->setHeadNodePositionLock(true);
 		}

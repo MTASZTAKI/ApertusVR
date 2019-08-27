@@ -57,8 +57,6 @@ namespace ape
 
 		ape::UserInputMacro* mpApeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		ape::ICoreConfig* mpCoreConfig;

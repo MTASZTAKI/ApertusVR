@@ -79,6 +79,16 @@ void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2& mo
 	mMouseMovedRelValue = mouseValueRel;
 }
 
+void ape::ViewPointManagerPlugin::controllerMovedEventCallback(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl)
+{
+	updateViewPoseByController(controllerMovedValuePos, controllerMovedValueOri, controllerMovedValueScl);
+}
+
+void ape::ViewPointManagerPlugin::hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
+{
+	updateViewPoseByHmd(hmdMovedValuePos, hmdMovedValueOri, hmdMovedValueScl);
+}
+
 void ape::ViewPointManagerPlugin::mouseScrolledEventCallback(const int & mouseValue)
 {
 	mMouseScrolledValue = mouseValue;
@@ -92,13 +102,14 @@ void ape::ViewPointManagerPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mpUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&ViewPointManagerPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForKeyReleasedStringValue(std::bind(&ViewPointManagerPlugin::keyReleasedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&ViewPointManagerPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&ViewPointManagerPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&ViewPointManagerPlugin::mouseMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2));
 	mpUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&ViewPointManagerPlugin::mouseScrolledEventCallback, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&ViewPointManagerPlugin::controllerMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&ViewPointManagerPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
 	FILE* apeOisUserInputConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -148,17 +159,16 @@ void ape::ViewPointManagerPlugin::toggleViewPoses(bool isInterpolated)
 {
 	if (mViewPoses.size() > 0 && mViewPosesToggleIndex < mViewPoses.size())
 	{
-		mUserInputMacroPose.userPosition = mViewPoses[mViewPosesToggleIndex].userPosition;
-		mUserInputMacroPose.userOrientation = mViewPoses[mViewPosesToggleIndex].userOrientation;
 		if (!isInterpolated)
 		{
-			mpUserInputMacro->updateViewPose(mViewPoses[mViewPosesToggleIndex]);
+			mpUserInputMacro->getUserNode().lock()->setPosition(mViewPoses[mViewPosesToggleIndex].userPosition);
+			mpUserInputMacro->getUserNode().lock()->setOrientation(mViewPoses[mViewPosesToggleIndex].userOrientation);
 		}
 		else
 		{
 			mpUserInputMacro->interpolateViewPose(mViewPoses[mViewPosesToggleIndex], 5000);
 		}
-		APE_LOG_DEBUG("View pose is toggled: " << mUserInputMacroPose.userPosition.toString() << " | " << mUserInputMacroPose.userOrientation.toString());
+		APE_LOG_DEBUG("View pose is toggled: " << mViewPoses[mViewPosesToggleIndex].userPosition.toString() << " | " << mViewPoses[mViewPosesToggleIndex].userOrientation.toString());
 		mViewPosesToggleIndex++;
 		if (mViewPoses.size() == mViewPosesToggleIndex)
 			mViewPosesToggleIndex = 0;
@@ -235,6 +245,23 @@ void ape::ViewPointManagerPlugin::updateViewPoseByMouse(const std::string& mouse
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		//APE_LOG_DEBUG("updateViewPoseByMouse: " << mouseValue << " mIsMouseReleased: " << mIsMouseReleased);
+	}
+}
+
+void ape::ViewPointManagerPlugin::updateViewPoseByController(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl)
+{
+	if (auto userNode = mpUserInputMacro->getUserNode().lock())
+	{
+		userNode->translate(controllerMovedValueOri * ape::Vector3(0, 0, 3 * -controllerMovedValuePos.y), ape::Node::TransformationSpace::WORLD);
+	}
+}
+
+void ape::ViewPointManagerPlugin::updateViewPoseByHmd(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
+{
+	if (auto headNode = mpUserInputMacro->getHeadNode().lock())
+	{
+		headNode->setPosition(hmdMovedValuePos * hmdMovedValueScl);
+		headNode->setOrientation(hmdMovedValueOri);
 	}
 }
 

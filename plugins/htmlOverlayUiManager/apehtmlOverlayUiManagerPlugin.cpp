@@ -28,7 +28,6 @@ void ape::HtmlOverlayUiManagerPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	APE_LOG_FUNC_LEAVE();
 }

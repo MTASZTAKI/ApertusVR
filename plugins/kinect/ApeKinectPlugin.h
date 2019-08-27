@@ -163,8 +163,6 @@ namespace ape
 
 		ape::UserInputMacro* mpapeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		bool _1Detected = false;
 		bool operatorPointsGenerated = false;
 		bool halfscan = false;

@@ -96,8 +96,6 @@ namespace ape
 
 		ape::UserInputMacro* mpApeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 	public:
 		apeHtcVivePlugin();
 

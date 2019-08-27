@@ -64,9 +64,7 @@ void ape::ape360StereoImagePlugin::eventCallBack(const ape::Event & event)
 				if (found != std::string::npos)
 				{
 					createSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
-					mUserInputMacroPose = ape::UserInputMacro::ViewPose();
-					mUserInputMacroPose.headPosition = ape::Vector3(0, 0, 0);
-					mpApeUserInputMacro->updateViewPose(mUserInputMacroPose);
+					mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
 					mpApeUserInputMacro->setHeadNodePositionLock(true);
 				}
 			}

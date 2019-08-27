@@ -56,6 +56,10 @@ namespace ape
 
 		void mouseMovedEventCallback(const ape::Vector2& mouseValueRel, const ape::Vector2& mouseValueAbs);
 
+		void controllerMovedEventCallback(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
+
+		void hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
+
 		void mouseScrolledEventCallback(const int& mouseValue);
 
 		void Init() override;
@@ -101,11 +105,13 @@ namespace ape
 
 		ape::UserInputMacro* mpUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		void updateViewPoseByKeyBoard(const std::string& keyValue);
 
 		void updateViewPoseByMouse(const std::string& mouseValue);
+
+		void updateViewPoseByController(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
+
+		void updateViewPoseByHmd(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
 
 		void toggleViewPoses(bool isInterpolated);
 

@@ -63,7 +63,6 @@ void ape::KinectPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");
@@ -512,7 +511,7 @@ void ape::KinectPlugin::Run()
 					std::cout << "locked" << std::endl;
 					rootClothNode->setPosition(anchor);
 					std::cout << rootClothNode->getPosition().toString() << std::endl;
-					mUserInputMacroPose.userPosition = ape::Vector3(-0.931241, 31.6337, 110.023);
+					/*mUserInputMacroPose.userPosition = ape::Vector3(-0.931241, 31.6337, 110.023);
 					mUserInputMacroPose.userOrientation = ape::Quaternion(-0.993851, 0.0846812, 0.0710891, 0.00605706);
 					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 					mUserInputMacroPose.userPosition = ape::Vector3(-406.561, 45.8449, -250.643);
@@ -520,7 +519,7 @@ void ape::KinectPlugin::Run()
 					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
 					mUserInputMacroPose.userPosition = ape::Vector3(11.0208, 51.4279, -695.983);
 					mUserInputMacroPose.userOrientation = ape::Quaternion(0.0135394, -0.00138574, 0.994711, 0.101814);
-					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);
+					mpapeUserInputMacro->interpolateViewPose(mUserInputMacroPose, 5000);*/
 				}
 				operatorPointsGenerated = true;
 			}

@@ -56,9 +56,6 @@ ape::UserInputMacro::UserInputMacro()
 	mOverlayMouseTexture = ape::UnitTextureWeakPtr();
 	mCursorText = ape::TextGeometryWeakPtr();
 	mOverlayBrowserMaterial = ape::ManualMaterialWeakPtr();
-	mKeyStringValue = std::string();
-	mIsNewKeyEvent = false;
-	mEnableOverlayBrowserKeyEvents = false;
 	mIsLockHeadNodePosition = false;
 	mIsLockUserNodePosition = false;
 	mKeyPressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
@@ -67,6 +64,10 @@ ape::UserInputMacro::UserInputMacro()
 	mMouseReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&, const ape::Vector2&)>>();
 	mMouseScrolledFunctions = std::vector<std::function<void(const int&)>>();
+	mControllerPressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mControllerReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mControllerMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
+	mHmdMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -106,21 +107,6 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
 		APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
-		if (auto overlayBrowserMaterial = mOverlayBrowserMaterial.lock())
-		{
-			if (overlayBrowserMaterial->isShowOnOverlay())
-			{
-				if (auto overlayBrowser = mOverlayBrowser.lock())
-				{
-					if (auto focusChangedBrowser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
-					{
-						mEnableOverlayBrowserKeyEvents = focusChangedBrowser->isFocusOnEditableField() && overlayBrowser->getName() == focusChangedBrowser->getName();
-						APE_LOG_TRACE("mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
-						mIsNewKeyEvent = true;
-					}
-				}
-			}
-		}
 	}
 	else if (event.type == ape::Event::Type::BROWSER_MOUSE_CLICK)
 	{
@@ -147,123 +133,7 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 			if (!overlayBrowserMaterial->isShowOnOverlay())
 			{
 				APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
-				if (auto rayGeometry = mRayGeometry.lock())
-				{
-					auto intersections = rayGeometry->getIntersections();
-					std::list<ape::EntityWeakPtr> intersectionList;
-					std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
-					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size: " << intersectionList.size());
-					bool removeItem = false;
-					std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
-					while (i != intersectionList.end())
-					{
-						removeItem = false;
-						if (auto entity = i->lock())
-						{
-							std::string entityName = entity->getName();
-							ape::Entity::Type entityType = entity->getType();
-							//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
-							/*if (entityName.find(mUserNode.lock()->getName()) != std::string::npos)
-							removeItem = true;
-							else if (entityName.find("coord") != std::string::npos)
-							removeItem = true;
-							else if (entityName.find("cursor") != std::string::npos)
-							removeItem = true;*/
-						}
-						if (removeItem)
-							i = intersectionList.erase(i);
-						else
-							i++;
-					}
-					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections.size after erase: " << intersectionList.size());
-
-					bool intersectionHandled = false;
-					if (intersectionList.empty())
-					{
-						if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-						{
-							clearNodeSelection();
-							intersectionHandled = true;
-						}
-					}
-					else
-					{
-						APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: -------------------------------------");
-						for (auto intersection : intersectionList)
-						{
-							if (auto entity = intersection.lock())
-							{
-								std::string entityName = entity->getName();
-								ape::Entity::Type entityType = entity->getType();
-								APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: entityName: " << entityName << " entityType: " << entityType);
-
-								if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
-								{
-									auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
-									if (auto selectedParentNode = geometry->getParentNode().lock())
-									{
-										APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-										if (auto cursorText = mCursorText.lock())
-										{
-											cursorText->setCaption(entityName);
-										}
-										if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-										{
-											if (isNodeSelected(selectedParentNode->getName()))
-												removeNodeSelection(selectedParentNode->getName());
-											else
-												addNodeSelection(selectedParentNode->getName());
-											intersectionHandled = true;
-											break;
-										}
-									}
-								}
-								else if (entityType == ape::Entity::Type::POINT_CLOUD)
-								{
-									auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(entity);
-									if (auto selectedParentNode = pointCloud->getParentNode().lock())
-									{
-										APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: parentNode: " << selectedParentNode->getName());
-										if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-										{
-											if (isNodeSelected(selectedParentNode->getName()))
-												removeNodeSelection(selectedParentNode->getName());
-											else
-												addNodeSelection(selectedParentNode->getName());
-											intersectionHandled = true;
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-					APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION: intersections handled: " << intersectionHandled);
-				}
 			}
-		}
-	}
-}
-
-void ape::UserInputMacro::updateViewPose(ViewPose pose)
-{
-	if (!mEnableOverlayBrowserKeyEvents)
-	{
-		if (auto userNode = mUserNode.lock())
-		{
-			if (!mIsLockUserNodePosition)
-			{
-				userNode->setPosition(pose.userPosition);
-			}
-			userNode->setOrientation(pose.userOrientation);
-		}
-		if (auto headNode = mHeadNode.lock())
-		{
-			if (!mIsLockHeadNodePosition)
-			{
-				headNode->setPosition(pose.headPosition);
-			}
-			headNode->setOrientation(pose.headOrientation);
 		}
 	}
 }
@@ -290,31 +160,28 @@ bool ape::UserInputMacro::getUserNodePositionLock()
 
 void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)
 {
-	if (!mEnableOverlayBrowserKeyEvents)
+	if (auto userNode = mUserNode.lock())
 	{
-		if (auto userNode = mUserNode.lock())
+		auto moveInterpolator = std::make_unique<ape::Interpolator>(false);
+		moveInterpolator->addSection(
+			userNode->getPosition(),
+			pose.userPosition,
+			milliseconds * 1000,
+			[&](ape::Vector3 pos) { userNode->setPosition(pos); }
+		);
+		auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
+		rotateInterpolator->addSection(
+			userNode->getOrientation(),
+			pose.userOrientation,
+			milliseconds * 1000,
+			[&](ape::Quaternion ori) { userNode->setOrientation(ori); }
+		);
+		while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
 		{
-			auto moveInterpolator = std::make_unique<ape::Interpolator>(false);
-			moveInterpolator->addSection(
-				userNode->getPosition(),
-				pose.userPosition,
-				milliseconds * 1000,
-				[&](ape::Vector3 pos) { userNode->setPosition(pos); }
-			);
-			auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
-			rotateInterpolator->addSection(
-				userNode->getOrientation(),
-				pose.userOrientation,
-				milliseconds * 1000,
-				[&](ape::Quaternion ori) { userNode->setOrientation(ori); }
-			);
-			while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
-			{
-				if (!moveInterpolator->isQueueEmpty())
-					moveInterpolator->iterateTopSection();
-				if (!rotateInterpolator->isQueueEmpty())
-					rotateInterpolator->iterateTopSection();
-			}
+			if (!moveInterpolator->isQueueEmpty())
+				moveInterpolator->iterateTopSection();
+			if (!rotateInterpolator->isQueueEmpty())
+				rotateInterpolator->iterateTopSection();
 		}
 	}
 }
@@ -401,7 +268,7 @@ void ape::UserInputMacro::createOverLayText(std::string caption)
 {
 	if (mOverlayText.lock())
 	{
-
+		;
 	}
 	else
 	{
@@ -423,67 +290,6 @@ void ape::UserInputMacro::createOverLayText(std::string caption)
 	}
 }
 
-bool ape::UserInputMacro::isNodeSelected(std::string nodeName)
-{
-	APE_LOG_TRACE("nodeName: " << nodeName);
-	std::map<std::string, ape::NodeWeakPtr>::iterator findIt;
-	findIt = mSelectedNodes.find(nodeName);
-	return (findIt != mSelectedNodes.end());
-}
-
-void ape::UserInputMacro::addNodeSelection(std::string nodeName)
-{
-	APE_LOG_FUNC_ENTER();
-	APE_LOG_TRACE("nodeName: " << nodeName);
-	if (auto findNode = mpSceneManager->getNode(nodeName).lock())
-	{
-		ape::NodeWeakPtrVector childNodes = findNode->getChildNodes();
-		APE_LOG_DEBUG("childNodes size: " << childNodes.size());
-		for (auto childNode : childNodes)
-			if (auto childNodeSP = childNode.lock())
-				APE_LOG_DEBUG("childNode: " << childNodeSP->getName());
-		mSelectedNodes.insert(std::pair<std::string, ape::NodeWeakPtr>(findNode->getName(), findNode));
-		findNode->showBoundingBox(true);
-	}
-	APE_LOG_FUNC_LEAVE();
-}
-
-bool ape::UserInputMacro::removeNodeSelection(std::string nodeName)
-{
-	APE_LOG_TRACE("nodeName: " << nodeName);
-	std::map<std::string, ape::NodeWeakPtr>::iterator findIt;
-	findIt = mSelectedNodes.find(nodeName);
-	if (findIt != mSelectedNodes.end())
-	{
-		if (auto findNode = findIt->second.lock())
-		{
-			findNode->showBoundingBox(false);
-			mSelectedNodes.erase(findIt);
-			return true;
-		}
-	}
-	return false;
-}
-
-void ape::UserInputMacro::clearNodeSelection()
-{
-	APE_LOG_FUNC_ENTER();
-	auto nodeIt = mSelectedNodes.begin();
-	while (nodeIt != mSelectedNodes.end())
-	{
-		if (auto selectedNodeInMap = nodeIt->second.lock())
-		{
-			selectedNodeInMap->showBoundingBox(false);
-			nodeIt = mSelectedNodes.erase(nodeIt);
-		}
-		else
-		{
-			++nodeIt;
-		}
-	}
-	APE_LOG_FUNC_LEAVE();
-}
-
 void ape::UserInputMacro::mouseMovedValue(ape::Vector2 mouseMovedValueRel, ape::Vector2 mouseMovedValueAbs)
 {
 	auto functionList = mMouseMovedFunctions;
@@ -499,6 +305,42 @@ void ape::UserInputMacro::mouseScrolledValue(int mouseScrolledValue)
 	for (auto it : functionList)
 	{
 		it(mouseScrolledValue);
+	}
+}
+
+void ape::UserInputMacro::controllerPressedStringValue(std::string controllerPressedStringValue)
+{
+	auto functionList = mControllerPressedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(controllerPressedStringValue);
+	}
+}
+
+void ape::UserInputMacro::controllerReleasedStringValue(std::string controllerReleasedStringValue)
+{
+	auto functionList = mControllerReleasedStringFunctions;
+	for (auto it : functionList)
+	{
+		it(controllerReleasedStringValue);
+	}
+}
+
+void ape::UserInputMacro::controllerMovedValue(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl)
+{
+	auto functionList = mControllerMovedFunctions;
+	for (auto it : functionList)
+	{
+		it(controllerMovedValuePos, controllerMovedValueOri, controllerMovedValueScl);
+	}
+}
+
+void ape::UserInputMacro::hmdMovedValue(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
+{
+	auto functionList = mHmdMovedFunctions;
+	for (auto it : functionList)
+	{
+		it(hmdMovedValuePos, hmdMovedValueOri, hmdMovedValueScl);
 	}
 }
 
@@ -532,55 +374,19 @@ void ape::UserInputMacro::keyReleasedStringValue(std::string keyReleasedStringVa
 void ape::UserInputMacro::keyPressedStringValue(std::string keyPressedStringValue)
 {
 	APE_LOG_DEBUG("keyPressedStringValue: " << keyPressedStringValue);
-	mKeyStringValue = keyPressedStringValue;
 	auto functionList = mKeyPressedStringFunctions;
 	for (auto it : functionList)
 	{
+		auto type = &it.target_type();
+		APE_LOG_DEBUG("keyPressedStringValue: cb called: " << type->name());
 		it(keyPressedStringValue);
 	}
-	//std::wstring keyAsWString(keyAsString.begin(), keyAsString.end());
-	//if (e.key == OIS::KeyCode::KC_BACK)
-	//	keyAsWString = 8;
-	//else if (e.key == OIS::KeyCode::KC_TAB)
-	//	keyAsWString = 9;
-	//else if (e.key == OIS::KeyCode::KC_RETURN)
-	//	keyAsWString = 13;
-	//else if (e.key == OIS::KeyCode::KC_LSHIFT || e.key == OIS::KeyCode::KC_RSHIFT)
-	//	keyAsWString = 14;
-	//else if (e.key == OIS::KeyCode::KC_SPACE)
-	//	keyAsWString = 32;
-	//else if (e.key == OIS::KeyCode::KC_END)
-	//	keyAsWString = 35;
-	//else if (e.key == OIS::KeyCode::KC_HOME)
-	//	keyAsWString = 36;
-	//else if (e.key == OIS::KeyCode::KC_LEFT)
-	//	keyAsWString = 37;
-	//else if (e.key == OIS::KeyCode::KC_UP)
-	//	keyAsWString = 38;
-	//else if (e.key == OIS::KeyCode::KC_RIGHT)
-	//	keyAsWString = 39;
-	//else if (e.key == OIS::KeyCode::KC_DOWN)
-	//	keyAsWString = 40;
-	//else if (e.key == OIS::KeyCode::KC_DELETE)
-	//	keyAsWString = 46;
-	//else if (e.key == OIS::KeyCode::KC_PERIOD)
-	//	keyAsWString = 1046;
-
-	//	mIsNewKeyEvent = false;
-	//	overlayBrowser->keyASCIIValue(keyAsWString[0]);
-
-	//	APE_LOG_TRACE("Before waiting: mIsNewKeyEvent: " << mIsNewKeyEvent);
-	//	while (!mIsNewKeyEvent)
-	//	{
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	//	}
-	//	mIsNewKeyEvent = false;
-	//	APE_LOG_TRACE("After waiting mEnableOverlayBrowserKeyEvents: " << mEnableOverlayBrowserKeyEvents);
-	//}
 }
 
 void ape::UserInputMacro::registerCallbackForKeyPressedStringValue(std::function<void(const std::string&)> callback)
 {
+	auto type = &callback.target_type();
+	APE_LOG_DEBUG("registerCallbackForKeyPressedStringValue: " << type->name());
 	mKeyPressedStringFunctions.push_back(callback);
 }
 
@@ -609,30 +415,24 @@ void ape::UserInputMacro::registerCallbackForMouseScrolledValue(std::function<vo
 	mMouseScrolledFunctions.push_back(callback);
 }
 
-void ape::UserInputMacro::updateSelectedNodePose(Pose pose)
+void ape::UserInputMacro::registerCallbackForControllerPressedStringValue(std::function<void(const std::string&)> callback)
 {
-	for (auto nodeIt = mSelectedNodes.begin(); nodeIt != mSelectedNodes.end(); nodeIt++)
-	{
-		if (auto selectedNodeInMap = nodeIt->second.lock())
-		{
-			if (mKeyStringValue == "KC_LSHIFT" || mKeyStringValue == "KC_RSHIFT")
-			{
-				selectedNodeInMap->setPosition(pose.position);
-			}
-			if (mKeyStringValue == "KC_LCONTROL" || mKeyStringValue == "KC_RCONTROL")
-			{
-				selectedNodeInMap->setPosition(pose.position);
-			}
-			if (mKeyStringValue == "KC_LMENU" || mKeyStringValue == "KC_RMENU")
-			{
-				selectedNodeInMap->setPosition(pose.position);
-			}
-			if (mKeyStringValue == "KC_SPACE")
-			{
-				selectedNodeInMap->setOrientation(pose.orientation);
-			}
-		}
-	}
+	mControllerPressedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForControllerReleasedStringValue(std::function<void(const std::string&)> callback)
+{
+	mControllerReleasedStringFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForControllerMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback)
+{
+	mControllerMovedFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForHmdMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback)
+{
+	mHmdMovedFunctions.push_back(callback);
 }
 
 void ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor)

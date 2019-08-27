@@ -72,8 +72,6 @@ namespace ape
 
 		ape::UserInputMacro* mpApeUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
 		void eventCallBack(const ape::Event& event);

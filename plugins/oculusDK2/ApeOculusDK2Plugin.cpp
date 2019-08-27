@@ -41,7 +41,6 @@ void ape::apeOculusDK2Plugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	ovr_Initialize();
 	mpHMD = ovrHmd_Create(0);
 	if (!mpHMD)
@@ -235,9 +234,7 @@ void ape::apeOculusDK2Plugin::Run()
 		OVR::Posef pose = ts.HeadPose.ThePose;
 		ovrFovPort fovLeft = mpHMD->DefaultEyeFov[ovrEye_Left];
 		ovrFovPort fovRight = mpHMD->DefaultEyeFov[ovrEye_Right];
-		mUserInputMacroPose.headPosition = ape::Vector3(pose.Translation.x * 100, pose.Translation.y * 100, pose.Translation.z * 100);
-		mUserInputMacroPose.headOrientation = ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z);
-		mpapeUserInputMacro->updateViewPose(mUserInputMacroPose);
+		mpapeUserInputMacro->hmdMovedValue(ape::Vector3(pose.Translation.x, pose.Translation.y, pose.Translation.z), ape::Quaternion(pose.Rotation.w, pose.Rotation.x, pose.Rotation.y, pose.Rotation.z), ape::Vector3(100, 100, 100));
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	APE_LOG_FUNC_LEAVE();

@@ -123,7 +123,6 @@ void ape::KinectHeadTrackingPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 	APE_LOG_DEBUG("Sensor init begin");
 	InitializeDefaultSensor();
 	APE_LOG_DEBUG("Sensor init finished");

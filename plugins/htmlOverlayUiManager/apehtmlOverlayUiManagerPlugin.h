@@ -67,8 +67,6 @@ namespace ape
 
 		ape::UserInputMacro* mpUserInputMacro;
 
-		ape::UserInputMacro::ViewPose mUserInputMacroPose;
-
 		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
 		void eventCallBack(const ape::Event& event);
