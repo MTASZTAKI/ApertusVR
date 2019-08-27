@@ -27,7 +27,8 @@
     "selected": "none",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
-      "/plugins/assimpAssetLoader/resources"
+      "/plugins/AssimpAssetLoader/resources"
     ]
   }
 }
+

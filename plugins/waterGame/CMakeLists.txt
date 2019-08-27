@@ -20,21 +20,35 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	apeOgreRenderPlugin.json
-	apeAssimpAssetLoaderPlugin.json
-	apeOisUserInputPlugin.json
-	apeNodeJsPlugin.json
-	apeX3DLoaderPlugin.json
-	apeKinectPlugin.json
-	apeBulletPlugin.json
-	apePhysicsSimulationScenePlugin.json
-	apeCore.json
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	apeWaterGamePlugin.h
+	Bubble.h
+	BubbleManager.h
+	GameManager.h
 	)
 
-add_custom_target(
-    Configs_physicsSimulation_local_monitor ALL
-    SOURCES ${CONFIGS}
-)
+set (SOURCES 
+	apeWaterGamePlugin.cpp
+	Bubble.cpp
+	BubbleManager.cpp
+	GameManager.cpp
+	)
 
-set_property (TARGET Configs_physicsSimulation_local_monitor PROPERTY FOLDER "Samples/PhysicsSimulation/Configs")
+include_directories(
+	${PROJECT_SOURCE_DIR}/common/include 
+	)
+
+add_library (apeWaterGamePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeWaterGamePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
+
+if (WIN32)
+	# we have to link to some DirectX libraries 
+	target_link_libraries (apeWaterGamePlugin dinput8 dxguid)
+endif ()
+
+set_property (TARGET apeWaterGamePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apeWaterGamePlugin PROPERTY FOLDER "Plugins")

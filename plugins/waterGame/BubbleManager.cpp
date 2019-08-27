@@ -1,18 +1,19 @@
 #include <ctime>
 #include "BubbleManager.h"
 
-TexasEEG::BubbleManager::BubbleManager(ape::NodeWeakPtr userNode)
+WaterGame::BubbleManager::BubbleManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode)
 {
 	APE_LOG_TRACE("");
 	mUserNode = userNode;
+	mUserBodyNode = userBodyNode;
 }
 
-TexasEEG::BubbleManager::~BubbleManager()
+WaterGame::BubbleManager::~BubbleManager()
 {
 	APE_LOG_TRACE("");
 }
 
-void TexasEEG::BubbleManager::Run()
+void WaterGame::BubbleManager::Run()
 {
 	while (isGameOver() == false)
 	{
@@ -22,7 +23,7 @@ void TexasEEG::BubbleManager::Run()
 	}
 }
 
-void TexasEEG::BubbleManager::UpdateTimers()
+void WaterGame::BubbleManager::UpdateTimers()
 {
 	int sumCount = 0;
 	for (int i = 0; i < mActivatedBubbleQueue.size(); i++)
@@ -54,11 +55,11 @@ void TexasEEG::BubbleManager::UpdateTimers()
 	APE_LOG_TRACE("sumCount: " << sumCount);
 }
 
-void TexasEEG::BubbleManager::CreateBubbles(int num)
+void WaterGame::BubbleManager::CreateBubbles(int num)
 {
-	if (auto userNode = mUserNode.lock())
+	if (auto userBodyNode = mUserBodyNode.lock())
 	{
-		APE_LOG_TRACE("userNode.Orientation: " << userNode->getOrientation().toString());
+		APE_LOG_TRACE("userNode.Orientation: " << userBodyNode->getOrientation().toString());
 
 		int newXDist = 0;
 		int newYDist = 0;
@@ -68,9 +69,9 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 		{
 			APE_LOG_TRACE("i: " << i);
 
-			newXDist = userNode->getPosition().x + ((std::rand() % 100) - 100);
+			newXDist = userBodyNode->getPosition().x + ((std::rand() % 100) - 100);
 			newYDist = ((std::rand() % 100) - 100);
-			newZDist = userNode->getPosition().z - ((std::rand() % 400) + 300);
+			newZDist = userBodyNode->getPosition().z - ((std::rand() % 400) + 300);
 
 			// add previous Bubble's position
 			if (mBubbleQueue.size() > 1)
@@ -82,13 +83,13 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 
 			ape::Vector3 newPos = ape::Vector3(newXDist, newYDist, newZDist);
 			APE_LOG_TRACE("mBubbleQueue.push_back(): " << newPos.toString());
-			mBubbleQueue.push_back(new TexasEEG::Bubble(newPos));
+			mBubbleQueue.push_back(new WaterGame::Bubble(newPos));
 		}
 	}
 	APE_LOG_TRACE("mBubbleQueue.size: " << mBubbleQueue.size());
 }
 
-void TexasEEG::BubbleManager::RemoveBubbles(int num)
+void WaterGame::BubbleManager::RemoveBubbles(int num)
 {
 	int i = 0;
 	num = std::min((int)mActivatedBubbleQueue.size(), num);
@@ -101,7 +102,7 @@ void TexasEEG::BubbleManager::RemoveBubbles(int num)
 	}
 }
 
-void TexasEEG::BubbleManager::StartBubbles(int num)
+void WaterGame::BubbleManager::StartBubbles(int num)
 {
 	int i = 0;
 	num = std::min((int)mBubbleQueue.size(), num);
@@ -118,7 +119,7 @@ void TexasEEG::BubbleManager::StartBubbles(int num)
 	}
 }
 
-void TexasEEG::BubbleManager::StartGame()
+void WaterGame::BubbleManager::StartGame()
 {
 	mGameOver = false;
 	mSkippedValue = 0;
@@ -128,22 +129,22 @@ void TexasEEG::BubbleManager::StartGame()
 	mTimerThread->detach();
 }
 
-bool TexasEEG::BubbleManager::isGameOver()
+bool WaterGame::BubbleManager::isGameOver()
 {
 	return mGameOver;
 }
 
-int TexasEEG::BubbleManager::getSkippedValue()
+int WaterGame::BubbleManager::getSkippedValue()
 {
 	return mSkippedValue;
 }
 
-void TexasEEG::BubbleManager::resetSkippedValue()
+void WaterGame::BubbleManager::resetSkippedValue()
 {
 	mSkippedValue = 0;
 }
 
-std::deque<TexasEEG::Bubble*>* TexasEEG::BubbleManager::getAvtivatedBubblesQueue()
+std::deque<WaterGame::Bubble*>* WaterGame::BubbleManager::getAvtivatedBubblesQueue()
 {
 	return &mActivatedBubbleQueue;
 }

@@ -1,16 +1,16 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [1000,1000,1000],
-      "position": [ 0,100, 0 ],
-      "orientation": [ 1, 0, 0, 0 ],
+      "scale": [2,2,2],
+      "position": [ 20,250, 0 ],
+      "orientation": [ 0.0007963, 0, 0.9999997, 0 ],
       "regenerateNormals": true,
-      "rootNodeName": "lantern",
+      "rootNodeName": "suzanne",
       "physics": {
         "mass": 1.0,
-        "restitution": 0.2,
+        "restitution": 1.0,
         "friction": 0.5,
         "rolling friction": 0.1,
         "spinning friction": 0.1,

@@ -203,6 +203,8 @@ namespace ape
 
 		ape::Vector3 Rotate(ape::Vector3 vec, ape::Quaternion quat);
 
+		btVector3 Rotate(btVector3 vec, btQuaternion quat);
+
 		void setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec);
 
 		void createConvexHullShape(

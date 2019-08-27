@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_TEXASEEPGLUGIN_H
-#define APE_TEXASEEPGLUGIN_H
+#ifndef APE_WaterGamePLUGIN_H
+#define APE_WaterGamePLUGIN_H
 
 #include <chrono>
 #include <deque>
@@ -43,12 +43,14 @@ SOFTWARE.*/
 #include "sceneelements/apeITextGeometry.h"
 #include "macros/userInput/apeUserInputMacro.h"
 #include "GameManager.h"
+#include "sceneElements/apeIRigidBody.h"
 
-#define THIS_PLUGINNAME "apeTexasEEGPlugin"
+#define THIS_PLUGINNAME "apeWaterGamePlugin"
 
 namespace ape
 {
-	class apeTexasEEGPlugin : public ape::IPlugin
+
+	class apeWaterGamePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -67,16 +69,20 @@ namespace ape
 
 		ape::EntityWeakPtr mScoreText;
 
-		TexasEEG::GameManager* mGameManager;
+		ape::NodeWeakPtr mUserBodyNode;
 
-		TexasEEG::BubbleManager* mBubbleManager;
+		WaterGame::GameManager* mGameManager;
+
+		WaterGame::BubbleManager* mBubbleManager;
 
 		ape::UserInputMacro* mpapeUserInputMacro;
 
-	public:
-		apeTexasEEGPlugin();
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
 
-		~apeTexasEEGPlugin();
+	public:
+		apeWaterGamePlugin();
+
+		~apeWaterGamePlugin();
 
 		void Init() override;
 
@@ -93,14 +99,14 @@ namespace ape
 		void UpdateScore(int score);
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateapeTexasEEGPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateApeWaterGamePlugin()
 	{
-		return new ape::apeTexasEEGPlugin;
+		return new ape::apeWaterGamePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyapeTexasEEGPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyApeWaterGamePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeTexasEEGPlugin*)plugin;
+		delete (ape::apeWaterGamePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -108,9 +114,10 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeTexasEEGPlugin, DestroyapeTexasEEGPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateApeWaterGamePlugin, DestroyApeWaterGamePlugin);
 		return 0;
 	}
+
 }
 
 #endif

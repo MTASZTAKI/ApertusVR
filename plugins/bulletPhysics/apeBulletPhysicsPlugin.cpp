@@ -153,11 +153,13 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						case ape::Entity::Type::GEOMETRY_CONE:
 							if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(geometry))
 							{
-
-								btCollisionShape* coneShape = new btConeShape(cone->getParameters().radius,
-									cone->getParameters().height);
+								btScalar height = cone->getParameters().height;
+								btScalar radius = cone->getParameters().radius;
+								btCollisionShape* coneShape = new btConeShape(radius,height);
 								setOffsetVector(apeBodyName, ape::Vector3(0,-cone->getParameters().height / 2.0f, 0));
 								btScalar mass = apeBody->getMass();
+								m_volumes[apeBodyName] = radius * radius * M_PI * height / 3.0f;
+
 								setCollisionShape(apeBodyName, coneShape, mass);
 							}
 							break;
@@ -760,9 +762,12 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 
 	btScalar volumeScale = m_shapeScales[apeBodyName].getX() * m_shapeScales[apeBodyName].getY() * m_shapeScales[apeBodyName].getZ();
 	btScalar volume = m_volumes[apeBodyName] * volumeScale;
-	/// scaling the volume (a rude solution to deal with big objects)
-	volume = (2 * atan(volume) / M_PI * 500 + 500) / 50;
+	/// pressing the volume (a rude solution to deal with big objects)
+	//volume = (2 * atan(volume) / M_PI * 800 + 800) / 50;
+	volume = log10(volume) * 5;
 	btVector3 bouyancyForce;
+	btVector3 forcePos(0,0,0);
+
 
 	static btClock clock;
 	btScalar dTime = btScalar(clock.getTimeSeconds());
@@ -778,7 +783,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 			btVector3 vel = body->getLinearVelocity();
 		
 			if (vel.getY() < 0)
-				vel.setY(vel.getY() * 0.3f);
+				vel.setY(vel.getY() * 0.5f);
 			else
 				vel.setY(vel.getY() * 0.3f);
 
@@ -795,17 +800,20 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	/// partly submerged
 	else
 	{
+		/// hack for balancing
+		forcePos = Rotate(btVector3(0, -abs(m_liquidHeight - depth), 0), tr.getRotation()) / volume;
+
 		float submerged = m_liquidHeight - depth + maxDepth;
 		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *m_liquidDensity*volume, 0);
 		body->setDamping(0.7, 0.7);
 		/// waves
 		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)
-			body->applyCentralForce(m_waveDirection * m_forceScale);
+			body->applyForce(m_waveDirection * m_forceScale,forcePos);
 		else if (dTime > m_waveFreq + m_waveDuration)
 			clock.reset();
 	}
 
-	body->applyCentralForce(bouyancyForce * m_forceScale);
+	body->applyForce(bouyancyForce * m_forceScale,forcePos);
 }
 
 ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion quat)
@@ -820,6 +828,20 @@ ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion 
 	ape::Quaternion resultAsQuat = quat * vecAsQuat * quat.Inverse();
 
 	return ape::Vector3(resultAsQuat.x,resultAsQuat.y,resultAsQuat.z);
+}
+
+btVector3 ape::BulletPhysicsPlugin::Rotate(btVector3 vec, btQuaternion quat)
+{
+	btQuaternion vecAsQuat(
+		0,
+		vec.getX(),
+		vec.getY(),
+		vec.getZ()
+	);
+
+	btQuaternion resultAsQuat = quat * vecAsQuat * quat.inverse() ;
+
+	return btVector3(resultAsQuat.getX(), resultAsQuat.getY(), resultAsQuat.getZ());
 }
 
 void ape::BulletPhysicsPlugin::setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec)

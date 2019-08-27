@@ -271,3 +271,8 @@ option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationPlugin?" ON )
 if (${APE_PLUGIN_PhysicsSimulationScene})
 	add_subdirectory (physicsSimulationScene)
 endif ()
+
+option(APE_PLUGIN_WaterGame "Use WaterGamePlugin?" ON )
+if (${APE_PLUGIN_WaterGame})
+	add_subdirectory (waterGame)
+endif ()

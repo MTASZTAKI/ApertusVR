@@ -2,7 +2,48 @@
   "environment": "water",
   "cubes": {
     "enable": true,
-    "arraySize" :  [6, 2, 20],
-    "initPos": [-100, 500,-50]
-  }
+    "arraySize": [ 6, 2, 6 ],
+    "initPos": [ 0, 600, 0 ]
+  },
+  "spheres": {
+    "enable": false,
+    "arraySize": [ 6, 1, 6 ],
+    "initPos": [ -60, 200, -120 ]
+  },
+  "assets": [
+    {
+      "name": "shape01",
+      "shape": "sphere",
+      "radius": 20.0,
+      "position": [ -150, 400, 20 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "yellow"
+    },
+    {
+      "name": "box01",
+      "shape": "box",
+      "dims": [ 25, 25, 25 ],
+      "position": [ -200, 240, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "green"
+    },
+    {
+      "name": "cone01",
+      "shape": "cone",
+      "radius": 35.0,
+      "height": 40.0,
+      "position": [ -160, 360, -30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "red"
+    },
+    {
+      "name": "cylinder01",
+      "shape": "cylinder",
+      "radius": 15.0,
+      "height": 25.0,
+      "position": [ -200, 220, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
+    }
+  ]
 }

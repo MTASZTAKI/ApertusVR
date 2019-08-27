@@ -1,27 +1,28 @@
 #include "GameManager.h"
 
-TexasEEG::GameManager::GameManager(ape::NodeWeakPtr userNode)
+WaterGame::GameManager::GameManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode)
 {
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mTime = 0;
 	mScore = 0;
 	mUserNode = userNode;
-	mBubbleManager = new TexasEEG::BubbleManager(userNode);
+	mUserBodyNode = userBodyNode;
+	mBubbleManager = new WaterGame::BubbleManager(userNode, userBodyNode);
 
 	Init();
 }
 
-TexasEEG::GameManager::~GameManager()
+WaterGame::GameManager::~GameManager()
 {
 }
 
-void TexasEEG::GameManager::Init()
+void WaterGame::GameManager::Init()
 {
 	APE_LOG_TRACE("timeText create");
 	if (auto timerNode = mpSceneManager->createNode("timerNode").lock())
 	{
-		timerNode->setParentNode(mUserNode);
-		timerNode->setPosition(ape::Vector3(-18, 10, -30));
+		timerNode->setParentNode(mUserBodyNode);
+		timerNode->setPosition(ape::Vector3(-18, 10, -40));
 
 		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", ape::Entity::GEOMETRY_TEXT);
 		if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
@@ -36,8 +37,8 @@ void TexasEEG::GameManager::Init()
 	APE_LOG_TRACE("scoreText create");
 	if (auto scoreNode = mpSceneManager->createNode("scoreNode").lock())
 	{
-		scoreNode->setParentNode(mUserNode);
-		scoreNode->setPosition(ape::Vector3(18, 10, -30));
+		scoreNode->setParentNode(mUserBodyNode);
+		scoreNode->setPosition(ape::Vector3(18, 10, -40));
 
 		mScoreText = mpSceneManager->createEntity("scoreText", ape::Entity::GEOMETRY_TEXT);
 		if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
@@ -53,7 +54,7 @@ void TexasEEG::GameManager::Init()
 	mTimerThread->detach();
 }
 
-void TexasEEG::GameManager::Timer()
+void WaterGame::GameManager::Timer()
 {
 	while (true)
 	{
@@ -62,16 +63,16 @@ void TexasEEG::GameManager::Timer()
 	}
 }
 
-void TexasEEG::GameManager::Run()
+void WaterGame::GameManager::Run()
 {
 	while (mBubbleManager->isGameOver() == false)
 	{
-		if (auto userNode = mUserNode.lock())
+		if (auto userBodyNode = mUserBodyNode.lock())
 		{
 			for (int i = 0; i < mBubbleManager->getAvtivatedBubblesQueue()->size(); i++)
 			{
-				if (userNode->getPosition().distance(mBubbleManager->getAvtivatedBubblesQueue()->at(i)->getPosition()) < 30)
-				{					
+				if (userBodyNode->getPosition().distance(mBubbleManager->getAvtivatedBubblesQueue()->at(i)->getPosition()) < 30)
+				{
 					std::lock_guard<std::mutex> lock(lockMutex);
 
 					mScore += mBubbleManager->getAvtivatedBubblesQueue()->at(i)->getCounter();
@@ -94,7 +95,7 @@ void TexasEEG::GameManager::Run()
 	APE_LOG_TRACE("gameOver");
 }
 
-void TexasEEG::GameManager::Start()
+void WaterGame::GameManager::Start()
 {
 	mBubbleManager->CreateBubbles(3);
 	mBubbleManager->StartBubbles(3);
@@ -104,20 +105,20 @@ void TexasEEG::GameManager::Start()
 	mGameThread->detach();
 }
 
-void TexasEEG::GameManager::Pause()
+void WaterGame::GameManager::Pause()
 {
 }
 
-void TexasEEG::GameManager::Stop()
+void WaterGame::GameManager::Stop()
 {
 }
 
-int TexasEEG::GameManager::GetScore()
+int WaterGame::GameManager::GetScore()
 {
 	return mScore;
 }
 
-void TexasEEG::GameManager::UpdateTime()
+void WaterGame::GameManager::UpdateTime()
 {
 	mTime++;
 	if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
@@ -126,7 +127,7 @@ void TexasEEG::GameManager::UpdateTime()
 	}
 }
 
-void TexasEEG::GameManager::UpdateScore(int score)
+void WaterGame::GameManager::UpdateScore(int score)
 {
 	if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
 	{
@@ -134,7 +135,7 @@ void TexasEEG::GameManager::UpdateScore(int score)
 	}
 }
 
-void TexasEEG::GameManager::UpdateStatus()
+void WaterGame::GameManager::UpdateStatus()
 {
 	mStatusText = mpSceneManager->createEntity("statusText", ape::Entity::GEOMETRY_TEXT);
 	if (auto statusText = std::static_pointer_cast<ape::ITextGeometry>(mStatusText.lock()))

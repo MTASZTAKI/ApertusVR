@@ -50,7 +50,7 @@ class ApePackageManager:
     def createPluginTemplate(self, args):
         pluginName = uncapitalize(args.name)
         pluginPath = '../../plugins/' + pluginName + '/'
-        pluginClassName = 'Ape' + capitalize(pluginName) + 'Plugin'
+        pluginClassName = 'ape' + capitalize(pluginName) + 'Plugin'
         pluginHeaderName = 'APE_' + capitalize(pluginName) + 'PLUGIN_H'
         pluginsCMakeListsOptionName = 'APE_PLUGIN_' + capitalize(pluginName)
         pluginsCMakeListsCaptionName = capitalize(pluginName) + 'Plugin'
@@ -137,7 +137,7 @@ class ApePackageManager:
         sampleName = uncapitalize(args.name)
         samplePath = '../../samples/' + sampleName + '/'
         configPath = samplePath + 'configs/'
-        sampleClassName = 'Ape' + capitalize(sampleName)
+        sampleClassName = 'ape' + capitalize(sampleName)
         samplesCMakeListsOptionName = 'APE_SAMPLES_' + capitalize(sampleName)
 
         sampleCppFileName = sampleClassName + '.cpp'

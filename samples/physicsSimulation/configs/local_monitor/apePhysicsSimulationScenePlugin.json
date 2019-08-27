@@ -1,8 +1,0 @@
-{
-  "environment": "water",
-  "cubes": {
-    "enable": true,
-    "arraySize" :  [6, 2, 20],
-    "initPos": [-100, 500,-50]
-  }
-}

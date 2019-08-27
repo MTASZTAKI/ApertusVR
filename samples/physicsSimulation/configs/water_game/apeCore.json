@@ -3,7 +3,7 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeSkyWaterTerrainScenePlugin",
-    "apeTexasEEGPlugin",
+    "apeWaterGamePlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {

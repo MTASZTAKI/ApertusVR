@@ -20,59 +20,72 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_BUBBLEMANAGER_H
-#define APE_BUBBLEMANAGER_H
+#ifndef APE_GAMEMANAGER_H
+#define APE_GAMEMANAGER_H
 
-#include <deque>
 #include <thread>
 #include <mutex>
 #include "ape.h"
+#include "managers/apeISceneManager.h"
+#include "managers/apeICoreConfig.h"
 #include "managers/apeILogManager.h"
-#include "Bubble.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIManualPass.h"
+#include "BubbleManager.h"
 
-namespace TexasEEG
+namespace WaterGame
 {
-	class BubbleManager
+	class GameManager
 	{
 	private:
-		ape::NodeWeakPtr mUserNode;
+		ape::ISceneManager* mpSceneManager;
+
+		std::thread* mGameThread;
 
 		std::thread* mTimerThread;
 
-		std::deque<TexasEEG::Bubble*> mBubbleQueue;
+		WaterGame::BubbleManager* mBubbleManager;
 
-		std::deque<TexasEEG::Bubble*> mActivatedBubbleQueue;
+		ape::NodeWeakPtr mUserNode;
+
+		ape::NodeWeakPtr mUserBodyNode;
 
 		std::mutex lockMutex;
 
-		int mSkippedValue;
+		ape::EntityWeakPtr mStatusText;
 
-		bool mGameOver;
+		ape::EntityWeakPtr mTimeText;
+
+		ape::EntityWeakPtr mScoreText;
+
+		int mTime;
+
+		int mScore;
+
+		void Timer();
+
+		void Init();
 
 		void Run();
 
-		void UpdateTimers();
-
 	public:
-		BubbleManager(ape::NodeWeakPtr userNode);
+		GameManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode);
 
-		~BubbleManager();
+		~GameManager();
 
-		void CreateBubbles(int num);
+		void Start();
 
-		void RemoveBubbles(int num);
+		void Pause();
 
-		void StartBubbles(int num);
+		void Stop();
 
-		void StartGame();
+		int GetScore();
 
-		bool isGameOver();
+		void UpdateTime();
 
-		int getSkippedValue();
+		void UpdateScore(int score);
 
-		void resetSkippedValue();
-
-		std::deque<TexasEEG::Bubble*>* getAvtivatedBubblesQueue();
+		void UpdateStatus();
 	};
 }
 

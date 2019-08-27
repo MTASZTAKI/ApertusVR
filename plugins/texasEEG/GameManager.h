@@ -48,8 +48,6 @@ namespace TexasEEG
 
 		ape::NodeWeakPtr mUserNode;
 
-		ape::NodeWeakPtr mUserBodyNode;
-
 		std::mutex lockMutex;
 
 		ape::EntityWeakPtr mStatusText;
@@ -69,7 +67,7 @@ namespace TexasEEG
 		void Run();
 
 	public:
-		GameManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode);
+		GameManager(ape::NodeWeakPtr userNode);
 
 		~GameManager();
 

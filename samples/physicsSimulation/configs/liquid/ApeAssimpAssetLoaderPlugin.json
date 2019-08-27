@@ -1,13 +1,13 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "file": "/plugins/assimpAssetLoader/resources/Duck.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [1000,1000,1000],
-      "position": [ 0,100, 0 ],
+      "scale": [ 0.6, 0.6, 0.6 ],
+      "position": [ 0, 400, 0 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
-      "rootNodeName": "lantern",
+      "rootNodeName": "duckNode",
       "physics": {
         "mass": 1.0,
         "restitution": 0.2,
@@ -16,7 +16,26 @@
         "spinning friction": 0.1,
         "linear damping": 0.01,
         "angular damping": 0.05,
-        "bouyancyEnabled": false
+        "bouyancyEnabled": true
+      }
+    },
+    {
+      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "mergeAndExportMeshes": false,
+      "scale": [ 1000, 1000, 1000 ],
+      "position": [ 0, 1000, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "regenerateNormals": true,
+      "rootNodeName": "avoNode",
+      "physics": {
+        "mass": 1.0,
+        "restitution": 0.2,
+        "friction": 0.5,
+        "rolling friction": 0.1,
+        "spinning friction": 0.1,
+        "linear damping": 0.01,
+        "angular damping": 0.05,
+        "bouyancyEnabled": true
       }
     }
   ]

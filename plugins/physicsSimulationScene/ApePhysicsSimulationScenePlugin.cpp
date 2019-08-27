@@ -52,7 +52,6 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 				m_waterEnabled = environment == "water";
 				m_groundIsWavy = environment == "terrain";
 			}
-
 			if (jsonDocument.HasMember("cubes"))
 			{
 				rapidjson::Value& input = jsonDocument["cubes"];
@@ -75,77 +74,80 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 					}
 				}
 			}
+			if (jsonDocument.HasMember("spheres"))
+			{
+				rapidjson::Value& input = jsonDocument["spheres"];
 
+				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				{
+					if (it->name == "enable")
+						m_spheres = it->value.GetBool();
+					if (it->name == "arraySize")
+					{
+						m_spheresArraySize[0] = it->value.GetArray()[0].GetInt();
+						m_spheresArraySize[1] = it->value.GetArray()[1].GetInt();
+						m_spheresArraySize[2] = it->value.GetArray()[2].GetInt();
+					}
+					if (it->name == "initPos")
+					{
+						m_spheresInitPos.x = it->value.GetArray()[0].GetFloat();
+						m_spheresInitPos.y = it->value.GetArray()[1].GetFloat();
+						m_spheresInitPos.z = it->value.GetArray()[2].GetFloat();
+					}
+				}
+			}
 			if (jsonDocument.HasMember("assets"))
 			{
 				rapidjson::Value& input = jsonDocument["assets"];
 
 				for (auto& asset : input.GetArray())
 				{
-					std::string shape, name;
-					float radius, height;
-					ape::Vector3 dims, position;
-					ape::Quaternion orientatioin;
-					shapeColors color;
+					AssetConfig assetConfig;
+
 					for (rapidjson::Value::MemberIterator assetMemberIterator = asset.MemberBegin(); assetMemberIterator != asset.MemberEnd(); ++assetMemberIterator)
 					{
 						if (assetMemberIterator->name == "name")
-							name = assetMemberIterator->value.GetString();
+							assetConfig.name = assetMemberIterator->value.GetString();
 						else if (assetMemberIterator->name == "shape")
-							shape = assetMemberIterator->value.GetString();
+							assetConfig.shape = assetMemberIterator->value.GetString();
 						else if (assetMemberIterator->name == "radius")
-							radius = assetMemberIterator->value.GetFloat();
+							assetConfig.radius = assetMemberIterator->value.GetFloat();
 						else if (assetMemberIterator->name == "height")
-							height = assetMemberIterator->value.GetFloat();
+							assetConfig.height = assetMemberIterator->value.GetFloat();
 						else if (assetMemberIterator->name == "dims")
 						{
-							dims.x = assetMemberIterator->value.GetArray()[0].GetFloat();
-							dims.y = assetMemberIterator->value.GetArray()[1].GetFloat();
-							dims.z = assetMemberIterator->value.GetArray()[2].GetFloat();
+							assetConfig.dims.x = assetMemberIterator->value.GetArray()[0].GetFloat();
+							assetConfig.dims.y = assetMemberIterator->value.GetArray()[1].GetFloat();
+							assetConfig.dims.z = assetMemberIterator->value.GetArray()[2].GetFloat();
 						}
 						else if (assetMemberIterator->name == "position")
 						{
-							position.x = assetMemberIterator->value.GetArray()[0].GetFloat();
-							position.y = assetMemberIterator->value.GetArray()[1].GetFloat();
-							position.z = assetMemberIterator->value.GetArray()[2].GetFloat();
+							assetConfig.pos.x = assetMemberIterator->value.GetArray()[0].GetFloat();
+							assetConfig.pos.y = assetMemberIterator->value.GetArray()[1].GetFloat();
+							assetConfig.pos.z = assetMemberIterator->value.GetArray()[2].GetFloat();
 						}
 						else if (assetMemberIterator->name == "orientation")
 						{
-							orientatioin.w = assetMemberIterator->value.GetArray()[0].GetFloat();
-							orientatioin.x = assetMemberIterator->value.GetArray()[1].GetFloat();
-							orientatioin.y = assetMemberIterator->value.GetArray()[2].GetFloat();
-							orientatioin.z = assetMemberIterator->value.GetArray()[3].GetFloat();
+							assetConfig.orient.w = assetMemberIterator->value.GetArray()[0].GetFloat();
+							assetConfig.orient.x = assetMemberIterator->value.GetArray()[1].GetFloat();
+							assetConfig.orient.y = assetMemberIterator->value.GetArray()[2].GetFloat();
+							assetConfig.orient.z = assetMemberIterator->value.GetArray()[3].GetFloat();
 						}
 						else if (assetMemberIterator->name == "color")
 						{
 							std::string colorStr = assetMemberIterator->value.GetString();
 							if (colorStr == "blue")
-								color = BLUE;
+								assetConfig.color = ape::Color(0.01f, 0.01f, 0.7f);
 							else if (colorStr == "red")
-								color = RED;
+								assetConfig.color = ape::Color(0.7f, 0.01f, 0.01f);
 							else if (colorStr == "green")
-								color = GREEN;
+								assetConfig.color = ape::Color(0.01f,0.7f,0.01f);
 							else if (colorStr == "yellow")
-								color = YELLOW;
+								assetConfig.color = ape::Color(0.7f, 0.7f, 0.01f);
 						}
 					}
 
-					if (shape == "sphere")
-					{
-						makeSphere(name, radius, position, orientatioin,color);
-					}
-					else if (shape == "cone")
-					{
-						makeCone(name, radius, height, position, orientatioin,color);
-					}
-					else if (shape == "cylinder")
-					{
-						makeCylinder(name, radius, height, position, orientatioin,color);
-					}
-					else if (shape == "box")
-					{
-						makeBox(name, dims, position, orientatioin,color);
-					}
+					m_assets.push_back(assetConfig);
 				}
 			}
 
@@ -177,7 +179,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	{
 		if (m_waterEnabled)
 		{
-			makeWater("water", ape::Vector2(3000, 3000), ape::Vector3(0, 300, 0));
+			makeWater("water", ape::Vector2(10000, 10000), ape::Vector3(0, 300, 0));
 		}
 		else if (m_groundIsWavy)
 		{
@@ -196,61 +198,20 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 
 	//makeCone("cone11", 10.f, 15.f, { 0,200,0 });
 
-
-	if (m_cubes)
+	for (auto& asset : m_assets)
 	{
-		for (int i = 0; i < m_cubesArraySize[0]; i++)
-		{
-			std::stringstream ssi;
-			ssi << i;
-			for (int j = 0; j < m_cubesArraySize[1]; j++)
-			{
-				std::stringstream ssj;
-				ssj << j;
-				for (int k = 0; k < m_cubesArraySize[2]; k++)
-				{
-					std::stringstream ssk;
-					ssk << k;
-
-					if (auto boxNode = mpSceneManager->createNode("boxNode" + ssi.str() + ssj.str() + ssk.str()).lock())
-					{
-						// material for box
-						std::shared_ptr<ape::IManualMaterial> boxMaterial;
-						if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
-						{
-							boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));
-							boxMaterial->setSpecularColor(ape::Color(float(i) / float(m_cubesArraySize[0] - 1), float(j) / float(m_cubesArraySize[1] - 1), float(k) / float(m_cubesArraySize[2] - 1)));
-						}
-
-
-						boxNode->setPosition(m_cubesInitPos + ape::Vector3(float(i * 10 - m_cubesArraySize[0] * 10 / 2 + 5), float(j * 10), float(k * 10 - m_cubesArraySize[2] * 10 / 2 + 5)));
-
-						// oordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-						if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
-						{
-							box->setParameters(ape::Vector3(10, 10, 10));
-							box->setParentNode(boxNode);
-							box->setMaterial(boxMaterial);
-
-
-							if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
-							{
-								boxBody->setToStatic();
-								boxBody->setGeometry(box);
-								boxBody->setParentNode(boxNode);
-								boxBody->setRestitution(0.6f);
-								boxBody->setDamping(0.01, 0.01);
-								boxBody->setBouyancy(m_waterEnabled);
-								boxBody->setToDynamic(1.0f);
-
-								m_bodies.push_back(boxBody);
-							}
-						}
-					}
-				}
-			}
-		}
+		if (asset.shape == "sphere")
+			makeSphere(asset.name, asset.radius, asset.pos, asset.orient, asset.color);
+		else if (asset.shape == "cone")
+			makeCone(asset.name, asset.radius, asset.height, asset.pos, asset.orient, asset.color);
+		else if(asset.shape == "cylinder")
+			makeCylinder(asset.name, asset.radius, asset.height, asset.pos, asset.orient, asset.color);
+		else if (asset.shape == "box")
+			makeBox(asset.name, asset.dims, asset.pos, asset.orient, asset.color);
 	}
+
+	makeCubeArray();
+	makeSphereArray();
 
 	APE_LOG_FUNC_LEAVE();
 }
@@ -293,9 +254,9 @@ void ape::apePhysicsSimulationScenePlugin::makeTerrain(std::string name, ape::Ve
 {
 	if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 	{
-		material->setDiffuseColor(ape::Color(0.5f, 0.5f, 0.5f));
-		material->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f));
-		//material->setCullingMode(ape::Material::CullingMode::NONE_CM);
+		material->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
+		material->setSpecularColor(ape::Color(0.3f, 0.3f, 0.2f));
+		material->setCullingMode(ape::Material::CullingMode::NONE_CM);
 
 		if (auto node = mpSceneManager->createNode(name + "Node").lock())
 		{
@@ -314,7 +275,7 @@ void ape::apePhysicsSimulationScenePlugin::makeTerrain(std::string name, ape::Ve
 				const float TRIANGLE_SIZE = 30.f;
 
 				float offset = -50;
-				const float waveheight = 30.f;
+				const float waveheight = 20.f;
 
 
 				ape::GeometryCoordinates coordinates;
@@ -361,7 +322,7 @@ void ape::apePhysicsSimulationScenePlugin::makeTerrain(std::string name, ape::Ve
 					terrainBody->setToStatic();
 					terrainBody->setParentNode(node);
 					terrainBody->setGeometry(terrain);
-					terrainBody->setRestitution(0.6f);
+					terrainBody->setRestitution(0.8f);
 					terrainBody->setFriction(0.5, 0.3, 0.3);
 
 				}
@@ -416,7 +377,7 @@ void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vect
 
 			if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
 			{
-				box->setParameters(ape::Vector3(3000.f, pos.y, 3000.f));
+				box->setParameters(ape::Vector3(size.x, pos.y, size.y));
 				box->setParentNode(boxNode);
 				box->setMaterial(boxMaterial);
 			}
@@ -424,62 +385,43 @@ void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vect
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
+void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, ape::Color color = ape::Color())
 {
 	// create box geometry
-	if (auto boxNode = mpSceneManager->createNode("boxNode").lock())
+	if (auto boxNode = mpSceneManager->createNode(name+"Node").lock())
 	{
 		// material for box
 		std::shared_ptr<ape::IManualMaterial> boxMaterial;
-		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("boxMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			switch (color)
-			{
-			case ape::apePhysicsSimulationScenePlugin::BLUE:
-				boxMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
-				boxMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::RED:
-				boxMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
-				boxMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::GREEN:
-				boxMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
-				boxMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::YELLOW:
-				boxMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
-				boxMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
-				break;
-			default:
-				break;
-			}
+			boxMaterial->setDiffuseColor(color);
+			boxMaterial->setSpecularColor(color);
 		}
 
 		boxNode->setPosition(pos);
 		boxNode->setOrientation(orient);
 
-		ape::BoxGeometrySharedPtr box;
-		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("box", ape::Entity::GEOMETRY_BOX).lock()))
+		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
 		{
 			box->setParameters(dims);
 			box->setParentNode(boxNode);
 			box->setMaterial(boxMaterial);
-		}
 
-		if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("boxbody", ape::Entity::RIGIDBODY).lock()))
-		{
-			boxBody->setToDynamic(1.0f);
-			boxBody->setParentNode(boxNode);
-			boxBody->setGeometry(box);
-			boxBody->setRestitution(0.8f);
-			boxBody->setFriction(0.5, 0.3, 0.3);
-			boxBody->setBouyancy(m_waterEnabled);
+
+			if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
+			{
+				boxBody->setToDynamic(1.0f);
+				boxBody->setParentNode(boxNode);
+				boxBody->setGeometry(box);
+				boxBody->setRestitution(0.8f);
+				boxBody->setFriction(0.5, 0.3, 0.3);
+				boxBody->setBouyancy(m_waterEnabled);
+			}
 		}
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float radius, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
+void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float radius, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, ape::Color color = ape::Color())
 {
 	if (auto sphereNode = mpSceneManager->createNode(name + "Node").lock())
 	{
@@ -487,27 +429,8 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 		std::shared_ptr<ape::IManualMaterial> sphereMaterial;
 		if (sphereMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			switch (color)
-			{
-			case ape::apePhysicsSimulationScenePlugin::BLUE:
-				sphereMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
-				sphereMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::RED:
-				sphereMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
-				sphereMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::GREEN:
-				sphereMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
-				sphereMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::YELLOW:
-				sphereMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
-				sphereMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
-				break;
-			default:
-				break;
-			}
+			sphereMaterial->setDiffuseColor(color);
+			sphereMaterial->setSpecularColor(color);
 		}
 
 		sphereNode->setPosition(pos);
@@ -533,39 +456,22 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
+void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, ape::Color color = ape::Color())
 {
-	if (auto coneNode = mpSceneManager->createNode("coneNode").lock())
+	if (auto coneNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 		// material for cone
 		std::shared_ptr<ape::IManualMaterial> coneMaterial;
-		if (coneMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coneMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (coneMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			switch (color)
-			{
-			case ape::apePhysicsSimulationScenePlugin::BLUE:
-				coneMaterial->setDiffuseColor(ape::Color(0.0, 0.0,1.0));
-				coneMaterial->setSpecularColor(ape::Color(0.0, 0.0,1.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::RED:
-				coneMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
-				coneMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::GREEN:
-				coneMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
-				coneMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::YELLOW:
-				coneMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
-				coneMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
-				break;
-			}
+			coneMaterial->setDiffuseColor(color);
+			coneMaterial->setSpecularColor(color);
 		}
 
 		coneNode->setPosition(pos);
 		coneNode->setOrientation(orient);
 
-		if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("cone", ape::Entity::GEOMETRY_CONE).lock()))
+		if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CONE).lock()))
 		{
 			cone->setParameters(radius,height,1,ape::Vector2(1,1));
 				
@@ -573,7 +479,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 			cone->setMaterial(coneMaterial);
 
 
-			if (auto coneBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("conebody", ape::Entity::RIGIDBODY).lock()))
+			if (auto coneBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
 			{
 				coneBody->setToDynamic(1.0f);
 				coneBody->setGeometry(cone);
@@ -590,48 +496,29 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, shapeColors color = BLUE)
+void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, ape::Color color = ape::Color())
 {
-	if (auto cylinderNode = mpSceneManager->createNode("cylinderNode").lock())
+	if (auto cylinderNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 		// material for cylinder
 		std::shared_ptr<ape::IManualMaterial> cylinderMaterial;
-		if (cylinderMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("cylinderMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (cylinderMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			switch (color)
-			{
-			case ape::apePhysicsSimulationScenePlugin::BLUE:
-				cylinderMaterial->setDiffuseColor(ape::Color(0.0, 0.0, 1.0));
-				cylinderMaterial->setSpecularColor(ape::Color(0.0, 0.0, 1.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::RED:
-				cylinderMaterial->setDiffuseColor(ape::Color(1.0, 0.0, 0.0));
-				cylinderMaterial->setSpecularColor(ape::Color(1.0, 0.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::GREEN:
-				cylinderMaterial->setDiffuseColor(ape::Color(0.0, 1.0, 0.0));
-				cylinderMaterial->setSpecularColor(ape::Color(0.0, 1.0, 0.0));
-				break;
-			case ape::apePhysicsSimulationScenePlugin::YELLOW:
-				cylinderMaterial->setDiffuseColor(ape::Color(1.0, 1.0, 0.0));
-				cylinderMaterial->setSpecularColor(ape::Color(1.0, 1.0, 0.0));
-				break;
-			default:
-				break;
-			}
+			cylinderMaterial->setDiffuseColor(color);
+			cylinderMaterial->setSpecularColor(color);
 		}
 
 
 		cylinderNode->setPosition(pos);
 		cylinderNode->setOrientation(ape::Quaternion(ape::Degree(90.f), ape::Vector3(1, 0, 0)));
-		if (auto cylinder = std::static_pointer_cast<ape::ICylinderGeometry>(mpSceneManager->createEntity("cylinder", ape::Entity::GEOMETRY_CYLINDER).lock()))
+		if (auto cylinder = std::static_pointer_cast<ape::ICylinderGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CYLINDER).lock()))
 		{
 			cylinder->setParameters(radius, height, 1);
 			cylinder->setParentNode(cylinderNode);
 			cylinder->setMaterial(cylinderMaterial);
 
 
-			if (auto cylinderBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("cylinderbody", ape::Entity::RIGIDBODY).lock()))
+			if (auto cylinderBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
 			{
 				cylinderBody->setToDynamic(1.0f);
 				cylinderBody->setGeometry(cylinder);
@@ -647,4 +534,117 @@ void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float 
 	}
 }
 
+void ape::apePhysicsSimulationScenePlugin::makeCubeArray()
+{
+	if (m_cubes)
+	{
+		for (int i = 0; i < m_cubesArraySize[0]; i++)
+		{
+			std::stringstream ssi;
+			ssi << i;
+			for (int j = 0; j < m_cubesArraySize[1]; j++)
+			{
+				std::stringstream ssj;
+				ssj << j;
+				for (int k = 0; k < m_cubesArraySize[2]; k++)
+				{
+					std::stringstream ssk;
+					ssk << k;
 
+					if (auto boxNode = mpSceneManager->createNode("xxboxNode" + ssi.str() + ssj.str() + ssk.str()).lock())
+					{
+						// material for box
+						std::shared_ptr<ape::IManualMaterial> boxMaterial;
+						if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("xxboxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
+						{
+							boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));
+							boxMaterial->setSpecularColor(ape::Color(float(i) / float(m_cubesArraySize[0] - 1), float(j) / float(m_cubesArraySize[1] - 1), float(k) / float(m_cubesArraySize[2] - 1)));
+						}
+
+
+						boxNode->setPosition(m_cubesInitPos + ape::Vector3(float(i * 10 - m_cubesArraySize[0] * 10 / 2 + 5), float(j * 10), float(k * 10 - m_cubesArraySize[2] * 10 / 2 + 5)));
+
+						
+						if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("xxbox" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
+						{
+							box->setParameters(ape::Vector3(10, 10, 10));
+							box->setParentNode(boxNode);
+							box->setMaterial(boxMaterial);
+
+
+							if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("xxboxbody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
+							{
+								boxBody->setToStatic();
+								boxBody->setGeometry(box);
+								boxBody->setParentNode(boxNode);
+								boxBody->setRestitution(0.6f);
+								boxBody->setDamping(0.01, 0.01);
+								boxBody->setBouyancy(m_waterEnabled);
+								boxBody->setToDynamic(1.0f);
+
+								m_bodies.push_back(boxBody);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void ape::apePhysicsSimulationScenePlugin::makeSphereArray()
+{
+	if (m_spheres)
+	{
+		for (int i = 0; i < m_spheresArraySize[0]; i++)
+		{
+			std::stringstream ssi;
+			ssi << i;
+			for (int j = 0; j < m_spheresArraySize[1]; j++)
+			{
+				std::stringstream ssj;
+				ssj << j;
+				for (int k = 0; k < m_spheresArraySize[2]; k++)
+				{
+					std::stringstream ssk;
+					ssk << k;
+
+					if (auto sphereNode = mpSceneManager->createNode("xxsphereNode" + ssi.str() + ssj.str() + ssk.str()).lock())
+					{
+						// material for sphere
+						std::shared_ptr<ape::IManualMaterial> sphereMaterial;
+						if (sphereMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("xxsphereMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
+						{
+							sphereMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_spheresArraySize[0]), float(j + 1) / float(m_spheresArraySize[1]), float(k + 1) / float(m_spheresArraySize[2])));
+							sphereMaterial->setSpecularColor(ape::Color(float(i) / float(m_spheresArraySize[0] - 1), float(j) / float(m_spheresArraySize[1] - 1), float(k) / float(m_spheresArraySize[2] - 1)));
+						}
+
+
+						sphereNode->setPosition(m_spheresInitPos + ape::Vector3(float(i * 10 - m_spheresArraySize[0] * 10 / 2 + 5), float(j * 10), float(k * 10 - m_spheresArraySize[2] * 10 / 2 + 5)));
+
+						if (auto sphere = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("xxsphere" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_SPHERE).lock()))
+						{
+							sphere->setParameters(5.0f, { 1,1 });
+							sphere->setParentNode(sphereNode);
+							sphere->setMaterial(sphereMaterial);
+
+
+							if (auto sphereBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("xxspherebody" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::RIGIDBODY).lock()))
+							{
+								sphereBody->setToStatic();
+								sphereBody->setGeometry(sphere);
+								sphereBody->setParentNode(sphereNode);
+								sphereBody->setRestitution(0.6f);
+								sphereBody->setDamping(0.01, 0.01);
+								sphereBody->setBouyancy(m_waterEnabled);
+								sphereBody->setToDynamic(1.0f);
+
+								m_bodies.push_back(sphereBody);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

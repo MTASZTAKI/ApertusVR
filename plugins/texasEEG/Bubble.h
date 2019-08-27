@@ -29,7 +29,6 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITextGeometry.h"
 #include "sceneelements/apeIManualMaterial.h"
-#include "sceneelements/apeIRigidBody.h"
 
 namespace TexasEEG
 {
@@ -47,8 +46,6 @@ namespace TexasEEG
 		ape::EntityWeakPtr mCounterText;
 
 		ape::EntityWeakPtr mMaterial;
-
-		ape::EntityWeakPtr mRigidBody;
 
 		ape::Vector3 mPosition;
 

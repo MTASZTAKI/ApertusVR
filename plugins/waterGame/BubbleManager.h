@@ -30,18 +30,20 @@ SOFTWARE.*/
 #include "managers/apeILogManager.h"
 #include "Bubble.h"
 
-namespace TexasEEG
+namespace WaterGame
 {
 	class BubbleManager
 	{
 	private:
 		ape::NodeWeakPtr mUserNode;
 
+		ape::NodeWeakPtr mUserBodyNode;
+
 		std::thread* mTimerThread;
 
-		std::deque<TexasEEG::Bubble*> mBubbleQueue;
+		std::deque<WaterGame::Bubble*> mBubbleQueue;
 
-		std::deque<TexasEEG::Bubble*> mActivatedBubbleQueue;
+		std::deque<WaterGame::Bubble*> mActivatedBubbleQueue;
 
 		std::mutex lockMutex;
 
@@ -54,7 +56,7 @@ namespace TexasEEG
 		void UpdateTimers();
 
 	public:
-		BubbleManager(ape::NodeWeakPtr userNode);
+		BubbleManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode);
 
 		~BubbleManager();
 
@@ -72,7 +74,7 @@ namespace TexasEEG
 
 		void resetSkippedValue();
 
-		std::deque<TexasEEG::Bubble*>* getAvtivatedBubblesQueue();
+		std::deque<WaterGame::Bubble*>* getAvtivatedBubblesQueue();
 	};
 }
 

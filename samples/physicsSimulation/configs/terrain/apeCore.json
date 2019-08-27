@@ -3,7 +3,8 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apePhysicsSimulationScenePlugin",
-    "apeBulletPhysicsPlugin"
+    "apeBulletPhysicsPlugin",
+    "apeAssimpAssetLoaderPlugin"
   ],
   "network": {
     "user": "cave",

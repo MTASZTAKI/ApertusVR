@@ -20,59 +20,80 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_BUBBLEMANAGER_H
-#define APE_BUBBLEMANAGER_H
+#ifndef APE_BUBBLE_H
+#define APE_BUBBLE_H
 
-#include <deque>
-#include <thread>
-#include <mutex>
 #include "ape.h"
 #include "managers/apeILogManager.h"
-#include "Bubble.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "sceneelements/apeIRigidBody.h"
 
-namespace TexasEEG
+namespace WaterGame
 {
-	class BubbleManager
+	class Bubble
 	{
 	private:
-		ape::NodeWeakPtr mUserNode;
-
 		std::thread* mTimerThread;
 
-		std::deque<TexasEEG::Bubble*> mBubbleQueue;
+		ape::ISceneManager* mpSceneManager;
 
-		std::deque<TexasEEG::Bubble*> mActivatedBubbleQueue;
+		ape::NodeWeakPtr mBubbleNode;
 
-		std::mutex lockMutex;
+		ape::EntityWeakPtr mGeometry;
 
-		int mSkippedValue;
+		ape::EntityWeakPtr mCounterText;
 
-		bool mGameOver;
+		ape::EntityWeakPtr mMaterial;
 
-		void Run();
+		ape::EntityWeakPtr mRigidBody;
 
-		void UpdateTimers();
+		ape::Vector3 mPosition;
+
+		int mValue;
+
+		int mTimerCount;
+
+		static int geometryCount;
+
+		bool mIsTimedOut;
+
+		int id;
+
+		void init();
 
 	public:
-		BubbleManager(ape::NodeWeakPtr userNode);
+		Bubble(ape::Vector3 pos = ape::Vector3(0, 0, 0), int maxCount = 10);
 
-		~BubbleManager();
+		~Bubble();
 
-		void CreateBubbles(int num);
+		void start(int counter);
 
-		void RemoveBubbles(int num);
+		void finish();
 
-		void StartBubbles(int num);
+		void hide();
 
-		void StartGame();
+		std::string getName();
 
-		bool isGameOver();
+		int getId();
 
-		int getSkippedValue();
+		ape::Vector3 getPosition();
 
-		void resetSkippedValue();
+		int getValue();
 
-		std::deque<TexasEEG::Bubble*>* getAvtivatedBubblesQueue();
+		int getCounter();
+
+		void setCounter(int num);
+
+		void decCounter();
+
+		void setColor(ape::Color color);
+
+		void setText(std::string caption);
+
+		bool isTimedOut();
 	};
 }
 
