@@ -307,9 +307,9 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
 					else
 						body->setToStatic();
-
 					body->setParentNode(node);
 					body->setGeometry(mesh,mPhysicsConfigs[assimpSceneID].colliderType);
+					
 					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
 					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
 									  mPhysicsConfigs[assimpSceneID].rollingFriction,

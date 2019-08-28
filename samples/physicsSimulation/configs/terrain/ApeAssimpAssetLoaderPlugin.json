@@ -4,8 +4,8 @@
       "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
       "mergeAndExportMeshes": false,
       "scale": [2,2,2],
-      "position": [ 20,250, 0 ],
-      "orientation": [ 0.0007963, 0, 0.9999997, 0 ],
+      "position": [ 50,250, 10],
+      "orientation": [1, 0, 0, 0 ],
       "regenerateNormals": true,
       "rootNodeName": "suzanne",
       "physics": {

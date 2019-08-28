@@ -3,12 +3,12 @@
   "cubes": {
     "enable": true,
     "arraySize": [ 6, 2, 6 ],
-    "initPos": [ 0, 600, 0 ]
+    "position": [ 0, 600, 0 ]
   },
   "spheres": {
     "enable": false,
     "arraySize": [ 6, 1, 6 ],
-    "initPos": [ -60, 200, -120 ]
+    "position": [ 0,0, 0]
   },
   "assets": [
     {
@@ -30,8 +30,8 @@
     {
       "name": "cone01",
       "shape": "cone",
-      "radius": 35.0,
-      "height": 40.0,
+      "radius": 30.0,
+      "height": 30.0,
       "position": [ -160, 360, -30 ],
       "orientation": [ 1, 0, 0, 0 ],
       "color": "red"
@@ -44,6 +44,14 @@
       "position": [ -200, 220, 30 ],
       "orientation": [ 1, 0, 0, 0 ],
       "color": "blue"
+    },
+    {
+      "name": "sphere03",
+      "shape" : "sphere",
+      "radius": 30.0,
+      "position": [ 0, 1000, -10 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color" :  "green"
     }
   ]
 }

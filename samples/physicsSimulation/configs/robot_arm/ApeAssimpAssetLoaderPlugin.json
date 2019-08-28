@@ -7,7 +7,7 @@
       "position": [ 0,100, 0 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
-      "rootNodeName": "lantern",
+      "rootNodeName": "avoNode",
       "physics": {
         "mass": 1.0,
         "restitution": 0.8,

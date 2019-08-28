@@ -2,13 +2,13 @@
   "environment": "terrain",
   "cubes": {
     "enable": false,
-    "arraySize": [ 6, 1, 6 ],
-    "initPos": [ 0, 400, 0 ]
+    "position": [ 0, 600, 0 ],
+    "arraySize": [ 6, 1, 6 ]
   },
   "spheres": {
-    "enable": false,
-    "arraySize": [ 6, 1, 6 ],
-    "initPos": [ 0, 350, 0 ]
+    "enable": true,
+    "position": [ 0, 500, 0 ],
+    "arraySize" :  [6,1,6]
   },
   "assets": [
     {
@@ -79,6 +79,14 @@
       "position": [ -30, 200, 30 ],
       "orientation": [ 1, 0, 0, 0 ],
       "color": "red"
+    },
+    {
+      "name": "box03",
+      "shape": "box",
+      "dims": [ 30, 20, 25 ],
+      "position": [ -30, 220, -30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
     }
   ]
 }

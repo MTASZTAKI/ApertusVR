@@ -31,7 +31,18 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 	m_solver = new btSequentialImpulseConstraintSolver();
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
 
+	/// default values for config variables
 	m_userProps.userExists = false;
+	m_fixedTimeStep = 0.16;
+	m_maxSubSteps = 1;
+	m_gravity = btVector3(0, -10, 0);
+	m_waveDirection = btVector3(0, 0, 0);
+	m_waveFreq = 5.0f;
+	m_waveDuration = 1.0f;
+	m_forceScale = 10.0f;
+	m_liquidHeight = 300.0f;
+	m_liquidDensity = 1.0f;
+	m_balanceInLiquid = false;
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
@@ -74,7 +85,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 				}
 				else if (event.type == ape::Event::Type::NODE_PARENTNODE)
 				{
-					
+
 				}
 			}
 		}
@@ -155,8 +166,8 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 							{
 								btScalar height = cone->getParameters().height;
 								btScalar radius = cone->getParameters().radius;
-								btCollisionShape* coneShape = new btConeShape(radius,height);
-								setOffsetVector(apeBodyName, ape::Vector3(0,-cone->getParameters().height / 2.0f, 0));
+								btCollisionShape* coneShape = new btConeShape(radius, height);
+								setOffsetVector(apeBodyName, ape::Vector3(0, -cone->getParameters().height / 2.0f, 0));
 								btScalar mass = apeBody->getMass();
 								m_volumes[apeBodyName] = radius * radius * M_PI * height / 3.0f;
 
@@ -236,7 +247,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 						case ape::Entity::Type::GEOMETRY_CLONE:
 							if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(geometry))
 							{
-								
+
 								std::string sourceGeometryName = cloneGeometry->getSourceGeometryName();
 								std::string apeBodyCopyName = m_geometryNameBodyNameMap[sourceGeometryName];
 								if (m_collisionShapes[apeBodyCopyName])
@@ -272,7 +283,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						/*btBody->setCollisionFlags(btBody->getCollisionFlags() |
 							btCollisionObject::CF_KINEMATIC_OBJECT);*/
-						/*btBody->setActivationState(DISABLE_DEACTIVATION);*/
+							/*btBody->setActivationState(DISABLE_DEACTIVATION);*/
 					}
 
 				}
@@ -301,11 +312,11 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 
 					btBody->setRestitution(apeBody->getRestitution());
 				}
-				else if(event.type == ape::Event::Type::RIGIDBODY_BOUYANCY)
+				else if (event.type == ape::Event::Type::RIGIDBODY_BOUYANCY)
 				{
-					if(m_bouyancyEnabled[apeBodyName] = apeBody->bouyancyEnabled())
+					if (m_bouyancyEnabled[apeBodyName] = apeBody->bouyancyEnabled())
 					{
-					
+
 					}
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_PARENTNODE)
@@ -314,12 +325,15 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					{
 						m_parentNodes[apeBodyName] = parentNode;
 
+						auto offset = -m_offsets[apeBodyName];
+						parentNode->translate(-m_offsets[apeBodyName],ape::Node::TransformationSpace::LOCAL);
+
 						m_shapeScales[apeBodyName] = fromApe(parentNode->getDerivedScale());
 						updateShapeScale(apeBodyName);
 
 						setTransform(apeBodyName,
 							fromApe(parentNode->getDerivedOrientation()),
-							fromApe(parentNode->getDerivedPosition()));					
+							fromApe(parentNode->getDerivedPosition()));
 
 						/// user 
 						if (parentNode->getName() == "userBodyNode")
@@ -334,7 +348,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
 		{
-			if(event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
+			if (event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
 			{
 				if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 				{
@@ -420,6 +434,8 @@ void ape::BulletPhysicsPlugin::Init()
 						m_liquidHeight = it->value.GetFloat();
 					else if (it->name == "liquidDensity")
 						m_liquidDensity = it->value.GetFloat();
+					else if (it->name == "balance")
+						m_balanceInLiquid = it->value.GetBool();
 				}
 			}
 		}
@@ -447,7 +463,7 @@ void ape::BulletPhysicsPlugin::Run()
 
 		/// takes one step of the simulation in the physics engine
 		///stepTime < maxNumSubSteps * internalTimeStep
-		m_dynamicsWorld->stepSimulation(m_dtSec,m_maxSubSteps,m_fixedTimeStep);
+		m_dynamicsWorld->stepSimulation(m_dtSec, m_maxSubSteps, m_fixedTimeStep);
 		btclock.reset();
 
 		for (auto it = m_collisionObjects.rbegin(); it != m_collisionObjects.rend(); it++)
@@ -469,31 +485,31 @@ void ape::BulletPhysicsPlugin::Run()
 			else
 				trans = body->getWorldTransform();
 
-			if(auto parentNode = m_parentNodes[apeBodyName].lock())
+			if (auto parentNode = m_parentNodes[apeBodyName].lock())
 			{
 				ape::Quaternion worldOrientation = fromBt(trans.getRotation());
 
 				btVector3 rotated_offset = fromApe(m_offsets[apeBodyName]);
 
 				ape::Vector3 worldPosition = fromBt(trans.getOrigin() + trans.getBasis() * rotated_offset);
-				
+
 				if (body && !body->isStaticObject() && !body->isKinematicObject())
 				{
-					ape::Vector3 inheritedPosition{0, 0, 0};
-					ape::Quaternion inheritedOrientation{1, 0, 0, 0};
-					ape::Vector3 inheritedScale{1, 1, 1};
+					ape::Vector3 inheritedPosition{ 0, 0, 0 };
+					ape::Quaternion inheritedOrientation{ 1, 0, 0, 0 };
+					ape::Vector3 inheritedScale{ 1, 1, 1 };
 					ape::NodeSharedPtr nodeIt = parentNode;
-					
+
 
 					while (auto parentParentNode = nodeIt->getParentNode().lock())
 					{
 						nodeIt = parentParentNode;
- 						inheritedPosition += Rotate(nodeIt->getPosition() / inheritedScale, inheritedOrientation);
-  						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
+						inheritedPosition += Rotate(nodeIt->getPosition() / inheritedScale, inheritedOrientation);
+						inheritedOrientation = inheritedOrientation * nodeIt->getOrientation();
 						inheritedScale = inheritedScale * nodeIt->getScale();
 					}
 
-					ape::Vector3 position = Rotate((worldPosition - inheritedPosition)/inheritedScale,inheritedOrientation);
+					ape::Vector3 position = Rotate((worldPosition - inheritedPosition) / inheritedScale, inheritedOrientation);
 					ape::Quaternion orientation = inheritedOrientation.Inverse() * worldOrientation;
 
 					parentNode->setOrientation(orientation);
@@ -502,7 +518,7 @@ void ape::BulletPhysicsPlugin::Run()
 				else
 				{
 					/*ape::Quaternion orientation = parentNode->getOrientation() * parentNode->getDerivedOrientation().Inverse() * worldOrientation;
-					
+
 					ape::Vector3 scale = parentNode->getScale();
 					ape::Vector3 pos = parentNode->getPosition();
 					ape::Vector3 position = parentNode->getPosition()-parentNode->getDerivedPosition() + worldPosition;
@@ -512,9 +528,9 @@ void ape::BulletPhysicsPlugin::Run()
 
 					btVector3 newPosition = fromApe(parentNode->getDerivedPosition());
 					btQuaternion newOrientation = fromApe(parentNode->getDerivedOrientation());
-			
+
 					btTransform newTrans = btTransform(newOrientation, newPosition);
-					
+
 					body->setWorldTransform(newTrans);
 				}
 			}
@@ -669,9 +685,9 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 		updateShapeScale(apeBodyName);
 
 		btVector3 localInertia;
-		if(body->getInvMass() > 0.0f)
+		if (body->getInvMass() > 0.0f)
 			colShape->calculateLocalInertia(mass, localInertia);
-			body->setMassProps(mass, localInertia);
+		body->setMassProps(mass, localInertia);
 	}
 
 
@@ -743,7 +759,8 @@ void ape::BulletPhysicsPlugin::updateShapeScale(std::string apeBodyName)
 			btCollisionShape* childShape = compShape->getChildShape(0);
 			btVector3 scaledCenterOfMass = m_shapeCenterOfMasses[apeBodyName] * scale;
 			compShape->setLocalScaling(scale);
-			m_offsets[apeBodyName] = fromBt(-scaledCenterOfMass);
+			setOffsetVector(apeBodyName, fromBt(-scaledCenterOfMass));
+			//m_offsets[apeBodyName] = fromBt(-scaledCenterOfMass);
 		}
 	}
 	else
@@ -757,7 +774,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 {
 	btVector3 aabbMin, aabbMax;
 	body->getAabb(aabbMin, aabbMax);
-	btScalar maxDepth = (aabbMax.getY() - aabbMin.getY())/2.0f;
+	btScalar maxDepth = (aabbMax.getY() - aabbMin.getY()) / 2.0f;
 	btScalar depth = tr.getOrigin().getY();
 
 	btScalar volumeScale = m_shapeScales[apeBodyName].getX() * m_shapeScales[apeBodyName].getY() * m_shapeScales[apeBodyName].getZ();
@@ -765,8 +782,10 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	/// pressing the volume (a rude solution to deal with big objects)
 	//volume = (2 * atan(volume) / M_PI * 800 + 800) / 50;
 	volume = log10(volume) * 5;
+
 	btVector3 bouyancyForce;
-	btVector3 forcePos(0,0,0);
+	btVector3 forcePos(0, 0, 0);
+	btVector3 surfaceTension(0, 0, 0);
 
 
 	static btClock clock;
@@ -781,7 +800,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 		if (abs(depth - m_liquidHeight - maxDepth) < 0.1)
 		{
 			btVector3 vel = body->getLinearVelocity();
-		
+
 			if (vel.getY() < 0)
 				vel.setY(vel.getY() * 0.5f);
 			else
@@ -789,7 +808,7 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 
 			body->setLinearVelocity(vel);
 		}
-		body->setDamping(m_dampings[apeBodyName].x,m_dampings[apeBodyName].y);
+		body->setDamping(m_dampings[apeBodyName].x, m_dampings[apeBodyName].y);
 	}
 	/// fully submerged
 	else if (depth <= m_liquidHeight - maxDepth)
@@ -801,19 +820,20 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 	else
 	{
 		/// hack for balancing
-		forcePos = Rotate(btVector3(0, -abs(m_liquidHeight - depth), 0), tr.getRotation()) / volume;
+		if (m_balanceInLiquid)
+			forcePos = Rotate(btVector3(0, depth - aabbMin.getY() /*-abs(m_liquidHeight - depth)*/, 0), tr.getRotation()) / 80;
 
 		float submerged = m_liquidHeight - depth + maxDepth;
 		bouyancyForce = btVector3(0, submerged / (2 * maxDepth) *m_liquidDensity*volume, 0);
 		body->setDamping(0.7, 0.7);
 		/// waves
 		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)
-			body->applyForce(m_waveDirection * m_forceScale,forcePos);
+			body->applyForce(m_waveDirection * m_forceScale, forcePos);
 		else if (dTime > m_waveFreq + m_waveDuration)
 			clock.reset();
 	}
 
-	body->applyForce(bouyancyForce * m_forceScale,forcePos);
+	body->applyForce(bouyancyForce * m_forceScale, forcePos);
 }
 
 ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion quat)
@@ -827,7 +847,7 @@ ape::Vector3 ape::BulletPhysicsPlugin::Rotate(ape::Vector3 vec, ape::Quaternion 
 
 	ape::Quaternion resultAsQuat = quat * vecAsQuat * quat.Inverse();
 
-	return ape::Vector3(resultAsQuat.x,resultAsQuat.y,resultAsQuat.z);
+	return ape::Vector3(resultAsQuat.x, resultAsQuat.y, resultAsQuat.z);
 }
 
 btVector3 ape::BulletPhysicsPlugin::Rotate(btVector3 vec, btQuaternion quat)
@@ -839,18 +859,19 @@ btVector3 ape::BulletPhysicsPlugin::Rotate(btVector3 vec, btQuaternion quat)
 		vec.getZ()
 	);
 
-	btQuaternion resultAsQuat = quat * vecAsQuat * quat.inverse() ;
+	btQuaternion resultAsQuat = quat * vecAsQuat * quat.inverse();
 
 	return btVector3(resultAsQuat.getX(), resultAsQuat.getY(), resultAsQuat.getZ());
 }
 
 void ape::BulletPhysicsPlugin::setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec)
 {
-	if (auto body = btRigidBody::upcast(m_collisionObjects[apeBodyName]))
+	if (auto parentNode = m_parentNodes[apeBodyName].lock())
 	{
-		////body->translate(fromApe(m_offsets[apeBodyName]));
-		//btTransform tr(body->getWorldTransform());
-		//body->translate(tr.getBasis() * fromApe(-offsetVec));
+		auto pNodePos0 = parentNode->getDerivedPosition();
+		/*parentNode->translate(-m_offsets[apeBodyName], ape::Node::TransformationSpace::LOCAL);
+		parentNode->translate(offsetVec, ape::Node::TransformationSpace::LOCAL);*/
+		auto pNodePos1 = parentNode->getPosition();
 	}
 	m_offsets[apeBodyName] = offsetVec;
 }

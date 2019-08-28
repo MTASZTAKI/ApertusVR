@@ -110,10 +110,6 @@ namespace ape
 
 		btVector3 m_gravity;
 
-		btScalar m_plainHeight;
-
-		bool m_showBoundingBox;
-
 		btVector3 m_waveDirection;
 
 		btScalar m_waveFreq;
@@ -125,6 +121,8 @@ namespace ape
 		btScalar m_liquidHeight;
 
 		btScalar m_liquidDensity;
+
+		bool m_balanceInLiquid;
 
 		/// member pointers for bullet
 

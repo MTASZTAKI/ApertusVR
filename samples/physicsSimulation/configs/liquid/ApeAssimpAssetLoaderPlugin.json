@@ -4,8 +4,8 @@
       "file": "/plugins/assimpAssetLoader/resources/Duck.gltf",
       "mergeAndExportMeshes": false,
       "scale": [ 0.6, 0.6, 0.6 ],
-      "position": [ 0, 400, 0 ],
-      "orientation": [ 1, 0, 0, 0 ],
+      "position": [ 0, 350, 0 ],
+      "orientation": [ 1, 0, 0, 0],
       "regenerateNormals": true,
       "rootNodeName": "duckNode",
       "physics": {
@@ -20,13 +20,32 @@
       }
     },
     {
-      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "file": "/plugins/assimpAssetLoader/resources/Waterbottle.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [ 1000, 1000, 1000 ],
-      "position": [ 0, 1000, 0 ],
+      "scale": [ 300, 300, 300 ],
+      "position": [ 0, 420, -60 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
-      "rootNodeName": "avoNode",
+      "rootNodeName": "wbNode",
+      "physics": {
+        "mass": 1.0,
+        "restitution": 0.2,
+        "friction": 0.5,
+        "rolling friction": 0.1,
+        "spinning friction": 0.1,
+        "linear damping": 0.01,
+        "angular damping": 0.05,
+        "bouyancyEnabled": true
+      }
+    },
+    {
+      "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
+      "mergeAndExportMeshes": false,
+      "scale": [ 2, 2, 2],
+      "position": [ 0, 450, -100 ],
+      "orientation": [ 0.0007963, 0, 0.9999997, 0],
+      "regenerateNormals": true,
+      "rootNodeName": "suzanneNode",
       "physics": {
         "mass": 1.0,
         "restitution": 0.2,
