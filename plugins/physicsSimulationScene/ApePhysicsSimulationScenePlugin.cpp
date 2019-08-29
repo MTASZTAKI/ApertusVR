@@ -161,21 +161,25 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	}
 
 	//mpSceneMakerMacro->makeLit();
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
+	if (!m_waterEnabled)
 	{
-		light->setLightType(ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+		if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(ape::Light::Type::DIRECTIONAL);
+			light->setLightDirection(ape::Vector3(1, -1, 0));
+			light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
+			light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+		}
+		if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT).lock()))
+		{
+			light->setLightType(ape::Light::Type::DIRECTIONAL);
+			light->setLightDirection(ape::Vector3(0, -1, 1));
+			light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
+			light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+		}
+
+		mpSceneMakerMacro->makeBackground();
 	}
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT).lock()))
-	{
-		light->setLightType(ape::Light::Type::DIRECTIONAL);
-		light->setLightDirection(ape::Vector3(0, -1, 1));
-		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
-	}
-	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeCoordinateSystem();
 	//mpSceneMakerMacro->makeTerrain("terrain");
 	//mpSceneMakerMacro->makeBox("a1");
@@ -184,7 +188,10 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	{
 		if (m_waterEnabled)
 		{
-			makeWater("water", ape::Vector2(10000, 10000), ape::Vector3(0, 300, 0));
+			//makeWater("water", ape::Vector2(10000, 10000), ape::Vector3(0, 300, 0));
+
+			
+
 		}
 		else if (m_groundIsWavy)
 		{
@@ -398,7 +405,7 @@ void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector
 	if (auto boxNode = mpSceneManager->createNode(name+"Node").lock())
 	{
 		// material for box
-		std::shared_ptr<ape::IManualMaterial> boxMaterial;
+		ape::ManualMaterialSharedPtr boxMaterial;
 		if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			boxMaterial->setDiffuseColor(color);
@@ -408,14 +415,15 @@ void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector
 		boxNode->setPosition(pos);
 		boxNode->setOrientation(orient);
 
-		if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
+		ape::BoxGeometrySharedPtr box;
+		if (box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
 		{
 			box->setParameters(dims);
 			box->setParentNode(boxNode);
 			box->setMaterial(boxMaterial);
 
-
-			if (auto boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
+			ape::RigidBodySharedPtr boxBody;
+			if (boxBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(name + "Body", ape::Entity::RIGIDBODY).lock()))
 			{
 				boxBody->setToDynamic(1.0f);
 				boxBody->setParentNode(boxNode);
@@ -564,6 +572,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCubeArray()
 					{
 						boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));
 						boxMaterial->setSpecularColor(ape::Color(float(i) / float(m_cubesArraySize[0] - 1), float(j) / float(m_cubesArraySize[1] - 1), float(k) / float(m_cubesArraySize[2] - 1)));
+						boxMaterial->setAmbientColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));
 					}
 
 
@@ -624,20 +633,21 @@ void ape::apePhysicsSimulationScenePlugin::makeSphereArray()
 							switch (rand()%4)
 							{
 							case 0:
-								color = ape::Color(0.01f, 0.01f, 0.7f);
+								color = ape::Color(0.01f, 0.01f, 0.7f, 0.6f);
 								break;
 							case 1:
-								color = ape::Color(0.7f, 0.01f, 0.01f);
+								color = ape::Color(0.7f, 0.01f, 0.01f, 0.6f);
 								break;
 							case 2:
-								color = ape::Color(0.7f, 0.7f, 0.01f);
+								color = ape::Color(0.7f, 0.7f, 0.01f, 0.6f);
 								break;
 							case 3:
-								color = ape::Color(0.01f, 0.7f, 0.01f);
+								color = ape::Color(0.01f, 0.7f, 0.01f, 0.6f);
 								break;
 							}
 							sphereMaterial->setDiffuseColor(color);
 							sphereMaterial->setSpecularColor(color);
+							sphereMaterial->setAmbientColor(color);
 						}
 
 

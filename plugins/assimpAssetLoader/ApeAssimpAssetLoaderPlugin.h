@@ -66,6 +66,7 @@ namespace ape
 	struct PhysicsConfig
 	{
 		PhysicsConfig() :
+			enable(false),
 			mass(1.0f),
 			friction(0.5f),
 			rollingFriction(0.0f),
@@ -76,6 +77,7 @@ namespace ape
 			colliderType(ape::RigidBodyColliderType::AUTO)
 		{}
 
+		bool enable;
 		float mass;
 		float friction;
 		float rollingFriction;

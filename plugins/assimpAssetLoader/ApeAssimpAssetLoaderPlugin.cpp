@@ -301,22 +301,26 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 
 
 				/// setting physics body to the asset
-				if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY).lock()))
-				{	
-					if (mPhysicsConfigs[assimpSceneID].mass > 0.0f)
-						body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
-					else
-						body->setToStatic();
-					body->setParentNode(node);
-					body->setGeometry(mesh,mPhysicsConfigs[assimpSceneID].colliderType);
-					
-					body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
-					body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
-									  mPhysicsConfigs[assimpSceneID].rollingFriction,
-									  mPhysicsConfigs[assimpSceneID].spinningFriction);
-					body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
-									 mPhysicsConfigs[assimpSceneID].angularDamping);
-					body->setBouyancy(mPhysicsConfigs[assimpSceneID].bouyancyEnable);
+				
+				if (mPhysicsConfigs[assimpSceneID].enable)
+				{
+					if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY).lock()))
+					{
+						if (mPhysicsConfigs[assimpSceneID].mass > 0.0f)
+							body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
+						else
+							body->setToStatic();
+						body->setParentNode(node);
+						body->setGeometry(mesh, mPhysicsConfigs[assimpSceneID].colliderType);
+
+						body->setRestitution(mPhysicsConfigs[assimpSceneID].restitution);
+						body->setFriction(mPhysicsConfigs[assimpSceneID].friction,
+							mPhysicsConfigs[assimpSceneID].rollingFriction,
+							mPhysicsConfigs[assimpSceneID].spinningFriction);
+						body->setDamping(mPhysicsConfigs[assimpSceneID].linearDamping,
+							mPhysicsConfigs[assimpSceneID].angularDamping);
+						body->setBouyancy(mPhysicsConfigs[assimpSceneID].bouyancyEnable);
+					}
 				}
 			}
 		}

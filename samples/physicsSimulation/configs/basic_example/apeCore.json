@@ -2,8 +2,8 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apeSkyWaterTerrainScenePlugin",
-    "apeTexasEEGPlugin"
+    "apePhysicsSimulationScenePlugin",
+    "apeBulletPhysicsPlugin"
   ],
   "network": {
     "user": "cave",
@@ -26,7 +26,7 @@
     "selected": "none",
     "resourceLocations": [
       "/macros/sceneMaker/resources",
-      "/plugins/texasEEG/resources"
+      "/plugins/assimpAssetLoader/resources"
     ]
   }
 }

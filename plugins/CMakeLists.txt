@@ -145,11 +145,6 @@ if (${APE_PLUGIN_BulletPhysics})
 	add_subdirectory (bulletPhysics)
 endif ()
 
-# option(APE_PLUGIN_PhysicsSimulation "Use PhysicsSimulationPlugin?" ON)
-# if(${APE_PLUGIN_PhisicsSimulation})
-# 	add_subdirectory(physicsSimulation)
-# endif()
-
 # Input handlers
 
 option(APE_PLUGIN_OisUserInput "Use OisUserInputPlugin?" ON )

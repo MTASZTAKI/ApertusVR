@@ -8,15 +8,15 @@
     "z": 0
   },
   "bouyancy": {
-    "liquidHeight": 300.0,
+    "liquidHeight": 30.0,
     "liquidDensity": 1.0,
     "balance" :  true
   },
   "waterWave": {
-    "x": 0.01,
-    "y": 0,
+    "x": 0.02,
+    "y": -0.1,
     "z": 0,
-    "freq": 0.0,
+    "freq": 0.5,
     "duration": 1.0
   }
 }

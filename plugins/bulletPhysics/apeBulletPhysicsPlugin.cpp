@@ -538,7 +538,7 @@ void ape::BulletPhysicsPlugin::Run()
 			/// debug
 			if (float(clock()) - float(t) > 1000.0)
 			{
-				printf("%s pos: %s\n", apeBodyName.c_str(), toString(trans.getOrigin()).c_str());
+				//printf("%s pos: %s\n", apeBodyName.c_str(), toString(trans.getOrigin()).c_str());
 				//printf("%s mass: %f\n", apeBodyName.c_str(), body->getInvMass());
 				//btVector3 force = body->getTotalForce();
 				//printf("%s total force: %s\n", apeBodyName.c_str(),toString(force).c_str());
@@ -828,7 +828,9 @@ void ape::BulletPhysicsPlugin::updateBouyancy(std::string apeBodyName, btRigidBo
 		body->setDamping(0.7, 0.7);
 		/// waves
 		if (dTime > m_waveFreq && dTime <= m_waveFreq + m_waveDuration)
-			body->applyForce(m_waveDirection * m_forceScale, forcePos);
+		{
+			body->applyForce(m_waveDirection * m_forceScale,forcePos);
+		}
 		else if (dTime > m_waveFreq + m_waveDuration)
 			clock.reset();
 	}

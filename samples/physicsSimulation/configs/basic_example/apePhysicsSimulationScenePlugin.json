@@ -1,0 +1,10 @@
+{
+  "environment": "ground",
+  "cubes": {
+    "enable": true,
+    "position": [ 0, 300, 0 ],
+    "arraySize": [ 6, 6, 6 ]
+  },
+  "assets": [
+  ]
+}

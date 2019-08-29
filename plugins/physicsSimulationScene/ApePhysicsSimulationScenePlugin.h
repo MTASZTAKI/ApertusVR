@@ -62,11 +62,13 @@ SOFTWARE.*/
 #include "sceneelements/apeIBoxGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeICylinderGeometry.h"
+#include "sceneelements/apeIWater.h"
 
 /// utils, macros
 #include "utils/apeInterpolator.h"
 #include "macros/sceneMaker/apeSceneMakerMacro.h"
 #include "macros/userInput/ApeUserInputMacro.h"
+
 
 #define THIS_PLUGINNAME "apePhysicsSimulationScenePlugin"
 

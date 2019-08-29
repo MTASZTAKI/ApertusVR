@@ -4,7 +4,8 @@
     "apeOisUserInputPlugin",
     "apePhysicsSimulationScenePlugin",
     "apeBulletPhysicsPlugin",
-    "apeAssimpAssetLoaderPlugin"
+    "apeAssimpAssetLoaderPlugin",
+    "apeSkyWaterTerrainScenePlugin"
   ],
   "network": {
     "user": "cave",
