@@ -112,38 +112,29 @@ void ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationC
 
 RakNet::RM3SerializationResult ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	if (serializeParameters->whenLastSerialized == 0)
-	{
-		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-
-		mVariableDeltaSerializer.EndSerialize(&serializationContext);
-
-		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-	}
-	return RakNet::RM3SR_DO_NOT_SERIALIZE;
+	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.EndSerialize(&serializationContext);
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void ape::PointCloudImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	if (deserializeParameters->bitstreamWrittenTo[0])
+	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
+	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	RakNet::RakString parentNodeName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))
 	{
-		RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
-		mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-		RakNet::RakString parentNodeName;
-		if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))
+		if (auto parentNode = mpSceneManager->getNode(parentNodeName.C_String()).lock())
 		{
-			if (auto parentNode = mpSceneManager->getNode(parentNodeName.C_String()).lock())
-			{
-				mParentNode = parentNode;
-				mParentNodeName = parentNodeName.C_String();
-			}
+			mParentNode = parentNode;
+			mParentNodeName = parentNodeName.C_String();
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARENTNODE));
 		}
-		mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 	}
+	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 
 void ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer, RakNet::Packet * packet)
@@ -405,7 +396,6 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				}
 				APE_LOG_DEBUG("Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARENTNODE));
 			}
 			else if (packet->data[0] == 255)
 			{
