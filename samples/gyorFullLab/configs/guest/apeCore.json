@@ -1,8 +1,6 @@
 {
   "plugins": [
-    "apeNodeJsPlugin",
-    "apeAssimpAssetLoaderPlugin",
-    "apeKinectPlugin"
+    "apeGyorPlugin",
   ],
   "network": {
     "user": "gyorFullLab_guest",
@@ -19,8 +17,9 @@
       }
     },
     "lan": {
-      "hostIP": "10.1.0.30",
+      "hostReplicaIP": "10.1.0.30",
       "hostReplicaPort": "61116",
+      "hostStreamIP": "10.1.0.39",
       "hostStreamPort": "61117"
     },
     "selected": "lan",

@@ -140,8 +140,8 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 							mNetworkConfig.lanConfig.hostReplicaIP = lanMemberIterator->value.GetString();
 						else if (lanMemberIterator->name == "hostReplicaPort")
 							mNetworkConfig.lanConfig.hostReplicaPort = lanMemberIterator->value.GetString();
-						else if (lanMemberIterator->name == "hostStreamPort")
-							mNetworkConfig.lanConfig.hostStreamPort = lanMemberIterator->value.GetString();
+						else if (lanMemberIterator->name == "hostStreamIP")
+							mNetworkConfig.lanConfig.hostStreamIP = lanMemberIterator->value.GetString();
 						else if (lanMemberIterator->name == "hostStreamPort")
 							mNetworkConfig.lanConfig.hostStreamPort = lanMemberIterator->value.GetString();
 					}
