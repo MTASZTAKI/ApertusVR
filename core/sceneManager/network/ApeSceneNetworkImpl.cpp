@@ -37,26 +37,24 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&SceneNetworkImpl::eventCallBack, this, std::placeholders::_1));
 	mStreamReplicas = std::vector<ape::Replica*>();
 	mIsConnectedToNATServer = false;
-	mIsConnectedToHost = false;
 	mNATServerAddress.FromString("");
 	mParticipantType = mpCoreConfig->getNetworkConfig().participant;
-	mHostGuid = RakNet::RakNetGUID();
-	mHostAddress = RakNet::SystemAddress();
+	mReplicaHostGuid = RakNet::RakNetGUID();
 
 	if (mParticipantType == ape::SceneNetwork::HOST)
 	{
-		mIsHost = true;
+		mIsReplicaHost = true;
 		init();
 		if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 		{
 			bool createSessionResult = mpLobbyManager->createSession(mpCoreConfig->getNetworkConfig().lobbyConfig.roomName, mGuid.ToString());
 			APE_LOG_DEBUG("lobbyManager->createSession(): " << createSessionResult);
 		}
-		create();
+		createReplicaHost();
 	}
 	else if (mParticipantType == ape::SceneNetwork::GUEST)
 	{
-		mIsHost = false;
+		mIsReplicaHost = false;
 		init();
 		std::string uuid;
 		if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
@@ -67,10 +65,10 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 			APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 			//if (getSessionRes && !uuid.empty())
 			//{
-				//connect(uuid);
+				//connect2ReplicaHost(uuid);
 			//}
 		}
-		connect(uuid);
+		connect2ReplicaHost(uuid);
 	}
 }
 
@@ -97,36 +95,27 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
 
 void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 {
-	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
+	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.length())
 	{
-		if (mParticipantType == ape::SceneNetwork::HOST)
+		if (event.type == ape::Event::Type::POINT_CLOUD_PARAMETERS)
 		{
-			if (event.type == ape::Event::Type::POINT_CLOUD_PARAMETERS)
+			if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 			{
-				if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
+				if (auto pointCloud = ((ape::PointCloudImpl*)entity.get()))
 				{
-					if (auto pointCloud = ((ape::PointCloudImpl*)entity.get()))
+					if (mIsStreamHost)
 					{
 						mStreamReplicas.push_back(pointCloud);
-						APE_LOG_DEBUG("listenStreamPeerSendThread for replica named: " << event.subjectName);
-						std::thread runStreamPeerListenThread((std::bind(&ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
-						runStreamPeerListenThread.detach();
+						APE_LOG_DEBUG("listenStreamPeerSenderThread for replica named: " << event.subjectName);
+						std::thread runStreamPeerSenderListenThread((std::bind(&ape::Replica::listenStreamPeerSendThread, pointCloud, mpRakStreamPeer)));
+						runStreamPeerSenderListenThread.detach();
 					}
-				}
-			}
-		}
-		else if (mParticipantType == ape::SceneNetwork::GUEST)
-		{
-			if (event.type == ape::Event::Type::POINT_CLOUD_CREATE)
-			{
-				if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
-				{
-					if (auto pointCloud = ((ape::PointCloudImpl*)entity.get()))
+					else
 					{
 						mStreamReplicas.push_back(pointCloud);
-						APE_LOG_DEBUG("listenStreamPeerReceiveThread for replica named: " << event.subjectName);
-						std::thread runStreamPeerListenThread((std::bind(&ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
-						runStreamPeerListenThread.detach();
+						APE_LOG_DEBUG("listenStreamPeerReceiveerThread for replica named: " << event.subjectName);
+						std::thread runStreamPeerReceiverListenThread((std::bind(&ape::Replica::listenStreamPeerReceiveThread, pointCloud, mpRakStreamPeer)));
+						runStreamPeerReceiverListenThread.detach();
 					}
 				}
 			}
@@ -136,13 +125,6 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 
 void ape::SceneNetworkImpl::init()
 {
-	auto tp = std::chrono::system_clock::now();
-	auto dur = tp.time_since_epoch();
-	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count();
-	std::string uniqueID = std::to_string(nanoseconds);
-	ape::NetworkConfig networkConfig = mpCoreConfig->getNetworkConfig();
-	networkConfig.uniqueID = uniqueID;
-	mpCoreConfig->setNetworkConfig(networkConfig);
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
@@ -158,10 +140,11 @@ void ape::SceneNetworkImpl::init()
 	mpRakReplicaPeer = RakNet::RakPeerInterface::GetInstance();
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
+	{
 		mpNatPunchthroughClient = RakNet::NatPunchthroughClient::GetInstance();
-	mpReplicaManager3 = std::make_shared<ape::ReplicaManager>();
-	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 		mpRakReplicaPeer->AttachPlugin(mpNatPunchthroughClient);
+	}
+	mpReplicaManager3 = std::make_shared<ape::ReplicaManager>();
 	mpRakReplicaPeer->AttachPlugin(mpReplicaManager3.get());
 	mpReplicaManager3->SetNetworkIDManager(mpNetworkIDManager);
 	mpReplicaManager3->SetAutoManageConnections(false,true);
@@ -200,13 +183,17 @@ void ape::SceneNetworkImpl::init()
 			}
 		}
 	}
-	else if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
+	APE_LOG_DEBUG("runReplicaPeerListenThread");
+	std::thread runReplicaPeerListenThread((std::bind(&SceneNetworkImpl::runReplicaPeerListen, this)));
+	runReplicaPeerListenThread.detach();
+	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.length())
 	{
 		mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
 		int socketFamily;
 		socketFamily = AF_INET;
-		if (mParticipantType == ape::SceneNetwork::HOST)
+		if (mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP == mAddress.ToString(false))
 		{
+			mIsStreamHost = true;
 			mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 			RakNet::SocketDescriptor socketDescriptor(atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0);
 			socketDescriptor.socketFamily = socketFamily;
@@ -219,8 +206,9 @@ void ape::SceneNetworkImpl::init()
 			}
 			APE_LOG_DEBUG("Started stream server on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 		}
-		else if (mParticipantType == ape::SceneNetwork::GUEST)
+		else
 		{
+			mIsStreamHost = false;
 			mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 			RakNet::SocketDescriptor socketDescriptor(0, 0);
 			socketDescriptor.socketFamily = socketFamily;
@@ -233,18 +221,15 @@ void ape::SceneNetworkImpl::init()
 			APE_LOG_DEBUG("Started stream client on " << mpRakStreamPeer->GetMyBoundAddress().ToString(true));
 		}
 	}
-	APE_LOG_DEBUG("runReplicaPeerListenThread");
-	std::thread runReplicaPeerListenThread((std::bind(&SceneNetworkImpl::runReplicaPeerListen, this)));
-	runReplicaPeerListenThread.detach();
 }
 
-void ape::SceneNetworkImpl::connect(std::string guid)
+void ape::SceneNetworkImpl::connect2ReplicaHost(std::string guid)
 {
-	mHostGuid.FromString(guid.c_str());
+	mReplicaHostGuid.FromString(guid.c_str());
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 	{
-		APE_LOG_DEBUG("Try to NAT punch to: " << mHostGuid.ToString());
-		if (mpNatPunchthroughClient->OpenNAT(mHostGuid, mNATServerAddress))
+		APE_LOG_DEBUG("Try to NAT punch to: " << mReplicaHostGuid.ToString());
+		if (mpNatPunchthroughClient->OpenNAT(mReplicaHostGuid, mNATServerAddress))
 		{
 			APE_LOG_DEBUG("Wait for server response....");
 		}
@@ -255,8 +240,8 @@ void ape::SceneNetworkImpl::connect(std::string guid)
 	}
 	else if ((mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN))
 	{
-		APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.hostIP << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
-		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort.c_str()), 0, 0);
+		APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
+		RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort.c_str()), 0, 0);
 		if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 		{
 			APE_LOG_DEBUG("Failed connect call to " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort << ". Code=" << car);
@@ -277,16 +262,16 @@ void ape::SceneNetworkImpl::destroy()
 {
 }
 
-void ape::SceneNetworkImpl::create()
+void ape::SceneNetworkImpl::createReplicaHost()
 {
 	APE_LOG_DEBUG("Listening....");
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 		mpNatPunchthroughClient->FindRouterPortStride(mNATServerAddress);
 }
 
-bool ape::SceneNetworkImpl::isHost()
+bool ape::SceneNetworkImpl::isReplicaHost()
 {
-	return mIsHost;
+	return mIsReplicaHost;
 }
 
 std::string ape::SceneNetworkImpl::getGUID()
@@ -481,16 +466,11 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						/*if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
+						if (!mIsStreamHost)
 						{
-							if (mParticipantType == ape::SceneNetwork::ParticipantType::GUEST)
-							{
-								mIsConnectedToHost = true;
-								mHostAddress = packet->systemAddress;
-								APE_LOG_DEBUG("Try to connect to host for streaming: " << mHostAddress.ToString(false) << "|" << atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()));
-								mpRakStreamPeer->Connect(mHostAddress.ToString(false), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
-							}
-						}*/
+							APE_LOG_DEBUG("Try to connect to stream host: " << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP << "|" << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort);
+							mpRakStreamPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
+						}
 					}
 					break;
 				}

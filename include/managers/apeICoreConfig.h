@@ -100,27 +100,32 @@ namespace ape
 
 		struct LanConfig
 		{
-			std::string hostIP;
+			std::string hostReplicaIP;
 
 			std::string hostReplicaPort;
+
+			std::string hostStreamIP;
 
 			std::string hostStreamPort;
 
 			LanConfig()
 			{
-				this->hostIP = std::string();
+				this->hostReplicaIP = std::string();
 				this->hostReplicaPort = std::string();
+				this->hostStreamIP = std::string();
 				this->hostStreamPort = std::string();
 			}
 
 			LanConfig(
-				std::string hostIP,
+				std::string hostReplicaIP,
 				std::string hostReplicaPort,
+				std::string hostStreamIP,
 				std::string hostStreamPort
 			)
 			{
-				this->hostIP = hostIP;
+				this->hostReplicaIP = hostReplicaIP;
 				this->hostReplicaPort = hostReplicaPort;
+				this->hostStreamIP = hostStreamIP;
 				this->hostStreamPort = hostStreamPort;
 			}
 		};

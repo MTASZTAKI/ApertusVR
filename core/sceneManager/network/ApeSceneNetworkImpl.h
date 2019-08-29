@@ -85,9 +85,7 @@ namespace ape
 
 		RakNet::SystemAddress mAddress;
 
-		RakNet::RakNetGUID mHostGuid;
-
-		RakNet::SystemAddress mHostAddress;
+		RakNet::RakNetGUID mReplicaHostGuid;
 
 		std::string mNATServerIP;
 
@@ -105,7 +103,9 @@ namespace ape
 
 		bool mIsConnectedToNATServer;
 		
-		bool mIsHost;
+		bool mIsReplicaHost;
+
+		bool mIsStreamHost;
 		
 		ape::ICoreConfig* mpCoreConfig;
 
@@ -116,8 +116,6 @@ namespace ape
 		std::vector<ape::Replica*> mStreamReplicas;
 
 		void eventCallBack(const ape::Event& event);
-
-		bool mIsConnectedToHost;
 
 		LobbyManager* mpLobbyManager;
 
@@ -132,11 +130,11 @@ namespace ape
 
 		~SceneNetworkImpl();
 
-		void create();
+		void createReplicaHost();
 
 		void destroy();
 
-		void connect(std::string guid);
+		void connect2ReplicaHost(std::string guid);
 
 		void leave();
 
@@ -144,7 +142,7 @@ namespace ape
 
 		ape::SceneNetwork::ParticipantType getParticipantType() override;
 
-		bool isHost();
+		bool isReplicaHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
 	};
