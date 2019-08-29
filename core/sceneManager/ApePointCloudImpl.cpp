@@ -232,7 +232,7 @@ void ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * stream
 	streamPacket[24] = myFloatUnion.fBuff[3];
 	myFloatUnion.f = mParameters.unitScaleDistance;
 	streamPacket[25] = myFloatUnion.fBuff[0];
-	streamPacket[16] = myFloatUnion.fBuff[1];
+	streamPacket[26] = myFloatUnion.fBuff[1];
 	streamPacket[27] = myFloatUnion.fBuff[2];
 	streamPacket[28] = myFloatUnion.fBuff[3];
 	myFloatUnion.f = mParameters.scaleFactor;
@@ -333,10 +333,10 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				myFloatUnion.fBuff[2] = packet->data[15];
 				myFloatUnion.fBuff[3] = packet->data[16];
 				mParameters.pointSize = myFloatUnion.f;
-				myFloatUnion.fBuff[0] = packet->data[17];
-				myFloatUnion.fBuff[1] = packet->data[18];
-				myFloatUnion.fBuff[2] = packet->data[19];
-				myFloatUnion.fBuff[3] = packet->data[20];
+				myIntUnion.iBuff[0] = packet->data[17];
+				myIntUnion.iBuff[1] = packet->data[18];
+				myIntUnion.iBuff[2] = packet->data[19];
+				myIntUnion.iBuff[3] = packet->data[20];
 				mParameters.pointScale = static_cast<bool>(myIntUnion.i);
 				myFloatUnion.fBuff[0] = packet->data[21];
 				myFloatUnion.fBuff[1] = packet->data[22];
