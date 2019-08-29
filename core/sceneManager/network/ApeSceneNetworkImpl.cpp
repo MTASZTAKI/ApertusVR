@@ -97,7 +97,7 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 {
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.length())
 	{
-		if (event.type == ape::Event::Type::POINT_CLOUD_PARAMETERS)
+		if (event.type == ape::Event::Type::POINT_CLOUD_CREATE)
 		{
 			if (auto entity = mpSceneManager->getEntity(event.subjectName).lock())
 			{
@@ -163,7 +163,7 @@ void ape::SceneNetworkImpl::init()
 	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
 	mpRakReplicaPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 	mGuid = mpRakReplicaPeer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-	mAddress = mpRakReplicaPeer->GetMyBoundAddress();
+	mAddress = mpRakReplicaPeer->GetSystemAddressFromGuid(mGuid);
 	APE_LOG_DEBUG("Our guid is: " << mGuid.ToString());
 	APE_LOG_DEBUG("Started on: " << mAddress.ToString(true));
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
@@ -191,7 +191,8 @@ void ape::SceneNetworkImpl::init()
 		mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
 		int socketFamily;
 		socketFamily = AF_INET;
-		if (mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP == mAddress.ToString(false))
+		auto myIPAddress = std::string(mAddress.ToString(false));
+		if (mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP == myIPAddress)
 		{
 			mIsStreamHost = true;
 			mpRakStreamPeer->SetTimeoutTime(5000, RakNet::UNASSIGNED_SYSTEM_ADDRESS);
@@ -469,7 +470,9 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 						if (!mIsStreamHost)
 						{
 							APE_LOG_DEBUG("Try to connect to stream host: " << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP << "|" << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort);
-							mpRakStreamPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
+							RakNet::ConnectionAttemptResult car = mpRakStreamPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
+							APE_LOG_DEBUG("Raknet Stream Connection to Host Result: " << (int)car);
+							RakAssert(sr == RakNet::RAKNET_STARTED);
 						}
 					}
 					break;

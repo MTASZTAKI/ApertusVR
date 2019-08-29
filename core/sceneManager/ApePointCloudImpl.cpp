@@ -153,8 +153,7 @@ void ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 {
 	int streamPacketSizeInBytes = (mCurrentPointsSize * sizeof(short)) + (mCurrentColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
-	//APE_LOG_DEBUG("Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
-	//" mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
+	APE_LOG_DEBUG("Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) << " mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 	streamPacket[0] = (unsigned char)255;
 
 	dataUnionBytesInt myUnion;
@@ -310,8 +309,7 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					packetDataIndex++;
 				}
 				APE_LOG_DEBUG("Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARENTNODE));
+				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
 			}
 			else if (packet->data[0] == 255)
 			{
@@ -341,14 +339,14 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 						packetDataIndex++;
 					}
 				}
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_POINTS));
+				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_POINTS));
 				for (int i = 0; i < mCurrentColorsSize; i++)
 				{
 					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
-				//APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_COLORS));
+				APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
+				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)
 			{

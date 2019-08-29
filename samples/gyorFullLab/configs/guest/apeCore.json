@@ -1,6 +1,7 @@
 {
   "plugins": [
     "apeGyorPlugin",
+    "apeKinectPlugin"
   ],
   "network": {
     "user": "gyorFullLab_guest",
