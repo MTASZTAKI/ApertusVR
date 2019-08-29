@@ -309,7 +309,7 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 					packetDataIndex++;
 				}
 				APE_LOG_DEBUG("Received init stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
-				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
+				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_PARAMETERS));
 			}
 			else if (packet->data[0] == 255)
 			{
@@ -339,13 +339,13 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 						packetDataIndex++;
 					}
 				}
+				APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_POINTS));
 				for (int i = 0; i < mCurrentColorsSize; i++)
 				{
 					mCurrentColors[i] = ((short)packet->data[packetDataIndex]) / 255.0f;
 					packetDataIndex++;
 				}
-				APE_LOG_DEBUG("Received stream packed with size: " << packet->length << " packetDataIndex after read " << packetDataIndex);
 				//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::POINT_CLOUD_COLORS));
 			}
 			else if (packet->data[0] == ID_CONNECTION_LOST)
