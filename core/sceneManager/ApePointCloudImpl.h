@@ -99,6 +99,8 @@ namespace ape
 
 		int mStreamHeaderSizeInBytes;
 
+		int mStreamInitHeaderSizeInBytes;
+
 		ape::PointCloudPoints mCurrentPoints;
 
 		ape::PointCloudColors mCurrentColors;
