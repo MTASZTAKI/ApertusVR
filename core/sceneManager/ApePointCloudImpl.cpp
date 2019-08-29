@@ -38,8 +38,7 @@ ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : ape:
 	mIsCurrentColorsChanged = false;
 	mCurrentPoints = ape::PointCloudPoints();
 	mCurrentColors = ape::PointCloudColors();
-	mStreamHeaderSizeInBytes = 9; // 9bytes means: 1byte(1 char) for packetID and 8bytes more(2 integers) for point cloud size
-	mStreamInitHeaderSizeInBytes = 33; // 33 means: 1byte(1 char) for packetID and 8bytes more(2 integers) for point cloud size + 24bytes more(6 floats) for the rest of the parameters
+	mStreamHeaderSizeInBytes = 33; // 33 means: 1byte(1 char) for packetID and 8bytes more(2 integers) for point cloud size + 24bytes more(6 floats) for the rest of the parameters
 }
 
 ape::PointCloudImpl::~PointCloudImpl()
@@ -157,17 +156,49 @@ void ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 	APE_LOG_DEBUG("Try for starting send " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) << " mCurrentPointsSize " << mCurrentPointsSize << " mCurrentColorsSize " << mCurrentColorsSize);
 	streamPacket[0] = (unsigned char)255;
 
-	dataUnionBytesInt myUnion;
-	myUnion.i = mCurrentPointsSize;
-	streamPacket[1] = myUnion.iBuff[0];
-	streamPacket[2] = myUnion.iBuff[1];
-	streamPacket[3] = myUnion.iBuff[2];
-	streamPacket[4] = myUnion.iBuff[3];
-	myUnion.i = mCurrentColorsSize;
-	streamPacket[5] = myUnion.iBuff[0];
-	streamPacket[6] = myUnion.iBuff[1];
-	streamPacket[7] = myUnion.iBuff[2];
-	streamPacket[8] = myUnion.iBuff[3];
+	dataUnionBytesInt myIntUnion;
+	myIntUnion.i = mCurrentPointsSize;
+	streamPacket[1] = myIntUnion.iBuff[0];
+	streamPacket[2] = myIntUnion.iBuff[1];
+	streamPacket[3] = myIntUnion.iBuff[2];
+	streamPacket[4] = myIntUnion.iBuff[3];
+	myIntUnion.i = mCurrentColorsSize;
+	streamPacket[5] = myIntUnion.iBuff[0];
+	streamPacket[6] = myIntUnion.iBuff[1];
+	streamPacket[7] = myIntUnion.iBuff[2];
+	streamPacket[8] = myIntUnion.iBuff[3];
+
+	dataUnionBytesFloat myFloatUnion;
+	myFloatUnion.f = mParameters.boundigSphereRadius;
+	streamPacket[9] = myFloatUnion.fBuff[0];
+	streamPacket[10] = myFloatUnion.fBuff[1];
+	streamPacket[11] = myFloatUnion.fBuff[2];
+	streamPacket[12] = myFloatUnion.fBuff[3];
+	myFloatUnion.f = mParameters.pointSize;
+	streamPacket[13] = myFloatUnion.fBuff[0];
+	streamPacket[14] = myFloatUnion.fBuff[1];
+	streamPacket[15] = myFloatUnion.fBuff[2];
+	streamPacket[16] = myFloatUnion.fBuff[3];
+	myIntUnion.i = static_cast<int>(mParameters.pointScale);
+	streamPacket[17] = myIntUnion.iBuff[0];
+	streamPacket[18] = myIntUnion.iBuff[1];
+	streamPacket[19] = myIntUnion.iBuff[2];
+	streamPacket[20] = myIntUnion.iBuff[3];
+	myFloatUnion.f = mParameters.pointScaleOffset;
+	streamPacket[21] = myFloatUnion.fBuff[0];
+	streamPacket[22] = myFloatUnion.fBuff[1];
+	streamPacket[23] = myFloatUnion.fBuff[2];
+	streamPacket[24] = myFloatUnion.fBuff[3];
+	myFloatUnion.f = mParameters.unitScaleDistance;
+	streamPacket[25] = myFloatUnion.fBuff[0];
+	streamPacket[26] = myFloatUnion.fBuff[1];
+	streamPacket[27] = myFloatUnion.fBuff[2];
+	streamPacket[28] = myFloatUnion.fBuff[3];
+	myFloatUnion.f = mParameters.scaleFactor;
+	streamPacket[29] = myFloatUnion.fBuff[0];
+	streamPacket[30] = myFloatUnion.fBuff[1];
+	streamPacket[31] = myFloatUnion.fBuff[2];
+	streamPacket[32] = myFloatUnion.fBuff[3];
 
 	int packetDataIndex = mStreamHeaderSizeInBytes;
 	for (auto item : mCurrentPoints)
@@ -192,7 +223,7 @@ void ape::PointCloudImpl::sendStreamPacket(RakNet::RakPeerInterface* streamPeer,
 
 void ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * streamPeer, RakNet::Packet * packet)
 {
-	int streamPacketSizeInBytes = (mPointsSize * sizeof(short)) + (mColorsSize * sizeof(char)) + mStreamInitHeaderSizeInBytes;
+	int streamPacketSizeInBytes = (mPointsSize * sizeof(short)) + (mColorsSize * sizeof(char)) + mStreamHeaderSizeInBytes;
 	char* streamPacket = new char[streamPacketSizeInBytes];
 	APE_LOG_DEBUG("Try for sending init stream packet " << streamPacketSizeInBytes << " bytes sized big packet to " << packet->systemAddress.ToString(true) <<
 		" mPointsSize " << mPointsSize << " mColorsSize " << mColorsSize);
@@ -242,7 +273,7 @@ void ape::PointCloudImpl::sendInitStreamPacket(RakNet::RakPeerInterface * stream
 	streamPacket[31] = myFloatUnion.fBuff[2];
 	streamPacket[32] = myFloatUnion.fBuff[3];
 
-	int packetDataIndex = mStreamInitHeaderSizeInBytes;
+	int packetDataIndex = mStreamHeaderSizeInBytes;
 	for (auto item : mParameters.points)
 	{
 		dataUnionBytesShort myUnion;
@@ -359,7 +390,7 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				mParameters.points.resize(mPointsSize);
 				mParameters.colors.clear();
 				mParameters.colors.resize(mColorsSize);
-				int packetDataIndex = mStreamInitHeaderSizeInBytes;
+				int packetDataIndex = mStreamHeaderSizeInBytes;
 				for (int i = 0; i < mPointsSize; i++)
 				{
 					dataUnionBytesShort myUnion;
@@ -391,6 +422,38 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				myIntUnion.iBuff[2] = packet->data[7];
 				myIntUnion.iBuff[3] = packet->data[8];
 				mColorsSize = myIntUnion.i;
+
+				dataUnionBytesFloat myFloatUnion;
+				myFloatUnion.fBuff[0] = packet->data[9];
+				myFloatUnion.fBuff[1] = packet->data[10];
+				myFloatUnion.fBuff[2] = packet->data[11];
+				myFloatUnion.fBuff[3] = packet->data[12];
+				mParameters.boundigSphereRadius = myFloatUnion.f;
+				myFloatUnion.fBuff[0] = packet->data[13];
+				myFloatUnion.fBuff[1] = packet->data[14];
+				myFloatUnion.fBuff[2] = packet->data[15];
+				myFloatUnion.fBuff[3] = packet->data[16];
+				mParameters.pointSize = myFloatUnion.f;
+				myIntUnion.iBuff[0] = packet->data[17];
+				myIntUnion.iBuff[1] = packet->data[18];
+				myIntUnion.iBuff[2] = packet->data[19];
+				myIntUnion.iBuff[3] = packet->data[20];
+				mParameters.pointScale = static_cast<bool>(myIntUnion.i);
+				myFloatUnion.fBuff[0] = packet->data[21];
+				myFloatUnion.fBuff[1] = packet->data[22];
+				myFloatUnion.fBuff[2] = packet->data[23];
+				myFloatUnion.fBuff[3] = packet->data[24];
+				mParameters.pointScaleOffset = myFloatUnion.f;
+				myFloatUnion.fBuff[0] = packet->data[25];
+				myFloatUnion.fBuff[1] = packet->data[26];
+				myFloatUnion.fBuff[2] = packet->data[27];
+				myFloatUnion.fBuff[3] = packet->data[28];
+				mParameters.unitScaleDistance = myFloatUnion.f;
+				myFloatUnion.fBuff[0] = packet->data[29];
+				myFloatUnion.fBuff[1] = packet->data[30];
+				myFloatUnion.fBuff[2] = packet->data[31];
+				myFloatUnion.fBuff[3] = packet->data[32];
+				mParameters.scaleFactor = myFloatUnion.f;
 
 				mCurrentPoints.clear();
 				mCurrentPoints.resize(mCurrentPointsSize);
