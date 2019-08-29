@@ -416,12 +416,12 @@ void ape::PointCloudImpl::listenStreamPeerReceiveThread(RakNet::RakPeerInterface
 				myIntUnion.iBuff[1] = packet->data[2];
 				myIntUnion.iBuff[2] = packet->data[3];
 				myIntUnion.iBuff[3] = packet->data[4];
-				mPointsSize = myIntUnion.i;
+				mCurrentPointsSize = myIntUnion.i;
 				myIntUnion.iBuff[0] = packet->data[5];
 				myIntUnion.iBuff[1] = packet->data[6];
 				myIntUnion.iBuff[2] = packet->data[7];
 				myIntUnion.iBuff[3] = packet->data[8];
-				mColorsSize = myIntUnion.i;
+				mCurrentColorsSize = myIntUnion.i;
 
 				dataUnionBytesFloat myFloatUnion;
 				myFloatUnion.fBuff[0] = packet->data[9];
