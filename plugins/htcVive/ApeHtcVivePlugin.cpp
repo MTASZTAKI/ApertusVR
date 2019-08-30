@@ -59,7 +59,7 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 		ape::Matrix4 controllerTrackerPose = conversionFromOpenVR(openVRPose);
 		controllerTrackerPose.decomposition(controllerTrackerScale, controllerTrackerOrientation, controllerTrackerPosition);
 		controllerTrackerScale = 100;
-		controllerTrackerPosition = controllerTrackerPosition * controllerTrackerScale;
+		controllerTrackerPosition = controllerTrackerPosition;
 		vr::VRControllerState_t openVRControllerState;
 		mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
 		mpApeUserInputMacro->controllerMovedValue(controllerTrackerPosition, controllerTrackerOrientation, controllerTrackerScale);
@@ -74,7 +74,7 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 		ape::Matrix4 hmdTrackerPose = conversionFromOpenVR(openVRPose);
 		hmdTrackerPose.decomposition(hmdTrackerScale, hmdTrackerOrientation, hmdTrackerPosition);
 		hmdTrackerScale = 100;
-		hmdTrackerPosition = hmdTrackerPosition * hmdTrackerScale;
+		hmdTrackerPosition = hmdTrackerPosition;
 		mpApeUserInputMacro->hmdMovedValue(hmdTrackerPosition, hmdTrackerOrientation, hmdTrackerScale);
 	}
 }
