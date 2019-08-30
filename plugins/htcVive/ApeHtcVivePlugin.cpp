@@ -9,7 +9,6 @@ ape::apeHtcVivePlugin::apeHtcVivePlugin()
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeHtcVivePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mCamera = ape::CameraWeakPtr();
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenVrRttTextureIDs[0] = nullptr;

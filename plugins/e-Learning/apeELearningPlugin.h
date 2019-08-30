@@ -102,6 +102,8 @@ namespace ape
 
 		void resetUserNodePose();
 
+		void resetHeadNodePose();
+
 		void eventCallBack(const ape::Event& event);
 
 		void keyPressedStringEventCallback(const std::string& keyValue);

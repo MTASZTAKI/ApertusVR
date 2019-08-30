@@ -8,7 +8,6 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ViewPointManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mTranslateSpeedFactorKeyboard = 3;
 	mRotateSpeedFactorKeyboard = 1;
@@ -27,7 +26,6 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 ape::ViewPointManagerPlugin::~ViewPointManagerPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ViewPointManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -112,11 +110,11 @@ void ape::ViewPointManagerPlugin::Init()
 	mpUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&ViewPointManagerPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
-	FILE* apeOisUserInputConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	FILE* apeViewPointManagerPlugintConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
-	if (apeOisUserInputConfigFile)
+	if (apeViewPointManagerPlugintConfigFile)
 	{
-		rapidjson::FileReadStream jsonFileReaderStream(apeOisUserInputConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::FileReadStream jsonFileReaderStream(apeViewPointManagerPlugintConfigFile, readBuffer, sizeof(readBuffer));
 		rapidjson::Document jsonDocument;
 		jsonDocument.ParseStream(jsonFileReaderStream);
 		if (jsonDocument.IsObject())
@@ -150,7 +148,7 @@ void ape::ViewPointManagerPlugin::Init()
 				}
 			}
 		}
-		fclose(apeOisUserInputConfigFile);
+		fclose(apeViewPointManagerPlugintConfigFile);
 	}
 	APE_LOG_FUNC_LEAVE();
 }
@@ -253,6 +251,7 @@ void ape::ViewPointManagerPlugin::updateViewPoseByController(ape::Vector3 contro
 	if (auto userNode = mpUserInputMacro->getUserNode().lock())
 	{
 		userNode->translate(controllerMovedValueOri * ape::Vector3(0, 0, 3 * -controllerMovedValuePos.y), ape::Node::TransformationSpace::WORLD);
+		//APE_LOG_DEBUG("updateViewPoseByController: ");
 	}
 }
 
@@ -260,8 +259,10 @@ void ape::ViewPointManagerPlugin::updateViewPoseByHmd(ape::Vector3 hmdMovedValue
 {
 	if (auto headNode = mpUserInputMacro->getHeadNode().lock())
 	{
-		headNode->setPosition(hmdMovedValuePos * hmdMovedValueScl);
+		/*if (mpUserInputMacro->getHeadNodePositionLock())
+			headNode->setPosition(hmdMovedValuePos * hmdMovedValueScl);*/
 		headNode->setOrientation(hmdMovedValueOri);
+		//APE_LOG_DEBUG("updateViewPoseByHmd: " << headNode->getPosition().toString() << " ; " << headNode->getOrientation().toString());
 	}
 }
 

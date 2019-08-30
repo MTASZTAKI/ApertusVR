@@ -238,6 +238,16 @@ void ape::apeELearningPlugin::resetUserNodePose()
 	}
 }
 
+void ape::apeELearningPlugin::resetHeadNodePose()
+{
+	if (auto headNode = mpApeUserInputMacro->getHeadNode().lock())
+	{
+		headNode->setPosition(ape::Vector3(0, 0, 0));
+		headNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+		APE_LOG_DEBUG("resetHeadNodePose");
+	}
+}
+
 void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::CAMERA_CREATE)
@@ -252,7 +262,9 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 		{
 			mSphereGeometryRight = createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
 			mpApeUserInputMacro->getUserNode().lock()->setPosition(ape::Vector3(0, 0, 0));
-			//mpApeUserInputMacro->setUserNodePositionLock(true);
+			mpApeUserInputMacro->getUserNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
+			mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
+			mpApeUserInputMacro->getHeadNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			mpApeUserInputMacro->setHeadNodePositionLock(true);
 		}
 	}
@@ -304,6 +316,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 				{
 					loadNextRoom();
 					resetUserNodePose();
+					resetHeadNodePose();
 				}
 			}
 		}
@@ -380,6 +393,10 @@ void ape::apeELearningPlugin::Init()
 	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&apeELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
 	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&apeELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
 	createHotSpots();
+	while (!mSphereGeometryLeft.lock())
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	}
 	createRoomTextures();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -387,11 +404,7 @@ void ape::apeELearningPlugin::Init()
 void ape::apeELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	while (!mSphereGeometryLeft.lock())
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	}
-	createOverlayBrowser();
+	//createOverlayBrowser();
 	loadNextRoom();
 	while (true)
 	{
