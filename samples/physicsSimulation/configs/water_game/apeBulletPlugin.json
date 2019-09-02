@@ -2,19 +2,13 @@
   "maxSubSteps": 1000,
   "fixedTimeStep": 0.0046,
   "forceScale": 100,
-  "gravity": {
-    "x": 0,
-    "y": -10,
-    "z": 0
-  },
+  "gravity": [ 0, -10, 0 ]
   "bouyancy": {
     "liquidHeight": 0.0,
     "liquidDensity": 1.0
   },
   "waterWave": {
-    "x": -0.5,
-    "y": -4,
-    "z": 0,
+    "direction" :  [-0.5, -4.0, 0.0],
     "freq": 5.0,
     "duration": 1.0
   }

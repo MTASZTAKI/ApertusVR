@@ -391,7 +391,11 @@ void ape::BulletPhysicsPlugin::Init()
 			{
 				rapidjson::Value& input = jsonDocument["gravity"];
 
-				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
+				m_gravity.setX(input.GetArray()[0].GetFloat());
+				m_gravity.setY(input.GetArray()[1].GetFloat());
+				m_gravity.setZ(input.GetArray()[2].GetFloat());
+
+				/*for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
 				{
 					if (it->name == "x")
 						m_gravity.setX(it->value.GetFloat());
@@ -399,7 +403,7 @@ void ape::BulletPhysicsPlugin::Init()
 						m_gravity.setY(it->value.GetFloat());
 					else if (it->name == "z")
 						m_gravity.setZ(it->value.GetFloat());
-				}
+				}*/
 			}
 			if (jsonDocument.HasMember("waterWave"))
 			{
@@ -407,13 +411,14 @@ void ape::BulletPhysicsPlugin::Init()
 
 				for (rapidjson::Value::MemberIterator it = input.MemberBegin(); it != input.MemberEnd(); it++)
 				{
-					if (it->name == "x")
-						m_waveDirection.setX(it->value.GetFloat());
-					else if (it->name == "y")
-						m_waveDirection.setY(it->value.GetFloat());
-					else if (it->name == "z")
-						m_waveDirection.setZ(it->value.GetFloat());
-					else if (it->name == "freq")
+
+					if (it->name == "direction")
+					{
+						m_waveDirection.setX(it->value.GetArray()[0].GetFloat());
+						m_waveDirection.setY(it->value.GetArray()[1].GetFloat());
+						m_waveDirection.setZ(it->value.GetArray()[2].GetFloat());
+					}
+					else if(it->name == "freq")
 						m_waveFreq = it->value.GetFloat();
 					else if (it->name == "duration")
 						m_waveDuration = it->value.GetFloat();

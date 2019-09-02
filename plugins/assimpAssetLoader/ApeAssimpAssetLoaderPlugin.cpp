@@ -421,6 +421,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					if (assetMemberIterator->name == "physics")
 					{
 						PhysicsConfig physicsConfig;
+						physicsConfig.enable = true;
 
 						for (auto physicsMemberIt = assetMemberIterator->value.MemberBegin();
 							physicsMemberIt != assetMemberIterator->value.MemberEnd(); physicsMemberIt++)

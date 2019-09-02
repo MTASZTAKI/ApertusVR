@@ -1,0 +1,48 @@
+{
+  "environment": "water1",
+  "cubes": {
+    "enable": true,
+    "arraySize": [ 6, 2, 6 ],
+    "position": [ 0, 300, 0 ]
+  },
+  "spheres": {
+    "enable": false,
+    "arraySize": [ 6, 2, 6 ],
+    "position": [ 0,300, 0]
+  },
+  "assets": [
+    {
+      "name": "shape01",
+      "shape": "sphere",
+      "radius": 20.0,
+      "position": [ -150, 100, 20 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "yellow"
+    },
+    {
+      "name": "box01",
+      "shape": "box",
+      "dims": [ 25, 25, 25 ],
+      "position": [ -200, -40, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "green"
+    },
+    {
+      "name": "cylinder01",
+      "shape": "cylinder",
+      "radius": 15.0,
+      "height": 25.0,
+      "position": [ -200, -20, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
+    },
+    {
+      "name": "sphere03",
+      "shape" : "sphere",
+      "radius": 30.0,
+      "position": [ 0, 700, -10 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color" :  "green"
+    }
+  ]
+}

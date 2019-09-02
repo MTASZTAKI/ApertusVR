@@ -31,8 +31,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    Configs_physicsSimulation_liquid ALL
+    Configs_physicsSimulation_water1 ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Configs_physicsSimulation_liquid PROPERTY FOLDER "Samples/PhysicsSimulation/Configs")
+set_property (TARGET Configs_physicsSimulation_water1 PROPERTY FOLDER "Samples/PhysicsSimulation/Configs")

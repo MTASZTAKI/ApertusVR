@@ -127,7 +127,7 @@ namespace ape
 
 		void makeGround(std::string name, ape::Vector2 size, float height);
 
-		void makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos);
+		void makeWater(std::string name, ape::Vector3 size, ape::Vector3 pos);
 
 		void makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient, ape::Color color);
 		
@@ -141,9 +141,13 @@ namespace ape
 
 		void makeSphereArray();
 
-		bool m_waterEnabled;
+		bool m_water1;
 
-		bool m_groundIsWavy;
+		bool m_water2;
+
+		bool m_ground;
+
+		bool m_terrain;
 
 		bool m_cubes;
 

@@ -1,5 +1,5 @@
 {
-  "environment": "water",
+  "environment": "water2",
   "cubes": {
     "enable": true,
     "arraySize": [ 6, 2, 6 ],

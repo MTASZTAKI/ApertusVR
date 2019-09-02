@@ -12,7 +12,8 @@ ape::apePhysicsSimulationScenePlugin::apePhysicsSimulationScenePlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apePhysicsSimulationScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	m_groundIsWavy = false;
+	m_ground = true;
+	m_terrain = m_water1 = m_water2 = false;
 	bool m_cubes = false;
 	bool m_spheres = false;
 	APE_LOG_FUNC_LEAVE();
@@ -51,8 +52,10 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 			{
 				rapidjson::Value& input = jsonDocument["environment"];
 				std::string environment = input.GetString();
-				m_waterEnabled = environment == "water";
-				m_groundIsWavy = environment == "terrain";
+				m_water1 = environment == "water1";
+				m_water2 = environment == "water2";
+				m_terrain = environment == "terrain";
+				m_ground = environment == "ground";
 			}
 			if (jsonDocument.HasMember("cubes"))
 			{
@@ -107,7 +110,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 					AssetConfig assetConfig;
 					assetConfig.radius = 10.f;
 					assetConfig.height = 10.f;
-					
+
 
 					for (rapidjson::Value::MemberIterator assetMemberIterator = asset.MemberBegin(); assetMemberIterator != asset.MemberEnd(); ++assetMemberIterator)
 					{
@@ -146,7 +149,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 							else if (colorStr == "red")
 								assetConfig.color = ape::Color(0.7f, 0.01f, 0.01f);
 							else if (colorStr == "green")
-								assetConfig.color = ape::Color(0.01f,0.7f,0.01f);
+								assetConfig.color = ape::Color(0.01f, 0.7f, 0.01f);
 							else if (colorStr == "yellow")
 								assetConfig.color = ape::Color(0.7f, 0.7f, 0.01f);
 						}
@@ -161,7 +164,7 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 	}
 
 	//mpSceneMakerMacro->makeLit();
-	if (!m_waterEnabled)
+	if (!m_water2)
 	{
 		if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
 		{
@@ -186,20 +189,17 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 
 	if (true)
 	{
-		if (m_waterEnabled)
+		if (m_water1)
 		{
-			//makeWater("water", ape::Vector2(10000, 10000), ape::Vector3(0, 300, 0));
-
-			
-
+			makeWater("water", ape::Vector3(20000, 5000, 20000), ape::Vector3(0, 30, 0));
 		}
-		else if (m_groundIsWavy)
+		else if (m_terrain)
 		{
 			makeTerrain("terrain", ape::Vector3(1, 1, 1));
 		}
-		else
+		else if (m_ground)
 		{
-			makeGround("ground", ape::Vector2(10000, 10000),0);
+			makeGround("ground", ape::Vector2(10000, 10000), 0);
 		}
 	}
 
@@ -216,15 +216,15 @@ void ape::apePhysicsSimulationScenePlugin::Init()
 			makeSphere(asset.name, asset.radius, asset.pos, asset.orient, asset.color);
 		else if (asset.shape == "cone")
 			makeCone(asset.name, asset.radius, asset.height, asset.pos, asset.orient, asset.color);
-		else if(asset.shape == "cylinder")
+		else if (asset.shape == "cylinder")
 			makeCylinder(asset.name, asset.radius, asset.height, asset.pos, asset.orient, asset.color);
 		else if (asset.shape == "box")
 			makeBox(asset.name, asset.dims, asset.pos, asset.orient, asset.color);
 	}
 
-	if(m_cubes)
+	if (m_cubes)
 		makeCubeArray();
-	if(m_spheres)
+	if (m_spheres)
 		makeSphereArray();
 
 	APE_LOG_FUNC_LEAVE();
@@ -375,12 +375,12 @@ void ape::apePhysicsSimulationScenePlugin::makeGround(std::string name, ape::Vec
 	}
 }
 
-void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos)
+void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vector3 size, ape::Vector3 pos)
 {
 	if (auto boxNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 
-		boxNode->setPosition(pos/2.0f);
+		boxNode->setPosition(pos - ape::Vector3(0,size.y /2,0));
 		if (auto boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.2f, 0.7f));
@@ -391,7 +391,7 @@ void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vect
 
 			if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))
 			{
-				box->setParameters(ape::Vector3(size.x, pos.y, size.y));
+				box->setParameters(ape::Vector3(size.x, size.y, size.y));
 				box->setParentNode(boxNode);
 				box->setMaterial(boxMaterial);
 			}
@@ -402,7 +402,7 @@ void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vect
 void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient = { 1,0,0,0 }, ape::Color color = ape::Color())
 {
 	// create box geometry
-	if (auto boxNode = mpSceneManager->createNode(name+"Node").lock())
+	if (auto boxNode = mpSceneManager->createNode(name + "Node").lock())
 	{
 		// material for box
 		ape::ManualMaterialSharedPtr boxMaterial;
@@ -430,7 +430,7 @@ void ape::apePhysicsSimulationScenePlugin::makeBox(std::string name, ape::Vector
 				boxBody->setGeometry(box);
 				boxBody->setRestitution(0.8f);
 				boxBody->setFriction(0.5, 0.3, 0.3);
-				boxBody->setBouyancy(m_waterEnabled);
+				boxBody->setBouyancy(m_water1 || m_water2);
 			}
 		}
 	}
@@ -465,7 +465,7 @@ void ape::apePhysicsSimulationScenePlugin::makeSphere(std::string name, float ra
 				sphereBody->setRestitution(0.8f);
 				sphereBody->setDamping(0.05, 0.05);
 				sphereBody->setFriction(0.5, 0.3, 0.3);
-				sphereBody->setBouyancy(m_waterEnabled);
+				sphereBody->setBouyancy(m_water1 || m_water2);
 			}
 		}
 	}
@@ -488,8 +488,8 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 
 		if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CONE).lock()))
 		{
-			cone->setParameters(radius,height,1,ape::Vector2(1,1));
-				
+			cone->setParameters(radius, height, 1, ape::Vector2(1, 1));
+
 			cone->setParentNode(coneNode);
 			cone->setMaterial(coneMaterial);
 
@@ -502,7 +502,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCone(std::string name, float radi
 				coneBody->setRestitution(0.8f);
 				coneBody->setDamping(0.05, 0.05);
 				coneBody->setFriction(0.5, 0.3, 0.3);
-				coneBody->setBouyancy(m_waterEnabled);
+				coneBody->setBouyancy(m_water1 || m_water2);
 
 				m_bodies.push_back(coneBody);
 			}
@@ -541,7 +541,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCylinder(std::string name, float 
 				cylinderBody->setRestitution(0.0f);
 				cylinderBody->setDamping(0.5, 0.7);
 				cylinderBody->setFriction(0.4, 0.5, 0.5);
-				cylinderBody->setBouyancy(m_waterEnabled);
+				cylinderBody->setBouyancy(m_water1 || m_water2);
 
 				m_bodies.push_back(cylinderBody);
 			}
@@ -578,7 +578,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCubeArray()
 
 					boxNode->setPosition(m_cubesInitPos + ape::Vector3(float(i * 10 - m_cubesArraySize[0] * 10 / 2 + 5), float(j * 10), float(k * 10 - m_cubesArraySize[2] * 10 / 2 + 5)));
 
-						
+
 					if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity("xxbox" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::GEOMETRY_BOX).lock()))
 					{
 						box->setParameters(ape::Vector3(10, 10, 10));
@@ -593,7 +593,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCubeArray()
 							boxBody->setParentNode(boxNode);
 							boxBody->setRestitution(0.6f);
 							boxBody->setDamping(0.01, 0.01);
-							boxBody->setBouyancy(m_waterEnabled);
+							boxBody->setBouyancy(m_water1 || m_water2);
 							boxBody->setToDynamic(1.0f);
 
 							m_bodies.push_back(boxBody);
@@ -630,7 +630,7 @@ void ape::apePhysicsSimulationScenePlugin::makeSphereArray()
 						{
 							ape::Color color;
 
-							switch (rand()%4)
+							switch (rand() % 4)
 							{
 							case 0:
 								color = ape::Color(0.01f, 0.01f, 0.7f, 0.6f);
@@ -667,7 +667,7 @@ void ape::apePhysicsSimulationScenePlugin::makeSphereArray()
 								sphereBody->setParentNode(sphereNode);
 								sphereBody->setRestitution(0.6f);
 								sphereBody->setDamping(0.01, 0.01);
-								sphereBody->setBouyancy(m_waterEnabled);
+								sphereBody->setBouyancy(m_water1 || m_water2);
 								sphereBody->setToDynamic(1.0f);
 
 								m_bodies.push_back(sphereBody);
