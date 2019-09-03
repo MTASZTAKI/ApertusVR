@@ -5,17 +5,17 @@
       "mergeAndExportMeshes": false,
       "scale": [ 0.6, 0.6, 0.6 ],
       "position": [ 0, 50, 0 ],
-      "orientation": [ 1, 0, 0, 0],
+      "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
       "rootNodeName": "duckNode",
       "physics": {
         "mass": 1.0,
         "restitution": 0.2,
-        "friction": 0.5,
-        "rolling friction": 0.1,
-        "spinning friction": 0.1,
-        "linear damping": 0.01,
-        "angular damping": 0.05,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
         "bouyancyEnabled": true
       }
     },
@@ -30,30 +30,30 @@
       "physics": {
         "mass": 1.0,
         "restitution": 0.2,
-        "friction": 0.5,
-        "rolling friction": 0.1,
-        "spinning friction": 0.1,
-        "linear damping": 0.01,
-        "angular damping": 0.05,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
         "bouyancyEnabled": true
       }
     },
     {
       "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [ 2, 2, 2],
+      "scale": [ 2, 2, 2 ],
       "position": [ 0, 150, -100 ],
-      "orientation": [ 0.0007963, 0, 0.9999997, 0],
+      "orientation": [ 0.0007963, 0, 0.9999997, 0 ],
       "regenerateNormals": true,
       "rootNodeName": "suzanneNode",
       "physics": {
         "mass": 1.0,
         "restitution": 0.2,
-        "friction": 0.5,
-        "rolling friction": 0.1,
-        "spinning friction": 0.1,
-        "linear damping": 0.01,
-        "angular damping": 0.05,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
         "bouyancyEnabled": true
       }
     }

@@ -568,6 +568,7 @@ void ape::apePhysicsSimulationScenePlugin::makeCubeArray()
 				{
 					// material for box
 					std::shared_ptr<ape::IManualMaterial> boxMaterial;
+					
 					if (boxMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("xxboxMaterial" + ssi.str() + ssj.str() + ssk.str(), ape::Entity::MATERIAL_MANUAL).lock()))
 					{
 						boxMaterial->setDiffuseColor(ape::Color(float(i + 1) / float(m_cubesArraySize[0]), float(j + 1) / float(m_cubesArraySize[1]), float(k + 1) / float(m_cubesArraySize[2])));

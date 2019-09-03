@@ -434,23 +434,23 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 							{
 								physicsConfig.restitution = physicsMemberIt->value.GetFloat();
 							}
-							if (physicsMemberIt->name == "friction")
+							if (physicsMemberIt->name == "linearFriction")
 							{
 								physicsConfig.friction = physicsMemberIt->value.GetFloat();
 							}
-							if (physicsMemberIt->name == "rolling friction")
+							if (physicsMemberIt->name == "rollingFriction")
 							{
 								physicsConfig.rollingFriction = physicsMemberIt->value.GetFloat();
 							}
-							if (physicsMemberIt->name == "spinning friction")
+							if (physicsMemberIt->name == "spinningFriction")
 							{
 								physicsConfig.spinningFriction = physicsMemberIt->value.GetFloat();
 							}
-							if (physicsMemberIt->name == "linear damping")
+							if (physicsMemberIt->name == "linearDamping")
 							{
 								physicsConfig.linearDamping = physicsMemberIt->value.GetFloat();
 							}
-							if (physicsMemberIt->name == "angular damping")
+							if (physicsMemberIt->name == "angularDamping")
 							{
 								physicsConfig.angularDamping = physicsMemberIt->value.GetFloat();
 							}
@@ -468,6 +468,10 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 								else if (colliderType == "trianglemesh")
 								{
 									physicsConfig.colliderType = ape::RigidBodyColliderType::TRIANGLE_MESH;
+								}
+								else
+								{
+									physicsConfig.colliderType = ape::RigidBodyColliderType::AUTO;
 								}
 							}
 						}

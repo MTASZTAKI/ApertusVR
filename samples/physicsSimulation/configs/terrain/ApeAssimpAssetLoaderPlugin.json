@@ -11,11 +11,11 @@
       "physics": {
         "mass": 1.0,
         "restitution": 1.0,
-        "friction": 0.5,
-        "rolling friction": 0.1,
-        "spinning friction": 0.1,
-        "linear damping": 0.01,
-        "angular damping": 0.05,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
         "bouyancyEnabled": false
       }
     }
