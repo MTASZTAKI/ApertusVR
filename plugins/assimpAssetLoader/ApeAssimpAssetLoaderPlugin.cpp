@@ -75,22 +75,43 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-			APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
-			AssetConfig assetConfig;
-			assetConfig.mergeAndExportMeshes = false;
-			assetConfig.regenerateNormals = false;
-			if (auto rootNode = fileGeometry->getParentNode().lock())
+			std::string fileName = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("/\\") + 1);
+			std::string fileExtension = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("."));
+			if (fileExtension != ".mesh")
 			{
-				assetConfig.rootNodeName = rootNode->getName();
-				APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
-				assetConfig.scale = rootNode->getScale();
-				assetConfig.position = rootNode->getPosition();
-				assetConfig.orientation = rootNode->getOrientation();
+				APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+				APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+				AssetConfig assetConfig;
+				assetConfig.mergeAndExportMeshes = false;
+				assetConfig.regenerateNormals = false;
+				if (auto rootNode = fileGeometry->getParentNode().lock())
+				{
+					assetConfig.rootNodeName = rootNode->getName();
+					APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+					assetConfig.scale = rootNode->getScale();
+					assetConfig.position = rootNode->getPosition();
+					assetConfig.orientation = rootNode->getOrientation();
+				}
+				else
+				{
+					APE_LOG_DEBUG("no root node was founded maybe it can causes problems");
+				}
+				assetConfig.file = fileGeometry->getFileName();
+				mAssimpAssetConfigs.push_back(assetConfig);
+
+				PhysicsConfig physicsConfig;
+				physicsConfig.mass = 1.0;
+				physicsConfig.restitution = 0.6;
+				physicsConfig.friction = 0.5;
+				physicsConfig.rollingFriction = 0.1;
+				physicsConfig.spinningFriction = 0.1;
+				physicsConfig.linearDamping = 0.01;
+				physicsConfig.angularDamping = 0.05;
+				physicsConfig.bouyancyEnable = true;
+				mPhysicsConfigs.push_back(physicsConfig);
+
+				readFile(fileGeometry->getFileName());
 			}
-			assetConfig.file = fileGeometry->getFileName();
-			mAssimpAssetConfigs.push_back(assetConfig);
-			readFile(fileGeometry->getFileName());
 		}
 	}
 }
