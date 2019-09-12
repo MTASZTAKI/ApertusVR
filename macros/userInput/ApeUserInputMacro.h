@@ -209,14 +209,6 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		void setHeadNodePositionLock(bool lock);
-
-		void setUserNodePositionLock(bool lock);
-
-		bool getHeadNodePositionLock();
-
-		bool getUserNodePositionLock();
-
 		void interpolateViewPose(ViewPose pose, unsigned int milliseconds);
 
 		ape::NodeWeakPtr getUserNode();

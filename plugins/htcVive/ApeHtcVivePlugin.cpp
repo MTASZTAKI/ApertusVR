@@ -189,7 +189,6 @@ void ape::apeHtcVivePlugin::Init()
 			texture->setSourceCamera(cameraRight);
 		cameraRight->setProjection(conversionFromOpenVR(projectionRight));
 	}
-	
 }
 
 void ape::apeHtcVivePlugin::Run()

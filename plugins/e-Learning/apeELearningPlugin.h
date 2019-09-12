@@ -81,6 +81,12 @@ namespace ape
 
 		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
 
+		ape::NodeWeakPtr mControllerNode;
+
+		ape::Vector3 mLastHmdPosition;
+
+		ape::Quaternion mLastHmdOrientation;
+
 	public:
 		apeELearningPlugin();
 
@@ -115,7 +121,11 @@ namespace ape
 		void mouseMovedCallback(const ape::Vector2& mouseMovedValueRel, const ape::Vector2& mouseMovedValueAbs);
 
 		void mouseScrolledCallback(const int& mouseScrolledValue);
+		
+		void controllerMovedValueCallback(const ape::Vector3& controllerPosition, const ape::Quaternion& controllerOrientation, const ape::Vector3& controllerScale);
 
+		void hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
+		
 		void Init() override;
 
 		void Run() override;

@@ -27,6 +27,9 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mMouseMovedValueAbs = ape::Vector2();
 	mMouseScrolledValue = 0;
 	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
+	mControllerNode = ape::NodeWeakPtr();
+	mLastHmdPosition = ape::Vector3();
+	mLastHmdOrientation = ape::Quaternion();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -42,6 +45,7 @@ ape::FileGeometryWeakPtr ape::apeELearningPlugin::createSphere(std::string camer
 	{
 		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName).lock())
 		{
+			sphereNode->setScale(ape::Vector3(10, 10, 10));
 			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE).lock()))
 			{
 				sphereMeshFile->setFileName(meshName);
@@ -265,7 +269,17 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 			mpApeUserInputMacro->getUserNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
-			mpApeUserInputMacro->setHeadNodePositionLock(true);
+			if (auto node = mpSceneManager->createNode("htcVive_Controller_Node").lock())
+			{
+				node->setScale(ape::Vector3(10, 10, 10));
+				std::string controller3DModelFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/scene.gltf";
+				if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(controller3DModelFileName, ape::Entity::GEOMETRY_FILE).lock()))
+				{
+					model->setParentNode(node);
+					model->setFileName(controller3DModelFileName);
+				}
+				mControllerNode = node;
+			}
 		}
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
@@ -383,6 +397,28 @@ void ape::apeELearningPlugin::mouseScrolledCallback(const int & mouseScrolledVal
 	mMouseScrolledValue = mMouseScrolledValue;
 }
 
+void ape::apeELearningPlugin::controllerMovedValueCallback(const ape::Vector3 & controllerPosition, const ape::Quaternion & controllerOrientation, const ape::Vector3 & controllerScale)
+{
+	if (auto controllerNode = mControllerNode.lock())
+	{
+		ape::Vector3 position = (controllerPosition * controllerScale) - mLastHmdPosition;
+		controllerNode->setPosition(position);
+		controllerNode->setOrientation(controllerOrientation);
+		//APE_LOG_DEBUG("position: " << position.toString());
+	}
+}
+
+void ape::apeELearningPlugin::hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
+{
+	mLastHmdPosition = hmdMovedValuePos * hmdMovedValueScl;
+	mLastHmdOrientation = hmdMovedValueOri;
+	if (auto headNode = mpApeUserInputMacro->getHeadNode().lock())
+	{
+		headNode->setOrientation(hmdMovedValueOri);
+	}
+	//APE_LOG_DEBUG("mLastHmdPosition: " << mLastHmdPosition.toString());
+}
+
 void ape::apeELearningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
@@ -392,6 +428,8 @@ void ape::apeELearningPlugin::Init()
 	mpApeUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&apeELearningPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&apeELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
 	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&apeELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&apeELearningPlugin::controllerMovedValueCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpApeUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&apeELearningPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	createHotSpots();
 	while (!mSphereGeometryLeft.lock())
 	{

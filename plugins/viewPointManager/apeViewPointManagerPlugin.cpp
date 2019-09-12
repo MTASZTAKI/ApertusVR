@@ -250,7 +250,7 @@ void ape::ViewPointManagerPlugin::updateViewPoseByController(ape::Vector3 contro
 {
 	if (auto userNode = mpUserInputMacro->getUserNode().lock())
 	{
-		userNode->translate(controllerMovedValueOri * ape::Vector3(0, 0, 3 * -controllerMovedValuePos.y), ape::Node::TransformationSpace::WORLD);
+		//userNode->translate(controllerMovedValueOri * ape::Vector3(0, 0, 3 * -controllerMovedValuePos.y), ape::Node::TransformationSpace::WORLD);
 		//APE_LOG_DEBUG("updateViewPoseByController: ");
 	}
 }
@@ -259,8 +259,7 @@ void ape::ViewPointManagerPlugin::updateViewPoseByHmd(ape::Vector3 hmdMovedValue
 {
 	if (auto headNode = mpUserInputMacro->getHeadNode().lock())
 	{
-		/*if (mpUserInputMacro->getHeadNodePositionLock())
-			headNode->setPosition(hmdMovedValuePos * hmdMovedValueScl);*/
+		headNode->setPosition(hmdMovedValuePos * hmdMovedValueScl);
 		headNode->setOrientation(hmdMovedValueOri);
 		//APE_LOG_DEBUG("updateViewPoseByHmd: " << headNode->getPosition().toString() << " ; " << headNode->getOrientation().toString());
 	}

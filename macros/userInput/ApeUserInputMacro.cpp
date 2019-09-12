@@ -138,26 +138,6 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	}
 }
 
-void ape::UserInputMacro::setHeadNodePositionLock(bool lock)
-{
-	mIsLockHeadNodePosition = lock;
-}
-
-void ape::UserInputMacro::setUserNodePositionLock(bool lock)
-{
-	mIsLockUserNodePosition = lock;
-}
-
-bool ape::UserInputMacro::getHeadNodePositionLock()
-{
-	return mIsLockHeadNodePosition;
-}
-
-bool ape::UserInputMacro::getUserNodePositionLock()
-{
-	return mIsLockUserNodePosition;
-}
-
 void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int milliseconds)
 {
 	if (auto userNode = mUserNode.lock())
