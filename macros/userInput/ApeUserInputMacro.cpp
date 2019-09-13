@@ -64,8 +64,8 @@ ape::UserInputMacro::UserInputMacro()
 	mMouseReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&, const ape::Vector2&)>>();
 	mMouseScrolledFunctions = std::vector<std::function<void(const int&)>>();
-	mControllerPressedStringFunctions = std::vector<std::function<void(const std::string&)>>();
-	mControllerReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
+	mControllerTouchpadPressedValueFunctions = std::vector<std::function<void(const ape::Vector2&)>>();
+	mControllerButtonReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mControllerMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
 	mHmdMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
 	APE_LOG_FUNC_LEAVE();
@@ -288,21 +288,21 @@ void ape::UserInputMacro::mouseScrolledValue(int mouseScrolledValue)
 	}
 }
 
-void ape::UserInputMacro::controllerPressedStringValue(std::string controllerPressedStringValue)
+void ape::UserInputMacro::controllerTouchpadPressedValue(ape::Vector2 axis)
 {
-	auto functionList = mControllerPressedStringFunctions;
+	auto functionList = mControllerTouchpadPressedValueFunctions;
 	for (auto it : functionList)
 	{
-		it(controllerPressedStringValue);
+		it(axis);
 	}
 }
 
-void ape::UserInputMacro::controllerReleasedStringValue(std::string controllerReleasedStringValue)
+void ape::UserInputMacro::controllerButtonPressedStringValue(std::string controllerButtonPressedStringValue)
 {
-	auto functionList = mControllerReleasedStringFunctions;
+	auto functionList = mControllerButtonReleasedStringFunctions;
 	for (auto it : functionList)
 	{
-		it(controllerReleasedStringValue);
+		it(controllerButtonPressedStringValue);
 	}
 }
 
@@ -395,14 +395,14 @@ void ape::UserInputMacro::registerCallbackForMouseScrolledValue(std::function<vo
 	mMouseScrolledFunctions.push_back(callback);
 }
 
-void ape::UserInputMacro::registerCallbackForControllerPressedStringValue(std::function<void(const std::string&)> callback)
+void ape::UserInputMacro::registerCallbackForControllerTouchpadPressedValue(std::function<void(const ape::Vector2&)> callback)
 {
-	mControllerPressedStringFunctions.push_back(callback);
+	mControllerTouchpadPressedValueFunctions.push_back(callback);
 }
 
-void ape::UserInputMacro::registerCallbackForControllerReleasedStringValue(std::function<void(const std::string&)> callback)
+void ape::UserInputMacro::registerCallbackForControllerButtonPressedStringValue(std::function<void(const std::string&)> callback)
 {
-	mControllerReleasedStringFunctions.push_back(callback);
+	mControllerButtonReleasedStringFunctions.push_back(callback);
 }
 
 void ape::UserInputMacro::registerCallbackForControllerMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback)

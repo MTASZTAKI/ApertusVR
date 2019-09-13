@@ -63,6 +63,17 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 		vr::VRControllerState_t openVRControllerState;
 		mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
 		mpApeUserInputMacro->controllerMovedValue(controllerTrackerPosition, controllerTrackerOrientation, controllerTrackerScale);
+		if (openVRControllerState.ulButtonPressed)
+		{
+			if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Touchpad))
+			{
+				mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y));
+			}
+			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Trigger))
+			{
+				mpApeUserInputMacro->controllerButtonPressedStringValue("Trigger");
+			}
+		}
 	}
 	vr::TrackedDevicePose_t hmdPose;
 	if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)

@@ -46,6 +46,13 @@ namespace ape
 				y * rhs.y);
 		}
 
+		std::string toString() const
+		{
+			std::ostringstream buff;
+			buff << x << ", " << y;
+			return buff.str();
+		}
+
 		std::string toJsonString() const
 		{
 			std::ostringstream buff;

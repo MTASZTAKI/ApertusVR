@@ -408,15 +408,29 @@ void ape::apeELearningPlugin::controllerMovedValueCallback(const ape::Vector3 & 
 	}
 }
 
-void ape::apeELearningPlugin::hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
+void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl)
 {
 	mLastHmdPosition = hmdMovedValuePos * hmdMovedValueScl;
 	mLastHmdOrientation = hmdMovedValueOri;
-	if (auto headNode = mpApeUserInputMacro->getHeadNode().lock())
+	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
-		headNode->setOrientation(hmdMovedValueOri);
+		userNode->setOrientation(hmdMovedValueOri);
 	}
 	//APE_LOG_DEBUG("mLastHmdPosition: " << mLastHmdPosition.toString());
+}
+
+void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& axis)
+{
+	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+	{
+		userNode->translate(ape::Vector3(0, 0, -1), ape::Node::TransformationSpace::LOCAL);
+	}
+	//APE_LOG_DEBUG("controllerTouchpadPressedValue: " << axis.toString());
+}
+
+void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
+{
+	APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
 }
 
 void ape::apeELearningPlugin::Init()
@@ -430,6 +444,8 @@ void ape::apeELearningPlugin::Init()
 	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&apeELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&apeELearningPlugin::controllerMovedValueCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	mpApeUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&apeELearningPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpApeUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&apeELearningPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForControllerButtonPressedStringValue(std::bind(&apeELearningPlugin::controllerButtonPressedStringValue, this, std::placeholders::_1));
 	createHotSpots();
 	while (!mSphereGeometryLeft.lock())
 	{

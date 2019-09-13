@@ -189,9 +189,9 @@ namespace ape
 
 		std::vector<std::function<void(const int&)>> mMouseScrolledFunctions;
 
-		std::vector<std::function<void(const std::string&)>> mControllerPressedStringFunctions;
+		std::vector<std::function<void(const ape::Vector2&)>> mControllerTouchpadPressedValueFunctions;
 
-		std::vector<std::function<void(const std::string&)>> mControllerReleasedStringFunctions;
+		std::vector<std::function<void(const std::string&)>> mControllerButtonReleasedStringFunctions;
 
 		std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>> mControllerMovedFunctions;
 
@@ -237,9 +237,9 @@ namespace ape
 
 		void mouseScrolledValue(int mouseSrcolledValue);
 
-		void controllerPressedStringValue(std::string controllerPressedStringValue);
+		void controllerTouchpadPressedValue(ape::Vector2 axis);
 
-		void controllerReleasedStringValue(std::string controllerReleasedStringValue);
+		void controllerButtonPressedStringValue(std::string controllerButtonPressedStringValue);
 
 		void controllerMovedValue(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
 
@@ -257,9 +257,9 @@ namespace ape
 
 		void registerCallbackForMouseScrolledValue(std::function<void(const int&)> callback);
 
-		void registerCallbackForControllerPressedStringValue(std::function<void(const std::string&)> callback);
+		void registerCallbackForControllerTouchpadPressedValue(std::function<void(const ape::Vector2&)> callback);
 
-		void registerCallbackForControllerReleasedStringValue(std::function<void(const std::string&)> callback);
+		void registerCallbackForControllerButtonPressedStringValue(std::function<void(const std::string&)> callback);
 
 		void registerCallbackForControllerMovedValue(std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)> callback);
 

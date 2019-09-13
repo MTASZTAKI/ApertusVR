@@ -124,7 +124,11 @@ namespace ape
 		
 		void controllerMovedValueCallback(const ape::Vector3& controllerPosition, const ape::Quaternion& controllerOrientation, const ape::Vector3& controllerScale);
 
-		void hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
+		void hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl);
+
+		void controllerTouchpadPressedValue(const ape::Vector2& axis);
+
+		void controllerButtonPressedStringValue(const std::string& buttonValue);
 		
 		void Init() override;
 
