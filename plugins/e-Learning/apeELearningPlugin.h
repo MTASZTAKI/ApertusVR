@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "sceneelements/apeIPlaneGeometry.h"
 #include "sceneelements/apeIFileMaterial.h"
 #include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeIBrowser.h"
 #include "sceneelements/apeIIndexedLineSetGeometry.h"
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeICamera.h"
@@ -91,6 +92,10 @@ namespace ape
 
 		ape::RayGeometryWeakPtr mRayGeometry;
 
+		ape::BrowserWeakPtr mBrowser;
+
+		ape::NodeWeakPtr mBrowserNode;
+
 	public:
 		apeELearningPlugin();
 
@@ -102,7 +107,7 @@ namespace ape
 
 		void createHotSpots();
 
-		void createOverlayBrowser();
+		void createBrowser();
 
 		void loadNextRoom();
 

@@ -149,7 +149,6 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
 			browserMaterial->setPassTexture(browserTexture);
-			browserMaterial->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
 			browserMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpapeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
@@ -169,6 +168,7 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 				else if (auto fileGeometry = std::dynamic_pointer_cast<ape::IFileGeometry>(browserGeometry))
 				{
 					fileGeometry->setMaterial(browserMaterial);
+					browserMaterial->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
 				}
 			}
 			else

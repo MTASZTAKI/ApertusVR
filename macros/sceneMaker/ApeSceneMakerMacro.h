@@ -74,7 +74,7 @@ namespace ape
 
 		void makeModel(std::string fileName);
 
-		void createBrowser();
+		void makeBrowser(std::string name, std::string url, ape::Vector3 position, ape::Quaternion orientation, float width, float height, float resoultionVertical, float resolutionHorizontal);
 
 		void makeSky();
 

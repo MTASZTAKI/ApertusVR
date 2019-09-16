@@ -85,13 +85,56 @@ void ape::SceneMakerMacro::makeModel(std::string fileName)
 	}
 }
 
-void ape::SceneMakerMacro::createBrowser()
+void ape::SceneMakerMacro::makeBrowser(std::string name, std::string url, ape::Vector3 position, ape::Quaternion orientation, float width, float height, float resoultionVertical, float resolutionHorizontal)
 {
-	
+	if (!mpSceneManager->getNode(name).lock())
+	{
+		if (auto browserNode = mpSceneManager->createNode(name).lock())
+		{
+			browserNode->setPosition(position);
+			browserNode->setOrientation(orientation);
+			if (auto browserGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name + "geometry", ape::Entity::GEOMETRY_PLANE).lock()))
+			{
+				browserGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(width, height), ape::Vector2(1, 1));
+				browserGeometry->setParentNode(browserNode);
+				if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity(name + "browser", ape::Entity::BROWSER).lock()))
+				{
+					browser->setResoultion(resoultionVertical, resolutionHorizontal);
+					browser->setURL(url);
+					browser->setGeometry(browserGeometry);
+					/*if (auto browserMouseNode = mpSceneManager->createNode(name + "mouse").lock())
+					{
+						browserMouseNode->setParentNode(browserNode);
+						browserMouseNode->setPosition(ape::Vector3(0, -1, 0));
+						if (auto mouseGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name + "mouseGeometry", ape::Entity::GEOMETRY_PLANE).lock()))
+						{
+							mouseGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(width, height), ape::Vector2(1, 1));
+							mouseGeometry->setParentNode(browserMouseNode);
+							if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "mouseMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+							{
+								mouseMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+								mouseMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+								mouseMaterial->setLightingEnabled(false);
+								mouseMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
+								if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity(name + "mouseTexture", ape::Entity::TEXTURE_UNIT).lock()))
+								{
+									mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
+									mouseTexture->setTextureAddressingMode(ape::Texture::AddressingMode::CLAMP);
+									mouseTexture->setTextureFiltering(ape::Texture::Filtering::POINT, ape::Texture::Filtering::LINEAR, ape::Texture::Filtering::F_NONE);
+								}
+								std::static_pointer_cast<ape::IPlaneGeometry>(mouseGeometry)->setMaterial(mouseMaterial);
+							}
+						}
+					}*/
+				}
+			}
+		}
+	}
 }
 
 void ape::SceneMakerMacro::makeSky()
 {
+
 }
 
 void ape::SceneMakerMacro::makeBackground()

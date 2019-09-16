@@ -153,10 +153,24 @@ void ape::apeELearningPlugin::createHotSpots()
 	}
 }
 
-void ape::apeELearningPlugin::createOverlayBrowser()
+void ape::apeELearningPlugin::createBrowser()
 {
-	mpSceneMakerMacro->makeOverlayBrowser("http://www.apertusvr.org");
-	mpApeUserInputMacro->showOverlayBrowser(false);
+	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -200), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
+	if (auto browserNode = mpSceneManager->getNode("mainBrowser").lock())
+	{
+		browserNode->setChildrenVisibility(false);
+		if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+		{
+			browserNode->setParentNode(userNode);
+			browserNode->rotate(ape::Degree(-90).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+			browserNode->rotate(ape::Degree(-90).toRadian(), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::LOCAL);
+		}
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity("mainBrowserbrowser").lock()))
+		{
+			mBrowser = browser;
+		}
+		mBrowserNode = browserNode;
+	}
 }
 
 void ape::apeELearningPlugin::loadNextRoom()
@@ -303,6 +317,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
+		APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION called");
 		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
@@ -328,8 +343,15 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 								if (clickedNode->getName() == it->first && clickedNode->getChildrenVisibility())
 								{
 									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
-									mpApeUserInputMacro->setOverlayBrowserURL(mGameURLResourcePath[it->second.get_gameurl()]);
-									mpApeUserInputMacro->showOverlayBrowser(true);
+									if (auto browser = mBrowser.lock())
+									{
+										browser->setURL(mGameURLResourcePath[it->second.get_gameurl()]);
+										if (auto browserNode =mBrowserNode.lock())
+										{
+											browserNode->setChildrenVisibility(true);
+										}
+									}
+									break;
 								}
 							}
 						}
@@ -435,6 +457,7 @@ void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMoved
 	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
 		userNode->setOrientation(hmdMovedValueOri);
+		//userNode->setPosition(mLastHmdPosition);
 	}
 	//APE_LOG_DEBUG("mLastHmdPosition: " << mLastHmdPosition.toString());
 }
@@ -450,10 +473,13 @@ void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2&
 
 void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
 {
-	//APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
+	APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
 	if (buttonValue == "Grip")
 	{
-		;
+		if (auto browserNode = mBrowserNode.lock())
+		{
+			browserNode->setChildrenVisibility(false);
+		}
 	}
 	else if (buttonValue == "Trigger")
 	{
@@ -487,7 +513,7 @@ void ape::apeELearningPlugin::Init()
 void ape::apeELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	//createOverlayBrowser();
+	createBrowser();
 	loadNextRoom();
 	while (true)
 	{
