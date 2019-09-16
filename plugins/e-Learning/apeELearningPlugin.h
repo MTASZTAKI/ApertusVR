@@ -35,6 +35,8 @@ SOFTWARE.*/
 #include "sceneelements/apeIFileGeometry.h"
 #include "sceneelements/apeIPlaneGeometry.h"
 #include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
 #include "sceneelements/apeINode.h"
 #include "sceneelements/apeICamera.h"
 #include "sceneelements/apeIManualTexture.h"
@@ -86,6 +88,8 @@ namespace ape
 		ape::Vector3 mLastHmdPosition;
 
 		ape::Quaternion mLastHmdOrientation;
+
+		ape::RayGeometryWeakPtr mRayGeometry;
 
 	public:
 		apeELearningPlugin();

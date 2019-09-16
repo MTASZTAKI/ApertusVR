@@ -1542,8 +1542,17 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							if (auto raySpaceNode = rayOverlayNode->getParentNode().lock())
 							{
-								Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
+								Ogre::Ray ray;
+								//TODO_apeOgreRenderPlugin detect or separate event for both overlay and spatial rayQuery
+								/*Ogre::Ray ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
 									rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height); //TODO_apeOgreRenderPlugin check enabled window in ogreRenderWindowConfigList
+								*/
+								if (mpOgreSceneManager->hasSceneNode(raySpaceNode->getName()))
+								{
+									auto ogreNode = mpOgreSceneManager->getSceneNode(raySpaceNode->getName());
+									Ogre::Vector3 rayDirection = ogreNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+									ray = Ogre::Ray(ogreNode->getPosition(), rayDirection);
+								}
 								Ogre::RaySceneQuery *raySceneQuery = mpOgreSceneManager->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
 								if (raySceneQuery != NULL)
 								{

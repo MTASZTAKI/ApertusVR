@@ -269,22 +269,41 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 			mpApeUserInputMacro->getUserNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
-			if (auto node = mpSceneManager->createNode("htcVive_Controller_Node").lock())
+			if (auto controllerNode = mpSceneManager->createNode("htcVive_Controller_Node").lock())
 			{
-				node->setScale(ape::Vector3(10, 10, 10));
+				controllerNode->setScale(ape::Vector3(10, 10, 10));
 				std::string controller3DModelFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/scene.gltf";
 				if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(controller3DModelFileName, ape::Entity::GEOMETRY_FILE).lock()))
 				{
-					model->setParentNode(node);
+					model->setParentNode(controllerNode);
 					model->setFileName(controller3DModelFileName);
 				}
-				mControllerNode = node;
+				if (auto rayNode = mpSceneManager->createNode("rayNode").lock())
+				{
+					if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery", ape::Entity::GEOMETRY_RAY).lock()))
+					{
+						rayGeometry->setIntersectingEnabled(true);
+						rayGeometry->setParentNode(rayNode);
+						mRayGeometry = rayGeometry;
+					}
+					rayNode->setParentNode(controllerNode);
+					if (auto laserLine = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("laserLine", ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					{
+						ape::GeometryCoordinates coordinates = {0, 0, 0, 0, 400, 0 };
+						ape::GeometryIndices indices = { 0, 1, -1 };
+						ape::Color color(1, 0, 0);
+						laserLine->setParameters(coordinates, indices, color);
+						laserLine->setParentNode(rayNode);
+						rayNode->setOrientation(ape::Quaternion(0.707, -0.707, 0, 0));
+					}
+				}
+				mControllerNode = controllerNode;
 			}
 		}
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
-		if (auto rayGeometry = mpApeUserInputMacro->getRayGeometry().lock())
+		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
 			std::list<ape::EntityWeakPtr> intersectionList;
@@ -302,6 +321,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
 						if (auto clickedNode = geometry->getParentNode().lock())
 						{
+							//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName());
 							std::map<std::string, quicktype::Hotspot>::iterator it;
 							for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
 							{
@@ -421,16 +441,25 @@ void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMoved
 
 void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& axis)
 {
+	//APE_LOG_DEBUG("controllerTouchpadPressedValue: " << axis.toString());
 	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
 		userNode->translate(ape::Vector3(0, 0, -1), ape::Node::TransformationSpace::LOCAL);
 	}
-	//APE_LOG_DEBUG("controllerTouchpadPressedValue: " << axis.toString());
 }
 
 void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
 {
-	APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
+	//APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
+	if (buttonValue == "Grip")
+	{
+		;
+	}
+	else if (buttonValue == "Trigger")
+	{
+		if (auto rayGeomtery = mRayGeometry.lock())
+			rayGeomtery->fireIntersectionQuery();
+	}
 }
 
 void ape::apeELearningPlugin::Init()

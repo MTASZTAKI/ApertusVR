@@ -73,6 +73,14 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 			{
 				mpApeUserInputMacro->controllerButtonPressedStringValue("Trigger");
 			}
+			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_Grip))
+			{
+				mpApeUserInputMacro->controllerButtonPressedStringValue("Grip");
+			}
+			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_ApplicationMenu))
+			{
+				mpApeUserInputMacro->controllerButtonPressedStringValue("Menu");
+			}
 		}
 	}
 	vr::TrackedDevicePose_t hmdPose;
