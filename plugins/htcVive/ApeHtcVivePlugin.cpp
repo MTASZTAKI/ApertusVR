@@ -60,28 +60,7 @@ void ape::apeHtcVivePlugin::submitTextureLeftToOpenVR()
 		controllerTrackerPose.decomposition(controllerTrackerScale, controllerTrackerOrientation, controllerTrackerPosition);
 		controllerTrackerScale = 100;
 		controllerTrackerPosition = controllerTrackerPosition;
-		vr::VRControllerState_t openVRControllerState;
-		mpOpenVrSystem->GetControllerState(controllerID, &openVRControllerState, sizeof openVRControllerState);
 		mpApeUserInputMacro->controllerMovedValue(controllerTrackerPosition, controllerTrackerOrientation, controllerTrackerScale);
-		if (openVRControllerState.ulButtonPressed)
-		{
-			if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Touchpad))
-			{
-				mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y));
-			}
-			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Trigger))
-			{
-				mpApeUserInputMacro->controllerButtonPressedStringValue("Trigger");
-			}
-			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_Grip))
-			{
-				mpApeUserInputMacro->controllerButtonPressedStringValue("Grip");
-			}
-			else if (openVRControllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::k_EButton_ApplicationMenu))
-			{
-				mpApeUserInputMacro->controllerButtonPressedStringValue("Menu");
-			}
-		}
 	}
 	vr::TrackedDevicePose_t hmdPose;
 	if ((hmdPose = mOpenVrTrackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
@@ -257,7 +236,31 @@ void ape::apeHtcVivePlugin::Run()
 	APE_LOG_DEBUG("mOpenVrTextures[0]:" << mOpenVrTextures[0].handle << " mOpenVrTextures[1]" << mOpenVrTextures[1].handle);
 	while (true)
 	{
-		//nothing to do there becuse it is the apeHtcVivePlugin thread. 
+		vr::VREvent_t event;
+		while (mpOpenVrSystem->PollNextEvent(&event, sizeof(event))) switch (event.eventType)
+		{
+			case vr::VREvent_ButtonPress:
+			{
+				if (event.data.controller.button == vr::k_EButton_SteamVR_Touchpad)
+				{
+					//mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y));
+				}
+				else if (event.data.controller.button == vr::k_EButton_SteamVR_Trigger)
+				{
+					mpApeUserInputMacro->controllerButtonPressedStringValue("Trigger");
+				}
+				else if (event.data.controller.button == vr::k_EButton_Grip)
+				{
+					mpApeUserInputMacro->controllerButtonPressedStringValue("Grip");
+				}
+				else if (event.data.controller.button == vr::k_EButton_ApplicationMenu)
+				{
+					mpApeUserInputMacro->controllerButtonPressedStringValue("Menu");
+				}
+			}
+			break;
+		}
+		
 		//compositor and pose update is done by the ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
