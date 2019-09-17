@@ -45,7 +45,7 @@ ape::FileGeometryWeakPtr ape::apeELearningPlugin::createSphere(std::string camer
 	{
 		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName).lock())
 		{
-			sphereNode->setScale(ape::Vector3(10, 10, 10));
+			//sphereNode->setScale(ape::Vector3(100, 100, 100));
 			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE).lock()))
 			{
 				sphereMeshFile->setFileName(meshName);
@@ -64,12 +64,12 @@ void ape::apeELearningPlugin::createRoomTextures()
 	{
 		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
-			material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+			/*if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);*/
+			if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
+			{
 				material->setPassTexture(texture);
 				sphereGeometryLeft->setMaterial(material);
 			}
@@ -79,12 +79,12 @@ void ape::apeELearningPlugin::createRoomTextures()
 	{
 		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
-			material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+			/*if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
+				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);*/
+			if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
+			{
 				material->setPassTexture(texture);
 				sphereGeometryRight->setMaterial(material);
 			}
@@ -107,23 +107,32 @@ void ape::apeELearningPlugin::createHotSpots()
 			{
 				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
 				{
+					//node->setPosition(ape::Vector3(hotspot.get_h(), hotspot.get_v(), hotspot.get_z()));
 					node->setPosition(ape::Vector3(0, 0, -20));
 					node->setOrientation(ape::Quaternion(0.707, 0.707, 0, 0));
 					if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 					{
-						material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
-						material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 						material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-						std::string textureFileName;
 						auto pos = hotspot.get_textures()[0].find("/") + 1;
-						textureFileName = hotspot.get_textures()[0].substr(pos);
+						/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + hotspot.get_textures()[0].substr(pos);
+						if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+						{
+							int width, height, channels;
+							unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+							if (rgb_image)
+							{
+								texture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
+								texture->setBuffer(rgb_image);
+								material->setPassTexture(texture);
+							}*/
+						std::string textureFileName = hotspot.get_textures()[0].substr(pos);
 						if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
 						{
 							texture->setFileName(textureFileName);
 							material->setPassTexture(texture);
 							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE).lock()))
 							{
-								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height(), hotspot.get_src_width()), ape::Vector2(1, 1));
+								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * hotspot.get_width(), hotspot.get_src_width() * hotspot.get_width()), ape::Vector2(1, 1));
 								planeGeometry->setParentNode(node);
 								planeGeometry->setMaterial(material);
 							}
@@ -155,7 +164,7 @@ void ape::apeELearningPlugin::createHotSpots()
 
 void ape::apeELearningPlugin::createBrowser()
 {
-	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -200), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
+	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -100), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
 	if (auto browserNode = mpSceneManager->getNode("mainBrowser").lock())
 	{
 		browserNode->setChildrenVisibility(false);
@@ -217,7 +226,7 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
 		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
+		/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
 		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Texture").lock()))
 		{
 			int width, height, channels;
@@ -227,12 +236,22 @@ void ape::apeELearningPlugin::loadRoomTextures()
 				texture->setBuffer(rgb_image);
 				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
 			}
+		}*/
+		std::string textureFileName = mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
+		if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Texture").lock()))
+		{
+			texture->setFileName(textureFileName);
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Material").lock()))
+			{
+				material->setPassTexture(texture);
+				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
+			}
 		}
 	}
 	if (auto sphereGeometryRight = mSphereGeometryRight.lock())
 	{
 		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
+		/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
 		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Texture").lock()))
 		{
 			int width, height, channels;
@@ -240,6 +259,16 @@ void ape::apeELearningPlugin::loadRoomTextures()
 			if (rgb_image)
 			{
 				texture->setBuffer(rgb_image);
+				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
+			}
+		}*/
+		std::string textureFileName = mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
+		if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Texture").lock()))
+		{
+			texture->setFileName(textureFileName);
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Material").lock()))
+			{
+				material->setPassTexture(texture);
 				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
 			}
 		}

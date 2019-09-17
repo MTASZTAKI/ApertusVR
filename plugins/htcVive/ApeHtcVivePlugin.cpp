@@ -107,10 +107,6 @@ void ape::apeHtcVivePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	APE_LOG_DEBUG("waiting for main window");
-	while (mpCoreConfig->getWindowConfig().handle == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
 	APE_LOG_DEBUG("try to initialize openVR HMD");
 	mpOpenVrSystem = vr::VR_Init(&mOpenVrHmdError, vr::EVRApplicationType::VRApplication_Scene);
 	if (mOpenVrHmdError != vr::VRInitError_None)
@@ -243,7 +239,7 @@ void ape::apeHtcVivePlugin::Run()
 			{
 				if (event.data.controller.button == vr::k_EButton_SteamVR_Touchpad)
 				{
-					//mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y));
+					mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(/*openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y*/));
 				}
 				else if (event.data.controller.button == vr::k_EButton_SteamVR_Trigger)
 				{

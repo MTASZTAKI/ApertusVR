@@ -2,6 +2,8 @@
   "plugins": [
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
     "apeHtcVivePlugin",
     "apeIndustry40Plugin",
     "ape360VideoPlugin",
