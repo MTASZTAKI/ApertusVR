@@ -65,6 +65,7 @@ ape::UserInputMacro::UserInputMacro()
 	mMouseMovedFunctions = std::vector<std::function<void(const ape::Vector2&, const ape::Vector2&)>>();
 	mMouseScrolledFunctions = std::vector<std::function<void(const int&)>>();
 	mControllerTouchpadPressedValueFunctions = std::vector<std::function<void(const ape::Vector2&)>>();
+	mControllerTouchpadReleasedValueFunctions = std::vector<std::function<void(const ape::Vector2&)>>();
 	mControllerButtonReleasedStringFunctions = std::vector<std::function<void(const std::string&)>>();
 	mControllerMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
 	mHmdMovedFunctions = std::vector<std::function<void(const ape::Vector3&, const ape::Quaternion&, const ape::Vector3&)>>();
@@ -297,6 +298,15 @@ void ape::UserInputMacro::controllerTouchpadPressedValue(ape::Vector2 axis)
 	}
 }
 
+void ape::UserInputMacro::controllerTouchpadReleasedValue(ape::Vector2 axis)
+{
+	auto functionList = mControllerTouchpadReleasedValueFunctions;
+	for (auto it : functionList)
+	{
+		it(axis);
+	}
+}
+
 void ape::UserInputMacro::controllerButtonPressedStringValue(std::string controllerButtonPressedStringValue)
 {
 	auto functionList = mControllerButtonReleasedStringFunctions;
@@ -398,6 +408,11 @@ void ape::UserInputMacro::registerCallbackForMouseScrolledValue(std::function<vo
 void ape::UserInputMacro::registerCallbackForControllerTouchpadPressedValue(std::function<void(const ape::Vector2&)> callback)
 {
 	mControllerTouchpadPressedValueFunctions.push_back(callback);
+}
+
+void ape::UserInputMacro::registerCallbackForControllerTouchpadReleasedValue(std::function<void(const ape::Vector2&)> callback)
+{
+	mControllerTouchpadReleasedValueFunctions.push_back(callback);
 }
 
 void ape::UserInputMacro::registerCallbackForControllerButtonPressedStringValue(std::function<void(const std::string&)> callback)

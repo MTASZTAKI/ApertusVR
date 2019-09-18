@@ -17,7 +17,7 @@
 		{
 			"id": "room1",
 			"texture": "SZE_Ipar40Labor_015_Top.jpg",
-			"rotation": 0,
+			"rotation": 77,
 			"hotspots": [
 				{
 					"id": "film01",

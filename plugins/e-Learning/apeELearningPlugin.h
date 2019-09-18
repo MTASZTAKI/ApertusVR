@@ -96,6 +96,8 @@ namespace ape
 
 		ape::NodeWeakPtr mBrowserNode;
 
+		bool mIsControllerTouchPressed;
+
 	public:
 		apeELearningPlugin();
 
@@ -115,10 +117,6 @@ namespace ape
 
 		void loadRoomTextures();
 
-		void resetUserNodePose();
-
-		void resetHeadNodePose();
-
 		void eventCallBack(const ape::Event& event);
 
 		void keyPressedStringEventCallback(const std::string& keyValue);
@@ -136,6 +134,8 @@ namespace ape
 		void hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl);
 
 		void controllerTouchpadPressedValue(const ape::Vector2& axis);
+
+		void controllerTouchpadReleasedValue(const ape::Vector2& axis);
 
 		void controllerButtonPressedStringValue(const std::string& buttonValue);
 		

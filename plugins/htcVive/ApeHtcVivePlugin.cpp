@@ -255,6 +255,14 @@ void ape::apeHtcVivePlugin::Run()
 				}
 			}
 			break;
+			case vr::VREvent_ButtonUnpress:
+			{
+				if (event.data.controller.button == vr::k_EButton_SteamVR_Touchpad)
+				{
+					mpApeUserInputMacro->controllerTouchpadReleasedValue(ape::Vector2(/*openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y*/));
+				}
+			}
+			break;
 		}
 		
 		//compositor and pose update is done by the ape::apeHtcVivePlugin::submitTextureLeftToOpenVR() function called from the rendering thread
