@@ -68,6 +68,14 @@ namespace ape
 
 		std::vector<quicktype::Room> mRooms;
 
+		std::vector<ape::NodeWeakPtr> mCurrentHotspotNodes;
+
+		int mCurrentHotSpotNodeID;
+
+		std::vector<std::string> mCurrentPossibleNextRoomNames;
+
+		int mCurrentPossibleNextRoomID;
+
 		std::map<std::string, std::string> mGameURLResourcePath;
 
 		ape::Vector3 mUserDeadZone;
@@ -113,11 +121,13 @@ namespace ape
 
 		void createBrowser();
 
-		void loadNextRoom();
+		void loadRoom(std::string name);
 
 		void loadHotSpots();
 
 		void loadRoomTextures();
+
+		void rotateSpheres(ape::Quaternion orientation);
 
 		void eventCallBack(const ape::Event& event);
 
