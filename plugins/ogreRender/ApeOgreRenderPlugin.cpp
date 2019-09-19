@@ -1188,12 +1188,38 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							}
 							else if (texture->getType() == ape::Entity::Type::TEXTURE_FILE)
 							{
-								auto ogreTexture = Ogre::TextureManager::getSingleton().load(std::static_pointer_cast<ape::IFileTexture>(texture)->getFileName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-								if (!ogreTexture.isNull() && !ogreMaterial.isNull())
+								if (!ogreMaterial.isNull())
 								{
 									if (!ogreMaterial->getTechnique(0)->getPass(0)->getNumTextureUnitStates())
-										ogreMaterial->getTechnique(0)->getPass(0)->createTextureUnitState();
-									ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+									{
+										auto ogreTexture = Ogre::TextureManager::getSingleton().load(std::static_pointer_cast<ape::IFileTexture>(texture)->getFileName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+										if (!ogreTexture.isNull())
+										{
+											ogreMaterial->getTechnique(0)->getPass(0)->createTextureUnitState();
+											ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+										}
+									}
+									else
+									{
+										/*std::string oldOgreTextureName = ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName();
+										auto oldOgreTexture = Ogre::TextureManager::getSingleton().getByName(oldOgreTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+										if (!oldOgreTexture.isNull())
+										{
+											oldOgreTexture->unload();
+											auto newOgreTexture = Ogre::TextureManager::getSingleton().load(std::static_pointer_cast<ape::IFileTexture>(texture)->getFileName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+											if (!newOgreTexture.isNull())
+											{
+												ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(newOgreTexture);
+												ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->retryTextureLoad();
+											}
+										}*/
+										auto ogreTexture = Ogre::TextureManager::getSingleton().load(std::static_pointer_cast<ape::IFileTexture>(texture)->getFileName(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+										if (!ogreTexture.isNull())
+										{
+											ogreMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
+											ogreMaterial->compile();
+										}
+									}
 								}
 							}
 						}

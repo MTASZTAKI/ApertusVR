@@ -98,6 +98,8 @@ namespace ape
 
 		bool mIsControllerTouchPressed;
 
+		quicktype::Welcome mConfig;
+
 	public:
 		apeELearningPlugin();
 

@@ -63,31 +63,35 @@ void ape::apeELearningPlugin::createRoomTextures()
 {
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
-		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		for (auto const& room : mConfig.get_rooms())
 		{
-			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			/*if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Left", ape::Entity::MATERIAL_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);*/
-			if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(sphereGeometryLeft->getName() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
-			{
-				material->setPassTexture(texture);
-				sphereGeometryLeft->setMaterial(material);
+				material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Left", ape::Entity::TEXTURE_FILE).lock()))
+				{
+					auto stringPos = room.get_texture().find_last_of("_") + 1;
+					std::string textureFileName = room.get_texture().substr(0, stringPos) + "Top.png";
+					texture->setFileName(textureFileName);
+					material->setPassTexture(texture);
+				}
 			}
 		}
 	}
 	if (auto sphereGeometryRight = mSphereGeometryRight.lock())
 	{
-		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+		for (auto const& room : mConfig.get_rooms())
 		{
-			material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			/*if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Right", ape::Entity::MATERIAL_MANUAL).lock()))
 			{
-				texture->setParameters(8192, 4096, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);*/
-			if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(sphereGeometryRight->getName() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
-			{
-				material->setPassTexture(texture);
-				sphereGeometryRight->setMaterial(material);
+				material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Right", ape::Entity::TEXTURE_FILE).lock()))
+				{
+					auto stringPos = room.get_texture().find_last_of("_") + 1;
+					std::string textureFileName = room.get_texture().substr(0, stringPos) + "Top.png";
+					texture->setFileName(textureFileName);
+					material->setPassTexture(texture);
+				}
 			}
 		}
 	}
@@ -95,11 +99,7 @@ void ape::apeELearningPlugin::createRoomTextures()
 
 void ape::apeELearningPlugin::createHotSpots()
 {
-	std::stringstream fileFullPath;
-	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeELearningPlugin.json";
-	FILE* apeELearningConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	quicktype::Welcome config = nlohmann::json::parse(apeELearningConfigFile);
-	for (auto const& room : config.get_rooms())
+	for (auto const& room : mConfig.get_rooms())
 	{
 		std::weak_ptr<std::vector<quicktype::Hotspot>> hotspots = room.get_hotspots();
 		if (hotspots.lock())
@@ -165,7 +165,7 @@ void ape::apeELearningPlugin::createHotSpots()
 
 void ape::apeELearningPlugin::createBrowser()
 {
-	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -50), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
+	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -70), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
 	if (auto browserNode = mpSceneManager->getNode("mainBrowser").lock())
 	{
 		browserNode->setChildrenVisibility(false);
@@ -232,60 +232,32 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	{
 		if (auto shpereNode = sphereGeometryLeft->getParentNode().lock())
 		{
-			auto roomRotateDegree = ape::Radian(ape::Degree(mRooms[mCurrentRoomID].get_rotation()).toRadian());
-			shpereNode->rotate(roomRotateDegree, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+			auto roomRotateAngle = ape::Radian(ape::Degree(mRooms[mCurrentRoomID].get_rotation()).toRadian());
+			auto roomRotateAxis = ape::Vector3(0, 1, 0);
+			auto roomOrientation = ape::Quaternion();
+			roomOrientation.FromAngleAxis(roomRotateAngle, roomRotateAxis);
+			shpereNode->setOrientation(roomOrientation);
 		}
-		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
-		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Texture").lock()))
+		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(mRooms[mCurrentRoomID].get_id() + "_Material_Left").lock()))
 		{
-			int width, height, channels;
-			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
-			if (rgb_image)
-			{
-				texture->setBuffer(rgb_image);
-				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
-			}
-		}*/
-		std::string textureFileName = mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Top.png";
-		if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Texture").lock()))
-		{
-			texture->setFileName(textureFileName);
-			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(sphereGeometryLeft->getName() + "_Material").lock()))
-			{
-				material->setPassTexture(texture);
-				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
-			}
+			sphereGeometryLeft->setMaterial(material);
+			APE_LOG_DEBUG("A room is active with texture: " << material->getName());
 		}
 	}
 	if (auto sphereGeometryRight = mSphereGeometryRight.lock())
 	{
 		if (auto shpereNode = sphereGeometryRight->getParentNode().lock())
 		{
-			auto roomRotateDegree = ape::Radian(ape::Degree(mRooms[mCurrentRoomID].get_rotation()).toRadian());
-			shpereNode->rotate(roomRotateDegree, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+			auto roomRotateAngle = ape::Radian(ape::Degree(mRooms[mCurrentRoomID].get_rotation()).toRadian());
+			auto roomRotateAxis = ape::Vector3(0, 1, 0);
+			auto roomOrientation = ape::Quaternion();
+			roomOrientation.FromAngleAxis(roomRotateAngle, roomRotateAxis);
+			shpereNode->setOrientation(roomOrientation);
 		}
-		auto pos = mRooms[mCurrentRoomID].get_texture().find_last_of("_") + 1;
-		/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
-		if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Texture").lock()))
+		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(mRooms[mCurrentRoomID].get_id() + "_Material_Right").lock()))
 		{
-			int width, height, channels;
-			unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
-			if (rgb_image)
-			{
-				texture->setBuffer(rgb_image);
-				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
-			}
-		}*/
-		std::string textureFileName = mRooms[mCurrentRoomID].get_texture().substr(0, pos) + "Bottom.png";
-		if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Texture").lock()))
-		{
-			texture->setFileName(textureFileName);
-			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(sphereGeometryRight->getName() + "_Material").lock()))
-			{
-				material->setPassTexture(texture);
-				APE_LOG_DEBUG("A room is active with texture: " << textureFileName);
-			}
+			sphereGeometryRight->setMaterial(material);
+			APE_LOG_DEBUG("A room is active with texture: " << material->getName());
 		}
 	}
 }
@@ -391,7 +363,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 			if (event.subjectName == userNode->getName())
 			{
 				ape::Vector3 position = userNode->getPosition();
-				APE_LOG_DEBUG("position.length()" << position.length() << " mUserDeadZone.length()" << mUserDeadZone.length());
+				//APE_LOG_DEBUG("position.length()" << position.length() << " mUserDeadZone.length()" << mUserDeadZone.length());
 				if (position.length() > mUserDeadZone.length())
 				{
 					loadNextRoom();
@@ -519,6 +491,10 @@ void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::stri
 void ape::apeELearningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeELearningPlugin.json";
+	FILE* apeELearningConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	mConfig = nlohmann::json::parse(apeELearningConfigFile);
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&apeELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&apeELearningPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
