@@ -239,7 +239,9 @@ void ape::apeHtcVivePlugin::Run()
 			{
 				if (event.data.controller.button == vr::k_EButton_SteamVR_Touchpad)
 				{
-					mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(/*openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y*/));
+					vr::VRControllerState_t openVRControllerState;
+					mpOpenVrSystem->GetControllerState(3, &openVRControllerState, sizeof openVRControllerState);
+					mpApeUserInputMacro->controllerTouchpadPressedValue(ape::Vector2(openVRControllerState.rAxis[0].x, openVRControllerState.rAxis[0].y));
 				}
 				else if (event.data.controller.button == vr::k_EButton_SteamVR_Trigger)
 				{

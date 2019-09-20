@@ -45,12 +45,44 @@ SOFTWARE.*/
 #include "sceneelements/apeIManualMaterial.h"
 #include "macros/userInput/apeUserInputMacro.h"
 #include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "datatypes/apeEuler.h"
 #include "apeELearningPluginConfig.h"
 
 #define THIS_PLUGINNAME "apeELearningPlugin"
 
 namespace ape
 {
+	struct RotationPose
+	{
+		int angle;
+
+		std::string type;
+
+		std::string name;
+
+		RotationPose() {};
+
+		RotationPose(int angle, std::string type, std::string name)
+		{
+			this->angle = angle;
+			this->type = type;
+			this->name = name;
+		}
+
+		bool operator<(const RotationPose& r) const
+		{
+			if (angle != r.angle)
+				return angle < r.angle;
+			return angle < r.angle;
+		}
+
+		bool operator>(const RotationPose& r) const
+		{
+			if (angle != r.angle)
+				return angle > r.angle;
+			return angle > r.angle;
+		}
+	};
 	class apeELearningPlugin : public ape::IPlugin
 	{
 	private:
@@ -68,13 +100,9 @@ namespace ape
 
 		std::vector<quicktype::Room> mRooms;
 
-		std::vector<ape::NodeWeakPtr> mCurrentHotspotNodes;
+		std::vector<RotationPose> mCurrentRotationPoses;
 
-		int mCurrentHotSpotNodeID;
-
-		std::vector<std::string> mCurrentPossibleNextRoomNames;
-
-		int mCurrentPossibleNextRoomID;
+		int mCurrentRotationPoseID;
 
 		std::map<std::string, std::string> mGameURLResourcePath;
 
@@ -104,7 +132,11 @@ namespace ape
 
 		ape::NodeWeakPtr mBrowserNode;
 
-		bool mIsControllerTouchPressed;
+		bool mIsTouchPadPressed;
+
+		bool mIsForwardMovementEnabled;
+
+		int mCurrentSphereAngle;
 
 		quicktype::Welcome mConfig;
 
@@ -127,7 +159,7 @@ namespace ape
 
 		void loadRoomTextures();
 
-		void rotateSpheres(ape::Quaternion orientation);
+		void rotateSpheres(int angle);
 
 		void eventCallBack(const ape::Event& event);
 
@@ -150,6 +182,8 @@ namespace ape
 		void controllerTouchpadReleasedValue(const ape::Vector2& axis);
 
 		void controllerButtonPressedStringValue(const std::string& buttonValue);
+
+		void findClosestRotationPose(int currentSphereAngle, std::string command);
 		
 		void Init() override;
 

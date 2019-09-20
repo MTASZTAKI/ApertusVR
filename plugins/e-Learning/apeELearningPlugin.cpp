@@ -30,11 +30,11 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	mControllerNode = ape::NodeWeakPtr();
 	mLastHmdPosition = ape::Vector3();
 	mLastHmdOrientation = ape::Quaternion();
-	mIsControllerTouchPressed = false;
-	mCurrentHotspotNodes = std::vector<ape::NodeWeakPtr>();
-	mCurrentHotSpotNodeID = 0;
-	mCurrentPossibleNextRoomNames = std::vector<std::string>();
-	mCurrentPossibleNextRoomID = 0;
+	mIsTouchPadPressed = false;
+	mCurrentRotationPoses = std::vector<RotationPose>();
+	mCurrentRotationPoseID = -1;
+	mIsForwardMovementEnabled = false;
+	mCurrentSphereAngle = 0;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -189,6 +189,7 @@ void ape::apeELearningPlugin::createBrowser()
 
 void ape::apeELearningPlugin::loadRoom(std::string name)
 {
+	mIsForwardMovementEnabled = false;
 	for (int i = 0; i < mRooms.size(); i++)
 	{
 		if (mRooms[i].get_id() == name)
@@ -198,34 +199,27 @@ void ape::apeELearningPlugin::loadRoom(std::string name)
 		}
 	}
 	loadRoomTextures();
+	mCurrentRotationPoses.clear();
+	mCurrentRotationPoses.resize(0);
 	loadHotSpots();
 	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
 		userNode->setPosition(ape::Vector3(0, 0, 0));
 	}
-	auto roomRotateAngle = ape::Radian(ape::Degree(mRooms[mCurrentRoomID].get_rotation()).toRadian());
-	auto roomRotateAxis = ape::Vector3(0, 1, 0);
-	auto roomOrientation = ape::Quaternion();
-	roomOrientation.FromAngleAxis(roomRotateAngle, roomRotateAxis);
-	rotateSpheres(roomOrientation);
-	mCurrentPossibleNextRoomNames.clear();
-	mCurrentPossibleNextRoomNames.resize(0);
-	mCurrentPossibleNextRoomID = 0;
+	rotateSpheres(mRooms[mCurrentRoomID].get_rotation());
 	auto graph = mConfig.get_graph();
 	for (auto const& graphItem : graph)
 	{
 		if (graphItem.get_src() == mRooms[mCurrentRoomID].get_id())
 		{
-			mCurrentPossibleNextRoomNames.push_back(graphItem.get_dst());
+			ape::RotationPose rotationPose(graphItem.get_angle(), "room", graphItem.get_dst());
+			mCurrentRotationPoses.push_back(rotationPose);
 		}
 	}
 }
 
 void ape::apeELearningPlugin::loadHotSpots()
 {
-	mCurrentHotspotNodes.clear();
-	mCurrentHotspotNodes.resize(0);
-	mCurrentHotSpotNodeID = 0;
 	std::map<std::string, quicktype::Hotspot>::iterator it;
 	for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
 	{
@@ -240,7 +234,8 @@ void ape::apeELearningPlugin::loadHotSpots()
 					{
 						node->setChildrenVisibility(true);
 						APE_LOG_DEBUG("A hotSpot is active: " << hotspot.get_id());
-						mCurrentHotspotNodes.push_back(node);
+						ape::RotationPose rotationPose(20, "hotspot", hotspot.get_id());
+						mCurrentRotationPoses.push_back(rotationPose);
 					}
 				}
 				else
@@ -275,8 +270,13 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	}
 }
 
-void ape::apeELearningPlugin::rotateSpheres(ape::Quaternion orientation)
+void ape::apeELearningPlugin::rotateSpheres(int angle)
 {
+	mCurrentSphereAngle = angle;
+	auto angleRad = ape::Radian(ape::Degree(angle).toRadian());
+	auto axis = ape::Vector3(0, 1, 0);
+	auto orientation = ape::Quaternion();
+	orientation.FromAngleAxis(angleRad, axis);
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
 		if (auto shpereNode = sphereGeometryLeft->getParentNode().lock())
@@ -389,18 +389,19 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 	}
 	else if (event.type == ape::Event::Type::NODE_POSITION)
 	{
-		//if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
-		//{
-		//	if (event.subjectName == userNode->getName())
-		//	{
-		//		ape::Vector3 position = userNode->getPosition();
-		//		//APE_LOG_DEBUG("position.length()" << position.length() << " mUserDeadZone.length()" << mUserDeadZone.length());
-		//		if (position.length() > mUserDeadZone.length())
-		//		{
-		//			loadRoom();
-		//		}
-		//	}
-		//}
+		if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+		{
+			if (event.subjectName == userNode->getName())
+			{
+				ape::Vector3 position = userNode->getPosition();
+				//APE_LOG_DEBUG("position.length()" << position.length() << " mUserDeadZone.length()" << mUserDeadZone.length());
+				if (position.length() > mUserDeadZone.length())
+				{
+					if (mCurrentRotationPoses[mCurrentRotationPoseID].type == "room")
+						loadRoom(mCurrentRotationPoses[mCurrentRotationPoseID].name);
+				}
+			}
+		}
 	}
 }
 
@@ -490,52 +491,38 @@ void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMoved
 void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& axis)
 {
 	//APE_LOG_DEBUG("controllerTouchpadPressedValue: " << axis.toString());
-	mIsControllerTouchPressed = true;
-	if (mCurrentHotSpotNodeID < mCurrentHotspotNodes.size())
+	mIsTouchPadPressed = true;
+	if (axis.y > 0.666 && std::abs(axis.x) < 0.333)
 	{
-		mCurrentPossibleNextRoomID = 0;
-		if (auto hotspotNode = mCurrentHotspotNodes[mCurrentHotSpotNodeID].lock())
+		APE_LOG_DEBUG("UP");
+		if (mCurrentRotationPoses[mCurrentRotationPoseID].type == "room")
 		{
-			rotateSpheres(hotspotNode->getOrientation().Inverse());
-			mCurrentHotSpotNodeID++;
-			return;
+			mIsForwardMovementEnabled = true;
 		}
 	}
-	else 
+	else if (axis.x > 0.666 && std::abs(axis.y) < 0.333)
 	{
-		if (mCurrentPossibleNextRoomID < mCurrentPossibleNextRoomNames.size())
+		APE_LOG_DEBUG("RIGHT");
+		findClosestRotationPose(mCurrentSphereAngle, "RIGHT");
+		if (mCurrentRotationPoseID > -1 && mCurrentRotationPoseID < mCurrentRotationPoses.size())
 		{
-			auto graph = mConfig.get_graph();
-			for (auto const& graphItem : graph)
-			{
-				if (graphItem.get_src() == mRooms[mCurrentRoomID].get_id())
-				{
-					for (auto const& graphItem2 : graph)
-					{
-						if (graphItem2.get_dst() == mCurrentPossibleNextRoomNames[mCurrentPossibleNextRoomID])
-						{
-							auto roomRotateAngle = ape::Radian(ape::Degree(graphItem2.get_angle()).toRadian());
-							auto roomRotateAxis = ape::Vector3(0, 1, 0);
-							auto roomOrientation = ape::Quaternion();
-							roomOrientation.FromAngleAxis(roomRotateAngle, roomRotateAxis);
-							rotateSpheres(roomOrientation);
-							mCurrentPossibleNextRoomID++;
-							return;
-						}
-					}
-				}
-			}
+			rotateSpheres(mCurrentRotationPoses[mCurrentRotationPoseID].angle + 1);
 		}
-		else
+	}
+	else if (axis.x < -0.666 && std::abs(axis.y) < 0.333)
+	{
+		APE_LOG_DEBUG("LEFT");
+		findClosestRotationPose(mCurrentSphereAngle, "LEFT");
+		if (mCurrentRotationPoseID > -1 && mCurrentRotationPoseID < mCurrentRotationPoses.size())
 		{
-			mCurrentHotSpotNodeID = 0;
+			rotateSpheres(mCurrentRotationPoses[mCurrentRotationPoseID].angle - 1);
 		}
 	}
 }
 
 void ape::apeELearningPlugin::controllerTouchpadReleasedValue(const ape::Vector2 & axis)
 {
-	mIsControllerTouchPressed = false;
+	mIsTouchPadPressed = false;
 }
 
 void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
@@ -555,23 +542,39 @@ void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::stri
 	}
 	else if (buttonValue == "Menu")
 	{
-		if (mCurrentHotSpotNodeID < mCurrentHotspotNodes.size())
+
+	}
+}
+
+void ape::apeELearningPlugin::findClosestRotationPose(int currentSphereAngle, std::string command)
+{
+	auto currentSphereAngleRotatePose = ape::RotationPose(currentSphereAngle, "sphere", "sphere");
+	mCurrentRotationPoses.push_back(currentSphereAngleRotatePose);
+	std::sort(mCurrentRotationPoses.begin(), mCurrentRotationPoses.end(), std::greater<ape::RotationPose>());
+	for (int i = 0; i < mCurrentRotationPoses.size(); i++)
+	{
+		if (mCurrentRotationPoses[i].type == "sphere")
 		{
-			if (auto browser = mBrowser.lock())
+			if (command == "RIGHT")
 			{
-				if (auto hotSpotNode = mCurrentHotspotNodes[mCurrentHotSpotNodeID].lock())
+				if (i - 1 > -1)
 				{
-					browser->setURL(mGameURLResourcePath[mNodeNamesHotSpots[hotSpotNode->getName()].get_gameurl()]);
-					if (auto browserNode = mBrowserNode.lock())
-					{
-						browserNode->setChildrenVisibility(true);
-					}
+					mCurrentRotationPoseID = i - 1;
+					APE_LOG_DEBUG("RIGHT");
 				}
+				mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
+				return;
 			}
-		}
-		else if (mCurrentPossibleNextRoomID < mCurrentPossibleNextRoomNames.size())
-		{
-			loadRoom(mCurrentPossibleNextRoomNames[mCurrentPossibleNextRoomID]);
+			else if (command == "LEFT")
+			{
+				if (i + 1 < mCurrentRotationPoses.size())
+				{
+					mCurrentRotationPoseID = i + 1;
+					APE_LOG_DEBUG("LEFT");
+				}
+				mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
+				return;
+			}
 		}
 	}
 }
@@ -610,13 +613,13 @@ void ape::apeELearningPlugin::Run()
 	loadRoom(mConfig.get_start_room());
 	while (true)
 	{
-		while (mIsControllerTouchPressed)
+		while (mIsForwardMovementEnabled)
 		{
-			/*if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+			if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 			{
-				userNode->translate(ape::Vector3(0, 0, -1), ape::Node::TransformationSpace::LOCAL);
+				userNode->translate(ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
-			}*/
+			}
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
