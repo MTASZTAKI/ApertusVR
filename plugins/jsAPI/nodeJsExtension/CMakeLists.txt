@@ -44,12 +44,15 @@ set (HEADERS
 	wrappers/apeJsBindMatrix4.h
 	wrappers/apeJsBindTextGeometryImpl.h
 	wrappers/apeJsBindVector3.h
+	wrappers/apeJsBindVector2.h
 	wrappers/apeManualMaterialJsBind.h
 	wrappers/apePbsPassJsBind.h
 	wrappers/apeManualPassJsBind.h
 	wrappers/apeIndexedLineSetGeometryJsBind.h
 	wrappers/apeBoxGeometryJsBind.h
 	wrappers/apeFileGeometryJsBind.h
+	wrappers/apeFileTextureJsBind.h
+	wrappers/apePlaneGeometryJsBind.h
 	wrappers/apePointCloudJsBind.h
 	)
 

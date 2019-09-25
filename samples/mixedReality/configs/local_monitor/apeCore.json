@@ -3,8 +3,8 @@
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
-    "apeIndustry40Plugin",
-    "ape360VideoPlugin"
+    "apeViewPointManagerPlugin",
+    "apeIndustry40Plugin"
   ],
   "network": {
     "user": "cave",
