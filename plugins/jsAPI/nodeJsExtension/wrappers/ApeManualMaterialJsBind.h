@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ape.h"
 #include "sceneelements/apeIManualMaterial.h"
 #include "apeManualPassJsBind.h"
+#include "ApeFileTextureJsBind.h"
 #include "apePbsPassJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
@@ -120,6 +121,10 @@ public:
 
 	ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
 
+	void setPassTexture(FileTextureJsPtr fileTexture) {
+		mPtr.lock()->setPassTexture(fileTexture.getTextureSharedPtr());
+	}
+
 	void setManualPass(ManualPassJsPtr manualPass)
 	{
 		mPtr.lock()->setPass(manualPass.getManualPassSharedPtr());
@@ -164,6 +169,7 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(getSpecularColor);
 	method(setManualPass);
 	method(setPbsPass);
+	method(setPassTexture);
 }
 
 #endif

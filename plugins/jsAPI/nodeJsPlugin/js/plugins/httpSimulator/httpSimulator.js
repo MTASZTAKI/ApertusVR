@@ -28,7 +28,7 @@ var LineByLineReader = moduleManager.requireNodeModule('line-by-line');
 class HttpSimulator {
 	constructor(options) {
 		this.options = {
-			uri: moduleManager.httpServer.address + '/api/v1/setproperties',
+			uri: moduleManager.httpServer.address + '/api/v1/settensorflow',
 			method: 'POST',
 			json: {}
 		};
@@ -66,7 +66,7 @@ class HttpSimulator {
 
 			// this.lineNumber++;
 			// console.log('line-reader: line> ', this.lineNumber);
-			request.post(self.options, function (error, response, body) {
+			/*request.post(self.options, function (error, response, body) {
 					if (error) {
 						console.log('http post error: ', error);
 					}
@@ -75,7 +75,7 @@ class HttpSimulator {
 						self.lr.resume();
 					}, self.delay);
 				}
-			);
+			);*/
 		});
 
 		this.lr.on('end', function () {

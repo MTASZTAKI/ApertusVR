@@ -44,10 +44,13 @@ SOFTWARE.*/
 #include "apeJsBindRadian.h"
 #include "apeJsBindTextGeometryImpl.h"
 #include "apeJsBindVector3.h"
+#include "apeJsBindVector2.h"
 #include "apeManualMaterialJsBind.h"
 #include "apeManualPassJsBind.h"
 #include "apePbsPassJsBind.h"
 #include "apePointCloudJsBind.h"
+#include "ApeFileTextureJsBind.h"
+#include "apePlaneGeometryJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 
@@ -108,6 +111,8 @@ public:
 		done(false, nodeJsPtrVec);
 		APE_LOG_FUNC_LEAVE();
 	}
+
+	
 
 	void getNodesNames(nbind::cbFunction &done)
 	{
@@ -338,6 +343,40 @@ public:
 		return success;
 	}
 
+	PlaneJsPtr createPlane(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return PlaneJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_PLANE));
+	}
+
+	bool getPlane(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
+		{
+			if (auto plane = std::dynamic_pointer_cast<ape::IPlaneGeometry>(entity))
+			{
+				success = true;
+				done(!success, PlaneJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
 	FileGeometryJsPtr createFileGeometry(std::string name)
 	{
 		APE_LOG_FUNC_ENTER();
@@ -356,6 +395,40 @@ public:
 			{
 				success = true;
 				done(!success, FileGeometryJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
+	FileTextureJsPtr createFileTexture(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return FileTextureJsPtr(mpSceneManager->createEntity(name, ape::Entity::TEXTURE_FILE));
+	}
+
+	bool getFileTexture(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
+		{
+			if (auto fileTexture = std::dynamic_pointer_cast<ape::IFileTexture>(entity))
+			{
+				success = true;
+				done(!success, FileTextureJsPtr(entityWeakPtr));
 			}
 			else
 			{
@@ -547,11 +620,17 @@ NBIND_CLASS(JsBindManager)
 	method(createBox);
 	method(getBox);
 
+	method(createPlane);
+	method(getPlane);
+
 	method(createFileGeometry);
 	method(getFileGeometry);
 
 	method(createIndexedLineSet);
 	method(getIndexedLineSet);
+
+	method(createFileTexture);
+	method(getFileTexture);
 
 	method(createManualMaterial);
 	method(getManualMaterial);
