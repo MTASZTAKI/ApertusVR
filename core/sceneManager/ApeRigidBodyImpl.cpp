@@ -38,6 +38,7 @@ ape::RigidBodyImpl::RigidBodyImpl(std::string name,bool isHostCreated)
 	mGeometry = ape::GeometryWeakPtr();
 	mGeometryName = std::string();
 	mBouyancyEnabled = false;
+	mColliderType = ape::RigidBodyColliderType::AUTO;
 }
 
 ape::RigidBodyImpl::~RigidBodyImpl()
@@ -50,9 +51,12 @@ void ape::RigidBodyImpl::setMass(float mass)
 {
 	if (mRBType == ape::RigidBodyType::DYNAMIC)
 		mMass = mass > 0.0f ? mass : 1.0f;
-	else if (mRBType == ape::RigidBodyType::STATIC)
+	else if (mRBType == ape::RigidBodyType::STATIC ||
+			mRBType == ape::RigidBodyType::KINEMATIC)
+	{
 		mMass = 0.0f;
-	this;
+	}
+
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
 }
 
@@ -89,6 +93,12 @@ void ape::RigidBodyImpl::setToStatic()
 	this->setMass(0.0f);
 }
 
+void ape::RigidBodyImpl::setToKinematic()
+{
+	mRBType = ape::RigidBodyType::KINEMATIC;
+	this->setMass(0.0f);
+}
+
 void ape::RigidBodyImpl::setBouyancy(bool enable)
 {
 	mBouyancyEnabled = enable;
@@ -99,7 +109,6 @@ bool ape::RigidBodyImpl::bouyancyEnabled()
 {
 	return mBouyancyEnabled;
 }
-
 
 /// Physics parameter getters
 
@@ -148,6 +157,16 @@ bool ape::RigidBodyImpl::isStatic()
 	return mRBType == ape::RigidBodyType::STATIC;
 }
 
+bool ape::RigidBodyImpl::isKinematic()
+{
+	return mRBType == ape::RigidBodyType::KINEMATIC;
+}
+
+ape::RigidBodyColliderType ape::RigidBodyImpl::getColliderType()
+{
+	return mColliderType;
+}
+
 /// Parent node and geometry
 
 void ape::RigidBodyImpl::setParentNode(ape::NodeWeakPtr parentNode)
@@ -167,12 +186,13 @@ ape::NodeWeakPtr ape::RigidBodyImpl::getParentNode()
 	return mParentNode;
 }
 
-void ape::RigidBodyImpl::setGeometry(ape::GeometryWeakPtr geometry)
+void ape::RigidBodyImpl::setGeometry(ape::GeometryWeakPtr geometry, ape::RigidBodyColliderType colliderType = ape::RigidBodyColliderType::AUTO)
 {
 	if (auto geometrySP = geometry.lock())
 	{
 		mGeometry = geometry;
 		mGeometryName = geometrySP->getName();
+		mColliderType = colliderType;
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_SHAPE));
 	}
 	else
@@ -182,6 +202,11 @@ void ape::RigidBodyImpl::setGeometry(ape::GeometryWeakPtr geometry)
 ape::GeometryWeakPtr ape::RigidBodyImpl::getGeometry()
 {
 	return mGeometry;
+}
+
+std::string ape::RigidBodyImpl::getGeometryName()
+{
+	return mGeometryName;
 }
 
 /// Replica
@@ -208,7 +233,8 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRestitution);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRBType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyEnabled);
-	
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColliderType);
+
 	/// ParentNode, userNode and Geometry serialization
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
@@ -251,6 +277,9 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters *deserializeP
 
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBouyancyEnabled))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
+	
+	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColliderType))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_COLLIDER));*/
 	
 	
 	RakNet::RakString parentName;

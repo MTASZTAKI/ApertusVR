@@ -3,8 +3,7 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeSkyWaterTerrainScenePlugin",
-    "apeTexasEEGPlugin",
-    "apeBulletPhysicsPlugin"
+    "apeTexasEEGPlugin"
   ],
   "network": {
     "user": "cave",

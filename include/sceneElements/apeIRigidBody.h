@@ -39,7 +39,15 @@ namespace ape
 	enum RigidBodyType
 	{
 		DYNAMIC,
-		STATIC
+		STATIC,
+		KINEMATIC
+	};
+
+	enum RigidBodyColliderType
+	{
+		AUTO,
+		TRIANGLE_MESH,
+		CONVEX_HULL
 	};
 
     class IRigidBody : public ape::Entity
@@ -67,6 +75,8 @@ namespace ape
 
 		virtual void setToStatic() = 0;
 
+		virtual void setToKinematic() = 0;
+
 		virtual void setBouyancy(bool enable) = 0;
 
 		/// Physics parameter getters
@@ -89,7 +99,11 @@ namespace ape
 
 		virtual bool isStatic() = 0;
 
+		virtual bool isKinematic() = 0;
+
 		virtual bool bouyancyEnabled() = 0;
+
+		virtual RigidBodyColliderType getColliderType() = 0;
 
 		/// Parent node and geometry (for shape)
         
@@ -97,9 +111,14 @@ namespace ape
 
 		virtual ape::NodeWeakPtr getParentNode() = 0;
         
-        virtual void setGeometry(ape::GeometryWeakPtr geometry) = 0;
+        virtual void setGeometry(
+			ape::GeometryWeakPtr geometry,
+			ape::RigidBodyColliderType colliderType = ape::RigidBodyColliderType::AUTO
+		) = 0;
 
         virtual ape::GeometryWeakPtr getGeometry() = 0; 
+
+		virtual std::string getGeometryName() = 0;
 	};
 }
 

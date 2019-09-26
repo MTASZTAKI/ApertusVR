@@ -20,4 +20,9 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (local_monitor)
+add_subdirectory (basic_example)
+add_subdirectory (terrain)
+add_subdirectory (robot_arm)
+add_subdirectory (water_1)
+add_subdirectory (water_2)
+add_subdirectory (water_game)

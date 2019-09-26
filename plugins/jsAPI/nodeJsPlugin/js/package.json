@@ -7,7 +7,7 @@
     "assert": "^1.4.1",
     "async": "^2.6.0",
     "body-parser": "^1.15.2",
-	"binary-file": "*",
+    "binary-file": "*",
     "cheerio": "*",
     "express": "^4.14.0",
     "express-validator": "^4.3.0",

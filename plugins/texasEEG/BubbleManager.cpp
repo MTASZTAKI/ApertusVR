@@ -1,11 +1,10 @@
 #include <ctime>
 #include "BubbleManager.h"
 
-TexasEEG::BubbleManager::BubbleManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode)
+TexasEEG::BubbleManager::BubbleManager(ape::NodeWeakPtr userNode)
 {
 	APE_LOG_TRACE("");
 	mUserNode = userNode;
-	mUserBodyNode = userBodyNode;
 }
 
 TexasEEG::BubbleManager::~BubbleManager()
@@ -57,9 +56,9 @@ void TexasEEG::BubbleManager::UpdateTimers()
 
 void TexasEEG::BubbleManager::CreateBubbles(int num)
 {
-	if (auto userBodyNode = mUserBodyNode.lock())
+	if (auto userNode = mUserNode.lock())
 	{
-		APE_LOG_TRACE("userNode.Orientation: " << userBodyNode->getOrientation().toString());
+		APE_LOG_TRACE("userNode.Orientation: " << userNode->getOrientation().toString());
 
 		int newXDist = 0;
 		int newYDist = 0;
@@ -69,9 +68,9 @@ void TexasEEG::BubbleManager::CreateBubbles(int num)
 		{
 			APE_LOG_TRACE("i: " << i);
 
-			newXDist = userBodyNode->getPosition().x + ((std::rand() % 100) - 100);
+			newXDist = userNode->getPosition().x + ((std::rand() % 100) - 100);
 			newYDist = ((std::rand() % 100) - 100);
-			newZDist = userBodyNode->getPosition().z - ((std::rand() % 400) + 300);
+			newZDist = userNode->getPosition().z - ((std::rand() % 400) + 300);
 
 			// add previous Bubble's position
 			if (mBubbleQueue.size() > 1)

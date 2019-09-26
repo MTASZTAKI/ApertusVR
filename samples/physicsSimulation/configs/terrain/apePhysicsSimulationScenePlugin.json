@@ -1,0 +1,92 @@
+{
+  "environment": "terrain",
+  "cubes": {
+    "enable": false,
+    "position": [ 0, 600, 0 ],
+    "arraySize": [ 6, 1, 6 ]
+  },
+  "spheres": {
+    "enable": true,
+    "position": [ 0, 500, 0 ],
+    "arraySize" :  [6,1,6]
+  },
+  "assets": [
+    {
+      "name": "sphere01",
+      "shape": "sphere",
+      "radius": 10.0,
+      "position": [ 0, 150, -10 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "red"
+    },
+    {
+      "name": "cone01",
+      "shape": "cone",
+      "radius": 20.0,
+      "height": 30.0,
+      "position": [ 0, 150, 20 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
+    },
+    {
+      "name": "cylinder01",
+      "shape": "cylinder",
+      "radius": 15.0,
+      "height": 35.0,
+      "position": [ -20, 150, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "yellow"
+    },
+    {
+      "name": "sphere02",
+      "shape": "sphere",
+      "radius": 10.0,
+      "height": 20.0,
+      "position": [ -50, 150, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "green"
+    },
+    {
+      "name": "cone02",
+      "shape": "cone",
+      "radius": 20.0,
+      "height": 20.0,
+      "position": [ 0, 200, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "red"
+    },
+    {
+      "name": "box01",
+      "shape": "box",
+      "dims": [ 10, 20, 10 ],
+      "position": [ 30, 200, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "yellow"
+    },
+    {
+      "name": "box02",
+      "shape": "box",
+      "dims": [ 10, 20, 20 ],
+      "position": [ -30, 200, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "green"
+    },
+    {
+      "name": "cylinder02",
+      "shape": "cylinder",
+      "height": 20,
+      "radius": 15,
+      "position": [ -30, 200, 30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "red"
+    },
+    {
+      "name": "box03",
+      "shape": "box",
+      "dims": [ 30, 20, 25 ],
+      "position": [ -30, 220, -30 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "color": "blue"
+    }
+  ]
+}

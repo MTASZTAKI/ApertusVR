@@ -145,11 +145,6 @@ if (${APE_PLUGIN_BulletPhysics})
 	add_subdirectory (bulletPhysics)
 endif ()
 
-# option(APE_PLUGIN_PhysicsSimulation "Use PhysicsSimulationPlugin?" ON)
-# if(${APE_PLUGIN_PhisicsSimulation})
-# 	add_subdirectory(physicsSimulation)
-# endif()
-
 # Input handlers
 
 option(APE_PLUGIN_OisUserInput "Use OisUserInputPlugin?" ON )
@@ -267,7 +262,12 @@ if (${APE_PLUGIN_PolimiPlugin})
 	add_subdirectory (polimi)
 endif ()
 
-option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationScenePlugin?" ON )
+option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationPlugin?" ON )
 if (${APE_PLUGIN_PhysicsSimulationScene})
 	add_subdirectory (physicsSimulationScene)
+endif ()
+
+option(APE_PLUGIN_WaterGame "Use WaterGamePlugin?" ON )
+if (${APE_PLUGIN_WaterGame})
+	add_subdirectory (waterGame)
 endif ()

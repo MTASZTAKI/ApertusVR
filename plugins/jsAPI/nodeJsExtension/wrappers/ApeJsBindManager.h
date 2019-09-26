@@ -37,6 +37,8 @@ SOFTWARE.*/
 #include "apeJsBindDegree.h"
 #include "apeJsBindEuler.h"
 #include "apeJsBindIndexedFaceSetGeometryImpl.h"
+#include "ApeJsBindRigidBodyImpl.h"
+#include "ApeJsBindCloneGeometryImpl.h"
 #include "apeJsBindLightImpl.h"
 #include "apeJsBindMatrix4.h"
 #include "apeJsBindNodeImpl.h"
@@ -244,6 +246,7 @@ public:
 	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name)
 	{
 		APE_LOG_FUNC_ENTER();
+		/*printf("\nCREATING INDEXED FACE SET GEOMETRY!\n");*/
 		APE_LOG_FUNC_LEAVE();
 		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET));
 	}
@@ -253,12 +256,83 @@ public:
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
 		auto entityWeakPtr = mpSceneManager->getEntity(name);
+ 		/*printf("\nname: %s\n",name.c_str());*/
+		if (auto entity = entityWeakPtr.lock())
+		{
+			/*printf("\nauto entity = entityWeakPtr.lock()\n");*/
+			if (auto indexedFaceSet = std::dynamic_pointer_cast<ape::IIndexedFaceSetGeometry>(entity))
+			{
+				success = true;
+				/*printf("\nsuccess = true\n");*/
+				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
+	CloneGeometryJsPtr createCloneGeometry(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return CloneGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CLONE));
+	}
+
+	bool getCloneGeometry(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
 		if (auto entity = entityWeakPtr.lock())
 		{
 			if (auto indexedFaceSet = std::dynamic_pointer_cast<ape::IIndexedFaceSetGeometry>(entity))
 			{
 				success = true;
-				done(!success, IndexedFaceSetJsPtr(entityWeakPtr));
+				done(!success, CloneGeometryJsPtr(entityWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
+	RigidBodyJsPtr createRigidBody(std::string name)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY));
+	}
+
+	bool getRigidBody(std::string name, nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto entityWeakPtr = mpSceneManager->getEntity(name);
+		if (auto entity = entityWeakPtr.lock())
+		{
+			if (auto rigidBody = std::dynamic_pointer_cast<ape::IRigidBody>(entity))
+			{
+				success = true;
+				done(!success, RigidBodyJsPtr(entityWeakPtr));
 			}
 			else
 			{
@@ -617,6 +691,9 @@ NBIND_CLASS(JsBindManager)
 	method(createIndexedFaceSet);
 	method(getIndexedFaceSet);
 
+	method(createRigidBody);
+	method(getRigidBody);
+
 	method(createBox);
 	method(getBox);
 
@@ -625,6 +702,9 @@ NBIND_CLASS(JsBindManager)
 
 	method(createFileGeometry);
 	method(getFileGeometry);
+
+	method(createCloneGeometry);
+	method(getCloneGeometry);
 
 	method(createIndexedLineSet);
 	method(getIndexedLineSet);

@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_PHYSICSSIMULATIONPLUGIN_H
 #define APE_PHYSICSSIMULATIONPLUGIN_H
 
+/// std lib
 #include <chrono>
 #include <iostream>
 #include <list>
@@ -31,12 +32,17 @@ SOFTWARE.*/
 #include <random>
 #include <thread>
 #include <vector>
+
 #include "plugin/apePluginAPI.h"
+
+/// managers
 #include "managers/apeIEventManager.h"
 #include "managers/apeILogManager.h"
 #include "managers/apeISceneManager.h"
 #include "managers/apeISceneNetwork.h"
 #include "managers/apeICoreConfig.h"
+
+/// sceneelements
 #include "sceneelements/apeICamera.h"
 #include "sceneelements/apeIConeGeometry.h"
 #include "sceneelements/apeIFileGeometry.h"
@@ -52,12 +58,17 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITextGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
-#include "utils/apeInterpolator.h"
-#include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "sceneelements/apeICloneGeometry.h"
 #include "sceneelements/apeIBoxGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeICylinderGeometry.h"
+#include "sceneelements/apeIWater.h"
+
+/// utils, macros
+#include "utils/apeInterpolator.h"
+#include "macros/sceneMaker/apeSceneMakerMacro.h"
 #include "macros/userInput/ApeUserInputMacro.h"
+
 
 #define THIS_PLUGINNAME "apePhysicsSimulationScenePlugin"
 
@@ -100,23 +111,57 @@ namespace ape
 
 	private:
 
+		struct AssetConfig
+		{
+			std::string name;
+			std::string shape;
+			float height;
+			float radius;
+			ape::Vector3 dims;
+			ape::Vector3 pos;
+			ape::Quaternion orient;
+			ape::Color color;
+		};
+
 		void makeTerrain(std::string name, ape::Vector3 scale);
 
-		void makeGround(std::string name, ape::Vector2 size);
+		void makeGround(std::string name, ape::Vector2 size, float height);
 
-		void makeWater(std::string name, ape::Vector2 size, ape::Vector3 pos);
+		void makeWater(std::string name, ape::Vector3 size, ape::Vector3 pos);
 
-		void makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos);
+		void makeBox(std::string name, ape::Vector3 dims, ape::Vector3 pos, ape::Quaternion orient, ape::Color color);
 		
-		void makeSphere(std::string name, float radius, ape::Vector3 pos);
+		void makeSphere(std::string name, float radius, ape::Vector3 pos, ape::Quaternion orient, ape::Color color);
 
-		void makeCone(std::string name, float radius, float height, ape::Vector3 pos);
+		void makeCone(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient, ape::Color color);
 
-		void makeCylinder(std::string name, float radius, float height, ape::Vector3 pos);
+		void makeCylinder(std::string name, float radius, float height, ape::Vector3 pos, ape::Quaternion orient, ape::Color color);
 
-		bool m_waterEnabled;
+		void makeCubeArray();
 
-		bool m_groundIsWavy;
+		void makeSphereArray();
+
+		bool m_water1;
+
+		bool m_water2;
+
+		bool m_ground;
+
+		bool m_terrain;
+
+		bool m_cubes;
+
+		bool m_spheres;
+
+		int m_cubesArraySize[3];
+
+		int m_spheresArraySize[3];
+
+		ape::Vector3 m_cubesInitPos;
+
+		ape::Vector3 m_spheresInitPos;
+
+		std::vector<AssetConfig> m_assets;
 
 		std::vector<RigidBodyWeakPtr> m_bodies;
 	};

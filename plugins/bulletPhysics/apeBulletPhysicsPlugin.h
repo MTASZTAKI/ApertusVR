@@ -44,6 +44,7 @@ SOFTWARE.*/
 #include "sceneelements/apeISphereGeometry.h"
 #include "sceneelements/apeITorusGeometry.h"
 #include "sceneelements/apeITubeGeometry.h"
+#include "sceneElements/apeICloneGeometry.h"
 #include "sceneelements/apeIRigidBody.h"
 #include "sceneElements/apeIIndexedFaceSetGeometry.h"
 #include "sceneElements/apeIManualMaterial.h"
@@ -105,11 +106,9 @@ namespace ape
 
 		int m_maxSubSteps;
 
+		btScalar m_dtSec;
+
 		btVector3 m_gravity;
-
-		btScalar m_plainHeight;
-
-		bool m_showBoundingBox;
 
 		btVector3 m_waveDirection;
 
@@ -122,6 +121,8 @@ namespace ape
 		btScalar m_liquidHeight;
 
 		btScalar m_liquidDensity;
+
+		bool m_balanceInLiquid;
 
 		/// member pointers for bullet
 
@@ -156,26 +157,31 @@ namespace ape
 		std::map<std::string, btScalar> m_volumes;
 
 		std::map<std::string, ape::Vector2> m_dampings;
-		
+
+		std::map<std::string, std::string> m_geometryNameBodyNameMap;
+
+
 		userProps m_userProps;
 
 		ape::DoubleQueue<Event> m_eventDoubleQueue;
 
-		void processEventDoubleQueue();
-
 		/// conversion between bullet and ape
 
-		ape::Vector3 fromBullet(const btVector3& btVec);
+		ape::Vector3 fromBt(const btVector3& btVec);
 
-		ape::Quaternion fromBullet(const btQuaternion& btQuat);
+		ape::Quaternion fromBt(const btQuaternion& btQuat);
 
 		btVector3 fromApe(const ape::Vector3& apeVec);
 
 		btQuaternion fromApe(const ape::Quaternion& apeQuat);
 
+		btTransform fromApe(ape::NodeWeakPtr node);
+
 		std::string toString(btVector3 vec);
 
 		/// functions for cleaner code in the eventCallBack
+
+		void processEventDoubleQueue();
 
 		void setTransform(std::string apeBodyName, btQuaternion new_orientation, btVector3 new_position);
 
@@ -192,6 +198,25 @@ namespace ape
 		void updateShapeScale(std::string apeBodyname);
 
 		void updateBouyancy(std::string apeBodyName, btRigidBody* body, btTransform tr);
+
+		ape::Vector3 Rotate(ape::Vector3 vec, ape::Quaternion quat);
+
+		btVector3 Rotate(btVector3 vec, btQuaternion quat);
+
+		void setOffsetVector(std::string apeBodyName, ape::Vector3 offsetVec);
+
+		void createConvexHullShape(
+			std::string apeBodyName,
+			const ape::GeometryCoordinates& coordinates,
+			btScalar mass
+		);
+
+		void createTriangleMeshShape(
+			std::string apeBodyname,
+			const ape::GeometryCoordinates& coordinates,
+			const ape::GeometryIndices& indices,
+			btScalar mass
+		);
 
 	};
 	

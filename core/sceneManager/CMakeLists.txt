@@ -36,6 +36,7 @@ set(HEADERS
 	apeIndexedFaceSetGeometryImpl.h
 	apeIndexedLineSetGeometryImpl.h
 	apeCylinderGeometryImpl.h
+	apeCloneGeometryImpl.h
 	apeConeGeometryImpl.h
 	apeTorusGeometryImpl.h
 	apeTubeGeometryImpl.h
@@ -73,6 +74,7 @@ set(SOURCES
 	apeIndexedFaceSetGeometryImpl.cpp
 	apeIndexedLineSetGeometryImpl.cpp
 	apeCylinderGeometryImpl.cpp
+	apeCloneGeometryImpl.cpp
 	apeConeGeometryImpl.cpp
 	apeTorusGeometryImpl.cpp
 	apeTubeGeometryImpl.cpp

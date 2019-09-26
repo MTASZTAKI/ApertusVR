@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apePhysicsSimulationScenePlugin",
+    "apeBulletPhysicsPlugin"
+  ],
+  "network": {
+    "user": "cave",
+    "participant": "none",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "none",
+    "resourceLocations": [
+      "/macros/sceneMaker/resources",
+      "/plugins/assimpAssetLoader/resources"
+    ]
+  }
+}
