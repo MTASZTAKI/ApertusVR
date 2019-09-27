@@ -35,7 +35,7 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 #find assimp
-if(EXISTS ${ASSIMP_HOME}/lib/Debug/assimp-vc140-mt.lib AND EXISTS ${ASSIMP_HOME}/lib/Release/assimp-vc140-mt.lib)
+if(EXISTS ${ASSIMP_HOME}/lib/Debug/assimp-vc141-mtd.lib AND EXISTS ${ASSIMP_HOME}/lib/Release/assimp-vc141-mt.lib)
 	set(ASSIMP_READY TRUE)
 	message (STATUS "assimp is installed" )
 else ()
@@ -95,16 +95,8 @@ target_link_libraries (apeAssimpAssetLoaderPlugin apePluginManager apeSceneManag
 set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	# todo_apeAssimpAssetLoaderPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
-	# Copying the assimp bins to the desired place
-	# debug dlls
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/assimp-vc140-mt.dll)
-		file(COPY ${ASSIMP_HOME}/bin/Debug/assimp-vc140-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	# release dlls
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/assimp-vc140-mt.dll)
-		file(COPY ${ASSIMP_HOME}/bin/Release/assimp-vc140-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
+	file(COPY ${ASSIMP_HOME}/bin/Debug/assimp-vc140-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${ASSIMP_HOME}/bin/Release/assimp-vc140-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 
