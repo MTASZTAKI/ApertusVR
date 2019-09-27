@@ -133,7 +133,7 @@ if (${APE_PLUGIN_OgreRender})
 	add_subdirectory (ogreRender)
 endif ()
 
-option(APE_PLUGIN_Ogre21Render "Use Ogre21RenderPlugin?" ON )
+option(APE_PLUGIN_Ogre21Render "Use Ogre21RenderPlugin?" OFF )
 if (${APE_PLUGIN_Ogre21Render})
 	add_subdirectory (ogre21Render)
 endif ()
