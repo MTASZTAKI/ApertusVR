@@ -32,7 +32,7 @@ void ape::apeTexasEEGPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpapeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mUserInputMacroPose = ape::UserInputMacro::ViewPose();
+	//mUserInputMacroPose = ape::UserInputMacro::ViewPose();
 
 	mGameManager = new TexasEEG::GameManager(mpapeUserInputMacro->getUserNode());
 	mGameManager->Start();

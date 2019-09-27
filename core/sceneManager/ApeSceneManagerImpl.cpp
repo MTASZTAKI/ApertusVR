@@ -250,7 +250,7 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 		case ape::Entity::GEOMETRY_CLONE:
 		{
 			APE_LOG_TRACE("type: GEOMETRY_CLONE");
-			auto entity = std::make_shared<ape::CloneGeometryImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isHost());
+			auto entity = std::make_shared<ape::CloneGeometryImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isReplicaHost());
 			mEntities.insert(std::make_pair(name, entity));
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CLONE_CREATE));
 			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
