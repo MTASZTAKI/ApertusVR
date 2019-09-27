@@ -1,0 +1,1 @@
+cmd='C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_INSTALL_PREFIX:PATH=C:/Program Files/OGRE;-DSDL_CMAKE_DEBUG_POSTFIX:STRING=_d;-GVisual Studio 15 2017 Win64;-DCMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2017/Community;<SOURCE_DIR><SOURCE_SUBDIR>'
