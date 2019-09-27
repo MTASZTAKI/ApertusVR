@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2016 MTA SZTAKI
+Copyright (c) 2018 MTA SZTAKI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OGRERENDERPLUGINCONFIGS_H
-#define APE_OGRERENDERPLUGINCONFIGS_H
+#ifndef APE_OGRE21RENDERPLUGINCONFIGS_H
+#define APE_OGRE21RENDERPLUGINCONFIGS_H
 
 #include <vector>
 #include <string>
-#include "ApeVector3.h"
-#include "ApeQuaternion.h"
-#include "ApeDegree.h"
-#include "ApeRadian.h"
+#include "datatypes/apeVector3.h"
+#include "datatypes/apeQuaternion.h"
+#include "datatypes/apeDegree.h"
+#include "datatypes/apeRadian.h"
 
-namespace Ape
+namespace ape
 {
 	struct OgreCameraConfig
 	{
 		std::string name;
 
-		Ape::Vector3 positionOffset;
-		
-		Ape::Quaternion orientationOffset;
+		ape::Vector3 positionOffset;
+
+		ape::Quaternion orientationOffset;
 
 		float nearClip;
 
@@ -46,23 +46,27 @@ namespace Ape
 
 		Degree fovY;
 
+		std::string parentNodeName;
+
 		OgreCameraConfig()
 		{
 			this->name = std::string();
-			this->positionOffset = Ape::Vector3();
-			this->orientationOffset = Ape::Quaternion();
+			this->positionOffset = ape::Vector3();
+			this->orientationOffset = ape::Quaternion();
 			this->nearClip = 0.0f;
 			this->farClip = 0.0f;
 			this->fovY = 0.0f;
+			this->parentNodeName = std::string();
 		}
 
 		OgreCameraConfig(
 			std::string name,
-			Ape::Vector3 positionOffset,
-			Ape::Quaternion orientationOffset,
+			ape::Vector3 positionOffset,
+			ape::Quaternion orientationOffset,
 			float nearClip,
 			float farClip,
-			Degree fovY)
+			Degree fovY,
+			std::string parentNodeName = "")
 		{
 			this->name = name;
 			this->positionOffset = positionOffset;
@@ -70,6 +74,7 @@ namespace Ape
 			this->nearClip = nearClip;
 			this->farClip = farClip;
 			this->fovY = fovY;
+			this->parentNodeName = parentNodeName;
 		}
 	};
 
@@ -96,7 +101,7 @@ namespace Ape
 
 	struct OgreViewPortConfig
 	{
-		OgreCameraConfig camera;
+		std::vector<OgreCameraConfig> cameras;
 
 		int zOrder;
 
@@ -110,7 +115,7 @@ namespace Ape
 
 		OgreViewPortConfig()
 		{
-			this->camera = OgreCameraConfig();
+			this->cameras = std::vector<OgreCameraConfig>();
 			this->zOrder = 0;
 			this->left = 0;
 			this->top = 0;
@@ -119,14 +124,14 @@ namespace Ape
 		}
 
 		OgreViewPortConfig(
-		OgreCameraConfig camera,
-		int zOrder,
-		int left,
-		int top,
-		int width,
-		int height)
+			std::vector<OgreCameraConfig> cameras,
+			int zOrder,
+			int left,
+			int top,
+			int width,
+			int height)
 		{
-			this->camera = camera;
+			this->cameras = cameras;
 			this->zOrder = zOrder;
 			this->left = left;
 			this->top = top;
@@ -135,15 +140,17 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::OgreViewPortConfig > OgreViewPortConfigList;
+	typedef std::vector < ape::OgreViewPortConfig > OgreViewPortConfigList;
 
 	struct OgreRenderWindowConfig
 	{
 		bool enable;
 
 		std::string name;
-		
+
 		int monitorIndex;
+
+		bool hidden;
 
 		int width;
 
@@ -161,7 +168,7 @@ namespace Ape
 
 		int colorDepth;
 
-		Ape::OgreViewPortConfigList viewportList;
+		ape::OgreViewPortConfigList viewportList;
 
 		std::string windowHandler;
 
@@ -170,7 +177,8 @@ namespace Ape
 			this->enable = true;
 			this->name = "";
 			this->monitorIndex = 0;
-			this->width = 0;
+			this->hidden = false,
+				this->width = 0;
 			this->height = 0;
 			this->vSync = false;
 			this->vSyncInterval = 0;
@@ -178,28 +186,30 @@ namespace Ape
 			this->fsaa = 0;
 			this->fsaaHint = "";
 			this->colorDepth = 0;
-			this->viewportList = Ape::OgreViewPortConfigList();
+			this->viewportList = ape::OgreViewPortConfigList();
 			this->windowHandler = "";
 		}
 
 		OgreRenderWindowConfig(bool enable,
-		std::string name,
-		int monitorIndex,
-		int width,
-		int height,
-		bool vSync,
-		int vSyncInterval,
-		bool fullScreen,
-		int fsaa,
-		int fsaaHint,
-		int colorDepth,
-		Ape::OgreViewPortConfigList viewportList,
-		std::string windowHandler = "")
+			std::string name,
+			int monitorIndex,
+			bool hidden,
+			int width,
+			int height,
+			bool vSync,
+			int vSyncInterval,
+			bool fullScreen,
+			int fsaa,
+			int fsaaHint,
+			int colorDepth,
+			ape::OgreViewPortConfigList viewportList,
+			std::string windowHandler = "")
 		{
 			this->enable = enable;
 			this->name = name;
 			this->monitorIndex = monitorIndex;
-			this->width = width;
+			this->hidden = hidden,
+				this->width = width;
 			this->height = height;
 			this->vSync = vSync;
 			this->vSyncInterval = vSyncInterval;
@@ -212,7 +222,7 @@ namespace Ape
 		}
 	};
 
-	typedef std::vector < Ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
+	typedef std::vector < ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
 
 	struct Ogre21RenderPluginConfig
 	{

@@ -1,17 +1,13 @@
 /*MIT License
-
-Copyright (c) 2016 MTA SZTAKI
-
+Copyright (c) 2018 MTA SZTAKI
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,49 +45,94 @@ SOFTWARE.*/
 #include "OgreTechnique.h" 
 #include "OgreTextureManager.h"
 #include "OgreWindowEventUtilities.h"
+#include <OgreCamera.h>
+#include <OgreViewport.h>
+#include "OgreMaterialManager.h"
+
+#include "OgreLodConfig.h"
+#include "OgreMeshLodGenerator.h"
+#include "OgreLodWorkQueueInjectorListener.h"
+#include "OgreLodWorkQueueInjector.h"
+#include "OgrePixelCountLodStrategy.h"
+#include "OgreLodWorkQueueRequest.h"
+#include "OgreLodWorkQueueWorker.h"
+#include "OgreItem.h"
+#include "OgrePrerequisites.h"
+
+#include "OgreMesh.h"
+#include "OgreMeshManager.h"
+#include "OgreMeshSerializer.h"
+#include <OgreMesh2Serializer.h>
+#include "OgreMeshSerializerImpl.h"
+#include "OgreMeshManager2.h"
+
+#include "OgreHlmsUnlit.h"
+#include "OgreHlmsPbs.h"
+#include "OgreHlmsCommon.h"
+#include "OgreArchiveManager.h"
+#include "OgreHlmsPbsDatablock.h"
+
+
+#include <OgreCompositorManager2.h>
+
+#include <OgreStaticGeometry.h>
+#include <OgreMaterialSerializer.h>
+
+#include <OgreD3D11Texture.h>
+#include <OgreGL3PlusTexture.h>
+
+#include <OgreCompositorWorkspace.h>
+
+#include "OgreHlmsManager.h"
+
+
+
+
 
 
 //ApertusVR includes
-#include "ApeIFileMaterial.h"
-#include "ApeITextGeometry.h"
-#include "ApeILight.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIPlaneGeometry.h"
-#include "ApeIBoxGeometry.h"
-#include "ApeICylinderGeometry.h"
-#include "ApeITorusGeometry.h"
-#include "ApeITubeGeometry.h"
-#include "ApeIRayGeometry.h"
-#include "ApeISphereGeometry.h"
-#include "ApeIConeGeometry.h"
-#include "ApeIIndexedFaceSetGeometry.h"
-#include "ApeIIndexedLineSetGeometry.h"
-#include "ApeIManualMaterial.h"
-#include "ApePluginAPI.h"
-#include "ApeIPlugin.h"
-#include "ApeISceneManager.h"
-#include "ApeICamera.h"
-#include "ApeIPointCloud.h"
+#include "managers/apeILogManager.h"
+#include "sceneelements/apeIFileMaterial.h"
+#include "sceneelements/apeITextGeometry.h"
+#include "sceneelements/apeILight.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIPlaneGeometry.h"
+#include "sceneelements/apeIBoxGeometry.h"
+#include "sceneelements/apeICylinderGeometry.h"
+#include "sceneelements/apeITorusGeometry.h"
+#include "sceneelements/apeITubeGeometry.h"
+#include "sceneelements/apeIRayGeometry.h"
+#include "sceneelements/apeISphereGeometry.h"
+#include "sceneelements/apeIConeGeometry.h"
+#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "sceneelements/apeIManualMaterial.h"
+#include "plugin/apePluginAPI.h"
+#include "plugin/apeIPlugin.h"
+#include "managers/apeISceneManager.h"
+#include "sceneelements/apeICamera.h"
+#include "sceneelements/apeIPointCloud.h"
+#include "macros/userInput/apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
-#include "ApeDoubleQueue.h"
-#include "ApeIEventManager.h"
-#include "ApeISystemConfig.h"
-#include "ApeIMainWindow.h"
-#include "ApeIFileGeometry.h"
-#include "ApeIUnitTexture.h"
-#include "ApeIPbsPass.h"
-#include "ApeIManualPass.h"
-#include "ApeIManualTexture.h"
-#include "ApeISky.h"
-#include "ApeIWater.h"
+#include "utils/apeDoubleQueue.h"
+#include "managers/apeIEventManager.h"
+#include "managers/apeICoreConfig.h"
+#include "sceneelements/apeIFileGeometry.h"
+#include "sceneelements/apeIUnitTexture.h"
+#include "sceneelements/apeIPbsMaterial.h"
+#include "sceneelements/apeIManualPass.h"
+#include "sceneelements/apeIManualTexture.h"
+#include "sceneelements/apeISky.h"
+#include "sceneelements/apeIWater.h"
+
 
 //Own includes
-#include "ApeOgre21RenderPluginConfigs.h"
-#include "ApeOgre21Conversions.h"
+#include "apeOgre21RenderPluginConfigs.h"
+#include "apeOgre21Conversions.h"
 
-#define THIS_PLUGINNAME "ApeOgre21RenderPlugin"
+#define THIS_PLUGINNAME "apeOgre21RenderPlugin"
 
-namespace Ape
+namespace ape
 {
 	class Ogre21RenderPlugin : public IPlugin, public Ogre::FrameListener
 	{
@@ -118,58 +159,79 @@ namespace Ape
 
 		bool frameEnded(const Ogre::FrameEvent& evt) override;
 
-		
+		template <class id_t>
+		Ogre::IndexBufferPacked* inflateIndexBufferPacked(ape::GeometryIndexedFaceSetParameters parameters, Ogre::VaoManager* vaomgr,
+			Ogre::IndexBufferPacked::IndexType typenum, id_t* buffer);
 
 	private:
 		Ogre::Root* mpRoot;
 
 		Ogre::SceneManager* mpSceneMgr;
 
+		Ogre::MaterialPtr mSkyBoxMaterial;
+
+		Ogre::CompositorManager2 * mpCompositorManager;
+
+		std::map<std::string, Ogre::Item*> mItemList;
+
+		std::map<std::string, Ogre::MaterialPtr> mMatList;
+
+		std::map<std::string, Ogre::ManualObject*> mManualObjectList;
+
+		std::map<std::string, Ogre::HlmsPbsDatablock*> mPbsDataBlockList;
+
+		std::map<std::string, Ogre::MeshPtr> mMeshPtrList;
+
 		std::vector<Ogre::Camera*> mOgreCameras;
 
-		
+		Ogre::RenderWindow* mpActualRenderwindow;
+
+		Ogre::CompositorWorkspace* mpActualWorkSpace;
+
+		std::map<std::string, Ogre::Light*> mLightList;
 
 		std::map<std::string, Ogre::RenderWindow*> mRenderWindows;
 
-		
-
 		Ogre::HlmsManager* mpHlmsPbsManager;
 
-		
+		Ogre::MaterialSerializer mMaterialSerializer;
 
-		
+		ape::ISceneManager* mpSceneManager;
 
-		Ape::ISceneManager* mpSceneManager;
+		ape::IEventManager* mpEventManager;
 
-		Ape::IEventManager* mpEventManager;
+		ape::ICoreConfig* mpCoreConfig;
 
-		Ape::ISystemConfig* mpSystemConfig;
+		ape::DoubleQueue<Event> mEventDoubleQueue;
 
-		Ape::IMainWindow* mpMainWindow;
+		ape::Ogre21RenderPluginConfig mOgreRenderPluginConfig;
 
-		Ape::DoubleQueue<Event> mEventDoubleQueue;
+		ape::NodeWeakPtr mUserNode;
 
-		Ape::Ogre21RenderPluginConfig mOgreRenderPluginConfig;
+		ape::UserInputMacro* mpUserInputMacro;
 
-		Ape::NodeWeakPtr mUserNode;
+		ape::UserInputMacro::ViewPose mUserInputMacroPose;
+
+		std::vector<ape::ManualTextureWeakPtr> mRttList;
 
 		int mCameraCountFromConfig;
 
 		void processEventDoubleQueue();
 
-		void eventCallBack(const Ape::Event& event);
+		void eventCallBack(const ape::Event& event);
 
-		
+		void registerHlms();
+
 	};
-	
-	APE_PLUGIN_FUNC Ape::IPlugin* CreateOgre21RenderPlugin()
+
+	APE_PLUGIN_FUNC ape::IPlugin* CreateOgreRenderPlugin()
 	{
-		return new Ogre21RenderPlugin;
+		return new ape::Ogre21RenderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyOgre21RenderPlugin(Ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyOgreRenderPlugin(ape::IPlugin *plugin)
 	{
-		delete (Ogre21RenderPlugin*)plugin;
+		delete (ape::Ogre21RenderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -177,7 +239,8 @@ namespace Ape
 	APE_PLUGIN_ALLOC()
 	{
 		std::cout << THIS_PLUGINNAME << "_CREATE" << std::endl;
-		ApeRegisterPlugin(THIS_PLUGINNAME, CreateOgre21RenderPlugin, DestroyOgre21RenderPlugin);
+		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateOgreRenderPlugin, DestroyOgreRenderPlugin);
 		return 0;
 	}
 }
