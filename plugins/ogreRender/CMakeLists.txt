@@ -334,7 +334,6 @@ if (WIN32)
 	file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${HYDRAX_HOME}/srcdemo/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${SKYX_HOME}/release/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
 endif ()
 
 
