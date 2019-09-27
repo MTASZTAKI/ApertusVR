@@ -1,0 +1,44 @@
+{
+    "renderSystem": "DX11",
+    "lodLevels": {
+        "autoGenerateAndSave": false,
+        "bias": 0.5
+    },
+    "renderWindows": [
+      {
+        "enable": true,
+        "monitorIndex": 0,
+        "name": "window0",
+        "hidden": false,
+        "resolution": {
+          "width": 1400,
+          "height": 1050,
+          "fullScreen": false
+        },
+        "miscParams": {
+          "vSync": true,
+          "vSyncInterval": 1,
+          "colorDepth": 32,
+          "FSAA": 8,
+          "FSAAHint": "Quality"
+        },
+        "viewports": [
+          {
+            "zOrder": 0,
+            "left": 0,
+            "top": 0,
+            "width": 1400,
+            "height": 1050,
+            "cameras": [
+              {
+                "name": "camera1",
+                "nearClip": 1,
+                "farClip": 10000,
+                "fovY": 45
+              }
+            ]
+          }
+        ]
+      }
+    ]
+}

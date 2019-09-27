@@ -43,6 +43,11 @@ if (${APE_SAMPLES_InGameBrowser})
 	add_subdirectory (inGameBrowser)
 endif ()
 
+option(APE_SAMPLES_PhotorealisticScene "APE_SAMPLES_PhotorealisticScene?" ON )
+if (${APE_SAMPLES_PhotorealisticScene})
+	add_subdirectory (photorealisticScene)
+endif ()
+
 # Environment Simulation
 
 option(APE_SAMPLES_Environment "APE_SAMPLES_Environment?" ON )
