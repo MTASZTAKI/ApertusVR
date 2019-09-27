@@ -135,7 +135,6 @@ set (SOURCES
 	ApeOgre21RenderPlugin.cpp
 	)
 include_directories(
-	
 	${PROJECT_SOURCE_DIR}/common/include 
 	${OGRE_INCLUDE_DIRS}
 	${PATH_OGRE21}/Components/Hlms/Common
@@ -155,7 +154,7 @@ include_directories(
 	)
 add_library (apeOgre21RenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (apeOgre21RenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeSystem ${OGRE_LIBRARIES} ${OGRE_HlmsPbs} ${OGRE_HlmsUnlit_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES}  ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL3Plus_LIBRARIES}  ${OGRE_Hlms_LIBRARIES} OgreHlmsPbs OgreHlmsUnlit)
+${OGRE_Plugin_ParticleFX_LIBRARIES}  ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL3Plus_LIBRARIES} ${OGRE_Hlms_LIBRARIES})
 
 message("OgreHlms:  ${OGRE_Hlms_LIBRARIES}")
 

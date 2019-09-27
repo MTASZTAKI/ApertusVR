@@ -276,8 +276,6 @@ set (SOURCES
 	apeOgrePointCloud.cpp
 	)
 include_directories(
-	
-	 
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OGRE_HLMS_INCLUDE_DIRS}
