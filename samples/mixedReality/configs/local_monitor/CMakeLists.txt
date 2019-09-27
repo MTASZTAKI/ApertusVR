@@ -22,7 +22,7 @@
 
 set (CONFIGS
 	apeOgreRenderPlugin.json
-	apeOisUserInputPlugin.json
+	apeViewPointManagerPlugin.json
 	apeNodeJsPlugin.json
 	apeX3DLoaderPlugin.json
 	apeKinectPlugin.json
