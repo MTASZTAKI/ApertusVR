@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,18 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+#apeCefSubProcessApp
+set (CEF_SUBPROCESS_APP_SOURCES
+	apeCefSubProcessAppMain.cpp
+	)
+include_directories(
+	${CEF_HOME}
+	${CEF_HOME}/include
+	)
+if (WIN32)
+	add_executable (apeCefSubProcessApp WIN32 ${CEF_SUBPROCESS_APP_SOURCES})
+	target_link_libraries (apeCefSubProcessApp MY_CEF_LIBS MY_CEF_DLLWRAPPER_LIBS comctl32.lib rpcrt4.lib shlwapi.lib ws2_32.lib)
+endif()
+set_property (TARGET apeCefSubProcessApp PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCefSubProcessApp PROPERTY FOLDER "Plugins/Browser/CefBrowser/")
 
-add_subdirectory (assetImporter)
-add_subdirectory (browser)
-add_subdirectory (hmd)
-add_subdirectory (languageAPI)
-add_subdirectory (physics)
-add_subdirectory (render)
-add_subdirectory (scene)
-add_subdirectory (track)
-add_subdirectory (userInput)
-add_subdirectory (userInterface)

@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,28 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+#apeHtmlOverlayUiManagerPlugin
+set (HEADERS
+	apeHtmlOverlayUiManagerPlugin.h
+	)
 
-add_subdirectory (assetImporter)
-add_subdirectory (browser)
-add_subdirectory (hmd)
-add_subdirectory (languageAPI)
-add_subdirectory (physics)
-add_subdirectory (render)
-add_subdirectory (scene)
-add_subdirectory (track)
-add_subdirectory (userInput)
-add_subdirectory (userInterface)
+set (SOURCES 
+	apeHtmlOverlayUiManagerPlugin.cpp
+	)
+
+include_directories(	
+	${RAPIDJSON_INCLUDE_DIR}
+	)
+
+# Add the dinamic library target to the project
+add_library (apeHtmlOverlayUiManagerPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeHtmlOverlayUiManagerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
+
+# Place target xxx into the specified folder in IDEs supporting it
+set_property (TARGET apeHtmlOverlayUiManagerPlugin PROPERTY FOLDER "Plugins/UserInterface")
+
+
+
+

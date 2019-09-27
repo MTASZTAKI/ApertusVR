@@ -2,28 +2,27 @@
   "plugins": [
     "apeOgreRenderPlugin",
 	"apeOisUserInputPlugin",
-	"apeHelloWorldScenePlugin",
     "apeViewPointManagerPlugin"
   ],
   "network": {
-    "user": "",
-    "participant": "none",
+    "user": "multiPlayerGuest",
+    "participant": "guest",
     "internet": {
       "natPunchThrough": {
-        "ip": "",
-        "port": ""
+        "ip": "195.111.2.95",
+        "port": "61666"
       },
       "lobby": {
-        "ip": "",
-        "port": "",
-        "room": ""
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "multiPlayer"
       }
     },
     "lan": {
       "ip": "",
       "port": ""
     },
-    "selected": "none",
+    "selected": "internet",
     "resourceLocations": [
       "/plugins/scene/helloWorld/resources"
     ]

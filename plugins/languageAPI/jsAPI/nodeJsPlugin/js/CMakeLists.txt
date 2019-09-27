@@ -20,14 +20,4 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-
-add_subdirectory (assetImporter)
-add_subdirectory (browser)
-add_subdirectory (hmd)
-add_subdirectory (languageAPI)
-add_subdirectory (physics)
-add_subdirectory (render)
-add_subdirectory (scene)
-add_subdirectory (track)
-add_subdirectory (userInput)
-add_subdirectory (userInterface)
+add_subdirectory (plugins)

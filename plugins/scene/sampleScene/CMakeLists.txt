@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,41 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+#error function
+function (reportError what and when)
+	if (${${when}})
+		message (${${what}})
+	endif ()
+endfunction ()
+#
 
-add_subdirectory (assetImporter)
-add_subdirectory (browser)
-add_subdirectory (hmd)
-add_subdirectory (languageAPI)
-add_subdirectory (physics)
-add_subdirectory (render)
-add_subdirectory (scene)
-add_subdirectory (track)
-add_subdirectory (userInput)
-add_subdirectory (userInterface)
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	apeSampleScenePlugin.h
+	)
+
+set (SOURCES 
+	apeSampleScenePlugin.cpp
+	)
+
+include_directories(
+	
+	
+	)
+
+add_library (apeSampleScenePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeSampleScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
+if (WIN32)
+	# we have to link to some DirectX libraries
+	target_link_libraries (apeSampleScenePlugin dinput8 dxguid)
+endif ()
+
+set_property (TARGET apeSampleScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apeSampleScenePlugin PROPERTY FOLDER "Plugins/Scene")
+
+
+
+
