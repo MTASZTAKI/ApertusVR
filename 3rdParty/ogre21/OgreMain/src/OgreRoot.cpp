@@ -27,7 +27,7 @@ THE SOFTWARE.
 */
 // Ogre includes
 #include "OgreStableHeaders.h"
-
+#
 #include "OgreRoot.h"
 
 #include "OgreRenderSystem.h"
@@ -51,6 +51,7 @@ THE SOFTWARE.
 #include "OgrePlugin.h"
 #include "OgreFileSystem.h"
 #include "OgreResourceBackgroundQueue.h"
+#include "OgreDecal.h"
 #include "OgreEntity.h"
 #include "OgreItem.h"
 #include "OgreBillboardSet.h"
@@ -137,7 +138,6 @@ namespace Ogre {
       , mFrameSmoothingTime(0.0f)
       , mRemoveQueueStructuresOnClear(false)
       , mDefaultMinPixelSize(0)
-      , mFreqUpdatedBuffersUploadOption(v1::HardwareBuffer::HBU_DEFAULT)
       , mNextMovableObjectTypeFlag(1)
       , mIsInitialised(false)
       , mIsBlendIndicesGpuRedundant(true)
@@ -276,6 +276,8 @@ namespace Ogre {
         mAutoWindow = 0;
 
         // instantiate and register base movable factories
+        mDecalFactory = OGRE_NEW DecalFactory();
+        addMovableObjectFactory(mDecalFactory);
         mEntityFactory = OGRE_NEW v1::EntityFactory();
         addMovableObjectFactory(mEntityFactory);
         mItemFactory = OGRE_NEW ItemFactory();
@@ -317,9 +319,10 @@ namespace Ogre {
             << "Best time: \t"  << mFrameStats->getBestTime() << " ms\n"
             << "Worst time: \t" << mFrameStats->getWorstTime()<< " ms";
 
-#if OGRE_PROFILING
+#if OGRE_PROFILING && OGRE_PROFILING != OGRE_PROFILING_INTERNAL_OFFLINE
         OGRE_DELETE mProfiler;
 #endif
+
         shutdown();
 
         OGRE_DELETE mSceneManagerEnum;
@@ -380,6 +383,7 @@ namespace Ogre {
         OGRE_DELETE mResourceBackgroundQueue;
         OGRE_DELETE mResourceGroupManager;
 
+        OGRE_DELETE mDecalFactory;
         OGRE_DELETE mEntityFactory;
         OGRE_DELETE mItemFactory;
         OGRE_DELETE mLightFactory;
@@ -409,6 +413,9 @@ namespace Ogre {
         mAutoWindow = 0;
         mFirstTimePostWindowInit = false;
 
+#if OGRE_PROFILING == OGRE_PROFILING_INTERNAL_OFFLINE
+        OGRE_DELETE mProfiler;
+#endif
 
         StringInterface::cleanupDictionary ();
     }
@@ -666,6 +673,8 @@ namespace Ogre {
         // Tell scene managers
         SceneManagerEnumerator::getSingleton().setRenderSystem(system);
 
+        if(RenderSystem::Listener* ls = RenderSystem::getSharedListener())
+            ls->eventOccurred("RenderSystemChanged");
     }
     //-----------------------------------------------------------------------
     void Root::addRenderSystem(RenderSystem *newRend)

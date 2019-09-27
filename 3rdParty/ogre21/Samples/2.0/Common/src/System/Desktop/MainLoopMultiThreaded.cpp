@@ -123,13 +123,14 @@ unsigned long renderThreadApp( Ogre::ThreadHandle *threadHandle )
     SdlInputHandler *inputHandler = graphicsSystem->getInputHandler();
     inputHandler->setGrabMousePointer( true );
     inputHandler->setMouseVisible( false );
+    inputHandler->setMouseRelative( true );
     #endif
 
     Ogre::RenderWindow *renderWindow = graphicsSystem->getRenderWindow();
 
     Ogre::Timer timer;
 
-    unsigned long startTime = timer.getMicroseconds();
+    Ogre::uint64 startTime = timer.getMicroseconds();
 
     double timeSinceLast = 1.0 / 60.0;
 
@@ -145,7 +146,7 @@ unsigned long renderThreadApp( Ogre::ThreadHandle *threadHandle )
             Ogre::Threads::Sleep( 500 );
         }
 
-        unsigned long endTime = timer.getMicroseconds();
+        Ogre::uint64 endTime = timer.getMicroseconds();
         timeSinceLast = (endTime - startTime) / 1000000.0;
         timeSinceLast = std::min( 1.0, timeSinceLast ); //Prevent from going haywire.
         startTime = endTime;

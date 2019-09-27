@@ -123,6 +123,11 @@ namespace Ogre
             m[3][3] = m33;
         }
 
+        inline Matrix4(const Real* arr)
+        {
+            memcpy(m,arr,16*sizeof(Real));
+        }
+
         /** Creates a standard 4x4 transformation matrix with a zero translation part from a rotation/scaling 3x3 matrix.
          */
 
@@ -650,6 +655,23 @@ namespace Ogre
                 m[2][0] * m2.m[0][3] + m[2][1] * m2.m[1][3] + m[2][2] * m2.m[2][3] + m[2][3],
 
                 0, 0, 0, 1);
+        }
+
+        /** 3-D Vector transformation specially for an affine matrix.
+            @remarks
+                Transforms the given 3-D vector by the 3x3 submatrix, without
+                adding translation, as should be transformed directions and normals.
+            @note
+                The matrix must be an affine matrix. @see Matrix4::isAffine.
+        */
+        inline Vector3 transformDirectionAffine(const Vector3& v) const
+        {
+            assert(isAffine());
+
+            return Vector3(
+                    m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z,
+                    m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z,
+                    m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z);
         }
 
         /** 3-D Vector transformation specially for an affine matrix.

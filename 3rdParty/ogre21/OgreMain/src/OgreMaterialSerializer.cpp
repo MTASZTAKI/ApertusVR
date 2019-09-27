@@ -372,6 +372,8 @@ namespace Ogre
                         writeValue("spot");
                         break;
                     case Light::LT_VPL:
+                    case Light::LT_AREA_APPROX:
+                    case Light::LT_AREA_LTC:
                     case Light::NUM_LIGHT_TYPES: //Keep compiler happy
                         break;
                     };
@@ -1554,7 +1556,7 @@ namespace Ogre
         GpuLogicalBufferStructPtr doubleLogical = params->getDoubleLogicalBufferStruct();
         if( !doubleLogical.isNull() )
         {
-            OGRE_LOCK_MUTEX(floatLogical->mutex);
+            OGRE_LOCK_MUTEX(doubleLogical->mutex);
 
             for(GpuLogicalIndexUseMap::const_iterator i = doubleLogical->map.begin();
                 i != doubleLogical->map.end(); ++i)

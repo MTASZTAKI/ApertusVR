@@ -127,6 +127,7 @@ namespace Ogre
                         width: mWidth height: mHeight mipmapped: NO];
                 desc.textureType = MTLTextureType2DMultisample;
                 desc.sampleCount = mFSAA;
+                desc.usage = MTLTextureUsageRenderTarget;
 
                 mMsaaTex = [mOwnerDevice->mDevice newTextureWithDescriptor: desc];
                 mColourAttachmentDesc.texture = mMsaaTex;
@@ -214,7 +215,7 @@ namespace Ogre
             {
                 LogManager::getSingleton().logMessage("Mac Cocoa Window: Rendering on an external plain NSView*");
                 opt = miscParams->find("parentWindowHandle");
-                NSView *nsview = (__bridge NSView*)reinterpret_cast<void*>(StringConverter::parseUnsignedLong(opt->second));
+                NSView *nsview = (__bridge NSView*)reinterpret_cast<void*>(StringConverter::parseSizeT(opt->second));
                 assert( nsview &&
                        "Unable to get a pointer to the parent NSView."
                        "Was the 'parentWindowHandle' parameter set correctly in the call to createRenderWindow()?");
@@ -228,14 +229,23 @@ namespace Ogre
 #else
         NSRect frame;
 #endif
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
         frame.origin.x = 0;
         frame.origin.y = 0;
         frame.size.width = mWidth;
         frame.size.height = mHeight;
+#else
+        frame = [mWindow.contentView bounds];
+#endif
         mMetalView = [[OgreMetalView alloc] initWithFrame:frame];
 
 #if OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS
-        [mWindow setContentView:mMetalView];
+        NSView *view = mWindow.contentView;
+        [view addSubview:mMetalView];
+        mResizeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidResizeNotification object:mWindow queue:nil usingBlock:^(NSNotification *){
+          mMetalView.frame = [mWindow.contentView bounds];
+        }];
 #endif
 
         mMetalLayer = (CAMetalLayer*)mMetalView.layer;
@@ -256,6 +266,9 @@ namespace Ogre
     //-------------------------------------------------------------------------
     void MetalRenderWindow::destroy()
     {
+#if OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS
+        [[NSNotificationCenter defaultCenter] removeObserver:mResizeObserver];
+#endif
         mActive = false;
         mClosed = true;
 
@@ -269,13 +282,12 @@ namespace Ogre
     {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
         CGRect frame = mMetalView.frame;
-#else
-        NSRect frame = mMetalView.frame;
-#endif
         frame.size.width    = width;
         frame.size.height   = height;
         mMetalView.frame = frame;
-
+#else
+        mMetalView.frame = [mWindow.contentView bounds];
+#endif
         detachDepthBuffer();
     }
     //-------------------------------------------------------------------------
@@ -283,12 +295,12 @@ namespace Ogre
     {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
         CGRect frame = mMetalView.frame;
-#else
-        NSRect frame = mMetalView.frame;
-#endif
         frame.origin.x = left;
         frame.origin.y = top;
         mMetalView.frame = frame;
+#else
+        mMetalView.frame = [mWindow.contentView bounds];
+#endif
     }
     //-------------------------------------------------------------------------
     bool MetalRenderWindow::isClosed(void) const
@@ -322,3 +334,4 @@ namespace Ogre
         }
     }
 }
+

@@ -243,7 +243,7 @@ namespace Ogre
         float   mDetailsOffsetScale[4][4];
         float   mEmissive[3];
         float   mNormalMapWeight;
-        float   mReserved[3][4];
+        float   mUserValue[3][4]; //can be used in custom pieces
         uint16  mTexIndices[NUM_PBSM_TEXTURE_TYPES];
 
         PbsBakedTextureArray mBakedTextures;
@@ -359,6 +359,17 @@ namespace Ogre
               where N is a number between 0 and 3.
                 UV set to use for the particular texture map.
                 The UV value must be in range [0; 8)
+
+            * transparency <value>
+              Specifies the transparency amount. Value in range [0; 1]
+              where 0 = full transparency and 1 = fully opaque.
+
+            * transparency_mode <transparent, none, fade>
+              Specifies the transparency mode. @see TransparencyModes
+
+            * alpha_from_textures <true, false>
+              When set to false transparency calculations ignore the alpha channel in
+              the textures
         */
         HlmsPbsDatablock( IdString name, HlmsPbs *creator,
                           const HlmsMacroblock *macroblock,
@@ -389,7 +400,10 @@ namespace Ogre
         /// in PBSM_EMISSIVE slot.
         void setEmissive( const Vector3 &emissiveColour );
         Vector3 getEmissive(void) const;
-        bool hasEmissive(void) const;
+        /// Returns true iif getEmissive is non-zero
+        bool hasEmissiveConstant(void) const;
+        /// Returns true if getEmissive is non-zero or if there is an emissive texture set
+        bool _hasEmissive(void) const;
 
         /** Sets whether to use a specular workflow, or a metallic workflow.
         @remarks
@@ -656,6 +670,13 @@ namespace Ogre
         */
         void setReceiveShadows( bool receiveShadows );
         bool getReceiveShadows(void) const;
+
+        /** Sets the value of the userValue, this can be used in a custom piece
+        @param userValueIdx
+            Which userValue to modify, in the range [0; 3)
+        */
+        void setUserValue( uint8 userValueIdx, const Vector4 &value );
+        Vector4 getUserValue( uint8 userValueIdx ) const;
 
         /** Manually set a probe to affect this particular material.
         @remarks

@@ -124,7 +124,7 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
   elseif (NOT APPLE AND NOT CMAKE_COMPILER_IS_CLANGXX)
       set(OGRE_WARNING_FLAGS "${OGRE_WARNING_FLAGS} -Wno-unused-but-set-parameter")
   endif ()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OGRE_WARNING_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${OGRE_WARNING_FLAGS} ${CMAKE_CXX_FLAGS}")
 
   set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG=1" )
 endif ()
@@ -407,9 +407,10 @@ endif()
 # Customise what to build
 cmake_dependent_option(OGRE_STATIC "Static build" FALSE "" TRUE)
 cmake_dependent_option(OGRE_BUILD_RENDERSYSTEM_D3D11 "Build Direct3D11 RenderSystem" TRUE "WIN32;DirectX11_FOUND OR WINDOWS_STORE OR WINDOWS_PHONE" FALSE)
-cmake_dependent_option(OGRE_BUILD_RENDERSYSTEM_GL3PLUS "Build OpenGL 3+ RenderSystem" TRUE "OPENGL_FOUND; NOT OGRE_BUILD_RENDERSYSTEM_GLES; NOT OGRE_BUILD_RENDERSYSTEM_GLES2;NOT WINDOWS_STORE;NOT WINDOWS_PHONE" FALSE)
+cmake_dependent_option(OGRE_BUILD_RENDERSYSTEM_GL3PLUS "Build OpenGL 3+ RenderSystem" TRUE "OPENGL_FOUND; NOT OGRE_BUILD_RENDERSYSTEM_GLES; NOT OGRE_BUILD_RENDERSYSTEM_GLES2;NOT WINDOWS_STORE;NOT WINDOWS_PHONE;NOT OGRE_BUILD_PLATFORM_APPLE_IOS" FALSE)
 cmake_dependent_option(OGRE_BUILD_RENDERSYSTEM_GLES "Build OpenGL ES 1.x RenderSystem" FALSE "OPENGLES_FOUND;NOT WINDOWS_STORE;NOT WINDOWS_PHONE" FALSE)
 if( APPLE )
+    option(OGRE_BUILD_PLATFORM_APPLE_IOS "Build For iOS (Apple only)" FALSE)
     option(OGRE_BUILD_RENDERSYSTEM_METAL "Build Metal RenderSystem (Apple only)" TRUE)
 endif()
 cmake_dependent_option(OGRE_BUILD_PLATFORM_NACL "Build Ogre for Google's Native Client (NaCl)" FALSE "OPENGLES2_FOUND;NOT WINDOWS_STORE;NOT WINDOWS_PHONE" FALSE)
@@ -462,6 +463,16 @@ set(OGRE_CONFIG_ALLOCATOR 1 CACHE STRING
 )
 endif ()
 
+set( OGRE_DEBUG_LEVEL_DEBUG 3 CACHE STRING
+    "Specify debug level for debug builds:
+    0 - None. Disabled. No checks done at all.
+    1 - Low. We perform basic assert checks and other non-performance intensive checks.
+    2 - Medium. We alter classes to add some debug variables for a bit more thorough checking and also perform checks that may cause some performance hit.
+    3 - High. We perform intensive validation without concerns for performance."
+)
+set( OGRE_DEBUG_LEVEL_RELEASE 0 CACHE STRING
+    "Specify debug level for Release, RelWithDebInfo and MinSizeRel builds. See OGRE_MAX_DEBUG_LEVEL_DEBUG" )
+
 cmake_dependent_option(OGRE_CONFIG_CONTAINERS_USE_CUSTOM_ALLOCATOR "STL containers in Ogre use the custom allocator" TRUE "" FALSE)
 option(OGRE_CONFIG_STRING_USE_CUSTOM_ALLOCATOR "Ogre String uses the custom allocator" FALSE)
 option(OGRE_CONFIG_MEMTRACK_DEBUG "Enable Ogre's memory tracker in debug mode" FALSE)
@@ -501,6 +512,7 @@ option(OGRE_LEGACY_ANIMATIONS "Use the skeletal animation from 1.x. It's much sl
 option(OGRE_SIMD_SSE2 "Enable SIMD (Include SSE2 files)." TRUE)
 option(OGRE_SIMD_NEON "Enable SIMD (Include NEON files)." TRUE)
 option(OGRE_RESTRICT_ALIASING "Restrict aliasing." TRUE)
+option(OGRE_IDSTRING_ALWAYS_READABLE "Always keep readable strings on IdString, even in Release builds." FALSE)
 cmake_dependent_option(OGRE_CONFIG_STATIC_LINK_CRT "Statically link the MS CRT dlls (msvcrt)" FALSE "MSVC" FALSE)
 set(OGRE_LIB_DIRECTORY "lib${LIB_SUFFIX}" CACHE STRING "Install path for libraries, e.g. 'lib64' on some 64-bit Linux distros.")
 if (WIN32)
@@ -522,8 +534,10 @@ set( OGRE_PROFILING_PROVIDER "none" CACHE STRING
 	overhead so you may want to ship your game with this option disabled.
 	none - Profiling OFF
 	internal - Use internal profiling with on-screen overlays
-	remotery - Use Remotery. https://github.com/Celtoys/Remotery"
+	remotery - Use Remotery. https://github.com/Celtoys/Remotery
+	offline - Use internal profiling that generates a CSV file for offline analysis"
 )
+option(OGRE_PROFILING_EXHAUSTIVE "When a valid profiler provider is set, includes exhaustive information of Ogre calls to better find culprit of big slowdowns or hitches, particularly why load times are slow. Best used with 'offline' profiler provider" FALSE)
 
 if( NOT Remotery_FOUND AND OGRE_PROFILING_PROVIDER STREQUAL "remotery" )
 	message( STATUS "WARNING: Remotery not found! Forcing profiling to disable" )

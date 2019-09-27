@@ -45,12 +45,14 @@ THE SOFTWARE.
 #include "OgreD3D11RenderSystem.h"
 
 #include "OgreRenderQueue.h"
+#include "OgreRoot.h"
 
 #include "OgreD3D11HardwareBufferManager.h" //D3D11HardwareBufferManager::getGLType
 
 #include "OgreTimer.h"
 #include "OgreStringConverter.h"
 #include "OgreLogManager.h"
+#include "OgreProfiler.h"
 
 namespace Ogre
 {
@@ -526,6 +528,8 @@ namespace Ogre
     //-----------------------------------------------------------------------------------
     void D3D11VaoManager::createDelayedImmutableBuffers(void)
     {
+        OgreProfileExhaustive( "D3D11VaoManager::createDelayedImmutableBuffers" );
+
         bool immutableBuffersCreated = false;
 
         for( size_t i=0; i<NumInternalBufferTypes; ++i )
@@ -636,6 +640,8 @@ namespace Ogre
     //-----------------------------------------------------------------------------------
     void D3D11VaoManager::reorganizeImmutableVaos(void)
     {
+        OgreProfileExhaustive( "D3D11VaoManager::reorganizeImmutableVaos" );
+
         VertexArrayObjectSet::const_iterator itor = mVertexArrayObjects.begin();
         VertexArrayObjectSet::const_iterator end  = mVertexArrayObjects.end();
 
@@ -889,16 +895,23 @@ namespace Ogre
         if( mD3D11RenderSystem->_getFeatureLevel() > D3D_FEATURE_LEVEL_11_0 )
         {
             //D3D11.1 supports NO_OVERWRITE on shader buffers, use the common pool
-            size_t vboIdx;
+            size_t vboIdx = 0;
 
             BufferType vboFlag = bufferType;
             if( vboFlag >= BT_DYNAMIC_DEFAULT )
                 vboFlag = BT_DYNAMIC_DEFAULT;
 
-            allocateVbo( sizeBytes, alignment, bufferType, SHADER_BUFFER, vboIdx, bufferOffset );
+            if( bufferType == BT_IMMUTABLE )
+            {
+				bufferInterface = new D3D11BufferInterface( vboIdx, 0, 0 );
+            }
+            else
+            {
+				allocateVbo( sizeBytes, alignment, bufferType, SHADER_BUFFER, vboIdx, bufferOffset );
 
-            Vbo &vbo = mVbos[SHADER_BUFFER][vboFlag][vboIdx];
-            bufferInterface = new D3D11BufferInterface( vboIdx, vbo.vboName, vbo.dynamicBuffer );
+				Vbo &vbo = mVbos[SHADER_BUFFER][vboFlag][vboIdx];
+				bufferInterface = new D3D11BufferInterface( vboIdx, vbo.vboName, vbo.dynamicBuffer );
+            }
         }
         else
         {
@@ -1067,6 +1080,8 @@ namespace Ogre
                                                         IndexBufferPacked *indexBuffer,
                                                         OperationType opType )
     {
+        OgreProfileExhaustive( "D3D11VaoManager::findVao" );
+
         Vao vao;
 
         vao.operationType = opType;
@@ -1156,6 +1171,8 @@ namespace Ogre
     //-----------------------------------------------------------------------------------
     void D3D11VaoManager::releaseVao( VertexArrayObject *vao )
     {
+        OgreProfileExhaustive( "D3D11VaoManager::releaseVao" );
+
         D3D11VertexArrayObject *glVao = static_cast<D3D11VertexArrayObject*>( vao );
 
         VaoVec::iterator itor = mVaos.begin();
@@ -1242,7 +1259,7 @@ namespace Ogre
     {
         HlmsManager *hlmsManager = Root::getSingleton().getHlmsManager();
         VertexElement2VecVec vertexElements = VertexArrayObject::getVertexDeclaration( vertexBuffers );
-        uint8 inputLayout = hlmsManager->_addInputLayoutId( vertexElements, opType );
+        uint16 inputLayout = hlmsManager->_getInputLayoutId( vertexElements, opType );
 
         {
             bool hasImmutableDelayedBuffer = false;
@@ -1405,6 +1422,8 @@ namespace Ogre
 
         if( currentTimeMs >= mNextStagingBufferTimestampCheckpoint )
         {
+            OgreProfileExhaustive( "D3D11VaoManager::_update zero-ref staging buffers" );
+
             mNextStagingBufferTimestampCheckpoint = (unsigned long)(~0);
 
             for( size_t i=0; i<2; ++i )
@@ -1417,7 +1436,7 @@ namespace Ogre
                     StagingBuffer *stagingBuffer = *itor;
 
                     mNextStagingBufferTimestampCheckpoint = std::min(
-                        mNextStagingBufferTimestampCheckpoint, 
+                        mNextStagingBufferTimestampCheckpoint,
                         stagingBuffer->getLastUsedTimestamp() + stagingBuffer->getLifetimeThreshold() );
 
                     if( stagingBuffer->getLastUsedTimestamp() + stagingBuffer->getLifetimeThreshold() < currentTimeMs )

@@ -40,6 +40,7 @@ THE SOFTWARE.
 #include "OgreLogManager.h"
 
 #include "rapidjson/document.h"
+#include "rapidjson/error/en.h"
 
 namespace Ogre
 {
@@ -465,7 +466,12 @@ namespace Ogre
                 CompareFunction alphaTestCmp = parseCompareFunction( array[0].GetString() );
                 if( alphaTestCmp == NUM_COMPARE_FUNCTIONS )
                     alphaTestCmp = CMPF_ALWAYS_PASS;
-                datablock->setAlphaTest( alphaTestCmp );
+
+                bool alphaTestShadowCasterOnly = false;
+                if( arraySize > 2 && array[2].IsBool() )
+                    alphaTestShadowCasterOnly = array[2].GetBool();
+
+                datablock->setAlphaTest( alphaTestCmp, alphaTestShadowCasterOnly );
             }
 
             if( arraySize > 1 && array[1].IsNumber() )
@@ -504,7 +510,7 @@ namespace Ogre
                 {
                     //Ignore datablocks that already exist (useful for reloading materials)
                     if( e.getNumber() != Exception::ERR_DUPLICATE_ITEM )
-                        throw e;
+                        throw;
                     else
                         LogManager::getSingleton().logMessage( e.getFullDescription() );
                 }
@@ -525,7 +531,9 @@ namespace Ogre
         {
             OGRE_EXCEPT( Exception::ERR_INVALIDPARAMS,
                          "HlmsJson::loadMaterials",
-                         "Invalid JSON string in file " + filename );
+                         "Invalid JSON string in file " + filename + " at line " +
+                         StringConverter::toString( d.GetErrorOffset() ) + " Reason: " +
+                         rapidjson::GetParseError_En( d.GetParseError() ) );
         }
 
         NamedBlocks blocks;
@@ -769,17 +777,17 @@ namespace Ogre
     //-----------------------------------------------------------------------------------
     String HlmsJson::getName( const HlmsMacroblock *macroblock ) const
     {
-        return "\"Macroblock_" + StringConverter::toString( macroblock->mId ) + '"';
+        return "\"Macroblock_" + StringConverter::toString( macroblock->mLifetimeId ) + '"';
     }
     //-----------------------------------------------------------------------------------
     String HlmsJson::getName( const HlmsBlendblock *blendblock ) const
     {
-        return "\"Blendblock_" + StringConverter::toString( blendblock->mId ) + '"';
+        return "\"Blendblock_" + StringConverter::toString( blendblock->mLifetimeId ) + '"';
     }
     //-----------------------------------------------------------------------------------
     String HlmsJson::getName( const HlmsSamplerblock *samplerblock )
     {
-        return "\"Sampler_" + StringConverter::toString( samplerblock->mId ) + '"';
+        return "\"Sampler_" + StringConverter::toString( samplerblock->mLifetimeId ) + '"';
     }
     //-----------------------------------------------------------------------------------
     void HlmsJson::saveSamplerblock( const HlmsSamplerblock *samplerblock, String &outString )
@@ -954,6 +962,8 @@ namespace Ogre
             toQuotedStr( datablock->getAlphaTest(), outString );
             outString += ", ";
             outString += StringConverter::toString( datablock->getAlphaTestThreshold() );
+            outString += ", ";
+            outString += StringConverter::toString( datablock->getAlphaTestShadowCasterOnly() );
             outString += ']';
         }
 

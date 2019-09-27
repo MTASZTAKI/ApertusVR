@@ -50,6 +50,8 @@ THE SOFTWARE.
 
 #include "OgreOldSkeletonManager.h"
 
+#include "OgreProfiler.h"
+
 namespace Ogre {
     bool Mesh::msOptimizeForShadowMapping = false;
 
@@ -146,6 +148,8 @@ namespace Ogre {
     //-----------------------------------------------------------------------
     void Mesh::prepareImpl()
     {
+        OgreProfileExhaustive( "Mesh2::prepareImpl" );
+
         // Load from specified 'name'
         if (getCreator()->getVerbose())
             LogManager::getSingleton().logMessage("Mesh: Loading "+mName+".");
@@ -165,6 +169,8 @@ namespace Ogre {
     //-----------------------------------------------------------------------
     void Mesh::loadImpl()
     {
+        OgreProfileExhaustive( "Mesh2::loadImpl" );
+
         MeshSerializer serializer( mVaoManager );
         //serializer.setListener(MeshManager::getSingleton().getListener());
 
@@ -184,6 +190,8 @@ namespace Ogre {
     //-----------------------------------------------------------------------
     void Mesh::unloadImpl()
     {
+        OgreProfileExhaustive( "Mesh2::unloadImpl" );
+
         // Teardown submeshes
         SubMeshVec::const_iterator itor = mSubMeshes.begin();
         SubMeshVec::const_iterator end  = mSubMeshes.end();
@@ -491,8 +499,10 @@ namespace Ogre {
         return retVal;
     }
     //---------------------------------------------------------------------
-    void Mesh::importV1( v1::Mesh *mesh, bool halfPos, bool halfTexCoords, bool qTangents )
+    void Mesh::importV1( v1::Mesh *mesh, bool halfPos, bool halfTexCoords, bool qTangents, bool halfPose )
     {
+        OgreProfileExhaustive( "Mesh2::importV1" );
+
         mesh->load();
 
         if( mLoadingState.get() != LOADSTATE_UNLOADED )
@@ -533,7 +543,7 @@ namespace Ogre {
         for( size_t i=0; i<mesh->getNumSubMeshes(); ++i )
         {
             SubMesh *subMesh = createSubMesh();
-            subMesh->importFromV1( mesh->getSubMesh( i ), halfPos, halfTexCoords, qTangents );
+            subMesh->importFromV1( mesh->getSubMesh( i ), halfPos, halfTexCoords, qTangents, halfPose );
         }
 
         mSubMeshNameMap = mesh->getSubMeshNameMap();
@@ -583,6 +593,8 @@ namespace Ogre {
     //---------------------------------------------------------------------
     void Mesh::prepareForShadowMapping( bool forceSameBuffers )
     {
+        OgreProfileExhaustive( "Mesh2::prepareForShadowMapping" );
+
         SubMeshVec::const_iterator itor = mSubMeshes.begin();
         SubMeshVec::const_iterator end  = mSubMeshes.end();
 

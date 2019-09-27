@@ -49,6 +49,7 @@ namespace Ogre
         OgreMetalView       *mMetalView;
 #if OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS
         NSWindow            *mWindow;
+        id                  mResizeObserver;
 #endif
 
         MetalRenderSystem   *mRenderSystem;
@@ -73,7 +74,7 @@ namespace Ogre
         virtual bool isClosed(void) const;
 
         // RenderTarget overloads.
-        virtual void copyContentsToMemory(const PixelBox &dst, FrameBuffer buffer) {}
+        virtual void copyContentsToMemory(const Box& src, const PixelBox &dst, FrameBuffer buffer) {}
         virtual bool requiresTextureFlipping() const { return false; }
 
         virtual void getCustomAttribute( const String& name, void* pData );
@@ -81,3 +82,4 @@ namespace Ogre
 }
 
 #endif
+

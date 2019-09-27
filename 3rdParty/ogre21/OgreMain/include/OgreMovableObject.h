@@ -165,6 +165,22 @@ namespace Ogre {
         /** Get the manager of this object, if any (internal use only) */
         SceneManager* _getManager(void) const { return mManager; }
 
+        /** Notifies the movable object that hardware resources were lost
+            @remarks
+                Called automatically by RenderSystem if hardware resources
+                were lost and can not be restored using some internal mechanism.
+                Among affected resources are nested shadow renderables, ManualObjects, etc.
+        */
+        virtual void _releaseManualHardwareResources() {}
+
+        /** Notifies the movable object that hardware resources should be restored
+            @remarks
+                Called automatically by RenderSystem if hardware resources
+                were lost and can not be restored using some internal mechanism.
+                Among affected resources are nested shadow renderables, ManualObjects, etc.
+        */
+        virtual void _restoreManualHardwareResources() {}
+
         /** Sets a custom name for this node. Doesn't have to be unique */
         void setName( const String &name )                                  { mName = name; }
 
@@ -330,6 +346,19 @@ namespace Ogre {
 
         /** Gets the distance at which batches are no longer rendered. */
         inline Real getRenderingDistance(void) const;
+
+        /** Sets the distance at which the object is no longer casting shadows.
+        @param
+            dist Distance beyond which the object will not cast shadows (the default is FLT_MAX,
+            which means objects are always casting shadows). Values equal or below zero will be ignored,
+            and cause an assertion in debug mode.
+        @note ShadowRenderingDistance will be clamped to RenderingDistance value
+        @see setRenderingDistance
+        */
+        inline void setShadowRenderingDistance(Real dist);
+
+        /** Gets the distance at which batches are no longer casting shadows. */
+        inline Real getShadowRenderingDistance(void) const;
 
         /** Sets the minimum pixel size an object needs to be in both screen axes in order to be rendered
         @note Camera::setUseMinPixelSize() needs to be called for this parameter to be used.

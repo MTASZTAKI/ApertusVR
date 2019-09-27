@@ -142,6 +142,16 @@ namespace Ogre
         bool                    mHasPlanarReflections;
         uint8                   mLastBoundPlanarReflection;
 #endif
+        TexturePtr              mAreaLightMasks;
+        HlmsSamplerblock const  *mAreaLightMasksSamplerblock;
+        LightArray				mAreaLights;
+        bool                    mUsingAreaLightMasks;
+
+        bool                    mUsingLtcMatrix;
+        TexturePtr              mLtcMatrixTexture;
+
+        TexturePtr              mDecalsTextures[3];
+        HlmsSamplerblock const  *mDecalsSamplerblock;
 
         ConstBufferPool::BufferPool const *mLastBoundPool;
 
@@ -173,6 +183,8 @@ namespace Ogre
 
         virtual void calculateHashForPreCreate( Renderable *renderable, PiecesMap *inOutPieces );
         virtual void calculateHashForPreCaster( Renderable *renderable, PiecesMap *inOutPieces );
+
+        virtual void notifyPropertiesMergedPreGenerationStep(void);
 
         static bool requiredPropertyByAlphaTest( IdString propertyName );
 
@@ -208,6 +220,8 @@ namespace Ogre
 
         virtual void postCommandBufferExecution( CommandBuffer *commandBuffer );
         virtual void frameEnded(void);
+
+        void loadLtcMatrix(void);
 
         /** Fill the provided string and string vector with all the sub-folder needed to instantiate
             an HlmsPbs object with the default distribution of the HlmsResources.
@@ -271,6 +285,9 @@ namespace Ogre
         void setIrradianceVolume( IrradianceVolume *irradianceVolume )
                                                     { mIrradianceVolume = irradianceVolume; }
         IrradianceVolume* getIrradianceVolume(void) const  { return mIrradianceVolume; }
+
+        void setAreaLightMasks( const TexturePtr &areaLightMask );
+        const TexturePtr& getAreaLightMasks(void) const     { return mAreaLightMasks; }
 
 #ifdef OGRE_BUILD_COMPONENT_PLANAR_REFLECTIONS
         void setPlanarReflections( PlanarReflections *planarReflections );

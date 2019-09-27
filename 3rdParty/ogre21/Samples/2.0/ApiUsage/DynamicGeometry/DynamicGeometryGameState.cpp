@@ -80,6 +80,9 @@ namespace Demo
             // However if for some weird reason there is an exception raised, the memory will
             // not be freed, so it is up to us to do so.
             // The reasons for exceptions are very rare. But we're doing this for correctness.
+            // Important: Please note that we passed keepAsShadow = true to createIndexBuffer,
+            // thus Ogre will free the pointer. However had we passed keepAsShadow = false,
+            // it would be YOUR responsability to free the pointer, not Ogre's
             OGRE_FREE_SIMD( indexBuffer, Ogre::MEMCATEGORY_GEOMETRY );
             indexBuffer = 0;
             throw e;
@@ -125,6 +128,9 @@ namespace Demo
         }
         catch( Ogre::Exception &e )
         {
+            // Important: Please note that we passed keepAsShadow = true to createVertexBuffer,
+            // thus Ogre will free the pointer. However had we passed keepAsShadow = false,
+            // it would be YOUR responsability to free the pointer, not Ogre's
             OGRE_FREE_SIMD( vertexBuffer, Ogre::MEMCATEGORY_GEOMETRY );
             vertexBuffer = 0;
             throw e;
@@ -360,14 +366,14 @@ namespace Demo
 
         //We do not regress the frame, because we haven't advanced yet.
         cubeVertices = reinterpret_cast<float*RESTRICT_ALIAS>(
-                    mDynamicVertexBuffer[1]->map( 2, 4, true ) );
+                    mDynamicVertexBuffer[1]->map( 2, 2, true ) );
         updateDynamicBuffer01( cubeVertices, c_originalVertices, 2, 4 );
         mDynamicVertexBuffer[1]->unmap( Ogre::UO_KEEP_PERSISTENT );
 
         //We regress the frame, because the previous map had advanced automatically by passing 'true'.
         mDynamicVertexBuffer[1]->regressFrame();
         cubeVertices = reinterpret_cast<float*RESTRICT_ALIAS>(
-                    mDynamicVertexBuffer[1]->map( 4, 6, false ) );
+                    mDynamicVertexBuffer[1]->map( 4, 2, false ) );
         updateDynamicBuffer01( cubeVertices, c_originalVertices, 4, 6 );
         mDynamicVertexBuffer[1]->unmap( Ogre::UO_KEEP_PERSISTENT );
         mDynamicVertexBuffer[1]->advanceFrame();    //Make sure we advance when we're done and
@@ -378,7 +384,7 @@ namespace Demo
         //We regress the frame, because the previous map had advanced it; and the frame isn't over yet.
         mDynamicVertexBuffer[1]->regressFrame();
         cubeVertices = reinterpret_cast<float*RESTRICT_ALIAS>(
-                    mDynamicVertexBuffer[1]->map( 6, 8, false ) );
+                    mDynamicVertexBuffer[1]->map( 6, 2, false ) );
         updateDynamicBuffer01( cubeVertices, c_originalVertices, 6, 8 );
         mDynamicVertexBuffer[1]->unmap( Ogre::UO_KEEP_PERSISTENT );
         mDynamicVertexBuffer[1]->advanceFrame();    //Make sure we advance when we're done and

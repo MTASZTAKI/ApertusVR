@@ -31,6 +31,7 @@
 #include "OgreGpuProgramManager.h"
 #include "OgreGLSLShader.h"
 #include "OgreRoot.h"
+#include "OgreProfiler.h"
 
 #include "Vao/OgreGL3PlusVaoManager.h"
 
@@ -232,7 +233,7 @@ namespace Ogre {
     void GLSLProgram::getMicrocodeFromCache(void)
     {
         GpuProgramManager::Microcode cacheMicrocode =
-            GpuProgramManager::getSingleton().getMicrocodeFromCache(getCombinedName());
+            GpuProgramManager::getSingleton().getMicrocodeFromCache(getCombinedSource());
 
         cacheMicrocode->seek(0);
 
@@ -246,7 +247,7 @@ namespace Ogre {
         // Load binary.
         OGRE_CHECK_GL_ERROR(glProgramBinary(mGLProgramHandle,
                                             binaryFormat,
-                                            cacheMicrocode->getPtr(),
+                                            cacheMicrocode->getCurrentPtr(),
                                             binaryLength));
 
         GLint success = 0;
@@ -258,11 +259,20 @@ namespace Ogre {
             // and then retrieve and cache new program binaries once again.
             compileAndLink();
         }
+        else
+        {
+            mLinked = true;
+
+            mVertexArrayObject = new GL3PlusOldVertexArrayObject();
+            mVertexArrayObject->bind();
+        }
     }
 
 
     void GLSLProgram::extractLayoutQualifiers(void)
     {
+        OgreProfileExhaustive( "GLSLProgram::extractLayoutQualifiers" );
+
         // Format is:
         //      layout(location = 0) attribute vec4 vertex;
 

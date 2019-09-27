@@ -16,9 +16,44 @@ struct Light
 	vec3 specular;
 @property( hlms_num_shadow_map_lights )
 	vec3 attenuation;
-	vec3 spotDirection;
-	vec3 spotParams;
+    //Spotlights:
+    //  spotDirection.xyz is direction
+    //  spotParams.xyz contains falloff params
+    //Custom 2D Shape:
+    //  spotDirection.xyz direction
+    //  spotDirection.w customShapeHalfRectSize.x
+    //  spotParams.xyz tangent
+    //  spotParams.w customShapeHalfRectSize.y
+    vec4 spotDirection;
+    vec4 spotParams;
 @end
+};
+
+#define areaLightDiffuseMipmapStart areaApproxLights[0].diffuse.w
+#define areaLightNumMipmapsSpecFactor areaApproxLights[0].specular.w
+
+struct AreaLight
+{
+	vec4 position; //.w contains the objLightMask
+	vec4 diffuse;		//[0].w contains diffuse mipmap start
+	vec4 specular;		//[0].w contains mipmap scale
+	vec4 attenuation;	//.w contains texture array idx
+	//Custom 2D Shape:
+	//  direction.xyz direction
+	//  direction.w invHalfRectSize.x
+	//  tangent.xyz tangent
+	//  tangent.w invHalfRectSize.y
+	vec4 direction;
+	vec4 tangent;
+	vec4 doubleSided;
+};
+
+struct AreaLtcLight
+{
+	vec4 position;		//.w contains the objLightMask
+	vec4 diffuse;		//.w contains attenuation range
+	vec4 specular;		//.w contains doubleSided
+	vec3 points[4];
 };
 
 @insertpiece( DeclCubemapProbeStruct )
@@ -29,7 +64,7 @@ layout_constbuffer(binding = 0) uniform PassBuffer
 	//Vertex shader (common to both receiver and casters)
 	mat4 viewProj;
 
-@property( hlms_global_clip_distances )
+@property( hlms_global_clip_planes )
 	vec4 clipPlane0;
 @end
 
@@ -73,6 +108,8 @@ layout_constbuffer(binding = 0) uniform PassBuffer
 @property( hlms_pssm_fade )
 	float pssmFadePoint;@end
 	@property( hlms_lights_spot )Light lights[@value(hlms_lights_spot)];@end
+	@property( hlms_lights_area_approx )AreaLight areaApproxLights[@value(hlms_lights_area_approx)];@end
+	@property( hlms_lights_area_ltc )AreaLtcLight areaLtcLights[@value(hlms_lights_area_ltc)];@end
 @end @property( hlms_shadowcaster )
 	//Vertex shader
 	@property( exponential_shadow_maps )vec4 viewZRow;@end
@@ -131,7 +168,7 @@ struct Material
 	vec4 cDetailWeights;
 	vec4 detailOffsetScale[4];
 	vec4 emissive;		//emissive.w contains mNormalMapWeight.
-	vec4 reserved[3];
+	vec4 userValue[3];
 
 	uvec4 indices0_3;
 	uvec4 indices4_7;

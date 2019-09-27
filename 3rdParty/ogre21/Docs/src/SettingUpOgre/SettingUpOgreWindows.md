@@ -6,7 +6,7 @@
     * [CMake 3.x](https://cmake.org/download/)
     * Mercurial. We recommend [TortoiseHg](https://tortoisehg.bitbucket.io/download/index.html)
     * What you do **NOT** need: Boost. Don't waste your time.
-    * Visual Studio 2008 SP1 - 2015 (2017RC not tested). MinGW may work but we strongly recommend Visual Studio.
+    * Visual Studio 2008 SP1 - 2017 (2019 not tested). MinGW may work but we strongly recommend Visual Studio.
     * [DirectX June 2010 SDK](https://www.microsoft.com/en-us/download/details.aspx?id=6812). Optional.
       Needed if you use older Visual Studio versions and want the D3D11 plugin. Also comes with useful tools.
     * Windows 10 SDK. Contains the latest DirectX SDK, thus recommended over the DX June 2010 SDK,
@@ -16,6 +16,7 @@
       **YOUR END USERS NEED THIS UPDATE AS WELL**.
     * For HW & SW requirements, please visit http://www.ogre3d.org/developers/requirements
 
+@copydoc DownloadingOgreScriptsCommon
 
 # Downloading Ogre {#DownloadingOgreWindows}
 
@@ -25,21 +26,21 @@
 # Building Dependencies {#BuildingDependenciesWindows}
 
 -# Open CMake GUI.
--# Point "Where is the source code" to C:\\OgreSDK\\Dependencies; and
-   "Where to build the binaries" pointing to "C:\\OgreSDK\\Dependencies\\build"
+-# Point "Where is the source code" to C:\\OgreDepsRepo\\; and
+   "Where to build the binaries" pointing to "C:\\OgreDepsRepo\\build"
 -# Click 'Configure' and select the generator (i.e. if you're using Visual Studio 2013, select Visual Studio 12)
 ![](images/CMakeWindowsDependencies.png)
 -# Answer 'Ok' when asked if you want to create the build directory
 -# Sometimes on bleeding edge repos there might be CMake syntax warnings. Ignore them.
 -# Now click 'Generate'.
--# Open C:\\OgreSDK\\Dependencies\\build\\OGREDEPS.sln under Visual Studio.
+-# Open C:\\OgreDepsRepo\\build\\OGREDEPS.sln under Visual Studio.
    If you have multiple versions of VS, make sure you open it with the one you targeted for in CMake.
 -# Build the whole solution; which should build FreeImage, freetype, OIS, zlib and zziplib.
    Make sure to build both Debug and Release
 -# Once it's finished, right click on INSTALL project, and click build. THIS IS VERY IMPORTANT.
    It will create the folder structure that Ogre needs. You need to do this both for Debug and Release.
 ![](images/BuildWindowsDependencies.png)
--# This should've created an SDK folder structure under C:\\OgreSDK\\Dependencies\\build\\ogredeps
+-# This should've created an SDK folder structure under C:\\OgreDepsRepo\\build\\ogredeps
 
 
 # Building Ogre {#BuildingOgreWindows}
@@ -49,11 +50,11 @@
    pointing to "C:\\OgreSDK\\build"
 -# Hit Configure and choose the same Visual Studio generator you did for the dependencies.
    It will now complain it can't find the Dependencies.
--# Set OGRE_DEPENDENCIES_DIR to point to C:\\OgreSDK\\Dependencies\\build\\ogredeps as in the picture.
+-# Set OGRE_DEPENDENCIES_DIR to point to C:\\OgreDepsRepo\\build\\ogredeps as in the picture.
    Use the search filter to find the option quickly. Now hit configure again.
 ![](images/CMakeWindowsOgre.png)
--# *Pro tip:* If C:\\OgreSDK\\Dependencies contains the files that are generated in
-   C:\\OgreSDK\\Dependencies\\build\\ogredeps; you won't need the previous step.
+-# *Pro tip:* If you move the generated folder C:\\OgreDepsRepo\\build\\ogredeps to
+   C:\\OgreSDK\\Dependencies you won't need the previous step.
 -# Click Generate. If you want to build the samples, now tick OGRE_BUILD_SAMPLES2 and click Generate again.
 -# Open the solution C:\\OgreSDK\\build\\OGRE.sln and compile.
 -# You're done. You can also right click on INSTALL project if you wish to generate the SDK structure
@@ -71,6 +72,20 @@ Don't worry, those CMake configs are about the *old threading* model. For more i
 
 @addtogroup MdInternal
 @{
+
+@addtogroup DownloadingOgreScriptsCommon
+@ingroup MdInternal
+@{
+
+# Automatic download & build scripts
+
+We easy-to-use scripts that will download and setup all dependencies for you in a self-contained folder
+Download build_ogre_scripts for the branch you need from:
+
+https://bitbucket.org/sinbad/ogre/downloads/
+
+@}
+
 @addtogroup DownloadingOgreCommon
 @ingroup MdInternal
 @{

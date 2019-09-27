@@ -446,13 +446,18 @@ namespace Ogre {
             ArrayReal       planeNegD;
         };
 
-        ArrayVector3 cameraPos, lodCameraPos;
+        ArrayVector3 cameraPos, cameraDir, lodCameraPos;
         cameraPos.setAll( frustum->_getCachedDerivedPosition() );
+        cameraDir.setAll( -frustum->_getCachedDerivedOrientation().zAxis() );
         lodCameraPos.setAll( lodCamera->_getCachedDerivedPosition() );
 
         // Flip the bit from shadow caster, and leave only that in "includeNonCasters"
-        ArrayInt includeNonCasters = Mathlib::SetAll( ((sceneVisibilityFlags & LAYER_SHADOW_CASTER) ^ -1)
-                                                        & LAYER_SHADOW_CASTER );
+        Ogre::uint32 includeNonCastersTest = (((sceneVisibilityFlags & LAYER_SHADOW_CASTER) ^ -1) & LAYER_SHADOW_CASTER);
+
+        ArrayInt includeNonCasters = Mathlib::SetAll(includeNonCastersTest);
+
+        const bool isShadowMappingCasterPass = includeNonCastersTest == 0;
+
         sceneVisibilityFlags &= RESERVED_VISIBILITY_FLAGS;
 
         ArrayInt sceneFlags = Mathlib::SetAll( sceneVisibilityFlags );
@@ -480,7 +485,7 @@ namespace Ogre {
             ArrayReal * RESTRICT_ALIAS worldRadius = reinterpret_cast<ArrayReal*RESTRICT_ALIAS>
                                                                         (objData.mWorldRadius);
             ArrayReal * RESTRICT_ALIAS upperDistance = reinterpret_cast<ArrayReal*RESTRICT_ALIAS>
-                                                                        (objData.mUpperDistance);
+                                                                        (objData.mUpperDistance[isShadowMappingCasterPass]);
             ArrayReal * RESTRICT_ALIAS distanceToCamera = reinterpret_cast<ArrayReal*RESTRICT_ALIAS>
                                                                         (objData.mDistanceToCamera);
 
@@ -539,7 +544,10 @@ namespace Ogre {
                                 Mathlib::TestFlags4( Mathlib::Or( *visibilityFlags, includeNonCasters ),
                                                         Mathlib::SetAll( LAYER_SHADOW_CASTER ) ) );
 
-            *distanceToCamera = cameraPos.distance( objData.mWorldAabb->mCenter ) - *worldRadius;
+            //Project the vector to the object into the camera's plane. This allows
+            //us to use depth for sorting, rather than euclidean distance
+            *distanceToCamera = cameraDir.dotProduct( objData.mWorldAabb->mCenter -
+                                                      cameraPos ) - *worldRadius;
 
             //Fuse result with visibility flag
             // finalMask = ((visible|infinite_aabb) & sceneFlags & visibilityFlags) != 0 ? 0xffffffff : 0

@@ -59,11 +59,12 @@ namespace Ogre {
         assert( msSingleton );  return ( *msSingleton );  
     }
     //-----------------------------------------------------------------------
-    Profile::Profile(const String& profileName, uint32 groupID) 
+    Profile::Profile( const String& profileName, ProfileSampleFlags::ProfileSampleFlags flags,
+                      uint32 groupID )
         : mName(profileName)
         , mGroupID(groupID)
     {
-        Ogre::Profiler::getSingleton().beginProfile(profileName, groupID);
+        Ogre::Profiler::getSingleton().beginProfile(profileName, groupID, flags);
     }
     //-----------------------------------------------------------------------
     Profile::~Profile()
@@ -85,7 +86,7 @@ namespace Ogre {
         , mCurrentFrame(0)
         , mTimer(0)
         , mTotalFrameTime(0)
-        , mEnabled(false)
+        , mEnabled( OGRE_PROFILING == OGRE_PROFILING_INTERNAL_OFFLINE )
         , mUseStableMarkers(false)
         , mNewEnableState(false)
         , mProfileMask(0xFFFFFFFF)
@@ -158,6 +159,7 @@ namespace Ogre {
     //-----------------------------------------------------------------------
     void Profiler::setEnabled(bool enabled) 
     {
+#if OGRE_PROFILING != OGRE_PROFILING_INTERNAL_OFFLINE
         if (!mInitialized && enabled) 
         {
             for( TProfileSessionListener::iterator i = mListeners.begin(); i != mListeners.end(); ++i )
@@ -190,6 +192,10 @@ namespace Ogre {
             }
 #endif
         }
+#else
+        mEnabled = enabled;
+        mOfflineProfiler.setPaused( !enabled );
+#endif
         // We store this enable/disable request until the frame ends
         // (don't want to screw up any open profiles!)
         mNewEnableState = enabled;
@@ -229,8 +235,12 @@ namespace Ogre {
         mDisabledProfiles.erase(profileName);
     }
     //-----------------------------------------------------------------------
-    void Profiler::beginProfile(const String& profileName, uint32 groupID) 
+    void Profiler::beginProfile( const String& profileName, uint32 groupID,
+                                 ProfileSampleFlags::ProfileSampleFlags flags )
     {
+#if OGRE_PROFILING == OGRE_PROFILING_INTERNAL_OFFLINE
+        mOfflineProfiler.profileBegin( profileName.c_str(), flags );
+#else
         // regardless of whether or not we are enabled, we need the application's root profile (ie the first profile started each frame)
         // we need this so bogus profiles don't show up when users enable profiling mid frame
         // so we check
@@ -238,7 +248,6 @@ namespace Ogre {
         // if the profiler is enabled
         if (!mEnabled) 
             return;
-
         // mask groups
         if ((groupID & mProfileMask) == 0)
             return;
@@ -287,10 +296,14 @@ namespace Ogre {
         // we do this at the very end of the function to get the most
         // accurate timing results
         mCurrent->currTime = mTimer->getMicroseconds();
+#endif
     }
     //-----------------------------------------------------------------------
     void Profiler::endProfile(const String& profileName, uint32 groupID) 
     {
+#if OGRE_PROFILING == OGRE_PROFILING_INTERNAL_OFFLINE
+        mOfflineProfiler.profileEnd();
+#else
         if(!mEnabled) 
         {
             // if the profiler received a request to be enabled or disabled
@@ -355,7 +368,7 @@ namespace Ogre {
         // get the end time of this profile
         // we do this as close the beginning of this function as possible
         // to get more accurate timing results
-        const ulong endTime = mTimer->getMicroseconds();
+        const uint64 endTime = mTimer->getMicroseconds();
 
         // empty string is reserved for designating an empty parent
         assert ((profileName != "") && ("Profile name can't be an empty string"));
@@ -366,7 +379,7 @@ namespace Ogre {
             return;
 
         // calculate the elapsed time of this profile
-        const ulong timeElapsed = endTime - mCurrent->currTime;
+        const uint64 timeElapsed = endTime - mCurrent->currTime;
 
         // update parent's accumulator if it isn't the root
         if (&mRoot != mCurrent->parent) 
@@ -399,6 +412,7 @@ namespace Ogre {
             // we display everything to the screen
             displayResults();
         }
+#endif
     }
     //-----------------------------------------------------------------------
     void Profiler::beginGPUEvent(const String& event)

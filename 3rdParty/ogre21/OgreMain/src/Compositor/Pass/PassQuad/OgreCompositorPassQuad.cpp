@@ -42,6 +42,9 @@ THE SOFTWARE.
 #include "OgreSceneManager.h"
 #include "OgreTechnique.h"
 
+#include "OgreRenderTexture.h"
+#include "OgreHardwarePixelBuffer.h"
+
 namespace Ogre
 {
     void CompositorPassQuadDef::addQuadTextureSource( size_t texUnitIdx, const String &textureName,
@@ -248,10 +251,10 @@ namespace Ogre
             if( mDefinition->mFrustumCorners == CompositorPassQuadDef::CAMERA_DIRECTION )
             {
                 Real invFarPlane = 1.0f / mCamera->getFarClipDistance();
-                cameraDirs[0] /= invFarPlane;
-                cameraDirs[1] /= invFarPlane;
-                cameraDirs[2] /= invFarPlane;
-                cameraDirs[3] /= invFarPlane;
+                cameraDirs[0] *= invFarPlane;
+                cameraDirs[1] *= invFarPlane;
+                cameraDirs[2] *= invFarPlane;
+                cameraDirs[3] *= invFarPlane;
             }
 
             mFsRect->setNormals( cameraDirs[0], cameraDirs[1], cameraDirs[2], cameraDirs[3] );
@@ -288,6 +291,14 @@ namespace Ogre
 
         if( listener )
             listener->passPosExecute( this );
+
+        if( mDefinition->mIsResolve )
+        {
+            TexturePtr tex = mParentNode->getDefinedTexture( mDefinition->mFsaaTextureName, 0 );
+
+            if( !tex.isNull() )
+                tex->getBuffer()->getRenderTarget()->setFsaaResolved();
+        }
 
         //Call endUpdate if we're the last pass in a row to use this RT
         if( mDefinition->mEndRtUpdate )

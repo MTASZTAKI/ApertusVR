@@ -449,6 +449,7 @@ namespace Ogre {
         NodeMemoryManager       mNodeMemoryManager[NUM_SCENE_MEMORY_MANAGER_TYPES];
         ObjectMemoryManager     mEntityMemoryManager[NUM_SCENE_MEMORY_MANAGER_TYPES];
         ObjectMemoryManager     mLightMemoryManager;
+        ObjectMemoryManager     mForwardPlusMemoryManager[NUM_SCENE_MEMORY_MANAGER_TYPES];
         SkeletonAnimManager     mSkeletonAnimationManager;
         NodeMemoryManager       mTagPointNodeMemoryManager;
         /// Filled and cleared every frame in HighLevelCull()
@@ -457,7 +458,10 @@ namespace Ogre {
         ObjectMemoryManagerVec  mEntitiesMemoryManagerCulledList;
         ObjectMemoryManagerVec  mEntitiesMemoryManagerUpdateList;
         ObjectMemoryManagerVec  mLightsMemoryManagerCulledList;
+        ObjectMemoryManagerVec  mForwardPlusMemoryManagerCullList;
         SkeletonAnimManagerVec  mSkeletonAnimManagerCulledList;
+
+        uint32                  mNumDecals;
 
         /** Minimum depth level at which mNodeMemoryManager[SCENE_STATIC] is dirty.
         @remarks
@@ -485,6 +489,11 @@ namespace Ogre {
 
         ForwardPlusBase *mForwardPlusSystem;
         ForwardPlusBase *mForwardPlusImpl;
+        bool mBuildLegacyLightList;
+
+        TexturePtr mDecalsDiffuseTex;
+        TexturePtr mDecalsNormalsTex;
+        TexturePtr mDecalsEmissiveTex;
 
         /// Updated every frame, has enough memory to hold all lights.
         /// The order is not deterministic, it depends on the number
@@ -787,8 +796,6 @@ namespace Ogre {
         bool mLateMaterialResolving;
 
         ColourValue mShadowColour;
-        v1::HardwareIndexBufferSharedPtr mShadowIndexBuffer;
-        size_t mShadowIndexBufferUsedSize;
         v1::Rectangle2D* mFullScreenQuad;
         Real mShadowDirLightExtrudeDist;
         IlluminationRenderStage mIlluminationStage;
@@ -913,7 +920,8 @@ namespace Ogre {
             NUM_REQUESTS
         };
 
-        size_t mNumWorkerThreads;
+        size_t  mNumWorkerThreads;
+        bool    mForceMainThread;
 
         CullFrustumRequest              mCurrentCullFrustumRequest;
         UpdateLodRequest                mUpdateLodRequest;
@@ -1317,6 +1325,8 @@ namespace Ogre {
             but on reverse.
         @param lightsPerCell
             The maximum number of lights a cell in the grid can hold.
+        @param decalsPerCell
+            Maximum number of decals a cell in the grid can hold. 0 to disable decals.
         @param minDistance
             Bias towards the camera for grid.
         @param maxDistance
@@ -1326,10 +1336,46 @@ namespace Ogre {
                            uint32 lightsPerCell, float minDistance, float maxDistance );
 
         void setForwardClustered( bool bEnable, uint32 width, uint32 height, uint32 numSlices,
-                                  uint32 lightsPerCell, float minDistance, float maxDistance );
+                                  uint32 lightsPerCell, uint32 decalsPerCell, float minDistance,
+                                  float maxDistance );
+
+        /** Enables or disables the legace 1.9 way of building light lists which can be 
+            used by HlmsLowLevel materials.
+            This light list can be turned on regardless of any Forward* mode but it 
+            consumes a lot of performance and is only used by HlmsLowLevel materials 
+            that need ligting.
+        */
+        void setBuildLegacyLightList( bool bEnable );
 
         ForwardPlusBase* getForwardPlus(void)                       { return mForwardPlusSystem; }
         ForwardPlusBase* _getActivePassForwardPlus(void)            { return mForwardPlusImpl; }
+
+        /** Sets the decal texture for diffuse. Should be a RGBA8 or similar colour format.
+        @remarks
+            If the emissive texture (see SceneManager::setDecalsEmissive) is the same as
+            the diffuse, Hlms can perform a performance optimization and use fewer texture
+            slots.
+
+            You still need to enable a Forward+ solution that supports decals, such as
+            SceneManager::setForwardClusted; otherwise decals won't be rendered.
+        @param tex
+            Null pointer to disable diffuse texture for all decals, globablly.
+        */
+        void setDecalsDiffuse( const TexturePtr &tex )              { mDecalsDiffuseTex = tex; }
+        /** Sets the decal texture normal maps. Should be RG8_SNORM or BC5_SNORM.
+
+            @see    SceneManager::setDecalsDiffuse
+        @param tex
+            Null pointer to disable normal map textures for all decals, globally.
+        */
+        void setDecalsNormals( const TexturePtr &tex )              { mDecalsNormalsTex = tex; }
+        /// See SceneManager::setDecalsDiffuse. Setting this texture to the same as diffuse
+        /// incurs in a performance optimization.
+        void setDecalsEmissive( const TexturePtr &tex )             { mDecalsEmissiveTex = tex; }
+
+        const TexturePtr& getDecalsDiffuse(void) const              { return mDecalsDiffuseTex; }
+        const TexturePtr& getDecalsNormals(void) const              { return mDecalsNormalsTex; }
+        const TexturePtr& getDecalsEmissive(void) const             { return mDecalsEmissiveTex; }
 
         /// For internal use.
         /// @see CompositorPassSceneDef::mEnableForwardPlus
@@ -1447,6 +1493,10 @@ namespace Ogre {
                 SceneManager::clearScene
         */
         virtual void destroyAllEntities(void);
+
+        virtual Decal* createDecal( SceneMemoryMgrTypes sceneType = SCENE_DYNAMIC );
+        virtual void destroyDecal( Decal *decal );
+        virtual void destroyAllDecals(void);
 
         /** Creates a 2D rectangle that can be displayed for screen space effects or
             showing a basic GUI.
@@ -1930,6 +1980,10 @@ namespace Ogre {
         */
         virtual void _applySceneAnimations(void);
 
+        /// Returns true if collection code was run. When false, you cannot
+        /// trust the contents of _getTmpVisibleObjectsList to be empty
+        bool _collectForwardPlusObjects( const Camera *camera );
+
         /** Performs the frustum culling that will later be needed by _renderPhase02
             @remarks
                 @See CompositorShadowNode to understand why rendering is split in two phases
@@ -1988,6 +2042,24 @@ namespace Ogre {
 
         void _setViewport( Viewport *vp )                               { setViewport( vp ); }
         void _setCameraInProgress( Camera *camera )                     { mCameraInProgress = camera; }
+
+        /** Notifies the scene manager that hardware resources were lost
+            @remarks
+                Called automatically by RenderSystem if hardware resources
+                were lost and can not be restored using some internal mechanism.
+                Among affected resources are manual meshes without loaders, 
+                manual textures without loaders, ManualObjects, etc.
+        */
+        virtual void _releaseManualHardwareResources();
+
+        /** Notifies the scene manager that hardware resources should be restored
+            @remarks
+                Called automatically by RenderSystem if hardware resources
+                were lost and can not be restored using some internal mechanism.
+                Among affected resources are manual meshes without loaders, 
+                manual textures without loaders, ManualObjects, etc.
+        */
+        virtual void _restoreManualHardwareResources();
 
         /** Enables / disables a 'sky plane' i.e. a plane at constant
             distance from the camera representing the sky.
@@ -3164,6 +3236,8 @@ namespace Ogre {
             requests when a sync is performed
         */
         unsigned long _updateWorkerThread( ThreadHandle *threadHandle );
+    protected:
+        inline bool updateWorkerThreadImpl( size_t threadIdx );
     };
 
     /** Default implementation of IntersectionSceneQuery. */

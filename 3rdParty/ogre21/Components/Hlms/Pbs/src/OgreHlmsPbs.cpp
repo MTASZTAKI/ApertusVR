@@ -64,6 +64,7 @@ THE SOFTWARE.
 #endif
 
 #include "OgreLogManager.h"
+#include "OgreProfiler.h"
 
 namespace Ogre
 {
@@ -227,6 +228,10 @@ namespace Ogre
         mHasPlanarReflections( false ),
         mLastBoundPlanarReflection( 0u ),
 #endif
+        mAreaLightMasksSamplerblock( 0 ),
+        mUsingAreaLightMasks( false ),
+        mUsingLtcMatrix( false ),
+        mDecalsSamplerblock( 0 ),
         mLastBoundPool( 0 ),
         mLastTextureHash( 0 ),
 #if !OGRE_NO_FINE_LIGHT_MASK_GRANULARITY
@@ -316,6 +321,33 @@ namespace Ogre
                 mPlanarReflectionsSamplerblock = mHlmsManager->getSamplerblock( samplerblock );
             }
 #endif
+            if( !mAreaLightMasksSamplerblock )
+            {
+                samplerblock.mMinFilter     = FO_LINEAR;
+                samplerblock.mMagFilter     = FO_LINEAR;
+                samplerblock.mMipFilter     = FO_LINEAR;
+                samplerblock.mCompareFunction   = NUM_COMPARE_FUNCTIONS;
+
+                samplerblock.mU             = TAM_CLAMP;
+                samplerblock.mV             = TAM_CLAMP;
+                samplerblock.mW             = TAM_CLAMP;
+
+                mAreaLightMasksSamplerblock = mHlmsManager->getSamplerblock( samplerblock );
+            }
+
+            if( !mDecalsSamplerblock )
+            {
+                samplerblock.mMinFilter     = FO_LINEAR;
+                samplerblock.mMagFilter     = FO_LINEAR;
+                samplerblock.mMipFilter     = FO_LINEAR;
+                samplerblock.mCompareFunction   = NUM_COMPARE_FUNCTIONS;
+
+                samplerblock.mU             = TAM_CLAMP;
+                samplerblock.mV             = TAM_CLAMP;
+                samplerblock.mW             = TAM_CLAMP;
+
+                mDecalsSamplerblock = mHlmsManager->getSamplerblock( samplerblock );
+            }
         }
     }
     //-----------------------------------------------------------------------------------
@@ -324,6 +356,8 @@ namespace Ogre
                                                             uint32 finalHash,
                                                             const QueuedRenderable &queuedRenderable )
     {
+        OgreProfileExhaustive( "HlmsPbs::createShaderCacheEntry" );
+
         const HlmsCache *retVal = Hlms::createShaderCacheEntry( renderableHash, passCache, finalHash,
                                                                 queuedRenderable );
 
@@ -363,6 +397,22 @@ namespace Ogre
 
             if( mIrradianceVolume && getProperty( HlmsBaseProp::ShadowCaster ) == 0 )
                 psParams->setNamedConstant( "irradianceVolume", texUnit++ );
+
+            if( mAreaLightMasks && getProperty( HlmsBaseProp::LightsAreaTexMask ) > 0 )
+                psParams->setNamedConstant( "areaLightMasks", texUnit++ );
+
+            if( mLtcMatrixTexture && getProperty( HlmsBaseProp::LightsAreaLtc ) > 0 )
+                psParams->setNamedConstant( "ltcMatrix", texUnit++ );
+
+            if( mGridBuffer && getProperty( HlmsBaseProp::EnableDecals ) )
+            {
+                if( mDecalsTextures[0] )
+                    psParams->setNamedConstant( "decalsDiffuseTex", texUnit++ );
+                if( mDecalsTextures[1] )
+                    psParams->setNamedConstant( "decalsNormalsTex", texUnit++ );
+                if( mDecalsTextures[2] && mDecalsTextures[0] != mDecalsTextures[2] )
+                    psParams->setNamedConstant( "decalsEmissiveTex", texUnit++ );
+            }
 
             if( !mPreparedPass.shadowMaps.empty() )
             {
@@ -428,6 +478,11 @@ namespace Ogre
         GpuProgramParametersSharedPtr vsParams = retVal->pso.vertexShader->getDefaultParameters();
         vsParams->setNamedConstant( "worldMatBuf", 0 );
 
+        if( queuedRenderable.renderable->getNumPoses() > 0 )
+        {
+            vsParams->setNamedConstant( "poseBuf", 4 );
+        }
+        
         mListener->shaderCacheEntryCreated( mShaderProfile, retVal, passCache,
                                             mSetProperties, queuedRenderable );
 
@@ -607,19 +662,14 @@ namespace Ogre
             ++numNormalWeights;
         }
 
+        for( size_t i=0; i<4; ++i )
         {
-            size_t validDetailMaps = 0;
-            for( size_t i=0; i<4; ++i )
+            if( !datablock->getTexture( PBSM_DETAIL0_NM + i ).isNull() )
             {
-                if( !datablock->getTexture( PBSM_DETAIL0_NM + i ).isNull() )
+                if( datablock->getDetailNormalWeight( i ) != 1.0f )
                 {
-                    if( datablock->getDetailNormalWeight( i ) != 1.0f )
-                    {
-                        setProperty( *PbsProperty::DetailNormalWeights[validDetailMaps], 1 );
-                        ++numNormalWeights;
-                    }
-
-                    ++validDetailMaps;
+                    setProperty( *PbsProperty::DetailNormalWeights[i], 1 );
+                    ++numNormalWeights;
                 }
             }
         }
@@ -654,22 +704,23 @@ namespace Ogre
             }
         }
 
-        if( datablock->hasEmissive() )
+        if( datablock->_hasEmissive() )
         {
-            if( datablock->getEmissive() != Vector3::ZERO )
+            if( datablock->hasEmissiveConstant() )
                 setProperty( PbsProperty::EmissiveConstant, 1 );
         }
 
         bool usesNormalMap = !datablock->getTexture( PBSM_NORMAL ).isNull();
         for( size_t i=PBSM_DETAIL0_NM; i<=PBSM_DETAIL3_NM; ++i )
             usesNormalMap |= !datablock->getTexture( i ).isNull();
-        setProperty( PbsProperty::NormalMap, usesNormalMap );
 
         /*setProperty( HlmsBaseProp::, !datablock->getTexture( PBSM_DETAIL0 ).isNull() );
         setProperty( HlmsBaseProp::DiffuseMap, !datablock->getTexture( PBSM_DETAIL1 ).isNull() );*/
         bool normalMapCanBeSupported = (getProperty( HlmsBaseProp::Normal ) &&
                                         getProperty( HlmsBaseProp::Tangent )) ||
                                         getProperty( HlmsBaseProp::QTangent );
+
+        setProperty( PbsProperty::NormalMap, usesNormalMap );
 
         if( !normalMapCanBeSupported && usesNormalMap )
         {
@@ -724,7 +775,11 @@ namespace Ogre
             }
             else if( itor->keyName != PbsProperty::HwGammaRead &&
                      itor->keyName != PbsProperty::UvDiffuse &&
+                     itor->keyName != HlmsPsoProp::InputLayoutId &&
                      itor->keyName != HlmsBaseProp::Skeleton &&
+                     itor->keyName != HlmsBaseProp::Pose &&
+                     itor->keyName != HlmsBaseProp::PoseHalfPrecision &&
+                     itor->keyName != HlmsBaseProp::PoseNormals &&
                      itor->keyName != HlmsBaseProp::BonesPerVertex &&
                      itor->keyName != HlmsBaseProp::DualParaboloidMapping &&
                      itor->keyName != HlmsBaseProp::AlphaTest &&
@@ -779,6 +834,19 @@ namespace Ogre
             setProperty( PbsProperty::MaterialsPerBuffer, static_cast<int>( mSlotsPerPool ) );
     }
     //-----------------------------------------------------------------------------------
+    void HlmsPbs::notifyPropertiesMergedPreGenerationStep(void)
+    {
+        if( getProperty( HlmsBaseProp::DecalsNormals ) )
+        {
+            //If decals normals are enabled, we need to generate the TBN matrix.
+            bool normalMapCanBeSupported = (getProperty( HlmsBaseProp::Normal ) &&
+                                            getProperty( HlmsBaseProp::Tangent )) ||
+                                            getProperty( HlmsBaseProp::QTangent );
+
+            setProperty( PbsProperty::NormalMap, normalMapCanBeSupported );
+        }
+    }
+    //-----------------------------------------------------------------------------------
     bool HlmsPbs::requiredPropertyByAlphaTest( IdString keyName )
     {
         bool retVal =
@@ -804,9 +872,16 @@ namespace Ogre
         return retVal;
     }
     //-----------------------------------------------------------------------------------
+    static bool SortByTextureLightMaskIdx( const Light *_a, const Light *_b )
+    {
+        return _a->mTextureLightMaskIdx < _b->mTextureLightMaskIdx;
+    }
+    //-----------------------------------------------------------------------------------
     HlmsCache HlmsPbs::preparePassHash( const CompositorShadowNode *shadowNode, bool casterPass,
                                         bool dualParaboloid, SceneManager *sceneManager )
     {
+        OgreProfileExhaustive( "HlmsPbs::preparePassHash" );
+
         mSetProperties.clear();
 
         if( shadowNode && mShadowFilter == ExponentialShadowMaps )
@@ -928,6 +1003,14 @@ namespace Ogre
             if( mIrradianceVolume )
                 setProperty( PbsProperty::IrradianceVolumes, 1 );
 
+            if( mAreaLightMasks )
+            {
+                const size_t numComponents =
+                        PixelUtil::getComponentCount( mAreaLightMasks->getFormat() );
+                if( numComponents > 2u )
+                    setProperty( HlmsBaseProp::LightsAreaTexColour, 1 );
+            }
+
 #ifdef OGRE_BUILD_COMPONENT_PLANAR_REFLECTIONS
             mHasPlanarReflections = false;
             mLastBoundPlanarReflection = 0u;
@@ -980,6 +1063,10 @@ namespace Ogre
         int32 numDirectionalLights  = getProperty( HlmsBaseProp::LightsDirNonCaster );
         int32 numShadowMapLights    = getProperty( HlmsBaseProp::NumShadowMapLights );
         int32 numPssmSplits         = getProperty( HlmsBaseProp::PssmSplits );
+        int32 numAreaApproxLights   = getProperty( HlmsBaseProp::LightsAreaApprox );
+        int32 numAreaLtcLights      = getProperty( HlmsBaseProp::LightsAreaLtc );
+        const size_t realNumAreaApproxLights = mRealNumAreaApproxLights;
+        const size_t realNumAreaLtcLights = mRealNumAreaLtcLights;
 
         bool isPssmBlend = getProperty( HlmsBaseProp::PssmBlend ) != 0;
         bool isPssmFade = getProperty( HlmsBaseProp::PssmFade ) != 0;
@@ -992,6 +1079,10 @@ namespace Ogre
         mGridBuffer             = 0;
         mGlobalLightListBuffer  = 0;
 
+        mDecalsTextures[0].setNull();
+        mDecalsTextures[1].setNull();
+        mDecalsTextures[2].setNull();
+
         if( !casterPass )
         {
             ForwardPlusBase *forwardPlus = sceneManager->_getActivePassForwardPlus();
@@ -1000,6 +1091,17 @@ namespace Ogre
                 mapSize += forwardPlus->getConstBufferSize();
                 mGridBuffer             = forwardPlus->getGridBuffer( camera );
                 mGlobalLightListBuffer  = forwardPlus->getGlobalLightListBuffer( camera );
+
+                if( forwardPlus->getDecalsEnabled() )
+                {
+                    const PrePassMode prePassMode = sceneManager->getCurrentPrePassMode();
+                    if( prePassMode != PrePassCreate )
+                        mDecalsTextures[0] = sceneManager->getDecalsDiffuse();
+                    if( prePassMode != PrePassUse )
+                        mDecalsTextures[1] = sceneManager->getDecalsNormals();
+                    if( prePassMode != PrePassCreate )
+                        mDecalsTextures[2] = sceneManager->getDecalsEmissive();
+                }
             }
 
             if( mParallaxCorrectedCubemap )
@@ -1066,6 +1168,9 @@ namespace Ogre
                 //Three variables * 4 (padded vec3) * 4 (bytes) * numDirectionalLights
                 mapSize += ( 3 * 4 * 4 ) * numDirectionalLights;
             }
+
+            mapSize += ( 7 * 4 * 4 ) * numAreaApproxLights;
+            mapSize += ( 7 * 4 * 4 ) * numAreaLtcLights;
         }
         else
         {
@@ -1310,7 +1415,8 @@ namespace Ogre
                 *passBufferPtr++ = *shadowNode->getPssmFade(0);
             }
 
-            passBufferPtr += alignToNextMultiple( numPssmSplits + numPssmBlendsAndFade, 4 ) - ( numPssmSplits + numPssmBlendsAndFade );
+            passBufferPtr += alignToNextMultiple( numPssmSplits + numPssmBlendsAndFade, 4 ) -
+                             ( numPssmSplits + numPssmBlendsAndFade );
 
             if( numShadowMapLights > 0 )
             {
@@ -1389,21 +1495,35 @@ namespace Ogre
                     *passBufferPtr++ = attenQuadratic;
                     ++passBufferPtr;
 
-                    //vec3 lights[numLights].spotDirection;
+                    const Vector2 rectSize = light->getDerivedRectSize();
+
+                    //vec4 lights[numLights].spotDirection;
                     Vector3 spotDir = viewMatrix3 * light->getDerivedDirection();
                     *passBufferPtr++ = spotDir.x;
                     *passBufferPtr++ = spotDir.y;
                     *passBufferPtr++ = spotDir.z;
-                    ++passBufferPtr;
+                    *passBufferPtr++ = 1.0f / rectSize.x;
 
-                    //vec3 lights[numLights].spotParams;
-                    Radian innerAngle = light->getSpotlightInnerAngle();
-                    Radian outerAngle = light->getSpotlightOuterAngle();
-                    *passBufferPtr++ = 1.0f / ( cosf( innerAngle.valueRadians() * 0.5f ) -
-                                             cosf( outerAngle.valueRadians() * 0.5f ) );
-                    *passBufferPtr++ = cosf( outerAngle.valueRadians() * 0.5f );
-                    *passBufferPtr++ = light->getSpotlightFalloff();
-                    ++passBufferPtr;
+                    //vec4 lights[numLights].spotParams;
+                    if( light->getType() != Light::LT_AREA_APPROX )
+                    {
+                        Radian innerAngle = light->getSpotlightInnerAngle();
+                        Radian outerAngle = light->getSpotlightOuterAngle();
+                        *passBufferPtr++ = 1.0f / ( cosf( innerAngle.valueRadians() * 0.5f ) -
+                                                    cosf( outerAngle.valueRadians() * 0.5f ) );
+                        *passBufferPtr++ = cosf( outerAngle.valueRadians() * 0.5f );
+                        *passBufferPtr++ = light->getSpotlightFalloff();
+                    }
+                    else
+                    {
+                        Quaternion qRot = light->getParentNode()->_getDerivedOrientation();
+                        Vector3 xAxis = viewMatrix3 * qRot.xAxis();
+                        *passBufferPtr++ = xAxis.x;
+                        *passBufferPtr++ = xAxis.y;
+                        *passBufferPtr++ = xAxis.z;
+                    }
+                    *passBufferPtr++ = 1.0f / rectSize.y;
+
                 }
             }
             else
@@ -1444,6 +1564,219 @@ namespace Ogre
                     ++passBufferPtr;
                 }
             }
+
+            float areaLightNumMipmaps = 0.0f;
+            float areaLightNumMipmapsSpecFactor = 0.0f;
+
+            if( mAreaLightMasks )
+            {
+                //Roughness minimum value is 0.02, so we need to map
+                //[0.02; 1.0] -> [0; 1] in the pixel shader that's why we divide by 0.98.
+                //The 2.0 is just arbitrary (it looks good)
+                areaLightNumMipmaps = mAreaLightMasks->getNumMipmaps();
+                areaLightNumMipmapsSpecFactor = areaLightNumMipmaps * 2.0f / 0.98f;
+            }
+
+            //Send area lights. We need them sorted so textured ones
+            //come first, as that what our shader expects
+            mAreaLights.reserve( numAreaApproxLights );
+            mAreaLights.clear();
+            const LightListInfo &globalLightList = sceneManager->getGlobalLightList();
+            size_t areaLightNumber = 0;
+            for( size_t idx = mAreaLightsGlobalLightListStart;
+                 idx<globalLightList.lights.size() && areaLightNumber < realNumAreaApproxLights; ++idx )
+            {                
+                if( globalLightList.lights[idx]->getType() == Light::LT_AREA_APPROX )
+                {
+                    mAreaLights.push_back( globalLightList.lights[idx] );
+                    ++areaLightNumber;
+                }
+            }
+
+            std::sort( mAreaLights.begin(), mAreaLights.end(), SortByTextureLightMaskIdx );
+
+            for( size_t i=0; i<realNumAreaApproxLights; ++i )
+            {
+                Light const *light = mAreaLights[i];
+
+                Vector4 lightPos4 = light->getAs4DVector();
+                Vector3 lightPos = viewMatrix * Vector3( lightPos4.x, lightPos4.y, lightPos4.z );
+
+                //vec3 areaApproxLights[numLights].position
+                *passBufferPtr++ = lightPos.x;
+                *passBufferPtr++ = lightPos.y;
+                *passBufferPtr++ = lightPos.z;
+#if !OGRE_NO_FINE_LIGHT_MASK_GRANULARITY
+                *reinterpret_cast<uint32 * RESTRICT_ALIAS>( passBufferPtr ) = light->getLightMask();
+#endif
+                ++passBufferPtr;
+
+                //vec3 areaApproxLights[numLights].diffuse
+                ColourValue colour = light->getDiffuseColour() *
+                                     light->getPowerScale();
+                *passBufferPtr++ = colour.r;
+                *passBufferPtr++ = colour.g;
+                *passBufferPtr++ = colour.b;
+                *passBufferPtr++ = areaLightNumMipmaps *
+                                   (light->mTexLightMaskDiffuseMipStart / 65535.0f);
+
+                //vec3 areaApproxLights[numLights].specular
+                colour = light->getSpecularColour() * light->getPowerScale();
+                *passBufferPtr++ = colour.r;
+                *passBufferPtr++ = colour.g;
+                *passBufferPtr++ = colour.b;
+                *passBufferPtr++ = areaLightNumMipmapsSpecFactor;
+
+                //vec4 areaApproxLights[numLights].attenuation;
+                Real attenRange     = light->getAttenuationRange();
+                Real attenLinear    = light->getAttenuationLinear();
+                Real attenQuadratic = light->getAttenuationQuadric();
+                *passBufferPtr++ = attenRange;
+                *passBufferPtr++ = attenLinear;
+                *passBufferPtr++ = attenQuadratic;
+                *passBufferPtr++ = static_cast<float>( light->mTextureLightMaskIdx );
+
+                const Vector2 rectSize = light->getDerivedRectSize();
+
+                //vec4 areaApproxLights[numLights].direction;
+                Vector3 areaDir = viewMatrix3 * light->getDerivedDirection();
+                *passBufferPtr++ = areaDir.x;
+                *passBufferPtr++ = areaDir.y;
+                *passBufferPtr++ = areaDir.z;
+                *passBufferPtr++ = 1.0f / rectSize.x;
+
+                //vec4 areaApproxLights[numLights].tangent;
+                Quaternion qRot = light->getParentNode()->_getDerivedOrientation();
+                Vector3 xAxis = viewMatrix3 * qRot.xAxis();
+                *passBufferPtr++ = xAxis.x;
+                *passBufferPtr++ = xAxis.y;
+                *passBufferPtr++ = xAxis.z;
+                *passBufferPtr++ = 1.0f / rectSize.y;
+
+                //vec4 doubleSided;
+                *passBufferPtr++ = light->getDoubleSided() ? 1.0f : 0.0f;
+                *passBufferPtr++ = 0.0f;
+                *passBufferPtr++ = 0.0f;
+                *passBufferPtr++ = 0.0f;
+            }
+
+            for( int32 i=realNumAreaApproxLights; i<numAreaApproxLights; ++i )
+            {
+                //vec3 areaApproxLights[numLights].position
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+
+                //vec3 areaApproxLights[numLights].diffuse
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 1000.0f;
+
+                //vec3 areaApproxLights[numLights].specular
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 1000.0f;
+
+                //vec4 areaApproxLights[numLights].attenuation;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 1;
+                *passBufferPtr++ = 1;
+                *passBufferPtr++ = 0;
+
+                //vec4 areaApproxLights[numLights].direction;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 1.0f;
+
+                //vec4 areaApproxLights[numLights].tangent;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 0;
+                *passBufferPtr++ = 1.0f;
+
+                //vec4 doubleSided;
+                *passBufferPtr++ = 0.0f;
+                *passBufferPtr++ = 0.0f;
+                *passBufferPtr++ = 0.0f;
+                *passBufferPtr++ = 0.0f;
+            }
+
+            mAreaLights.reserve( numAreaLtcLights );
+            mAreaLights.clear();
+            areaLightNumber = 0;
+            for( size_t idx = mAreaLightsGlobalLightListStart;
+                 idx<globalLightList.lights.size() && areaLightNumber < realNumAreaLtcLights; ++idx )
+            {
+                if( globalLightList.lights[idx]->getType() == Light::LT_AREA_LTC )
+                {
+                    mAreaLights.push_back( globalLightList.lights[idx] );
+                    ++areaLightNumber;
+                }
+            }
+
+            //std::sort( mAreaLights.begin(), mAreaLights.end(), SortByTextureLightMaskIdx );
+
+            for( size_t i=0; i<realNumAreaLtcLights; ++i )
+            {
+                Light const *light = mAreaLights[i];
+
+                Vector4 lightPos4 = light->getAs4DVector();
+                Vector3 lightPos = viewMatrix * Vector3( lightPos4.x, lightPos4.y, lightPos4.z );
+
+                //vec3 areaLtcLights[numLights].position
+                *passBufferPtr++ = lightPos.x;
+                *passBufferPtr++ = lightPos.y;
+                *passBufferPtr++ = lightPos.z;
+#if !OGRE_NO_FINE_LIGHT_MASK_GRANULARITY
+                *reinterpret_cast<uint32 * RESTRICT_ALIAS>( passBufferPtr ) = light->getLightMask();
+#endif
+                ++passBufferPtr;
+
+                const Real attenRange   = light->getAttenuationRange();
+
+                //vec3 areaLtcLights[numLights].diffuse
+                ColourValue colour = light->getDiffuseColour() *
+                                     light->getPowerScale();
+                *passBufferPtr++ = colour.r;
+                *passBufferPtr++ = colour.g;
+                *passBufferPtr++ = colour.b;
+                *passBufferPtr++ = attenRange;
+
+                //vec3 areaLtcLights[numLights].specular
+                colour = light->getSpecularColour() * light->getPowerScale();
+                *passBufferPtr++ = colour.r;
+                *passBufferPtr++ = colour.g;
+                *passBufferPtr++ = colour.b;
+                *passBufferPtr++ = light->getDoubleSided() ? 1.0f : 0.0f;
+
+                const Vector2 rectSize = light->getDerivedRectSize() * 0.5f;
+                Quaternion qRot = light->getParentNode()->_getDerivedOrientation();
+                Vector3 xAxis = (viewMatrix3 * qRot.xAxis()) * rectSize.x;
+                Vector3 yAxis = (viewMatrix3 * qRot.yAxis()) * rectSize.y;
+
+                Vector3 rectPoints[4];
+                //vec4 areaLtcLights[numLights].points[4];
+                rectPoints[0] = lightPos - xAxis - yAxis;
+                rectPoints[1] = lightPos + xAxis - yAxis;
+                rectPoints[2] = lightPos + xAxis + yAxis;
+                rectPoints[3] = lightPos - xAxis + yAxis;
+
+                for( size_t j=0; j<4u; ++j )
+                {
+                    *passBufferPtr++ = rectPoints[j].x;
+                    *passBufferPtr++ = rectPoints[j].y;
+                    *passBufferPtr++ = rectPoints[j].z;
+                    *passBufferPtr++ = 1.0f;
+                }
+            }
+
+            memset( passBufferPtr, 0,
+                    (numAreaLtcLights - realNumAreaLtcLights) * sizeof(float) * 4u * 7u );
+            passBufferPtr += (numAreaLtcLights - realNumAreaLtcLights) * 4u * 7u;
 
             if( shadowNode )
             {
@@ -1546,6 +1879,34 @@ namespace Ogre
         if( mHasPlanarReflections )
             mTexUnitSlotStart += 1;
 #endif
+        if( mAreaLightMasks && getProperty( HlmsBaseProp::LightsAreaTexMask ) > 0 )
+        {
+            mTexUnitSlotStart += 1;
+            mUsingAreaLightMasks = true;
+        }
+        else
+        {
+            mUsingAreaLightMasks = false;
+        }
+
+        if( mLtcMatrixTexture && getProperty( HlmsBaseProp::LightsAreaLtc ) > 0 )
+        {
+            mTexUnitSlotStart += 1;
+            mUsingLtcMatrix = true;
+        }
+        else
+        {
+            mUsingLtcMatrix = false;
+        }
+
+        for( size_t i=0; i<3u; ++i )
+        {
+            if( mDecalsTextures[i] &&
+                (i != 2u || mDecalsTextures[2] != mDecalsTextures[0]) )
+            {
+                ++mTexUnitSlotStart;
+            }
+        }
 
         uploadDirtyDatablocks();
 
@@ -1645,6 +2006,34 @@ namespace Ogre
                     ++texUnit;
                 }
 
+                if( mUsingAreaLightMasks )
+                {
+                    *commandBuffer->addCommand<CbTexture>() = CbTexture( texUnit, true,
+                                                                         mAreaLightMasks.get(),
+                                                                         mAreaLightMasksSamplerblock );
+                    ++texUnit;
+                }
+
+                if( mUsingLtcMatrix )
+                {
+                    *commandBuffer->addCommand<CbTexture>() = CbTexture( texUnit, true,
+                                                                         mLtcMatrixTexture.get(),
+                                                                         mAreaLightMasksSamplerblock );
+                    ++texUnit;
+                }
+
+                for( size_t i=0; i<3u; ++i )
+                {
+                    if( mDecalsTextures[i] &&
+                        (i != 2u || mDecalsTextures[2] != mDecalsTextures[0]) )
+                    {
+                        *commandBuffer->addCommand<CbTexture>() = CbTexture( texUnit, true,
+                                                                             mDecalsTextures[i].get(),
+                                                                             mDecalsSamplerblock );
+                        ++texUnit;
+                    }
+                }
+
                 //We changed HlmsType, rebind the shared textures.
                 FastArray<Texture*>::const_iterator itor = mPreparedPass.shadowMaps.begin();
                 FastArray<Texture*>::const_iterator end  = mPreparedPass.shadowMaps.end();
@@ -1719,6 +2108,8 @@ namespace Ogre
         float * RESTRICT_ALIAS currentMappedTexBuffer       = mCurrentMappedTexBuffer;
 
         bool hasSkeletonAnimation = queuedRenderable.renderable->hasSkeletonAnimation();
+        uint32 numPoses = queuedRenderable.renderable->getNumPoses();
+        uint32 poseWeightsNumFloats = ((numPoses >> 2u) + std::min(numPoses % 4u, 1u)) * 4u;
 
         const Matrix4 &worldMat = queuedRenderable.movableObject->_getParentNodeFullTransform();
 
@@ -1726,10 +2117,10 @@ namespace Ogre
         //                          ---- VERTEX SHADER ----
         //---------------------------------------------------------------------------
 
-        if( !hasSkeletonAnimation )
+        if( !hasSkeletonAnimation && numPoses == 0 )
         {
             //We need to correct currentMappedConstBuffer to point to the right texture buffer's
-            //offset, which may not be in sync if the previous draw had skeletal animation.
+            //offset, which may not be in sync if the previous draw had skeletal and/or pose animation.
             const size_t currentConstOffset = (currentMappedTexBuffer - mStartMappedTexBuffer) >>
                                                 (2 + !casterPass);
             currentMappedConstBuffer =  currentConstOffset + mStartMappedConstBuffer;
@@ -1796,99 +2187,199 @@ namespace Ogre
             bool exceedsConstBuffer = (size_t)((currentMappedConstBuffer - mStartMappedConstBuffer) + 4)
                                         > mCurrentConstBufferSize;
 
-            if( isV1 )
+            if( hasSkeletonAnimation )
             {
-                uint16 numWorldTransforms = queuedRenderable.renderable->getNumWorldTransforms();
-                assert( numWorldTransforms <= 256u );
-
-                const size_t minimumTexBufferSize = 12 * numWorldTransforms;
-                bool exceedsTexBuffer = (currentMappedTexBuffer - mStartMappedTexBuffer) +
-                        minimumTexBufferSize >= mCurrentTexBufferSize;
-
-                if( exceedsConstBuffer || exceedsTexBuffer )
+                if( isV1 )
                 {
-                    currentMappedConstBuffer = mapNextConstBuffer( commandBuffer );
+                    uint16 numWorldTransforms = queuedRenderable.renderable->getNumWorldTransforms();
+                    assert( numWorldTransforms <= 256u );
 
-                    if( exceedsTexBuffer )
-                        mapNextTexBuffer( commandBuffer, minimumTexBufferSize * sizeof(float) );
-                    else
-                        rebindTexBuffer( commandBuffer, true, minimumTexBufferSize * sizeof(float) );
+                    const size_t poseDataSize = numPoses > 0u ? (4u + poseWeightsNumFloats) : 0u;
+                    const size_t minimumTexBufferSize = 12 * numWorldTransforms + poseDataSize;
+                    bool exceedsTexBuffer = (currentMappedTexBuffer - mStartMappedTexBuffer) +
+                            minimumTexBufferSize >= mCurrentTexBufferSize;
 
-                    currentMappedTexBuffer = mCurrentMappedTexBuffer;
+                    if( exceedsConstBuffer || exceedsTexBuffer )
+                    {
+                        currentMappedConstBuffer = mapNextConstBuffer( commandBuffer );
+
+                        if( exceedsTexBuffer )
+                            mapNextTexBuffer( commandBuffer, minimumTexBufferSize * sizeof(float) );
+                        else
+                            rebindTexBuffer( commandBuffer, true, minimumTexBufferSize * sizeof(float) );
+
+                        currentMappedTexBuffer = mCurrentMappedTexBuffer;
+                    }
+
+                    //uint worldMaterialIdx[]
+                    size_t distToWorldMatStart = mCurrentMappedTexBuffer - mStartMappedTexBuffer;
+                    distToWorldMatStart >>= 2;
+                    *currentMappedConstBuffer = (distToWorldMatStart << 9 ) |
+                            (datablock->getAssignedSlot() & 0x1FF);
+
+                    //vec4 worldMat[][3]
+                    //TODO: Don't rely on a virtual function + make a direct 4x3 copy
+                    Matrix4 tmp[256];
+                    queuedRenderable.renderable->getWorldTransforms( tmp );
+                    for( size_t i=0; i<numWorldTransforms; ++i )
+                    {
+    #if !OGRE_DOUBLE_PRECISION
+                        memcpy( currentMappedTexBuffer, &tmp[ i ], 12 * sizeof( float ) );
+                        currentMappedTexBuffer += 12;
+    #else
+                        for( int y = 0; y < 3; ++y )
+                        {
+                            for( int x = 0; x < 4; ++x )
+                            {
+                                *currentMappedTexBuffer++ = tmp[ i ][ y ][ x ];
+                            }
+                        }
+    #endif
+                    }
                 }
-
-                //uint worldMaterialIdx[]
-                size_t distToWorldMatStart = mCurrentMappedTexBuffer - mStartMappedTexBuffer;
-                distToWorldMatStart >>= 2;
-                *currentMappedConstBuffer = (distToWorldMatStart << 9 ) |
-                        (datablock->getAssignedSlot() & 0x1FF);
-
-                //vec4 worldMat[][3]
-                //TODO: Don't rely on a virtual function + make a direct 4x3 copy
-                Matrix4 tmp[256];
-                queuedRenderable.renderable->getWorldTransforms( tmp );
-                for( size_t i=0; i<numWorldTransforms; ++i )
+                else
                 {
-#if !OGRE_DOUBLE_PRECISION
-                    memcpy( currentMappedTexBuffer, &tmp[ i ], 12 * sizeof( float ) );
+                    SkeletonInstance *skeleton = queuedRenderable.movableObject->getSkeletonInstance();
+
+    #if OGRE_DEBUG_MODE
+                    assert( dynamic_cast<const RenderableAnimated*>( queuedRenderable.renderable ) );
+    #endif
+
+                    const RenderableAnimated *renderableAnimated = static_cast<const RenderableAnimated*>(
+                                                                            queuedRenderable.renderable );
+
+                    const RenderableAnimated::IndexMap *indexMap = renderableAnimated->getBlendIndexToBoneIndexMap();
+
+                    const size_t poseDataSize = numPoses > 0u ? (4u + poseWeightsNumFloats) : 0u;
+                    const size_t minimumTexBufferSize = 12 * indexMap->size() + poseDataSize;
+                    bool exceedsTexBuffer = (currentMappedTexBuffer - mStartMappedTexBuffer) +
+                                                minimumTexBufferSize >= mCurrentTexBufferSize;
+
+                    if( exceedsConstBuffer || exceedsTexBuffer )
+                    {
+                        currentMappedConstBuffer = mapNextConstBuffer( commandBuffer );
+
+                        if( exceedsTexBuffer )
+                            mapNextTexBuffer( commandBuffer, minimumTexBufferSize * sizeof(float) );
+                        else
+                            rebindTexBuffer( commandBuffer, true, minimumTexBufferSize * sizeof(float) );
+
+                        currentMappedTexBuffer = mCurrentMappedTexBuffer;
+                    }
+
+                    //uint worldMaterialIdx[]
+                    size_t distToWorldMatStart = mCurrentMappedTexBuffer - mStartMappedTexBuffer;
+                    distToWorldMatStart >>= 2;
+                    *currentMappedConstBuffer = (distToWorldMatStart << 9 ) |
+                            (datablock->getAssignedSlot() & 0x1FF);
+
+                    RenderableAnimated::IndexMap::const_iterator itBone = indexMap->begin();
+                    RenderableAnimated::IndexMap::const_iterator enBone = indexMap->end();
+
+                    while( itBone != enBone )
+                    {
+                        const SimpleMatrixAf4x3 &mat4x3 = skeleton->_getBoneFullTransform( *itBone );
+                        mat4x3.streamTo4x3( currentMappedTexBuffer );
+                        currentMappedTexBuffer += 12;
+
+                        ++itBone;
+                    }
+                }
+            }
+
+            if( numPoses > 0 )
+            {
+                if( !hasSkeletonAnimation )
+                {
+                    // If not combined with skeleton animation, pose animations are gonna need 1 vec4's
+                    // for pose data (base vertex, num vertices), enough vec4's to accomodate
+                    // the weight of each pose, 3 vec4's for worldMat, and 4 vec4's for worldView. 
+                    const size_t minimumTexBufferSize = 4 + poseWeightsNumFloats + 3*4 + 4*4;
+                    bool exceedsTexBuffer = (currentMappedTexBuffer - mStartMappedTexBuffer) +
+                                                minimumTexBufferSize >= mCurrentTexBufferSize;
+
+                    if( exceedsConstBuffer || exceedsTexBuffer )
+                    {
+                        currentMappedConstBuffer = mapNextConstBuffer( commandBuffer );
+
+                        if( exceedsTexBuffer )
+                            mapNextTexBuffer( commandBuffer, minimumTexBufferSize * sizeof(float) );
+                        else
+                            rebindTexBuffer( commandBuffer, true, minimumTexBufferSize * sizeof(float) );
+
+                        currentMappedTexBuffer = mCurrentMappedTexBuffer;
+                    }
+
+                    //uint worldMaterialIdx[]
+                    size_t distToWorldMatStart = mCurrentMappedTexBuffer - mStartMappedTexBuffer;
+                    distToWorldMatStart >>= 2;
+                    *currentMappedConstBuffer = (distToWorldMatStart << 9 ) |
+                            (datablock->getAssignedSlot() & 0x1FF);
+                }
+                
+                uint8 meshLod = queuedRenderable.movableObject->getCurrentMeshLod();
+                const VertexArrayObjectArray &vaos = queuedRenderable.renderable->getVaos(
+                            static_cast<VertexPass>(casterPass) );
+                VertexArrayObject *vao = vaos[meshLod];
+                // According to this https://forums.ogre3d.org/viewtopic.php?f=25&t=95040#p545057
+                // "macOS uses an old OpenGL version which doesn't use baseVertex"
+        #ifdef __APPLE__
+                size_t baseVertex = 0;
+        #else
+                size_t baseVertex = vao->getBaseVertexBuffer()->_getFinalBufferStart();
+        #endif
+                memcpy( currentMappedTexBuffer, &baseVertex, sizeof( baseVertex ) );
+                size_t numVertices = vao->getBaseVertexBuffer()->getNumElements();
+                memcpy( currentMappedTexBuffer + 1, &numVertices, sizeof( numVertices ) );
+                currentMappedTexBuffer += 4;
+
+                memcpy( currentMappedTexBuffer, queuedRenderable.renderable->getPoseWeights(),
+                        sizeof(float) * numPoses);
+                currentMappedTexBuffer += poseWeightsNumFloats;
+
+                if( !hasSkeletonAnimation )
+                {
+                    //mat4x3 world
+        #if !OGRE_DOUBLE_PRECISION
+                    memcpy( currentMappedTexBuffer, &worldMat, 4 * 3 * sizeof( float ) );
                     currentMappedTexBuffer += 12;
-#else
+        #else
                     for( int y = 0; y < 3; ++y )
                     {
                         for( int x = 0; x < 4; ++x )
                         {
-                            *currentMappedTexBuffer++ = tmp[ i ][ y ][ x ];
+                            *currentMappedTexBuffer++ = worldMat[ y ][ x ];
                         }
                     }
-#endif
-                }
-            }
-            else
-            {
-                SkeletonInstance *skeleton = queuedRenderable.movableObject->getSkeletonInstance();
+        #endif
 
-#if OGRE_DEBUG_MODE
-                assert( dynamic_cast<const RenderableAnimated*>( queuedRenderable.renderable ) );
-#endif
-
-                const RenderableAnimated *renderableAnimated = static_cast<const RenderableAnimated*>(
-                                                                        queuedRenderable.renderable );
-
-                const RenderableAnimated::IndexMap *indexMap = renderableAnimated->getBlendIndexToBoneIndexMap();
-
-                const size_t minimumTexBufferSize = 12 * indexMap->size();
-                bool exceedsTexBuffer = (currentMappedTexBuffer - mStartMappedTexBuffer) +
-                                            minimumTexBufferSize >= mCurrentTexBufferSize;
-
-                if( exceedsConstBuffer || exceedsTexBuffer )
-                {
-                    currentMappedConstBuffer = mapNextConstBuffer( commandBuffer );
-
-                    if( exceedsTexBuffer )
-                        mapNextTexBuffer( commandBuffer, minimumTexBufferSize * sizeof(float) );
-                    else
-                        rebindTexBuffer( commandBuffer, true, minimumTexBufferSize * sizeof(float) );
-
-                    currentMappedTexBuffer = mCurrentMappedTexBuffer;
+                    //mat4 worldView
+                    Matrix4 tmp = mPreparedPass.viewMatrix.concatenateAffine( worldMat );
+            #ifdef OGRE_GLES2_WORKAROUND_1
+                    tmp = tmp.transpose();
+        #endif
+        #if !OGRE_DOUBLE_PRECISION
+                    memcpy( currentMappedTexBuffer, &tmp, sizeof( Matrix4 ) * !casterPass );
+                    currentMappedTexBuffer += 16 * !casterPass;
+        #else
+                    if( !casterPass )
+                    {
+                        for( int y = 0; y < 4; ++y )
+                        {
+                            for( int x = 0; x < 4; ++x )
+                            {
+                                *currentMappedTexBuffer++ = tmp[ y ][ x ];
+                            }
+                        }
+                    }
+        #endif
                 }
 
-                //uint worldMaterialIdx[]
-                size_t distToWorldMatStart = mCurrentMappedTexBuffer - mStartMappedTexBuffer;
-                distToWorldMatStart >>= 2;
-                *currentMappedConstBuffer = (distToWorldMatStart << 9 ) |
-                        (datablock->getAssignedSlot() & 0x1FF);
-
-                RenderableAnimated::IndexMap::const_iterator itBone = indexMap->begin();
-                RenderableAnimated::IndexMap::const_iterator enBone = indexMap->end();
-
-                while( itBone != enBone )
-                {
-                    const SimpleMatrixAf4x3 &mat4x3 = skeleton->_getBoneFullTransform( *itBone );
-                    mat4x3.streamTo4x3( currentMappedTexBuffer );
-                    currentMappedTexBuffer += 12;
-
-                    ++itBone;
-                }
+                TexBufferPacked* poseBuf = queuedRenderable.renderable->getPoseTexBuffer();
+                *commandBuffer->addCommand<CbShaderBuffer>() = CbShaderBuffer( VertexShader,
+                                                                               4, poseBuf, 0,
+                                                                               poseBuf->
+                                                                               getTotalSizeBytes() );
             }
 
             //If the next entity will not be skeletally animated, we'll need
@@ -2003,6 +2494,32 @@ namespace Ogre
         mCurrentPassBuffer  = 0;
     }
     //-----------------------------------------------------------------------------------
+    void HlmsPbs::loadLtcMatrix(void)
+    {
+        HlmsTextureManager *hlmsTextureManager = mHlmsManager->getTextureManager();
+
+        const uint32 poolId = 992044u;
+
+        if( !hlmsTextureManager->hasPoolId( poolId, HlmsTextureManager::TEXTURE_TYPE_NON_COLOR_DATA ) )
+        {
+            hlmsTextureManager->reservePoolId( poolId, HlmsTextureManager::TEXTURE_TYPE_NON_COLOR_DATA,
+                                               64u, 64u, 2u, 0u, PF_FLOAT16_RGBA, false, false );
+        }
+        HlmsTextureManager::TextureLocation texLocation0, texLocation1;
+        texLocation0 = hlmsTextureManager->createOrRetrieveTexture(
+                           "ltcMatrix0.dds", "ltcMatrix0.dds",
+                           HlmsTextureManager::TEXTURE_TYPE_NON_COLOR_DATA, poolId );
+        texLocation1 = hlmsTextureManager->createOrRetrieveTexture(
+                           "ltcMatrix1.dds", "ltcMatrix1.dds",
+                           HlmsTextureManager::TEXTURE_TYPE_NON_COLOR_DATA, poolId );
+
+        OGRE_ASSERT_LOW( texLocation0.texture == texLocation1.texture );
+        OGRE_ASSERT_LOW( texLocation0.xIdx == 0u );
+        OGRE_ASSERT_LOW( texLocation1.xIdx == 1u );
+
+        mLtcMatrixTexture = texLocation0.texture;
+    }
+    //-----------------------------------------------------------------------------------
     void HlmsPbs::getDefaultPaths( String &outDataFolderPath, StringVector &outLibraryFoldersPaths )
     {
         //We need to know what RenderSystem is currently in use, as the
@@ -2051,6 +2568,11 @@ namespace Ogre
     void HlmsPbs::setAmbientLightMode( AmbientLightMode mode )
     {
         mAmbientLightMode = mode;
+    }
+    //-----------------------------------------------------------------------------------
+    void HlmsPbs::setAreaLightMasks( const TexturePtr &areaLightMask )
+    {
+        mAreaLightMasks = areaLightMask;
     }
 #ifdef OGRE_BUILD_COMPONENT_PLANAR_REFLECTIONS
     //-----------------------------------------------------------------------------------

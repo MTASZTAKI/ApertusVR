@@ -69,6 +69,9 @@ namespace Ogre
         Matrix4 mSceneComponentTransform;
         String  mDefaultPccWorkspaceName;
 
+        bool mUseBinaryFloatingPoint;
+        bool mUsingOitd;
+
         LightArray mVplLights;
 
         typedef map<uint32, SceneNode*>::type IndexToSceneNodeMap;
@@ -81,16 +84,18 @@ namespace Ogre
         void destroyParallaxCorrectedCubemap(void);
 
         static inline Light::LightTypes parseLightType( const char *value );
-        static inline float decodeFloat( const rapidjson::Value &jsonValue );
-        static inline double decodeDouble( const rapidjson::Value &jsonValue );
-        static inline Vector2 decodeVector2Array( const rapidjson::Value &jsonArray );
-        static inline Vector3 decodeVector3Array( const rapidjson::Value &jsonArray );
-        static inline Vector4 decodeVector4Array( const rapidjson::Value &jsonArray );
-        static inline Quaternion decodeQuaternionArray( const rapidjson::Value &jsonArray );
-        static inline ColourValue decodeColourValueArray( const rapidjson::Value &jsonArray );
-        static inline Aabb decodeAabbArray( const rapidjson::Value &jsonArray,
+        inline bool isFloat( const rapidjson::Value &jsonValue ) const;
+        inline bool isDouble( const rapidjson::Value &jsonValue ) const;
+        inline float decodeFloat( const rapidjson::Value &jsonValue );
+        inline double decodeDouble( const rapidjson::Value &jsonValue );
+        inline Vector2 decodeVector2Array( const rapidjson::Value &jsonArray );
+        inline Vector3 decodeVector3Array( const rapidjson::Value &jsonArray );
+        inline Vector4 decodeVector4Array( const rapidjson::Value &jsonArray );
+        inline Quaternion decodeQuaternionArray( const rapidjson::Value &jsonArray );
+        inline ColourValue decodeColourValueArray( const rapidjson::Value &jsonArray );
+        inline Aabb decodeAabbArray( const rapidjson::Value &jsonArray,
                                             const Aabb &defaultValue );
-        static inline Matrix3 decodeMatrix3Array( const rapidjson::Value &jsonArray );
+        inline Matrix3 decodeMatrix3Array( const rapidjson::Value &jsonArray );
 
         void importNode( const rapidjson::Value &nodeValue, Node *node );
         SceneNode* importSceneNode( const rapidjson::Value &sceneNodeValue, uint32 nodeIdx,
@@ -107,6 +112,8 @@ namespace Ogre
         void importEntities( const rapidjson::Value &json );
         void importLight( const rapidjson::Value &lightValue );
         void importLights( const rapidjson::Value &json );
+        void importDecal( const rapidjson::Value &decalValue );
+        void importDecals( const rapidjson::Value &json );
         void importInstantRadiosity( const rapidjson::Value &irValue );
         void importPcc( const rapidjson::Value &pccValue );
         void importSceneSettings( const rapidjson::Value &json, uint32 importFlags );

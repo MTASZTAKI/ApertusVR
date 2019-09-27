@@ -88,6 +88,15 @@ namespace Ogre {
             LT_SPOTLIGHT = 2,
             /// Virtual point lights, used for Instant Radiosity (Global Illumination fake / approximation)
             LT_VPL = 3,
+            MAX_FORWARD_PLUS_LIGHTS = 4,
+            /// Non-PBR version of Area lights. Not an accurate approximation, but
+            /// they're flexible, useful & cheap. They aren't physically correct at all.
+            LT_AREA_APPROX = 4,
+            /// PBR version of Area lights using Linearly Transformed Cosines as researched
+            /// by Eric Heitz, Jonathan Dupuy, Stephen Hill and David Neubelt.
+            /// It's slower than LT_AREA_APPROX, and does not currently support textures.
+            /// However it's physically accurate.
+            LT_AREA_LTC = 5,
 
             NUM_LIGHT_TYPES
         };
@@ -274,6 +283,14 @@ namespace Ogre {
 
 		bool getAffectParentNode(void) const                        { return mAffectParentNode; }
 
+        /** For area lights and custom 2d shapes, specifies whether the light lits in both
+            directions (positive & negative sides of the plane) or if only towards one.
+        @param bDoubleSided
+            True to enable. Default: false.
+        */
+        void setDoubleSided( bool bDoubleSided );
+        bool getDoubleSided(void) const                             { return mDoubleSided; }
+
         /** Sets the range of a spotlight, i.e. the angle of the inner and outer cones
             and the rate of falloff between them.
         @param innerAngle
@@ -326,6 +343,13 @@ namespace Ogre {
             clipping.
         */
         Real getSpotlightNearClipDistance() const { return mSpotNearClip; }
+
+        /** For custom 2D shape and area lights, sets the dimensions of the rectangle, in half size
+        @param halfSize
+        */
+        void setRectSize( Vector2 rectSize );
+        const Vector2& getRectSize(void) const          { return mRectSize; }
+        Vector2 getDerivedRectSize(void) const;
         
         /** Set a scaling factor to indicate the relative power of a light.
         @remarks
@@ -513,6 +537,20 @@ namespace Ogre {
             false-positives (The function should not return any false-negatives).
         */
         bool isInLightRange(const Ogre::AxisAlignedBox& container) const;
+
+        /** Sets a textured for types of light that support it. At the time of
+            writing only LT_AREA_APPROX supports it.
+        @remarks
+            Note that HlmsPbs only supports one 2D Array texture active at a time.
+            i.e. you must call hlmsPbs->setAreaLightMasks( texture );
+            and if that texture belongs to a different pool as the one you're
+            inputting here, the wrong texture will be displayed!
+        @param texture
+            Texture. Can be monochrome or coloured. Must be a 2D Array texture.
+        @param sliceIdx
+            Slice to the texture.
+        */
+        void setTexture( const TexturePtr &texture, uint16 sliceIdx );
     
     protected:
 
@@ -531,7 +569,18 @@ namespace Ogre {
         Real mAttenuationQuad;
         Real mPowerScale;
         bool mOwnShadowFarDist;
-		bool mAffectParentNode;
+        bool mAffectParentNode;
+        /// Valid only for area lights
+        bool mDoubleSided;
+    protected:
+        Vector2 mRectSize;
+    public:
+        uint16 mTextureLightMaskIdx;
+        /// Control the start of mip level for diffuse component for area lights
+        /// The value is UNORM, thus the range [0; 65535] maps to [0; 1] where
+        /// 1.0 means to use the highest mip level, and 0 the lowest mip.
+        uint16 mTexLightMaskDiffuseMipStart;
+    protected:
         Real mShadowFarDist;
         Real mShadowFarDistSquared;
 

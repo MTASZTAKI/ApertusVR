@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 #if defined(__i386) || defined(_M_IX86)
     // Calling conventions are needed for x86 (32-bit ONLY) CPUs
-    #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
         #define OGRE_THREAD_CALL_CONVENTION _OGRE_SIMD_ALIGN_ATTRIBUTE __stdcall
     #elif OGRE_COMPILER == OGRE_COMPILER_GNUC || OGRE_COMPILER == OGRE_COMPILER_CLANG
         #define __cdecl __attribute__((__cdecl__))
@@ -43,7 +43,7 @@ THE SOFTWARE.
     #define OGRE_THREAD_CALL_CONVENTION
 #endif
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
     /// @See Threads::CreateThread for an example on how to use
     #define THREAD_DECLARE( threadFunction ) \
     unsigned long OGRE_THREAD_CALL_CONVENTION threadFunction##_internal( void *argName )\
@@ -78,7 +78,7 @@ THE SOFTWARE.
     }
 #endif
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
     //No need to include the heavy windows.h header for something like this!
     typedef void* HANDLE;
 #else
@@ -89,7 +89,7 @@ namespace Ogre
 {
     class _OgreExport ThreadHandle
     {
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
         HANDLE  mThread;
 #else
         pthread_t mThread;
@@ -104,7 +104,7 @@ namespace Ogre
         size_t getThreadIdx() const         { return mThreadIdx; }
         void* getUserParam() const          { return mUserParam; }
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
         /// Internal use
         void _setOsHandle( HANDLE handle )  { mThread = handle; }
         /// Internal use
@@ -120,11 +120,19 @@ namespace Ogre
     typedef SharedPtr<ThreadHandle> ThreadHandlePtr;
     typedef vector<ThreadHandlePtr>::type ThreadHandleVec;
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
     typedef unsigned long (OGRE_THREAD_CALL_CONVENTION *THREAD_ENTRY_POINT)( void *lpThreadParameter );
 #else
     typedef void* (OGRE_THREAD_CALL_CONVENTION *THREAD_ENTRY_POINT)( void *lpThreadParameter );
 #endif
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WINRT
+    typedef uint32 TlsHandle;
+#else
+    typedef pthread_key_t TlsHandle;
+#endif
+
+    #define OGRE_TLS_INVALID_HANDLE 0xFFFFFFFF
 
     class _OgreExport Threads
     {
@@ -181,6 +189,26 @@ namespace Ogre
         /// Sleeps for a **minimum** of the specified time of milliseconds. Actual time spent
         /// sleeping may vary widely depending on OS and other variables. Do not feed 0.
         static void Sleep( uint32 milliseconds );
+
+        /** Allocates a Thread Local Storage handle to use
+        @param outTls [out]
+            Handle to TLS.
+            On failure this handle is set to OGRE_TLS_INVALID_HANDLE
+        @return
+            True on success, false on failure.
+            TLS allocation can fail if the system ran out of handles,
+            or it ran out of memory.
+        */
+        static bool CreateTls( TlsHandle *outTls );
+
+        /** Destroys a Thread Local Storage handle created with CreateTls
+        @param tlsHandle
+            Handle to destroy
+        */
+        static void DestroyTls( TlsHandle tlsHandle );
+
+        static void SetTls( TlsHandle tlsHandle, void *value );
+        static void* GetTls( TlsHandle tlsHandle );
     };
 }
 

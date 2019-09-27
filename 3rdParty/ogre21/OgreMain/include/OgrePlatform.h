@@ -233,20 +233,6 @@ namespace Ogre {
 #       define _OgrePrivate
 #   endif
 
-// on windows we override OgreBuildSettings.h for convenience
-// see https://bitbucket.org/sinbad/ogre/pull-requests/728
-#ifdef OGRE_DEBUG_MODE
-#undef OGRE_DEBUG_MODE
-#endif
-
-// Win32 compilers use _DEBUG for specifying debug builds.
-// for MinGW, we set DEBUG
-#   if defined(_DEBUG) || defined(DEBUG)
-#       define OGRE_DEBUG_MODE 1
-#   else
-#       define OGRE_DEBUG_MODE 0
-#   endif
-
 // Disable unicode support on MingW for GCC 3, poorly supported in stdlibc++
 // STLPORT fixes this though so allow if found
 // MinGW C++ Toolkit supports unicode and sets the define __MINGW32_TOOLBOX_UNICODE__ in _mingw.h
@@ -304,22 +290,65 @@ namespace Ogre {
 #endif
 
 //----------------------------------------------------------------------------
-// Apple Settings
-#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE || OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-// on Apple & Windows we override OgreBuildSettings.h for convenience
-// see https://bitbucket.org/sinbad/ogre/pull-requests/728
-#   ifdef OGRE_DEBUG_MODE
-#   undef OGRE_DEBUG_MODE
+// Debug mode and asserts
+
+// No checks done at all
+#define OGRE_DEBUG_NONE     0
+// We perform basic assert checks and other non-performance intensive checks
+#define OGRE_DEBUG_LOW      1
+// We alter classes to add some debug variables for a bit more thorough checking
+// and also perform checks that may cause some performance hit
+#define OGRE_DEBUG_MEDIUM   2
+// We perform intensive validation without concerns for performance
+#define OGRE_DEBUG_HIGH     3
+
+// We cannot tell whether something is a debug build or not simply by checking NDEBUG because
+// it's perfectly valid for a user to #undef NDEBUG to get assertions in a release build.
+// DEBUG is set automatically on MSVC and _DEBUG is set automatically on MINGW.
+// Some environments don't provide any debug flags besides NDEBUG by default, so we issue a
+// warning here.
+#ifndef OGRE_DEBUG_MODE
+#   if !defined(NDEBUG) && !defined(_DEBUG) && !defined(DEBUG) && !defined(OGRE_IGNORE_UNKNOWN_DEBUG)
+#       pragma message (\
+    "Ogre can't tell whether this is a debug build. If it is, please add _DEBUG to the preprocessor "\
+    "definitions. Otherwise, you can set OGRE_IGNORE_UNKNOWN_DEBUG to suppress this warning. Ogre will "\
+    "assume this is not a debug build by default. To add _DEBUG with g++, invoke g++ with the argument "\
+    "-D_DEBUG. To add it in CMake, include "\
+    "set( CMAKE_CXX_FLAGS_DEBUG \"${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG=1 -D_DEBUG=1\" ) at the top of your "\
+    "CMakeLists.txt file. IDEs usually provide the possibility to add preprocessor definitions in the build "\
+    "settings. You can also manually set OGRE_DEBUG_MODE to either 1 or 0 instead of adding _DEBUG." )
+#   endif
+#   if defined(NDEBUG) && defined(_DEBUG) && !defined(OGRE_IGNORE_DEBUG_FLAG_CONTRADICTION)
+#       pragma message (\
+         "You have both NDEBUG and _DEBUG defined. Ogre will assume you're running a debug build. To suppress this "\
+         "warning, set OGRE_IGNORE_DEBUG_FLAG_CONTRADICTION.")
 #   endif
 
-// Win32 compilers use _DEBUG for specifying debug builds.
-// for MinGW, we set DEBUG
 #   if defined(_DEBUG) || defined(DEBUG)
-#       define OGRE_DEBUG_MODE 1
+#       define OGRE_DEBUG_MODE OGRE_DEBUG_LEVEL_DEBUG
 #   else
-#       define OGRE_DEBUG_MODE 0
+#       define OGRE_DEBUG_MODE OGRE_DEBUG_LEVEL_RELEASE
 #   endif
 #endif
+
+#if OGRE_DEBUG_MODE >= OGRE_DEBUG_LOW
+#   define OGRE_ASSERTS_ENABLED
+#endif
+
+#define OGRE_ASSERT_LOW OGRE_ASSERT
+
+#if OGRE_DEBUG_MODE >= OGRE_DEBUG_MEDIUM
+#   define OGRE_ASSERT_MEDIUM OGRE_ASSERT
+#else
+#   define OGRE_ASSERT_MEDIUM(condition) ((void)0)
+#endif
+
+#if OGRE_DEBUG_MODE >= OGRE_DEBUG_HIGH
+#   define OGRE_ASSERT_HIGH OGRE_ASSERT
+#else
+#   define OGRE_ASSERT_HIGH(condition) ((void)0)
+#endif
+
 
 //----------------------------------------------------------------------------
 // Android Settings

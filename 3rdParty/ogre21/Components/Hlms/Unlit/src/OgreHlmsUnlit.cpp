@@ -56,6 +56,9 @@ THE SOFTWARE.
 #include "CommandBuffer/OgreCbTexture.h"
 #include "CommandBuffer/OgreCbShaderBuffer.h"
 #include "OgreUnlitProperty.h"
+
+#include "OgreProfiler.h"
+
 namespace Ogre
 {
 
@@ -130,6 +133,8 @@ namespace Ogre
                                                         uint32 finalHash,
                                                         const QueuedRenderable &queuedRenderable )
     {
+        OgreProfileExhaustive( "HlmsUnlit::createShaderCacheEntry" );
+
         const HlmsCache *retVal = Hlms::createShaderCacheEntry( renderableHash, passCache, finalHash,
                                                                 queuedRenderable );
 
@@ -440,6 +445,7 @@ namespace Ogre
         {
             if( itor->keyName != UnlitProperty::HwGammaRead &&
                      //itor->keyName != UnlitProperty::UvDiffuse &&
+                     itor->keyName != HlmsPsoProp::InputLayoutId &&
                      itor->keyName != HlmsBaseProp::Skeleton &&
                      itor->keyName != HlmsBaseProp::BonesPerVertex &&
                      itor->keyName != HlmsBaseProp::DualParaboloidMapping &&
@@ -464,6 +470,8 @@ namespace Ogre
     HlmsCache HlmsUnlit::preparePassHash( const CompositorShadowNode *shadowNode, bool casterPass,
                                           bool dualParaboloid, SceneManager *sceneManager )
     {
+        OgreProfileExhaustive( "HlmsUnlit::preparePassHash" );
+
         mSetProperties.clear();
 
         //Set the properties and create/retrieve the cache.
@@ -493,7 +501,11 @@ namespace Ogre
 
         Camera *camera = sceneManager->getCameraInProgress();
         if( camera && camera->isReflected() )
-            setProperty( HlmsBaseProp::GlobalClipDistances, 1 );
+        {
+            int32 numClipDist = std::max( getProperty( HlmsBaseProp::PsoClipDistances ), 1 );
+            setProperty( HlmsBaseProp::PsoClipDistances, numClipDist );
+            setProperty( HlmsBaseProp::GlobalClipPlanes, 1 );
+        }
 
         mListener->preparePassHash( shadowNode, casterPass, dualParaboloid, sceneManager, this );
 

@@ -1,4 +1,4 @@
-@property( !metallic_workflow && (!specular_map || !fresnel_workflow) )
+@property( !metallic_workflow && (!specular_map || !fresnel_workflow) && !hlms_decals_diffuse )
 	@property( !transparent_mode )
 		@piece( F0 )material.F0@end
 	@end @property( transparent_mode )
@@ -9,8 +9,13 @@
 			@piece( F0 )float1(material.F0.@insertpiece( FresnelSwizzle ) * diffuseCol.w)@end
 		@end
 	@end
-@end @property( metallic_workflow || (specular_map && fresnel_workflow) )
-	@piece( F0 )F0@end
+@end @property( metallic_workflow || (specular_map && fresnel_workflow) || hlms_decals_diffuse )
+	@property( !fresnel_scalar )
+		@piece( F0 )float1(F0)@end
+	@end
+	@property( fresnel_scalar )
+		@piece( F0 )F0@end
+	@end
 @end
 
 @property( !fresnel_scalar )
@@ -238,4 +243,6 @@ float3 BRDF_IR( float3 lightDir, float3 lightDiffuse,
 @property( hlms_fine_light_mask )
 	@piece( ObjLightMaskCmp )if( (inPs.objLightMask & as_type<uint>( passBuf.lights[@counter(fineMaskLightIdx)].position.w )) != 0u )@end
 	@piece( andObjLightMaskCmp )&& ((inPs.objLightMask & as_type<uint>( passBuf.lights[@counter(fineMaskLightIdx)].position.w )) != 0u)@end
+	@piece( andObjAreaApproxLightMaskCmp )&& ((inPs.objLightMask & as_type<uint>( passBuf.areaApproxLights[@counter(fineMaskAreaApproxLightIdx)].position.w )) != 0u)@end
+	@piece( andObjAreaLtcLightMaskCmp )&& ((inPs.objLightMask & as_type<uint>( passBuf.areaLtcLights[@counter(fineMaskAreaLtcLightIdx)].position.w )) != 0u)@end
 @end

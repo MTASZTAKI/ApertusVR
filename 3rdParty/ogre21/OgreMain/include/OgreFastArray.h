@@ -80,10 +80,13 @@ namespace Ogre
         {
             if( mSize + newElements > mCapacity )
             {
-                mCapacity = std::max( mSize + newElements, mCapacity + (mCapacity >> 1) + 1 );
+                mCapacity = std::max<size_t>( mSize + newElements, mCapacity + (mCapacity >> 1u) + 1u );
                 T *data = (T*)::operator new( mCapacity * sizeof(T) );
-                memcpy( data, mData, mSize * sizeof(T) );
-                ::operator delete( mData );
+                if( mData )
+                {
+                    memcpy( data, mData, mSize * sizeof(T) );
+                    ::operator delete( mData );
+                }
                 mData = data;
             }
         }
@@ -160,9 +163,17 @@ namespace Ogre
 
         ~FastArray()
         {
+            destroy();
+        }
+
+        void destroy()
+        {
             for( size_t i=0; i<mSize; ++i )
                 mData[i].~T();
             ::operator delete( mData );
+            mSize = 0;
+            mCapacity = 0;
+            mData = 0;
         }
 
         size_t size() const                     { return mSize; }
@@ -284,6 +295,25 @@ namespace Ogre
         }
 
         void resize( size_t newSize, const T &value=T() )
+        {
+            if( newSize > mSize )
+            {
+                growToFit( newSize - mSize );
+                for( size_t i=mSize; i<newSize; ++i )
+                {
+                    new (&mData[i]) T( value );
+                }
+            }
+            else
+            {
+                for( size_t i=newSize; i<mSize; ++i )
+                    mData[i].~T();
+            }
+
+            mSize = newSize;
+        }
+
+        void resizePOD( size_t newSize, const T &value=T() )
         {
             if( newSize > mSize )
             {

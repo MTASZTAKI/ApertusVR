@@ -53,6 +53,7 @@ THE SOFTWARE.
 #include "Animation/OgreSkeletonManager.h"
 
 #include "OgreMesh2.h"
+#include "OgreProfiler.h"
 
 namespace Ogre {
 namespace v1 {
@@ -68,6 +69,7 @@ namespace v1 {
         mLodStrategyName( LodStrategyManager::getSingleton().getDefaultStrategy()->getName() ),
         mHasManualLodLevel(false),
         mNumLods(1),
+        mBufferManager(0),
         mVertexBufferUsage(HardwareBuffer::HBU_STATIC_WRITE_ONLY),
         mIndexBufferUsage(HardwareBuffer::HBU_STATIC_WRITE_ONLY),
         mVertexBufferShadowBuffer(true),
@@ -97,6 +99,11 @@ namespace v1 {
         // have to call this here reather than in Resource destructor
         // since calling virtual methods in base destructors causes crash
         unload();
+    }
+    //-----------------------------------------------------------------------
+    HardwareBufferManagerBase* Mesh::getHardwareBufferManager()
+    {
+        return mBufferManager ? mBufferManager : HardwareBufferManager::getSingletonPtr();
     }
     //-----------------------------------------------------------------------
     SubMesh* Mesh::createSubMesh()
@@ -207,6 +214,8 @@ namespace v1 {
     //-----------------------------------------------------------------------
     void Mesh::postLoadImpl(void)
     {
+        OgreProfileExhaustive( "v1::Mesh::postLoadImpl" );
+
         // Prepare for shadow volumes?
         if (MeshManager::getSingleton().getPrepareAllMeshesForShadowVolumes())
         {
@@ -245,6 +254,8 @@ namespace v1 {
     //-----------------------------------------------------------------------
     void Mesh::prepareImpl()
     {
+        OgreProfileExhaustive( "v1::Mesh::prepareImpl" );
+
         // Load from specified 'name'
         if (getCreator()->getVerbose())
             LogManager::getSingleton().logMessage("Mesh: Loading "+mName+".");
@@ -263,6 +274,8 @@ namespace v1 {
     }
     void Mesh::loadImpl()
     {
+        OgreProfileExhaustive( "v1::Mesh::loadImpl" );
+
         MeshSerializer serializer;
         serializer.setListener(MeshManager::getSingleton().getListener());
 
@@ -291,6 +304,7 @@ namespace v1 {
     void Mesh::unloadImpl()
     {
         // Teardown submeshes
+        OgreProfileExhaustive( "v1::Mesh::unloadImpl" );
 
         // mSubMeshList is iterated in submesh destructor, so pop after deleting
         while ( !mSubMeshList.empty() )
@@ -311,6 +325,8 @@ namespace v1 {
         // Clear SubMesh lists
         mSubMeshList.clear();
         mSubMeshNameMap.clear();
+
+        freeEdgeList();
 #if !OGRE_NO_MESHLOD
         // Removes all LOD data
         removeLodLevels();
@@ -327,6 +343,24 @@ namespace v1 {
 
         // Removes reference to skeleton
         setSkeletonName(BLANKSTRING);
+    }
+    //-----------------------------------------------------------------------
+    void Mesh::reload(LoadingFlags flags)
+    {
+        bool wasPreparedForShadowVolumes = mPreparedForShadowVolumes;
+        bool wasEdgeListsBuilt = mEdgeListsBuilt;
+        bool wasAutoBuildEdgeLists = mAutoBuildEdgeLists;
+
+        Resource::reload(flags);
+
+        if(flags & LF_PRESERVE_STATE)
+        {
+            if(wasPreparedForShadowVolumes)
+                prepareForShadowVolume();
+            if(wasEdgeListsBuilt)
+                buildEdgeList();
+            setAutoBuildEdgeLists(wasAutoBuildEdgeLists);
+        }
     }
     //-----------------------------------------------------------------------
     void Mesh::importV2( Ogre::Mesh *mesh )
@@ -419,22 +453,27 @@ namespace v1 {
         }
         MeshPtr newMesh = MeshManager::getSingleton().createManual(newName, theGroup);
 
+        newMesh->mBufferManager = mBufferManager;
+        newMesh->mVertexBufferUsage = mVertexBufferUsage;
+        newMesh->mIndexBufferUsage = mIndexBufferUsage;
+        newMesh->mVertexBufferShadowBuffer = mVertexBufferShadowBuffer;
+        newMesh->mIndexBufferShadowBuffer = mIndexBufferShadowBuffer;
+
         // Copy submeshes first
         vector<SubMesh*>::type::iterator subi;
         for (subi = mSubMeshList.begin(); subi != mSubMeshList.end(); ++subi)
         {
             (*subi)->clone("", newMesh.get());
-
         }
 
         // Copy shared geometry and index map, if any
         if (sharedVertexData[VpNormal])
         {
-            newMesh->sharedVertexData[VpNormal] = sharedVertexData[VpNormal]->clone();
+            newMesh->sharedVertexData[VpNormal] = sharedVertexData[VpNormal]->clone(true, mBufferManager);
             if( sharedVertexData[VpNormal] == sharedVertexData[VpShadow] )
                 newMesh->sharedVertexData[VpShadow] = newMesh->sharedVertexData[VpNormal];
             else
-                newMesh->sharedVertexData[VpShadow] = sharedVertexData[VpShadow]->clone();
+                newMesh->sharedVertexData[VpShadow] = sharedVertexData[VpShadow]->clone(true, mBufferManager);
 
             newMesh->sharedBlendIndexToBoneIndexMap = sharedBlendIndexToBoneIndexMap;
         }
@@ -470,11 +509,6 @@ namespace v1 {
             if (lod.edgeData)
                 newLod.edgeData = lod.edgeData->clone();
         }
-
-        newMesh->mVertexBufferUsage = mVertexBufferUsage;
-        newMesh->mIndexBufferUsage = mIndexBufferUsage;
-        newMesh->mVertexBufferShadowBuffer = mVertexBufferShadowBuffer;
-        newMesh->mIndexBufferShadowBuffer = mIndexBufferShadowBuffer;
 
         newMesh->mSkeletonName = mSkeletonName;
         newMesh->mOldSkeleton = mOldSkeleton;
@@ -943,8 +977,7 @@ namespace v1 {
             currentBufferUsage = HardwareBuffer::HBU_STATIC_WRITE_ONLY;
         }
         // Create a new buffer for bone assignments
-        HardwareVertexBufferSharedPtr vbuf =
-            HardwareBufferManager::getSingleton().createVertexBuffer(
+        HardwareVertexBufferSharedPtr vbuf = getHardwareBufferManager()->createVertexBuffer(
                 sizeof(unsigned char)*4 + sizeof(float)*numBlendWeightsPerVertex,
                 targetVertexData->vertexCount,
                 currentBufferUsage,
@@ -1605,7 +1638,7 @@ namespace v1 {
                     prevTexCoordElem->getSource());
             // Now create a new buffer, which includes the previous contents
             // plus extra space for the 3D coords
-            newBuffer = HardwareBufferManager::getSingleton().createVertexBuffer(
+            newBuffer = getHardwareBufferManager()->createVertexBuffer(
                 origBuffer->getVertexSize() + 3*sizeof(float),
                 vertexData->vertexCount,
                 origBuffer->getUsage(),

@@ -35,6 +35,7 @@ struct PS_INPUT
 @end
 
 @insertpiece( DeclPlanarReflTextures )
+@insertpiece( DeclAreaApproxTextures )
 
 @property( two_sided_lighting )
 @piece( two_sided_flip_normal )* (gl_FrontFacing ? 1.0 : -1.0)@end
@@ -49,7 +50,7 @@ Buffer<float4> f3dLightList : register(t2);@end
 	SamplerState		irradianceVolumeSampler	: register(s@value(irradianceVolumeTexUnit));
 @end
 
-@property( !roughness_map )#define ROUGHNESS material.kS.w@end
+@property( !roughness_map && !hlms_decals_diffuse )#define ROUGHNESS material.kS.w@end
 @property( num_textures )Texture2DArray textureMaps[@value( num_textures )] : register(t@value(textureRegStart));@end
 @property( use_envprobe_map )TextureCube	texEnvProbeMap : register(t@value(envMapReg));
 SamplerState envMapSamplerState : register(s@value(envMapReg));@end
@@ -110,15 +111,21 @@ float3 qmul( float4 q, float3 v )
 @property( (hlms_normal || hlms_qtangent) && !hlms_prepass )
 @insertpiece( DeclareBRDF )
 @insertpiece( DeclareBRDF_InstantRadiosity )
+@insertpiece( DeclareBRDF_AreaLightApprox )
 @end
 
 @property( use_parallax_correct_cubemaps )
 @insertpiece( DeclParallaxLocalCorrect )
 @end
 
+@insertpiece( DeclDecalsSamplers )
+
 @insertpiece( DeclShadowMapMacros )
 @insertpiece( DeclShadowSamplers )
 @insertpiece( DeclShadowSamplingFuncs )
+
+@insertpiece( DeclAreaLtcTextures )
+@insertpiece( DeclAreaLtcLightFuncs )
 
 @insertpiece( DeclOutputType )
 
@@ -133,7 +140,7 @@ float3 qmul( float4 q, float3 v )
 	@insertpiece( custom_ps_preExecution )
 
 	Material material;
-	
+
 @property( diffuse_map )	uint diffuseIdx;@end
 @property( normal_map_tex )	uint normalIdx;@end
 @property( specular_map )	uint specularIdx;@end
@@ -147,12 +154,12 @@ float3 qmul( float4 q, float3 v )
 @property( use_envprobe_map )	uint envMapIdx;@end
 
 float4 diffuseCol;
-@property( specular_map && !metallic_workflow && !fresnel_workflow )float3 specularCol;@end
-@property( metallic_workflow || (specular_map && fresnel_workflow) )@insertpiece( FresnelType ) F0;@end
-@property( roughness_map )float ROUGHNESS;@end
-	
+@property( (specular_map && !metallic_workflow && !fresnel_workflow) || hlms_decals_diffuse )float3 specularCol;@end
+@property( metallic_workflow || (specular_map && fresnel_workflow) || hlms_decals_diffuse )@insertpiece( FresnelType ) F0;@end
+@property( roughness_map || hlms_decals_diffuse )float ROUGHNESS;@end
+
 @property( hlms_normal || hlms_qtangent )	float3 nNormal;@end
-	
+
 @property( hlms_normal || hlms_qtangent )
 	@property( !lower_gpu_overhead )
 		uint materialId	= worldMaterialIdx[inPs.drawId].x & 0x1FFu;
@@ -214,18 +221,23 @@ float4 diffuseCol;
 	@foreach( detail_maps_diffuse, n )
 		@insertpiece( blend_mode_idx@n ) @add( t, 1 ) @end
 
-		/// Apply the material's diffuse over the textures
-		@property( !transparent_mode )
-			diffuseCol.xyz *= material.kD.xyz;
-		@end @property( transparent_mode )
-			diffuseCol.xyz *= material.kD.xyz * diffuseCol.w * diffuseCol.w;
-		@end
+    /// Apply the material's diffuse over the textures
+	@property( !transparent_mode )
+	    diffuseCol.xyz *= material.kD.xyz;
+	@end @property( transparent_mode )
+	    diffuseCol.xyz *= material.kD.xyz * diffuseCol.w * diffuseCol.w;
+	@end
 
-	@property( alpha_test )
+	@property( alpha_test && !alpha_test_shadow_caster_only )
 		if( material.kD.w @insertpiece( alpha_test_cmp_func ) diffuseCol.a )
 			discard;
 	@end
 @end
+
+	@insertpiece( SampleSpecularMap )
+	@insertpiece( SampleRoughnessMap )
+
+	@insertpiece( forwardPlusDoDecals )
 
 @property( !hlms_use_prepass )
 	@property( !normal_map )
@@ -268,13 +280,15 @@ float4 diffuseCol;
 		nNormal.xy	+= vDetail.xy;
 		nNormal.z	*= vDetail.z + 1.0 - detailWeights.@insertpiece(detail_swizzle@n) @insertpiece( detail@n_nm_weight_mul );@end @end
 
+	@insertpiece( custom_ps_posSampleNormal )
+
+	@insertpiece( forwardPlusApplyDecalsNormal )
+
 	@property( normal_map )
 		nNormal = normalize( mul( nNormal, TBN ) );
 	@end
 
 	@insertpiece( DoDirectionalShadowMaps )
-
-	@insertpiece( SampleRoughnessMap )
 
 @end @property( hlms_use_prepass )
 	int2 iFragCoord = int2( gl_FragCoord.xy );
@@ -324,8 +338,6 @@ float4 diffuseCol;
 	@end
 @end
 
-	@insertpiece( SampleSpecularMap )
-
 @property( !hlms_prepass )
 	//Everything's in Camera space
 @property( hlms_lights_spot || use_envprobe_map || hlms_use_ssr || use_planar_reflections || ambient_hemisphere || hlms_forwardplus )
@@ -354,7 +366,7 @@ float4 diffuseCol;
 		finalColour += BRDF( passBuf.lights[@n].position.xyz, viewDir, NdotV, passBuf.lights[@n].diffuse, passBuf.lights[@n].specular, material, nNormal @insertpiece( brdfExtraParams ) );@end
 @end
 
-@property( hlms_lights_point || hlms_lights_spot )	float3 lightDir;
+@property( hlms_lights_point || hlms_lights_spot || hlms_lights_area_approx || hlms_lights_area_ltc )	float3 lightDir;
 	float fDistance;
 	float3 tmpColour;
 	float spotCosAngle;@end
@@ -378,7 +390,7 @@ float4 diffuseCol;
 @foreach( hlms_lights_spot, n, hlms_lights_point )
 	lightDir = passBuf.lights[@n].position.xyz - inPs.pos;
 	fDistance= length( lightDir );
-@property( !hlms_lights_spot_textured )	spotCosAngle = dot( normalize( inPs.pos - passBuf.lights[@n].position.xyz ), passBuf.lights[@n].spotDirection );@end
+@property( !hlms_lights_spot_textured )	spotCosAngle = dot( normalize( inPs.pos - passBuf.lights[@n].position.xyz ), passBuf.lights[@n].spotDirection.xyz );@end
 @property( hlms_lights_spot_textured )	spotCosAngle = dot( normalize( inPs.pos - passBuf.lights[@n].position.xyz ), zAxis( passBuf.lights[@n].spotQuaternion ) );@end
 	if( fDistance <= passBuf.lights[@n].attenuation.x && spotCosAngle >= passBuf.lights[@n].spotParams.y @insertpiece( andObjLightMaskCmp ) )
 	{
@@ -396,6 +408,10 @@ float4 diffuseCol;
 		finalColour += tmpColour * (atten * spotAtten);
 	}@end
 
+	//Custom 2D shape lights
+	@insertpiece( DoAreaApproxLights )
+	@insertpiece( DoAreaLtcLights )
+
 @insertpiece( forward3dLighting )
 @insertpiece( applyIrradianceVolumes )
 
@@ -406,7 +422,7 @@ float4 diffuseCol;
 
 @property( use_envprobe_map || hlms_use_ssr || use_planar_reflections || ambient_hemisphere )
 	float3 reflDir = 2.0 * dot( viewDir, nNormal ) * nNormal - viewDir;
-	
+
 	@property( use_envprobe_map )
 		@property( use_parallax_correct_cubemaps )
 			float3 envColourS;
@@ -552,7 +568,7 @@ float4 diffuseCol;
 @end
 	@insertpiece( custom_ps_preExecution )
 
-	
+
 @property( alpha_test )
 	Material material;
 @property( diffuse_map )	uint diffuseIdx;@end
@@ -622,4 +638,3 @@ float4 diffuseCol;
 @end
 }
 @end
-

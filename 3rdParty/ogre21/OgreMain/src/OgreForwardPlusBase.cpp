@@ -38,20 +38,27 @@ THE SOFTWARE.
 
 #include "OgreHlms.h"
 
+#include "OgreDecal.h"
+
 namespace Ogre
 {
-    //Six variables * 4 (padded vec3) * 4 (bytes) * numLights
-    const size_t ForwardPlusBase::NumBytesPerLight = 6 * 4 * 4;
+    //N variables * 4 (vec4 or padded vec3) * 4 (bytes per float)
+    const size_t ForwardPlusBase::MinDecalRq = 0u;
+    const size_t ForwardPlusBase::MaxDecalRq = 4u;
+    const size_t ForwardPlusBase::NumBytesPerLight = c_ForwardPlusNumFloat4PerLight * 4u * 4u;
+    const size_t ForwardPlusBase::NumBytesPerDecal = c_ForwardPlusNumFloat4PerDecal * 4u * 4u;
 
-    ForwardPlusBase::ForwardPlusBase( SceneManager *sceneManager ) :
+    ForwardPlusBase::ForwardPlusBase( SceneManager *sceneManager, bool decalsEnabled ) :
         mVaoManager( 0 ),
         mSceneManager( sceneManager ),
         mDebugMode( false ),
         mFadeAttenuationRange( true ),
-        mEnableVpls( false )
+        mEnableVpls( false ),
+        mDecalsEnabled( decalsEnabled ),
   #if !OGRE_NO_FINE_LIGHT_MASK_GRANULARITY
-    ,   mFineLightMaskGranularity( true )
+        mFineLightMaskGranularity( true ),
   #endif
+        mDecalFloat4Offset( 0u )
     {
     }
     //-----------------------------------------------------------------------------------
@@ -132,21 +139,50 @@ namespace Ogre
         }
     }
     //-----------------------------------------------------------------------------------
+    size_t ForwardPlusBase::calculateBytesNeeded( size_t numLights, size_t numDecals )
+    {
+        size_t totalBytes = numLights * NumBytesPerLight;
+        if( numDecals > 0u )
+        {
+            totalBytes = alignToNextMultiple( totalBytes, NumBytesPerDecal );
+            totalBytes += numDecals * NumBytesPerDecal;
+        }
+
+        return totalBytes;
+    }
+    //-----------------------------------------------------------------------------------
     void ForwardPlusBase::fillGlobalLightListBuffer( Camera *camera,
                                                      TexBufferPacked *globalLightListBuffer )
     {
         //const LightListInfo &globalLightList = mSceneManager->getGlobalLightList();
         const size_t numLights = mCurrentLightList.size();
 
-        if( !numLights )
+        size_t numDecals = 0;
+        size_t actualMaxDecalRq = 0;
+        const VisibleObjectsPerRq &objsPerRqInThread0 = mSceneManager->_getTmpVisibleObjectsList()[0];
+        if( mDecalsEnabled )
+        {
+            actualMaxDecalRq = std::min( MaxDecalRq, objsPerRqInThread0.size() );
+            for( size_t rqId=MinDecalRq; rqId<=actualMaxDecalRq; ++rqId )
+                numDecals += objsPerRqInThread0[rqId].size();
+        }
+
+        if( !numLights && !numDecals )
             return;
+
+        {
+            size_t accumOffset = numLights * c_ForwardPlusNumFloat4PerLight;
+            if( numDecals > 0u )
+                accumOffset = alignToNextMultiple( accumOffset, c_ForwardPlusNumFloat4PerDecal );
+            mDecalFloat4Offset = static_cast<uint16>( accumOffset );
+        }
 
         Matrix4 viewMatrix = camera->getViewMatrix();
         Matrix3 viewMatrix3;
         viewMatrix.extract3x3Matrix( viewMatrix3 );
 
         float * RESTRICT_ALIAS lightData = reinterpret_cast<float * RESTRICT_ALIAS>(
-                    globalLightListBuffer->map( 0, NumBytesPerLight * numLights ) );
+                    globalLightListBuffer->map( 0, calculateBytesNeeded( numLights, numDecals ) ) );
         LightArray::const_iterator itLights = mCurrentLightList.begin();
         LightArray::const_iterator enLights = mCurrentLightList.end();
 
@@ -209,6 +245,45 @@ namespace Ogre
             ++itLights;
         }
 
+        //Align to the start of decals
+        //Alignment happens in increments of float4, hence the "<< 2u"
+        lightData += (mDecalFloat4Offset - numLights * c_ForwardPlusNumFloat4PerLight) << 2u;
+
+        const Matrix4 viewMat = camera->getViewMatrix();
+
+        for( size_t rqId=MinDecalRq; rqId<=actualMaxDecalRq; ++rqId )
+        {
+            MovableObject::MovableObjectArray::const_iterator itor = objsPerRqInThread0[rqId].begin();
+            MovableObject::MovableObjectArray::const_iterator end  = objsPerRqInThread0[rqId].end();
+
+            while( itor != end )
+            {
+                OGRE_ASSERT_HIGH( dynamic_cast<Decal*>( *itor ) );
+                Decal *decal = static_cast<Decal*>( *itor );
+
+                const Matrix4 worldMat = decal->_getParentNodeFullTransform();
+                Matrix4 invWorldView = viewMat.concatenateAffine( worldMat );
+                invWorldView = invWorldView.inverseAffine();
+
+#if !OGRE_DOUBLE_PRECISION
+                memcpy( lightData, invWorldView[0], sizeof(float) * 12u );
+                lightData += 12u;
+#else
+                for( size_t i=0; i<3u; ++i )
+                {
+                    *lightData++ = static_cast<float>( invWorldView[i][0] );
+                    *lightData++ = static_cast<float>( invWorldView[i][1] );
+                    *lightData++ = static_cast<float>( invWorldView[i][2] );
+                    *lightData++ = static_cast<float>( invWorldView[i][3] );
+                }
+#endif
+                memcpy( lightData, &decal->mDiffuseIdx, sizeof(uint32) * 4u );
+                lightData += 4u;
+
+                ++itor;
+            }
+        }
+
         globalLightListBuffer->unmap( UO_KEEP_PERSISTENT );
     }
     //-----------------------------------------------------------------------------------
@@ -225,14 +300,12 @@ namespace Ogre
         {
             if( itor->camera == camera &&
                 itor->reflection == camera->isReflected() &&
-                (itor->aspectRatio - camera->getAspectRatio()) < 1e-6f &&
+                Math::Abs(itor->aspectRatio - camera->getAspectRatio()) < 1e-6f &&
                 itor->visibilityMask == visibilityMask &&
                 itor->shadowNode == shadowNode )
             {
                 bool upToDate = itor->lastFrame == mVaoManager->getFrameCount();
                 itor->lastFrame = mVaoManager->getFrameCount();
-                itor->lastPos   = camera->getDerivedPosition();
-                itor->lastRot   = camera->getDerivedOrientation();
 
                 if( upToDate )
                 {
@@ -244,14 +317,19 @@ namespace Ogre
                         //So we need to generate a new buffer for them (we can't map
                         //the same buffer twice in the same frame)
                         ++itor->currentBufIdx;
-                        if( itor->currentBufIdx > itor->gridBuffers.size() )
+                        if( itor->currentBufIdx >= itor->gridBuffers.size() )
                             itor->gridBuffers.push_back( CachedGridBuffer() );
+
+                        upToDate = false;
                     }
                 }
                 else
                 {
                     itor->currentBufIdx = 0;
                 }
+
+                itor->lastPos = camera->getDerivedPosition();
+                itor->lastRot = camera->getDerivedOrientation();
 
                 *outCachedGrid = &(*itor);
 
@@ -286,7 +364,8 @@ namespace Ogre
         return false;
     }
     //-----------------------------------------------------------------------------------
-    bool ForwardPlusBase::getCachedGridFor( Camera *camera, const CachedGrid **outCachedGrid ) const
+    bool ForwardPlusBase::getCachedGridFor( const Camera *camera,
+                                            const CachedGrid **outCachedGrid ) const
     {
         const uint32 visibilityMask = camera->getLastViewport()->getLightVisibilityMask();
 
@@ -297,7 +376,7 @@ namespace Ogre
         {
             if( itor->camera == camera &&
                 itor->reflection == camera->isReflected() &&
-                (itor->aspectRatio - camera->getAspectRatio()) < 1e-6f &&
+                Math::Abs(itor->aspectRatio - camera->getAspectRatio()) < 1e-6f &&
                 itor->visibilityMask == visibilityMask &&
                 itor->shadowNode == mSceneManager->getCurrentShadowNode() )
             {
@@ -360,6 +439,12 @@ namespace Ogre
                 ++itor;
             }
         }
+    }
+    //-----------------------------------------------------------------------------------
+    bool ForwardPlusBase::isCacheDirty( const Camera *camera ) const
+    {
+        CachedGrid const *outCachedGrid = 0;
+        return getCachedGridFor( camera, &outCachedGrid );
     }
     //-----------------------------------------------------------------------------------
     TexBufferPacked* ForwardPlusBase::getGridBuffer( Camera *camera ) const
