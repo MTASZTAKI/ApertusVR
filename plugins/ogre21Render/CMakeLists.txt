@@ -35,14 +35,14 @@ endfunction ()
 
 
 
-set(PATH_OGRE21DEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre21/ogre/Dependencies)
-set(PATH_OGRE21DEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre21/ogre/Dependencies)
-set(PATH_OGRE21 ${CMAKE_SOURCE_DIR}/3rdParty/ogre21/ogre)	
+set(PATH_OGRE21DEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre21/Dependencies)
+set(PATH_OGRE21DEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre21/Dependencies/ogredeps)
+set(PATH_OGRE21 ${CMAKE_SOURCE_DIR}/3rdParty/ogre21)	
 set(OGRE21_READY FALSE)
 
 
 #find ogre21
-message (STATUS "try to find Ogre" )
+message (STATUS "try to find Ogre21" )
 set (OGRE_STATIC OFF)
 set (ENV{OGREDEPS_BUILD_SDL2} FALSE)
 set (ENV{OGRE_BUILD_RENDERSYSTEM_D3D9} FALSE)
@@ -83,15 +83,16 @@ if (NOT OGRE21_READY)
 		message (STATUS "Configuring ogre dependencies for ${CONF}, please wait.....")
 		execute_process ( 
 			COMMAND ${CMAKE_COMMAND}
+			-DOGREDEPS_BUILD_SDL2:BOOL=FALSE
 			-G ${CMAKE_GENERATOR}
 			.
 			WORKING_DIRECTORY ${PATH_OGRE21DEPS}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 			)
 		reportError (output if error)
-		message (STATUS "Building ogre dependencies for ${CONF}, please wait.....")
+		message (STATUS "Building ogre21 dependencies for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target all_build install
+			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
 			WORKING_DIRECTORY ${PATH_OGRE21DEPS}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
@@ -100,9 +101,13 @@ if (NOT OGRE21_READY)
 
 #build ogre2.1
 	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
-		message (STATUS "Configuring ogre for ${CONF}, please wait.....")
+		message (STATUS "Configuring ogre21 for ${CONF}, please wait.....")
 		execute_process ( 
-				COMMAND ${CMAKE_COMMAND} 
+				COMMAND ${CMAKE_COMMAND}
+				-DOGRE_DEPENDENCIES_DIR:PATH=${PATH_OGREDEPS_OUT}
+				-DOGRE_BUILD_SAMPLES:BOOL=FALSE
+				-DOGRE_BUILD_SAMPLES2:BOOL=FALSE
+				-DOGRE_INSTALL_SAMPLES=OFF				
 				-G ${CMAKE_GENERATOR} 
 				.
 				WORKING_DIRECTORY ${PATH_OGRE21}
@@ -111,7 +116,7 @@ if (NOT OGRE21_READY)
 		reportError (output if error)
 		message (STATUS "Building ogre2.1 for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target all_build
+			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
 			WORKING_DIRECTORY ${PATH_OGRE21}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
