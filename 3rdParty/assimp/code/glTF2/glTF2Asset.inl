@@ -1031,7 +1031,7 @@ inline void Mesh::Read(Value& pJSON_Object, Asset& pAsset_Root)
         for (unsigned int i = 0; i < weights->Size(); ++i) {
           Value& weightValue = (*weights)[i];
           if (weightValue.IsNumber()) {
-            this->weights[i] = weightValue.GetFloat();
+			  ;// this->weights[i] = weightValue.GetFloat();
           }
         }
     }
