@@ -39,9 +39,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(include)
 add_subdirectory(core)
-if (WIN32)
-	add_subdirectory(plugins)
-	add_subdirectory(samples)
-	add_subdirectory(servers)
-	add_subdirectory(macros)
-endif ()
+add_subdirectory(plugins)
+add_subdirectory(samples)
+add_subdirectory(macros)
+

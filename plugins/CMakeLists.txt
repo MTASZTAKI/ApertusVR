@@ -20,254 +20,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Basic
 
-option(APE_PLUGIN_HelloWorld "Use HelloWorldPlugin?" ON )
-if (${APE_PLUGIN_HelloWorld})
-	add_subdirectory (helloWorld)
-endif ()
+add_subdirectory (360ImageScene)
+add_subdirectory (360StereoImageScene)
+add_subdirectory (360VideoScene)
+add_subdirectory (assimpAssetLoader)
+add_subdirectory (bulletPhysics)
+add_subdirectory (cefBrowser)
+add_subdirectory (htcVive)
+add_subdirectory (htmlOverlayUiManager)
+add_subdirectory (inGameBrowserScene)
+add_subdirectory (kinect)
+add_subdirectory (kinectHeadTracking)
+add_subdirectory (leapMotion)
+add_subdirectory (oceanAndSkySimulationScene)
+add_subdirectory (ogreRender)
+add_subdirectory (oisUserInput)
+add_subdirectory (physicsSimulationScene)
+add_subdirectory (sampleScene)
+add_subdirectory (viewPointManager)
 
-option(APE_PLUGIN_Tester "Use TesterPlugin?" ON )
-if (${APE_PLUGIN_Tester})
-	add_subdirectory (tester)
-endif ()
-
-option(APE_PLUGIN_SceneRecorder "Use SceneRecorderPlugin?" ON )
-if (${APE_PLUGIN_SceneRecorder})
-	add_subdirectory (sceneRecorder)
-endif ()
-
-option(APE_PLUGIN_CefBrowser "Use CefBrowserPlugin?" ON )
-if (${APE_PLUGIN_CefBrowser})
-	add_subdirectory (cefBrowser)
-endif ()
-option(APE_PLUGIN_CefBrowser_VideoCodecsSupport "Use CefBrowserPlugin VideoCodecsSupport?" OFF )
-option(APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource "Use CefBrowserPlugin VideoCodecsSupport_FromSource?" OFF )
-
-option(APE_PLUGIN_InGameBrowserSample "Use InGameBrowserSamplePlugin?" ON )
-if (${APE_PLUGIN_InGameBrowserSample})
-	add_subdirectory (inGameBrowserSample)
-endif ()
-
-# Environment Simulation
-
-option(APE_PLUGIN_SkyTerrainWaterScene "Use SkyTerrainWaterScenePlugin?" ON )
-if (${APE_PLUGIN_SkyTerrainWaterScene})
-	add_subdirectory (skyTerrainWaterScene)
-endif ()
-
-# 360
-
-option(APE_PLUGIN_360Image "Use 360ImagePlugin?" ON )
-if (${APE_PLUGIN_360Image})
-	add_subdirectory (360Image)
-endif ()
-
-option(APE_PLUGIN_360StereoImage "Use 360StereoImagePlugin?" ON )
-if (${APE_PLUGIN_360StereoImage})
-	add_subdirectory (360StereoImage)
-endif ()
-
-option(APE_PLUGIN_E-Learning "Use E-LearningPlugin?" ON )
-if (${APE_PLUGIN_E-Learning})
-	add_subdirectory (e-Learning)
-endif ()
-
-option(APE_PLUGIN_360Video "Use 360VideoPlugin?" ON )
-if (${APE_PLUGIN_360Video})
-	add_subdirectory (360Video)
-endif ()
-
-# 3D model formats
-
-option(APE_PLUGIN_AssimpAssetLoader "Use AssimpAssetLoaderPlugin?" ON )
-if (${APE_PLUGIN_AssimpAssetLoader})
-	add_subdirectory (assimpAssetLoader)
-endif ()
-
-# UI
-
-option(APE_PLUGIN_htmlOverlayUiManager "Use htmlOverlayUiManagerPlugin?" ON )
-if (${APE_PLUGIN_htmlOverlayUiManager})
-	add_subdirectory (htmlOverlayUiManager)
-endif ()
-
-option(APE_PLUGIN_viewPointManager "Use viewPointManagerPlugin?" ON )
-if (${APE_PLUGIN_viewPointManager})
-	add_subdirectory (viewPointManager)
-endif ()
-
-option(APE_PLUGIN_Avatar "Use AvatarPlugin?" ON )
-if (${APE_PLUGIN_Avatar})
-	add_subdirectory (avatar)
-endif ()
-
-option(APE_PLUGIN_GallerySamplePlugin "Use GallerySamplePlugin?" ON )
-if (${APE_PLUGIN_GallerySamplePlugin})
-	add_subdirectory (gallerySample)
-endif ()
-
-# Hand Tracking
-
-option(APE_PLUGIN_LeapMotion "Use LeapMotionPlugin?" ON )
-if (${APE_PLUGIN_LeapMotion})
-	add_subdirectory (leapMotion)
-endif ()
-
-# Head Tracking
-
-option(APE_PLUGIN_FobHeadTracking "Use FobHeadTrackingPlugin?" ON )
-if (${APE_PLUGIN_FobHeadTracking})
-	add_subdirectory (fobHeadTracking)
-endif ()
-
-option(APE_PLUGIN_KinectHeadTracking "Use KinectHeadTrackingPlugin?" ON )
-if (${APE_PLUGIN_KinectHeadTracking})
-	add_subdirectory (kinectHeadTracking)
-endif ()
-
-# Renders
-
-option(APE_PLUGIN_OgreRender "Use OgreRenderPlugin?" ON )
-if (${APE_PLUGIN_OgreRender})
-	add_subdirectory (ogreRender)
-endif ()
-
-option(APE_PLUGIN_Ogre21Render "Use Ogre21RenderPlugin?" OFF )
-if (${APE_PLUGIN_Ogre21Render})
-	add_subdirectory (ogre21Render)
-endif ()
-
-# Physics
-
-option(APE_PLUGIN_BulletPhysics "Use BulletPhysicsPlugin?" ON )
-if (${APE_PLUGIN_BulletPhysics})
-	add_subdirectory (bulletPhysics)
-endif ()
-
-# Input handlers
-
-option(APE_PLUGIN_OisUserInput "Use OisUserInputPlugin?" ON )
-if (${APE_PLUGIN_OisUserInput})
-	add_subdirectory (oisUserInput)
-endif ()
-
-# Displays
-
-option(APE_PLUGIN_OculusDK2 "Use OculusDK2Plugin?" ON )
-if (${APE_PLUGIN_OculusDK2})
-	add_subdirectory (oculusDK2)
-endif ()
-
-option(APE_PLUGIN_HtcVive "Use HtcVivePlugin?" ON )
-if (${APE_PLUGIN_HtcVive})
-	add_subdirectory (htcVive)
-endif ()
-
-# PointCloud
-
-option(APE_PLUGIN_Kinect "Use KinectPlugin?" ON )
-if (${APE_PLUGIN_Kinect})
-	add_subdirectory (kinect)
-endif ()
-
-option(APE_PLUGIN_MultiKinect "Use MultiKinectPlugin?" OFF )
-if (${APE_PLUGIN_MultiKinect})
-	add_subdirectory (multikinect)
-endif ()
-
-option(APE_PLUGIN_Zed "Use ZedPlugin?" OFF )
-if (${APE_PLUGIN_Zed})
-	add_subdirectory (zed)
-endif ()
-
-option(APE_PLUGIN_PointCloudRecorder "Use PointCloudRecorder?" ON )
-if (${APE_PLUGIN_PointCloudRecorder})
- 	add_subdirectory (pointCloudRecorder)
-endif ()
-
-# Industry / IoT / Controllers / Sensors
-
-option(APE_PLUGIN_Industry40 "Use Industry40Plugin?" ON )
-if (${APE_PLUGIN_Industry40})
-	add_subdirectory (industry40)
-endif ()
-
-# Apis, servers
-
-option(APE_PLUGIN_JsAPI "Use JsAPIPlugin?" ON )
-if (${APE_PLUGIN_JsAPI})
+option(APE_JSAPI "Use JS_API?" OFF )
+if (${APE_JSAPI})
 	add_subdirectory (jsAPI)
-endif ()
-
-option(APE_PLUGIN_Webserver "Use WebserverPlugin?" ON )
-if (${APE_PLUGIN_Webserver})
-	add_subdirectory (webserver)
-endif ()
-
-# Others
-
-option(APE_PLUGIN_EngineeringScene "Use EngineeringScenePlugin?" ON )
-if (${APE_PLUGIN_EngineeringScene})
-	add_subdirectory (engineeringScene)
-endif ()
-
-option(APE_PLUGIN_PresentationScene "Use PresentationScenePlugin?" ON )
-if (${APE_PLUGIN_PresentationScene})
-	add_subdirectory (presentationScene)
-endif ()
-
-option(APE_PLUGIN_ArtScene "Use ArtScenePlugin?" ON )
-if (${APE_PLUGIN_ArtScene})
-	add_subdirectory (artScene)
-endif ()
-
-option(APE_PLUGIN_LinkageDesignerVR "Use LinkageDesignerVRPlugin?" ON )
-if (${APE_PLUGIN_LinkageDesignerVR})
-	add_subdirectory (linkageDesignerVR)
-endif ()
-
-option(APE_PLUGIN_Lego "Use LegoPlugin?" ON )
-if (${APE_PLUGIN_Lego})
-	add_subdirectory (lego)
-endif ()
-
-option(APE_PLUGIN_TexasEEGPlugin "Use TexasEEGPlugin?" ON )
-if (${APE_PLUGIN_TexasEEGPlugin})
-	add_subdirectory (texasEEG)
-endif ()
-
-option(APE_PLUGIN_RobotCalibration "Use RobotCalibrationPlugin?" ON )
-if (${APE_PLUGIN_RobotCalibration})
-	add_subdirectory (robotCalibration)
-endif ()
-
-option(APE_PLUGIN_GyorPlugin "Use GyorPlugin?" ON )
-if (${APE_PLUGIN_GyorPlugin})
-	add_subdirectory (gyor)
-endif ()
-
-option(APE_PLUGIN_GyorPathPlanningPlugin "Use GyorPathPlanningPlugin?" ON )
-if (${APE_PLUGIN_GyorPathPlanningPlugin})
-	add_subdirectory (gyorPathPlanning)
-endif ()
-
-option(APE_PLUGIN_AudiPlugin "Use AudiPlugin?" ON )
-if (${APE_PLUGIN_AudiPlugin})
-	add_subdirectory (audi)
-endif ()
-
-option(APE_PLUGIN_PolimiPlugin "Use PolimiPlugin?" ON )
-if (${APE_PLUGIN_PolimiPlugin})
-	add_subdirectory (polimi)
-endif ()
-
-option(APE_PLUGIN_PhysicsSimulationScene "Use PhysicsSimulationPlugin?" ON )
-if (${APE_PLUGIN_PhysicsSimulationScene})
-	add_subdirectory (physicsSimulationScene)
-endif ()
-
-option(APE_PLUGIN_WaterGame "Use WaterGamePlugin?" ON )
-if (${APE_PLUGIN_WaterGame})
-	add_subdirectory (waterGame)
 endif ()

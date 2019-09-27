@@ -1,5 +1,0 @@
-
-option(${sampleOptionName} "${sampleOptionName}?" ON )
-if ($${${sampleOptionName}})
-	add_subdirectory (${sampleName})
-endif ()

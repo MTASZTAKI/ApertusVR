@@ -1,5 +1,0 @@
-
-option(${pluginOptionName} "Use ${pluginCaptionName}?" ON )
-if ($${${pluginOptionName}})
-	add_subdirectory (${pluginName})
-endif ()

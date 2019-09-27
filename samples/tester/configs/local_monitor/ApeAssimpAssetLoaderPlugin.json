@@ -1,8 +1,0 @@
-{
-  "assets": [
-    "/plugins/assimpAssetLoader/resources/UR10STL.stl"
-  ],
-  "mergeAndExportMeshes": false,
-  "scale": 0.1,
-  "regenerateNormals":  true
-}
