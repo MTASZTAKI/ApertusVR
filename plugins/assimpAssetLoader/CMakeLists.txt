@@ -65,8 +65,8 @@ endif ()
 #use assimp
 add_library(MY_ASSIMP STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_DEBUG ${ASSIMP_HOME}/lib/Debug/assimp-vc140-mt.lib)
-	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_RELEASE ${ASSIMP_HOME}/lib/Release/assimp-vc140-mt.lib)
+	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_DEBUG ${ASSIMP_HOME}/lib/Debug/assimp-vc141-mtd.lib)
+	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_RELEASE ${ASSIMP_HOME}/lib/Release/assimp-vc141-mt.lib)
 endif ()
 
 #apeAssimpAssetLoaderPlugin
@@ -95,8 +95,8 @@ target_link_libraries (apeAssimpAssetLoaderPlugin apePluginManager apeSceneManag
 set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins")
 
 if (WIN32)
-	file(COPY ${ASSIMP_HOME}/bin/Debug/assimp-vc140-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${ASSIMP_HOME}/bin/Release/assimp-vc140-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${ASSIMP_HOME}/bin/Debug/assimp-vc141-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${ASSIMP_HOME}/bin/Release/assimp-vc141-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 
