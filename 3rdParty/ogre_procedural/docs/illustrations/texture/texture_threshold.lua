@@ -1,6 +1,0 @@
-buffer = Procedural.TextureBuffer(128)
-Procedural.Cell(buffer):setDensity(4):setRegularity(234):process()
-Procedural.Threshold(buffer):process()
-tests:addTextureBuffer(buffer)
-dotfile = tests:getDotFile("texture_28", "Threshold_Demo")
-dotfile:set("Cell", "texture_cell_smooth", "Threshold", "texture_threshold")

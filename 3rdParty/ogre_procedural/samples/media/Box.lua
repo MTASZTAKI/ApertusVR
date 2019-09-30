@@ -1,1 +1,0 @@
-tests:addTriangleBuffer(Procedural.BoxGenerator():setSizeX(10):buildTriangleBuffer())

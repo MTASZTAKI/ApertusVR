@@ -45,24 +45,6 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 
-# dx9
-if (WIN32 AND NOT EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe)
-    message("DirectX9 SDK: Starting download, please wait...")
-	file(DOWNLOAD https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe
-	${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe SHOW_PROGRESS)
-	message("DirectX9 SDK: Starting installer...")
-	set(DX9SDK_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/directx9/DXSDK_Jun10.exe")
-	execute_process(
-		COMMAND cmd /c ${DX9SDK_SETUP_PATH}
-		RESULT_VARIABLE DX9SDK_SETUP_RESULT
-	)
-	if (${DX9SDK_SETUP_RESULT} EQUAL 0)
-		message("DirectX9 SDK: Installation succeeded, exit code (${DX9SDK_SETUP_RESULT})")
-	else ()
-		message("DirectX9 SDK: Installation failed, exit code (${DX9SDK_SETUP_RESULT})")
-	endif ()
-endif ()
-
 set(PATH_OGREDEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies)
 set(PATH_OGREDEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
 set(PATH_OGRE ${CMAKE_SOURCE_DIR}/3rdParty/ogre)

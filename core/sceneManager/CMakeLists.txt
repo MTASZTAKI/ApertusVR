@@ -22,6 +22,9 @@
 
 # Add all header and cpp files in the directory to the project
 
+include("network/prepare_curl.cmake")
+include("network/prepare_raknet.cmake")
+
 set(HEADERS
 	apeTextGeometryImpl.h
 	apeLightImpl.h
