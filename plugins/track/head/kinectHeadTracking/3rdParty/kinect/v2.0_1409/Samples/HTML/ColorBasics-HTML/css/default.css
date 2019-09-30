@@ -1,0 +1,85 @@
+﻿body {
+    background-color:#ffffff;
+    color:gray;
+}
+
+#header {
+    width: auto;
+    height: auto;
+    text-align: center;
+}
+
+#logo1 {
+    float: left;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+#logo2 {
+    display: inline-block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#apptext {
+    float: right;
+    text-align: right;
+    padding-right: 10px;
+}
+
+#canvas_container {
+   width: 100%;
+   height: 90%;
+   padding-top: 5px;
+}
+
+canvas {
+    position: absolute;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+}
+
+#ender {
+    text-align: center;
+    padding-top: 5px;
+    width: auto;
+    height: auto;
+}
+
+#status {
+    float: left;
+    text-align: left;
+    padding-left: 10px;
+}
+
+#controls {
+    float: right;
+    padding-right: 10px;
+}
+
+input#snapshotbutton {
+    cursor: pointer;
+    padding: 5px 10px;
+    background: #808080;
+    border: 1px solid #000000;
+}
+
+input#snapshotbutton:hover, input#snapshotbutton:focus {
+    background-color: #696868;
+    -webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
+    box-shadow: 0 0 1px rgba(0,0,0, .75);
+}
+
+@media screen and (-ms-view-state: fullscreen-landscape) {
+}
+
+@media screen and (-ms-view-state: filled) {
+}
+
+@media screen and (-ms-view-state: snapped) {
+}
+
+@media screen and (-ms-view-state: fullscreen-portrait) {
+}

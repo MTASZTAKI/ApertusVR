@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Image(buffer):setFile("red_brick.jpg"):process()
+Procedural.Convolution(buffer):setKernel(Procedural.Matrix3(10.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -10.0)):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_09", "Convolution_Demo")
+dotfile:set("Image", "texture_image", "Kernel matrix", "", "Convolution", "texture_convolution")

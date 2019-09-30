@@ -1,0 +1,9 @@
+<map id="LEAP_TRACKING_EVENT" name="LEAP_TRACKING_EVENT">
+<area shape="rect" id="node2" href="$a00029.html#a00057" title="Describes a tracked hand. " alt="" coords="233,719,356,928"/>
+<area shape="rect" id="node3" href="$a00029.html#a00054" title="Describes the digit of a hand. " alt="" coords="177,476,282,583"/>
+<area shape="rect" id="node4" href="$a00029.html#a00071" title="A three element, floating&#45;point vector. " alt="" coords="33,13,151,149"/>
+<area shape="rect" id="node5" href="$a00029.html#a00038" title="Describes a bone&#39;s position and orientation. " alt="" coords="236,277,337,355"/>
+<area shape="rect" id="node7" href="$a00029.html#a00064" title="Properties associated with the palm of the hand. " alt="" coords="363,277,463,355"/>
+<area shape="rect" id="node6" href="$a00029.html#a00066" title="A four element, floating point quaternion. " alt="" coords="333,5,485,156"/>
+<area shape="rect" id="node8" href="$a00029.html#a00056" title="Identifying information for a frame of tracking data. " alt="" coords="380,770,553,877"/>
+</map>

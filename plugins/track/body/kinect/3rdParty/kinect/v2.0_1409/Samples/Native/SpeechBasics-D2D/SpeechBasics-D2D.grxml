@@ -1,0 +1,34 @@
+﻿<grammar version="1.0" xml:lang="en-US" root="rootRule" tag-format="semantics/1.0-literals" xmlns="http://www.w3.org/2001/06/grammar">
+  <rule id="rootRule">
+    <one-of>
+      <item>
+        <tag>FORWARD</tag>
+        <one-of>
+          <item> forwards </item>
+          <item> forward </item>
+          <item> straight </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>BACKWARD</tag>
+        <one-of>
+          <item> backward </item>
+          <item> backwards </item>
+          <item> back </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>LEFT</tag>
+        <one-of>
+          <item> turn left </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>RIGHT</tag>
+        <one-of>
+          <item> turn right </item>
+        </one-of>
+      </item>
+    </one-of>
+  </rule>
+</grammar>

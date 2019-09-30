@@ -1,0 +1,770 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Gesture &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/api/Leap.Gesture.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Gesture.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Gesture.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/api/Leap.Gesture.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Gesture.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/index.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Gesture.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/api/Leap.Gesture.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Gesture.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Gesture
+</span> -->
+        
+  <div class="section" id="gesture">
+<h1>Gesture<a class="headerlink" href="#gesture" title="Permalink to this headline">¶</a></h1>
+<p><strong>Notice</strong> Gestures are deprecated in version 3.0 and may not behave the same
+as they did in earlier versions.</p>
+<style>.members {
+     -webkit-column-count:2; /* Chrome, Safari, Opera */
+     -moz-column-count:2; /* Firefox */
+     column-count:2;
+     }
+     strong {color:gray;}
+</style><p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a003d8e2b689e1e80a9d9f5547f26d831">Gesture()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a90982875b1a1e8b54302e1325de490cd">Gesture(const Gesture &amp;rhs)</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a43aeae80706c4089acf73e4095891fa5">duration() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1abac9920e8988b2743222ce1729ac6601">durationSeconds() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a43fd476e22d0607d5caae64402b2cffa">frame() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a788e21d8ff5d1f54209e75f14a27110b">hands() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a87daef5bdd8501be1f113684cfc61074">id() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a4788a29ee0630494dbd62bdbcabc8a2c">invalid()</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1aac1b70a2ed67ead038c4d3f5ac4d8a81">isValid() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a7d26edde0f247f1556ebcc6d15053515">operator!=(const Gesture &amp;rhs) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1ae811cd825aca7239e86c5e7314bb7448">operator==(const Gesture &amp;rhs) const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a9b73aa8053337ed8d142fc912703e43e">pointables() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a3804c9648e6d1325751536cca350f2bf">state() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1a3f23c97b6c9f2a88e1121d1c633ccafa">toString() const</a></li>
+<li><a class="reference external" href="#cppclass_leap_1_1_gesture_1afbd0fa31db28593e9669c3c56711c0a7">type() const</a></li>
+</ul>
+</div>
+<div class="line-block" id="cppclass_leap_1_1_gesture">
+<div class="line"><em>class</em> <strong>Leap::Gesture</strong></div>
+</div>
+<blockquote>
+<div><p>The <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> class represents a recognized movement by the user. </p>
+<p></p>
+<em>Public Type</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_gesture_1a5d74787dedbc4e11c1ab15bf487e61f8"></span><strong>State enum</strong></p>
+<blockquote>
+<div><p>The possible gesture states. </p>
+<p></p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">STATE_INVALID</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">-1</span></tt> - <p>An invalid state. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_START</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>The gesture is starting. </p>
+<p>Just enough has happened to recognize it. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_UPDATE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - <p>The gesture is in progress. </p>
+<p>(Note: not all gestures have updates). </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_STOP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">3</span></tt> - <p>The gesture has completed or stopped. </p>
+<p></p>
+</li>
+</ul>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a1d1cfd8ffb84e947f82999c682b666a7"></span><strong>Type enum</strong></p>
+<blockquote>
+<div><p>The supported types of gestures. </p>
+<p></p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">TYPE_INVALID</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">-1</span></tt> - <p>An invalid type. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_SWIPE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>A straight line movement by the hand with fingers extended. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_CIRCLE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">4</span></tt> - <p>A circular movement by a finger. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_SCREEN_TAP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">5</span></tt> - <p>A forward tapping movement by a finger. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_KEY_TAP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">6</span></tt> - <p>A downward tapping movement by a finger. </p>
+<p></p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<em>Public Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_gesture_1a43aeae80706c4089acf73e4095891fa5"></span><div class="line-block">
+<div class="line">int64_t <strong>duration</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The elapsed duration of the recognized movement up to the frame containing this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object, in microseconds. </p>
+<p><p><pre class="literal-block">
+float microseconds = gesture.duration();
+</pre>
+</p>
+<p>The duration reported for the first <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> in the sequence (with the STATE_START state) will typically be a small positive number since the movement must progress far enough for the Leap Motion software to recognize it as an intentional gesture.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>int64_t the elapsed duration in microseconds. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1abac9920e8988b2743222ce1729ac6601"></span><div class="line-block">
+<div class="line">float <strong>durationSeconds</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The elapsed duration in seconds. </p>
+<p><p><pre class="literal-block">
+float seconds = gesture.durationSeconds();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>See</strong></dt>
+<dd><a class="reference internal" href="#cppclass_leap_1_1_gesture_1a43aeae80706c4089acf73e4095891fa5"><em>duration()</em></a> </dd>
+<dt><strong>Return</strong></dt>
+<dd>float the elapsed duration in seconds. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a43fd476e22d0607d5caae64402b2cffa"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> <strong>frame</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> containing this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> instance. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Leap::Frame</em></a> frameOfGesture = gesture.frame();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> The parent <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> object. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a003d8e2b689e1e80a9d9f5547f26d831"></span><div class="line-block">
+<div class="line"> <strong>Gesture</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a new <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object. </p>
+<p>An uninitialized <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object is considered invalid. Get valid instances of the <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> class, which will be one of the <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> subclasses, from a <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame"><em>Frame</em></a> object. <dl class="docutils">
+<dt><strong>Since</strong></dt>
+<dd>1.0 </dd>
+</dl>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a90982875b1a1e8b54302e1325de490cd"></span><div class="line-block">
+<div class="line"> <strong>Gesture</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>  &amp; rhs)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Constructs a new copy of an <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Leap::Gesture</em></a> copy = <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Leap::Gesture</em></a>(gesture);
+</pre>
+</p>
+<p></p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a788e21d8ff5d1f54209e75f14a27110b"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>HandList</em></a> <strong>hands</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of hands associated with this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>, if any. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>Leap::HandList</em></a> handsForGesture = gesture.hands();
+</pre>
+</p>
+<p>If no hands are related to this gesture, the list is empty.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="Leap.HandList.html#cppclass_leap_1_1_hand_list"><em>HandList</em></a> the list of related <a class="reference internal" href="Leap.Hand.html#cppclass_leap_1_1_hand"><em>Hand</em></a> objects. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a87daef5bdd8501be1f113684cfc61074"></span><div class="line-block">
+<div class="line">int32_t <strong>id</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The gesture ID. </p>
+<p><p>All <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> objects belonging to the same recognized movement share the same ID value. Use the ID value with the <a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a138683bff90b364b998c1b508469c308"><em>Frame::gesture()</em></a> method to find updates related to this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object in subsequent frames.</p>
+<p><pre class="literal-block">
+int32_t gestureOfInterest = gesture.<a class="reference internal" href="#cppclass_leap_1_1_gesture_1a87daef5bdd8501be1f113684cfc61074"><em>id</em></a>();
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> manyGestures = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>(olderFrame);
+for(<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a39ad19b879ba9c81c59feddfba2eca03"><em>Leap::GestureList::const_iterator</em></a> gl = manyGestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); gl != manyGestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); gl++)
+{
+    if ((*gl).id() == gestureOfInterest) {
+        //Process it...
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>int32_t the ID of this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1aac1b70a2ed67ead038c4d3f5ac4d8a81"></span><div class="line-block">
+<div class="line">bool <strong>isValid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Reports whether this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> instance represents a valid <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>. </p>
+<p><p><pre class="literal-block">
+if (gesture.isValid()) {
+    // Process it...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>bool True, if this is a valid <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> instance; false, otherwise. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a7d26edde0f247f1556ebcc6d15053515"></span><div class="line-block">
+<div class="line">bool <strong>operator!=</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>  &amp; rhs)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object inequality. </p>
+<p><p><pre class="literal-block">
+thisGesture != thatGesture;
+</pre>
+</p>
+<p>Two Gestures are equal only if they represent the same snapshot of the same recognized movement. </p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1ae811cd825aca7239e86c5e7314bb7448"></span><div class="line-block">
+<div class="line">bool <strong>operator==</strong>(const  <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>  &amp; rhs)</div>
+</div>
+</p>
+<blockquote>
+<div><p>Compare <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object equality. </p>
+<p><p><pre class="literal-block">
+thisGesture == thatGesture;
+</pre>
+</p>
+<p>Two Gestures are equal if they represent the same snapshot of the same recognized movement. </p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a9b73aa8053337ed8d142fc912703e43e"></span><div class="line-block">
+<div class="line"><a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>PointableList</em></a> <strong>pointables</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The list of fingers and tools associated with this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>, if any. </p>
+<p><p>If no <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> objects are related to this gesture, the list is empty.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>Leap::PointableList</em></a> pointablesForGesture = gesture.pointables();
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="Leap.PointableList.html#cppclass_leap_1_1_pointable_list"><em>PointableList</em></a> the list of related <a class="reference internal" href="Leap.Pointable.html#cppclass_leap_1_1_pointable"><em>Pointable</em></a> objects. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a3804c9648e6d1325751536cca350f2bf"></span><div class="line-block">
+<div class="line">State <strong>state</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The gesture state. </p>
+<p><p>Recognized movements occur over time and have a beginning, a middle, and an end. The &#8216;<a class="reference internal" href="#cppclass_leap_1_1_gesture_1a3804c9648e6d1325751536cca350f2bf"><em>state()</em></a>&#8216; attribute reports where in that sequence this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object falls.</p>
+<p><pre class="literal-block">
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> gestures = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>();
+for(<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a39ad19b879ba9c81c59feddfba2eca03"><em>Leap::GestureList::const_iterator</em></a> gl = gestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); gl != gestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); gl++)
+{
+    switch ((*gl).state()) {
+        case Leap::Gesture::STATE_START:
+            //Handle starting gestures
+            break;
+        case Leap::Gesture::STATE_UPDATE:
+            //Handle continuing gestures
+            break;
+        case Leap::Gesture::STATE_STOP:
+            //Handle ending gestures
+            break;
+        default:
+            //Handle unrecognized states
+            break;
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Gesture::State A value from the Gesture::State enumeration. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a3f23c97b6c9f2a88e1121d1c633ccafa"></span><div class="line-block">
+<div class="line">std::string <strong>toString</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>A string containing a brief, human-readable description of this <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> gestures = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>();
+for(<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a39ad19b879ba9c81c59feddfba2eca03"><em>Leap::GestureList::const_iterator</em></a> gl = gestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); gl != gestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); gl++)
+    std::cout &lt;&lt; (*gl).toString() &lt;&lt; std::endl;
+</pre>
+</p>
+<p></p>
+</p>
+</div></blockquote>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1afbd0fa31db28593e9669c3c56711c0a7"></span><div class="line-block">
+<div class="line">Type <strong>type</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>The gesture type. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list"><em>Leap::GestureList</em></a> gestures = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>();
+for(<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a39ad19b879ba9c81c59feddfba2eca03"><em>Leap::GestureList::const_iterator</em></a> gl = gestures.<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1aa4b02d4f1a8500fb07a551069060709f"><em>begin</em></a>(); gl != frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1aff7d79842325405f41784cddf0c979db"><em>gestures</em></a>().<a class="reference internal" href="Leap.GestureList.html#cppclass_leap_1_1_gesture_list_1a350132543d80a1c1e5be844e6d2878ea"><em>end</em></a>(); gl++)
+{
+    switch ((*gl).type()) {
+        case Leap::Gesture::TYPE_CIRCLE:
+            //Handle circle gestures
+            break;
+        case Leap::Gesture::TYPE_KEY_TAP:
+            //Handle key tap gestures
+            break;
+        case Leap::Gesture::TYPE_SCREEN_TAP:
+            //Handle screen tap gestures
+            break;
+        case Leap::Gesture::TYPE_SWIPE:
+            //Handle swipe gestures
+            break;
+        default:
+            //Handle unrecognized gestures
+            break;
+    }
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Gesture::Type A value from the Gesture::Type enumeration. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+<em>Public Static Functions</em><blockquote>
+<div><p><span class="target" id="cppclass_leap_1_1_gesture_1a4788a29ee0630494dbd62bdbcabc8a2c"></span><div class="line-block">
+<div class="line">const  <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a>  &amp; <strong>invalid</strong>()</div>
+</div>
+</p>
+<blockquote>
+<div><p>Returns an invalid <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> object. </p>
+<p><p><pre class="literal-block">
+<a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Leap::Gesture</em></a> trackedGesture = frame.<a class="reference internal" href="Leap.Frame.html#cppclass_leap_1_1_frame_1a138683bff90b364b998c1b508469c308"><em>gesture</em></a>(gestureID);
+if (trackedGesture != <a class="reference internal" href="#cppclass_leap_1_1_gesture_1a4788a29ee0630494dbd62bdbcabc8a2c"><em>Leap::Gesture::invalid</em></a>()) {
+    //Process it...
+}
+</pre>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The invalid <a class="reference internal" href="#cppclass_leap_1_1_gesture"><em>Gesture</em></a> instance. </dd>
+</dl>
+</p>
+</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="gesture-type">
+<h2>Gesture Type<a class="headerlink" href="#gesture-type" title="Permalink to this headline">¶</a></h2>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a1d1cfd8ffb84e947f82999c682b666a7"></span><strong>Type enum</strong></p>
+<blockquote>
+<div><p>The supported types of gestures. </p>
+<p></p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">TYPE_INVALID</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">-1</span></tt> - <p>An invalid type. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_SWIPE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>A straight line movement by the hand with fingers extended. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_CIRCLE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">4</span></tt> - <p>A circular movement by a finger. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_SCREEN_TAP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">5</span></tt> - <p>A forward tapping movement by a finger. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">TYPE_KEY_TAP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">6</span></tt> - <p>A downward tapping movement by a finger. </p>
+<p></p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="gesture-state">
+<h2>Gesture State<a class="headerlink" href="#gesture-state" title="Permalink to this headline">¶</a></h2>
+<p><span class="target" id="cppclass_leap_1_1_gesture_1a5d74787dedbc4e11c1ab15bf487e61f8"></span><strong>State enum</strong></p>
+<blockquote>
+<div><p>The possible gesture states. </p>
+<p></p>
+<p><em>Values:</em></p>
+<ul class="breatheenumvalues">
+<li><tt class="first docutils literal"><span class="pre">STATE_INVALID</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">-1</span></tt> - <p>An invalid state. </p>
+<p></p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_START</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">1</span></tt> - <p>The gesture is starting. </p>
+<p>Just enough has happened to recognize it. </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_UPDATE</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">2</span></tt> - <p>The gesture is in progress. </p>
+<p>(Note: not all gestures have updates). </p>
+</li>
+<li><tt class="first docutils literal"><span class="pre">STATE_STOP</span></tt><tt class="docutils literal"> <span class="pre">=</span> <span class="pre">=</span> <span class="pre">3</span></tt> - <p>The gesture has completed or stopped. </p>
+<p></p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,945 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Coordinate Systems &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Camera Images" href="Leap_Images.html" />
+    <link rel="prev" title="Fingers" href="Leap_Pointables.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/devguide/Leap_Coordinate_Mapping.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Coordinate_Mapping.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Coordinate_Mapping.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/devguide/Leap_Coordinate_Mapping.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Pointables.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Images.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_Coordinate_Mapping.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_Coordinate_Mapping.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Coordinate_Mapping.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Coordinate_Mapping.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Coordinate Systems
+</span> -->
+        
+  <div class="section" id="coordinate-systems">
+<h1>Coordinate Systems<a class="headerlink" href="#coordinate-systems" title="Permalink to this headline">¶</a></h1>
+<p>A fundamental task when using the Leap Motion controller in an application is mapping the coordinate values received from the controller to the appropriate application-defined coordinate system.</p>
+<div class="section" id="leap-motion-coordinates">
+<h2>Leap Motion Coordinates<a class="headerlink" href="#leap-motion-coordinates" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion Controller provides coordinates in units of real world millimeters within the Leap Motion frame of reference. That is, if a finger tip&#8217;s position is given as <tt class="docutils literal"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span> <span class="pre">=</span> <span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">-100]</span></tt>, those numbers are millimeters &#8211; or, x = +10cm, y = 10cm, z = -10cm.</p>
+<p>The Leap Controller hardware itself is the center of this frame of reference. The origin is located at the top, center of the hardware. That is if you touch the middle of the Leap Motion controller (and were able to get data) the coordinates of your finger tip would be [0, 0, 0].</p>
+<div class="figure">
+<img alt="devguide/../../../images/Leap_Axes.png" src="devguide/../../../images/Leap_Axes.png" />
+<p class="caption">The Leap Motion controller uses a right-handed coordinate system.</p>
+</div>
+<p>In its normal position, that is on a desk with the user on one side and the computer monitor on the other, the user is &#8220;in front&#8221; (+z) of the controller and the monitor screen is &#8220;behind&#8221;(-z) the controller. If the user enables automatic orientation, the Leap Motion software adjusts the coordinate system if the controller is reversed (the green LED is facing away from the user). However, if the user places their controller in a different position (upside down or sideways), the Leap Motion software cannot detect or adjust for this.</p>
+<p>Design your application to encourage the user to not get too close to the Leap Motion Controller with visual cues; hovering your hands right over the controller increases the chance that fingers and hands will block each other from view.</p>
+</div>
+<div class="section" id="mapping-coordinates-to-your-application">
+<h2>Mapping Coordinates to your Application<a class="headerlink" href="#mapping-coordinates-to-your-application" title="Permalink to this headline">¶</a></h2>
+<p>To use information from the Leap Motion device in your application, you have to interpret that data so it makes sense in your application. For example, to map Leap Motion coordinates to application coordinates, you have to decide which axes to use, how much of the Leap Motion field of view to take advantage of, and whether to use an absolute mapping or a relative mapping.</p>
+<p>For 3D applications, it usually makes sense to use all three axes of the Leap Motion device. For 2D applications, you can often discard one axis, typically the z-axis, and map input from the two remaining axes to the 2D application coordinates.</p>
+<p>Whether you use two or three axes, you have to decide how much of the Leap Motion range and field of view to use in your application. The field of view is an inverted pyramid. The available range on the x and z axes is much smaller close to the device than it is near the top of the range. If you use too wide a range, or allow too low a height, then the user won&#8217;t be able to reach the bottom corners of your application. Consider the following example, which maps the Leap Motion coordinates to the rectangle below (this example requires a plugged-in Leap Motion controller to view):</p>
+<div id="abs_mapping_stage" style="background-color:rgb(191,191,191); width:600px; height:200;"></div>
+<script>
+//Uses Kinetic.js
+var abs = {};
+abs.width = 600;
+abs.height = 200;
+abs.stage = new Kinetic.Stage({
+        container: 'abs_mapping_stage',
+        width: abs.width,
+        height: abs.height
+});
+
+abs.layer = new Kinetic.Layer();
+
+var y_intercept = abs.height - abs.width/2/Math.tan(65 * Math.PI/180);
+abs.line = new Kinetic.Line({
+  x: 0,
+  y: 0,
+  points: [0, y_intercept, abs.width/2, abs.height, abs.width, y_intercept],
+  stroke: 'red'
+});
+
+abs.tip = new Kinetic.Circle({
+        x: 239,
+        y: 75,
+        radius: 20,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        opacity:.5,
+        visible: true
+      });
+
+abs.layer.add(abs.line);
+abs.layer.add(abs.tip);
+abs.stage.add(abs.layer);
+
+
+abs.scale = 600/470;
+abs.anim = new Kinetic.Animation(function(frame) {
+    var leap_frame = leap.frame(); //leap is a connected Controller object
+    if(leap_frame.valid && leap_frame.pointables.length > 0){
+       pointable = leap_frame.pointables[0];
+       abs.tip.x(pointable.tipPosition[0] * abs.scale + abs.width/2);
+       abs.tip.y(abs.height - pointable.tipPosition[1] * abs.scale);
+    } else if (abs.tip.y() < 0){
+       abs.tip.x(abs.width/2);
+       abs.tip.y(abs.height/2);     
+    }
+
+}, abs.layer);
+
+abs.anim.start();
+</script>
+<p>Notice that when you try to reach the bottom corners, your finger passes out of the device&#8217;s field of view and you cannot move the cursor there.</p>
+<p>You also have to decide how to scale the Leap Motion coordinates to suit your application (i.e. how many pixels per millimeter in a 2D application). The greater the scale factor, the more affect a small physical movement will have. This can make it easier for the user to move a pointer, for example, from one side of the application to another, but also makes precise positioning more difficult. You will need to find the best balance between speed and precision for your application.</p>
+<p>Finally, the difference between coordinate systems may require flipping an axis or three. For example, many 2D window drawing APIs put the origin at the top, left corner of the window, with y values increasing downward. Leap Motion y values increase upwards, so you have to essentially flip the y axis when making the conversion. As another example, the Unity 3D game development system uses a left-handed coordinate system, wheras the Leap Motion software uses a right-handed coordinate system.</p>
+<p>Mapping coordinates is much like converting temperatures from celsius to fahrenheit if you imagine each axis as a scale with corresponding start (freezing) and an end (boiling) points:</p>
+<img alt="devguide/../../../images/CoordinateThermometer.png" src="devguide/../../../images/CoordinateThermometer.png" />
+<p>You can use this formula to make the conversion:</p>
+<div class="math">
+\[x_{app} = (x_{leap} - Leap_{start})\frac{App_{range}}{Leap_{range}} + App_{start}\]</div>
+<p>where:</p>
+<div class="math">
+\[Leap_{range} = Leap_{end} - Leap_{start}\]\[App_{range} = App_{end} - App_{start}\]</div>
+<p>By changing the start and end points you can change the mapping of coordinates to make movements cover a larger or smaller area in your application. The following example uses this formula on the x and y axes to map an area of the Leap Motion field of view to a rectangular display area. You can play with the controls to set the ranges of the Leap Motion Scale.</p>
+<div  style="overflow:hidden;">
+<div id="rescale_stage" style="background-color:rgb(191,191,191); width:300px; height:200; float:left; margin-right:10px;"></div>
+<div style="float:left; width:250px">
+<div style="width:250px">
+<pre>
+Leap X = <span id="rescale_leapX">...</span>
+App  X = <span id="rescale_appX">...</span>
+
+Leap Y = <span id="rescale_leapY">...</span>
+App  Y = <span id="rescale_appY">...</span>
+</pre>
+</div>
+<div id="rescale_controls"  style="width:250px"></div>
+</div>
+</div>
+<script>
+//Uses Kinetic.js and dat.gui.js
+  var rescale = {};
+  rescale.controls = document.getElementById("rescale_controls");
+  rescale.leapX = document.getElementById("rescale_leapX");
+  rescale.leapY = document.getElementById("rescale_leapY");
+  rescale.appX = document.getElementById("rescale_appX");
+  rescale.appY = document.getElementById("rescale_appY");
+
+  rescale.stageWidth = 300;
+  rescale.stageHeight = 200;
+    
+  rescale.stage = new Kinetic.Stage({
+    container: 'rescale_stage',
+    width: rescale.stageWidth,
+    height: rescale.stageHeight
+  });
+
+  rescale.layer = new Kinetic.Layer();
+  rescale.tip = new Kinetic.Circle({
+        x: 239,
+        y: 75,
+        radius: 20,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        opacity:.5,
+        visible: true
+      });
+      rescale.layer.add(rescale.tip);
+
+  // add the layer to the stage
+  rescale.stage.add(rescale.layer);
+  
+  rescale.anim = new Kinetic.Animation(function(frame) {
+        var time = frame.time,
+            timeDiff = frame.timeDiff,
+            frameRate = frame.frameRate;
+
+        // update stuff
+        var leapFrame = leap.frame(); //leap is a connected Controller object
+        if(leapFrame.valid && leapFrame.pointables.length > 0)
+        {
+            var iBox = leapFrame.interactionBox;
+            var pointable = leapFrame.pointables[0];
+
+            var pos = convert(pointable.tipPosition);
+            rescale.tip.x(pos[0]);
+            rescale.tip.y(pos[1]);
+
+            rescale.leapX.innerText = pointable.tipPosition[0].toFixed(2);
+            rescale.leapY.innerText = pointable.tipPosition[1].toFixed(2);
+            rescale.appX.innerText = pos[0].toFixed(2);
+            rescale.appY.innerText = pos[1].toFixed(2);
+        } 
+  }, rescale.layer);
+
+  rescale.anim.start();
+
+rescale.leapXRange = 400;
+rescale.leapYRange = 400;
+rescale.leapXCenter = 0;
+rescale.leapYFloor = 0;
+rescale.appXRange = rescale.stageWidth;
+rescale.appYRange = rescale.stageHeight;
+
+rescale.clamp = true;
+rescale.LeapScale = [{"start":-200,"end":200},{"start":0,"end":400}];
+rescale.AppScale = [{"start":0,"end":rescale.stageWidth},{"start":rescale.stageHeight,"end":0}];
+
+function convert(position){
+    var result = [rescaleCoordinate(position[0], rescale.LeapScale[0], rescale.AppScale[0]),
+                  rescaleCoordinate(position[1], rescale.LeapScale[1], rescale.AppScale[1])];
+    if(rescale.clamp){
+        if(result[0] < rescale.AppScale[0].start){result[0] = rescale.AppScale[0].start;}
+        if(result[0] > rescale.AppScale[0].end)  {result[0] = rescale.AppScale[0].end;}
+        if(result[1] > rescale.AppScale[1].start){result[1] = rescale.AppScale[1].start;}
+        if(result[1] < rescale.AppScale[1].end)  {result[1] = rescale.AppScale[1].end;}
+    }
+              
+    return result;
+}
+function rescaleCoordinate(coordinate, currentScale, targetScale){
+    var currentRange = currentScale.end - currentScale.start;
+    var targetRange  = targetScale.end  - targetScale.start; 
+    var result = (coordinate - currentScale.start) * targetRange/currentRange + targetScale.start;
+    return result;
+}
+
+rescale.gui = new dat.GUI({ autoPlace: false });
+rescale.gui.add(rescale, "leapXRange",0,400).onChange(function(value){
+    rescale.LeapScale[0].start = -value/2 + rescale.leapXCenter;
+    rescale.LeapScale[0].end   =  value/2 + rescale.leapXCenter; 
+});
+rescale.gui.add(rescale,"leapXCenter",-100,100).onChange(function(value){
+    rescale.LeapScale[0].start = -rescale.leapXRange/2 + value;
+    rescale.LeapScale[0].end   =  rescale.leapXRange/2 + value; 
+});
+rescale.gui.add(rescale, "leapYRange",0,470).onChange(function(value){
+    rescale.LeapScale[1].end = value; 
+});
+rescale.gui.add(rescale,"leapYFloor",0,470).onChange(function(value){
+    rescale.LeapScale[1].end = rescale.LeapScale[1].end - rescale.LeapScale[1].start + value;   
+    rescale.LeapScale[1].start = value;
+});
+rescale.gui.add(rescale,"clamp");
+rescale.gui.closed = true;
+rescale.controls.appendChild(rescale.gui.domElement);
+</script>
+<p>If you decrease the range values, a smaller range of physical motion is mapped to the width of the display area, making it easier to move from one side to the other.</p>
+<p>The X-center value offsets the center of the X scale to the left or right. Because each hand naturally rests to the right or left of the Leap Motion controller, it can be easier for the user to interact with a full-screen application if you offset the coordinate mapping based on which hand is in use.</p>
+<p>The Y-floor slider sets the value on the Leap Motion y axis that maps to the bottom of the display area. A larger value means the user has to hold their hand higher above the controller, which also means that they are more likely to be able to reach the bottom corners.</p>
+<p>Enabling the clamp option prevents the cursor from leaving the display area &#8211; which can provide a valuable cue to the user as to where they can interact.</p>
+<p>A more general method of converting coordinates is to go from the Leap Motion coordinates to a normalized scale running between 0 and 1.0 and then from this normalized scale to the final, application scale. In fact, the <tt class="docutils literal"><span class="pre">InteractionBox</span></tt> class in the Leap Motion API will normalize coordinates for you.</p>
+</div>
+<div class="section" id="the-interaction-box">
+<h2>The Interaction Box<a class="headerlink" href="#the-interaction-box" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.InteractionBox.html"><tt class="docutils literal"><span class="pre">InteractionBox</span></tt></a> defines a rectilinear area within the Leap Motion field of view.</p>
+<img alt="devguide/../../../images/Leap_InteractionBox.png" src="devguide/../../../images/Leap_InteractionBox.png" />
+<p>As long as the user&#8217;s hand or finger stays within this box, it is guaranteed to remain in the Leap Motion field of view. You can use this guarantee in your application by mapping the interaction area of your application to the area defined by the InteractionBox instead of mapping to the entire Leap Motion field of view. The <tt class="docutils literal"><span class="pre">InteractionBox</span></tt> class provides the <a class="reference external" href="../api/Leap.InteractionBox.html#javaclasscom_1_1leapmotion_1_1leap_1_1_interaction_box_1ada413ef6f8364272be152ca1a9e9090e">normalizePoint()</a> method to help map Leap Motion coordinates to your application coordinates (by first normalizing them to the range [0..1]).</p>
+<img alt="devguide/../../../images/IBox_Diagram.png" src="devguide/../../../images/IBox_Diagram.png" />
+<p>The size of the <tt class="docutils literal"><span class="pre">InteractionBox</span></tt> is determined by the Leap Motion field of view and the user&#8217;s interaction height setting (in the Leap Motion control panel). The controller software adjusts the size of the box based on the height to keep the bottom corners within the filed of view. If you set the interaction height higher, then the box becomes larger. Users can set the interaction height based on the height they prefer to hold their hands when using the controller. Some users like to hold their hands much higher above the device than others. By using the InteractionBox to map the Leap Motion coordinate system to your application coordinate system, you can accommodate both types of user. A user can also set the interaction height to adjust automatically. If the user moves his or her hands below the current floor of the interaction box, the controller software lowers the height (until it reaches the minimum height); likewise if the user moves above the interaction box, the controller raises the box.</p>
+<p>Because the interaction box can change size and position, every <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> object contains an instance of the <tt class="docutils literal"><span class="pre">InteractionBox</span></tt> class. The following example illustrates the behavior of the interaction box. Change your interaction height settings using the Leap Motion control panel to see how it affects the box itself.</p>
+<div style="overflow:hidden;">
+<div id="liveBox_stage" style="background-color:rgb(191,191,191); width:400px; height:400; float:left; margin-right:10px;"></div>
+<div style="float:left; width:250px">
+<div style="width:250px">
+<pre>
+Box width = <span id="liveBox_width">...</span>
+Box height = <span id="liveBox_height">...</span>
+Box depth = <span id="liveBox_depth">...</span>
+Box center = <span id="liveBox_center">...</span>
+Box origin = <span id="liveBox_origin">...</span>
+</pre>
+</div>
+
+<div id="liveBox_controls" style="float:left;"></div>
+</div>
+</div>
+<script>
+//Uses Thee.js and dat.gui.js
+var liveBox = {};
+liveBox.stage = document.getElementById("liveBox_stage");
+
+liveBox.boxWidth = document.getElementById("liveBox_width");
+liveBox.boxHeight = document.getElementById("liveBox_height");
+liveBox.boxDepth = document.getElementById("liveBox_depth");
+liveBox.boxCenter = document.getElementById("liveBox_center");
+liveBox.boxOrigin = document.getElementById("liveBox_origin");
+
+liveBox.width = 400;
+liveBox.height = 400;
+liveBox.scene = new THREE.Scene();
+liveBox.camera = new THREE.PerspectiveCamera(35, liveBox.width / liveBox.height, 0.1, 10000);
+
+liveBox.renderer = new THREE.WebGLRenderer( {clearAlpha: 0 });
+liveBox.renderer.setSize(liveBox.width, liveBox.height);
+liveBox.stage.appendChild(liveBox.renderer.domElement);
+
+liveBox.camera.position.z = 2000;
+liveBox.camera.position.y = 700;
+liveBox.camera.lookAt(new THREE.Vector3(0, 400, 0));
+
+liveBox.gridHelper = new THREE.GridHelper( 500, 100 );
+liveBox.gridHelper.position = new THREE.Vector3( 0, 0, 0 );
+liveBox.gridHelper.rotation = new THREE.Euler( 15, 0, 0 );
+liveBox.scene.add( liveBox.gridHelper );
+
+//Add FOV lines
+liveBox.line_material = new THREE.LineBasicMaterial({color: 0x2222ff});
+liveBox.fov_geometry = new THREE.Geometry();
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( -1013, 456, 716 ) );
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( 1013, 456, 716 ) );
+liveBox.front_fov_line = new THREE.Line( liveBox.fov_geometry, liveBox.line_material );
+liveBox.line_material = new THREE.LineBasicMaterial({color: 0x6666ff});
+liveBox.fov_geometry = new THREE.Geometry();
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( -1013, 456, -716 ) );
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+liveBox.fov_geometry.vertices.push( new THREE.Vector3( 1013, 456, -716 ) );
+liveBox.back_fov_line = new THREE.Line( liveBox.fov_geometry, liveBox.line_material );
+liveBox.line_material = new THREE.LineBasicMaterial({color: 0xff0000});
+liveBox.range_geometry = new THREE.Geometry();
+liveBox.range_geometry.vertices.push( new THREE.Vector3( -1000, 470, 0));
+liveBox.range_geometry.vertices.push( new THREE.Vector3( 1000, 470, 0));
+liveBox.range_line = new THREE.Line( liveBox.range_geometry, liveBox.line_material );
+liveBox.scene.add( liveBox.range_line );
+liveBox.scene.add( liveBox.front_fov_line );
+liveBox.scene.add( liveBox.back_fov_line );
+
+//Add Cube to represent the InteractionBox
+liveBox.geometry = new THREE.CubeGeometry(1, 1, 1);
+liveBox.mesh_material = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    wireframe: true
+});
+liveBox.cube = new THREE.Mesh(liveBox.geometry, liveBox.mesh_material);
+liveBox.scene.add(liveBox.cube);
+
+//Add markers for finger tips
+liveBox.fingerMarkers = new Array(10);
+liveBox.circleGeometry = new THREE.CircleGeometry(10);
+for (f = 0; f < 10; f++) {
+    liveBox.fingerMarkers[f] = new THREE.Mesh(liveBox.circleGeometry, liveBox.mesh_material);
+    liveBox.fingerMarkers[f].visible = false;
+    liveBox.scene.add(liveBox.fingerMarkers[f]);
+}
+
+// This example uses the Leap Motion coordinates directly. The InteractionBox itself
+// is only used to get the box size and position. The normalize and denormalize functions 
+// are just used to demonstrate clamping
+function onFrame(frame) {
+    var box = frame.interactionBox;
+    var f = 0;
+    if (box) {
+        liveBox.cube.visible = true;
+        liveBox.cube.scale.x = box.width;
+        liveBox.cube.scale.y = box.height;
+        liveBox.cube.scale.z = box.depth;
+        liveBox.cube.position.x = box.center[0];
+        liveBox.cube.position.y = box.center[1];
+        liveBox.cube.position.z = box.center[2];
+
+        for (; f < frame.pointables.length && f < liveBox.fingerMarkers.length; f++) {
+            //Normalize and denormalize to demonstrate effect of clipping
+            if(liveBox.clamp){
+                var normalizedTip = box.normalizePoint(frame.pointables[f].tipPosition, true);
+                var position = box.denormalizePoint(normalizedTip);
+            } else {
+                var position = frame.pointables[f].tipPosition;
+            }
+            liveBox.fingerMarkers[f].position.x = position[0];
+            liveBox.fingerMarkers[f].position.y = position[1];
+            liveBox.fingerMarkers[f].position.z = position[2];
+            
+            liveBox.fingerMarkers[f].visible = true;
+        }
+    } else {
+        liveBox.cube.visible = false;
+    }
+
+    for (; f < liveBox.fingerMarkers.length; f++) {
+        liveBox.fingerMarkers[f].visible = false;
+    }
+
+    liveBox.renderer.render(liveBox.scene, liveBox.camera);
+    showBoxProperties(box)
+}
+leap.on('frame', onFrame); //leap is a Controller object
+liveBox.clamp = true;
+liveBox.gui = new dat.GUI({ autoPlace: false });
+liveBox.gui.closed = true;
+liveBox.gui.add(liveBox,"clamp");
+document.getElementById("liveBox_controls").appendChild(liveBox.gui.domElement);
+
+function showBoxProperties(iBox){
+liveBox.boxWidth.innerText = iBox.width + "mm"
+liveBox.boxHeight.innerText = iBox.height + "mm"
+liveBox.boxDepth.innerText = iBox.depth + "mm"
+liveBox.boxCenter.innerText = iBox.center[0].toFixed(2) + ", " + iBox.center[1].toFixed(2) + ", " + iBox.center[2].toFixed(2); 
+var origin = iBox.denormalizePoint(Leap.vec3.fromValues(0, 0, 0));
+liveBox.boxOrigin.innerText = origin[0].toFixed(2) + ", " + origin[1].toFixed(2) + ", " + origin[2].toFixed(2); 
+
+}
+</script>
+<p>You can use the clamp control in this example to see the affect of clamping coordinates when you use the <a class="reference external" href="../api/Leap.InteractionBox.html#javaclasscom_1_1leapmotion_1_1leap_1_1_interaction_box_1ada413ef6f8364272be152ca1a9e9090e">normalizePoint()</a> function. If you do not clamp, you can get values which are less than zero or greater than one.</p>
+<p>Because the interaction box can change over time, be aware that the normalized coordinates of a point measured in one frame may not match the normalized coordinates of the same real world point, when normalized using the interaction box provided by another frame. Thus straight lines or perfect circles &#8220;drawn in the air&#8221; by the user may not be straight or smooth if they are normalized across frames. For most applications, this isn&#8217;t a significant problem, but you should test your application with the <em>Automatic Interaction Height</em> setting enabled if you aren&#8217;t sure.</p>
+<div class="figure">
+<img alt="devguide/../../../images/IBox_FOR.png" src="devguide/../../../images/IBox_FOR.png" />
+</div>
+<p>To guarantee that a set of points tracked across frames is normalized consistently, you can save a single InteractionBox object &#8211; ideally the one with the largest height, width, and depth &#8211; and use that to normalize all the points.</p>
+</div>
+<div class="section" id="mapping-coordinates-with-the-interaction-box">
+<h2>Mapping Coordinates with the Interaction Box<a class="headerlink" href="#mapping-coordinates-with-the-interaction-box" title="Permalink to this headline">¶</a></h2>
+<p>To use the interaction box, first normalize the point to be mapped and then convert the normalized coordinates to your application coordinate system. Normalizing converts points within the interaction area to the range [0..1] and moves the origin to the bottom, left, back corner. You can then multiply these normalized coordinates by the maximum range for each axis of your application coordinate system, shifting and inverting the axis as necessary.</p>
+<div class="section" id="mapping-to-2d">
+<h3>Mapping to 2D<a class="headerlink" href="#mapping-to-2d" title="Permalink to this headline">¶</a></h3>
+<p>For example, most 2D drawing coordinate systems put the origin at the top, left corner of the window &#8211; and, naturally, don&#8217;t use a z-axis. To map Leap Motion coordinates to such a 2D system, you could use the following code:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kt">int</span> <span class="n">appWidth</span> <span class="o">=</span> <span class="mi">800</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">appHeight</span> <span class="o">=</span> <span class="mi">600</span><span class="o">;</span>
+
+<span class="n">InteractionBox</span> <span class="n">iBox</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">frame</span><span class="o">().</span><span class="na">interactionBox</span><span class="o">();</span>
+<span class="n">Pointable</span> <span class="n">pointable</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">frame</span><span class="o">().</span><span class="na">pointables</span><span class="o">().</span><span class="na">frontmost</span><span class="o">();</span>
+
+<span class="n">Vector</span> <span class="n">leapPoint</span> <span class="o">=</span> <span class="n">pointable</span><span class="o">.</span><span class="na">stabilizedTipPosition</span><span class="o">();</span>
+<span class="n">Vector</span> <span class="n">normalizedPoint</span> <span class="o">=</span> <span class="n">iBox</span><span class="o">.</span><span class="na">normalizePoint</span><span class="o">(</span><span class="n">leapPoint</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+<span class="kt">float</span> <span class="n">appX</span> <span class="o">=</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">getX</span><span class="o">()</span> <span class="o">*</span> <span class="n">appWidth</span><span class="o">;</span>
+<span class="kt">float</span> <span class="n">appY</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">getY</span><span class="o">())</span> <span class="o">*</span> <span class="n">appHeight</span><span class="o">;</span>
+<span class="c1">//The z-coordinate is not used</span>
+</pre></div>
+</div>
+<p>Notice that the example inverts the y-axis by subtracting the normalized y coordinate from one before multiplying by the maximum height.</p>
+<p>If you are using pointable or palm positions in a 2D application, consider using the <a class="reference external" href="../api/Leap.Pointable.html#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a911134a7be4d118d320769b3049f0c08">Pointable.stabilizedTipPosition()</a> or <a class="reference external" href="../api/Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand_1aaeda899cb68d201d95e78eeda0cd9e7f">Hand.stabilizedPalmPosition()</a>. These attributes have extra stabilization and filtering to help the user interact with a 2D interface. For 3D applications, the unstabilized <a class="reference external" href="../api/Leap.Pointable.html#javaclasscom_1_1leapmotion_1_1leap_1_1_pointable_1a96cf628961be23093d1cb2108622f3f2">Pointable.tipPosition()</a> and <a class="reference external" href="../api/Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand_1a3112c48b591f179a0167604d1bc845f8">Hand.palmPosition()</a> are usually more suitable.</p>
+</div>
+<div class="section" id="mapping-to-3d">
+<span id="map3d"></span><h3>Mapping to 3D<a class="headerlink" href="#mapping-to-3d" title="Permalink to this headline">¶</a></h3>
+<p>To map coordinates to a 3D coordinate system, you must know the scale factors, whether the origin needs to be translated, and whether the target coordinate system uses the right-hand rule or the left-hand rule.</p>
+<p>Units of measurement and scale in 3D graphics tend to be determined arbitrarily, but essentially, you need to decide how a movement in the real world should map to a movement in the virtual world.</p>
+<p>The origin of coordinates normalized with an interaction box is the bottom, left, rear corner. You can translate the normalized coordinates to move the origin to a more suitable location.</p>
+<p>The Leap Motion coordinate system uses the right-hand rule. If your coordinate system uses the left-hand rule, multiply the z-axis by -1 before normalizing (or swap the x and y axes).</p>
+<p>The following example illustrates mapping Leap Motion coordinates to a 3D system with the origin of the interaction area at the bottom center of the world, scales the range of the interaction box to 200 3d world units across:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Vector</span> <span class="nf">leapToWorld</span><span class="o">(</span><span class="n">Vector</span> <span class="n">leapPoint</span><span class="o">,</span> <span class="n">InteractionBox</span> <span class="n">iBox</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="n">leapPoint</span><span class="o">.</span><span class="na">setZ</span><span class="o">(</span><span class="n">leapPoint</span><span class="o">.</span><span class="na">getZ</span><span class="o">()</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">);</span> <span class="c1">//right-hand to left-hand rule</span>
+    <span class="n">Vector</span> <span class="n">normalized</span> <span class="o">=</span> <span class="n">iBox</span><span class="o">.</span><span class="na">normalizePoint</span><span class="o">(</span><span class="n">leapPoint</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">normalized</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="k">new</span> <span class="n">Vector</span><span class="o">(</span><span class="mf">0.5</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mf">0.5</span><span class="o">));</span> <span class="c1">//recenter origin</span>
+    <span class="k">return</span> <span class="n">normalized</span><span class="o">.</span><span class="na">times</span><span class="o">(</span><span class="mf">100.0</span><span class="o">);</span> <span class="c1">//scale</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapping-right-and-left-hands-differently">
+<h3>Mapping Right and Left Hands Differently<a class="headerlink" href="#mapping-right-and-left-hands-differently" title="Permalink to this headline">¶</a></h3>
+<p>If your application allows full-screen interactions, it can be a good idea to offset the origin of the normalized coordinates differently for each hand. By moving the left hand&#8217;s origin to the right and the right hand&#8217;s origin to the left, you essentially center each hand&#8217;s natural resting point in your application&#8217;s interaction area. This makes it less tiring for the left hand to reach the right corner of the application and vice versa.</p>
+<div  style="overflow:hidden;">
+<div id="ibox2d_stage" style="background-color:rgb(191,191,191); width:300px; height:200; float:left; margin-right:10px;"></div>
+<div style="float:left; width:250px">
+<div style="width:250px">
+<pre>
+Leap X = <span id="ibox2d_leapX">...</span>
+App  X = <span id="ibox2d_appX">...</span>
+
+Leap Y = <span id="ibox2d_leapY">...</span>
+App  Y = <span id="ibox2d_appY">...</span>
+</pre>
+</div>
+<div id="ibox2d_controls"  style="width:250px"></div>
+</div>
+</div>
+<script>
+//Uses Kinetic.js and dat.gui.js
+  var ibox2d = {};
+  ibox2d.maxHands = 6;
+  ibox2d.controls = document.getElementById("ibox2d_controls");
+  ibox2d.leapX = document.getElementById("ibox2d_leapX");
+  ibox2d.leapY = document.getElementById("ibox2d_leapY");
+  ibox2d.appX = document.getElementById("ibox2d_appX");
+  ibox2d.appY = document.getElementById("ibox2d_appY");
+
+  ibox2d.stageWidth = 300;
+  ibox2d.stageHeight = 200;
+    
+  ibox2d.stage = new Kinetic.Stage({
+    container: 'ibox2d_stage',
+    width: ibox2d.stageWidth,
+    height: ibox2d.stageHeight
+  });
+
+  ibox2d.layer = new Kinetic.Layer();
+  ibox2d.tips = new Array(ibox2d.maxHands);
+  ibox2d.labels = new Array(ibox2d.maxHands);
+  for(var t = 0; t < ibox2d.maxHands; t++)
+  {
+      var tip = new Kinetic.Circle({
+        x: 150,
+        y: 50,
+        radius: 20,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        opacity:.5,
+        visible: true
+      });
+      ibox2d.tips[t] = tip;
+      ibox2d.layer.add(tip);
+      
+      var label = new Kinetic.Text({
+          text: '...',
+          fontSize: 15,
+          visible: false,
+          fill: 'black'
+      });
+      ibox2d.labels[t] = label;
+      ibox2d.layer.add(label);
+    } 
+
+  // add the layer to the stage
+  ibox2d.stage.add(ibox2d.layer);
+  
+  ibox2d.anim = new Kinetic.Animation(function(frame) {
+        for(var h = 1; h < ibox2d.maxHands; h++){
+            ibox2d.labels[h].visible(false);
+            ibox2d.tips[h].visible(false);          
+        }
+
+        var time = frame.time,
+            timeDiff = frame.timeDiff,
+            frameRate = frame.frameRate;
+
+        var leapFrame = leap.frame(); 
+        for(var h = 0; h < leapFrame.hands.length; h++)
+        {
+            var pointable = leapFrame.hands[h].indexFinger;
+
+            var pos = convertCoordinates(pointable.stabilizedTipPosition, leapFrame.hands[h].type == "left");
+
+            ibox2d.tips[h].x(pos[0]);
+            ibox2d.tips[h].y(pos[1]);
+            ibox2d.tips[h].visible(true);
+
+            ibox2d.labels[h].text(leapFrame.hands[h].type);
+            ibox2d.labels[h].visible(true);
+            ibox2d.labels[h].x(ibox2d.tips[h].x() - 15);
+            ibox2d.labels[h].y(ibox2d.tips[h].y() - 8);
+
+            ibox2d.leapX.innerText = pointable.tipPosition[0].toFixed(2);
+            ibox2d.leapY.innerText = pointable.tipPosition[1].toFixed(2);
+            ibox2d.appX.innerText = pos[0].toFixed(2);
+            ibox2d.appY.innerText = pos[1].toFixed(2);
+        } 
+  }, ibox2d.layer);
+
+
+  ibox2d.anim.start();
+
+ibox2d.sensitivity = 1.0;
+ibox2d.clamp = false;
+ibox2d.centerHands = false;
+
+function convertCoordinates(leapPoint, isLeft){
+    var iBox = leap.frame().interactionBox;
+    var normalizedPoint = iBox.normalizePoint(leapPoint, false);
+
+    if(ibox2d.centerHands){
+        var offset = isLeft ? 0.25 : -0.25;
+        //console.log(normalizedPoint[0]);
+        normalizedPoint[0] += offset;
+        //console.log(normalizedPoint[0]);
+    }
+
+    Leap.vec3.scale(normalizedPoint, normalizedPoint, ibox2d.sensitivity); //scale
+    var center = ibox2d.sensitivity * .5 - .5;
+    Leap.vec3.subtract(normalizedPoint, normalizedPoint, [center, center, center]); // re-center
+
+    var appX = normalizedPoint[0] * ibox2d.stageWidth;
+    var appY = (1 - normalizedPoint[1]) * ibox2d.stageHeight;
+    //The z-coordinate is not used
+
+    if(ibox2d.clamp){
+        appX = (appX < 0) ? 0 : appX;
+        appX = (appX > ibox2d.stageWidth) ? ibox2d.stageWidth : appX;
+        appY = (appY < 0) ? 0 : appY;
+        appY = (appY > ibox2d.stageHeight) ? ibox2d.stageHeight : appY;
+    }
+    return [appX, appY];
+};
+
+ibox2d.gui = new dat.GUI({ autoPlace: false });
+ibox2d.gui.add(ibox2d,"sensitivity", .25, 4.0);
+ibox2d.gui.add(ibox2d,"centerHands");
+ibox2d.gui.add(ibox2d,"clamp");
+ibox2d.gui.closed = true;
+ibox2d.controls.appendChild(ibox2d.gui.domElement);
+</script>
+<p>To shift the origin for each hand, use <a class="reference external" href="../api/Leap.Hand.html#javaclasscom_1_1leapmotion_1_1leap_1_1_hand_1adac2dd15e66e9fe85168d45ff4051e49">Hand.isLeft()</a> to detect which hand is which, and then translate the normalized coordinates right or left:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Vector</span> <span class="nf">differentialNormalizer</span><span class="o">(</span><span class="n">Vector</span> <span class="n">leapPoint</span><span class="o">,</span>
+                      <span class="n">InteractionBox</span> <span class="n">iBox</span><span class="o">,</span>
+                             <span class="n">Boolean</span> <span class="n">isLeft</span><span class="o">,</span>
+                             <span class="n">Boolean</span> <span class="n">clamp</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="n">Vector</span> <span class="n">normalized</span> <span class="o">=</span> <span class="n">iBox</span><span class="o">.</span><span class="na">normalizePoint</span><span class="o">(</span><span class="n">leapPoint</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="kt">float</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">isLeft</span> <span class="o">?</span> <span class="mf">0.25</span> <span class="o">:</span> <span class="o">-</span><span class="mf">0.25</span><span class="o">;</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="na">setX</span><span class="o">(</span><span class="n">normalized</span><span class="o">.</span><span class="na">getX</span><span class="o">()</span> <span class="o">+</span> <span class="n">offset</span><span class="o">);</span>
+
+    <span class="c1">//clamp after offsetting</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="na">setX</span><span class="o">(</span> <span class="o">(</span><span class="n">clamp</span> <span class="o">&amp;&amp;</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getX</span><span class="o">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getX</span><span class="o">());</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="na">setX</span><span class="o">(</span> <span class="o">(</span><span class="n">clamp</span> <span class="o">&amp;&amp;</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getX</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getX</span><span class="o">());</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="na">setY</span><span class="o">(</span> <span class="o">(</span><span class="n">clamp</span> <span class="o">&amp;&amp;</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getY</span><span class="o">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getY</span><span class="o">());</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="na">setY</span><span class="o">(</span> <span class="o">(</span><span class="n">clamp</span> <span class="o">&amp;&amp;</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getY</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">normalized</span><span class="o">.</span><span class="na">getY</span><span class="o">());</span>
+
+    <span class="k">return</span> <span class="n">normalized</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Note that you must set the <tt class="docutils literal"><span class="pre">clamp</span></tt> parameter to false to use this technique. (If you want clamping, you can do it manually after offsetting the x-coordinate.)</p>
+</div>
+<div class="section" id="increasing-sensitivity">
+<h3>Increasing Sensitivity<a class="headerlink" href="#increasing-sensitivity" title="Permalink to this headline">¶</a></h3>
+<p>Mapping the full extents of the interaction box to the interaction area of your application is not always the best choice. You may want a smaller movement in the real world to have a larger affect in your application. You can simply scale the Leap Motion coordinates as desired without normalizing (see section above). But if you still want the other benefits of the InteractionBox, you can scale the normalized coordinates by a factor greater than one. A factor of two will make a given motion twice as sensitive; a factor of three, three times more sensitive; and so on. If you make things too sensitive, however, your interaction could become jumpy and difficult to control.</p>
+<p>You can do the opposite, of course, by multiplying the normalized coordinates by a value less than one, but it often doesn&#8217;t make sense &#8211; by definition, the user&#8217;s motion won&#8217;t cover the entire area of your application. It is easier, instead, to define your application interaction area as a smaller area within the application coordinate system (the math is the same).</p>
+<p>The following example, adapts the 2D example above to make the movement 1.5 times more sensitive:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">InteractionBox</span> <span class="n">iBox</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">frame</span><span class="o">().</span><span class="na">interactionBox</span><span class="o">();</span>
+<span class="n">Pointable</span> <span class="n">pointable</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="na">frame</span><span class="o">().</span><span class="na">pointables</span><span class="o">().</span><span class="na">frontmost</span><span class="o">();</span>
+
+<span class="n">Vector</span> <span class="n">leapPoint</span> <span class="o">=</span> <span class="n">pointable</span><span class="o">.</span><span class="na">stabilizedTipPosition</span><span class="o">();</span>
+<span class="n">Vector</span> <span class="n">normalizedPoint</span> <span class="o">=</span> <span class="n">iBox</span><span class="o">.</span><span class="na">normalizePoint</span><span class="o">(</span><span class="n">leapPoint</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<span class="c1">//Vector normalizedPoint = new Vector(.5, .5, 0);</span>
+
+<span class="n">normalizedPoint</span> <span class="o">=</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">times</span><span class="o">(</span><span class="mf">1.5</span><span class="o">);</span> <span class="c1">//scale</span>
+<span class="n">normalizedPoint</span> <span class="o">=</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">minus</span><span class="o">(</span><span class="k">new</span> <span class="n">Vector</span><span class="o">(.</span><span class="mi">25</span><span class="o">,</span> <span class="o">.</span><span class="mi">25</span><span class="o">,</span> <span class="o">.</span><span class="mi">25</span><span class="o">));</span> <span class="c1">// re-center</span>
+
+<span class="kt">float</span> <span class="n">appX</span> <span class="o">=</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">getX</span><span class="o">()</span> <span class="o">*</span> <span class="n">appWidth</span><span class="o">;</span>
+<span class="kt">float</span> <span class="n">appY</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">normalizedPoint</span><span class="o">.</span><span class="na">getY</span><span class="o">())</span> <span class="o">*</span> <span class="n">appHeight</span><span class="o">;</span>
+<span class="c1">//The z-coordinate is not used</span>
+</pre></div>
+</div>
+<p>You will notice that Setting the <tt class="docutils literal"><span class="pre">clamp</span></tt> parameter to true also no longer keeps the final coordinates within your defined bounds. The user&#8217;s motions can more easily move outside the application&#8217;s interaction area since you are effectively mapping a smaller subset of the interaction box to your application. Providing good visual feedback to keep the user oriented is helpful (as always).</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Controllers.html">Connecting to the Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Frames.html">Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Coordinate Systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#leap-motion-coordinates">Leap Motion Coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapping-coordinates-to-your-application">Mapping Coordinates to your Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-interaction-box">The Interaction Box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapping-coordinates-with-the-interaction-box">Mapping Coordinates with the Interaction Box</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mapping-to-2d">Mapping to 2D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapping-to-3d">Mapping to 3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapping-right-and-left-hands-differently">Mapping Right and Left Hands Differently</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#increasing-sensitivity">Increasing Sensitivity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

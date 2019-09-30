@@ -1,0 +1,394 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hand Attachments Prefab &mdash; Leap Motion Unity SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Unity SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Attachments Module" href="Unity_Attachments.html" />
+    <link rel="next" title="Transition Prefab" href="Unity.Prefab.Transition.html" />
+    <link rel="prev" title="Using Hand Attachments" href="Unity_Attachments_Overview.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'unity';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'unity/unity/Unity.Prefab.HandAttachments.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity.Prefab.HandAttachments.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity.Prefab.HandAttachments.html";
+            } else {
+                    redirectedLocation ="Unity_Attachments.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'unity/unity/Unity.Prefab.HandAttachments.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Unity_Attachments_Overview.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Unity.Prefab.Transition.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      Unity
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Unity_Attachments.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Unity_Attachments.html" accesskey="U">Attachments Module</a>&raquo;
+  Hand Attachments Prefab
+</span> -->
+        
+  <div class="section" id="hand-attachments-prefab">
+<h1>Hand Attachments Prefab<a class="headerlink" href="#hand-attachments-prefab" title="Permalink to this headline">¶</a></h1>
+<p>The Hand Attachments prefab provides a hand model that exposes the major transforms of the parts of a hand. The transforms include:</p>
+<ul class="simple">
+<li>Palm &#8211; the center of the palm</li>
+<li>Arm &#8211; the center of the arm</li>
+<li>Thumb &#8211; the tip of the thumb</li>
+<li>PinchPoint &#8211; a position halfway between the index finger tip and the tip of the thumb</li>
+<li>Index &#8211; the tip of the index finger</li>
+<li>Middle &#8211; the tip of the middle finger</li>
+<li>Ring &#8211; the tip of the ring finger</li>
+<li>Pinky &#8211; the tip of the little finger</li>
+<li>GrabPoint &#8211; a point near the center of the finger tips and the wrist position</li>
+</ul>
+<div class="section" id="using-the-hand-attachments-prefab">
+<h2>Using the Hand Attachments Prefab<a class="headerlink" href="#using-the-hand-attachments-prefab" title="Permalink to this headline">¶</a></h2>
+<p>To use the hand attachments prefab, add a pair of the HandAttachments prefabs to the Hand Pool:</p>
+<ol class="arabic simple">
+<li>Drag a pair of HandAttachments prefabs into the scene.</li>
+<li>Set one prefab to <strong>Left</strong> Handedness and the other to <strong>Right</strong>. (It helps to rename the game objects to keep track of which is which.)</li>
+<li>On the scene&#8217;s LeapHandController, increase the Hand Pool&#8217;s Model Pool size by one. This will create an additional element in the pool.</li>
+<li>Set the name of the new element to &#8220;utility_hands&#8221; (or any suitable name).</li>
+<li>Drag the HandAttachments from the scene hierarchy to the left and right model properties in the Hand Pool element that you just created.</li>
+<li>Set <strong>Is Enabled</strong> and <strong>Can Duplicate</strong> to true, if desired.</li>
+<li>Add additional components and child game objects to the attachment points.</li>
+</ol>
+<p><strong>Note:</strong> you can remove the child transforms for any attachment points that you are not using from the HandAttachments script. This optimization will releave Unity from having to modify the unused transforms.</p>
+<p>You can also make a prefab out of your completed HandAttachments game object. In that case, you can put the prefab into the Hand Pool directly and do not need a version in the scene hierarchy.</p>
+</div>
+<div class="section" id="key-components">
+<h2>Key Components<a class="headerlink" href="#key-components" title="Permalink to this headline">¶</a></h2>
+<p>The key components in the Hand Attachments prefab include:</p>
+<div class="section" id="hand-enable-disable-script">
+<h3>Hand Enable Disable (Script)<a class="headerlink" href="#hand-enable-disable-script" title="Permalink to this headline">¶</a></h3>
+<p>The HandEnableDisable script turns the entire hand attachment object off by calling SetActive(false) when the physical hand leaves the Leap Motion field of view. The script does the opposite when a hand enters the field of view.</p>
+</div>
+<div class="section" id="hand-attachments-script">
+<h3>Hand Attachments (Script)<a class="headerlink" href="#hand-attachments-script" title="Permalink to this headline">¶</a></h3>
+<p>The HandAttachments script is an IHandModel that updates the child transforms each frame based on the current positions and rotations of the hand and fingers reported in the Leap Motion tracking data.</p>
+<p>The script provides a list of transforms for each supported attachment point. You should set the transform to None for any unused points. The transforms assigned here are positioned directly. You can add child transforms to the attachment points to position objects at an offset position from the base positions.</p>
+<p>The <strong>Handedness</strong> setting must be set to <strong>Left</strong> or <strong>Right</strong>.</p>
+</div>
+<div class="section" id="child-transforms">
+<h3>Child Transforms<a class="headerlink" href="#child-transforms" title="Permalink to this headline">¶</a></h3>
+<p>The HandAttachments prefab contains an empty GameObject for each of the attachment points. These game objects consist of a Unity Transform, which is updated based on the tracked hand, and an AttachmentController component.</p>
+<p>The AttachmentController script can be used to control child objects of an attachment point. The script has two methods, Activate() and Deactivate() that you can call via a standard Unity event listener (or another script). For example, you can use the OnActivate and OnDeactivate events of a Detector to turn attachments on or off.</p>
+<p>The AttachmentController has two properties:</p>
+<ul class="simple">
+<li>Deactivate On Disable &#8211; disables all children when the hand model is disabled. This should be on when using a transition, but off if you want the attachments to be on all the time.</li>
+<li>Transition &#8211; An ITransition object. If set, the AttachmentController will play the transition when turning attachments on and off in response to the Activate() and Deactivate() functions.</li>
+</ul>
+<p><strong>Note:</strong> if your attached child objects are always enabled, you can remove the AttachmentController from the attachment point.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Unity Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Unity_Overview.html">Leap Motion Unity Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_VR.html">Hand Tracking in Virtual Reality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Project_Setup.html#setting-up-a-unity3d-project">Setting up a Unity3D project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Prefabs.html">Core Asset Prefabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Custom_Rig.html">Building a Custom VR Rig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_DetectionUtilities.html">Detection Utilities</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Unity_Attachments.html">Attachments Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Unity_Attachments_Overview.html">Using Hand Attachments</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Hand Attachments Prefab</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-hand-attachments-prefab">Using the Hand Attachments Prefab</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-components">Key Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hand-enable-disable-script">Hand Enable Disable (Script)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hand-attachments-script">Hand Attachments (Script)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#child-transforms">Child Transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.Prefab.Transition.html">Transition Prefab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.HandAttachments.html">HandAttachments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.AttachmentController.html">AttachmentController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.ITransition.html">ITransition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.Transition.html">Transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Unity.CameraFollower.html">CameraFollower</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Hand_Assets.html">Hand Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_Interaction_Engine.html">Interaction Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Unity_UIInput.html">UI Input Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">Unity Scripting Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

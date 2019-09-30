@@ -1,0 +1,524 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Your Own Hand Prefabs &mdash; Leap Motion Java SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Java SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'java';
+    var hasAPI = {};
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'java/unity/Unity_MakeDiscreteHand.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/unity/Unity_MakeDiscreteHand.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/unity/Unity_MakeDiscreteHand.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'java/unity/Unity_MakeDiscreteHand.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/index.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/unity/Unity_MakeDiscreteHand.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/index.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/index.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      Java
+    
+  </li>
+  <li>
+      <a href="../../python/index.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/index.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/index.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Creating Your Own Hand Prefabs
+</span> -->
+        
+  <div class="section" id="creating-your-own-hand-prefabs">
+<h1>Creating Your Own Hand Prefabs<a class="headerlink" href="#creating-your-own-hand-prefabs" title="Permalink to this headline">¶</a></h1>
+<p>You can make your own hand prefabs similar to those include in the core asset package. This allows you to create your own graphics and customized behaviors based on the existing scripts.</p>
+<div class="section" id="discrete-hand-prefabs">
+<h2>Discrete Hand Prefabs<a class="headerlink" href="#discrete-hand-prefabs" title="Permalink to this headline">¶</a></h2>
+<p>&#8220;Discrete&#8221; hands mean that each part of the hand is a separate game object with its own position and orientation. In the core asset package, the robot hands and the minimal hands are examples of discrete hands. Creating the prefabs is a bit of an involved process. The following discussion walks through the steps using Unity built-in primitive objects (cylinders and spheres).</p>
+<div class="figure">
+<img alt="unity/../../../images/unity/Unity_KnobbyHand.jpg" src="unity/../../../images/unity/Unity_KnobbyHand.jpg" />
+<p class="caption">A prefab hand created using Unity primitives</p>
+</div>
+<p>A couple of points before we get started:</p>
+<ul class="simple">
+<li>Each graphics primitive is placed inside an empty game object. The hand and finger scripts update the transform of this empty game object. The local transform of the primitive object itself orients and sizes the object relative to this empty parent.</li>
+<li>Remove any colliders from the parts of the graphics hand. Otherwise, these will make the colliders in the RigidHand bounce around.</li>
+<li>Generally, you don&#8217;t need parts for both the joints and the bones. They aren&#8217;t really independent of each other, so you can use which ever makes more sense for your hand model. In this tutorial, we will add both just to show how it is done.</li>
+<li>Similarly, your model might not need both metacarpal bones and a palm. The metacarpal bones are enclosed in the palm and don&#8217;t move independently. This tutorial includes both.</li>
+<li>Use real-world sizes for the hand model. The hand and finger scripts do not resize the parts individually. The overall scale is set by scale assigned to the LeapHandController object, but this also affects the range of motion of the hand. The size of the hand at 1:1 should be that of a typical human hand (and remember that the standard unit in Unity is 1 meter).</li>
+<li>Very abstract and symmetrical designs, like the one created in this tutorial, can use the same prefab for both right and left hands. Most models, however, will need a different prefab for each hand in order to adjust the local transforms of the hand components properly.</li>
+</ul>
+<p>First, we will create a prefab for the finger and then use that in constructing the hand prefab. To get started, create a new Unity project and import the Leap Motion asset package.</p>
+<div class="section" id="create-the-finger-prefab">
+<h3>Create the Finger Prefab<a class="headerlink" href="#create-the-finger-prefab" title="Permalink to this headline">¶</a></h3>
+<p>To create the finger prefab:</p>
+<ol class="arabic">
+<li><p class="first">Create a scene for the construction.</p>
+</li>
+<li><p class="first">Add an empty game object, named KnobbyFinger, to the scene.</p>
+</li>
+<li><p class="first">Create the bones:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Add an empty game object to KnobbyFinger. Name it Metacarpal.</p>
+</li>
+<li><p class="first">Add a Cylinder to Metacarpal, name it Tube. When creating your own hands, replace the cylinder with your own graphics object or objects.</p>
+</li>
+<li><p class="first">Remove the collider component — otherwise the RigidHand colliders bounce off it.</p>
+</li>
+<li><p class="first">Set the x rotation to 90.</p>
+<blockquote>
+<div><p>It helps to be in top view to align the graphics object to the finger. In top view, the direction from base of finger (or <a class="reference external" href="../api/Leap.Hand.html">hand</a>) toward the tip is toward the top of the screen (+z). The x axis corresponds to the left/right direction (+x is right). The Unity cylinder primitive is in the wrong orientation. Rotating it 90 degrees aligns it with the finger axis. This rotation has to be done on the Tube transform since the Metacarpal transform is controlled by the finger script. Your own graphics objects might need a different rotation.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Set both the Tube x and z scale to .003 (3 millimeters). This hand created in this tutorial intentionally uses extra-skinny bones. Real fingers are fatter.</p>
+</li>
+<li><p class="first">Set the Tube y scale to .034 (34mm). The y scale value determines length of finger segment.</p>
+<blockquote>
+<div><p>The sizes must use real-world hand sizes, converted into meters. The length (y scale) is half the target length of 68mm because the primitive cylinder is 2 units tall. Thus we have to scale down by an additional 50%. Note that these numbers aren’t magic. Feel free to experiment.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Duplicate Metacarpal, name it Proximal, and set the y scale of its Tube to .02.</p>
+</li>
+<li><p class="first">Duplicate Metacarpal again, name it Intermediate, and set the y scale of its Tube to .01.</p>
+</li>
+<li><p class="first">Duplicate Metacarpal again, name it Distal, and set the y scale of its Tube to .007.</p>
+<p>All these bones must be children of the KnobbyFinger object.</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Create the Joints:</p>
+<blockquote>
+<div><blockquote>
+<div><p>Remember, you don’t necessarily need both bones and joints.</p>
+</div></blockquote>
+<ol class="arabic simple">
+<li>Add an empty game object to KnobbyFinger. Name it MetacarpophalangealJoint.</li>
+<li>Add a Sphere primitive to the joint. Name it Knob.</li>
+<li>Remove the collider component from Knob.</li>
+<li>Set all the scale values of Knob to .01 (1cm).</li>
+<li>Duplicate MetacarpophalangealJoint and rename it ProximalinterphalangealJoint.</li>
+<li>Duplicate MetacarpophalangealJoint again and rename it DistalinterphalangealJoint.</li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<ol class="arabic" start="6">
+<li><p class="first">Add the SkeletalFinger script component to the KnobbyFinger object</p>
+</li>
+<li><p class="first">Drag each of the bones and joints you just created to corresponding the bone and joint slots in the script.</p>
+<p>The bones and joints must be in the following slots in the SkeletalFinger Bones and Joints arrays:</p>
+<p>Bones:</p>
+<ul class="simple">
+<li>0 - Metacarpal</li>
+<li>1 - Proximal</li>
+<li>2 - Intermediate</li>
+<li>3 - Distal</li>
+</ul>
+<p>Joints:</p>
+<ul class="simple">
+<li>0 - MetacarpohalangealJoint</li>
+<li>1 - ProximalinterphalangealJoint</li>
+<li>2 - DistalphalangealJoint</li>
+</ul>
+</li>
+<li><p class="first">Make the KnobbyFinger into a prefab by dragging it into the Asset folder from the Hierarchy panel.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="create-the-hand-prefab">
+<h3>Create the Hand Prefab<a class="headerlink" href="#create-the-hand-prefab" title="Permalink to this headline">¶</a></h3>
+<p>To create the hand prefab (after you have created the finger prefab):</p>
+<ol class="arabic">
+<li><p class="first">Create an empty game object. Name it KnobbyHand.</p>
+</li>
+<li><p class="first">Add the SkeletalHand script component to KnobbyHand.</p>
+</li>
+<li><p class="first">Set the Handedness property of the hand script to &#8220;Left.&#8221; This will need to be changed for the right hand prefab when you add it to the hand pool in the scene &#8211; or you can create unique prefabs for the left and right hands. For now, we want to make the prefab first; then we can copy it for the right hand.</p>
+</li>
+<li><p class="first">Drag 5 KnobyFinger prefabs into the hand. Name them Thumb, Index, Middle, Ring, and Pinky.</p>
+</li>
+<li><p class="first">For each finger, set the Finger type in the SkeletalFinger script component to the matching type.</p>
+</li>
+<li><p class="first">Drag the fingers to their correct slot in the SkeletalHand script component on KnobbyHand.</p>
+<p>Finger element order:</p>
+<ul class="simple">
+<li>0 - Thumb</li>
+<li>1 - Index</li>
+<li>2 - Middle</li>
+<li>3 - Ring</li>
+<li>4 - Pinky</li>
+</ul>
+</li>
+<li><p class="first">The Thumb is special in that it doesn’t have a real Metacarpal. Edit Thumb and remove the bone from element 0 in the bone array (leave as None). Delete the Metacarpal game object child of the thumb object in KnobbyHand.</p>
+</li>
+<li><p class="first">Add the palm:</p>
+<p>You can leave the slots for palm, wrist and forearm blank (None) if you don’t have graphics for them. The palm is also represented by RigidHand, so if you don&#8217;t use a palm, you might also want to modify a copy of RigidHand to remove the rigid body and collider for the palm.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Add an empty game object to KnobbyHand. Name it Palm.</li>
+<li>Add a Cylinder primitive to Palm. Name it Disc.</li>
+<li>Remove the Collider component.</li>
+<li>Set the Disc transform scale to (.085, .0015, .085). (Again, these numbers aren’t magic, feel free to experiment).</li>
+<li>Drag Palm to the Palm slot in the SkeletalHand script.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Add the wrist:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Add an empty game object to KnobbyHand. Name it Wrist.</li>
+<li>Add a Sphere primitive to Wrist. Name it Ball.</li>
+<li>Remove the Collider.</li>
+<li>Set the Ball transform scale to (.03, .03, .03).</li>
+<li>Drag Wrist to the WristJoint slot in the SkeletalHand script.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Add the arm:</p>
+<ol class="arabic simple">
+<li>Add an empty game object to KnobbyHand. Name it Arm.</li>
+<li>Add a Cylinder primitive to Arm. Name it Rod.</li>
+<li>Remove the Collider.</li>
+<li>Set the Rod transform x rotation to 90.</li>
+<li>Set the Rod transform scale to (.02, .12, .02).</li>
+<li>Drag Arm to the Forearm slot in the SkeletalHand script.</li>
+</ol>
+<p>The KnobbyHand hierarchy should look like the following:</p>
+<img alt="unity/../../../images/unity/Unity_KnobbyHand_Heirarchy.png" src="unity/../../../images/unity/Unity_KnobbyHand_Heirarchy.png" />
+</li>
+<li><p class="first">Drag the KnobbyHand to the Asset folder to create a prefab. Rename the prefab, KnobbyHand-Left.</p>
+</li>
+<li><p class="first">Drag the KnobbyHand to the Asset folder a second tme to create another prefab. Rename this prefab, KnobbyHand-Right.</p>
+</li>
+<li><p class="first">Select the KnobbyHand-Right prefab in the project panel. In the Inspector, chang its Handedness (chirality) setting to &#8220;Right.&#8221;</p>
+</li>
+</ol>
+</div>
+<div class="section" id="test-your-new-hand">
+<h3>Test Your new Hand<a class="headerlink" href="#test-your-new-hand" title="Permalink to this headline">¶</a></h3>
+<p>To test the hands:</p>
+<ol class="arabic simple">
+<li>Start with the Leap_Hands_Demo_Desktop, which already has a LeapHandController setup.</li>
+<li>Drag your KnobbyHand-Left and KnobbyHand-Right prefabs into the scene under the Camera&gt;HandModels game object.</li>
+<li>You can delete the two CapsuleHand prefabs.</li>
+</ol>
+<p>4. Select the LeapHandController game object and locate its Hand Pool component.
+3. Drag KnobbyHand-Left to the Left Graphics_Hands model slot (replacing the CapsuleHands-L model).
+4. Drag KnobbyHand-Right to the Right Graphics_Hands Model slot (replacing the CapsuleHands-R model).
+6. Play the level and observe the hands.</p>
+<p>Creating hands is a complicated process and there is a lot that can go wrong. Use the hierarchy view to find the parts of the “live” hand, if one isn’t in the right place. You can pause the game to freeze the live hand so that you can inspect its properties more closely.</p>
+<p>If the RigidHand components, visible in scene view, are jittery or bouncing, make sure that you removed all the collider components from the graphics hand parts.</p>
+<p>If fingers overlap and move under control of a single real finger, check the finger type settings in the SkeletalFinger script components of the fingers.</p>
+<p>If the hand parts are all munged together in a big blob, the primitive scale values are set too large. Remember that in Unity, 1 is 1 meter. A typical hand width is 8.5 centimeters, or .085 in the Unity transform scale value. To make hands larger in a game, scale up the LeapHandController object.</p>
+</div>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Java Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Java</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

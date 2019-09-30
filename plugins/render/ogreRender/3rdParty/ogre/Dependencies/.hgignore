@@ -1,0 +1,7 @@
+syntax: glob
+build
+bin
+include
+lib
+AndroidBuild
+emscripten-build

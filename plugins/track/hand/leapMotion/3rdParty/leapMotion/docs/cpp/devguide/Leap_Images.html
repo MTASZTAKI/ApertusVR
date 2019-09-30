@@ -1,0 +1,824 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Camera Images &mdash; Leap Motion C++ SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion C++ SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Serializing Tracking Data" href="Leap_Serialization.html" />
+    <link rel="prev" title="Coordinate Systems" href="Leap_Coordinate_Mapping.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'cpp';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'cpp/devguide/Leap_Images.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Images.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Images.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'cpp/devguide/Leap_Images.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Coordinate_Mapping.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Serialization.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/Leap_Images.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      C++
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Images.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Images.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Images.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Camera Images
+</span> -->
+        
+  <div class="section" id="camera-images">
+<h1>Camera Images<a class="headerlink" href="#camera-images" title="Permalink to this headline">¶</a></h1>
+<p>The Leap Motion controller uses infrared stereo cameras as tracking sensors. You can access the images from these cameras using the <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263">Controller.images()</a> or <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1a85588dbb02a8ff793cf2ced9067f8263">Frame.images()</a> functions. These functions provide an <a class="reference external" href="../api/Leap.ImageList.html"><tt class="docutils literal"><span class="pre">ImageList</span></tt></a> object, containing the <a class="reference external" href="../api/Leap.Image.html"><tt class="docutils literal"><span class="pre">Image</span></tt></a> objects. Controller.images() provides the most recent set of images. Frame.images() provides the set of images analysed to create that frame and can be slightly older than the images returned by the <tt class="docutils literal"><span class="pre">Controller</span></tt> directly.</p>
+<div class="figure align-center">
+<img alt="devguide/../../../images/Leap_Image_Raw.png" src="devguide/../../../images/Leap_Image_Raw.png" />
+<p class="caption">An image from one of the cameras. A grid highlighting the significant, complex distortion is superimposed on the image.</p>
+</div>
+<p>The images can be used for:</p>
+<ul class="simple">
+<li>Head-mounted display video pass-through</li>
+<li>Augmented reality</li>
+<li>Computer vision</li>
+</ul>
+<p>The Image API provides a buffer containing the sensor brightness values and a buffer containing the camera calibration map, which can be used to correct lens distortion and other optical imperfections in the image data.</p>
+<div class="section" id="image-api-basics">
+<h2>Image API Basics<a class="headerlink" href="#image-api-basics" title="Permalink to this headline">¶</a></h2>
+<p>Get <a class="reference external" href="../api/Leap.ImageList.html"><tt class="docutils literal"><span class="pre">ImageList</span></tt></a> objects from either <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263">Controller.images()</a> or <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1a85588dbb02a8ff793cf2ced9067f8263">Frame.images()</a>. The Controller.images() function gives you the most recent images. Frame.images() gives you the images associated with that frame. Since processing the frame takes a bit of time, the images from the frame will be at least one camera frame behind the images obtained from the controller. (In a future version, the data frame rate may be decoupled from the camera frame rate, so the difference could be larger.) Images from the controller have the smallest latency, but won&#8217;t match up as well to the tracking data of the current frame. When using Controller.images(), you can implement the <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1af6b82f6f7fb940f58dccd05ee1090741">onImages()</a> callback in a <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> object. Your <a class="reference external" href="../api/Leap.Listener.html#cppclass_leap_1_1_listener_1af6b82f6f7fb940f58dccd05ee1090741">Listener.onImages()</a> callback is invoked by the <tt class="docutils literal"><span class="pre">Controller</span></tt> as soon as a new set of images is ready.</p>
+<p>Image data is provided as an array of pixel values. The format of this data is reported by the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1aa50869d4b5b25718ba2c23c4c8aeb3d8">Image.format()</a> value. Currently, one format is in use. This &#8220;INFRARED&#8221; format uses one byte per pixel, defining the brightness measured for that sensor location. You can display infrared-format data as a greyscale image. Future Leap Motion hardware may provide sensor image data in a different format.</p>
+<div class="section" id="image-distortion">
+<h3>Image Distortion<a class="headerlink" href="#image-distortion" title="Permalink to this headline">¶</a></h3>
+<p>When a ray of light enters one of the Leap Motion cameras, the lens bends the light ray so that it hits the sensor, which records it as a greyscale brightness value at a specific pixel location. Of course, no lens is perfect, so a ray of light does not land on the sensor in the optically perfect spot. The calibration map provides data to correct this imperfection, allowing you to calculate the true angle of the original ray of light. You can use the corrected angle to generate a distortion-free image, and, using the angles from both images in the stereo pair, you can triangulate the 3D location of a feature identified in both images. Note that the calibration map corrects lens distortion; it does not correct perspective distortion.</p>
+<p>For image correction, the distortion data can be fed to a shader program that can efficiently interpolate the correction applied to rays of light. For getting the true angle for a small set of points, you can use the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">Image.warp()</a> function (but this is not efficient enough to transform a full bitmap at a high frame rate).</p>
+<p>The distortion data is based on the angle of view of the Leap Motion cameras. The image class provides functions, <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a7652cdb1289147a93c202edb808dd8dc">Image.rayScaleX()</a> and <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a8eeaf33cfbac8082bd46848a2837ff50">Image.rayScaleY()</a> that are proportional to view angles large enough to ensure that distortion map covers the entire view, about 150 degrees for the current Leap Motion peripheral. A 150 degree angle of view means that a light ray passing through the lens has a maximum slope of 4/1.</p>
+<div class="figure align-center">
+<img alt="devguide/../../../images/Leap_Image_Rays.png" src="devguide/../../../images/Leap_Image_Rays.png" />
+<p class="caption">A view angle of 150 degrees corresponds to a slope of ±4 (the tangent of 75 degrees is approximately 4)</p>
+</div>
+<p>The image above shows a reconstruction of the distortion-corrected image data. The brightness value of each pixel in the image originated from a ray of light entering the camera from a specific direction. The image is reconstructed by calculating the horizontal and vertical slopes represented by each pixel and finding the true brightness value from the image data using the calibration map. The red portions of the image represent areas within the rendering for which no brightness value is available (the actual field of view is less than 150 degrees).</p>
+</div>
+<div class="section" id="image-orientation">
+<h3>Image Orientation<a class="headerlink" href="#image-orientation" title="Permalink to this headline">¶</a></h3>
+<p>The top of the image is always toward the negative direction of the z-axis of the Leap Motion coordinate system. By default, the Leap Motion software automatically adjusts the coordinate system so that hands enter from the positive direction of the z-axis. (Users can disable auto-orientation using the Leap Motion control panel.) Before hands are inserted into the field of view, it isn&#8217;t possible to know which way the images are oriented, since the user can typically place or mount the device in either physical orientation (i.e. with the green LED on the long side of the device facing one way or the other). If the user places the device in the opposite way than you expect, the images will be upside down until they put their hands into view (or turn the device itself around).</p>
+</div>
+</div>
+<div class="section" id="get-the-raw-images">
+<h2>Get the Raw Images<a class="headerlink" href="#get-the-raw-images" title="Permalink to this headline">¶</a></h2>
+<p>Before you can get image data, you must set the POLICY_IMAGES flag using the <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a31b4a8342124b2c29955ce3fc8c0d31f">Controller.setPolicy()</a> function. For privacy reasons, each user must also enable the feature in the Leap Motion control panel for any application to get the raw camera images.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">controller</span><span class="p">.</span><span class="n">setPolicy</span><span class="p">(</span><span class="n">Leap</span><span class="o">::</span><span class="n">Controller</span><span class="o">::</span><span class="n">POLICY_IMAGES</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To get the image data, use either the <a class="reference external" href="../api/Leap.Controller.html#cppclass_leap_1_1_controller_1a85588dbb02a8ff793cf2ced9067f8263">Controller.images()</a> or the <a class="reference external" href="../api/Leap.Frame.html#cppclass_leap_1_1_frame_1a85588dbb02a8ff793cf2ced9067f8263">Frame.images()</a> function. Since the Leap Motion peripheral has two cameras, these functions return an <tt class="docutils literal"><span class="pre">ImageList</span></tt> object that contains two images (this could change in the future if multiple Leap Motion devices can be active at the same time). The image at index 0 is the left camera; the image at index 1 is the right camera. Note that the left-right orientation of the peripheral can be detected automatically based on the direction from which the user inserts his or her hand into the field of view. Detection is enabled by the auto-orientation setting in the Leap Motion control panel.</p>
+<p>Once you have an <a class="reference external" href="../api/Leap.Image.html"><tt class="docutils literal"><span class="pre">Image</span></tt></a> object, you can get the 8-bit brightness values from the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a100cb2126dc50863f75b555841dbcfa4">data()</a> buffer. The length of this buffer is <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a369399896761e31ae71db57fdd0ba431">Image.width()</a> times <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1ae26bcfe2f33f5873dbdfb6948cf1f59f">Image.height()</a> times <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a2f39586631180c12d005fe1bc76e1010">Image.bytesPerPixel()</a>. The width and height of the image changes with the current operating mode of the controller, which can change from frame to frame. Note that in &#8220;robust mode,&#8221; the images are half as tall.</p>
+<p>The following example gets the image list from a frame and copies the brightness values from the data() buffer to a bitmap (a Cinder Surface object, in this case). The example uses the Cinder OpenGL API for drawing:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//Uses Cinder OpenGL wrapper</span>
+<span class="n">Frame</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">frame</span><span class="p">();</span>
+
+<span class="n">ImageList</span> <span class="n">images</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">images</span><span class="p">();</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="n">Image</span> <span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+    <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+
+    <span class="c1">//Draw the raw image data as a greyscale bitmap</span>
+    <span class="n">Surface</span> <span class="nf">surface</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">height</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">SurfaceChannelOrder</span><span class="o">::</span><span class="n">RGBA</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Surface</span><span class="o">::</span><span class="n">Iter</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">surface</span><span class="p">.</span><span class="n">getIter</span><span class="p">();</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">iter</span><span class="p">.</span><span class="n">line</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span> <span class="n">iter</span><span class="p">.</span><span class="n">pixel</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="n">iter</span><span class="p">.</span><span class="n">r</span><span class="p">()</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">[</span><span class="n">cursor</span><span class="p">];</span>
+            <span class="n">iter</span><span class="p">.</span><span class="n">g</span><span class="p">()</span> <span class="o">=</span> <span class="n">iter</span><span class="p">.</span><span class="n">b</span><span class="p">()</span> <span class="o">=</span> <span class="n">iter</span><span class="p">.</span><span class="n">r</span><span class="p">();</span>
+            <span class="n">iter</span><span class="p">.</span><span class="n">a</span><span class="p">()</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+            <span class="n">cursor</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-the-calibration-map">
+<h2>Get the Calibration Map<a class="headerlink" href="#get-the-calibration-map" title="Permalink to this headline">¶</a></h2>
+<p>The calibration map can be used to correct image distortion due to lens curvature and other imperfections. The map is a 64x64 grid of points. Each point consists of two 32-bit values, so the buffer size is 128 times 64 times 4. You can get the calibration map buffer using the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a4c6fa722eba7018e148b13677c7ce609">Image.distortion()</a> function.</p>
+<p>Each point in the buffer indicates where to find the corrected brightness value for the corresponding pixel in the raw image. Valid coordinates are normalized in the range [0..1]. Individual elements of the calibration map can have a value in the range [-0.6..2.3], but coordinates below zero or above 1 are invalid. Discard values outside the range [0..1] when using the calibration data.</p>
+<p>To convert to pixel coordinates multiply by the width or height of the image. For pixels that lie in between the calibration grid points, you can interpolate between the nearest grid points. The camera lenses have a very large angle of view (roughly 150 degrees) and have a large amount of distortion. Because of this, not every point in the calibration grid maps to a valid pixel. The following rendering shows the lens correction data as color values. The left image shows the x values; the right side shows the y values.</p>
+<div class="figure align-center">
+<img alt="devguide/../../../images/Leap_Distortion.png" src="devguide/../../../images/Leap_Distortion.png" />
+<p class="caption">The red values indicate map values that fall outside the image.</p>
+</div>
+<p>The size of the calibration map is subject to change in the future, so the <tt class="docutils literal"><span class="pre">Image</span></tt> class provides the grid dimensions with the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1ad322752e1a1e4126873be710a19c35fe">distortionWidth()</a> (actually twice the width to account for two values per grid point) and <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1acc04d327051e1acaf9ff69e9e8be7068">distortionHeight()</a> functions. The length of the buffer containing the calibration data is <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1ad322752e1a1e4126873be710a19c35fe">distortionWidth()</a> times <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1acc04d327051e1acaf9ff69e9e8be7068">distortionHeight()</a> times 4 bytes.</p>
+<p>The following example illustrates how to get the calibration data:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">distortion_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">distortion</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">distortionWidth</span><span class="p">()</span> <span class="o">*</span> <span class="n">image</span><span class="p">.</span><span class="n">distortionHeight</span><span class="p">();</span> <span class="n">d</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">dX</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+    <span class="kt">float</span> <span class="n">dY</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">dX</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">dX</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">((</span><span class="n">dY</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">dY</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="c1">//Use valid calibration data</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-ray-correction">
+<h2>Image Ray Correction<a class="headerlink" href="#image-ray-correction" title="Permalink to this headline">¶</a></h2>
+<p>You can correct the raw image distortion in two ways:</p>
+<ul class="simple">
+<li>Use the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">Image.warp()</a> and <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a21051ced11b3ffc3057027fb010bc4d7">Image.rectify()</a> functions.</li>
+<li>Use the data in the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a4c6fa722eba7018e148b13677c7ce609">Image.distortion()</a> buffer directly.</li>
+</ul>
+<p>The <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">warp()</a> and <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a21051ced11b3ffc3057027fb010bc4d7">rectify()</a> functions are the simpler method, but processing each pixel individually on the CPU is relatively slow. Use these functions if you are only correcting a few points, you don&#8217;t need to process data in real time, or when you cannot use GPU shaders. The distortion() buffer is designed to be used with a GPU shader program and can correct the entire raw image while maintaining a good application frame rate.</p>
+<div class="section" id="correction-using-image-warp">
+<h3>Correction using Image.warp()<a class="headerlink" href="#correction-using-image-warp" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">Image.warp()</a> takes a ray direction and returns the pixel coordinates into the raw image data that specify the brightness value recorded for that ray direction.</p>
+<p>The following example uses the warp() function to rasterize the distortion-corrected image.</p>
+<p>To create the image, the example creates a target bitmap and then, for each pixel, computes the direction of the ray of light that would strike the pixel through an ideal lens. The warp() function is then used to look up the correct brightness value.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//Draw the undistorted image using the warp() function</span>
+<span class="n">Vec2f</span> <span class="n">origin</span> <span class="o">=</span> <span class="n">Vec2f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">targetWidth</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">targetHeight</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+<span class="n">Surface</span> <span class="nf">targetImage</span><span class="p">(</span><span class="n">targetWidth</span><span class="p">,</span><span class="n">targetHeight</span><span class="p">,</span><span class="n">targetWidth</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">SurfaceChannelOrder</span><span class="o">::</span><span class="n">RGBA</span><span class="p">);</span>
+
+<span class="c1">//Iterate over target image pixels, converting xy to ray slope</span>
+<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">};</span> <span class="c1">//An array to hold the rgba color components</span>
+<span class="n">Surface</span><span class="o">::</span><span class="n">Iter</span> <span class="n">tI</span> <span class="o">=</span> <span class="n">targetImage</span><span class="p">.</span><span class="n">getIter</span><span class="p">();</span>
+<span class="k">while</span><span class="p">(</span> <span class="n">tI</span><span class="p">.</span><span class="n">line</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">tI</span><span class="p">.</span><span class="n">pixel</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">//Normalize from pixel xy to range [0..1]</span>
+        <span class="n">Vector</span> <span class="n">input</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">tI</span><span class="p">.</span><span class="n">x</span><span class="p">()</span><span class="o">/</span><span class="n">targetWidth</span><span class="p">,</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">tI</span><span class="p">.</span><span class="n">y</span><span class="p">()</span><span class="o">/</span><span class="n">targetHeight</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+        <span class="c1">//Convert from normalized [0..1] to slope [-4..4]</span>
+        <span class="n">input</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">image</span><span class="p">.</span><span class="n">rayOffsetX</span><span class="p">())</span> <span class="o">/</span> <span class="n">image</span><span class="p">.</span><span class="n">rayScaleX</span><span class="p">();</span>
+        <span class="n">input</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">image</span><span class="p">.</span><span class="n">rayOffsetY</span><span class="p">())</span> <span class="o">/</span> <span class="n">image</span><span class="p">.</span><span class="n">rayScaleY</span><span class="p">();</span>
+
+        <span class="n">Vector</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">warp</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">pixel</span><span class="p">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pixel</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">pixel</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pixel</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">height</span><span class="p">())</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">data_index</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">pixel</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">+</span> <span class="n">floor</span><span class="p">(</span><span class="n">pixel</span><span class="p">.</span><span class="n">x</span><span class="p">);</span> <span class="c1">//xy to buffer index</span>
+            <span class="n">brightness</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">data</span><span class="p">()[</span><span class="n">data_index</span><span class="p">];</span> <span class="c1">//Look up brightness value</span>
+            <span class="n">brightness</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">//Greyscale</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">brightness</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span> <span class="c1">//Display invalid pixels as red</span>
+            <span class="n">brightness</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">tI</span><span class="p">.</span><span class="n">r</span><span class="p">()</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">tI</span><span class="p">.</span><span class="n">g</span><span class="p">()</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">tI</span><span class="p">.</span><span class="n">b</span><span class="p">()</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+        <span class="n">tI</span><span class="p">.</span><span class="n">a</span><span class="p">()</span> <span class="o">=</span> <span class="n">brightness</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">gl</span><span class="o">::</span><span class="n">Texture</span> <span class="n">targetTexture</span><span class="p">(</span><span class="n">targetImage</span><span class="p">,</span> <span class="n">gl</span><span class="o">::</span><span class="n">Texture</span><span class="o">::</span><span class="n">Format</span><span class="p">());</span>
+<span class="n">gl</span><span class="o">::</span><span class="n">draw</span><span class="p">(</span><span class="n">targetTexture</span><span class="p">,</span> <span class="n">Rectf</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">origin</span> <span class="o">+</span> <span class="n">Vec2f</span><span class="p">(</span><span class="n">targetWidth</span><span class="p">,</span> <span class="n">targetHeight</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>The example uses Cinder and draws each pixel in the image. This is not a particularly efficient way to draw the undistorted image, however.</p>
+</div>
+<div class="section" id="correction-using-shaders">
+<span id="image-shaders"></span><h3>Correction using Shaders<a class="headerlink" href="#correction-using-shaders" title="Permalink to this headline">¶</a></h3>
+<p>A more efficient way to correct the entire image is to use a GPU shader program. Pass the image data to a fragment shader as a normal texture and the distortion data as encoded textures. You can then texture a quad by decoding the distortion data and using that to look up the correct brightness value in the image texture.</p>
+<blockquote>
+<div><p>The following example creates an RGBA texture with each 8-bit color component set to the raw brightness value:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+<span class="n">Surface</span> <span class="nf">surface</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">height</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">SurfaceChannelOrder</span><span class="o">::</span><span class="n">RGBA</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">Surface</span><span class="o">::</span><span class="n">Iter</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">surface</span><span class="p">.</span><span class="n">getIter</span><span class="p">();</span>
+<span class="k">while</span><span class="p">(</span> <span class="n">iter</span><span class="p">.</span><span class="n">line</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">iter</span><span class="p">.</span><span class="n">pixel</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">iter</span><span class="p">.</span><span class="n">r</span><span class="p">()</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="p">[</span><span class="n">cursor</span><span class="p">];</span>
+        <span class="n">iter</span><span class="p">.</span><span class="n">g</span><span class="p">()</span> <span class="o">=</span> <span class="n">iter</span><span class="p">.</span><span class="n">b</span><span class="p">()</span> <span class="o">=</span> <span class="n">iter</span><span class="p">.</span><span class="n">r</span><span class="p">();</span>
+        <span class="n">iter</span><span class="p">.</span><span class="n">a</span><span class="p">()</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+        <span class="n">cursor</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">gl</span><span class="o">::</span><span class="n">Texture</span> <span class="n">texture</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">gl</span><span class="o">::</span><span class="n">Texture</span><span class="o">::</span><span class="n">Format</span><span class="p">());</span>
+<span class="n">texture</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The distortion map is encoded into a RGBA32F texture, which stores a 32-bit floating point number for each color channel. Only the red and green channels are used. The red component holds the x-lookup values, while the green component holds the y-lookup values. If available, you can also use a 2-channel floating point texture format, such as RG32F, to save texture memory.</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">distortion_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">distortion</span><span class="p">();</span>
+
+<span class="c1">//Encode the distorion/calibration map into a texture, r for X, g for Y</span>
+<span class="n">Surface32f</span> <span class="nf">distortion</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">distortionWidth</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="p">.</span><span class="n">distortionHeight</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">Surface32f</span><span class="o">::</span><span class="n">Iter</span> <span class="n">dI</span> <span class="o">=</span> <span class="n">distortion</span><span class="p">.</span><span class="n">getIter</span><span class="p">();</span>
+<span class="k">while</span><span class="p">(</span> <span class="n">dI</span><span class="p">.</span><span class="n">line</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">dI</span><span class="p">.</span><span class="n">pixel</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">dI</span><span class="p">.</span><span class="n">r</span><span class="p">()</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">cursor</span><span class="p">];</span>
+        <span class="n">dI</span><span class="p">.</span><span class="n">g</span><span class="p">()</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">cursor</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="n">dI</span><span class="p">.</span><span class="n">b</span><span class="p">()</span> <span class="o">=</span>  <span class="n">dI</span><span class="p">.</span><span class="n">a</span><span class="p">()</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+        <span class="n">cursor</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">gl</span><span class="o">::</span><span class="n">Texture</span><span class="o">::</span><span class="n">Format</span> <span class="n">textureFormat</span><span class="p">;</span>
+<span class="n">textureFormat</span><span class="p">.</span><span class="n">setInternalFormat</span><span class="p">(</span><span class="n">GL_RGBA32F_ARB</span><span class="p">);</span>
+
+<span class="n">gl</span><span class="o">::</span><span class="n">Texture</span> <span class="n">distortionTexture</span><span class="p">(</span><span class="n">distortion</span><span class="p">,</span> <span class="n">textureFormat</span><span class="p">);</span>
+<span class="n">distortionTexture</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The following simple shaders illustrate how to use these textures. The vertex program is a simple pass-through. The only requirement is that it pass the varying texture coordinate for the target texture to the fragment shader. The fragment program uses the texture coordinate and looks up the index values in the distortion texture map. It then uses the index values to lookup the final color for the target texture in the rawData texture.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#define STRINGIFY(s) #s</span>
+
+<span class="k">static</span> <span class="k">const</span> <span class="n">string</span> <span class="n">GLSL_VERT_PASSTHROUGH</span> <span class="o">=</span> <span class="n">STRINGIFY</span><span class="p">(</span>
+  <span class="n">varying</span> <span class="n">vec2</span> <span class="n">distortionLookup</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+      <span class="n">gl_FrontColor</span> <span class="o">=</span> <span class="n">gl_Color</span><span class="p">;</span>
+      <span class="n">distortionLookup</span> <span class="o">=</span> <span class="n">vec2</span><span class="p">(</span><span class="n">gl_MultiTexCoord0</span><span class="p">);</span>
+      <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">ftransform</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="k">static</span> <span class="k">const</span> <span class="n">string</span> <span class="n">GLSL_FRAG_IMGPROC</span> <span class="o">=</span> <span class="n">STRINGIFY</span><span class="p">(</span>
+    <span class="n">uniform</span> <span class="n">sampler2D</span>   <span class="n">rawData</span><span class="p">;</span>
+    <span class="n">uniform</span> <span class="n">sampler2D</span>   <span class="n">distortion</span><span class="p">;</span>
+
+    <span class="n">varying</span> <span class="n">vec2</span> <span class="n">distortionLookup</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="n">vec4</span> <span class="n">indexIntoRawData</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">distortion</span><span class="p">,</span> <span class="n">distortionLookup</span><span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">indexIntoRawData</span><span class="p">.</span><span class="n">r</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="o">&amp;&amp;</span> <span class="n">indexIntoRawData</span><span class="p">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+            <span class="o">&amp;&amp;</span> <span class="n">indexIntoRawData</span><span class="p">.</span><span class="n">g</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="o">&amp;&amp;</span> <span class="n">indexIntoRawData</span><span class="p">.</span><span class="n">g</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">rawData</span><span class="p">,</span> <span class="n">indexIntoRawData</span><span class="p">.</span><span class="n">rg</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Finally, the application uses this shader with the textures to draw a textured rectangle displaying the corrected image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">targetWidth</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">targetHeight</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+<span class="n">Surface</span> <span class="nf">targetImage</span><span class="p">(</span><span class="n">targetWidth</span><span class="p">,</span> <span class="n">targetHeight</span><span class="p">,</span> <span class="n">targetWidth</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">SurfaceChannelOrder</span><span class="o">::</span><span class="n">RGBA</span><span class="p">);</span>
+
+<span class="n">gl</span><span class="o">::</span><span class="n">Texture</span> <span class="n">targetTexture</span><span class="p">(</span><span class="n">targetImage</span><span class="p">,</span> <span class="n">gl</span><span class="o">::</span><span class="n">Texture</span><span class="o">::</span><span class="n">Format</span><span class="p">());</span>
+<span class="n">targetTexture</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">warpShader</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+<span class="n">warpShader</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="s">&quot;rawData&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="n">warpShader</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="s">&quot;distortion&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">gl</span><span class="o">::</span><span class="n">drawSolidRect</span><span class="p">(</span> <span class="n">Rectf</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">origin</span> <span class="o">+</span> <span class="n">Vec2f</span><span class="p">(</span><span class="n">targetWidth</span><span class="p">,</span> <span class="n">targetHeight</span><span class="p">))</span> <span class="p">);</span>
+
+<span class="n">warpShader</span><span class="p">.</span><span class="n">unbind</span><span class="p">();</span>
+<span class="n">targetTexture</span><span class="p">.</span><span class="n">unbind</span><span class="p">();</span>
+<span class="n">texture</span><span class="p">.</span><span class="n">unbind</span><span class="p">();</span>
+<span class="n">distortionTexture</span><span class="p">.</span><span class="n">unbind</span><span class="p">();</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="encoding-distortion-data-in-an-32-bit-argb-texture">
+<h3>Encoding Distortion Data in an 32-bit ARGB Texture<a class="headerlink" href="#encoding-distortion-data-in-an-32-bit-argb-texture" title="Permalink to this headline">¶</a></h3>
+<p>If a 32-bit-per-component texture format is not available on your target platform, you can use a separate texture for the x and y lookup values and encode the floating point values into multiple 8-bit color components. You then have to decode the values before using them to look up the raw brightness values.</p>
+<p>A common method for encoding floating point data in a texture is to decompose the input value into four lower-precision values and then restore them in the shader. For example, you can encode a floating point number into a Color object that has four 8-bit components as follows:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>Color encodeFloatRGBA(float input)
+{
+    input = (input + 0.6)/2.3; //scale the input value to the range [0..1]
+    float r = input;
+    float g = input * 255;
+    float b = input * 255 * 255;
+    float a = input * 255 * 255 * 255;
+
+    r = r - (float)Math.floor(r);
+    g = g - (float)Math.floor(g);
+    b = b - (float)Math.floor(b);
+    a = a - (float)Math.floor(a);
+
+    return Color(r, g, b, a);
+}
+</pre></div>
+</div>
+<p>To recompose the value in the fragment shader, you look up the value in the texture and perform the reciprocal operation. To avoid losing too much precision, encode the x and y distortion values in separate textures. Once the distortion indices are sampled from the textures and decoded, you can look up the correct brightness value from the camera image texture.</p>
+<div class="code c highlight-python"><div class="highlight"><pre>uniform sampler2D texture;
+uniform sampler2D vDistortion;
+uniform sampler2D hDistortion;
+
+varying vec2 distortionLookup;
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
+
+const vec4 decoderCoefficients = vec4(1.0, 1.0/255.0, 1.0/(255.0*255.0), 1.0/(255.0*255.0*255.0));
+
+void main() {
+  vec4 vEncoded = texture2D(vDistortion, vertTexCoord.st);
+  vec4 hEncoded = texture2D(hDistortion, vertTexCoord.st);
+  float vIndex = dot(vEncoded, decoderCoefficients) * 2.3 - 0.6;
+  float hIndex = dot(hEncoded, decoderCoefficients) * 2.3 - 0.6;
+
+  if(vIndex &gt;= 0.0 &amp;&amp; vIndex &lt;= 1.0
+        &amp;&amp; hIndex &gt;= 0.0 &amp;&amp; hIndex &lt;= 1.0)
+  {
+      gl_FragColor = texture2D(texture, vec2(hIndex, vIndex)) * vertColor;
+  } else {
+      gl_FragColor = vec4(1.0, 0, 0, 1.0); //show invalid pixels as red
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="correction-using-bilinear-interpolation">
+<h3>Correction using bilinear interpolation<a class="headerlink" href="#correction-using-bilinear-interpolation" title="Permalink to this headline">¶</a></h3>
+<p>In situations where shaders are not feasible you may be able to correct image distortion faster using well-optimized bilinear interpolation than when using the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">warp()</a> function. (As with any such optimization, you should verify your results with performance testing.)</p>
+<p>Recall that the distortion map contains a 64x64 element grid. Imagine these grid elements evenly spread out over your target image (with element [0, 0] in the lower-lefthand corner and [64,64] in the upper-right). Each element contains a horizontal coordinate and a vertical coordinate identifying where in the sensor image data to find the recorded brightness for that pixel in the target image. To find the brightness values for pixels in between the distortion grid elements, you have to interpolate between the four nearest grid points.</p>
+<div class="figure align-center">
+<img alt="devguide/../../../images/Interpolation.png" src="devguide/../../../images/Interpolation.png" />
+</div>
+<p>The base algorithm for finding the distortion-corrected brightness for a given pixel in the target image is:</p>
+<ol class="arabic simple">
+<li>Find the four points in the calibration grid surrounding the target pixel.</li>
+<li>Calculate the interpolation weights based on the distance of the target to each surrounding grid point.</li>
+<li>Lookup the horizontal and vertical values at each of the four grid elements.</li>
+<li>Bilinearly interpolate the horizontal value using the distance-based weighting factors.</li>
+<li>Repeat this interpolation for the vertical value.</li>
+<li>Reject any points where either the horizontal or vertical value is outside of the range [0..1]. There is no recorded data for such points.</li>
+<li>Denormalize the values so that they represent pixel coordinates into the raw sensor data.</li>
+<li>Look up the sensor value at the computed pixel coordinates.</li>
+<li>Set this brightness value at the original coordinates in the target image.</li>
+</ol>
+<p>The following example fills a two-dimensional array with the distortion corrected image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">float</span> <span class="n">destinationWidth</span> <span class="o">=</span> <span class="mi">320</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">destinationHeight</span> <span class="o">=</span> <span class="mi">120</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">destination</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="n">destinationWidth</span><span class="p">][(</span><span class="kt">int</span><span class="p">)</span><span class="n">destinationHeight</span><span class="p">];</span>
+
+<span class="c1">//define needed variables outside the inner loop</span>
+<span class="kt">float</span> <span class="n">calibrationX</span><span class="p">,</span> <span class="n">calibrationY</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">weightX</span><span class="p">,</span> <span class="n">weightY</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">dX</span><span class="p">,</span> <span class="n">dX1</span><span class="p">,</span> <span class="n">dX2</span><span class="p">,</span> <span class="n">dX3</span><span class="p">,</span> <span class="n">dX4</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">dY</span><span class="p">,</span> <span class="n">dY1</span><span class="p">,</span> <span class="n">dY2</span><span class="p">,</span> <span class="n">dY3</span><span class="p">,</span> <span class="n">dY4</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">denormalizedX</span><span class="p">,</span> <span class="n">denormalizedY</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+<span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">distortion_buffer</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">distortion</span><span class="p">();</span>
+
+<span class="c1">//Local variables for values needed in loop</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">distortionWidth</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">distortionWidth</span><span class="p">();</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">width</span><span class="p">();</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">height</span><span class="p">();</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">destinationWidth</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">destinationHeight</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//Calculate the position in the calibration map (still with a fractional part)</span>
+        <span class="n">calibrationX</span> <span class="o">=</span> <span class="mi">63</span> <span class="o">*</span> <span class="n">i</span><span class="o">/</span><span class="n">destinationWidth</span><span class="p">;</span>
+        <span class="n">calibrationY</span> <span class="o">=</span> <span class="mi">62</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">j</span><span class="o">/</span><span class="n">destinationHeight</span><span class="p">);</span> <span class="c1">// The y origin is at the bottom</span>
+        <span class="c1">//Save the fractional part to use as the weight for interpolation</span>
+        <span class="n">weightX</span> <span class="o">=</span> <span class="n">calibrationX</span> <span class="o">-</span> <span class="n">truncf</span><span class="p">(</span><span class="n">calibrationX</span><span class="p">);</span>
+        <span class="n">weightY</span> <span class="o">=</span> <span class="n">calibrationY</span> <span class="o">-</span> <span class="n">truncf</span><span class="p">(</span><span class="n">calibrationY</span><span class="p">);</span>
+
+        <span class="c1">//Get the x,y coordinates of the closest calibration map points to the target pixel</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">calibrationX</span><span class="p">;</span> <span class="c1">//Note truncation to int</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">calibrationY</span><span class="p">;</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="c1">//Look up the x and y values for the 4 calibration map points around the target</span>
+        <span class="n">dX1</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">];</span>
+        <span class="n">dX2</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">];</span>
+        <span class="n">dX3</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">];</span>
+        <span class="n">dX4</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">];</span>
+        <span class="n">dY1</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="n">dY2</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="n">dY3</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="n">dY4</span> <span class="o">=</span> <span class="n">distortion_buffer</span><span class="p">[</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+
+         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -- &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x1</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">y1</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x2</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">y2</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -- &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -- &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">distortionWidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="c1">//Bilinear interpolation of the looked-up values:</span>
+        <span class="c1">// X value</span>
+        <span class="n">dX</span> <span class="o">=</span> <span class="n">dX1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightX</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightY</span><span class="p">)</span> <span class="o">+</span>
+             <span class="n">dX2</span> <span class="o">*</span> <span class="n">weightX</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightY</span><span class="p">)</span> <span class="o">+</span>
+             <span class="n">dX3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightX</span><span class="p">)</span> <span class="o">*</span> <span class="n">weightY</span> <span class="o">+</span>
+             <span class="n">dX4</span> <span class="o">*</span> <span class="n">weightX</span> <span class="o">*</span> <span class="n">weightY</span><span class="p">;</span>
+
+        <span class="c1">// Y value</span>
+        <span class="n">dY</span> <span class="o">=</span> <span class="n">dY1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightX</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightY</span><span class="p">)</span> <span class="o">+</span>
+             <span class="n">dY2</span> <span class="o">*</span> <span class="n">weightX</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightY</span><span class="p">)</span> <span class="o">+</span>
+             <span class="n">dY3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightX</span><span class="p">)</span> <span class="o">*</span> <span class="n">weightY</span> <span class="o">+</span>
+             <span class="n">dY4</span> <span class="o">*</span> <span class="n">weightX</span> <span class="o">*</span> <span class="n">weightY</span><span class="p">;</span>
+
+        <span class="c1">// Reject points outside the range [0..1]</span>
+        <span class="k">if</span><span class="p">((</span><span class="n">dX</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">dX</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">dY</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">dY</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">//Denormalize from [0..1] to [0..width] or [0..height]</span>
+            <span class="n">denormalizedX</span> <span class="o">=</span> <span class="n">dX</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+            <span class="n">denormalizedY</span> <span class="o">=</span> <span class="n">dY</span> <span class="o">*</span> <span class="n">height</span><span class="p">;</span>
+
+            <span class="c1">//look up the brightness value for the target pixel</span>
+            <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="n">denormalizedX</span> <span class="o">+</span> <span class="n">denormalizedY</span> <span class="o">*</span> <span class="n">width</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="draw-tracking-data-over-image">
+<h2>Draw Tracking Data over Image<a class="headerlink" href="#draw-tracking-data-over-image" title="Permalink to this headline">¶</a></h2>
+<p>It is reasonably straightforward to draw representations of the Leap Motion tracking data over the camera image. If you have drawn the raw image data to a bitmap, you can find the pixel corresponding to a Leap Motion position using the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a084e8bb0ebaf71c32fe1ff0f483f0165">warp()</a> function.</p>
+<p>Converting a position in Leap Motion coordinates to horizontal and vertical slopes (from the camera perspective) requires knowing how far the cameras are from the origin of the Leap Motion coordinate system. For the current peripheral version, the offset on the x axis is 20mm to either side. The cameras are on the x-axis, so there is no z offset. The slope is simply the distance from the camera in the image plane &#8211; the x-coordinate for the horizontal slope; the z-coordinate for the vertical slope &#8211; divided by the distance to the image plane, the z-coordinate. The following diagram illustrates the geometry for the horizontal slope:</p>
+<div class="figure align-center">
+<img alt="devguide/../../../images/Image_Slope.png" src="devguide/../../../images/Image_Slope.png" />
+<p class="caption">The calculation is shown for the left camera; add the offset distance instead of subtracting for the right camera.</p>
+</div>
+<p>Once you know the ray slope values, you can get the pixel coordinates using warp().</p>
+<p>Note: The offset can be different for different form factors of the Leap Motion controller, but there is currently no way to get this value from the API.</p>
+<p>The following example draws circles over the finger tips in the image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Vec2f</span> <span class="n">origin</span> <span class="o">=</span> <span class="n">Vec2f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">const</span> <span class="kt">float</span> <span class="n">camera_offset</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span> <span class="c1">//x-axis offset of cameras in millimeters</span>
+<span class="n">FingerList</span> <span class="n">allTheFingers</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">fingers</span><span class="p">();</span>
+<span class="k">for</span><span class="p">(</span><span class="n">FingerList</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">fl</span> <span class="o">=</span> <span class="n">allTheFingers</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">fl</span> <span class="o">!=</span> <span class="n">allTheFingers</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">fl</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Vector</span> <span class="n">tip</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">fl</span><span class="p">).</span><span class="n">tipPosition</span><span class="p">();</span>
+    <span class="kt">float</span> <span class="n">h_slope</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">tip</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">camera_offset</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">tip</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">v_slope</span> <span class="o">=</span> <span class="n">tip</span><span class="p">.</span><span class="n">z</span><span class="o">/</span><span class="n">tip</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+
+    <span class="n">Vector</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">warp</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="n">h_slope</span><span class="p">,</span> <span class="n">v_slope</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="n">gl</span><span class="o">::</span><span class="n">color</span><span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">);</span>
+    <span class="n">gl</span><span class="o">::</span><span class="n">drawSolidCircle</span><span class="p">(</span><span class="n">Vec2f</span><span class="p">(</span><span class="n">pixel</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">origin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pixel</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">origin</span><span class="p">.</span><span class="n">y</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you have rendered the corrected image data, then correlating tracking data to the image data depends on how you rendered the image. For 3D scenes, this is a matter of using a consistent scale and correct placement of the textured quad showing the camera image. For other types of rendering, you must convert the ray slopes representing a Leap Motion position to a target image pixel according to the way that you corrected the image data.</p>
+<p>The following example displays finger tip positions on the distortion corrected image rendered in the example above.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">FingerList</span> <span class="n">frameFingers</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">fingers</span><span class="p">();</span>
+<span class="k">for</span><span class="p">(</span><span class="n">FingerList</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">fl</span> <span class="o">=</span> <span class="n">frameFingers</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">fl</span> <span class="o">!=</span> <span class="n">frameFingers</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">fl</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//Convert finger tip position to a ray from the camera POV</span>
+    <span class="n">Vector</span> <span class="n">tip</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">fl</span><span class="p">).</span><span class="n">tipPosition</span><span class="p">();</span>
+    <span class="kt">float</span> <span class="n">horizontal_slope</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">tip</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">tip</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">vertical_slope</span> <span class="o">=</span> <span class="n">tip</span><span class="p">.</span><span class="n">z</span><span class="o">/</span><span class="n">tip</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+
+    <span class="c1">//Normalize ray from [-4..4] to [0..1] (the inverse of how the undistorted image was drawn earlier)</span>
+    <span class="n">Vector</span> <span class="n">ray</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">horizontal_slope</span> <span class="o">*</span> <span class="n">image</span><span class="p">.</span><span class="n">rayScaleX</span><span class="p">()</span> <span class="o">+</span> <span class="n">image</span><span class="p">.</span><span class="n">rayOffsetX</span><span class="p">(),</span>
+                        <span class="n">vertical_slope</span>   <span class="o">*</span> <span class="n">image</span><span class="p">.</span><span class="n">rayScaleY</span><span class="p">()</span> <span class="o">+</span> <span class="n">image</span><span class="p">.</span><span class="n">rayOffsetY</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="c1">//Pixel coordinates from [0..1] to [0..width/height]</span>
+    <span class="n">Vector</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">targetWidth</span><span class="p">,</span> <span class="n">ray</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">targetHeight</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">gl</span><span class="o">::</span><span class="n">color</span><span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">);</span>
+    <span class="n">gl</span><span class="o">::</span><span class="n">drawSolidCircle</span><span class="p">(</span><span class="n">Vec2f</span><span class="p">(</span><span class="n">pixel</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">origin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pixel</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">origin</span><span class="p">.</span><span class="n">y</span><span class="p">),</span> <span class="mi">5</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="calculate-the-direction-to-an-image-feature">
+<h2>Calculate the Direction to an Image Feature<a class="headerlink" href="#calculate-the-direction-to-an-image-feature" title="Permalink to this headline">¶</a></h2>
+<p>Get the direction to an image feature with the <a class="reference external" href="../api/Leap.Image.html#cppclass_leap_1_1_image_1a21051ced11b3ffc3057027fb010bc4d7">Image.rectify()</a> function. Image.rectify() returns a vector containing the horizontal and vertical slopes (as defined from the camera point of view) given the pixel coordinates in the raw image data.</p>
+<p>The following example illustrates how to get the use the slope data for a pair of pixels that represent the same point on an image feature. If you can match two pixels in the stereo image pair with sufficient accuracy, you can triangulate the 3D position using the set of slope values from the two camera images.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Leap</span><span class="o">::</span><span class="n">Image</span> <span class="n">image_left</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">images</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Image</span> <span class="n">image_right</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">images</span><span class="p">()[</span><span class="mi">1</span><span class="p">];</span>
+
+
+<span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span> <span class="n">slopes_left</span> <span class="o">=</span> <span class="n">image_left</span><span class="p">.</span><span class="n">rectify</span><span class="p">(</span><span class="n">left_camera_pixel</span><span class="p">);</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span> <span class="n">slopes_right</span> <span class="o">=</span> <span class="n">image_right</span><span class="p">.</span><span class="n">rectify</span><span class="p">(</span><span class="n">right_camera_pixel</span><span class="p">);</span>
+
+<span class="c1">//Do the triangulation from the rectify() slopes</span>
+<span class="kt">float</span> <span class="n">cameraZ</span> <span class="o">=</span> <span class="mi">40</span><span class="o">/</span><span class="p">(</span><span class="n">slopes_right</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">slopes_left</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+<span class="kt">float</span> <span class="n">cameraY</span> <span class="o">=</span> <span class="n">cameraZ</span> <span class="o">*</span> <span class="n">slopes_right</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">cameraX</span> <span class="o">=</span> <span class="n">cameraZ</span> <span class="o">*</span> <span class="n">slopes_right</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span> <span class="n">position</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">::</span><span class="n">Vector</span><span class="p">(</span><span class="n">cameraX</span><span class="p">,</span> <span class="o">-</span><span class="n">cameraZ</span><span class="p">,</span> <span class="n">cameraY</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="head-mounted-display-mode">
+<h2>Head-Mounted Display Mode<a class="headerlink" href="#head-mounted-display-mode" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion service/daemon software provides a mode that optimizes tracking when the Leap Motion hardware is attached to a head-mounted display. In this mode, the Leap Motion software expects to view hands from the top rather than the bottom. When ambiguity exists whether the palm of a hand is facing toward or away from the Leap Motion sensors, setting this mode makes it more likely that the software will initialize the hand model so that it is facing away from the sensors. Thus this mode is good for mounting the Leap Motion device on the face of a head-mounted display rig.</p>
+<p>To turn on the mode in your application, enable the optimize HMD policy:</p>
+<div class="code cpp highlight-python"><div class="highlight"><pre>controller.setPolicy(Leap::Controller::PolicyFlag::POLICY_OPTIMIZE_HMD);
+</pre></div>
+</div>
+<p>The policy is always denied for hardware that cannot be mounted on an HMD, such as those embedded in laptops or keyboards.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">C++ Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Leap_Controllers.html">Connecting to the Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Frames.html">Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Camera Images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#image-api-basics">Image API Basics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#image-distortion">Image Distortion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#image-orientation">Image Orientation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#get-the-raw-images">Get the Raw Images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-the-calibration-map">Get the Calibration Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image-ray-correction">Image Ray Correction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#correction-using-image-warp">Correction using Image.warp()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#correction-using-shaders">Correction using Shaders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#encoding-distortion-data-in-an-32-bit-argb-texture">Encoding Distortion Data in an 32-bit ARGB Texture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#correction-using-bilinear-interpolation">Correction using bilinear interpolation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#draw-tracking-data-over-image">Draw Tracking Data over Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculate-the-direction-to-an-image-feature">Calculate the Direction to an Image Feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#head-mounted-display-mode">Head-Mounted Display Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>C++</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

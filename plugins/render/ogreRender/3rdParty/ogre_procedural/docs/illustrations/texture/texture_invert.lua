@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Gradient(buffer):process()
+Procedural.Invert(buffer):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_16", "Invert_Demo")
+dotfile:set("Gradient", "texture_gradient", "Invert", "texture_invert")

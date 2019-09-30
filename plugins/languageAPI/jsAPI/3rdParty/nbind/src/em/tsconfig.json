@@ -1,0 +1,22 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"declaration": false,
+		"experimentalDecorators": true,
+		"lib": ["es5", "es2015.collection"],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitUseStrict": true,
+		"outDir": "../../dist/bundle",
+		"removeComments": false,
+		"sourceMap": false,
+		"strictNullChecks": true,
+		"target": "es5"
+	},
+	"files": [
+		"emscripten.d.ts",
+		"em-api.ts"
+	]
+}

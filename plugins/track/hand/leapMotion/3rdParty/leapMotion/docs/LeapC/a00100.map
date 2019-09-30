@@ -1,0 +1,6 @@
+<map id="LEAP_IMAGE_COMPLETE_EVENT" name="LEAP_IMAGE_COMPLETE_EVENT">
+<area shape="rect" id="node2" href="$a00029.html#a00062" title="Properties of a sensor image. " alt="" coords="5,5,205,200"/>
+<area shape="rect" id="node3" href="$a00029.html#a00061" title="Opaque struct that identifies an image request. " alt="" coords="229,57,461,149"/>
+<area shape="rect" id="node4" href="$a00029.html#a00055" title="A matrix containing lens distortion correction coordinates. " alt="" coords="486,49,690,156"/>
+<area shape="rect" id="node5" href="$a00029.html#a00056" title="Identifying information for a frame of tracking data. " alt="" coords="715,49,888,156"/>
+</map>

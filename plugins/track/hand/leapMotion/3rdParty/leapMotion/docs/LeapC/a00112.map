@@ -1,0 +1,27 @@
+<map id="LEAP_CONNECTION_MESSAGE" name="LEAP_CONNECTION_MESSAGE">
+<area shape="rect" id="node2" href="$a00029.html#a00044" title="Received from LeapPollConnection() when a connection to the Leap Motion service is established..." alt="" coords="50,1020,255,1097"/>
+<area shape="rect" id="node3" href="$a00029.html#a00063" title="A system log message. " alt="" coords="279,1005,423,1112"/>
+<area shape="rect" id="node4" href="$a00029.html#a00041" title="Contains the response to a configuration value request. " alt="" coords="447,1013,645,1105"/>
+<area shape="rect" id="node5" href="$a00029.html#a00070" title="A variant data type used to get and set service configuration values. " alt="" coords="5,748,127,899"/>
+<area shape="rect" id="node6" href="$a00029.html#a00060" title="The error struct received from LeapPollConnection() when an image request goes wrong. " alt="" coords="669,1005,901,1112"/>
+<area shape="rect" id="node7" href="$a00029.html#a00059" title="Describes the image to request. " alt="" coords="151,763,410,884"/>
+<area shape="rect" id="node8" href="$a00029.html#a00061" title="Opaque struct that identifies an image request. " alt="" coords="434,777,666,869"/>
+<area shape="rect" id="node13" href="$a00029.html#a00058" title="The properties of a requested Image. " alt="" coords="925,991,1111,1127"/>
+<area shape="rect" id="node9" href="$a00029.html#a00049" title="Device event information. " alt="" coords="1345,1013,1510,1105"/>
+<area shape="rect" id="node10" href="$a00029.html#a00052" title="A reference to a Leap device. " alt="" coords="1619,777,1766,869"/>
+<area shape="rect" id="node11" href="$a00029.html#a00053" title="A notification that a device&#39;s status has changed. " alt="" coords="1534,1005,1707,1112"/>
+<area shape="rect" id="node12" href="$a00029.html#a00040" title="The result of a configuration change request. " alt="" coords="1732,1005,1912,1112"/>
+<area shape="rect" id="node14" href="$a00029.html#a00062" title="Properties of a sensor image. " alt="" coords="690,726,890,921"/>
+<area shape="rect" id="node15" href="$a00029.html#a00055" title="A matrix containing lens distortion correction coordinates. " alt="" coords="915,770,1119,877"/>
+<area shape="rect" id="node16" href="$a00029.html#a00056" title="Identifying information for a frame of tracking data. " alt="" coords="1143,770,1317,877"/>
+<area shape="rect" id="node20" href="$a00029.html#a00069" title="A snapshot, or frame of data, containing the tracking data for a single moment in time..." alt="" coords="1137,1005,1321,1112"/>
+<area shape="rect" id="node17" href="$a00029.html#a00046" title="Received from LeapPollConnection() when a connection to the Leap Motion service is lost..." alt="" coords="1936,1013,2132,1105"/>
+<area shape="rect" id="node18" href="$a00029.html#a00050" title="Device failure information. " alt="" coords="2156,1005,2333,1112"/>
+<area shape="rect" id="node19" href="$a00029.html#a00065" title="The response from a request to get or set a policy. " alt="" coords="2357,1013,2521,1105"/>
+<area shape="rect" id="node21" href="$a00029.html#a00057" title="Describes a tracked hand. " alt="" coords="1473,719,1595,928"/>
+<area shape="rect" id="node22" href="$a00029.html#a00054" title="Describes the digit of a hand. " alt="" coords="1525,476,1631,583"/>
+<area shape="rect" id="node23" href="$a00029.html#a00071" title="A three element, floating&#45;point vector. " alt="" coords="1381,13,1500,149"/>
+<area shape="rect" id="node24" href="$a00029.html#a00038" title="Describes a bone&#39;s position and orientation. " alt="" coords="1585,277,1686,355"/>
+<area shape="rect" id="node26" href="$a00029.html#a00064" title="Properties associated with the palm of the hand. " alt="" coords="1712,277,1812,355"/>
+<area shape="rect" id="node25" href="$a00029.html#a00066" title="A four element, floating point quaternion. " alt="" coords="1682,5,1834,156"/>
+</map>

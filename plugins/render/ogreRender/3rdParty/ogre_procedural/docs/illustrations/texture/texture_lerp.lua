@@ -1,0 +1,8 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Cloud(buffer):process()
+Procedural.Lerp(buffer):setImageA(bufferGradient):setImageB(bufferCellNormal):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_18", "Lerp_Demo")
+dotfile:set("Cloud", "texture_cloud", "Gradient", "texture_gradient", "Lerp", "texture_lerp")
+dotfile:add("Cell", "texture_cell_smooth")
+dotfile:bind(4, 3)

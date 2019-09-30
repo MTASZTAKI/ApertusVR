@@ -1,0 +1,1224 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LeapFrame &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="Leap_Classes.html" />
+    <link rel="next" title="LeapHand" href="Leap.Hand.html" />
+    <link rel="prev" title="FingerList" href="Leap.FingerList.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/api/Leap.Frame.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/api/Leap.Frame.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/api/Leap.Frame.html";
+            } else {
+                    redirectedLocation ="Leap_Classes.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/api/Leap.Frame.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap.FingerList.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap.Hand.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/api/Leap.Frame.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/api/Leap.Frame.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/api/Leap.Frame.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/api/Leap.Frame.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/api/Leap.Frame.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/api/Leap.Frame.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Classes.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Classes.html" accesskey="U">API Reference</a>&raquo;
+  LeapFrame
+</span> -->
+        
+  <div class="section" id="id29">
+<h1>Frame<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h1>
+<p><strong>Attributes:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Frame.current_frames_per_second" title="Leap.Frame.current_frames_per_second"><tt class="xref py py-attr docutils literal"><span class="pre">current_frames_per_second</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.fingers" title="Leap.Frame.fingers"><tt class="xref py py-attr docutils literal"><span class="pre">fingers</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.hands" title="Leap.Frame.hands"><tt class="xref py py-attr docutils literal"><span class="pre">hands</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.id" title="Leap.Frame.id"><tt class="xref py py-attr docutils literal"><span class="pre">id</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.images" title="Leap.Frame.images"><tt class="xref py py-attr docutils literal"><span class="pre">images</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.interaction_box" title="Leap.Frame.interaction_box"><tt class="xref py py-attr docutils literal"><span class="pre">interaction_box</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.is_valid" title="Leap.Frame.is_valid"><tt class="xref py py-attr docutils literal"><span class="pre">is_valid</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.pointables" title="Leap.Frame.pointables"><tt class="xref py py-attr docutils literal"><span class="pre">pointables</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.serialize" title="Leap.Frame.serialize"><tt class="xref py py-attr docutils literal"><span class="pre">serialize</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.timestamp" title="Leap.Frame.timestamp"><tt class="xref py py-attr docutils literal"><span class="pre">timestamp</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.tools" title="Leap.Frame.tools"><tt class="xref py py-attr docutils literal"><span class="pre">tools</span></tt></a></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<div class="members container">
+<ul class="simple">
+<li><a class="reference internal" href="#Leap.Frame.deserialize" title="Leap.Frame.deserialize"><tt class="xref py py-meth docutils literal"><span class="pre">deserialize()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.finger" title="Leap.Frame.finger"><tt class="xref py py-meth docutils literal"><span class="pre">finger()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.hand" title="Leap.Frame.hand"><tt class="xref py py-meth docutils literal"><span class="pre">hand()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.gesture" title="Leap.Frame.gesture"><tt class="xref py py-meth docutils literal"><span class="pre">gesture()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.gestures" title="Leap.Frame.gestures"><tt class="xref py py-meth docutils literal"><span class="pre">gestures()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.pointable" title="Leap.Frame.pointable"><tt class="xref py py-meth docutils literal"><span class="pre">pointable()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.rotation_angle" title="Leap.Frame.rotation_angle"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_angle()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.rotation_axis" title="Leap.Frame.rotation_axis"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_axis()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.rotation_matrix" title="Leap.Frame.rotation_matrix"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_matrix()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.rotation_probability" title="Leap.Frame.rotation_probability"><tt class="xref py py-meth docutils literal"><span class="pre">rotation_probability()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.scale_factor" title="Leap.Frame.scale_factor"><tt class="xref py py-meth docutils literal"><span class="pre">scale_factor()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.scale_probability" title="Leap.Frame.scale_probability"><tt class="xref py py-meth docutils literal"><span class="pre">scale_probability()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.tool" title="Leap.Frame.tool"><tt class="xref py py-meth docutils literal"><span class="pre">tool()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.translation" title="Leap.Frame.translation"><tt class="xref py py-meth docutils literal"><span class="pre">translation()</span></tt></a></li>
+<li><a class="reference internal" href="#Leap.Frame.translation_probability" title="Leap.Frame.translation_probability"><tt class="xref py py-meth docutils literal"><span class="pre">translation_probability()</span></tt></a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="Leap.Frame">
+<em class="property">class </em><tt class="descclassname">Leap.</tt><tt class="descname">Frame</tt><a class="headerlink" href="#Leap.Frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Frame class represents a set of hand and finger tracking data detected
+in a single frame.</p>
+<p>The Leap Motion software detects hands and fingers within the tracking area, reporting
+their positions, orientations and motions in frames at the Leap Motion frame rate.</p>
+<p>Access Frame objects through an instance of the <a class="reference internal" href="Leap.Controller.html#Leap.Controller" title="Leap.Controller"><tt class="xref py py-class docutils literal"><span class="pre">Controller</span></tt></a> class. You can
+poll for data at your applications natural frame rate or implement a
+Listener subclass to receive a callback event when a new Frame is available.</p>
+<p>The following example shows how to get the current frame from a controller and
+access lists of tracking data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">controller</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Controller</span><span class="p">()</span>
+<span class="c"># wait until Controller.isConnected() evaluates to true</span>
+<span class="c">#...</span>
+
+<span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span>
+<span class="n">hands</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hands</span>
+<span class="n">pointables</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">pointables</span>
+<span class="n">fingers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fingers</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">tools</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+<div class="constructors container">
+<dl class="classmethod">
+<dt id="Leap.Frame.Frame">
+<em class="property">classmethod </em><tt class="descname">Frame</tt><big>(</big><big>)</big><a class="headerlink" href="#Leap.Frame.Frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Frame object.</p>
+<p>Frame instances created with this constructor are invalid.
+Get valid Frame objects by calling the <a class="reference internal" href="Leap.Controller.html#Leap.Controller.frame" title="Leap.Controller.frame"><tt class="xref py py-func docutils literal"><span class="pre">Controller.frame()</span></tt></a> function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="attributes container">
+<dl class="attribute">
+<dt id="Leap.Frame.current_frames_per_second">
+<tt class="descname">current_frames_per_second</tt><a class="headerlink" href="#Leap.Frame.current_frames_per_second" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>The instantaneous framerate.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fps</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">current_frames_per_second</span>
+</pre></div>
+</div>
+<p>The rate at which the Leap Motion software is providing frames of data
+(in frames per second). The framerate can fluctuate depending on available computing
+resources, activity within the device field of view, software tracking settings,
+and other factors.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.fingers">
+<tt class="descname">fingers</tt><a class="headerlink" href="#Leap.Frame.fingers" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.FingerList.html#Leap.FingerList" title="Leap.FingerList"><tt class="xref py py-class docutils literal"><span class="pre">FingerList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of Finger objects detected in this frame, given in arbitrary order.
+The list can be empty if no fingers are detected.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fingers_for_frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fingers</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.hands">
+<tt class="descname">hands</tt><a class="headerlink" href="#Leap.Frame.hands" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.HandList.html#Leap.HandList" title="Leap.HandList"><tt class="xref py py-class docutils literal"><span class="pre">HandList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of Hand objects detected in this frame, given in arbitrary order.
+The list can be empty if no hands are detected.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">handlist</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hands</span>
+<span class="k">for</span> <span class="n">hand</span> <span class="ow">in</span> <span class="n">handlist</span><span class="p">:</span>
+    <span class="k">print</span> <span class="nb">str</span><span class="p">(</span><span class="n">hand</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.id">
+<tt class="descname">id</tt><a class="headerlink" href="#Leap.Frame.id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">long integer</td>
+</tr>
+</tbody>
+</table>
+<p>A unique ID for this Frame.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frame_identifier</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Consecutive frames processed by the Leap Motion
+software have consecutive increasing values (except when the controller is
+compensating for poor lighting &#8211; in which case, two sensor frames are used
+to construct each data frame and the frame ID increases by 2).</p>
+<p>You can use the <tt class="docutils literal"><span class="pre">id</span></tt> value to detect whether this frame has already been processed
+when you are polling the the controller for frames rather than using a listener:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lastFrameID</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">processFrame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastFrameID</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="c">#...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lastFrameID</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.images">
+<tt class="descname">images</tt><a class="headerlink" href="#Leap.Frame.images" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.ImageList.html#Leap.ImageList" title="Leap.ImageList"><tt class="xref py py-class docutils literal"><span class="pre">ImageList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of images from the Leap Motion cameras.</p>
+<p>Images received through the frame object are the images analyzed to create
+the tracking data for that frame.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">image_list</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">images</span>
+<span class="n">left_image</span> <span class="o">=</span> <span class="n">image_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">right_image</span> <span class="o">=</span> <span class="n">image_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.interaction_box">
+<tt class="descname">interaction_box</tt><a class="headerlink" href="#Leap.Frame.interaction_box" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.InteractionBox.html#Leap.InteractionBox" title="Leap.InteractionBox"><tt class="xref py py-class docutils literal"><span class="pre">InteractionBox</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The current InteractionBox for the frame. See the <a class="reference internal" href="Leap.InteractionBox.html#Leap.InteractionBox" title="Leap.InteractionBox"><tt class="xref py py-class docutils literal"><span class="pre">InteractionBox</span></tt></a> class
+documentation for more details on how this class should be used.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ibox</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">interaction_box</span>
+
+<span class="n">front_finger</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fingers</span><span class="o">.</span><span class="n">frontmost</span>
+<span class="n">normalized_position</span> <span class="o">=</span> <span class="n">ibox</span><span class="o">.</span><span class="n">normalize_point</span><span class="p">(</span> <span class="n">front_finger</span><span class="o">.</span><span class="n">tip_position</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">window_width</span>  <span class="o">*</span> <span class="n">normalized_position</span><span class="o">.</span><span class="n">x</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">window_height</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">normalized_position</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="n">draw_pointer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.is_valid">
+<tt class="descname">is_valid</tt><a class="headerlink" href="#Leap.Frame.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Reports whether this Frame instance is valid.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+    <span class="c">#Process frame data...</span>
+</pre></div>
+</div>
+<p>A valid Frame is one generated by the <a class="reference internal" href="Leap.Controller.html#Leap.Controller" title="Leap.Controller"><tt class="xref py py-class docutils literal"><span class="pre">Controller</span></tt></a> object that contains
+tracking data for all detected entities. An invalid Frame contains no
+actual tracking data, but you can call its functions without risk of a
+null pointer exception. The invalid Frame mechanism makes it more
+convenient to track individual data across the frame history. For example,
+you can invoke:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">finger</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">fingerID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for an arbitrary Frame history value, &#8220;n&#8221;, without first checking whether
+frame(n) returned a null object. (You should still check that the
+returned Finger instance is valid.)</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.pointables">
+<tt class="descname">pointables</tt><a class="headerlink" href="#Leap.Frame.pointables" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.PointableList.html#Leap.PointableList" title="Leap.PointableList"><tt class="xref py py-class docutils literal"><span class="pre">PointableList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The list of Pointable objects detected in this frame,
+given in arbitrary order. The list can be empty if no fingers are detected.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pointables_for_frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">pointables</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.serialize">
+<tt class="descname">serialize</tt><a class="headerlink" href="#Leap.Frame.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">tuple(<cite>Leap.byte_array</cite>, length)</td>
+</tr>
+</tbody>
+</table>
+<p>A tuple containing this Frame object as a <cite>Leap.byte_array</cite> object and the length
+of the byte_array.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ctypes</span>
+
+<span class="n">frame</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span>
+
+<span class="n">serialized_tuple</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">serialize</span>
+<span class="n">serialized_data</span> <span class="o">=</span> <span class="n">serialized_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">serialized_length</span> <span class="o">=</span> <span class="n">serialized_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">data_address</span> <span class="o">=</span> <span class="n">serialized_data</span><span class="o">.</span><span class="n">cast</span><span class="p">()</span><span class="o">.</span><span class="n">__long__</span><span class="p">()</span>
+<span class="nb">buffer</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_ubyte</span> <span class="o">*</span> <span class="n">serialized_length</span><span class="p">)</span><span class="o">.</span><span class="n">from_address</span><span class="p">(</span><span class="n">data_address</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="s">&#39;frame.data&#39;</span><span class="p">),</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+    <span class="n">data_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">buffer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The tuple can be fed directly to the <a class="reference internal" href="#Leap.Frame.deserialize" title="Leap.Frame.deserialize"><tt class="xref py py-meth docutils literal"><span class="pre">Frame.deserialize()</span></tt></a> function.
+However, saving the data to disk is a bit more work because of the limitations
+of the byte_array class used as the data type. Before you can save the data
+using Python&#8217;s built-in file API, you must convert this byte_array into an object
+that exposes the Python buffer interface. See <a class="reference internal" href="../devguide/Leap_Serialization.html"><em>Serializing Tracking Data</em></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.timestamp">
+<tt class="descname">timestamp</tt><a class="headerlink" href="#Leap.Frame.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">long integer</td>
+</tr>
+</tbody>
+</table>
+<p>The frame capture time in microseconds elapsed since the Leap started.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">timestamp</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">timestamp</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Leap.Frame.tools">
+<tt class="descname">tools</tt><a class="headerlink" href="#Leap.Frame.tools" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="Leap.ToolList.html#Leap.ToolList" title="Leap.ToolList"><tt class="xref py py-class docutils literal"><span class="pre">ToolList</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice</strong> Tools are deprecated in version 3.0.</p>
+<p>The list of Tool objects detected in this frame, given in arbitrary order.
+The list can be empty if no tools are detected.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="methods container">
+<blockquote>
+<div><dl class="method">
+<dt id="Leap.Frame.deserialize">
+<tt class="descname">deserialize</tt><big>(</big><em>frame_data</em><big>)</big><a class="headerlink" href="#Leap.Frame.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes a byte array to replace the properties of this Frame.</p>
+<p>A Controller object must be instantiated for this function to succeed, but it does not need to be connected.</p>
+<p>Any existing data in the frame is destroyed. If you have references to child objects (hands, fingers, etc.), these are preserved as long as the references remain in scope.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ctypes</span><span class="o">,</span> <span class="nn">numpy</span>
+
+<span class="n">frame</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">Frame</span><span class="p">()</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;frame.data&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">leap_byte_array</span> <span class="o">=</span> <span class="n">Leap</span><span class="o">.</span><span class="n">byte_array</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">address</span> <span class="o">=</span> <span class="n">leap_byte_array</span><span class="o">.</span><span class="n">cast</span><span class="p">()</span><span class="o">.</span><span class="n">__long__</span><span class="p">()</span>
+<span class="n">ctypes</span><span class="o">.</span><span class="n">memmove</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">frame</span><span class="o">.</span><span class="n">deserialize</span><span class="p">((</span><span class="n">leap_byte_array</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>When loading data from a file, you must convert the Python buffer into a <cite>Leap.byte_array</cite> object before passing it into <cite>deserialize</cite>. In addition, <cite>len()</cite> does not work with a <cite>byte_array</cite> object. You must calculate this separately, for example, from the length of the file buffer. The length is provided by the second item in the tuple given by the <a class="reference internal" href="#Leap.Frame.serialize" title="Leap.Frame.serialize"><tt class="xref py py-attr docutils literal"><span class="pre">serialize</span></tt></a> attribute. See <a class="reference internal" href="../devguide/Leap_Serialization.html"><em>Serializing Tracking Data</em></a>.</p>
+<p>Note: The behavior when calling functions which take another Frame object as a parameter is undefined when either frame has been deserialized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame_data</strong> (<em>tuple</em>) &#8211; A tuple containing the <cite>Leap.byte_array</cite> buffer containing the serialized frame data, followed by the length of this <cite>byte_array</cite> buffer.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.finger">
+<tt class="descname">finger</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Frame.finger" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Finger object with the specified ID in this frame.</p>
+<p>Use this function to retrieve the Finger object from
+this frame using an ID value obtained from a previous frame.
+This function always returns a Finger object, but if no finger
+with the specified ID is present, an invalid Finger object is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">finger_by_ID</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">finger_ID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a finger is lost and subsequently
+regained, the new Finger object representing that physical finger may have
+a different ID than that representing the finger in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Finger object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Finger.html#Leap.Finger" title="Leap.Finger"><tt class="xref py py-class docutils literal"><span class="pre">Finger</span></tt></a> The finger with the matching ID if one exists in this frame;
+otherwise, an invalid Finger object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.hand">
+<tt class="descname">hand</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Frame.hand" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Hand object with the specified ID in this frame.</p>
+<p>Use the <a class="reference internal" href="#Leap.Frame.hand" title="Leap.Frame.hand"><tt class="xref py py-func docutils literal"><span class="pre">Frame.hand()</span></tt></a> function to retrieve the Hand object from
+this frame using an ID value obtained from a previous frame.
+This function always returns a Hand object, but if no hand
+with the specified ID is present, an invalid Hand object is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hand</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">hand</span><span class="p">(</span><span class="n">hand_ID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a hand is lost and subsequently
+regained, the new Hand object representing that physical hand may have
+a different ID than that representing the physical hand in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Hand object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Hand.html#Leap.Hand" title="Leap.Hand"><tt class="xref py py-class docutils literal"><span class="pre">Hand</span></tt></a> The hand with the matching ID if one exists in this frame;
+otherwise, an invalid Hand object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.gesture">
+<tt class="descname">gesture</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Frame.gesture" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Notice</strong> Gestures are deprecated in version 3.0 and may not behave the same
+as they did in earlier versions.</p>
+<p>The Gesture object with the specified ID in this frame.</p>
+<p>Use the <tt class="docutils literal"><span class="pre">gesture</span></tt> function to return a Gesture object in this
+frame using an ID obtained in an earlier frame. The function always
+returns a Gesture object, but if there was no update for the gesture in
+this frame, then an invalid Gesture object is returned.</p>
+<p>All Gesture objects representing the same recognized movement share the
+same ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Gesture object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Gesture.html#Leap.Gesture" title="Leap.Gesture"><tt class="xref py py-class docutils literal"><span class="pre">Gesture</span></tt></a> The gesture with the matching ID if one exists in this frame;
+otherwise, an invalid Gesture object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.gestures">
+<tt class="descname">gestures</tt><big>(</big><span class="optional">[</span><em>sinceFrame</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Leap.Frame.gestures" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Notice</strong> Gestures are deprecated in version 3.0 and may not behave the same
+as they did in earlier versions.</p>
+<p>Returns a GestureList containing all gestures that have occured since
+the specified frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; An earlier Frame object. The starting frame must
+still be in the frame history cache, which has a default length of 60 frames. If no
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter is supplied, only the gestures from ththis frame ar returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.GestureList.html#Leap.GestureList" title="Leap.GestureList"><tt class="xref py py-class docutils literal"><span class="pre">GestureList</span></tt></a> &#8211; The list of the Gesture objects that have occured
+since the specified frame.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.pointable">
+<tt class="descname">pointable</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Frame.pointable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Pointable object with the specified ID in this frame.</p>
+<p>Use the this function to retrieve the Pointable object from
+this frame using an ID value obtained from a previous frame.
+This function always returns a Pointable object, but if no finger or tool
+with the specified ID is present, an invalid Pointable object is returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pointable_of_interest</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">pointable</span><span class="p">(</span><span class="n">pointable_ID</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a finger is lost and subsequently
+regained, the new Pointable object representing that finger may have
+a different ID than that representing the finger in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Pointable object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Pointable.html#Leap.Pointable" title="Leap.Pointable"><tt class="xref py py-class docutils literal"><span class="pre">Pointable</span></tt></a> The pointable with the matching ID if one exists in this frame;
+otherwise, an invalid Pointable object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.rotation_angle">
+<tt class="descname">rotation_angle</tt><big>(</big><em>sinceFrame</em><span class="optional">[</span>, <em>axis</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Leap.Frame.rotation_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>The angle of rotation derived from the overall
+rotational motion between the current frame and the specified frame.</p>
+<p>If no <tt class="docutils literal"><span class="pre">axis</span></tt> parameter is specified, then the returned angle is expressed in radians
+measured clockwise around the computed <a class="reference internal" href="#Leap.Frame.rotation_axis" title="Leap.Frame.rotation_axis"><tt class="xref py py-func docutils literal"><span class="pre">rotation_axis()</span></tt></a> vector (using the right-hand rule)
+between the start and end frames. The value is always between 0 and pi radians (0 and 180 degrees).</p>
+<p>If an <tt class="docutils literal"><span class="pre">axis</span></tt> parameter is specified, then the returned angle is expressed in radians measured
+clockwise around the supplied rotation axis (using the right-hand rule). In this case, the value
+is always between -pi and pi radians (-180 and 180 degrees).</p>
+<p>The Leap Motion software derives frame rotation from the relative change in position and
+orientation of all objects detected in the field of view.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rotation_around_y_axis</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">rotation_angle</span><span class="p">(</span><span class="n">start_frame</span><span class="p">,</span> <span class="n">Vector</span><span class="o">.</span><span class="n">y_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then the
+angle of rotation is zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative rotation.</li>
+<li><strong>axis</strong> (<a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>) &#8211; The axis to measure rotation around.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A positive value containing the heuristically determined
+rotational change between the current frame and that specified in the
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter, in radians.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.rotation_axis">
+<tt class="descname">rotation_axis</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.rotation_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>The axis of rotation derived from the overall rotational motion between
+the current frame and the specified frame.</p>
+<p>The returned direction vector is normalized.</p>
+<p>The Leap Motion software derives frame rotation from the relative change in position and
+orientation of all objects detected in the field of view.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">axis_of_frame_rotation</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">rotation_axis</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, or if no
+rotation is detected between the two frames, a zero vector is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> A normalized direction vector representing the axis of the
+heuristically determined rotational change between the current frame
+and that specified in the <tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.rotation_matrix">
+<tt class="descname">rotation_matrix</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.rotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The transform matrix expressing the rotation derived from the overall
+rotational motion between the current frame and the specified frame.</p>
+<p>The Leap Motion software derives frame rotation from the relative change in position and
+orientation of all objects detected in the field of view.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frame_rotation_transform</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns an identity matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Matrix.html#Leap.Matrix" title="Leap.Matrix"><tt class="xref py py-class docutils literal"><span class="pre">Matrix</span></tt></a> &#8211; A transformation Matrix containing the heuristically determined
+rotational change between the current frame and that specified in the
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.rotation_probability">
+<tt class="descname">rotation_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.rotation_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the overall motion between the current
+frame and the specified frame is intended to be a rotating motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rotation_intent_factor</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">rotation_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative rotation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A value between 0 and 1 representing the estimated probability
+that the overall motion between the current frame and the specified frame
+is intended to be a rotating motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.scale_factor">
+<tt class="descname">scale_factor</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.scale_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The scale factor derived from the overall motion between the current frame
+and the specified frame.</p>
+<p>The scale factor is always positive. A value of 1.0 indicates no
+scaling took place. Values between 0.0 and 1.0 indicate contraction
+and values greater than 1.0 indicate expansion.</p>
+<p>The Leap Motion software derives scaling from the relative inward or outward motion of
+all objects detected in the field of view (independent of translation
+and rotation).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frame_scale_motion</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns 1.0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative scaling.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A positive value representing the heuristically determined
+scaling change ratio between the current frame and that specified in the
+<tt class="docutils literal"><span class="pre">sinceFrame</span></tt> parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.scale_probability">
+<tt class="descname">scale_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.scale_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the overall motion between the current
+frame and the specified frame is intended to be a scaling motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">scale_intent_factor</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">scale_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative scaling.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">float</span></tt> &#8211; A value between 0 and 1 representing the estimated probability
+that the overall motion between the current frame and the specified frame
+is intended to be a scaling motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.tool">
+<tt class="descname">tool</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#Leap.Frame.tool" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Notice</strong> Tools are deprecated in version 3.0.</p>
+<p>The Tool object with the specified ID in this frame.</p>
+<p>Use this function to retrieve the Tool object from
+this frame using an ID value obtained from a previous frame.
+This function always returns a Tool object, but if no tool
+with the specified ID is present, an invalid Tool object is returned.</p>
+<p>Note that ID values persist across frames, but only until tracking of a
+particular object is lost. If tracking of a tool is lost and subsequently
+regained, the new Tool object representing that tool may have a
+different ID than that representing the tool in an earlier frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>integer</em>) &#8211; The ID value of a Tool object from a previous frame.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Tool.html#Leap.Tool" title="Leap.Tool"><tt class="xref py py-class docutils literal"><span class="pre">Tool</span></tt></a> The tool with the matching ID if one exists in this frame;
+otherwise, an invalid Tool object is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.translation">
+<tt class="descname">translation</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The change of position derived from the overall linear motion between
+the current frame and the specified frame.</p>
+<p>The returned translation vector provides the magnitude and direction of
+the movement in millimeters.</p>
+<p>The Leap Motion software derives frame translation from the linear motion of
+all objects detected in the field of view.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">linear_frame_movement</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">translation</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns a zero vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the relative translation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="Leap.Vector.html#Leap.Vector" title="Leap.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> A vector representing the heuristically determined change in
+position of all objects between the current frame and that specified
+in the sinceFrame parameter.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.translation_probability">
+<tt class="descname">translation_probability</tt><big>(</big><em>sinceFrame</em><big>)</big><a class="headerlink" href="#Leap.Frame.translation_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated probability that the overall motion between the current
+frame and the specified frame is intended to be a translating motion.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">translation_intent_factor</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">translation_probability</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If either this frame or sinceFrame is an invalid Frame object, then this
+method returns zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sinceFrame</strong> (<em>Frame</em>) &#8211; The starting frame for computing the translation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float A value between 0 and 1 representing the estimated probability
+that the overall motion between the current frame and the specified frame
+is intended to be a translating motion.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div></blockquote>
+<div class="data container">
+<dl class="data">
+<dt id="Leap.Frame.invalid">
+<tt class="descname">invalid</tt><a class="headerlink" href="#Leap.Frame.invalid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#Leap.Frame" title="Leap.Frame"><tt class="xref py py-class docutils literal"><span class="pre">Frame</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>An invalid Frame object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">find_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criteria</span><span class="p">):</span>
+    <span class="c">#search for frame meeting criteria...</span>
+    <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">frame</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Frame</span><span class="o">.</span><span class="n">invalid</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="operators container">
+<dl class="method">
+<dt id="Leap.Frame.eq">
+<tt class="descname">eq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Frame.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Frame object equality.</p>
+<p>Two Frame objects are equal if and only if both Frame objects represent
+the exact same frame of tracking data and both Frame objects are valid.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Leap.Frame.ne">
+<tt class="descname">ne</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Leap.Frame.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare Frame object inequality.</p>
+<p>Two Frame objects are equal if and only if both Frame objects represent
+the exact same frame of tracking data and both Frame objects are valid.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.0.</span></p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide/Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Classes.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Arm.html#id23">Arm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Bone.html#id27">Bone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Config.html#id16">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Controller.html#id32">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Device.html">Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.DeviceList.html">DeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDevice.html#id8">FailedDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FailedDeviceList.html#id5">FailedDeviceList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Finger.html#id20">Finger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.FingerList.html">FingerList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id29">Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Hand.html#id53">Hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.HandList.html">HandList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.ImageList.html">ImageList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.InteractionBox.html">InteractionBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Listener.html">Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Matrix.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Pointable.html#id24">Pointable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.PointableList.html">PointableList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap.Vector.html">Vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

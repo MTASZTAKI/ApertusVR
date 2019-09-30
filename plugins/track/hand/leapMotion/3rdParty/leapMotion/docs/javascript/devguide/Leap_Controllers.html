@@ -1,0 +1,390 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Connecting to the Controller &mdash; Leap Motion JavaScript SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion JavaScript SDK v3.1 documentation" href="../index.html" />
+    <link rel="up" title="Using the Tracking API" href="Leap_Guides2.html" />
+    <link rel="next" title="Tracking Model" href="Leap_Tracking.html" />
+    <link rel="prev" title="Using the Tracking API" href="Leap_Guides2.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'javascript';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.python = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'javascript/devguide/Leap_Controllers.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/Leap_Controllers.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/Leap_Controllers.html";
+            } else {
+                    redirectedLocation ="Leap_Guides2.html";
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'javascript/devguide/Leap_Controllers.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){
+            window.location.assign("Leap_Guides2.html");    }
+    else if( character == "K" & e.altKey){
+            window.location.assign("Leap_Tracking.html");
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      JavaScript
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/Leap_Controllers.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/Leap_Controllers.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      <a href="../../python/devguide/Leap_Controllers.html?proglang=python" onclick="localStorage['currentAPI'] = 'python'">Python</a>
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/Leap_Controllers.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="Leap_Guides2.html?proglang=current" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+    <a href="Leap_Guides2.html" accesskey="U">Using the Tracking API</a>&raquo;
+  Connecting to the Controller
+</span> -->
+        
+  <div class="section" id="connecting-to-the-controller">
+<h1>Connecting to the Controller<a class="headerlink" href="#connecting-to-the-controller" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object mediates the connection between your application and the Leap Motion service. You can create a <tt class="docutils literal"><span class="pre">Controller</span></tt> using the <a class="reference external" href="../api/Leap_Classes.html#Leap.loop"><tt class="docutils literal"><span class="pre">Leap.loop()</span></tt></a> function.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">loop</span><span class="p">({</span><span class="nx">enableGestures</span><span class="o">:</span><span class="kc">true</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">){</span>
+                           <span class="c1">//...</span>
+                           <span class="p">});</span>
+</pre></div>
+</div>
+<p>You can also create a Controller directly:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Use the <tt class="docutils literal"><span class="pre">Controller</span></tt> object to get information about the state of the connection and connected hardware and to set connection options for your application.</p>
+<div class="section" id="getting-frames">
+<h2>Getting Frames<a class="headerlink" href="#getting-frames" title="Permalink to this headline">¶</a></h2>
+<p>Get <a class="reference external" href="../api/Leap.Frame.html"><tt class="docutils literal"><span class="pre">Frame</span></tt></a> objects from one of the two looping mechanisms proveded by the LeapJS library. The <a class="reference external" href="../api/Leap.Frame.html#choosing-a-controller-loop-mechanism"><tt class="docutils literal"><span class="pre">animationFrame</span></tt></a> mechanism calls a function you define once during each browser animation loop, passing in the moce recent <tt class="docutils literal"><span class="pre">Frame</span></tt> object. Typically, the animation loop runs at 60 frames per second. The <a class="reference external" href="../api/Leap.Frame.html#choosing-a-controller-loop-mechanism"><tt class="docutils literal"><span class="pre">deviceFrame</span></tt></a> mechanism calls your function as soon as a new frame is ready. The device frame loop runs at the same rate as the Leap Motion frame rate, which can vary depending on the user&#8217;s settings and available computing power.</p>
+<p>See <a class="reference internal" href="Leap_Frames.html"><em>Frames</em></a> for more information.</p>
+</div>
+<div class="section" id="foreground-and-background-applications">
+<h2>Foreground and Background Applications<a class="headerlink" href="#foreground-and-background-applications" title="Permalink to this headline">¶</a></h2>
+<p>Ordinarily, the Leap Motion service/daemon only sends tracking data to the JavaScript application that has requested focus. This prevents applications idling in the background from receiving input intended for another applications. The LeapJS library manages focus requests automatically.</p>
+<p>If your application should receive data only when it is in the foreground and you want to know whether the service/daemon considers your application to be the foreground application, you can listen to <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.focus"><tt class="docutils literal"><span class="pre">focus</span></tt></a> and <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.blur">blur</a> events dispatched by the controller. See <a class="reference internal" href="#listening-for-controller-events">Listening for Controller Events</a>.</p>
+<p>Note that your application does not receive frames if another
+Leap-enabled application is in the foreground, even when the background
+frames policy is in effect. The policy only matters when a non-Leap-enabled app
+has the operating system input focus.</p>
+<p>You can tell the controller that your application wants data even when it is in the background using the <a class="reference external" href="../api/Leap.Controller.html#Controller.setBackground"><tt class="docutils literal"><span class="pre">setBackground()</span></tt></a> function.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Leap</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+<span class="nx">controller</span><span class="p">.</span><span class="nx">setBackground</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="access-to-images">
+<h2>Access to Images<a class="headerlink" href="#access-to-images" title="Permalink to this headline">¶</a></h2>
+<p>JavaScript applications cannot currently receive images from the Leap Motion cameras.</p>
+</div>
+<div class="section" id="connection-state">
+<h2>Connection State<a class="headerlink" href="#connection-state" title="Permalink to this headline">¶</a></h2>
+<p>When you start the <a class="reference external" href="../api/Leap_Classes.html#Leap.loop"><tt class="docutils literal"><span class="pre">Leap.loop()</span></tt></a> (or call <a class="reference external" href="../api/Leap.Controller.html#Controller.connect">Controller.connect()</a> directly), the LeapJS library connects to the LeapMotion service/daemon through a WebSocket. When the connection is established, the <tt class="docutils literal"><span class="pre">Controller</span></tt> dispatches a <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.connect"><tt class="docutils literal"><span class="pre">connect</span></tt></a> event. If the WebSocket becomes disconnected for any reason, the <tt class="docutils literal"><span class="pre">Controller</span></tt> dispatches a <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.disconnect"><tt class="docutils literal"><span class="pre">disconnect</span></tt></a> event.</p>
+<p>If the user plugs in or unplugs the Leap Motion peripheral while your application is running, the <tt class="docutils literal"><span class="pre">Controller</span></tt> dispatches <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.deviceConnected"><tt class="docutils literal"><span class="pre">deviceConnected</span></tt></a> and <a class="reference external" href="../api/Leap.Controller.html#Controller.Event.deviceDisconnected"><tt class="docutils literal"><span class="pre">deviceDisconnected</span></tt></a> events.</p>
+</div>
+<div class="section" id="listening-for-controller-events">
+<h2>Listening for Controller Events<a class="headerlink" href="#listening-for-controller-events" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="../api/Leap.Controller.html"><tt class="docutils literal"><span class="pre">Controller</span></tt></a> object dispatches a number of events using the <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> mechanism. To handle these events, you can extend the <a class="reference external" href="../api/Leap.Listener.html"><tt class="docutils literal"><span class="pre">Listener</span></tt></a> class to implement callback functions. The <tt class="docutils literal"><span class="pre">Controller</span></tt> invokes the relevant callback function when an event occurs.</p>
+<p>The events include:</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">JavaScript Docs (v3.1)</a></li>
+          </ul><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Connecting to the Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-frames">Getting Frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foreground-and-background-applications">Foreground and Background Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#access-to-images">Access to Images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connection-state">Connection State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listening-for-controller-events">Listening for Controller Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Tracking.html">Tracking Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Frames.html#id482">Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Hand.html">Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Pointables.html">Fingers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Coordinate_Mapping.html">Coordinate Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Images.html">Camera Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html">Serializing Tracking Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Leap_Serialization.html#id482">Serializing Tracking Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://developer.leapmotion.com/downloads/javascript#plugins">LeapJS Plug-ins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>JavaScript</p>
+</div>
+ -->
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

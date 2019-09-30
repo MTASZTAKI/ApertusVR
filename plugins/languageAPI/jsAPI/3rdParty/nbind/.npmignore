@@ -1,0 +1,14 @@
+node_modules/
+dist/bundle/
+src/**/*.ts
+example/
+build/
+test/
+doc/
+package-lock.json
+*.log.*
+*.log
+*.tgz
+
+.travis.yml
+appveyor.yml

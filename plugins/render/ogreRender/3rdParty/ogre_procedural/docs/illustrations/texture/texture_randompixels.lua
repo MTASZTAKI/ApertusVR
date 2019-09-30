@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Solid(buffer):setColour(Procedural.ColourValue(0.0, 0.5, 1.0, 1.0)):process()
+Procedural.RandomPixels(buffer):setColour(Procedural.ColourValue_Red):setCount(200):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_23", "RandomPixels_Demo")
+dotfile:set("Solid", "texture_solid", "RandomPixels", "texture_randompixels")

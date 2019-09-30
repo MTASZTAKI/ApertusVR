@@ -1,0 +1,6 @@
+buffer = Procedural.TextureBuffer(128)
+Procedural.Cell(buffer):setDensity(4):setRegularity(234):process()
+Procedural.Segment(buffer):setColourSource(bufferGradient):process()
+tests:addTextureBuffer(buffer)
+dotfile = tests:getDotFile("texture_26", "Segment_Demo")
+dotfile:set("Cell", "texture_cell_smooth", "Gradient", "texture_gradient", "Segment", "texture_segment")

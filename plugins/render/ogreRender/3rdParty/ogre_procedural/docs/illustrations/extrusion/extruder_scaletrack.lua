@@ -1,0 +1,5 @@
+s2 = Procedural.RectangleShape():setHeight(.5):realizeShape()
+p2 = Procedural.LinePath():betweenPoints(Procedural.Vector3(-5,0,0),Procedural.Vector3(5,0,0)):setNumSeg(10):realizePath()
+t = Procedural.Track(Procedural.Track_AM_RELATIVE_LINEIC):addKeyFrame(0,.5):addKeyFrame(.4,.5):addKeyFrame(.5,1.2):addKeyFrame(.8,1):addKeyFrame(1.0,1)
+tb = Procedural.Extruder():setShapeToExtrude(s2):setExtrusionPath(p2):setScaleTrack(t):buildTriangleBuffer()
+tests:addTriangleBuffer(tb)

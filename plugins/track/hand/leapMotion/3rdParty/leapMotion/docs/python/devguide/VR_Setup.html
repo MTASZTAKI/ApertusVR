@@ -1,0 +1,558 @@
+
+
+
+  
+  
+ 
+  
+  
+ 
+
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting Up Virtual and Augmented Reality Scenes &mdash; Leap Motion Python SDK v3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../cpp/_static/bootstrap-3.0.0/css/documentation-bundle.1471552333.css" type="text/css" />
+    
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+      <script type="text/javascript" src="../../cpp/_static/bootstrap-3.0.0/js/documentation-bundle.1471552333.js"></script>
+    <link rel="top" title="Leap Motion Python SDK v3.1 documentation" href="../index.html" />
+<script type="text/javascript" src="/assets/standalone-header.js?r9"></script>
+<link rel="stylesheet" href="/assets/standalone-header.css?r9" type="text/css" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31536531-1']);
+  _gaq.push(['_setDomainName', 'leapmotion.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+ 
+
+<script>
+
+    function getQueryValue(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+        var relPath = "../../";
+
+    var requestedAPI = getQueryValue("proglang");
+    if(requestedAPI == "current") requestedAPI = localStorage["currentAPI"];
+    var pageAPI = 'python';
+    var hasAPI = {};
+    hasAPI.cpp = true;
+    hasAPI.csharp = true;
+    hasAPI.objc = true;
+    hasAPI.java = true;
+    hasAPI.javascript = true;
+    hasAPI.unreal = true;
+    hasAPI.unity = true;
+
+    if(requestedAPI && (requestedAPI != pageAPI))
+    {
+        if(pageAPI != 'none'){
+            var redirectedLocation = relPath + 'python/devguide/VR_Setup.html';
+            if( requestedAPI == 'cpp' && hasAPI.cpp){
+                redirectedLocation = relPath + "cpp/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'csharp' && hasAPI.csharp){
+                redirectedLocation = relPath + "csharp/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'unity' && hasAPI.unity){
+                redirectedLocation = relPath + "unity/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'objc' && hasAPI.objc){
+                redirectedLocation = relPath + "objc/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'java' && hasAPI.java) {
+                redirectedLocation = relPath + "java/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'javascript' && hasAPI.javascript){
+                redirectedLocation = relPath + "javascript/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'python' && hasAPI.python){
+                redirectedLocation = relPath + "python/devguide/VR_Setup.html";
+            }
+            else if( requestedAPI == 'unreal' && hasAPI.unreal) {
+                redirectedLocation = relPath + "unreal/devguide/VR_Setup.html";
+            } else {
+
+                    if( requestedAPI == 'cpp'){
+                        redirectedLocation = relPath + "cpp/index.html?proglang=cpp";
+                    }
+                    else if( requestedAPI == 'csharp'){
+                        redirectedLocation = relPath + "csharp/index.html?proglang=csharp";
+                    }
+                    else if( requestedAPI == 'unity'){
+                        redirectedLocation = relPath + "unity/index.html?proglang=unity";
+                    }
+                    else if( requestedAPI == 'objc'){
+                        redirectedLocation = relPath + "objc/index.html?proglang=objc";
+                    }
+                    else if( requestedAPI == 'java') {
+                        redirectedLocation = relPath + "java/index.html?proglang=java";
+                    }
+                    else if( requestedAPI == 'javascript'){
+                        redirectedLocation = relPath + "javascript/index.html?proglang=javascript";
+                    }
+                    else if( requestedAPI == 'python'){
+                        redirectedLocation = relPath + "python/index.html?proglang=python";
+                    }
+                    else if( requestedAPI == 'unreal') {
+                        redirectedLocation = relPath + "unreal/index.html?proglang=unreal";
+                    } else {
+                        redirectedLocation = relPath + "index.html";
+                    }
+            }
+
+            //Guard against redirecting to the same page (infinitely)
+            if(relPath + 'python/devguide/VR_Setup.html' != redirectedLocation) window.location.replace(redirectedLocation);
+        }
+    }
+
+</script>
+
+<script>
+window.addEventListener('keyup', handleKeyInput);
+function handleKeyInput(e)
+{
+    var code;
+    if (!e) var e = window.event;
+    if (e.keyCode) code = e.keyCode;
+    else if (e.which) code = e.which;
+    var character = String.fromCharCode(code);
+    if( character == "J" & e.altKey){    }
+    else if( character == "K" & e.altKey){
+    }
+
+}
+</script>
+
+
+  </head>
+  <body role="document">
+
+<div class="developer-portal-styles">
+  <header class="navbar navbar-static-top developer-navbar header beta-header">
+    <nav class="container pr">
+      <a class="logo-link pull-left" href="/">
+        <img alt="Leap Motion Developers" class="media-object pull-left white-background" src="../_static/logo.png" />
+      </a>
+      <span class="inline-block hidden-phone developer-logo-text">
+        <div class="text">
+          <a href="/">
+            <span class="more-than-1199">Developer Portal</span>
+
+          </a>
+        </div>
+      </span>
+
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Everything within here will be hidden at 940px or less, accessible via a button. -->
+      <div class="nav-collapse">
+        <ul class="nav header-navigation developer-links">
+          <li class="external-link"><a href="https://developer.leapmotion.com/features">What's new</a> </li>
+          <li class="external-link"><a href="https://developer.leapmotion.com/downloads/skeletal-beta" class="">Getting Started</a></li>
+          <li><a class="active" href="#" class="">Documentation</a></li>
+          <li class="external-link"> <a href="https://developer.leapmotion.com/gallery" class="">Examples</a> </li>
+          <li class="external-link"> <a href="https://www.leapmotion.com/blog/category/labs/" class="" target="_blank">Blog <i class='fa fa-external-link'></i></a> </li>
+          <li class="external-link"> <a href="https://community.leapmotion.com/category/beta" class="" target="_blank">Community <i class='fa fa-external-link'></i></a> </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+</div>
+<section class="main-wrap">
+  <div data-swiftype-index="true">
+    <div class="second_navigation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            
+              
+
+<ul>
+  <li>
+      <a href="../../javascript/devguide/VR_Setup.html?proglang=javascript" onclick="localStorage['currentAPI'] = 'javascript'">JavaScript</a>
+    
+  </li>
+  <li>
+      <a href="../../unity/devguide/VR_Setup.html?proglang=unity" onclick="localStorage['currentAPI'] = 'unity'">Unity</a>
+    
+  </li>
+  <li>
+      <a href="../../csharp/devguide/VR_Setup.html?proglang=csharp" onclick="localStorage['currentAPI'] = 'csharp'">C#</a>
+    
+  </li>
+  <li>
+      <a href="../../cpp/devguide/VR_Setup.html?proglang=cpp" onclick="localStorage['currentAPI'] = 'cpp'">C++</a>
+    
+  </li>
+  <li>
+      <a href="../../java/devguide/VR_Setup.html?proglang=java" onclick="localStorage['currentAPI'] = 'java'">Java</a>
+    
+  </li>
+  <li>
+      Python
+    
+  </li>
+  <li>
+      <a href="../../objc/devguide/VR_Setup.html?proglang=objc" onclick="localStorage['currentAPI'] = 'objc'">Objective-C</a>
+    
+  </li>
+  <li>
+      <a href="../../unreal/devguide/VR_Setup.html?proglang=unreal" onclick="localStorage['currentAPI'] = 'unreal'">Unreal</a>
+    
+  </li>
+</ul>
+            
+          </div>
+          <div class="col-md-4 search">
+            
+              <script>
+function storeThisPage(){
+    sessionStorage["pageBeforeSearch"] = window.location;
+    return true;
+}
+function doneWithSearch(){
+    var storedPage = sessionStorage["pageBeforeSearch"];
+    if(storedPage){
+        window.location = storedPage;
+    } else {
+        window.location = "index.html"; //fallback
+    }
+    return false;
+}
+</script>
+<div  style="margin-top:-4px">
+<ul style="display:inline; white-space:nowrap"><li>
+<form class="navbar-form" action="../search.html" method="get" onsubmit="storeThisPage()">
+ <div class="form-group">
+  <input type="search" results="5" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form></li>
+</ul>
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+        //Remove dev portal header and footer when viewing from file system
+       if(window.location.protocol == 'file:'){
+            var navNode = document.querySelector(".developer-links");
+            navNode.parentNode.removeChild(navNode);
+        }
+
+    </script>
+
+
+<div id="wrap" data-spy="scroll" data-target="#sidebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 pull-right">
+        <!-- 
+ 
+<span id="breadcrumbs">
+  <a href="../index.html">Home</a>&raquo;
+  Setting Up Virtual and Augmented Reality Scenes
+</span> -->
+        
+  <div class="section" id="setting-up-virtual-and-augmented-reality-scenes">
+<h1>Setting Up Virtual and Augmented Reality Scenes<a class="headerlink" href="#setting-up-virtual-and-augmented-reality-scenes" title="Permalink to this headline">¶</a></h1>
+<p>Setting up a 3D scene to display hands controlled by the Leap Motion device in the different available Virtual Reality (VR) APIs involves similar steps &#8211; though there are differences in how much an API or engine does for you. In general, these steps include:</p>
+<ul class="simple">
+<li>Mounting the Leap Motion device on the HMD.</li>
+<li>Calculating the transforms that describe the difference in position and orientation between mounting the Leap Motion device on the HMD and placing it on a table.</li>
+<li>Accessing the Leap Motion API to get tracking data.</li>
+<li>Calculating the transforms necessary to convert from the Leap Motion right-handed coordinate system to your target coordinate system (if the coordinate systems are different).</li>
+<li>Translating coordinates for positions, directions, and orientations from the Leap Motion coordinate system into the target world coordinate system.</li>
+<li>For Augmented Reality (AR), rendering the Leap Motion sensor images.</li>
+</ul>
+<div class="section" id="mounting-the-leap-motion-device">
+<h2>Mounting the Leap Motion Device<a class="headerlink" href="#mounting-the-leap-motion-device" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/Leap_VR_Mount.png" src="../_images/Leap_VR_Mount.png" />
+<p>For the resourceful, there are no end of ways to attach the Leap Motion sensor to a head-mounted display: double-sided tape, velcro, rubber bands. For the rest of us, Leap Motion sells a custom mount &#8211; <a class="reference external" href="https://www.leapmotion.com/product/vr">https://www.leapmotion.com/product/vr</a>. The 3D printer files are also available (free) if you prefer to print your own. You can download the files from  <a class="reference external" href="http://www.thingiverse.com/thing:445866">Thingivers</a> and <a class="reference external" href="https://grabcad.com/library/leap-motion-vr-developer-mount-1">Grabcad</a>. The Leap Motion mount was designed with the Oculus Rift DK1 and DK2 in mind, but since it uses double-sided tape, it could work with other HMD&#8217;s as well &#8211; as long as they have a flat, Leap-sized area in the front middle.</p>
+<blockquote>
+<div><strong>Note:</strong> We recommend that you mount the Leap Motion device with the green power indicator LED facing downward. While the Leap Motion software will flip the coordinate system and images if mounted indicator upwards, it can only do so after a hand enters the view. In the meantime (or if auto-orientation is turned off in the Control Panel), the images from the cameras  can appear upside down.</div></blockquote>
+<p>When you mount the device on an HMD, measure the offsets between the Leap Motion origin and the midpoint of the line running from pupil to pupil in all dimensions (this line is refered to as the interpupillary line). These measurements will be required to correctly place 3D hands in the scene. The device should be mounted square to the device so that the cameras are facing straight ahead and level to the horizon when you are looking straight ahead and level.</p>
+<img alt="../_images/HMD_Mounting.png" src="../_images/HMD_Mounting.png" />
+<p>The matrix that represents the offset of the Leap Motion device from the user&#8217;s interpupillary and medial lines looks like the following, where <span class="math">\(t_{x}\)</span>, <span class="math">\(t_{y}\)</span>, and <span class="math">\(t_{z}\)</span> are your measured offsets:</p>
+<div class="math">
+\[\begin{split}T_{mounted} = \begin{bmatrix}
+             1 &amp; 0 &amp; 0 &amp; t_x \\
+             0 &amp; 1 &amp; 0 &amp; t_y \\
+             0 &amp; 0 &amp; 1 &amp; t_z \\
+             0 &amp; 0 &amp; 0 &amp; 1
+        \end{bmatrix}\end{split}\]</div>
+<p>Typical values for the translation components on an Oculus Rift are <span class="math">\(t_{x} = 0\)</span>, <span class="math">\(t_{y} = 0\)</span>, and <span class="math">\(t_{z} = -80\)</span>. When mounting your device, strive to keep <span class="math">\(t_{x}\)</span>, <span class="math">\(t_{y}\)</span> as close to zero as possible.</p>
+<p>&#8216;
+If your Leap Motion device is mounted square to the HMD with the y-axis projecting forward, you can specify the rotation of the device from upward-facing desktop mode to the forward-facing HMD mode with this matrix, which represents a -90 degree rotation around the x-axis and a 180 degree rotation around the z-axis:</p>
+<div class="math">
+\[\begin{split}R_{mounted} = \begin{bmatrix}
+            -1 &amp; 0 &amp; 0 &amp; 1 \\
+             0 &amp; 0 &amp;-1 &amp; 1 \\
+             0 &amp;-1 &amp; 0 &amp; 1 \\
+             0 &amp; 0 &amp; 0 &amp; 1
+        \end{bmatrix}\end{split}\]</div>
+<p>Combine the two matrices into one transform by multiplication:</p>
+<div class="math">
+\[M_{tabletop{\mapsto}mounted} = T_{mounted} \times R_{mounted}\]</div>
+<div class="section" id="using-a-proxy-object">
+<h3>Using a Proxy Object<a class="headerlink" href="#using-a-proxy-object" title="Permalink to this headline">¶</a></h3>
+<p>An alternate method of achieving this goal is to place a proxy object representing the Leap Motion device at the same relative position and orientation to the virtual world cameras as the device has to your eyes in the real world. This method is easier to use in graphic development environments like Unity and Unreal. The VR assets in the Leap Motion Unity asset package take this approach.</p>
+<div class="figure">
+<img alt="../_images/VR_rig.png" src="../_images/VR_rig.png" />
+<p class="caption">A proxy object for the Leap Motion device placed in relationship to the left- and right-eye cameras.</p>
+</div>
+<p>You can then transform the Leap Motion coordinates using the model matrix of the proxy object.</p>
+<p>[Code for this]</p>
+<p>&#8211; Unity, probably similar for Unreal</p>
+<div class="code highlight-python"><div class="highlight"><pre><span class="nb">object</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">TransformPoint</span><span class="p">()</span>
+<span class="nb">object</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">TransformDirection</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>&#8211; C++, etc</p>
+<div class="code highlight-python"><div class="highlight"><pre>//modelMatrix is a Leap::Matrix object containing the model matrix of your proxy object
+Leap::Vector worldPosition = modelMatrix.transformPosition(position);
+Leap::Vector worldDirection = modelMatrix.transformDirection(direction);
+</pre></div>
+</div>
+<p>Note that this doesn&#8217;t account for coordinate system and unit conversions, which we will discuss later.</p>
+</div>
+<div class="section" id="angling-the-mount">
+<h3>Angling the Mount<a class="headerlink" href="#angling-the-mount" title="Permalink to this headline">¶</a></h3>
+<p>If you angle your mount relative to the HMD, you must measure the angles and apply the same rotations to the tracking data. Angling the Leap Motion device downward can provide a more comfortable working space, but this also causes visual disorientation when using the video passthrough from the device cameras. Thus, an angled mount could restrict the types of applications you can develop or use.</p>
+<p>You can represent mount rotations as the following matrices, where <span class="math">\(\alpha\)</span>, <span class="math">\(\beta\)</span>, <span class="math">\(\gamma\)</span> are your angles measured counterclockwise (right-hand rule) around the x, y, and z axes:</p>
+<div class="math">
+\[    R_x = \begin{bmatrix}
+             1 & 0           & 0           & 1 \\
+             0 & cos(\alpha) &-sin(\alpha) & 1 \\
+             0 & sin(\alpha) & cos(\alpha) & 1 \\
+             0 & 0           & 0           & 1
+            \end{bmatrix}
+    \;
+    R_y = \begin{bmatrix}
+          cos(\beta) & 0 & sin(\beta) & 1 \\
+            0        & 1 &   0        & 1 \\
+         -sin(\beta) & 0 & cos(\beta) & 1 \\
+            0        & 0 &   0        & 1
+        \end{bmatrix}
+    \;
+    R_z = \begin{bmatrix}
+         cos(\gamma) & -sin(\gamma) & 0 & 1 \\
+         sin(\gamma) &  cos(\gamma) & 0 & 1 \\
+           0         &   0          & 1 & 1 \\
+           0         &   0          & 0 & 1
+        \end{bmatrix}\]</div><p>Combine the rotations by multiplying these matrices:</p>
+<div class="math">
+\[R_{mounted} = R_{x} \times R_{y} \times R_{z}\]</div>
+<p>Finally, you can combine the translations for the mount offset and rotations for the mount angles into one transform by multiplying the matrices:</p>
+<div class="math">
+\[M_{tabletop{\mapsto}mounted} = T_{mounted} \times R_{mounted}\]</div>
+</div>
+</div>
+<div class="section" id="converting-coordinate-systems">
+<h2>Converting Coordinate Systems<a class="headerlink" href="#converting-coordinate-systems" title="Permalink to this headline">¶</a></h2>
+<p>The Leap Motion coordinate system uses a right-handed convention and units of millimeters. Positive y is up; z is front-to-back; x is right-to-left. Your world might use a different set of conventions and units. For example, Unity3D uses a left-handed convention and units of meters, but also oriented with positive y facing up. Unreal Engine uses a left-handed convention and units of centimeters, and with positive z facing up. Three.js, a popular WebGL library uses the same conventions as the Leap Motion, but has no intrinsic convention for units.</p>
+<blockquote>
+<div><em>Note:</em> the scripts in the Unity asset package and the Unreal Engine plugin transform the coordinate systems automatically.</div></blockquote>
+<p>Scaling from Leap Motion coordinates to a unit system in meters can be achieved with the following matrix (change the scale factor from .001 to the correct value to scale to different linear units):</p>
+<div class="math">
+\[\begin{split}S_{mm{\mapsto}m} = \begin{bmatrix}
+     0.001 &amp;   0   &amp;   0   &amp; 0 \\
+       0   &amp; 0.001 &amp;   0   &amp; 0 \\
+       0   &amp;   0   &amp; 0.001 &amp; 0 \\
+       0   &amp;   0   &amp;   0   &amp; 1
+\end{bmatrix}\end{split}\]</div>
+<p>Note that the scale factors used assume that your game is using a 1:1 scale with reality. This is the default for Unity3D and Unreal Engine, for example, the standard Unity character controller prefabs are human scale (between 1 and 2 meters tall). Matching the scale accurately is important in a VR scene since the user has a much better sense of where their virtual hands should be in comparison to their real hands. In an AR scene, this can be even more critical.</p>
+<p>Changing the basis of the coordinate system can also be accomplished with a matrix transform. For example, the following matrix changes Leap coordinates and directions to the Unity left-handed convention (by scaling the z-axis by -1):</p>
+<div class="math">
+\[\begin{split}S_{RH{\mapsto}LH} = \begin{bmatrix}
+       1 &amp; 0 &amp;  0 &amp; 0 \\
+       0 &amp; 1 &amp;  0 &amp; 0 \\
+       0 &amp; 0 &amp; -1 &amp; 0 \\
+       0 &amp; 0 &amp;  0 &amp; 1
+\end{bmatrix}\end{split}\]</div>
+</div>
+<div class="section" id="head-motion">
+<h2>Head Motion<a class="headerlink" href="#head-motion" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the physical offset of the device from the user&#8217;s eyes, you must compensate for the motion of the user&#8217;s head while the scene is playing. Otherwise, the hands will appear to move when the head moves. Head tracking information can be accessed from the Head tracking APIs of your HMD or VR SDK. You want to anchor the Leap tracking data to the midpoint of the interpupillary line &#8211; the line between the two cameras in the virtual world. Typically, the head tracking information will be in the form of another transform matrix. For example, in the Oculus API, you can get the head tracking data relative to this point using <a href="#id1"><span class="problematic" id="id2">:code:`GetTrackingState().HeadPose &lt;https://developer.oculus.com/doc/0.5.0.1-libovr/structovr_tracking_state.html&gt;`_</span></a>.</p>
+<p>If you are using a proxy object which is parented to a scene object that is already driven by the HMD head tracking, then this step has already been done.</p>
+</div>
+<div class="section" id="accessing-tracking-data">
+<h2>Accessing Tracking Data<a class="headerlink" href="#accessing-tracking-data" title="Permalink to this headline">¶</a></h2>
+<p>Accessing the basic tracking data from the Leap Motion service is no different in a VR app than any other. See <a class="reference internal" href="Project_Setup.html"><em>Setting Up a Project</em></a> for information about adding the required Leap Motion libraries to a project and <a class="reference internal" href="Sample_Tutorial.html"><em>Hello World</em></a> for examples of basic access to the tracking data.</p>
+<p>Do note that when the Leap Motion sensor is mounted on an HMD, you should set the &#8220;Optimize for HMD&#8221; policy. This policy essentially instructs the Leap Motion software to expect hands to enter the field of view with their backs toward the cameras rather than their palms.</p>
+<p>[Policy flag setting code examples]
+.. only:: cpp
+.. only:: csharp or unity
+.. only:: java</p>
+</div>
+<div class="section" id="transforming-tracking-data">
+<h2>Transforming Tracking Data<a class="headerlink" href="#transforming-tracking-data" title="Permalink to this headline">¶</a></h2>
+<p>Finally, once the Leap Motion hardware is mounted and measured, the scene is setup and basic design decisions made, you can transform the Leap Tracking data into the scene so hands (or interaction if not actually showing hands) appear in the correct place. Essentially, you take all the matrices defined above that are relevant to your graphics system, multiply them together and use the result to transform the Leap Motion tracking data. Obviously, you want to precompute as much of this transformation as possible since most of the matrices do not change from frame to frame.</p>
+<div class="math">
+\[\begin{equation}
+   M_{Leap{\mapsto}World} = M_{HMD{\mapsto}World}
+                            \times
+                            S_{unit conversion}
+                            \times
+                            S_{axis conversion}
+                            \times
+                            M_{tabletop{\mapsto}mounted}
+\end{equation}\]</div>
+<p>For example, if your Leap device is mounted on an Oculus Rift DK2 without any odd angles and your world model uses a left-handed coordinate convention and units of meters, then you can take <span class="math">\(M_{tabletop{\mapsto}mounted}\)</span> as defined above, with <span class="math">\(t_x = t_y = 0\)</span> and <span class="math">\(t_z = -80\)</span> and multiply it by the coordinate unit (mm to m) and basis change (right-handed to left-handed) matrices, and fimally by the HMD transform:</p>
+<div class="math">
+\[\begin{split}\begin{equation}
+    M_{Leap{\mapsto}World} =
+    M_{HMD{\mapsto}World}
+    \times
+    \begin{bmatrix}
+           1 &amp; 0 &amp;  0 &amp; 0 \\
+           0 &amp; 1 &amp;  0 &amp; 0 \\
+           0 &amp; 0 &amp; -1 &amp; 0 \\
+           0 &amp; 0 &amp;  0 &amp; 1
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+         0.001 &amp;   0   &amp;   0   &amp; 0 \\
+           0   &amp; 0.001 &amp;   0   &amp; 0 \\
+           0   &amp;   0   &amp; 0.001 &amp; 0 \\
+           0   &amp;   0   &amp;   0   &amp; 1
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+                -1 &amp; 0 &amp; 0 &amp;  0 \\
+                 0 &amp; 0 &amp;-1 &amp;  0 \\
+                 0 &amp;-1 &amp; 0 &amp; -80 \\
+                 0 &amp; 0 &amp; 0 &amp;  1
+            \end{bmatrix}
+\end{equation}\end{split}\]</div>
+<div class="section" id="transform-a-position">
+<h3>Transform a Position<a class="headerlink" href="#transform-a-position" title="Permalink to this headline">¶</a></h3>
+<p>To transform a position in Leap Motion coordinates to world coordinates you essentially multiply the coordinate vector by the <span class="math">\(M_{Leap{\mapsto}World}\)</span> matrix. Using the Leap Motion math functions, you can do this with the <tt class="docutils literal"><span class="pre">Matrix</span></tt> class <a class="reference external" href="../api/Leap.Matrix.html#Leap.Matrix.transform_point">transform_point()</a> function:</p>
+</div>
+<div class="section" id="transform-a-direction">
+<h3>Transform a Direction<a class="headerlink" href="#transform-a-direction" title="Permalink to this headline">¶</a></h3>
+<p>Transforming a direction vector is very similar to transforming a position, except that you do not want to apply the coordinate scaling used to change the linear unit of measurement.</p>
+<blockquote>
+<div><p><strong>Note:</strong> If you are converting units, you must create a different transform that does not include the unit scaling matrix:</p>
+<div class="math">
+</div>
+<dl class="docutils">
+<dt>begin{equation}</dt>
+<dd><dl class="first last docutils">
+<dt>M_{Leap{mapsto}World} = M_{HMD{mapsto}World}</dt>
+<dd>times
+S_{axis conversion}
+times
+M_{tabletop{mapsto}mounted}</dd>
+</dl>
+</dd>
+</dl>
+<p>end{equation}</p>
+</div></blockquote>
+<p>The Leap Motion <tt class="docutils literal"><span class="pre">Matrix</span></tt> class defines the <a class="reference external" href="../api/Leap.Matrix.html#Leap.Matrix.transform_direction">transform_direction()</a> function, which does this:</p>
+</div>
+</div>
+<div class="section" id="camera-placement-in-an-ar-scene">
+<h2>Camera Placement in an AR scene<a class="headerlink" href="#camera-placement-in-an-ar-scene" title="Permalink to this headline">¶</a></h2>
+<p>For a VR scene (without camera images), proper placement of the cameras is straightforward: each camera should be at the user&#8217;s corresponding eyepoint.</p>
+<p>For an AR scene (using camera images), proper placement is a judgement call. Images from the Leap Motion cameras are 2D representations taken from a particular point of view and, unlike 3D data, you cannot simply apply a transformation to change the view to a different vantage point. In order to make the camera images match the 3D tracking data, you must move the cameras forward by the same amount that the physical Leap device is forward of the user&#8217;s eyes (i.e. 8cm for the Oculus) and move them closer together &#8211; the Leap cameras are 40mm apart, while the typical distance between human pupils is 64mm. However, moving the cameras closer together changes the stereo disparity and will make objects appear to be larger then they are in real life.</p>
+<p>You can put the scene cameras at the user&#8217;s pupils to maximize 3D accuracy or you can move them forward and closer to maximize alignment between the images and the 3D objects. You can also compromise and place the cameras between these two extremes. It really depends on which aspect is more important to your content.</p>
+<img alt="../_images/VR_Oculus_Leap.png" src="../_images/VR_Oculus_Leap.png" />
+<p>A quick and dirty trick to matching 3D hands and other objects without changing the position of scene cameras, is to scale the objects by the ratio of the user&#8217;s interpupillary distance (IPD), which averages 64mm, and the Leap Motion camera offset (40mm). If available from your HMD API, you should use the actual IPD rather than an estimated average. This technique can be used when your code does not control the position of the cameras (such as when using the Oculus rig in Unity).</p>
+</div>
+<div class="section" id="using-the-image-api-in-vr-or-ar">
+<h2>Using the Image API in VR or AR<a class="headerlink" href="#using-the-image-api-in-vr-or-ar" title="Permalink to this headline">¶</a></h2>
+<p>You can display the images from the Leap Motion cameras using rectangles texured with the image bitmaps. When you render the images, do not apply the same world transformation to these quad objects as you apply to other 3D objects. The image location and orientation must remain locked with respect to the scene cameras regardless of how your head is tilted. This means skipping the modelview matrix transform (by setting the modelview to the identity matrix) and using the projection transform only. It is sufficient to define the quad using the coordinates <tt class="docutils literal"><span class="pre">(-4,</span> <span class="pre">-4,</span> <span class="pre">-1)</span></tt>, <tt class="docutils literal"><span class="pre">(4,</span> <span class="pre">-4,</span> <span class="pre">-1)</span></tt>, <tt class="docutils literal"><span class="pre">(-4,</span> <span class="pre">4,</span> <span class="pre">-1)</span></tt>, and <tt class="docutils literal"><span class="pre">(4,</span> <span class="pre">4,</span> <span class="pre">-1)</span></tt>. Then, texture it with the fragment shader provided given in <a class="reference internal" href="Leap_Images.html#image-shaders"><em>Correction using Shaders</em></a>.</p>
+<p>In Unity and other graphic development environments, you can parent the image quads as children of the left and right camera objects. Our Unity image passthrough example does this for you.</p>
+<img alt="../_images/CamerasOverQuads.png" src="../_images/CamerasOverQuads.png" />
+<p>Each scene camera has an associated quad, textured with the image from the corresponding Leap Motion camera. The width and height of the quad must be 8 times the distance between the quad and the camera. By placing the quads close enough to the cameras (while maintaining the 8:1 side-length to distance ratio), you can prevent one image from overlapping into the field of view of the other camera.</p>
+</div>
+</div>
+
+
+           <!-- get_disqus_sso -->
+      </div>
+      <div id="sidebar" class="col-md-3">
+        <div class="well-sidebar" data-offset-top="188">
+          <ul>
+            <li><a href="../index.html" title="Home">Python Docs (v3.1)</a></li>
+          </ul><ul>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Overview.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices/Leap_Practices.html">Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides.html">Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Leap_Guides2.html">Using the Tracking API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Leap_Classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplements/Leap_Supplements.html">Appendices</a></li>
+</ul>
+
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</div>
+<!--
+
+<div class="ribbon">
+    <p>Python</p>
+</div>
+
+
+<footer>
+  <div id="footer" class="container">
+    <div class="container">
+      <div class="copyright">
+        <span>Copyright &copy; 2012 - 2016, Leap Motion, Inc.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>
