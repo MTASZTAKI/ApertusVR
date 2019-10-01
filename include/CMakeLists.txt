@@ -48,11 +48,9 @@ set (HEADERS
 		apeILight.h
 		apeILogManager.h
 		apeIManualMaterial.h
-		apeIManualPass.h
 		apeIManualTexture.h
 		apeINode.h
 		apeInterpolator.h
-		apeIPbsPass.h
 		apeIPlaneGeometry.h
 		apeIPlugin.h
 		apeIPluginManager.h
@@ -71,7 +69,6 @@ set (HEADERS
 		apeMaterial.h
 		apeMatrix3.h
 		apeMatrix4.h
-		apePass.h
 		apePlatform.h
 		apePluginAPI.h
 		apePluginDefines.h
