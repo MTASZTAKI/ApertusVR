@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_RIGIDBODYIMPL_H
 #define APE_RIGIDBODYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIRigidBody.h"
+#include "apeISceneManager.h"
+#include "apeIRigidBody.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

@@ -30,7 +30,7 @@ set (SOURCES
 	)
 
 include_directories(
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	${PROJECT_SOURCE_DIR}/common/include 
 	)
 

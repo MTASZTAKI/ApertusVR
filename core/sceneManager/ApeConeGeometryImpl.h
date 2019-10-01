@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_CONEGEOMETRYIMPL_H
 #define APE_CONEGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIConeGeometry.h"
+#include "apeISceneManager.h"
+#include "apeIConeGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

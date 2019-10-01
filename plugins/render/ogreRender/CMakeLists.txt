@@ -45,11 +45,11 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 
-set(PATH_OGREDEPS ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies)
-set(PATH_OGREDEPS_OUT ${CMAKE_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
-set(PATH_OGRE ${CMAKE_SOURCE_DIR}/3rdParty/ogre)
+set(PATH_OGREDEPS ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre/Dependencies)
+set(PATH_OGREDEPS_OUT ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
+set(PATH_OGRE ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre)
 set(OGRE_READY FALSE)
-set(PATH_OGRE_PROCEDURAL ${CMAKE_SOURCE_DIR}/3rdParty/ogre_procedural)
+set(PATH_OGRE_PROCEDURAL ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_procedural)
 set(OGRE_PROCEDURAL_READY FALSE)
 
 #find ogre
@@ -67,12 +67,12 @@ set (ENV{FREEIMAGE_HOME} ${PATH_OGREDEPS_OUT})
 set (ENV{FREETYPE_HOME} ${PATH_OGREDEPS_OUT})
 set (ENV{ZLIB_HOME} ${PATH_OGREDEPS_OUT})
 set (ENV{ZZIP_HOME} ${PATH_OGREDEPS_OUT})
-set (STORED_CMSD ${CMAKE_SOURCE_DIR})
+set (STORED_CMSD ${CMAKE_CURRENT_SOURCE_DIR})
 set (STORED_CIP ${CMAKE_INSTALL_PREFIX})
-set (CMAKE_SOURCE_DIR ${PATH_OGRE})
+set (CMAKE_CURRENT_SOURCE_DIR ${PATH_OGRE})
 set (CMAKE_INSTALL_PREFIX ${PATH_OGRE})
 add_subdirectory(${PATH_OGRE} ${PATH_OGRE} EXCLUDE_FROM_ALL)
-set (CMAKE_SOURCE_DIR ${STORED_CMSD})
+set (CMAKE_CURRENT_SOURCE_DIR ${STORED_CMSD})
 set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${PATH_OGRE};${PATH_OGRE}/CMake/;${PATH_OGRE}/lib/OGRE/cmake;${PATH_OGRE}/CMake/Packages;${PATH_OGRE}/CMake/Utils)
 find_package (OGRE 1.10 QUIET)
@@ -128,12 +128,12 @@ endif ()
 #find ogre_procedural
 message (STATUS "try to find Ogre_procedural" )
 set (ENV{OgreProcedural_HOME} ${PATH_OGRE_PROCEDURAL})
-set (STORED_CMSD ${CMAKE_SOURCE_DIR})
+set (STORED_CMSD ${CMAKE_CURRENT_SOURCE_DIR})
 set (STORED_CIP ${CMAKE_INSTALL_PREFIX})
-set (CMAKE_SOURCE_DIR ${PATH_OGRE_PROCEDURAL})
+set (CMAKE_CURRENT_SOURCE_DIR ${PATH_OGRE_PROCEDURAL})
 set (CMAKE_INSTALL_PREFIX ${PATH_OGRE_PROCEDURAL})
 add_subdirectory(${PATH_OGRE_PROCEDURAL} ${PATH_OGRE_PROCEDURAL} EXCLUDE_FROM_ALL)
-set (CMAKE_SOURCE_DIR ${STORED_CMSD})
+set (CMAKE_CURRENT_SOURCE_DIR ${STORED_CMSD})
 set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
 set (CMAKE_MODULE_PATH ${PATH_OGRE_PROCEDURAL}/CMake/Utils;${PATH_OGRE_PROCEDURAL}/CMake;${PATH_OGRE_PROCEDURAL}/CMake/Packages)
 find_package (OgreProcedural QUIET)
@@ -166,14 +166,15 @@ if (NOT OGRE_PROCEDURAL_READY)
 	endforeach ()
 endif ()
 #find ogre_hydrax
-option(APE_PLUGIN_OgreRender_HydraxNew "Use OgreRenderPluginHydraxNew?" ON )
-if (${APE_PLUGIN_OgreRender_HydraxNew})
-	set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax_new)
-else ()
-	set (HYDRAX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_hydrax)
-endif ()
+#option(APE_PLUGIN_OgreRender_HydraxNew "Use OgreRenderPluginHydraxNew?" ON )
+#if (${APE_PLUGIN_OgreRender_HydraxNew})
+#	set (HYDRAX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax_new)
+#else ()
+	set (HYDRAX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax/src)
+	set (HYDRAX_BIN_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax/srcdemo)
+#endif ()
 set (HYDRAX_READY FALSE)
-if(EXISTS ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.dll AND EXISTS ${HYDRAX_HOME}/srcdemo/Release/Hydrax.dll)
+if(EXISTS ${HYDRAX_BIN_HOME}/Debug/Hydrax.dll AND EXISTS ${HYDRAX_BIN_HOME}/Release/Hydrax.dll)
 	set(HYDRAX_READY TRUE)
 	message (STATUS "ogre_hydrax is installed" )
 else ()
@@ -203,11 +204,11 @@ endif ()
 #use ogre_hydrax
 add_library(MY_HYDRAX STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.lib)
-	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${HYDRAX_HOME}/srcdemo/Release/Hydrax.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${HYDRAX_BIN_HOME}/Debug/Hydrax.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${HYDRAX_BIN_HOME}/Release/Hydrax.lib)
 endif ()
 #find ogre_skyx
-set (SKYX_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ogre_skyx)
+set (SKYX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_skyx)
 set (SKYX_READY FALSE)
 if(EXISTS ${SKYX_HOME}/Debug/Skyx.dll AND EXISTS ${SKYX_HOME}/Release/Skyx.dll)
 	set(SKYX_READY TRUE)
@@ -269,13 +270,12 @@ include_directories(
 	${OGRE_RTShaderSystem_INCLUDE_DIRS}
 	${OGRE_CgProgramManager_INCLUDE_DIRS}
 	${OgreProcedural_INCLUDE_DIRS}
-	${HYDRAX_HOME}/include
-	${HYDRAX_HOME}/include/Modules
-	${HYDRAX_HOME}/include/Noise
-	${HYDRAX_HOME}/src
+	${HYDRAX_HOME}
+	${HYDRAX_HOME}/Modules
+	${HYDRAX_HOME}/Noise
 	${SKYX_HOME}/src
 	${SKYX_HOME}/src/VClouds
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 add_library (apeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
 target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
@@ -299,7 +299,7 @@ if (WIN32)
 	file(COPY ${OGRE_BINARY_DIR}/bin/debug/Plugin_CgProgramManager_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OGRE_BINARY_DIR}/bin/debug/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${HYDRAX_HOME}/srcdemo/Debug/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${HYDRAX_BIN_HOME}/Debug/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${SKYX_HOME}/Debug/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreOverlay.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
@@ -312,7 +312,7 @@ if (WIN32)
 	file(COPY ${OGRE_BINARY_DIR}/bin/release/Plugin_CgProgramManager.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${OGRE_BINARY_DIR}/bin/release/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${HYDRAX_HOME}/srcdemo/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${HYDRAX_BIN_HOME}/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${SKYX_HOME}/release/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 

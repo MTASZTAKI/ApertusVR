@@ -1,31 +1,31 @@
-#include "apeIndustry40Plugin.h"
+#include "apeHelloWorldPlugin.h"
 
-ape::apeIndustry40Plugin::apeIndustry40Plugin()
+ape::apeHelloWorldScenePlugin::apeHelloWorldScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeHelloWorldScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeHelloWorldScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::apeIndustry40Plugin::~apeIndustry40Plugin()
+ape::apeHelloWorldScenePlugin::~apeHelloWorldScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeIndustry40Plugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apeHelloWorldScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apeHelloWorldScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::eventCallBack(const ape::Event& event)
+void ape::apeHelloWorldScenePlugin::eventCallBack(const ape::Event& event)
 {
 
 }
 
-void ape::apeIndustry40Plugin::Init()
+void ape::apeHelloWorldScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	//mpSceneMakerMacro->makeLit();
@@ -48,7 +48,7 @@ void ape::apeIndustry40Plugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Run()
+void ape::apeHelloWorldScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	while (true)
@@ -58,25 +58,25 @@ void ape::apeIndustry40Plugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Step()
+void ape::apeHelloWorldScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Stop()
+void ape::apeHelloWorldScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Suspend()
+void ape::apeHelloWorldScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeIndustry40Plugin::Restart()
+void ape::apeHelloWorldScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

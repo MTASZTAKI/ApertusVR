@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_WATERIMPL_H
 #define APE_WATERIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIWater.h"
+#include "apeISceneManager.h"
+#include "apeIWater.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

@@ -20,16 +20,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Basic
-
-option(APE_MACRO_UserInput "Use UserInputMacro?" ON )
-if (${APE_MACRO_UserInput})
-	add_subdirectory (userInput)
-endif ()
-
-option(APE_MACRO_SceneMaker "Use SceneMakerMacro?" ON )
-if (${APE_MACRO_SceneMaker})
-	add_subdirectory (sceneMaker)
-endif ()
+add_subdirectory (userInput)
+add_subdirectory (sceneMaker)
 
 

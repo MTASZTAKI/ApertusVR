@@ -27,13 +27,13 @@ SOFTWARE.*/
 #include <list>
 #include <string>
 #include <thread>
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginAPI.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "managers/apeICoreConfig.h"
-#include "macros/userInput/apeUserInputMacro.h"
+#include "apeIPlugin.h"
+#include "apePluginAPI.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeICoreConfig.h"
+#include "apeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "apeHtmlOverlayUiManagerPlugin"
 

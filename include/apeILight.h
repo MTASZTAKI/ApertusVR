@@ -23,12 +23,12 @@ SOFTWARE.*/
 #ifndef APE_ILIGHT_H
 #define APE_ILIGHT_H
 
-#include "datatypes/apeColor.h"
-#include "datatypes/apeDegree.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apeRadian.h"
-#include "datatypes/apeVector3.h"
-#include "sceneelements/apeINode.h"
+#include "apeColor.h"
+#include "apeDegree.h"
+#include "apeEntity.h"
+#include "apeRadian.h"
+#include "apeVector3.h"
+#include "apeINode.h"
 
 namespace ape
 {

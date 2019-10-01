@@ -1,5 +1,5 @@
 #include <iostream>
-#include "macros/userInput/apeUserInputMacro.h"
+#include "apeUserInputMacro.h"
 
 std::mutex ape::UserInputMacro::mpInstanceMutex;
 ape::UserInputMacro* ape::UserInputMacro::mpInstance = 0;

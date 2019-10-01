@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_TEXTGEOMETRYIMPL_H
 #define APE_TEXTGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeITextGeometry.h"
-#include "sceneelements/apeINode.h"
+#include "apeISceneManager.h"
+#include "apeITextGeometry.h"
+#include "apeINode.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

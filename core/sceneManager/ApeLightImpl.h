@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_LIGHTIMPL_H
 #define APE_LIGHTIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeILight.h"
+#include "apeISceneManager.h"
+#include "apeILight.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

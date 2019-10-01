@@ -24,13 +24,13 @@ SOFTWARE.*/
 #define APE_IWATER_H
 
 #include "ape.h"
-#include "datatypes/apeColor.h"
-#include "datatypes/apeDegree.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apeRadian.h"
-#include "datatypes/apeVector3.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeISky.h"
+#include "apeColor.h"
+#include "apeDegree.h"
+#include "apeEntity.h"
+#include "apeRadian.h"
+#include "apeVector3.h"
+#include "apeINode.h"
+#include "apeISky.h"
 
 namespace ape
 {

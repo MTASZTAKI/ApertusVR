@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <cmath>
 #include <iostream>
-#include "datatypes/apeQuaternion.h"
+#include "apeQuaternion.h"
 
 namespace ape
 {

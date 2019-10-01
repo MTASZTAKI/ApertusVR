@@ -26,10 +26,10 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ape.h"
-#include "datatypes/apeColor.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apePass.h"
-#include "datatypes/apeTexture.h"
+#include "apeColor.h"
+#include "apeEntity.h"
+#include "apePass.h"
+#include "apeTexture.h"
 
 namespace ape
 {

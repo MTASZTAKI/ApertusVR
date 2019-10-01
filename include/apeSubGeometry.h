@@ -27,8 +27,8 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ape.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apeMaterial.h"
+#include "apeEntity.h"
+#include "apeMaterial.h"
 
 namespace ape
 {

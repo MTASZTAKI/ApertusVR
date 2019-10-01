@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_FILEGEOMETRYIMPL_H
 #define APE_FILEGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeINode.h"
+#include "apeISceneManager.h"
+#include "apeIFileGeometry.h"
+#include "apeINode.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

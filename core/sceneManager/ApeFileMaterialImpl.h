@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_FILEMATERIALIMPL_H
 #define APE_FILEMATERIALIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIFileMaterial.h"
+#include "apeISceneManager.h"
+#include "apeIFileMaterial.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

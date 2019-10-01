@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_PLUGINAPI_H
 #define APE_PLUGINAPI_H
 
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginDefines.h"
+#include "apeIPlugin.h"
+#include "apePluginDefines.h"
 
 #define APE_PLUGIN_API_VERSION  1
 

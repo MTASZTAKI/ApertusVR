@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_FILETEXTUREIMPL_H
 #define APE_FILETEXTUREIMPL_H
 
-#include "sceneelements/apeIFileTexture.h"
+#include "apeIFileTexture.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
-#include "managers/apeISceneManager.h"
+#include "apeISceneManager.h"
 
 namespace ape
 {

@@ -28,9 +28,9 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ape.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apeMaterial.h"
-#include "datatypes/apeVector3.h"
+#include "apeEntity.h"
+#include "apeMaterial.h"
+#include "apeVector3.h"
 
 namespace ape
 {

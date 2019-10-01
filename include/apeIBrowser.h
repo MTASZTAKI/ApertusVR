@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_IBROWSER_H
 #define APE_IBROWSER_H
 
-#include "datatypes/apeGeometry.h"
-#include "datatypes/apeVector2.h"
-#include "datatypes/apeEntity.h"
+#include "apeGeometry.h"
+#include "apeVector2.h"
+#include "apeEntity.h"
 
 namespace ape
 {

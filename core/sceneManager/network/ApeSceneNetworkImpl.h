@@ -38,10 +38,10 @@ SOFTWARE.*/
 #include <thread>
 #include <memory>
 #include <chrono>
-#include "managers/apeISceneNetwork.h"
-#include "managers/apeICoreConfig.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeISceneManager.h"
+#include "apeISceneNetwork.h"
+#include "apeICoreConfig.h"
+#include "apeIEventManager.h"
+#include "apeISceneManager.h"
 #include "apeLobbyManager.h"
 #include "apePointCloudImpl.h"
 #include "GetTime.h"

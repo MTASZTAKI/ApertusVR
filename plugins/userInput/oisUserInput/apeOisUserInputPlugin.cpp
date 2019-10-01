@@ -1,7 +1,5 @@
 #include <fstream>
 #include "apeOisUserInputPlugin.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
 
 ape::OISUserInputPlugin::OISUserInputPlugin()
 {

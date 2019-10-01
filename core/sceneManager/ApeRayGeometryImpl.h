@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_RAYGEOMETRYIMPL_H
 #define APE_RAYGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeIRayGeometry.h"
+#include "apeISceneManager.h"
+#include "apeINode.h"
+#include "apeIRayGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

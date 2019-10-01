@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_INDEXEDFACESETGEOMETRYIMPL_H
 #define APE_INDEXEDFACESETGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "apeISceneManager.h"
+#include "apeIIndexedFaceSetGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

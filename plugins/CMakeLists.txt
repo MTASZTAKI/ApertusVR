@@ -20,6 +20,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+include_directories("../macros/sceneMaker")
+include_directories("../macros/userInput")
 
 add_subdirectory (assetImporter)
 add_subdirectory (browser)

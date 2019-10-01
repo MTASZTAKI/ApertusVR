@@ -41,8 +41,8 @@ SOFTWARE.*/
 #include <sstream>
 #include <string>
 #include <vector>
-#include "system/apePlatform.h"
-#include "managers/apeILogManager.h"
+#include "apePlatform.h"
+#include "apeILogManager.h"
 
 namespace ape
 {

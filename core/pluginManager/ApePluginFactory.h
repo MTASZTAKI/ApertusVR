@@ -26,8 +26,8 @@ SOFTWARE.*/
 
 #include <string>
 #include <map>
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginDefines.h"
+#include "apeIPlugin.h"
+#include "apePluginDefines.h"
 
 namespace ape
 {

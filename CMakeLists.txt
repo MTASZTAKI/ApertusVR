@@ -22,19 +22,16 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(apertusVR)
-
-include("cmake/functions.cmake")
-include("cmake/prepare_cxx.cmake")
-include("cmake/prepare_cmake.cmake")
-include("cmake/prepare_ape.cmake")
-
+include("functions.cmake")
+include("prepare_cxx.cmake")
+include("prepare_cmake.cmake")
+include("prepare_ape.cmake")
 
 include_directories("include")
-include_directories(${PROJECT_SOURCE_DIR})
 
-add_subdirectory(include)
 add_subdirectory(core)
 add_subdirectory(plugins)
+add_subdirectory(include)
 add_subdirectory(samples)
 add_subdirectory(macros)
 

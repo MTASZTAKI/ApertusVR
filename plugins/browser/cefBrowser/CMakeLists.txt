@@ -55,14 +55,14 @@ if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource})
 					set GN_ARGUMENTS=--ide=vs2017 --sln=cef --filters=//cef/*
 					set GN_DEFINES=proprietary_codecs=true ffmpeg_branding="Chrome"
 					set CEF_ARCHIVE_FORMAT=tar.bz2
-					python ${CMAKE_SOURCE_DIR}\3rdParty\cef_source\automate-git.py --download-dir=${CMAKE_SOURCE_DIR}\3rdParty\cef_source --branch=trunk --x64-build
+					python ${CMAKE_CURRENT_SOURCE_DIR}\3rdParty\cef_source\automate-git.py --download-dir=${CMAKE_CURRENT_SOURCE_DIR}\3rdParty\cef_source --branch=trunk --x64-build
 					RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 					)		
 			reportError (output if error)
 			message (STATUS "Cef build succesfully finished")	
 		endif()
 	endif()
-	#todo_apeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
+	#todo_apeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_CURRENT_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
 endif ()
 
 if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
@@ -76,9 +76,9 @@ endif()
 # Specify the CEF distribution version.
 
 set(CEF_DISTRIBUTION "cef_binary_${CEF_VERSION}_${CEF_PLATFORM}")
-set(CEF_HOME ${CMAKE_SOURCE_DIR}/3rdParty/${CEF_DISTRIBUTION})
+set(CEF_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/${CEF_DISTRIBUTION})
 set(CEF_DLLWRAPPER_HOME ${CEF_HOME}/libcef_dll)
-set(CEF_DOWNLOAD_DIR ${CMAKE_SOURCE_DIR}/3rdParty/)
+set(CEF_DOWNLOAD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/)
 # The location where we expect the extracted binary distribution.
 set(CEF_ROOT "${CEF_DOWNLOAD_DIR}/${CEF_DISTRIBUTION}" CACHE INTERNAL "CEF_ROOT")
 # Download and/or extract the binary distribution if necessary.

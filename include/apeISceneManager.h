@@ -33,9 +33,9 @@ SOFTWARE.*/
 #define APE_SCENEMANAGER_DLL_EXPORT 
 #endif
 
-#include "utils/apeSingleton.h"
-#include "sceneelements/apeINode.h"
-#include "datatypes/apeEntity.h"
+#include "apeSingleton.h"
+#include "apeINode.h"
+#include "apeEntity.h"
 
 namespace ape
 {

@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 
-set (BULLET_HOME ${CMAKE_SOURCE_DIR}/3rdparty/bullet3)
+set (BULLET_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/bullet3)
 set (BULLET_LIB_READY FALSE)
 
 #error function
@@ -103,7 +103,7 @@ set (SOURCES
 	)
 
 include_directories(
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	${BULLET_HOME}/src
 	)
 

@@ -29,7 +29,7 @@ set (SOURCES
 	apeHtcVivePlugin.cpp
 	)
 	
-set(OPENVR_HOME ${CMAKE_SOURCE_DIR}/3rdParty/openvr)
+set(OPENVR_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/openvr)
 add_library(OPENVR_LIB STATIC IMPORTED)
 if (WIN32)
 	set_property(TARGET OPENVR_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${OPENVR_HOME}/lib/win64/openvr_api.lib)

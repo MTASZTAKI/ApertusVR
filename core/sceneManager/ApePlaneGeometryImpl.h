@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_PLANEGEOMETRYIMPL_H
 #define APE_PLANEGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIPlaneGeometry.h"
+#include "apeISceneManager.h"
+#include "apeIPlaneGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

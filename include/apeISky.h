@@ -24,14 +24,14 @@ SOFTWARE.*/
 #define APE_ISKY_H
 
 #include "ape.h"
-#include "datatypes/apeEntity.h"
-#include "datatypes/apeVector3.h"
-#include "datatypes/apeColor.h"
-#include "datatypes/apeDegree.h"
-#include "datatypes/apeRadian.h"
-#include "sceneelements/apeILight.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeICamera.h"
+#include "apeEntity.h"
+#include "apeVector3.h"
+#include "apeColor.h"
+#include "apeDegree.h"
+#include "apeRadian.h"
+#include "apeILight.h"
+#include "apeINode.h"
+#include "apeICamera.h"
 
 namespace ape
 {

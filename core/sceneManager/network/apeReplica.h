@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_REPLICA_H
 #define APE_REPLICA_H
 
-#include "managers/apeILogManager.h"
+#include "apeILogManager.h"
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"

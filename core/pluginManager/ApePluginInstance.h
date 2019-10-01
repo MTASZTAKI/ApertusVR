@@ -1,4 +1,4 @@
-/*MIT License
+/*MIT License#include "apePluginDefines.h"
 
 Copyright (c) 2018 MTA SZTAKI
 
@@ -25,8 +25,8 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginDefines.h"
+#include "apeIPlugin.h"
+#include "apePluginDefines.h"
 
 namespace ape
 {

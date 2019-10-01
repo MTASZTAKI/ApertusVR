@@ -36,8 +36,8 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "managers/apeISceneNetwork.h"
-#include "utils/apeSingleton.h"
+#include "apeISceneNetwork.h"
+#include "apeSingleton.h"
 
 namespace ape
 {

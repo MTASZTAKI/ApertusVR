@@ -25,7 +25,7 @@
 # Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO_apeOisUserInputPlugin Implement OS version*/; }
 # ois patch log begin
 
-set (OIS_HOME ${CMAKE_SOURCE_DIR}/3rdParty/ois)
+set (OIS_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ois)
 set (OIS_READY FALSE)
 
 

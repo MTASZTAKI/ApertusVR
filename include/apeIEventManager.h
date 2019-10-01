@@ -34,8 +34,8 @@ SOFTWARE.*/
 #endif
 
 #include <functional>
-#include "datatypes/apeEvent.h"
-#include "utils/apeSingleton.h"
+#include "apeEvent.h"
+#include "apeSingleton.h"
 
 namespace ape
 {

@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_IMANUALMATERIAL_H
 #define APE_IMANUALMATERIAL_H
 
-#include "datatypes/apeMaterial.h"
+#include "apeMaterial.h"
 
 namespace ape
 {

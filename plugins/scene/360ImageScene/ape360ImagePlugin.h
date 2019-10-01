@@ -27,12 +27,12 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeIFileMaterial.h"
-#include "sceneelements/apeINode.h"
+#include "apePluginAPI.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeIFileGeometry.h"
+#include "apeIFileMaterial.h"
+#include "apeINode.h"
 
 #define THIS_PLUGINNAME "ape360ImagePlugin"
 

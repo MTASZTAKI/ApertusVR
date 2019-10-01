@@ -5,7 +5,7 @@
 # 3rdParty/raknet/Source/CCRakNetSlidingWindow.cpp was changed
 # raknet patch log end
 
-set (RAKNET_SRC_DIR 3rdParty/raknet)
+set (RAKNET_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/network/3rdParty/raknet)
 set (RAKNET_HOME ${RAKNET_SRC_DIR})
 set (RAKNET_BUILD_DIR ${RAKNET_SRC_DIR}/build)
 set (RAKNET_INSTALL_DIR ${RAKNET_SRC_DIR}/install)

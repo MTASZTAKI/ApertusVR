@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_NODEIMPL_H
 #define APE_NODEIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeINode.h"
+#include "apeISceneManager.h"
+#include "apeINode.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

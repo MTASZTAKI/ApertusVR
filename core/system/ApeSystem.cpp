@@ -22,8 +22,8 @@ SOFTWARE.*/
 
 #include <chrono>
 #include <random>
-#include "system/apePlatform.h"
-#include "system/apeSystem.h"
+#include "apePlatform.h"
+#include "apeSystem.h"
 #include "apeEventManagerImpl.h"
 #include "apeLogManagerImpl.h"
 #include "apePluginManagerImpl.h"

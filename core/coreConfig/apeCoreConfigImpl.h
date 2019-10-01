@@ -34,7 +34,7 @@ SOFTWARE.*/
 #define APE_CORECONFIG_DLL_EXPORT 
 #endif
 
-#include "managers/apeICoreConfig.h"
+#include "apeICoreConfig.h"
 
 namespace ape
 { 

@@ -24,7 +24,7 @@
 # In /3rdParty/assimp/code/X3DImporter.cpp std::transforms are commented out because of operator != problem
 # assimp patch log begin
 
-set (ASSIMP_HOME ${CMAKE_SOURCE_DIR}/3rdParty/assimp)
+set (ASSIMP_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/assimp)
 set (ASSIMP_READY FALSE)
 
 
@@ -79,9 +79,8 @@ set (SOURCES
 	)
 
 include_directories(
-	  
 	${ASSIMP_HOME}/include
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 
 # Add the dinamic library target to the project

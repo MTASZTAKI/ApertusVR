@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_PBSPASSIMPL_H
 #define APE_PBSPASSIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeIPbsPass.h"
+#include "apeISceneManager.h"
+#include "apeINode.h"
+#include "apeIPbsPass.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

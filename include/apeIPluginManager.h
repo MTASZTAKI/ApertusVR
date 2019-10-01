@@ -33,8 +33,8 @@ SOFTWARE.*/
 	#define APE_PLUGINMANAGER_DLL_EXPORT
 #endif
 
-#include "utils/apeSingleton.h"
-#include "plugin/apeIPlugin.h"
+#include "apeSingleton.h"
+#include "apeIPlugin.h"
 
 namespace ape
 {

@@ -41,9 +41,9 @@ SOFTWARE.*/
 #include <functional>
 #include <string>
 #include <thread>
-#include "managers/apeILogManager.h"
-#include "managers/apeIPluginManager.h"
-#include "managers/apeICoreConfig.h"
+#include "apeILogManager.h"
+#include "apeIPluginManager.h"
+#include "apeICoreConfig.h"
 #include "apeInternalPluginManager.h"
 #include "apePluginFactory.h"
 

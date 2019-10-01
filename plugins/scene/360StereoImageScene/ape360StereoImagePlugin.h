@@ -27,16 +27,16 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeIFileMaterial.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeICamera.h"
-#include "sceneelements/apeIManualTexture.h"
-#include "macros/userInput/apeUserInputMacro.h"
+#include "apePluginAPI.h"
+#include "apeILogManager.h"
+#include "apeIEventManager.h"
+#include "apeISceneManager.h"
+#include "apeIFileGeometry.h"
+#include "apeIFileMaterial.h"
+#include "apeINode.h"
+#include "apeICamera.h"
+#include "apeIManualTexture.h"
+#include "apeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "ape360StereoImagePlugin"
 

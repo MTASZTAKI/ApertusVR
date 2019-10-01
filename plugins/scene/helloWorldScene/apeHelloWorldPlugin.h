@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_INDUSTRY40PLUGIN_H
-#define APE_INDUSTRY40PLUGIN_H
+#ifndef APE_HELLOWORLDSCENEPLUGIN_H
+#define APE_HELLOWORLDSCENEPLUGIN_H
 
 #include <chrono>
 #include <iostream>
@@ -31,35 +31,35 @@ SOFTWARE.*/
 #include <random>
 #include <thread>
 #include <vector>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "managers/apeISceneNetwork.h"
-#include "managers/apeICoreConfig.h"
-#include "sceneelements/apeICamera.h"
-#include "sceneelements/apeIConeGeometry.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeIFileMaterial.h"
-#include "sceneelements/apeIIndexedFaceSetGeometry.h"
-#include "sceneelements/apeIIndexedLineSetGeometry.h"
-#include "sceneelements/apeILight.h"
-#include "sceneelements/apeIManualMaterial.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeIPbsPass.h"
-#include "sceneelements/apeIPlaneGeometry.h"
-#include "sceneelements/apeIPointCloud.h"
-#include "sceneelements/apeISphereGeometry.h"
-#include "sceneelements/apeITextGeometry.h"
-#include "sceneelements/apeITubeGeometry.h"
-#include "utils/apeInterpolator.h"
-#include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "apePluginAPI.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeISceneNetwork.h"
+#include "apeICoreConfig.h"
+#include "apeICamera.h"
+#include "apeIConeGeometry.h"
+#include "apeIFileGeometry.h"
+#include "apeIFileMaterial.h"
+#include "apeIIndexedFaceSetGeometry.h"
+#include "apeIIndexedLineSetGeometry.h"
+#include "apeILight.h"
+#include "apeIManualMaterial.h"
+#include "apeINode.h"
+#include "apeIPbsPass.h"
+#include "apeIPlaneGeometry.h"
+#include "apeIPointCloud.h"
+#include "apeISphereGeometry.h"
+#include "apeITextGeometry.h"
+#include "apeITubeGeometry.h"
+#include "apeInterpolator.h"
+#include "apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "apeIndustry40Plugin"
+#define THIS_PLUGINNAME "apeHelloWorldScenePlugin"
 
 namespace ape
 {
-	class apeIndustry40Plugin : public ape::IPlugin
+	class apeHelloWorldScenePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -75,9 +75,9 @@ namespace ape
 		ape::PointCloudWeakPtr mPointCloud;
 
 	public:
-		apeIndustry40Plugin();
+		apeHelloWorldScenePlugin();
 
-		~apeIndustry40Plugin();
+		~apeHelloWorldScenePlugin();
 
 		void Init() override;
 
@@ -92,14 +92,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateapeIndustry40Plugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateapeHelloWorldScenePlugin()
 	{
-		return new ape::apeIndustry40Plugin;
+		return new ape::apeHelloWorldScenePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyapeIndustry40Plugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyapeHelloWorldScenePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeIndustry40Plugin*)plugin;
+		delete (ape::apeHelloWorldScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -107,7 +107,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeIndustry40Plugin, DestroyapeIndustry40Plugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeHelloWorldScenePlugin, DestroyapeHelloWorldScenePlugin);
 		return 0;
 	}
 }

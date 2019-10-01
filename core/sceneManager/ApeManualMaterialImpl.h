@@ -23,10 +23,10 @@ SOFTWARE.*/
 #ifndef APE_MANUALMATERIALIMPL_H
 #define APE_MANUALMATERIALIMPL_H
 
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeIManualMaterial.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeINode.h"
+#include "apeIManualMaterial.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

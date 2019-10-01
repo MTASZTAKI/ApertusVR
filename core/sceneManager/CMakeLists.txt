@@ -108,7 +108,7 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/core/logManager
 	${RAKNET_INCLUDE_DIR}
 	${CURL_INCLUDE_DIRS}
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/network/3rdParty/rapidjson/include
 	)
 
 # Add the dinamic library target to the project

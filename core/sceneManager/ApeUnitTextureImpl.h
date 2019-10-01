@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_UNITTEXTUREIMPL_H
 #define APE_UNITTEXTUREIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIUnitTexture.h"
-#include "sceneelements/apeINode.h"
+#include "apeISceneManager.h"
+#include "apeIUnitTexture.h"
+#include "apeINode.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

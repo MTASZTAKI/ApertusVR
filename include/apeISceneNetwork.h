@@ -36,8 +36,8 @@ SOFTWARE.*/
 #include <functional>
 #include <map>
 #include <vector>
-#include "utils/apeSingleton.h"
-#include "system/apeSystem.h"
+#include "apeSingleton.h"
+#include "apeSystem.h"
 
 namespace ape
 {

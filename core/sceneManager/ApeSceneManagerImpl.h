@@ -33,10 +33,10 @@ SOFTWARE.*/
 #define APE_SCENEMANAGER_DLL_EXPORT 
 #endif
 
-#include "managers/apeISceneManager.h"
-#include "managers/apeICoreConfig.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeIEventManager.h"
+#include "apeISceneManager.h"
+#include "apeICoreConfig.h"
+#include "apeILogManager.h"
+#include "apeIEventManager.h"
 
 namespace ape
 {

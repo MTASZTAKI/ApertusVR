@@ -2,7 +2,7 @@
 if (WIN32)
 	set (CURL_READY FALSE)
 
-	set(CURL_SOURCE_DIR 3rdParty/curl)
+	set(CURL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/network/3rdParty/curl)
 	set(CURL_INCLUDE_DIRS ${CURL_SOURCE_DIR}/include/)
 
 	set(CURL_DLL_FILENAME libcurl.dll)

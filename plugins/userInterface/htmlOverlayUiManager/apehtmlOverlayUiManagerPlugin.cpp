@@ -1,7 +1,5 @@
 #include <fstream>
 #include "apeHtmlOverlayUiManagerPlugin.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
 
 ape::HtmlOverlayUiManagerPlugin::HtmlOverlayUiManagerPlugin()
 {

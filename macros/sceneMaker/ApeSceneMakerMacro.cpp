@@ -1,5 +1,5 @@
 #include <iostream>
-#include "macros/sceneMaker/apeSceneMakerMacro.h"
+#include "apeSceneMakerMacro.h"
 
 ape::SceneMakerMacro::SceneMakerMacro()
 {

@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_INDEXEDLINESETGEOMETRYIMPL_H
 #define APE_INDEXEDLINESETGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIIndexedLineSetGeometry.h"
+#include "apeISceneManager.h"
+#include "apeIIndexedLineSetGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

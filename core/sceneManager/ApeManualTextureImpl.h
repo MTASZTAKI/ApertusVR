@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_MANUALTEXTUREIMPL_H
 #define APE_MANUALTEXTUREIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeIManualTexture.h"
+#include "apeISceneManager.h"
+#include "apeINode.h"
+#include "apeIManualTexture.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

@@ -34,7 +34,7 @@ SOFTWARE.*/
 #include <string>
 #include <typeinfo>
 #include <vector>
-#include "datatypes/apeQuaternion.h"
+#include "apeQuaternion.h"
 
 namespace ape
 {

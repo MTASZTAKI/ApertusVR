@@ -28,7 +28,7 @@ if (NOT PYTHONINTERP_FOUND)
 
 		message("Python: Starting installer...")
 
-		set(PYTHON_SETUP_PATH "${CMAKE_SOURCE_DIR}/3rdParty/python/python-2.7.12.msi")
+		set(PYTHON_SETUP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/python/python-2.7.12.msi")
 
 		execute_process(
 			COMMAND cmd /c ${PYTHON_SETUP_PATH}
@@ -90,7 +90,7 @@ if (WIN32)
 
 endif ()
 
-message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 # TODO: put APE_OUTPUT_DIR_DEBUG variable to CMakeLists.txt located in project root folder
@@ -106,7 +106,7 @@ message(STATUS "JS_API_DIR: ${JS_API_DIR}")
 set(NODE_VERSION "10.1.0")
 message(STATUS "NODE_VERSION: ${NODE_VERSION}")
 
-set(NODE_ROOT_DIR ${APE_SOURCE_DIR}/3rdParty/nodejs)
+set(NODE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nodejs)
 message(STATUS "NODE_ROOT_DIR: ${NODE_ROOT_DIR}")
 
 set(NODE_SOURCE_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/source)
@@ -232,7 +232,7 @@ if (WIN32)
 				# Install MSBuildTools
 				message(STATUS "MSBuildTools: Starting installer...")
 
-				set(MS_BUILD_TOOLS_PATH "${CMAKE_SOURCE_DIR}/3rdParty/msbuildtools/BuildTools_Full.exe")
+				set(MS_BUILD_TOOLS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/msbuildtools/BuildTools_Full.exe")
 
 				execute_process(
 					COMMAND cmd /c ${MS_BUILD_TOOLS_PATH}

@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_TORUSGEOMETRYIMPL_H
 #define APE_TORUSGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeITorusGeometry.h"
+#include "apeISceneManager.h"
+#include "apeITorusGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

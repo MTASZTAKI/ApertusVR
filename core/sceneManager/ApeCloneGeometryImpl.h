@@ -23,9 +23,9 @@ SOFTWARE.*/
 #ifndef APE_CLONEGEOMETRYIMPL_H
 #define APE_CLONEGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneElements/apeICloneGeometry.h"
-#include "sceneElements/apeINode.h"
+#include "apeISceneManager.h"
+#include "apeICloneGeometry.h"
+#include "apeINode.h"
 #include "ApeEventManagerImpl.h"
 #include "apeReplica.h"
 

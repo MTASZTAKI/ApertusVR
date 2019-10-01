@@ -29,8 +29,8 @@ SOFTWARE.*/
 #include "cef_app.h"
 #include "cef_client.h"
 #include "cef_render_handler.h"
-#include "sceneelements/apeIManualTexture.h"
-#include "managers/apeILogManager.h"
+#include "apeIManualTexture.h"
+#include "apeILogManager.h"
 
 namespace ape
 {

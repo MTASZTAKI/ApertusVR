@@ -27,24 +27,24 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "managers/apeICoreConfig.h"
-#include "datatypes/apeMatrix4.h"
-#include "sceneelements/apeICamera.h"
-#include "sceneelements/apeIConeGeometry.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeIFileMaterial.h"
-#include "sceneelements/apeIIndexedFaceSetGeometry.h"
-#include "sceneelements/apeIManualMaterial.h"
-#include "sceneelements/apeIManualMaterial.h"
-#include "sceneelements/apeIManualPass.h"
-#include "sceneelements/apeIManualTexture.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeITextGeometry.h"
-#include "macros/userInput/apeUserInputMacro.h"
+#include "apePluginAPI.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeICoreConfig.h"
+#include "apeMatrix4.h"
+#include "apeICamera.h"
+#include "apeIConeGeometry.h"
+#include "apeIFileGeometry.h"
+#include "apeIFileMaterial.h"
+#include "apeIIndexedFaceSetGeometry.h"
+#include "apeIManualMaterial.h"
+#include "apeIManualMaterial.h"
+#include "apeIManualPass.h"
+#include "apeIManualTexture.h"
+#include "apeINode.h"
+#include "apeITextGeometry.h"
+#include "apeUserInputMacro.h"
 #include "openvr.h"
 #include "openvr_capi.h"
 
@@ -53,7 +53,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class apeHtcVivePlugin : public ape::IPlugin
+	class HtcVivePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -95,9 +95,9 @@ namespace ape
 		ape::UserInputMacro* mpApeUserInputMacro;
 
 	public:
-		apeHtcVivePlugin();
+		HtcVivePlugin();
 
-		~apeHtcVivePlugin();
+		~HtcVivePlugin();
 
 		void Init() override;
 
@@ -114,12 +114,12 @@ namespace ape
 
 	APE_PLUGIN_FUNC ape::IPlugin* CreateapeHtcVivePlugin()
 	{
-		return new ape::apeHtcVivePlugin;
+		return new ape::HtcVivePlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyapeHtcVivePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeHtcVivePlugin*)plugin;
+		delete (ape::HtcVivePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

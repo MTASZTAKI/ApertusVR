@@ -27,8 +27,8 @@ SOFTWARE.*/
 #include <set>
 #include <string>
 #include <vector>
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginDefines.h"
+#include "apeIPlugin.h"
+#include "apePluginDefines.h"
 #include "apePluginInstance.h"
 
 namespace ape

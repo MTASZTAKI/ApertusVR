@@ -25,10 +25,10 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "datatypes/apeGeometry.h"
-#include "datatypes/apeVector2.h"
-#include "datatypes/apeVector3.h"
-#include "sceneelements/apeINode.h"
+#include "apeGeometry.h"
+#include "apeVector2.h"
+#include "apeVector3.h"
+#include "apeINode.h"
 
 namespace ape
 {

@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_CYLINDERGEOMETRYIMPL_H
 #define APE_CYLINDERGEOMETRYIMPL_H
 
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeICylinderGeometry.h"
+#include "apeISceneManager.h"
+#include "apeICylinderGeometry.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 

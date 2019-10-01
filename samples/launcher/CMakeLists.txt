@@ -21,16 +21,16 @@
 #SOFTWARE.
 
 set (SOURCES
-	apeLauncher.cpp
+	apeSampleLauncher.cpp
 	)
 
 include_directories(
 	
 	)
 
-add_executable (apeLauncher ${SOURCES})
-target_link_libraries (apeLauncher apeSystem)
-set_property (TARGET apeLauncher PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property (TARGET apeLauncher PROPERTY FOLDER "Launcher")
+add_executable (apeSampleLauncher ${SOURCES})
+target_link_libraries (apeSampleLauncher apeSystem)
+set_property (TARGET apeSampleLauncher PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeSampleLauncher PROPERTY FOLDER "SampleLauncher")
 
 

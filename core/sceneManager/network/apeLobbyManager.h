@@ -27,8 +27,8 @@ SOFTWARE.*/
 #include <vector>
 #include <string>
 #include <iostream>
-#include "managers/apeISceneNetwork.h"
-#include "managers/apeILogManager.h"
+#include "apeISceneNetwork.h"
+#include "apeILogManager.h"
 #include "apeHttpManager.h"
 
 namespace ape

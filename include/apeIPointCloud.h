@@ -29,7 +29,7 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ape.h"
-#include "datatypes/apeEntity.h"
+#include "apeEntity.h"
 
 namespace ape
 {

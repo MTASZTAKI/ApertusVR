@@ -28,8 +28,8 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "ape.h"
-#include "datatypes/apeQuaternion.h"
-#include "datatypes/apeVector3.h"
+#include "apeQuaternion.h"
+#include "apeVector3.h"
 
 namespace ape
 {

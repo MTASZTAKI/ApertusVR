@@ -26,15 +26,15 @@ SOFTWARE.*/
 #include <iostream>
 #include <string>
 #include <thread>
-#include "plugin/apeIPlugin.h"
-#include "plugin/apePluginAPI.h"
-#include "managers/apeICoreConfig.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeICamera.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeITextGeometry.h"
+#include "apeIPlugin.h"
+#include "apePluginAPI.h"
+#include "apeICoreConfig.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeICamera.h"
+#include "apeINode.h"
+#include "apeITextGeometry.h"
 #include "Leap.h"
 #include "LeapMath.h"
 

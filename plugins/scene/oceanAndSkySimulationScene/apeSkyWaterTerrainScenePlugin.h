@@ -27,18 +27,18 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "sceneelements/apeIFileGeometry.h"
-#include "sceneelements/apeIFileMaterial.h"
-#include "sceneelements/apeILight.h"
-#include "sceneelements/apeIManualTexture.h"
-#include "sceneelements/apeINode.h"
-#include "sceneelements/apeISky.h"
-#include "sceneelements/apeITextGeometry.h"
-#include "sceneelements/apeIWater.h"
+#include "apePluginAPI.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeIFileGeometry.h"
+#include "apeIFileMaterial.h"
+#include "apeILight.h"
+#include "apeIManualTexture.h"
+#include "apeINode.h"
+#include "apeISky.h"
+#include "apeITextGeometry.h"
+#include "apeIWater.h"
 
 #define THIS_PLUGINNAME "apeSkyWaterTerrainScenePlugin"
 

@@ -43,7 +43,7 @@ SOFTWARE.*/
 #include <sstream>
 #include <stdlib.h>
 #include <string>
-#include "utils/apeSingleton.h"
+#include "apeSingleton.h"
 
 #ifndef __FUNCTION_NAME__
 	#ifdef WIN32   //WINDOWS
