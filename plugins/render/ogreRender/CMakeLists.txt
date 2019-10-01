@@ -45,44 +45,26 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/ogre/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ogre/build)
+endif()
+set (OGRE_BUILD_DIR ${CMAKE_BINARY_DIR}/ogre/build)
+
 set(PATH_OGREDEPS ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre/Dependencies)
-set(PATH_OGREDEPS_OUT ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre/Dependencies/ogredeps)
+set(PATH_OGREDEPS_OUT ${OGRE_BUILD_DIR}/Dependencies/ogredeps)
 set(PATH_OGRE ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre)
 set(OGRE_READY FALSE)
-set(PATH_OGRE_PROCEDURAL ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_procedural)
-set(OGRE_PROCEDURAL_READY FALSE)
 
 #find ogre
 message (STATUS "try to find Ogre" )
-set (OGRE_STATIC OFF)
-set (ENV{OGREDEPS_BUILD_SDL2} FALSE)
-set (ENV{OGRE_BUILD_RENDERSYSTEM_D3D9} FALSE)
-set (ENV{FREETYPE_FT2BUILD_INCLUDE_DIR} ${PATH_OGREDEPS_OUT}/include/freetype)
-set (ENV{OGRE_HOME} ${PATH_OGRE})
-set (ENV{OGRE_SOURCE} ${PATH_OGRE})
-set (ENV{OGRE_BUILD} ${PATH_OGRE})
-set (ENV{OGRE_DEPENDENCIES_DIR} ${PATH_OGREDEPS_OUT})
-set (ENV{Cg_HOME} ${PATH_OGREDEPS_OUT})
-set (ENV{FREEIMAGE_HOME} ${PATH_OGREDEPS_OUT})
-set (ENV{FREETYPE_HOME} ${PATH_OGREDEPS_OUT})
-set (ENV{ZLIB_HOME} ${PATH_OGREDEPS_OUT})
-set (ENV{ZZIP_HOME} ${PATH_OGREDEPS_OUT})
-set (STORED_CMSD ${CMAKE_CURRENT_SOURCE_DIR})
-set (STORED_CIP ${CMAKE_INSTALL_PREFIX})
-set (CMAKE_CURRENT_SOURCE_DIR ${PATH_OGRE})
-set (CMAKE_INSTALL_PREFIX ${PATH_OGRE})
-add_subdirectory(${PATH_OGRE} ${PATH_OGRE} EXCLUDE_FROM_ALL)
-set (CMAKE_CURRENT_SOURCE_DIR ${STORED_CMSD})
-set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${PATH_OGRE};${PATH_OGRE}/CMake/;${PATH_OGRE}/lib/OGRE/cmake;${PATH_OGRE}/CMake/Packages;${PATH_OGRE}/CMake/Utils)
-find_package (OGRE 1.10 QUIET)
-if (OGRE_FOUND)
+if(EXISTS ${OGRE_BUILD_DIR}/bin/OgreMain.lib)
 	set(OGRE_READY TRUE)
-	message (STATUS "ogre is installed" )
+	message (STATUS "Ogre is installed" )
 else ()
 	set(OGRE_READY FALSE)
-	message (STATUS "ogre is not installed")
+	message (STATUS "Ogre is not installed" )
 endif ()
+
 #try ogre
 if (NOT OGRE_READY)
 #build ogredeps
@@ -91,15 +73,15 @@ if (NOT OGRE_READY)
 		execute_process ( 
 			COMMAND ${CMAKE_COMMAND} 
 			-G ${CMAKE_GENERATOR}
-			.
-			WORKING_DIRECTORY ${PATH_OGREDEPS}
+			${PATH_OGREDEPS}
+			WORKING_DIRECTORY ${PATH_OGREDEPS_OUT}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 			)
 		reportError (output if error)
 		message (STATUS "Building ogre dependencies for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
-			WORKING_DIRECTORY ${PATH_OGREDEPS}
+			COMMAND ${CMAKE_COMMAND} --build ${PATH_OGREDEPS_OUT} --config ${CONF} --target install
+			WORKING_DIRECTORY ${PATH_OGREDEPS_OUT}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -112,37 +94,39 @@ if (NOT OGRE_READY)
 				-DOGRE_BUILD_SAMPLES:BOOL=FALSE
 				-DOGRE_INSTALL_SAMPLES=OFF
 				-G ${CMAKE_GENERATOR} 
-				.
-				WORKING_DIRECTORY ${PATH_OGRE}
+				${PATH_OGRE}
+				WORKING_DIRECTORY ${OGRE_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ogre for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
-			WORKING_DIRECTORY ${PATH_OGRE}
+			COMMAND ${CMAKE_COMMAND} --build ${OGRE_BUILD_DIR} --config ${CONF} --target install
+			WORKING_DIRECTORY ${OGRE_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
 endif ()
+add_library(MY_OGRE STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/bin/Debug/OgreMain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/bin/Release/OgreMain.lib)
+endif ()
+
 #find ogre_procedural
 message (STATUS "try to find Ogre_procedural" )
-set (ENV{OgreProcedural_HOME} ${PATH_OGRE_PROCEDURAL})
-set (STORED_CMSD ${CMAKE_CURRENT_SOURCE_DIR})
-set (STORED_CIP ${CMAKE_INSTALL_PREFIX})
-set (CMAKE_CURRENT_SOURCE_DIR ${PATH_OGRE_PROCEDURAL})
-set (CMAKE_INSTALL_PREFIX ${PATH_OGRE_PROCEDURAL})
-add_subdirectory(${PATH_OGRE_PROCEDURAL} ${PATH_OGRE_PROCEDURAL} EXCLUDE_FROM_ALL)
-set (CMAKE_CURRENT_SOURCE_DIR ${STORED_CMSD})
-set (CMAKE_INSTALL_PREFIX ${STORED_CIP})
-set (CMAKE_MODULE_PATH ${PATH_OGRE_PROCEDURAL}/CMake/Utils;${PATH_OGRE_PROCEDURAL}/CMake;${PATH_OGRE_PROCEDURAL}/CMake/Packages)
-find_package (OgreProcedural QUIET)
-if (OgreProcedural_FOUND)
+set(PATH_OGRE_PROCEDURAL ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_procedural)
+set(OGRE_PROCEDURAL_READY FALSE)
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/ogre_procedural/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ogre_procedural/build)
+endif()
+set (OGRE_PROCEDURAL_BUILD_DIR ${CMAKE_BINARY_DIR}/ogre_procedural/build)
+if(EXISTS ${OGRE_PROCEDURAL_BUILD_DIR}/bin/debug/OgreProcedural.dll
 	set(OGRE_PROCEDURAL_READY TRUE)
-	message (STATUS "ogre_procedural is installed" )
+	message (STATUS "OgreProcedural is installed" )
 else ()
 	set(OGRE_PROCEDURAL_READY FALSE)
-	message (STATUS "ogre_procedural is not installed")
+	message (STATUS "OgreProcedural is not installed" )
 endif ()
 #try ogre_procedural
 if (NOT OGRE_PROCEDURAL_READY)
@@ -152,29 +136,39 @@ if (NOT OGRE_PROCEDURAL_READY)
 		execute_process ( 
 				COMMAND ${CMAKE_COMMAND} 
 				-G ${CMAKE_GENERATOR} 
-				.
-				WORKING_DIRECTORY ${PATH_OGRE_PROCEDURAL}
+				${PATH_OGRE_PROCEDURAL}
+				WORKING_DIRECTORY ${OGRE_PROCEDURAL_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ogre_procedural for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target install
-			WORKING_DIRECTORY ${PATH_OGRE_PROCEDURAL}
+			COMMAND ${CMAKE_COMMAND} --build ${OGRE_PROCEDURAL_BUILD_DIR} --config ${CONF} --target install
+			WORKING_DIRECTORY ${OGRE_PROCEDURAL_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
 endif ()
+add_library(MY_PROCEDURAL STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_PROCEDURAL PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_PROCEDURAL_BUILD_DIR}/bin/Debug/OgreProcedural_d.lib)
+	set_property(TARGET MY_PROCEDURAL PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_PROCEDURAL_BUILD_DIR}/bin/Release/OgreProcedural.lib)
+endif ()
+
 #find ogre_hydrax
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/ogre_hydrax/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ogre_hydrax/build)
+endif()
+set (OGRE_HYDRAX_BUILD_DIR ${CMAKE_BINARY_DIR}/ogre_hydrax/build/srcdemo)
 #option(APE_PLUGIN_OgreRender_HydraxNew "Use OgreRenderPluginHydraxNew?" ON )
 #if (${APE_PLUGIN_OgreRender_HydraxNew})
 #	set (HYDRAX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax_new)
 #else ()
 	set (HYDRAX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax/src)
-	set (HYDRAX_BIN_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax/srcdemo)
+	#set (HYDRAX_BIN_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_hydrax/srcdemo)
 #endif ()
 set (HYDRAX_READY FALSE)
-if(EXISTS ${HYDRAX_BIN_HOME}/Debug/Hydrax.dll AND EXISTS ${HYDRAX_BIN_HOME}/Release/Hydrax.dll)
+if(EXISTS ${OGRE_HYDRAX_BUILD_DIR}/bin/Debug/Hydrax.dll AND EXISTS ${OGRE_HYDRAX_BUILD_DIR}/bin/Release/Hydrax.dll)
 	set(HYDRAX_READY TRUE)
 	message (STATUS "ogre_hydrax is installed" )
 else ()
@@ -189,14 +183,14 @@ if (NOT HYDRAX_READY)
 				COMMAND ${CMAKE_COMMAND} 
 				-G ${CMAKE_GENERATOR} 
 				${HYDRAX_HOME}
-				WORKING_DIRECTORY ${HYDRAX_HOME}
+				WORKING_DIRECTORY ${OGRE_HYDRAX_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ogre_hydrax for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build ${HYDRAX_HOME} --config ${CONF} --target Hydrax
-			WORKING_DIRECTORY ${HYDRAX_HOME}
+			COMMAND ${CMAKE_COMMAND} --build ${OGRE_HYDRAX_BUILD_DIR} --config ${CONF} --target Hydrax
+			WORKING_DIRECTORY ${OGRE_HYDRAX_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -204,13 +198,18 @@ endif ()
 #use ogre_hydrax
 add_library(MY_HYDRAX STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${HYDRAX_BIN_HOME}/Debug/Hydrax.lib)
-	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${HYDRAX_BIN_HOME}/Release/Hydrax.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_HYDRAX_BUILD_DIR}/bin/Debug/Hydrax.lib)
+	set_property(TARGET MY_HYDRAX PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_HYDRAX_BUILD_DIR}/bin/Release/Hydrax.lib)
 endif ()
+
 #find ogre_skyx
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/ogre_sky/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ogre_sky/build)
+endif()
+set (OGRE_SKY_BUILD_DIR ${CMAKE_BINARY_DIR}/ogre_sky/build)
 set (SKYX_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_skyx)
 set (SKYX_READY FALSE)
-if(EXISTS ${SKYX_HOME}/Debug/Skyx.dll AND EXISTS ${SKYX_HOME}/Release/Skyx.dll)
+if(EXISTS ${OGRE_SKY_BUILD_DIR}/bin/Debug/Skyx.dll AND EXISTS ${OGRE_SKY_BUILD_DIR}/bin/Release/Skyx.dll)
 	set(SKYX_READY TRUE)
 	message (STATUS "ogre_skyx is installed" )
 else ()
@@ -225,14 +224,14 @@ if (NOT SKYX_READY)
 				COMMAND ${CMAKE_COMMAND} 
 				-G ${CMAKE_GENERATOR} 
 				${SKYX_HOME}
-				WORKING_DIRECTORY ${SKYX_HOME}
+				WORKING_DIRECTORY ${OGRE_SKY_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ogre_skyx for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build ${SKYX_HOME} --config ${CONF} --target ALL_BUILD
-			WORKING_DIRECTORY ${SKYX_HOME}
+			COMMAND ${CMAKE_COMMAND} --build ${OGRE_SKY_BUILD_DIR} --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${OGRE_SKY_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -240,8 +239,8 @@ endif ()
 #use ogre_skyx
 add_library(MY_SKYX STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_DEBUG ${SKYX_HOME}/Debug/Skyx.lib)
-	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_RELEASE ${SKYX_HOME}/Release/Skyx.lib)
+	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_SKY_BUILD_DIR}/bin/Debug/Skyx.lib)
+	set_property(TARGET MY_SKYX PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_SKY_BUILD_DIR}/bin/Release/Skyx.lib)
 endif ()
 # apeOgreRenderPlugin
 set (HEADERS
@@ -259,17 +258,8 @@ set (SOURCES
 	apeOgrePointCloud.cpp
 	)
 include_directories(
-	${OGRE_INCLUDE_DIRS}
-	${OGRE_Overlay_INCLUDE_DIRS}
-	${OGRE_HLMS_INCLUDE_DIRS}
-	${OGRE_MeshLodGenerator_INCLUDE_DIRS}
-	${OGRE_Plugin_ParticleFX_INCLUDE_DIRS}
-	${OGRE_RenderSystem_Direct3D9_INCLUDE_DIRS}
-	${OGRE_RenderSystem_Direct3D11_INCLUDE_DIRS}
-	${OGRE_RenderSystem_GL_INCLUDE_DIRS}
-	${OGRE_RTShaderSystem_INCLUDE_DIRS}
-	${OGRE_CgProgramManager_INCLUDE_DIRS}
-	${OgreProcedural_INCLUDE_DIRS}
+	${PATH_OGRE}/include
+	${PATH_OGRE_PROCEDURAL}/include
 	${HYDRAX_HOME}
 	${HYDRAX_HOME}/Modules
 	${HYDRAX_HOME}/Noise
@@ -278,42 +268,41 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 add_library (apeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OGRE_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OGRE_HLMS_LIBRARIES} ${OGRE_MeshLodGenerator_LIBRARIES}
-${OGRE_Plugin_ParticleFX_LIBRARIES} ${OGRE_RenderSystem_Direct3D9_LIBRARIES} ${OGRE_RenderSystem_Direct3D11_LIBRARIES} ${OGRE_RenderSystem_GL_LIBRARIES} ${OGRE_RTShaderSystem_LIBRARIES} ${OGRE_CgProgramManager_LIBRARIES} ${OgreProcedural_LIBRARIES} MY_HYDRAX MY_SKYX )
-if (${APE_PLUGIN_OgreRender_HydraxNew})
-	set_property (TARGET apeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}" HYDRAX_NEW)
-else ()
+target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE MY_PROCEDURAL MY_HYDRAX MY_SKYX )
+#if (${APE_PLUGIN_OgreRender_HydraxNew})
+#	set_property (TARGET apeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}" HYDRAX_NEW)
+#else ()
 	set_property (TARGET apeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-endif()
+#endif()
 
 set_property (TARGET apeOgreRenderPlugin PROPERTY FOLDER "Plugins/Render")
 if (WIN32)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreMain_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreOverlay_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreHLMS_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreMeshLodGenerator_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_GL_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/Plugin_CgProgramManager_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/debug/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OgreProcedural_BINARY_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${HYDRAX_BIN_HOME}/Debug/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${SKYX_HOME}/Debug/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreOverlay.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreHLMS.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreMeshLodGenerator.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_GL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D9.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/Plugin_CgProgramManager.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_BINARY_DIR}/bin/release/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OgreProcedural_BINARY_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${HYDRAX_BIN_HOME}/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${SKYX_HOME}/release/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreMain_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreOverlay_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreHLMS_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreMeshLodGenerator_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/RenderSystem_GL_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreRTShaderSystem_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/Plugin_CgProgramManager_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/debug/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_PROCEDURAL_BUILD_DIR}/bin/debug/OgreProcedural_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_HYDRAX_BUILD_DIR}/bin/Debug/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_SKY_BUILD_DIR}/bin/Debug/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/OgreOverlay.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/OgreHLMS.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/OgreMeshLodGenerator.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/RenderSystem_GL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/RenderSystem_Direct3D9.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/OgreRTShaderSystem.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/Plugin_CgProgramManager.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_BUILD_DIR}/bin/release/cg.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_PROCEDURAL_BUILD_DIR}/bin/release/OgreProcedural.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_HYDRAX_BUILD_DIR}/bin/release/Hydrax.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_SKY_BUILD_DIR}/bin/release/Skyx.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 

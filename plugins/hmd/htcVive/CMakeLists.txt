@@ -37,8 +37,6 @@ if (WIN32)
 endif ()	
 
 include_directories(
-	
-     	
 	${OPENVR_HOME}/headers
 	)
 
@@ -51,18 +49,10 @@ set_property (TARGET apeHtcVivePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DI
 set_property (TARGET apeHtcVivePlugin PROPERTY FOLDER "Plugins/HMD")
 
 if (WIN32)
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/openvr_api.dll)
-		file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/openvr_api.pdb)
-		file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/openvr_api.dll)
-		file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/openvr_api.pdb)
-		file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
+	file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OPENVR_HOME}/bin/win64/openvr_api.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 

@@ -55,14 +55,13 @@ if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport_FromSource})
 					set GN_ARGUMENTS=--ide=vs2017 --sln=cef --filters=//cef/*
 					set GN_DEFINES=proprietary_codecs=true ffmpeg_branding="Chrome"
 					set CEF_ARCHIVE_FORMAT=tar.bz2
-					python ${CMAKE_CURRENT_SOURCE_DIR}\3rdParty\cef_source\automate-git.py --download-dir=${CMAKE_CURRENT_SOURCE_DIR}\3rdParty\cef_source --branch=trunk --x64-build
+					python ${CMAKE_CURRENT_SOURCE_DIR}\3rdParty\cef_source\automate-git.py --download-dir=${CMAKE_BINARY_DIR}\cef_source --branch=trunk --x64-build
 					RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 					)		
 			reportError (output if error)
 			message (STATUS "Cef build succesfully finished")	
 		endif()
 	endif()
-	#todo_apeCefBrowserPlugin copy the generated cef_home\chromium\src\cef\binary_distrib\cef_binary_*.tar.bz2 to the ${CMAKE_CURRENT_SOURCE_DIR}\3rdParty and set CEF_VERSION just like below
 endif ()
 
 if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
@@ -76,9 +75,13 @@ endif()
 # Specify the CEF distribution version.
 
 set(CEF_DISTRIBUTION "cef_binary_${CEF_VERSION}_${CEF_PLATFORM}")
-set(CEF_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/${CEF_DISTRIBUTION})
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/${CEF_DISTRIBUTION}/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/${CEF_DISTRIBUTION}/build)
+endif()
+set(CEF_BUILD_DIR ${CMAKE_BINARY_DIR}/${CEF_DISTRIBUTION}/build)
+set(CEF_HOME ${CEF_BUILD_DIR}/${CEF_DISTRIBUTION})
 set(CEF_DLLWRAPPER_HOME ${CEF_HOME}/libcef_dll)
-set(CEF_DOWNLOAD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/)
+set(CEF_DOWNLOAD_DIR ${CEF_BUILD_DIR})
 # The location where we expect the extracted binary distribution.
 set(CEF_ROOT "${CEF_DOWNLOAD_DIR}/${CEF_DISTRIBUTION}" CACHE INTERNAL "CEF_ROOT")
 # Download and/or extract the binary distribution if necessary.
@@ -108,48 +111,48 @@ execute_process(
 endif()
 if (WIN32)
 	message (STATUS "try to modifying cef build MT build option to MD" )
-	FILE(READ ${CEF_HOME}/cmake/cef_variables.cmake cef_variables_content)
+	FILE(READ ${CEF_BUILD_DIR}/cmake/cef_variables.cmake cef_variables_content)
 	string(REGEX REPLACE "/MT" "/MD" modified_cef_variables_content "${cef_variables_content}" )
-    FILE(WRITE ${CEF_HOME}/cmake/cef_variables.cmake ${modified_cef_variables_content})
+    FILE(WRITE ${CEF_BUILD_DIR}/cmake/cef_variables.cmake ${modified_cef_variables_content})
 	message (STATUS "modifying cef build option ended" )
 endif()
 # Add the CEF binary distribution's cmake/ directory to the module path.
 message (STATUS "try to find cef" )
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_HOME}/cmake")
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_BUILD_DIR}/cmake")
 # Load the CEF configuration (executes FindCEF.cmake).
 find_package(CEF QUIET)
 #use cef
 add_library(MY_CEF_LIBS STATIC IMPORTED)
-set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_HOME}/Debug/libcef.lib)
-set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_HOME}/Release/libcef.lib)
+set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_BUILD_DIR}/Debug/libcef.lib)
+set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_BUILD_DIR}/Release/libcef.lib)
 #build cef_dll_wrapper
 foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 	message (STATUS "Configuring cef_dll_wrapper for ${CONF}, please wait.....")
 	execute_process ( 
 			COMMAND ${CMAKE_COMMAND} 
 			-G ${CMAKE_GENERATOR} 
-			.
-			WORKING_DIRECTORY ${CEF_HOME}
+			${CEF_BUILD_DIR}
+			WORKING_DIRECTORY ${CEF_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 			)		
 	reportError (output if error)
 	message (STATUS "Building cef_dll_wrapper for ${CONF}, please wait.....")
 	execute_process ( 
-		COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target libcef_dll_wrapper
-		WORKING_DIRECTORY ${CEF_HOME}
+		COMMAND ${CMAKE_COMMAND} --build ${CEF_BUILD_DIR} --config ${CONF} --target libcef_dll_wrapper
+		WORKING_DIRECTORY ${CEF_BUILD_DIR}
 		RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 	reportError (output if error)
 	#message (STATUS "Building cefsimple for ${CONF}, please wait.....")
 	#execute_process ( 
-	#	COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target cefsimple
-	#	WORKING_DIRECTORY ${CEF_HOME}
+	#	COMMAND ${CMAKE_COMMAND} --build CEF_BUILD_DIR --config ${CONF} --target cefsimple
+	#	WORKING_DIRECTORY ${CEF_BUILD_DIR}
 	#	RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 	#reportError (output if error)
 endforeach ()
 #use cef_dll_wrapper
 add_library(MY_CEF_DLLWRAPPER_LIBS STATIC IMPORTED)
-set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_HOME}/libcef_dll_wrapper/Debug/libcef_dll_wrapper.lib)
-set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_HOME}/libcef_dll_wrapper/Release/libcef_dll_wrapper.lib)
+set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_BUILD_DIR}/libcef_dll_wrapper/Debug/libcef_dll_wrapper.lib)
+set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_BUILD_DIR}/libcef_dll_wrapper/Release/libcef_dll_wrapper.lib)
 # apeCefBrowserPlugin
 set (HEADERS
 	apeCefBrowserPlugin.h
@@ -166,7 +169,6 @@ set (SOURCES
 	apeCefKeyboardHandlerImpl.cpp
 	)
 include_directories(
-	 
 	${CEF_HOME}
 	${CEF_HOME}/include
 	)
@@ -178,52 +180,20 @@ endif()
 set_property (TARGET apeCefBrowserPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET apeCefBrowserPlugin PROPERTY FOLDER "Plugins/Browser/CefBrowser")
 if (WIN32)
-	# todo_apeCefBrowserPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
-	# Copying the ogre bins to the desired place
-	# debug
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/chrome_elf.dll)
-		file(COPY ${CEF_HOME}/debug/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/d3dcompiler_43.dll)
-		file(COPY ${CEF_HOME}/debug/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/d3dcompiler_47.dll)
-		file(COPY ${CEF_HOME}/debug/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/libcef.dll)
-		file(COPY ${CEF_HOME}/debug/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/libEGL.dll)
-		file(COPY ${CEF_HOME}/debug/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/widevinecdmadapter.dll)
-		file(COPY ${CEF_HOME}/debug/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/icudtl.dat)
-		file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	endif()
-	# release
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/chrome_elf.dll)
-		file(COPY ${CEF_HOME}/release/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/d3dcompiler_43.dll)
-		file(COPY ${CEF_HOME}/release/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/d3dcompiler_47.dll)
-		file(COPY ${CEF_HOME}/release/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/libcef.dll)
-		file(COPY ${CEF_HOME}/release/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/libEGL.dll)
-		file(COPY ${CEF_HOME}/release/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/widevinecdmadapter.dll)
-		file(COPY ${CEF_HOME}/release/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/icudtl.dat)
-		file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	endif()
+	file(COPY ${CEF_HOME}/debug/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/debug/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/debug/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/debug/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/debug/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/debug/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	file(COPY ${CEF_HOME}/release/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/release/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/release/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/release/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/release/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/release/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 endif ()
 
 add_subdirectory (cefSubProcessApp)

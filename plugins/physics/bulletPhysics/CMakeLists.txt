@@ -20,7 +20,10 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/bullet3/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bullet3/build)
+endif()
+set (BULLET_BUILD_DIR ${CMAKE_BINARY_DIR}/bullet3/build)
 set (BULLET_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/bullet3)
 set (BULLET_LIB_READY FALSE)
 
@@ -32,12 +35,12 @@ function (reportError what and when)
 endfunction ()
 
 #find bullet libs
-if(EXISTS ${BULLET_HOME}/lib/Release/BulletDynamics.lib 
-	AND EXISTS ${BULLET_HOME}/lib/Debug/BulletDynamics_Debug.lib
-	AND EXISTS ${BULLET_HOME}/lib/Release/BulletCollision.lib 
-	AND EXISTS ${BULLET_HOME}/lib/Debug/BulletCollision_Debug.lib
-	AND EXISTS ${BULLET_HOME}/lib/Release/LinearMath.lib 
-	AND EXISTS ${BULLET_HOME}/lib/Debug/LinearMath_Debug.lib)
+if(EXISTS ${BULLET_BUILD_DIR}/lib/Release/BulletDynamics.lib 
+	AND EXISTS ${BULLET_BUILD_DIR}/lib/Debug/BulletDynamics_Debug.lib
+	AND EXISTS ${BULLET_BUILD_DIR}/lib/Release/BulletCollision.lib 
+	AND EXISTS ${BULLET_BUILD_DIR}/lib/Debug/BulletCollision_Debug.lib
+	AND EXISTS ${BULLET_BUILD_DIR}/lib/Release/LinearMath.lib 
+	AND EXISTS ${BULLET_BUILD_DIR}/lib/Debug/LinearMath_Debug.lib)
 	set(BULLET_LIB_READY TRUE)
 	message (STATUS "bullet libs are installed" )
 else ()
@@ -58,15 +61,15 @@ if (NOT BULLET_LIB_READY)
 				-DBUILD_UNIT_TESTS:BOOL=OFF
 				-DBUILD_EXTRAS:BOOL=OFF
 				-G ${CMAKE_GENERATOR} 
-				.
-				WORKING_DIRECTORY ${BULLET_HOME}
+				${BULLET_HOME}
+				WORKING_DIRECTORY ${BULLET_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building bullet for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target ALL_BUILD
-			WORKING_DIRECTORY ${BULLET_HOME}
+			COMMAND ${CMAKE_COMMAND} --build ${BULLET_BUILD_DIR} --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${BULLET_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -76,20 +79,20 @@ endif ()
 
 add_library(BULLET_DYNAMICS STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET BULLET_DYNAMICS PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_HOME}/lib/Debug/BulletDynamics_Debug.lib )
-	set_property(TARGET BULLET_DYNAMICS PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_HOME}/lib/Release/BulletDynamics.lib )
+	set_property(TARGET BULLET_DYNAMICS PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_BUILD_DIR}/lib/Debug/BulletDynamics_Debug.lib )
+	set_property(TARGET BULLET_DYNAMICS PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_BUILD_DIR}/lib/Release/BulletDynamics.lib )
 endif ()
 
 add_library(BULLET_COLLISION STATIC IMPORTED)
 if(WIN32)
-	set_property(TARGET BULLET_COLLISION PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_HOME}/lib/Debug/BulletCollision_Debug.lib )
-	set_property(TARGET BULLET_COLLISION PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_HOME}/lib/Release/BulletCollision.lib )
+	set_property(TARGET BULLET_COLLISION PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_BUILD_DIR}/lib/Debug/BulletCollision_Debug.lib )
+	set_property(TARGET BULLET_COLLISION PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_BUILD_DIR}/lib/Release/BulletCollision.lib )
 endif()
 
 add_library(BULLET_LINMATH STATIC IMPORTED)
 if(WIN32)
-	set_property(TARGET BULLET_LINMATH PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_HOME}/lib/Debug/LinearMath_Debug.lib )
-	set_property(TARGET BULLET_LINMATH PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_HOME}/lib/Release/LinearMath.lib )
+	set_property(TARGET BULLET_LINMATH PROPERTY IMPORTED_LOCATION_DEBUG ${BULLET_BUILD_DIR}/lib/Debug/LinearMath_Debug.lib )
+	set_property(TARGET BULLET_LINMATH PROPERTY IMPORTED_LOCATION_RELEASE ${BULLET_BUILD_DIR}/lib/Release/LinearMath.lib )
 endif()
 
 

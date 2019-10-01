@@ -25,6 +25,10 @@
 # Win32KeyBoard.h ln 54 was edited { return KeyCode::KC_UNASSIGNED;/*TODO_apeOisUserInputPlugin Implement OS version*/; }
 # ois patch log begin
 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/ois/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ois/build)
+endif()
+set (OIS_BUILD_DIR ${CMAKE_BINARY_DIR}/ois/build)
 set (OIS_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ois)
 set (OIS_READY FALSE)
 
@@ -37,7 +41,7 @@ function (reportError what and when)
 endfunction ()
 
 #find ois
-if(EXISTS ${OIS_HOME}/Debug/OIS.lib AND EXISTS ${OIS_HOME}/Release/OIS.lib)
+if(EXISTS ${OIS_BUILD_DIR}/Debug/OIS.lib AND EXISTS ${OIS_BUILD_DIR}/Release/OIS.lib)
 	set(OIS_READY TRUE)
 	message (STATUS "ois is installed" )
 else ()
@@ -51,15 +55,15 @@ if (NOT OIS_READY)
 		execute_process ( 
 				COMMAND ${CMAKE_COMMAND} 
 				-G ${CMAKE_GENERATOR} 
-				.
-				WORKING_DIRECTORY ${OIS_HOME}
+				${OIS_HOME}
+				WORKING_DIRECTORY ${OIS_BUILD_DIR}
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 				)		
 		reportError (output if error)
 		message (STATUS "Building ois for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build . --config ${CONF} --target ALL_BUILD
-			WORKING_DIRECTORY ${OIS_HOME}
+			COMMAND ${CMAKE_COMMAND} --build ${OIS_BUILD_DIR} --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${OIS_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
 	endforeach ()
@@ -67,8 +71,8 @@ endif ()
 #use ois
 add_library(MY_OIS STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_OIS PROPERTY IMPORTED_LOCATION_DEBUG ${OIS_HOME}/Debug/OIS.lib)
-	set_property(TARGET MY_OIS PROPERTY IMPORTED_LOCATION_RELEASE ${OIS_HOME}/Release/OIS.lib)
+	set_property(TARGET MY_OIS PROPERTY IMPORTED_LOCATION_DEBUG ${OIS_BUILD_DIR}/Debug/OIS.lib)
+	set_property(TARGET MY_OIS PROPERTY IMPORTED_LOCATION_RELEASE ${OIS_BUILD_DIR}/Release/OIS.lib)
 endif ()
 
 #apeOisUserInputPlugin
@@ -99,16 +103,8 @@ endif ()
 set_property (TARGET apeOisUserInputPlugin PROPERTY FOLDER "Plugins/UserInput")
 
 if (WIN32)
-	# TODO_apeOisUserInputPlugin are there any solution for doing this platform idependent way? maybe ogre install? sdk?
-	# Copying the ois bins to the desired place
-	# debug dlls
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/OIS_d.lib)
-		file(COPY ${OIS_HOME}/Debug/OIS.lib DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	endif()
-	# release dlls
-	if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/OIS.lib)
-		file(COPY ${OIS_HOME}/Release/OIS.lib DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	endif()
+	file(COPY ${OIS_BUILD_DIR}/Debug/OIS.lib DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OIS_BUILD_DIR}/Release/OIS.lib DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 
