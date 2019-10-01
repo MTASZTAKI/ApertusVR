@@ -2439,11 +2439,6 @@ void ape::OgreRenderPlugin::Init()
 	else
 		renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 	
-    
-
-	std::stringstream mediaFolder;
-	mediaFolder << APE_SOURCE_DIR << "/plugins/ogreRender/media";
-
 	mpRoot->setRenderSystem(renderSystem);
 	if (mOgreRenderPluginConfig.renderSystem == "DX9")
 	{
@@ -2451,7 +2446,7 @@ void ape::OgreRenderPlugin::Init()
 		renderSystem->setConfigOption("Multi device memory hint", "Auto hardware buffers management");
 	}
 
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts", "FileSystem");
+	/*Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss", "FileSystem");
@@ -2462,7 +2457,7 @@ void ape::OgreRenderPlugin::Init()
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");*/
 	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
 	

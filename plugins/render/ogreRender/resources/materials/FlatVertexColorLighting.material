@@ -1,0 +1,14 @@
+material FlatVertexColorLighting
+{
+   technique vertexcolourlighting
+   {
+      pass
+      {
+         diffuse vertexcolour
+         specular vertexcolour
+         ambient vertexcolour
+         lighting on
+         shader phong
+      }
+   }
+}

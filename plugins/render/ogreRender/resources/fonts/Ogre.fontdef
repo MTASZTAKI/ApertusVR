@@ -1,0 +1,47 @@
+BlueHighway
+{
+	type 		truetype
+	source 		fonts/bluebold.ttf
+	size 		32
+	resolution 	100
+}
+
+Starcraft
+{
+	type 		truetype
+	source 		starcraft.ttf
+	size 		32
+	resolution 	100
+}
+
+NeuroChrome
+{
+	type 		truetype
+	source 		neurochr.ttf
+	size 		32
+	resolution 	100
+}
+
+JokeWood
+{
+	type 		truetype
+	source 		JOKEWOOD.ttf
+	size 		32
+	resolution 	100
+}
+
+Xpression
+{
+	type 		truetype
+	source 		XPRSSION.ttf
+	size 		32
+	resolution 	100
+}
+
+Newcastle
+{
+	type 		truetype
+	source 		Newcastle.ttf
+	size 		32
+	resolution 	100
+}
