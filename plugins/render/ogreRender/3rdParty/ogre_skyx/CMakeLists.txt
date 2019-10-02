@@ -80,15 +80,15 @@ add_definitions(-DSKYX_LIB -D_USRDLL)
 #endif()
 
 #set ogre
-set (OGRE_HOME ../ogre)
 include_directories(
-	${OGRE_HOME}/ogremain/include
-	${OGRE_HOME}/include)
+	$ENV{OGRE_SDK}/include/ogre
+	$ENV{OGRE_BUILD}/include
+	)
 #use ogre
 add_library(MY_OGRE STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_HOME}/lib/Debug/OgreMain_d.lib)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_HOME}/lib/Release/OgreMain.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG $ENV{OGRE_SDK}/lib/Debug/OgreMain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE $ENV{OGRE_SDK}/lib/Release/OgreMain.lib)
 endif ()
 
 if (UNIX)

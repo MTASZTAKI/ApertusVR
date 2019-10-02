@@ -28,17 +28,6 @@ if(APPLE)
     set(RUNPATH "${CMAKE_CURRENT_SOURCE_DIR}/RunPath")
 endif(APPLE)
 
-#set ogre
-set (OGRE_HOME ../../ogre)
-include_directories(
-	${OGRE_HOME}/ogremain/include
-	${OGRE_HOME}/include)
-#use ogre
-add_library(MY_OGRE STATIC IMPORTED)
-if (WIN32)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_HOME}/lib/Debug/OgreMain_d.lib)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_HOME}/lib/Release/OgreMain.lib)
-endif ()
 
 set(HEADER_FILES
     CfgFileManager.h
@@ -96,12 +85,22 @@ set(SOURCE_FILES
 SET(HYDRAX_VERSION 0)
 SET(HYDRAX_VERSION_MAJOR 1)
 
-include_directories (.)
+add_library(MY_OGRE STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG $ENV{OGRE_SDK}/lib/Debug/OgreMain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE $ENV{OGRE_SDK}/lib/Release/OgreMain.lib)
+endif ()
+
+include_directories(
+	$ENV{OGRE_SDK}/include/ogre
+	$ENV{OGRE_BUILD}/include
+	$ENV{OGRE_HYDRAX_HOME}
+	)
 # Terrain Scene Manager
 #include_directories ( ${OGITOR_SM_INCLUDES} )
 
 add_library(Hydrax SHARED ${HEADER_FILES} ${SOURCE_FILES}  )
-SET(LIBRARY_OUTPUT_PATH  ../srcdemo/${CMAKE_BUILD_TYPE})
+SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BUILD_TYPE})
 
 set_target_properties(PROPERTIES
         INSTALL_RPATH ${OGRE_INSTALL_DIR}/lib/OGRE  )
