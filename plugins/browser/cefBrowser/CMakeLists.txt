@@ -131,7 +131,7 @@ foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 	execute_process ( 
 			COMMAND ${CMAKE_COMMAND} 
 			-G ${CMAKE_GENERATOR} 
-			${CEF_BUILD_DIR}
+			${CEF_HOME}
 			WORKING_DIRECTORY ${CEF_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
 			)		
@@ -186,14 +186,26 @@ if (WIN32)
 	file(COPY ${CEF_HOME}/debug/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${CEF_HOME}/debug/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${CEF_HOME}/debug/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	file(COPY ${CEF_HOME}/resources/locales DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/cef.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/cef_100_percent.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/cef_200_percent.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/cef_extensions.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/devtools_resources.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CEF_HOME}/resources/icudtl.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${CEF_HOME}/release/chrome_elf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${CEF_HOME}/release/d3dcompiler_43.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${CEF_HOME}/release/d3dcompiler_47.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${CEF_HOME}/release/libcef.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${CEF_HOME}/release/libEGL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${CEF_HOME}/release/widevinecdmadapter.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${CEF_HOME}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	file(COPY ${CEF_HOME}/resources/locales DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/cef.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/cef_100_percent.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/cef_200_percent.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/cef_extensions.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/devtools_resources.pak DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${CEF_HOME}/resources/icudtl.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 add_subdirectory (cefSubProcessApp)
