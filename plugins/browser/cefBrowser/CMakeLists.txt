@@ -111,9 +111,9 @@ execute_process(
 endif()
 if (WIN32)
 	message (STATUS "try to modifying cef build MT build option to MD" )
-	FILE(READ ${CEF_BUILD_DIR}/cmake/cef_variables.cmake cef_variables_content)
+	FILE(READ ${CEF_HOME}/cmake/cef_variables.cmake cef_variables_content)
 	string(REGEX REPLACE "/MT" "/MD" modified_cef_variables_content "${cef_variables_content}" )
-    FILE(WRITE ${CEF_BUILD_DIR}/cmake/cef_variables.cmake ${modified_cef_variables_content})
+    FILE(WRITE ${CEF_HOME}/cmake/cef_variables.cmake ${modified_cef_variables_content})
 	message (STATUS "modifying cef build option ended" )
 endif()
 # Add the CEF binary distribution's cmake/ directory to the module path.
