@@ -39,7 +39,7 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 #find assimp
-if(EXISTS ${ASSIMP_BUILD_DIR}/lib/Debug/assimp-vc141-mtd.lib AND EXISTS ${ASSIMP_BUILD_DIR}/lib/Release/assimp-vc141-mt.lib)
+if(EXISTS ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc141-mtd.lib AND EXISTS ${ASSIMP_BUILD_DIR}/code/Release/assimp-vc141-mt.lib)
 	set(ASSIMP_READY TRUE)
 	message (STATUS "assimp is installed" )
 else ()
@@ -60,7 +60,7 @@ if (NOT ASSIMP_READY)
 		reportError (output if error)
 		message (STATUS "Building assimp for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build ASSIMP_BUILD_DIR --config ${CONF} --target ALL_BUILD
+			COMMAND ${CMAKE_COMMAND} --build ${ASSIMP_BUILD_DIR} --config ${CONF} --target ALL_BUILD
 			WORKING_DIRECTORY ${ASSIMP_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
@@ -69,8 +69,8 @@ endif ()
 #use assimp
 add_library(MY_ASSIMP STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_DEBUG ${ASSIMP_BUILD_DIR}/lib/Debug/assimp-vc141-mtd.lib)
-	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_RELEASE ${ASSIMP_BUILD_DIR}/lib/Release/assimp-vc141-mt.lib)
+	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_DEBUG ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc141-mtd.lib)
+	set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_RELEASE ${ASSIMP_BUILD_DIR}/code/Release/assimp-vc141-mt.lib)
 endif ()
 
 #apeAssimpAssetLoaderPlugin
@@ -98,8 +98,8 @@ target_link_libraries (apeAssimpAssetLoaderPlugin apePluginManager apeSceneManag
 set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins/AssetImporter")
 
 if (WIN32)
-	file(COPY ${ASSIMP_BUILD_DIR}/bin/Debug/assimp-vc141-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${ASSIMP_BUILD_DIR}/bin/Release/assimp-vc141-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc141-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${ASSIMP_BUILD_DIR}/code/Release/assimp-vc141-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 
