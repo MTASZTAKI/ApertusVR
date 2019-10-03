@@ -110,10 +110,47 @@ if (NOT OGRE_READY)
 		reportError (output if error)
 	endforeach ()
 endif ()
+
 add_library(MY_OGRE STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/bin/Debug/OgreMain_d.lib)
-	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/bin/Release/OgreMain.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/sdk/lib/Debug/OgreMain_d.lib)
+	set_property(TARGET MY_OGRE PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/sdk/lib/Release/OgreMain.lib)
+endif ()
+
+add_library(MY_OGRE_OVERLAY STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_OVERLAY PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/sdk/lib/Debug/OgreOverlay_d.lib)
+	set_property(TARGET MY_OGRE_OVERLAY PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/sdk/lib/Release/OgreOverlay.lib)
+endif ()
+
+add_library(MY_OGRE_RTSHADER STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_RTSHADER PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/sdk/lib/Debug/OgreRTShaderSystem_d.lib)
+	set_property(TARGET MY_OGRE_RTSHADER PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/sdk/lib/Release/OgreRTShaderSystem.lib)
+endif ()
+
+add_library(MY_OGRE_HLMS STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_HLMS PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/sdk/lib/Debug/OgreHLMS_d.lib)
+	set_property(TARGET MY_OGRE_HLMS PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/sdk/lib/Release/OgreHLMS.lib)
+endif ()
+
+add_library(MY_OGRE_LOD STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_LOD PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/sdk/lib/Debug/OgreMeshLodGenerator_d.lib)
+	set_property(TARGET MY_OGRE_LOD PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/sdk/lib/Release/OgreMeshLodGenerator.lib)
+endif ()
+
+add_library(MY_OGRE_RENDER_GL STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_RENDER_GL PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/lib/Debug/RenderSystem_GL_d.lib)
+	set_property(TARGET MY_OGRE_RENDER_GL PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/lib/Release/RenderSystem_GL.lib)
+endif ()
+
+add_library(MY_OGRE_RENDER_D11 STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE_RENDER_D11 PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_BUILD_DIR}/lib/Debug/RenderSystem_Direct3D11_d.lib)
+	set_property(TARGET MY_OGRE_RENDER_D11 PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_BUILD_DIR}/lib/Release/RenderSystem_Direct3D11.lib)
 endif ()
 
 #find ogre_procedural
@@ -285,7 +322,8 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 add_library (apeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE MY_PROCEDURAL MY_HYDRAX MY_SKYX )
+target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE MY_OGRE_OVERLAY MY_OGRE_RTSHADER MY_OGRE_HLMS MY_OGRE_LOD
+ MY_OGRE_RENDER_GL MY_OGRE_RENDER_D11 MY_PROCEDURAL MY_HYDRAX MY_SKYX )
 #if (${APE_PLUGIN_OgreRender_HydraxNew})
 #	set_property (TARGET apeOgreRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}" HYDRAX_NEW)
 #else ()
