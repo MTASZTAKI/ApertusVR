@@ -40,9 +40,8 @@ set (SOURCES
 	)
 
 include_directories(
-	
 	${JS_API_COMMON_DIR}
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	${NODE_SOURCE_DIR}/src
 	${NODE_SOURCE_DIR}/deps/uv/include
 	${NODE_SOURCE_DIR}/deps/v8/include

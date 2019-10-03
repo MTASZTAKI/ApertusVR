@@ -20,6 +20,41 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+
+message(STATUS "ApePlugins: npm version: ${RESULT_VARIABLE}")
+execute_process(
+	COMMAND cmd /c "npm --version"
+	RESULT_VARIABLE BUILD_RESULT
+)
+
+if (${BUILD_RESULT} EQUAL 0)
+	message(STATUS "ApePlugins: npm is installed.")
+else ()
+	message("ApePlugins: npm is not installed, starting installer...")
+
+	if (HOST_ARCH_X64)
+		execute_process(
+			COMMAND cmd /c ${NODE_INSTALLER_X64_PATH}
+			RESULT_VARIABLE BUILD_RESULT
+		)
+	elseif (HOST_ARCH_X86)
+		execute_process(
+			COMMAND cmd /c ${NODE_INSTALLER_X86_PATH}
+			RESULT_VARIABLE BUILD_RESULT
+		)
+	endif ()
+
+	if (${BUILD_RESULT} EQUAL 0)
+		message(STATUS "ApePlugins: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
+		message(FATAL_ERROR "ApePlugins: Node-installer: npm should be added to path by the installer. Please restart CMake gui and reconfigure!")
+	else ()
+		message(FATAL_ERROR "ApePlugins: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
+	endif ()
+
+endif ()
+
+option(APE_JSAPI_FROM_SOURCE "Use JS_API_FROM_SOURCE?" OFF )
+if (${APE_JSAPI_FROM_SOURCE})
 # python
 find_package(PythonInterp)
 message("Python: version: ${PYTHON_VERSION_STRING}")
@@ -469,50 +504,11 @@ if (WIN32)
 
 		endif ()
 
-		#--------------------------------------------------------------------------------------------------------
-
-		###
-		### NPM
-		###
-
-		message(STATUS "ApePlugins: npm version: ${RESULT_VARIABLE}")
-		execute_process(
-			COMMAND cmd /c "npm --version"
-			RESULT_VARIABLE BUILD_RESULT
-		)
-
-		if (${BUILD_RESULT} EQUAL 0)
-			message(STATUS "ApePlugins: npm is installed.")
-		else ()
-			message("ApePlugins: npm is not installed, starting installer...")
-
-			if (HOST_ARCH_X64)
-				execute_process(
-					COMMAND cmd /c ${NODE_INSTALLER_X64_PATH}
-					RESULT_VARIABLE BUILD_RESULT
-				)
-			elseif (HOST_ARCH_X86)
-				execute_process(
-					COMMAND cmd /c ${NODE_INSTALLER_X86_PATH}
-					RESULT_VARIABLE BUILD_RESULT
-				)
-			endif ()
-
-			if (${BUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
-				message(FATAL_ERROR "ApePlugins: Node-installer: npm should be added to path by the installer. Please restart CMake gui and reconfigure!")
-			else ()
-				message(FATAL_ERROR "ApePlugins: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
-			endif ()
-
-		endif ()
-
 	endif ()
 endif ()
 
 # TODO: build node js under unix
-
-
+endif()
 
 add_subdirectory (nodeJsExtension)
 add_subdirectory (nodeJsPlugin)

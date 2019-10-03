@@ -20,7 +20,4 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-option(APE_JSAPI "Use JS_API?" OFF )
-if (${APE_JSAPI})
-	add_subdirectory (jsAPI)
-endif ()
+add_subdirectory (jsAPI)
