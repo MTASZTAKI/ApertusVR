@@ -60,10 +60,10 @@ set (HEADERS
 
 set (SOURCES
 	bindings.cpp
-    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Binding.cc
-    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/v8/Buffer.cc
-    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/common.cc
-    ${PROJECT_SOURCE_DIR}/3rdParty/nbind/src/reflect.cc
+    ${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/src/v8/Binding.cc
+    ${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/src/v8/Buffer.cc
+    ${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/src/common.cc
+    ${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/src/reflect.cc
 	)
 
 include_directories(
@@ -76,10 +76,10 @@ include_directories(
 	${NODE_SOURCE_DIR}/src
 	${NODE_SOURCE_DIR}/deps/uv/include
 	${NODE_SOURCE_DIR}/deps/v8/include
-	${PROJECT_SOURCE_DIR}/3rdParty/nbind/include
-	${PROJECT_SOURCE_DIR}/3rdParty/nan
-	${PROJECT_SOURCE_DIR}/3rdParty/raknet/Source
-	${PROJECT_SOURCE_DIR}/plugins/jsAPI/nodeJsExtension/wrappers
+	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/include
+	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nan
+	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/raknet/Source
+	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/nodeJsExtension/wrappers
 	 	
 	)
 
