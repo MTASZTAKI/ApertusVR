@@ -151,13 +151,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _0bodyMaterial;
 		if (_0bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("0BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _0bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("0BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_0bodyMaterialManualPass->setShininess(15.0f);
-				_0bodyMaterialManualPass->setDiffuseColor(ape::Color(0.0f, 1.0f, 0.0f));
-				_0bodyMaterialManualPass->setSpecularColor(ape::Color(0.0f, 1.0f, 0.0f));
-				_0bodyMaterial->setPass(_0bodyMaterialManualPass);
-			}
+			_0bodyMaterial->setDiffuseColor(ape::Color(0.0f, 1.0f, 0.0f));
+			_0bodyMaterial->setSpecularColor(ape::Color(0.0f, 1.0f, 0.0f));
 		}
 
 		for (int i = 0; i < 25; i++)
@@ -185,13 +180,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _1bodyMaterial;
 		if (_1bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("1BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _1bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("1BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_1bodyMaterialManualPass->setShininess(15.0f);
-				_1bodyMaterialManualPass->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
-				_1bodyMaterialManualPass->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
-				_1bodyMaterial->setPass(_1bodyMaterialManualPass);
-			}
+			_1bodyMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
+			_1bodyMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 		}
 
 		for (int i = 0; i < 25; i++)
@@ -219,13 +209,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _2bodyMaterial;
 		if (_2bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("2BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _2bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("2BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_2bodyMaterialManualPass->setShininess(15.0f);
-				_2bodyMaterialManualPass->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
-				_2bodyMaterialManualPass->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
-				_2bodyMaterial->setPass(_2bodyMaterialManualPass);
-			}
+			_2bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+			_2bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 		}
 
 		for (int i = 0; i < 25; i++)
@@ -253,13 +238,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _3bodyMaterial;
 		if (_3bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("3BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _3bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("3BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_3bodyMaterialManualPass->setShininess(15.0f);
-				_3bodyMaterialManualPass->setDiffuseColor(ape::Color(1.0f, 1.0f, 0.0f));
-				_3bodyMaterialManualPass->setSpecularColor(ape::Color(1.0f, 1.0f, 0.0f));
-				_3bodyMaterial->setPass(_3bodyMaterialManualPass);
-			}
+			_3bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+			_3bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 		}
 
 		for (int i = 0; i < 25; i++)
@@ -287,13 +267,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _4bodyMaterial;
 		if (_4bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("4BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _4bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("4BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_4bodyMaterialManualPass->setShininess(15.0f);
-				_4bodyMaterialManualPass->setDiffuseColor(ape::Color(1.0f, 0.0f, 1.0f));
-				_4bodyMaterialManualPass->setSpecularColor(ape::Color(1.0f, 0.0f, 1.0f));
-				_4bodyMaterial->setPass(_4bodyMaterialManualPass);
-			}
+			_4bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+			_4bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 		}
 
 		for (int i = 0; i < 25; i++)
@@ -321,13 +296,8 @@ void ape::KinectPlugin::Init()
 		std::shared_ptr<ape::IManualMaterial> _5bodyMaterial;
 		if (_5bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("5BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
-			if (auto _5bodyMaterialManualPass = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->createEntity("5BodyMaterialManualPass", ape::Entity::PASS_MANUAL).lock()))
-			{
-				_5bodyMaterialManualPass->setShininess(15.0f);
-				_5bodyMaterialManualPass->setDiffuseColor(ape::Color(0.0f, 1.0f, 1.0f));
-				_5bodyMaterialManualPass->setSpecularColor(ape::Color(0.0f, 1.0f, 1.0f));
-				_5bodyMaterial->setPass(_5bodyMaterialManualPass);
-			}
+			_5bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+			_5bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 		}
 
 		for (int i = 0; i < 25; i++)

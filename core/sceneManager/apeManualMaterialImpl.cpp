@@ -33,8 +33,6 @@ ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated
 	mEmissiveColor = ape::Color();
 	mTexture = ape::TextureWeakPtr();
 	mTextureName = std::string();
-	mPass = ape::PassWeakPtr();
-	mPassName = std::string();
 	mCullingMode = ape::Material::CullingMode::INVALID_CM;
 	mManualCullingMode = ape::Material::ManualCullingMode::INVALID_MCM;
 	mDepthCheckEnabled = false;
@@ -74,7 +72,7 @@ void ape::ManualMaterialImpl::setEmissiveColor(ape::Color emissive)
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
 }
 
-void ape::ManualMaterialImpl::setPassTexture(ape::TextureWeakPtr texture)
+void ape::ManualMaterialImpl::setTexture(ape::TextureWeakPtr texture)
 {
 	if (auto textureSP = texture.lock())
 	{
@@ -86,21 +84,9 @@ void ape::ManualMaterialImpl::setPassTexture(ape::TextureWeakPtr texture)
 		mTexture = ape::TextureWeakPtr();
 }
 
-ape::TextureWeakPtr ape::ManualMaterialImpl::getPassTexture()
+ape::TextureWeakPtr ape::ManualMaterialImpl::getTexture()
 {
 	return mTexture;
-}
-
-void ape::ManualMaterialImpl::setPass(ape::PassWeakPtr pass)
-{
-	if (auto passSP = pass.lock())
-	{
-		mPass = pass;
-		mPassName = passSP->getName();
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_PASS));
-	}
-	else
-		mPass = ape::PassWeakPtr();
 }
 
 void ape::ManualMaterialImpl::setCullingMode(ape::Material::CullingMode cullingMode)
@@ -109,7 +95,7 @@ void ape::ManualMaterialImpl::setCullingMode(ape::Material::CullingMode cullingM
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_CULLINGMODE));
 }
 
-void ape::ManualMaterialImpl::setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType)
+void ape::ManualMaterialImpl::setSceneBlending(ape::Material::SceneBlendingType sceneBlendingType)
 {
 	mSceneBlendingType = sceneBlendingType;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_SCENEBLENDING));
@@ -178,7 +164,6 @@ RakNet::RM3SerializationResult ape::ManualMaterialImpl::Serialize(RakNet::Serial
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSpecularColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAmbientColor);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mEmissiveColor);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mPassName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCullingMode);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mManualCullingMode);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mDepthCheckEnabled);
@@ -194,7 +179,6 @@ void ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	RakNet::RakString passName;
 	RakNet::RakString textureName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mDiffuseColor))
 	{
@@ -215,19 +199,6 @@ void ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 	{
 		//APE_LOG_DEBUG("Deserialize mEmissiveColor " << mEmissiveColor.toString());
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_EMISSIVE));
-	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, passName))
-	{
-		if (auto entity = mpSceneManager->getEntity(passName.C_String()).lock())
-		{
-			if (entity->getName() == mName && entity->getType() == mType)
-			{
-				APE_LOG_DEBUG("Deserialize passName " << passName.C_String());
-				mPass = std::static_pointer_cast<ape::Pass>(entity);
-				mPassName = passName.C_String();
-				mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_PASS));
-			}
-		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCullingMode))
 	{

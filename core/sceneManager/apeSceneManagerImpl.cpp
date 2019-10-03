@@ -39,8 +39,6 @@ SOFTWARE.*/
 #include "apeFileMaterialImpl.h"
 #include "apeCameraImpl.h"
 #include "apeManualMaterialImpl.h"
-#include "apePbsPassImpl.h"
-#include "apeManualPassImpl.h"
 #include "apeManualTextureImpl.h"
 #include "apeBrowserImpl.h"
 #include "apeUnitTextureImpl.h"
@@ -277,26 +275,6 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
-		case ape::Entity::PASS_PBS:
-		{
-			APE_LOG_TRACE("type: PASS_PBS");
-			auto entity = std::make_shared<ape::PbsPassImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isReplicaHost());
-			mEntities.insert(std::make_pair(name, entity));
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::PASS_PBS_CREATE));
-			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-				replicaManager->Reference(entity.get());
-			return entity;
-		}
-		case ape::Entity::PASS_MANUAL:
-		{
-			APE_LOG_TRACE("type: PASS_MANUAL");
-			auto entity = std::make_shared<ape::ManualPassImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isReplicaHost());
-			mEntities.insert(std::make_pair(name, entity));
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::PASS_MANUAL_CREATE));
-			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-				replicaManager->Reference(entity.get());
-			return entity;
-		}
 		case ape::Entity::TEXTURE_MANUAL:
 		{
 			APE_LOG_TRACE("type: TEXTURE_MANUAL");
@@ -447,12 +425,6 @@ void ape::SceneManagerImpl::deleteEntity(std::string name)
 			break;
 		case ape::Entity::MATERIAL_MANUAL:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::MATERIAL_MANUAL_DELETE));
-			break;
-		case ape::Entity::PASS_PBS:
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::PASS_PBS_DELETE));
-			break;
-		case ape::Entity::PASS_MANUAL:
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::PASS_MANUAL_DELETE));
 			break;
 		case ape::Entity::TEXTURE_MANUAL:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::TEXTURE_MANUAL_DELETE));

@@ -45,8 +45,6 @@ set(HEADERS
 	apeTubeGeometryImpl.h
 	apeSphereGeometryImpl.h
 	apeFileMaterialImpl.h
-	apePbsPassImpl.h
-	apeManualPassImpl.h
 	apeManualMaterialImpl.h
 	apeManualTextureImpl.h
 	apeUnitTextureImpl.h
@@ -83,8 +81,6 @@ set(SOURCES
 	apeTubeGeometryImpl.cpp
 	apeSphereGeometryImpl.cpp
 	apeFileMaterialImpl.cpp
-	apePbsPassImpl.cpp
-	apeManualPassImpl.cpp
 	apeManualMaterialImpl.cpp
 	apeManualTextureImpl.cpp
 	apeUnitTextureImpl.cpp

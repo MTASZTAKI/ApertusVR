@@ -26,10 +26,10 @@ SOFTWARE.*/
 #include <iostream>
 #include <map>
 #include <string>
-#include "managers/apeIEventManager.h"
-#include "managers/apeISceneManager.h"
-#include "managers/apeICoreConfig.h"
-#include "macros/userInput/apeUserInputMacro.h"
+#include "apeIEventManager.h"
+#include "apeISceneManager.h"
+#include "apeICoreConfig.h"
+#include "apeUserInputMacro.h"
 #include "apeBoxGeometryJsBind.h"
 #include "apeFileGeometryJsBind.h"
 #include "apeIndexedLineSetGeometryJsBind.h"
@@ -48,8 +48,6 @@ SOFTWARE.*/
 #include "apeJsBindVector3.h"
 #include "apeJsBindVector2.h"
 #include "apeManualMaterialJsBind.h"
-#include "apeManualPassJsBind.h"
-#include "apePbsPassJsBind.h"
 #include "apePointCloudJsBind.h"
 #include "ApeFileTextureJsBind.h"
 #include "apePlaneGeometryJsBind.h"
@@ -553,74 +551,6 @@ public:
 		return success;
 	}
 
-	PbsPassJsPtr createPbsPass(std::string name)
-	{
-		APE_LOG_FUNC_ENTER();
-		APE_LOG_FUNC_LEAVE();
-		return PbsPassJsPtr(mpSceneManager->createEntity(name, ape::Entity::PASS_PBS));
-	}
-
-	bool getPbsPass(std::string name, nbind::cbFunction &done)
-	{
-		APE_LOG_FUNC_ENTER();
-		bool success = false;
-		auto entityWeakPtr = mpSceneManager->getEntity(name);
-		if (auto entity = entityWeakPtr.lock())
-		{
-			if (auto pbsPass = std::dynamic_pointer_cast<ape::IPbsPass>(entity))
-			{
-				success = true;
-				done(!success, PbsPassJsPtr(entityWeakPtr));
-			}
-			else
-			{
-				success = false;
-				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
-			}
-		}
-		else
-		{
-			success = false;
-			done(!success, mErrorMap[ErrorType::NULLPTR]);
-		}
-		APE_LOG_FUNC_LEAVE();
-		return success;
-	}
-
-	ManualPassJsPtr createManualPass(std::string name)
-	{
-		APE_LOG_FUNC_ENTER();
-		APE_LOG_FUNC_LEAVE();
-		return ManualPassJsPtr(mpSceneManager->createEntity(name, ape::Entity::PASS_MANUAL));
-	}
-
-	bool getManualPass(std::string name, nbind::cbFunction &done)
-	{
-		APE_LOG_FUNC_ENTER();
-		bool success = false;
-		auto entityWeakPtr = mpSceneManager->getEntity(name);
-		if (auto entity = entityWeakPtr.lock())
-		{
-			if (auto ManualPass = std::dynamic_pointer_cast<ape::IManualPass>(entity))
-			{
-				success = true;
-				done(!success, ManualPassJsPtr(entityWeakPtr));
-			}
-			else
-			{
-				success = false;
-				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
-			}
-		}
-		else
-		{
-			success = false;
-			done(!success, mErrorMap[ErrorType::NULLPTR]);
-		}
-		APE_LOG_FUNC_LEAVE();
-		return success;
-	}
-
 	PointCloudJsPtr createPointCloud(std::string name)
 	{
 		APE_LOG_FUNC_ENTER();
@@ -714,12 +644,6 @@ NBIND_CLASS(JsBindManager)
 
 	method(createManualMaterial);
 	method(getManualMaterial);
-
-	method(createPbsPass);
-	method(getPbsPass);
-
-	method(createManualPass);
-	method(getManualPass);
 
 	method(createPointCloud);
 	method(getPointCloud);

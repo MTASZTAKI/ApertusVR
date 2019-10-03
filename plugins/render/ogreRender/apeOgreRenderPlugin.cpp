@@ -30,8 +30,6 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_PBS, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::PASS_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&OgreRenderPlugin::eventCallBack, this, std::placeholders::_1));
@@ -1177,7 +1175,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::MATERIAL_FILE_TEXTURE:
 				{
-					if (auto texture = materialFile->getPassTexture().lock())
+					if (auto texture = materialFile->getTexture().lock())
 					{
 						auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
 						if (!ogreTexture.isNull() && !ogreMaterial.isNull())
@@ -1228,20 +1226,9 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 				case ape::Event::Type::MATERIAL_MANUAL_EMISSIVE:
 					ogreMaterial->setSelfIllumination(ConversionToOgre(materialManual->getEmissiveColor()));
 					break;
-				case ape::Event::Type::MATERIAL_MANUAL_PASS:
-					{
-						if (auto pass = materialManual->getPass().lock())
-						{
-							Ogre::MaterialManager::getSingleton().remove(materialName);
-							auto ogrePassMaterial = Ogre::MaterialManager::getSingleton().getByName(pass->getName());
-							if (!ogrePassMaterial.isNull())
-								ogrePassMaterial->clone(materialName);
-						}
-					}
-					break;
 				case ape::Event::Type::MATERIAL_MANUAL_TEXTURE:
 					{
-						if (auto texture = materialManual->getPassTexture().lock())
+						if (auto texture = materialManual->getTexture().lock())
 						{
 							if (texture->getType() == ape::Entity::Type::TEXTURE_MANUAL)
 							{
@@ -1314,7 +1301,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					{
 						ogreMaterial->setCullingMode(ape::ConversionToOgre(materialManual->getCullingMode()));
 						ogreMaterial->setSceneBlending(ape::ConversionToOgre(materialManual->getSceneBlendingType()));
-						if (materialManual->getSceneBlendingType() == ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+						if (materialManual->getSceneBlendingType() == ape::Material::SceneBlendingType::TRANSPARENT_ALPHA)
 							ogreMaterial->setDepthWriteEnabled(false);
 					}
 					break;
@@ -1340,125 +1327,6 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							overlay->hide();
 					}
 					break;
-				}
-			}
-		}
-		else if (event.group == ape::Event::Group::PASS_PBS)
-		{
-			if (auto passPbs = std::static_pointer_cast<ape::IPbsPass>(mpSceneManager->getEntity(event.subjectName).lock()))
-			{
-				std::string passPbsName = passPbs->getName();
-				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passPbsName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-				Ogre::MaterialPtr ogrePbsPassMaterial = result.first.staticCast<Ogre::Material>();
-				if (!ogrePbsPassMaterial.isNull())
-				{
-					switch (event.type)
-					{
-					case ape::Event::Type::PASS_PBS_CREATE:
-					{
-						ogrePbsPassMaterial->createTechnique()->createPass();
-						Ogre::PbsMaterial* ogrePbsMaterial = new Ogre::PbsMaterial();
-						mPbsMaterials[passPbsName] = ogrePbsMaterial;
-					}
-						break;
-					case ape::Event::Type::PASS_PBS_AMBIENT:
-						ogrePbsPassMaterial->setAmbient(ConversionToOgre(passPbs->getAmbientColor()));
-						break;
-					case ape::Event::Type::PASS_PBS_DIFFUSE:
-						ogrePbsPassMaterial->setDiffuse(ConversionToOgre(passPbs->getDiffuseColor()));
-						break;
-					case ape::Event::Type::PASS_PBS_EMISSIVE:
-						ogrePbsPassMaterial->setSelfIllumination(ConversionToOgre(passPbs->getEmissiveColor()));
-						break;
-					case ape::Event::Type::PASS_PBS_SPECULAR:
-						ogrePbsPassMaterial->setSpecular(ConversionToOgre(passPbs->getSpecularColor()));
-						break;
-					case ape::Event::Type::PASS_PBS_SHININESS:
-						ogrePbsPassMaterial->setShininess(passPbs->getShininess());
-						break;
-					case ape::Event::Type::PASS_PBS_ALBEDO:
-						mPbsMaterials[passPbsName]->setAlbedo(ConversionToOgre(passPbs->getAlbedo()));
-						break;
-					case ape::Event::Type::PASS_PBS_F0:
-						mPbsMaterials[passPbsName]->setF0(ConversionToOgre(passPbs->getF0()));
-						break;
-					case ape::Event::Type::PASS_PBS_ROUGHNESS:
-						mPbsMaterials[passPbsName]->setRoughness(passPbs->getRoughness());
-						break;
-					case ape::Event::Type::PASS_PBS_LIGHTROUGHNESSOFFSET:
-						mPbsMaterials[passPbsName]->setLightRoughnessOffset(passPbs->getLightRoughnessOffset());
-						break;
-					case ape::Event::Type::PASS_PBS_DELETE:
-						;
-						break;
-					}
-				}
-			}
-		}
-		else if (event.group == ape::Event::Group::PASS_MANUAL)
-		{
-			if (auto passManual = std::static_pointer_cast<ape::IManualPass>(mpSceneManager->getEntity(event.subjectName).lock()))
-			{
-				std::string passManualName = passManual->getName();
-				auto result = Ogre::MaterialManager::getSingleton().createOrRetrieve(passManualName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-				Ogre::MaterialPtr ogreManualPassMaterial = result.first.staticCast<Ogre::Material>();
-				if (!ogreManualPassMaterial.isNull())
-				{
-					switch (event.type)
-					{
-					case ape::Event::Type::PASS_MANUAL_CREATE:
-						ogreManualPassMaterial->createTechnique()->createPass();
-						break;
-					case ape::Event::Type::PASS_MANUAL_AMBIENT:
-						ogreManualPassMaterial->setAmbient(ConversionToOgre(passManual->getAmbientColor()));
-						break;
-					case ape::Event::Type::PASS_MANUAL_DIFFUSE:
-						ogreManualPassMaterial->setDiffuse(ConversionToOgre(passManual->getDiffuseColor()));
-						break;
-					case ape::Event::Type::PASS_MANUAL_EMISSIVE:
-						ogreManualPassMaterial->setSelfIllumination(ConversionToOgre(passManual->getEmissiveColor()));
-						break;
-					case ape::Event::Type::PASS_MANUAL_SPECULAR:
-						ogreManualPassMaterial->setSpecular(ConversionToOgre(passManual->getSpecularColor()));
-						break;
-					case ape::Event::Type::PASS_MANUAL_SHININESS:
-						ogreManualPassMaterial->setShininess(passManual->getShininess());
-						break;
-					case ape::Event::Type::PASS_MANUAL_SCENEBLENDING:
-					{
-						ogreManualPassMaterial->setSceneBlending(ConversionToOgre(passManual->getSceneBlendingType()));
-						if (passManual->getSceneBlendingType() == ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
-							ogreManualPassMaterial->setDepthWriteEnabled(false);
-					}
-						break;
-					case ape::Event::Type::PASS_MANUAL_TEXTURE:
-					{
-						if (auto texture = passManual->getTexture().lock())
-						{
-							auto ogreTexture = Ogre::TextureManager::getSingleton().getByName(texture->getName());
-							if (!ogreTexture.isNull())
-							{
-								if (!ogreManualPassMaterial->getTechnique(0)->getPass(0)->getNumTextureUnitStates())
-									ogreManualPassMaterial->getTechnique(0)->getPass(0)->createTextureUnitState();
-								ogreManualPassMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(ogreTexture);
-							}
-						}
-					}
-						break;
-					case ape::Event::Type::PASS_MANUAL_GPUPARAMETERS:
-					{
-						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreManualPassMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
-						if (!ogreGpuParameters.isNull())
-						{
-							for (auto passGpuParameter : passManual->getPassGpuParameters())
-								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
-						}
-					}
-						break;
-					case ape::Event::Type::PASS_MANUAL_DELETE:
-						;
-						break;
-					}
 				}
 			}
 		}

@@ -30,7 +30,6 @@ ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : 
 	mIsSkyBox = false;
 	mTexture = ape::TextureWeakPtr();
 	mTextureName = std::string();
-	mPassGpuParameters = ape::PassGpuParameters();
 }
 
 ape::FileMaterialImpl::~FileMaterialImpl()
@@ -55,7 +54,7 @@ void ape::FileMaterialImpl::setAsSkyBox()
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
 }
 
-void ape::FileMaterialImpl::setPassTexture(ape::TextureWeakPtr texture)
+void ape::FileMaterialImpl::setTexture(ape::TextureWeakPtr texture)
 {
 	if (auto textureSP = texture.lock())
 	{
@@ -67,20 +66,9 @@ void ape::FileMaterialImpl::setPassTexture(ape::TextureWeakPtr texture)
 		mTexture = ape::TextureWeakPtr();
 }
 
-void ape::FileMaterialImpl::setPassGpuParameters(ape::PassGpuParameters passGpuParameters)
-{
-	mPassGpuParameters = passGpuParameters;
-	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_FILE_GPUPARAMETERS));
-}
-
-ape::TextureWeakPtr ape::FileMaterialImpl::getPassTexture()
+ape::TextureWeakPtr ape::FileMaterialImpl::getTexture()
 {
 	return mTexture;
-}
-
-ape::PassGpuParameters ape::FileMaterialImpl::getPassGpuParameters()
-{
-	return mPassGpuParameters;
 }
 
 void ape::FileMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

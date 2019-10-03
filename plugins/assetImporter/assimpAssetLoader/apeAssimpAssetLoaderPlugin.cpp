@@ -223,19 +223,19 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 
 					if (sceneBlendingType == aiBlendMode_Additive)
 					{
-						material->setSceneBlending(ape::Pass::SceneBlendingType::ADD);
+						material->setSceneBlending(ape::Material::SceneBlendingType::ADD);
 						//APE_LOG_DEBUG("blending ADD: " << opacity);
 					}
 					else if (sceneBlendingType == aiBlendMode_Default)
 					{
 						if (opacity < 0.99)
 						{
-							material->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+							material->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 							//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
 						}
 						else
 						{
-							material->setSceneBlending(ape::Pass::SceneBlendingType::REPLACE);
+							material->setSceneBlending(ape::Material::SceneBlendingType::REPLACE);
 							//APE_LOG_DEBUG("blending REPLACE: " << opacity);
 						}
 					}
@@ -292,7 +292,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					if (auto fileTexture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, ape::Entity::Type::TEXTURE_FILE).lock()))
 					{
 						fileTexture->setFileName(diffuseTextureFileName);
-						material->setPassTexture(fileTexture);
+						material->setTexture(fileTexture);
 					}
 				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)

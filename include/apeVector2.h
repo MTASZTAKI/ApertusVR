@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_VECTOR2_H
 #define APE_VECTOR2_H
 
+#include <fstream>
 #include <vector>
 
 namespace ape

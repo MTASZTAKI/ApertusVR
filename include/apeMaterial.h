@@ -28,7 +28,6 @@ SOFTWARE.*/
 #include "ape.h"
 #include "apeColor.h"
 #include "apeEntity.h"
-#include "apePass.h"
 #include "apeVector2.h"
 
 namespace ape
@@ -50,19 +49,25 @@ namespace ape
 			FRONT,
 			INVALID_MCM
 		};
+		enum SceneBlendingType
+		{
+			NONE_SBT,
+			ADD,
+			TRANSPARENT_ALPHA,
+			REPLACE,
+			INVALID_SBT
+		};
 
 	protected:
 		Material(std::string name, Entity::Type entityType) : Entity(name, entityType) {}
 
 		virtual ~Material() {};
 
-		ape::PassWeakPtr mPass;
-
 		CullingMode mCullingMode;
 
 		ManualCullingMode mManualCullingMode;
 
-		ape::Pass::SceneBlendingType mSceneBlendingType;
+		SceneBlendingType mSceneBlendingType;
 
 		bool mDepthWriteEnabled;
 
@@ -72,12 +77,9 @@ namespace ape
 
 		ape::Vector2 mDepthBias;
 
-		std::string mPassName;
-
 		bool mIsShowOnOverlay;
 
 	public:
-		ape::PassWeakPtr getPass() { return mPass; };
 
 		CullingMode getCullingMode() { return mCullingMode; };
 
@@ -91,7 +93,7 @@ namespace ape
 
 		bool getLightingEnabled() { return mLightingEnabled; };
 
-		ape::Pass::SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
+		SceneBlendingType getSceneBlendingType() { return mSceneBlendingType; };
 
 		bool isShowOnOverlay() { return mIsShowOnOverlay; };
 	};

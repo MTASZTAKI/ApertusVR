@@ -46,8 +46,6 @@ set (HEADERS
 	wrappers/apeJsBindVector3.h
 	wrappers/apeJsBindVector2.h
 	wrappers/apeManualMaterialJsBind.h
-	wrappers/apePbsPassJsBind.h
-	wrappers/apeManualPassJsBind.h
 	wrappers/apeIndexedLineSetGeometryJsBind.h
 	wrappers/apeBoxGeometryJsBind.h
 	wrappers/apeFileGeometryJsBind.h
@@ -127,7 +125,7 @@ if (MSVC)
 endif()
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/languageAPI/JsAPI" )
+set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI" )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_DEBUG})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_RELEASE})

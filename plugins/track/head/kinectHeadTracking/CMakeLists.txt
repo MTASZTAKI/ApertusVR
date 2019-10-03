@@ -33,33 +33,17 @@ function (reportError what and when)
 		message (${${what}})
 	endif ()
 endfunction ()
-# Determine the platform.
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-  set(KINECT_PLATFORM "macosx64")
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-  if(CMAKE_SIZEOF_VOID_P MATCHES 8)
-    set(KINECT_PLATFORM "linux64")
-  else()
-    set(KINECT_PLATFORM "linux32")
-  endif()
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-  if(CMAKE_SIZEOF_VOID_P MATCHES 8)
-    set(KINECT_PLATFORM "windows64")
-  else()
-    set(KINECT_PLATFORM "windows32")
-  endif()
-endif()
+
 #find kinect
-if (KINECT_PLATFORM EQUAL "windows64")
-	if(EXISTS ${KINECT_HOME}/v2.0_1409/Lib/x64/Kinect20.lib)
-		set(KINECT_READY TRUE)
-		message (STATUS "leap is installed" )
-	else ()
-		set(KINECT_READY FALSE)
-		message (STATUS "leap is not installed" )
-	endif ()
+if(EXISTS ${KINECT_HOME}/v2.0_1409/Lib/x64/Kinect20.lib)
+	set(KINECT_READY TRUE)
+	message (STATUS "kinect is installed" )
+else ()
+	set(KINECT_READY FALSE)
+	message (STATUS "kinect is not installed" )
 endif ()
-#use leap
+
+#use kinect
 add_library(MY_KINECT STATIC IMPORTED)
 if (WIN32)
 	set_property(TARGET MY_KINECT PROPERTY IMPORTED_LOCATION_DEBUG ${KINECT_HOME}/v2.0_1409/Lib/x64/Kinect20.lib)
@@ -78,8 +62,6 @@ set (SOURCES
 	)
 
 include_directories(
-	  
-	 
 	${KINECT_HOME}/v2.0_1409/inc
 	)
 

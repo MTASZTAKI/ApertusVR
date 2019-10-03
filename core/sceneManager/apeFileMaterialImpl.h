@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include "apeISceneManager.h"
 #include "apeIFileMaterial.h"
+#include "apeTexture.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 
@@ -44,13 +45,9 @@ namespace ape
 
 		void setAsSkyBox() override;
 
-		void setPassTexture(ape::TextureWeakPtr texture) override;
+		void setTexture(ape::TextureWeakPtr texture) override;
 
-		void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) override;
-
-		ape::TextureWeakPtr getPassTexture() override;
-
-		ape::PassGpuParameters getPassGpuParameters() override;
+		ape::TextureWeakPtr getTexture() override;
 
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
@@ -70,8 +67,6 @@ namespace ape
 		ape::TextureWeakPtr mTexture;
 
 		std::string mTextureName;
-
-		ape::PassGpuParameters mPassGpuParameters;
 	};
 }
 

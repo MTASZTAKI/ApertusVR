@@ -41,13 +41,9 @@ namespace ape
 
 		virtual void setAsSkyBox() = 0;
 
-		virtual void setPassTexture(ape::TextureWeakPtr texture) = 0;
+		virtual void setTexture(ape::TextureWeakPtr texture) = 0;
 
-		virtual void setPassGpuParameters(ape::PassGpuParameters passGpuParameters) = 0;
-
-		virtual ape::TextureWeakPtr getPassTexture() = 0;
-
-		virtual ape::PassGpuParameters getPassGpuParameters() = 0;
+		virtual ape::TextureWeakPtr getTexture() = 0;
 	};
 
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;

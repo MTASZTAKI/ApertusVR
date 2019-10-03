@@ -386,7 +386,7 @@ void ape::apePhysicsSimulationScenePlugin::makeWater(std::string name, ape::Vect
 			boxMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 0.2f, 0.7f));
 			boxMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 0.2f, 0.7f));
 			boxMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
-			boxMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			boxMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 
 
 			if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX).lock()))

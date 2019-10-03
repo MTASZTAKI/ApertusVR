@@ -70,7 +70,7 @@ target_link_libraries(${MY_TARGET_NAME} apeSceneManager apePluginManager apeEven
 set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)
 
 # Place target xxx into the specified folder in IDEs supporting it
-set_property(TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/JsAPI")
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI")
 
 # write and copy configuration files
 set(APEJS_FILE_PATH_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/js/)

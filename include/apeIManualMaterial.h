@@ -59,15 +59,13 @@ namespace ape
 
 		ape::Color getEmissiveColor() { return mEmissiveColor; };
 
-		virtual void setPassTexture(ape::TextureWeakPtr texture) = 0;
+		virtual void setTexture(ape::TextureWeakPtr texture) = 0;
 
-		virtual ape::TextureWeakPtr getPassTexture() = 0;
-
-		virtual void setPass(ape::PassWeakPtr pass) = 0;
+		virtual ape::TextureWeakPtr getTexture() = 0;
 
 		virtual void setCullingMode(ape::Material::CullingMode cullingMode) = 0;
 
-		virtual void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) = 0;
+		virtual void setSceneBlending(ape::Material::SceneBlendingType sceneBlendingType) = 0;
 
 		virtual void setDepthWriteEnabled(bool enable) = 0;
 

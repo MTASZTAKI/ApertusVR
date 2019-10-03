@@ -40,7 +40,6 @@ SOFTWARE.*/
 #include "apeIIndexedFaceSetGeometry.h"
 #include "apeIManualMaterial.h"
 #include "apeIManualMaterial.h"
-#include "apeIManualPass.h"
 #include "apeIManualTexture.h"
 #include "apeINode.h"
 #include "apeITextGeometry.h"

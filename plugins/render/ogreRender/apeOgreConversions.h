@@ -158,26 +158,26 @@ namespace ape
 			return ape::Camera::ProjectionType::PERSPECTIVE;
 	}
 
-	inline Ogre::SceneBlendType ConversionToOgre(const ape::Pass::SceneBlendingType type)
+	inline Ogre::SceneBlendType ConversionToOgre(const ape::Material::SceneBlendingType type)
 	{
-		if (type == ape::Pass::SceneBlendingType::ADD)
+		if (type == ape::Material::SceneBlendingType::ADD)
 			return Ogre::SceneBlendType::SBT_ADD;
-		else if (type == ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA)
+		else if (type == ape::Material::SceneBlendingType::TRANSPARENT_ALPHA)
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
-		else if (type == ape::Pass::SceneBlendingType::REPLACE)
+		else if (type == ape::Material::SceneBlendingType::REPLACE)
 			return Ogre::SceneBlendType::SBT_REPLACE;
-		else if (type == ape::Pass::SceneBlendingType::INVALID)
+		else if (type == ape::Material::SceneBlendingType::INVALID)
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 	}
 
-	inline ape::Pass::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
+	inline ape::Material::SceneBlendingType ConversionFromOgre(const Ogre::SceneBlendType type)
 	{
 		if (type == Ogre::SceneBlendType::SBT_ADD)
-			return ape::Pass::SceneBlendingType::ADD;
+			return ape::Material::SceneBlendingType::ADD;
 		else if (type == Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA)
-			return ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA;
+			return ape::Material::SceneBlendingType::TRANSPARENT_ALPHA;
 		else if (type == Ogre::SceneBlendType::SBT_REPLACE)
-			return ape::Pass::SceneBlendingType::REPLACE;
+			return ape::Material::SceneBlendingType::REPLACE;
 	}
 
 	inline Ogre::CullingMode ConversionToOgre(const ape::Material::CullingMode type)

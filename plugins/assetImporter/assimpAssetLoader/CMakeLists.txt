@@ -84,6 +84,7 @@ set (SOURCES
 
 include_directories(
 	${ASSIMP_HOME}/include
+	${ASSIMP_BUILD_DIR}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 

@@ -125,24 +125,6 @@ namespace ape
 
 	class SubGeometry;
 
-	class Pass;
-
-	typedef std::weak_ptr<Pass> PassWeakPtr;
-
-	typedef std::shared_ptr<Pass> PassSharedPtr;
-
-	class IPbsPass;
-
-	typedef std::weak_ptr<IPbsPass> PbsPassWeakPtr;
-
-	typedef std::shared_ptr<IPbsPass> PbsPassSharedPtr;
-
-	class IManualPass;
-
-	typedef std::weak_ptr<IManualPass> ManualPassWeakPtr;
-
-	typedef std::shared_ptr<IManualPass> ManualPassSharedPtr;
-
 	class Material;
 
 	typedef std::weak_ptr<Material> MaterialWeakPtr;

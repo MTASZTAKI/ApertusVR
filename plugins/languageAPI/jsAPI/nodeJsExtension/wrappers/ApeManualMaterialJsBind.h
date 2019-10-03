@@ -81,18 +81,6 @@ public:
 		return mPtr;
 	}
 
-	// Pass
-
-	ape::PassWeakPtr getPassWeakPtr()
-	{
-		return mPtr.lock()->getPass();
-	}
-
-	ManualPassJsPtr getManualPassJsPtr()
-	{
-		return ManualPassJsPtr(getPassWeakPtr());
-	}
-
 	// Entity
 
 	const std::string getName()
@@ -121,18 +109,8 @@ public:
 
 	ape::Color getSpecularColor() { return mPtr.lock()->getSpecularColor(); };
 
-	void setPassTexture(FileTextureJsPtr fileTexture) {
-		mPtr.lock()->setPassTexture(fileTexture.getTextureSharedPtr());
-	}
-
-	void setManualPass(ManualPassJsPtr manualPass)
-	{
-		mPtr.lock()->setPass(manualPass.getManualPassSharedPtr());
-	}
-
-	void setPbsPass(PbsPassJsPtr pbsPass)
-	{
-		mPtr.lock()->setPass(pbsPass.getPbsPassSharedPtr());
+	void setTexture(FileTextureJsPtr fileTexture) {
+		mPtr.lock()->setTexture(fileTexture.getTextureSharedPtr());
 	}
 };
 
@@ -152,11 +130,6 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(getManualMaterialWeakPtr);
 	method(getManualMaterialSharedPtr);
 
-	// Pass
-
-	method(getPassWeakPtr);
-	method(getManualPassJsPtr);
-
 	// Entity
 
 	method(getName);
@@ -167,9 +140,7 @@ NBIND_CLASS(ManualMaterialJsPtr)
 	method(setSpecularColor);
 	method(getDiffuseColor);
 	method(getSpecularColor);
-	method(setManualPass);
-	method(setPbsPass);
-	method(setPassTexture);
+	method(setTexture);
 }
 
 #endif

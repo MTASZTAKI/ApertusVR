@@ -7,7 +7,7 @@ if (WIN32)
 		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/curl/build)
 	endif()
 	set(CURL_BUILD_DIR ${CMAKE_BINARY_DIR}/curl/build)
-	set(CURL_INCLUDE_DIRS ${CURL_SOURCE_DIR}/include/)
+	set(CURL_INCLUDE_DIRS ${CURL_SOURCE_DIR}/include/ ${CURL_BUILD_DIR}/include/curl)
 
 	set(CURL_DLL_FILENAME libcurl.dll)
 	set(CURL_LIB_FILENAME libcurl_imp.lib)

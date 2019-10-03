@@ -129,12 +129,6 @@ endif()
 # Add the CEF binary distribution's cmake/ directory to the module path.
 message (STATUS "try to find cef" )
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_BUILD_DIR}/cmake")
-# Load the CEF configuration (executes FindCEF.cmake).
-find_package(CEF QUIET)
-#use cef
-add_library(MY_CEF_LIBS STATIC IMPORTED)
-set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_HOME}/Debug/libcef.lib)
-set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_HOME}/Release/libcef.lib)
 #build cef_dll_wrapper
 foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 	message (STATUS "Configuring cef_dll_wrapper for ${CONF}, please wait.....")
@@ -160,6 +154,10 @@ foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 	#reportError (output if error)
 endforeach ()
 endif ()
+#use cef
+add_library(MY_CEF_LIBS STATIC IMPORTED)
+set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_HOME}/Debug/libcef.lib)
+set_property(TARGET MY_CEF_LIBS PROPERTY IMPORTED_LOCATION_RELEASE ${CEF_HOME}/Release/libcef.lib)
 #use cef_dll_wrapper
 add_library(MY_CEF_DLLWRAPPER_LIBS STATIC IMPORTED)
 set_property(TARGET MY_CEF_DLLWRAPPER_LIBS PROPERTY IMPORTED_LOCATION_DEBUG ${CEF_BUILD_DIR}/libcef_dll_wrapper/Debug/libcef_dll_wrapper.lib)

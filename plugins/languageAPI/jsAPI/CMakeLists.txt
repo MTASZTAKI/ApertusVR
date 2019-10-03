@@ -20,6 +20,16 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+set (NODEJS_READY FALSE)
+
+#find node.js
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nodejs/10.1.0/source/release/node.lib)
+	set(NODEJS_READY TRUE)
+	message (STATUS "node.js is installed" )
+else ()
+	set(NODEJS_READY FALSE)
+	message (STATUS "node.js is not installed" )
+endif ()
 
 message(STATUS "ApePlugins: npm version: ${RESULT_VARIABLE}")
 execute_process(

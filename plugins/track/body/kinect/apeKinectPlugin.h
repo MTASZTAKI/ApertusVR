@@ -40,7 +40,6 @@ SOFTWARE.*/
 #include "apeICamera.h"
 #include "apeIFileGeometry.h"
 #include "apeIManualMaterial.h"
-#include "apeIManualPass.h"
 #include "apeINode.h"
 #include "apeIPointCloud.h"
 #include "apeISphereGeometry.h"

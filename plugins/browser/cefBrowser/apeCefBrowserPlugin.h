@@ -36,7 +36,6 @@ SOFTWARE.*/
 #include "apeIBrowser.h"
 #include "apeIFileGeometry.h"
 #include "apeIManualMaterial.h"
-#include "apeIManualPass.h"
 #include "apeIManualTexture.h"
 #include "apeINode.h"
 #include "apeIPlaneGeometry.h"

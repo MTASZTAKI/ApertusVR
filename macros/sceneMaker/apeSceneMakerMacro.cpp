@@ -113,7 +113,7 @@ void ape::SceneMakerMacro::makeBrowser(std::string name, std::string url, ape::V
 							if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "mouseMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 							{
 								mouseMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-								mouseMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+								mouseMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 								mouseMaterial->setLightingEnabled(false);
 								mouseMaterial->setCullingMode(ape::Material::CullingMode::NONE_CM);
 								if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity(name + "mouseTexture", ape::Entity::TEXTURE_UNIT).lock()))
@@ -356,7 +356,7 @@ void ape::SceneMakerMacro::makeOverlayBrowser(std::string url)
 		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
 		{
 			mouseMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-			mouseMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			mouseMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 			//mouseMaterial->setLightingEnabled(false); TODO_SceneMakerMacro crash in OpenGL
 			if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", ape::Entity::TEXTURE_UNIT).lock()))
 			{

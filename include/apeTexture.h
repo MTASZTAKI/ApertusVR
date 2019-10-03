@@ -26,7 +26,6 @@ SOFTWARE.*/
 #include <string>
 #include <vector>
 #include "apeEntity.h"
-#include "apePass.h"
 
 namespace ape
 {

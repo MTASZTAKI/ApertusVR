@@ -30,13 +30,13 @@ SOFTWARE.*/
 #include <string>
 #include <thread>
 #include <vector>
-#include "plugin/apePluginAPI.h"
-#include "managers/apeIEventManager.h"
-#include "managers/apeILogManager.h"
-#include "managers/apeISceneManager.h"
-#include "managers/apeICoreConfig.h"
-#include "datatypes/apeEvent.h"
-#include "sceneelements/apeINode.h"
+#include "apePluginAPI.h"
+#include "apeIEventManager.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
+#include "apeICoreConfig.h"
+#include "apeEvent.h"
+#include "apeINode.h"
 
 #define THIS_PLUGINNAME "apeNodeJsPlugin"
 

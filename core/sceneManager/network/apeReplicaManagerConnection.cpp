@@ -37,8 +37,6 @@ SOFTWARE.*/
 #include "apeLightImpl.h" 
 #include "apeFileMaterialImpl.h"
 #include "apeManualMaterialImpl.h"
-#include "apePbsPassImpl.h"
-#include "apeManualPassImpl.h"
 #include "apeBrowserImpl.h"
 #include "apeUnitTextureImpl.h"
 #include "apeRayGeometryImpl.h"
@@ -145,16 +143,6 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_MANUAL).lock())
 				return ((ape::ManualMaterialImpl*)entity.get());
-		}
-		else if (objectType == "PbsPass")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::PASS_PBS).lock())
-				return ((ape::PbsPassImpl*)entity.get());
-		}
-		else if (objectType == "ManualPass")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::PASS_MANUAL).lock())
-				return ((ape::ManualPassImpl*)entity.get());
 		}
 		else if (objectType == "Browser")
 		{

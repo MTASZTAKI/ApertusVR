@@ -25,7 +25,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
-#include "apeGeometry.h"
+#include "apeTexture.h"
 
 namespace ape
 {

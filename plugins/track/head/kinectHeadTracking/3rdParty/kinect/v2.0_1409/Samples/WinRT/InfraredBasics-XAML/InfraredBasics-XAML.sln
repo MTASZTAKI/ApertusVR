@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfraredBasics-XAML", "InfraredBasics-XAML.csproj", "{C5BB9835-588E-41A0-A722-CB66863E7AAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x86.ActiveCfg = Debug|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x86.Build.0 = Debug|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x86.Deploy.0 = Debug|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x86.ActiveCfg = Release|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x86.Build.0 = Release|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x86.Deploy.0 = Release|x86
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x64.ActiveCfg = Debug|x64
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x64.Build.0 = Debug|x64
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Debug|x64.Deploy.0 = Debug|x64
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x64.ActiveCfg = Release|x64
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x64.Build.0 = Release|x64
+		{C5BB9835-588E-41A0-A722-CB66863E7AAF}.Release|x64.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

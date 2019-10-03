@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
 #include "apeINode.h"
+#include "apeTexture.h"
 #include "apeIManualMaterial.h"
 #include "apeEventManagerImpl.h"
 #include "apeReplica.h"
@@ -43,19 +44,17 @@ namespace ape
 
 		void setSpecularColor(ape::Color specular) override;
 
-		void setPassTexture(ape::TextureWeakPtr texture) override;
+		void setTexture(ape::TextureWeakPtr texture) override;
 
 		void setAmbientColor(Color ambient) override;
 
 		void setEmissiveColor(Color emissive) override;
 
-		ape::TextureWeakPtr getPassTexture() override;
-
-		void setPass(ape::PassWeakPtr pass) override;
+		ape::TextureWeakPtr getTexture() override;
 
 		void setCullingMode(ape::Material::CullingMode cullingMode) override;
 
-		void setSceneBlending(ape::Pass::SceneBlendingType sceneBlendingType) override;
+		void setSceneBlending(ape::Material::SceneBlendingType sceneBlendingType) override;
 
 		void setDepthWriteEnabled(bool enable) override;
 

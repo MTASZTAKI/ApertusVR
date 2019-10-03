@@ -52,7 +52,6 @@ SOFTWARE.*/
 #include "apeILight.h"
 #include "apeIManualMaterial.h"
 #include "apeINode.h"
-#include "apeIPbsPass.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIPointCloud.h"
 #include "apeISphereGeometry.h"

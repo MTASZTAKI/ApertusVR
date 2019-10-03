@@ -148,8 +148,8 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
-			browserMaterial->setPassTexture(browserTexture);
-			browserMaterial->setSceneBlending(ape::Pass::SceneBlendingType::TRANSPARENT_ALPHA);
+			browserMaterial->setTexture(browserTexture);
+			browserMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 			mBrowserCounter++;
 			mpapeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
 			mpapeCefKeyboardHandlerImpl->registerBrowser(mBrowserCounter, browser);

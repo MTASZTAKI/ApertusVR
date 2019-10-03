@@ -46,7 +46,6 @@ SOFTWARE.*/
 #include "apeILight.h"
 #include "apeIManualMaterial.h"
 #include "apeINode.h"
-#include "apeIPbsPass.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIPointCloud.h"
 #include "apeISphereGeometry.h"
@@ -69,6 +68,8 @@ namespace ape
 		ape::ICoreConfig* mpCoreConfig;
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
+
+		ape::NodeWeakPtr mPlanetNode;
 
 		void eventCallBack(const ape::Event& event);
 

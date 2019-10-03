@@ -142,7 +142,7 @@ void ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserial
 	{
 		mCameraName = cameraName.C_String();
 		mCamera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(mCameraName).lock());
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_PASS));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
