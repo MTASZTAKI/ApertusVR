@@ -1190,8 +1190,8 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						Ogre::GpuProgramParametersSharedPtr ogreGpuParameters = ogreMaterial->getTechnique(0)->getPass(0)->getVertexProgramParameters();
 						if (!ogreGpuParameters.isNull())
 						{
-							for (auto passGpuParameter : materialFile->getPassGpuParameters())
-								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));
+							/*for (auto passGpuParameter : materialFile->getPassGpuParameters())
+								ogreGpuParameters->setNamedConstant(passGpuParameter.name, ConversionToOgre(passGpuParameter.value));*/
 						}
 					}
 				}

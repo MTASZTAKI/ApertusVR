@@ -166,7 +166,7 @@ namespace ape
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 		else if (type == ape::Material::SceneBlendingType::REPLACE)
 			return Ogre::SceneBlendType::SBT_REPLACE;
-		else if (type == ape::Material::SceneBlendingType::INVALID)
+		else if (type == ape::Material::SceneBlendingType::INVALID_SBT)
 			return Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA;
 	}
 

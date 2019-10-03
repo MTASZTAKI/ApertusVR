@@ -267,8 +267,16 @@ set (SOURCES
 	apeOgrePointCloud.cpp
 	)
 include_directories(
-	${PATH_OGRE}/include
-	${PATH_OGRE_PROCEDURAL}/include
+	$ENV{OGRE_BUILD}/include
+	$ENV{OGRE_SDK}/include/OGRE
+	$ENV{OGRE_SDK}/include/OGRE/Overlay
+	$ENV{OGRE_SDK}/include/OGRE/RTShaderSystem
+	$ENV{OGRE_SDK}/include/OGRE/HLMS
+	$ENV{OGRE_SDK}/include/OGRE/MeshLodGenerator
+	$ENV{OGRE_SDK}/include/OGRE/RenderSystems/Direct3D11
+	$ENV{OGRE_SDK}/include/OGRE/RenderSystems/GL
+	${PATH_OGRE}/OgreMain/include
+	${OGRE_PROCEDURAL_BUILD_DIR}/sdk/include/OgreProcedural
 	${HYDRAX_HOME}
 	${HYDRAX_HOME}/Modules
 	${HYDRAX_HOME}/Noise
