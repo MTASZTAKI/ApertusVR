@@ -76,7 +76,6 @@ include_directories(
 	${NODE_SOURCE_DIR}/deps/v8/include
 	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nbind/include
 	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/nan
-	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/3rdParty/raknet/Source
 	${PROJECT_SOURCE_DIR}/plugins/languageAPI/jsAPI/nodeJsExtension/wrappers
 	 	
 	)
@@ -99,7 +98,7 @@ endif ()
 
 # Link with dependency libraries
 if(WIN32)
-	target_link_libraries( ${MY_TARGET_NAME} apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro RAKNET MY_NODEJS_LIB ws2_32)
+	target_link_libraries( ${MY_TARGET_NAME} apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_NODEJS_LIB ws2_32)
 endif()
 
 # Set target library's name

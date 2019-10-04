@@ -24,15 +24,14 @@ SOFTWARE.*/
 #define APE_JSBIND_RIGIDBODYIMPL_H
 
 #include "ape.h"
-#include "sceneelements/apeIRigidBody.h"
-#include "sceneelements/apeIIndexedFaceSetGeometry.h"
-#include "sceneelements/apeICloneGeometry.h"
+#include "apeIRigidBody.h"
+#include "apeIIndexedFaceSetGeometry.h"
+#include "apeICloneGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "apeRigidBodyImpl.h"
 #include "apeJsBindNodeImpl.h"
 #include "apeJsBindCloneGeometryImpl.h"
-#include "ApeIndexedFaceSetGeometryImpl.h"
+#include "ApeIIndexedFaceSetGeometry.h"
 #include "apeManualMaterialJsBind.h"
 
 #ifdef NBIND_CLASS

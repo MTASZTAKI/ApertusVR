@@ -24,10 +24,9 @@ SOFTWARE.*/
 #define APE_JSBIND_INDEXEDFACESETGEOMETRYIMPL_H
 
 #include "ape.h"
-#include "sceneelements/apeIIndexedFaceSetGeometry.h"
+#include "apeIIndexedFaceSetGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "apeIndexedFaceSetGeometryImpl.h"
 #include "apeJsBindNodeImpl.h"
 #include "apeManualMaterialJsBind.h"
 

@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_LIGHTIMPL_H
 #define APE_JSBIND_LIGHTIMPL_H
 
-#include "apeLightImpl.h"
+#include "apeILight.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

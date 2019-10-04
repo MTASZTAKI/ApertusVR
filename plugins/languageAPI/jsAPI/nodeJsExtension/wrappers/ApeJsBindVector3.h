@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_VECTOR3_H
 #define APE_JSBIND_VECTOR3_H
 
-#include "datatypes/apeVector3.h"
+#include "apeVector3.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

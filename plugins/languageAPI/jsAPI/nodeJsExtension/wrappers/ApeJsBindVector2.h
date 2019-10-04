@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_VECTOR2_H
 #define APE_JSBIND_VECTOR2_H
 
-#include "datatypes/apeVector2.h"
+#include "apeVector2.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

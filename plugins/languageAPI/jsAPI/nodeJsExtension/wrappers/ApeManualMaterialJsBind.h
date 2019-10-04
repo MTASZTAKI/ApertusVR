@@ -24,10 +24,8 @@ SOFTWARE.*/
 #define APE_MANUALMATERIALJSBIND_H
 
 #include "ape.h"
-#include "sceneelements/apeIManualMaterial.h"
-#include "apeManualPassJsBind.h"
+#include "apeIManualMaterial.h"
 #include "ApeFileTextureJsBind.h"
-#include "apePbsPassJsBind.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

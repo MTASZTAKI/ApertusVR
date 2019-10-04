@@ -23,7 +23,7 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_COLOR_H
 #define APE_JSBIND_COLOR_H
 
-#include "datatypes/apeColor.h"
+#include "apeColor.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

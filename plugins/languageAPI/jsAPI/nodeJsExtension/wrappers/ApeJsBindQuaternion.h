@@ -23,8 +23,8 @@ SOFTWARE.*/
 #ifndef APE_JSBIND_QUATERNION_H
 #define APE_JSBIND_QUATERNION_H
 
-#include "datatypes/apeQuaternion.h"
-#include "datatypes/apeRadian.h"
+#include "apeQuaternion.h"
+#include "apeRadian.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 

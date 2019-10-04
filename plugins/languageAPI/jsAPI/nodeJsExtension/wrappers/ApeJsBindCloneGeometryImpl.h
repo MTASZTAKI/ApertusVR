@@ -24,10 +24,10 @@ SOFTWARE.*/
 #define APE_JSBIND_CLONEGEOMETRYIMPL_H
 
 #include "ape.h"
-#include "sceneelements/apeICloneGeometry.h"
+#include "apeICloneGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
-#include "apeIndexedFaceSetGeometryImpl.h"
+#include "apeIIndexedFaceSetGeometry.h"
 #include "apeJsBindNodeImpl.h"
 #include "apeManualMaterialJsBind.h"
 #include "ApeJsBindIndexedFaceSetGeometryImpl.h"

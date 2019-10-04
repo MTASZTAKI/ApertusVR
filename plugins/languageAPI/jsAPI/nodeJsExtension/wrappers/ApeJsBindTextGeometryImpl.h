@@ -25,12 +25,11 @@ SOFTWARE.*/
 
 #include <typeinfo>
 #include "ape.h"
-#include "sceneelements/apeITextGeometry.h"
+#include "apeITextGeometry.h"
 #include "nbind/nbind.h"
 #include "nbind/api.h"
 #include "apeJsBindNodeImpl.h"
-#include "apeNodeImpl.h"
-#include "apeTextGeometryImpl.h"
+#include "apeINode.h"
 
 #ifdef NBIND_CLASS
 
