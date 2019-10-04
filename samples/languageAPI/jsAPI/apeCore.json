@@ -1,8 +1,8 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeHelloWorldScenePlugin",
+    "apeOisUserInputPlugin",
+    "apeNodeJsPlugin",
     "apeViewPointManagerPlugin"
   ],
   "network": {
