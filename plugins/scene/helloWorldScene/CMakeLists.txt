@@ -30,11 +30,11 @@ endfunction ()
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	apeHelloWorldPlugin.h
+	apeHelloWorldScenePlugin.h
 	)
 
 set (SOURCES 
-	apeHelloWorldPlugin.cpp
+	apeHelloWorldScenePlugin.cpp
 	)
 
 include_directories(
@@ -42,18 +42,18 @@ include_directories(
 	
 	)
 
-add_library (apeHelloWorldPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeHelloWorldScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeHelloWorldPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
+target_link_libraries (apeHelloWorldScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
 if (WIN32)
 	# we have to link to some DirectX libraries
-	target_link_libraries (apeHelloWorldPlugin dinput8 dxguid)
+	target_link_libraries (apeHelloWorldScenePlugin dinput8 dxguid)
 endif ()
 
-set_property (TARGET apeHelloWorldPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeHelloWorldScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET apeHelloWorldPlugin PROPERTY FOLDER "Plugins/Scene")
+set_property (TARGET apeHelloWorldScenePlugin PROPERTY FOLDER "Plugins/Scene")
 
 
 

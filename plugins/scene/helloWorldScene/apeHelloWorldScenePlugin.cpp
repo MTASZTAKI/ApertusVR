@@ -1,4 +1,4 @@
-#include "apeHelloWorldPlugin.h"
+#include "apeHelloWorldScenePlugin.h"
 
 ape::apeHelloWorldScenePlugin::apeHelloWorldScenePlugin()
 {
@@ -30,7 +30,7 @@ void ape::apeHelloWorldScenePlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
 	{
-		universeSkyBoxMaterial->setFileName("universe.material");
+		universeSkyBoxMaterial->setFileName("universe");
 		universeSkyBoxMaterial->setAsSkyBox();
 	}
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
@@ -66,6 +66,12 @@ void ape::apeHelloWorldScenePlugin::Init()
 void ape::apeHelloWorldScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		if (auto planetNode = mPlanetNode.lock())
+			planetNode->rotate(0.0017f, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::LOCAL);
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 
