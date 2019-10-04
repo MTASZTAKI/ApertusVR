@@ -20,10 +20,29 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+set(NODE_VERSION "10.1.0")
+message(STATUS "NODE_VERSION: ${NODE_VERSION}")
+
+set(NODE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nodejs)
+message(STATUS "NODE_ROOT_DIR: ${NODE_ROOT_DIR}")
+
+set(NODE_SOURCE_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/source)
+message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
+
+set(NODE_LIB_NAME "node.lib")
+
+set(NODE_LIB_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_LIB_NAME}")
+message(STATUS "ApePlugins: Node: NODE_LIB_PATH_DEBUG: '${NODE_LIB_PATH_DEBUG}'")
+
+set(NODE_LIB_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_LIB_NAME}")
+message(STATUS "ApePlugins: Node: NODE_LIB_PATH_RELEASE: '${NODE_LIB_PATH_RELEASE}'")
+
+set(RAPIDJSON_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson)
+
 set (NODEJS_READY FALSE)
 
 #find node.js
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nodejs/10.1.0/source/release/node.lib)
+if(EXISTS ${NODE_SOURCE_DIR}/release/node.lib)
 	set(NODEJS_READY TRUE)
 	message (STATUS "node.js is installed" )
 else ()
@@ -147,15 +166,6 @@ message(STATUS "APE_OUTPUT_DIR_RELEASE: ${APE_OUTPUT_DIR_RELEASE}")
 
 set(JS_API_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "JS_API_DIR: ${JS_API_DIR}")
-
-set(NODE_VERSION "10.1.0")
-message(STATUS "NODE_VERSION: ${NODE_VERSION}")
-
-set(NODE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nodejs)
-message(STATUS "NODE_ROOT_DIR: ${NODE_ROOT_DIR}")
-
-set(NODE_SOURCE_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/source)
-message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
 
 set(NODE_INSTALLER_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/installer)
 message(STATUS "NODE_INSTALLER_DIR: ${NODE_INSTALLER_DIR}")
@@ -312,14 +322,6 @@ if (WIN32)
 		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_DEBUG: '${NODE_DLL_PATH_DEBUG}'")
 		set(NODE_DLL_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_DLL_NAME}")
 		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_RELEASE: '${NODE_DLL_PATH_RELEASE}'")
-
-		set(NODE_LIB_NAME "node.lib")
-
-		set(NODE_LIB_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_LIB_NAME}")
-		message(STATUS "ApePlugins: Node: NODE_LIB_PATH_DEBUG: '${NODE_LIB_PATH_DEBUG}'")
-
-		set(NODE_LIB_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_LIB_NAME}")
-		message(STATUS "ApePlugins: Node: NODE_LIB_PATH_RELEASE: '${NODE_LIB_PATH_RELEASE}'")
 
 		#--------------------------------------------------------------------------------------------------------
 
