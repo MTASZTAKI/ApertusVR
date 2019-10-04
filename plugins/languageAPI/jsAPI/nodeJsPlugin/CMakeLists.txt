@@ -78,7 +78,7 @@ set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/modules/module_manager/con
 file(WRITE ${CONFIG_FILE_PATH_SOURCE} "{\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"source\": {\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"apePath\": \"${APE_SOURCE_DIR}/\",\n")
-file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"jsApiPath\": \"plugins/jsAPI/nodeJsPlugin/js/\"\n")
+file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"jsApiPath\": \"plugins/languageAPI/jsAPI/nodeJsPlugin/js/\"\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t},\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\"build\": {\n")
 file(APPEND ${CONFIG_FILE_PATH_SOURCE} "\t\t\"binPath\": \"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/\",\n")
