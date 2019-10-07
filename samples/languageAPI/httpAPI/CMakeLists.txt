@@ -23,6 +23,7 @@
 set (CONFIGS
 	apeOgreRenderPlugin.json
 	apeViewPointManagerPlugin.json
+	apeNodeJsPlugin.json
 	apeCore.json
 	)
 
@@ -31,4 +32,4 @@ add_custom_target(
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET HttpAPI PROPERTY FOLDER "Samples/LanguageAPI")
+set_property (TARGET HttpAPI PROPERTY FOLDER "Samples/languageAPI")

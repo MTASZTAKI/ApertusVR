@@ -1,0 +1,23 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/assimpAssetLoader/resources/Suzanne.gltf",
+      "mergeAndExportMeshes": false,
+      "scale": [2,2,2],
+      "position": [ 50,250, 10],
+      "orientation": [  0.0007963, 0, 0.9999997, 0],
+      "regenerateNormals": true,
+      "rootNodeName": "suzanne",
+      "physics": {
+        "mass": 1.0,
+        "restitution": 1.0,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
+        "bouyancyEnabled": false
+      }
+    }
+  ]
+}

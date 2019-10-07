@@ -23,12 +23,13 @@
 set (CONFIGS
 	apeOgreRenderPlugin.json
 	apeViewPointManagerPlugin.json
+	apeKinectPlugin.json
 	apeCore.json
 	)
 
 add_custom_target(
-    BodyTrackingKinect ALL
+    BodyTracking_Kinect ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET BodyTrackingKinect PROPERTY FOLDER "Samples/Tracking")
+set_property (TARGET BodyTracking_Kinect PROPERTY FOLDER "Samples/Tracking")

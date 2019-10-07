@@ -1,0 +1,46 @@
+{
+  "plugins": [
+	"apeNodeJsPlugin",
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeWaterGamePlugin",
+    "apeBulletPhysicsPlugin"
+  ],
+  "network": {
+    "user": "cave",
+    "participant": "none",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "none",
+    "resourceLocations": [
+	  "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/materials",
+      "/plugins/render/ogreRender/resources/pbs",
+      "/plugins/render/ogreRender/resources/rtss",
+      "/plugins/render/ogreRender/resources/rtss/Cg",
+      "/plugins/render/ogreRender/resources/rtss/GLSL",
+      "/plugins/render/ogreRender/resources/rtss/GLSL150",
+      "/plugins/render/ogreRender/resources/rtss/GLSLES",
+      "/plugins/render/ogreRender/resources/rtss/HLSL",
+      "/plugins/render/ogreRender/resources/rtss/materials",
+      "/plugins/render/ogreRender/resources/hydrax",
+      "/plugins/render/ogreRender/resources/skyx",
+      "/macros/sceneMaker/resources",
+      "/plugins/assetLoader/assimpAssetLoader/resources",
+	  "/plugins/game/waterGame/resources"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "httpServer": {
+        "port":  3000
+    },
+    "pluginManager": {
+        "plugins": [
+            {
+                "file": "htmlOverlayUI/htmlOverlayUI.js",
+                "public": "htmlOverlayUI/public"
+            }
+        ]
+    }
+}

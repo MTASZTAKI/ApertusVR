@@ -6,9 +6,8 @@
     },
     "renderWindows": [
         {
-            "enable": true,
             "monitorIndex": 0,
-            "name": "window0",
+            "name": "HttpAPI",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
@@ -18,8 +17,8 @@
                 "vSync": true,
                 "vSyncInterval": 1,
                 "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
+                "FSAA": 8,
+                "FSAAHint": "Quality"
             },
             "viewports": [
                 {

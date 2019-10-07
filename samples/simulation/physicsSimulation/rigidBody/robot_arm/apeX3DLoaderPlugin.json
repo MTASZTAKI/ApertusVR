@@ -1,0 +1,11 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/x3dLoader/samples/TwoUR5.x3d",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 0, 0, 0 ],
+      "orientation": [ 0.5, -0.5, -0.5, -0.5 ]
+    }
+  ]
+}
+

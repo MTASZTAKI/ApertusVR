@@ -1,0 +1,23 @@
+{
+  "assets": [
+    {
+      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "mergeAndExportMeshes": false,
+      "scale": [1000,1000,1000],
+      "position": [ 0,100, 0 ],
+      "orientation": [ 1, 0, 0, 0 ],
+      "regenerateNormals": true,
+      "rootNodeName": "avoNode",
+      "physics": {
+        "mass": 1.0,
+        "restitution": 0.8,
+        "linearFriction": 0.5,
+        "rollingFriction": 0.1,
+        "spinningFriction": 0.1,
+        "linearDamping": 0.01,
+        "angularDamping": 0.05,
+        "bouyancyEnabled": false
+      }
+    }
+  ]
+}

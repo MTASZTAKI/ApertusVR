@@ -32,5 +32,6 @@ add_subdirectory (multiPlayer)
 add_subdirectory (pointCloud)
 add_subdirectory (simulation)
 add_subdirectory (tracking)
+add_subdirectory (e-Learning)
 add_subdirectory (userInterface)
 

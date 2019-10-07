@@ -1,0 +1,16 @@
+{
+  "environment": "ground",
+  "cubes": {
+    "enable": true,
+    "position": [ 0, 200, 0 ],
+    "arraySize": [ 6, 6, 6 ]
+  },
+  "spheres": {
+    "enable": false,
+    "position": [ 0, 100, 0 ],
+    "arraySize" : [6, 6, 6]
+  },
+  "assets": [
+    
+  ]
+}

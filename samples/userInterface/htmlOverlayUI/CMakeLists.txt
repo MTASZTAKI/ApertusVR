@@ -22,6 +22,7 @@
 
 set (CONFIGS
 	apeOgreRenderPlugin.json
+	apeNodeJsPlugin.json
 	apeViewPointManagerPlugin.json
 	apeCore.json
 	)

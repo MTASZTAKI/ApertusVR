@@ -91,9 +91,15 @@ else ()
 
 endif ()
 
-#copy node.dll to the bion/debug and release
-#npm install bin/debug/ and releaseŰ
+add_subdirectory (nodeJsExtension)
+add_subdirectory (nodeJsPlugin)
 
+#npm install bin/debug/ and release
+file(COPY ${NODE_SOURCE_DIR}/debug/node.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+file(COPY ${NODE_SOURCE_DIR}/release/node.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+
+execute_process(COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug npm install)
+execute_process(COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release npm install)
 
 option(APE_JSAPI_FROM_SOURCE "Use JS_API_FROM_SOURCE?" OFF )
 if (${APE_JSAPI_FROM_SOURCE})
@@ -526,5 +532,4 @@ endif ()
 # TODO: build node js under unix
 endif()
 
-add_subdirectory (nodeJsExtension)
-add_subdirectory (nodeJsPlugin)
+
