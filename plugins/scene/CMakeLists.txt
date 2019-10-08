@@ -21,6 +21,7 @@
 #SOFTWARE.
 
 add_subdirectory (360ImageScene)
+add_subdirectory (360ImageGalleryScene)
 add_subdirectory (360StereoImageScene)
 add_subdirectory (360VideoScene)
 add_subdirectory (helloWorldScene)

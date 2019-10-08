@@ -1,9 +1,9 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"ape360ImageGalleryScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "ape360ImageGalleryScenePlugin"
   ],
   "network": {
     "user": "",

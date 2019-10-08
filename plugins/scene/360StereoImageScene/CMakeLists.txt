@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	ape360StereoImagePlugin.h
+	ape360StereoImageScenePlugin.h
 	)
 
 set (SOURCES 
-	ape360StereoImagePlugin.cpp
+	ape360StereoImageScenePlugin.cpp
 	)
 
 include_directories(
 	 
 	)
 
-add_library (ape360StereoImagePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (ape360StereoImageScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (ape360StereoImagePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro)
+target_link_libraries (ape360StereoImageScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro)
 
-set_property (TARGET ape360StereoImagePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET ape360StereoImageScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET ape360StereoImagePlugin PROPERTY FOLDER "Plugins/Scene")
+set_property (TARGET ape360StereoImageScenePlugin PROPERTY FOLDER "Plugins/Scene")
 
 
