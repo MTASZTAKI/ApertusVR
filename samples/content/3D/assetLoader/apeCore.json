@@ -1,9 +1,10 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeAssimpAssetLoaderPlugin",
-    "apeViewPointManagerPlugin"
+    "apeViewPointManagerPlugin",
+    "apeOisUserInputPlugin",
+    "apeSampleScenePlugin",
+    "apeAssimpAssetLoaderPlugin"
   ],
   "network": {
     "user": "",
@@ -37,6 +38,8 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
+      "/macros/sceneMaker/resources",
+      "/plugins/scene/sampleScene/resources",
       "/plugins/scene/assetImporter/assimpAssetLoader/resources"
     ]
   }

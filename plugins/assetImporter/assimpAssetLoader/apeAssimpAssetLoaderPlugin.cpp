@@ -479,6 +479,18 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					}
 				}
 				mAssimpAssetConfigs.push_back(assetConfig);
+
+				PhysicsConfig physicsConfig;
+				physicsConfig.mass = 1.0;
+				physicsConfig.restitution = 0.6;
+				physicsConfig.friction = 0.5;
+				physicsConfig.rollingFriction = 0.1;
+				physicsConfig.spinningFriction = 0.1;
+				physicsConfig.linearDamping = 0.01;
+				physicsConfig.angularDamping = 0.05;
+				physicsConfig.bouyancyEnable = true;
+				mPhysicsConfigs.push_back(physicsConfig);
+
 				readFile(assetConfig.file);
 			}
 		}

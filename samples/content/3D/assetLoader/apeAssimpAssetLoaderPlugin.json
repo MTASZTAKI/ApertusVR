@@ -1,7 +1,7 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/robotFixture.stl",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/robotFixture.stl",
       "mergeAndExportMeshes": false,
       "scale": [ 0.1, 0.1, 0.1 ],
       "position": [ 0, 70, 0 ],
@@ -10,7 +10,7 @@
       "rootNodeName": "robotFixture"
     },
     {
-      "file": "/plugins/assimpAssetLoader/resources/table.stl",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/table.stl",
       "mergeAndExportMeshes": false,
       "scale": [ 0.1, 0.1, 0.1 ],
       "position": [ -42, 70, 73 ],
@@ -19,7 +19,7 @@
       "rootNodeName": "table"
     },
     {
-      "file": "/plugins/assimpAssetLoader/resources/table2.stl",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/table2.stl",
       "mergeAndExportMeshes": false,
       "scale": [ 0.1, 0.1, 0.1 ],
       "position": [ 85, 70, 0 ],
@@ -28,7 +28,7 @@
       "rootNodeName": "table2"
     },
     {
-      "file": "/plugins/assimpAssetLoader/resources/table3.stl",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/table3.stl",
       "mergeAndExportMeshes": false,
       "scale": [ 0.1, 0.1, 0.1 ],
       "position": [ 65, 70, -90 ],
@@ -37,7 +37,7 @@
       "rootNodeName": "table3"
     },
     {
-      "file": "/plugins/assimpAssetLoader/resources/triangleConsole.stl",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/triangleConsole.stl",
       "mergeAndExportMeshes": false,
       "scale": [ 0.1, 0.1, 0.1 ],
       "position": [ 0, 0, 0 ],
