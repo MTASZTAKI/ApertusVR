@@ -20,7 +20,7 @@ void ape::Video360ScenePlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	if (auto browserNode = mpSceneManager->createNode("browserNode").lock())
 	{
-		browserNode->setPosition(ape::Vector3(-100, 200, 0));
+		browserNode->setPosition(ape::Vector3(0, 0, 0));
 		if (auto browserGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("sphere.mesh", ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			browserGeometry->setFileName("thetaSphere.mesh");

@@ -1,10 +1,10 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeapeCefBrowserPlugin",
-	"apeOisUserInputPlugin",
-	"ape360VideoScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeViewPointManagerPlugin",
+    "apeCefBrowserPlugin",
+    "apeOisUserInputPlugin",
+    "ape360VideoScenePlugin"
   ],
   "network": {
     "user": "",
