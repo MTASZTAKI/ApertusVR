@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	apeSkyWaterTerrainScenePlugin.h
+	apeOceanAndSkySimulationScenePlugin.h
 	)
 
 set (SOURCES 
-	apeSkyWaterTerrainScenePlugin.cpp
+	apeOceanAndSkySimulationScenePlugin.cpp
 	)
 
 include_directories(
 	 
 	)
 
-add_library (apeSkyWaterTerrainScenePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeOceanAndSkySimulationScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeSkyWaterTerrainScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
+target_link_libraries (apeOceanAndSkySimulationScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET apeSkyWaterTerrainScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeOceanAndSkySimulationScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET apeSkyWaterTerrainScenePlugin PROPERTY FOLDER "Plugins/Scene")
+set_property (TARGET apeOceanAndSkySimulationScenePlugin PROPERTY FOLDER "Plugins/Scene")
 
 

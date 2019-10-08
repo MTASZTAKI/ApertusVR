@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_SKYWATERTERRAINLUGIN_H
-#define APE_SKYWATERTERRAINLUGIN_H
+#ifndef APE_OCEANANDSKYSIMULATIONSCENEPLUGIN_H
+#define APE_OCEANANDSKYSIMULATIONSCENEPLUGIN_H
 
 #include <chrono>
 #include <iostream>
@@ -40,11 +40,11 @@ SOFTWARE.*/
 #include "apeITextGeometry.h"
 #include "apeIWater.h"
 
-#define THIS_PLUGINNAME "apeSkyWaterTerrainScenePlugin"
+#define THIS_PLUGINNAME "apeOceanAndSkySimulationScenePlugin"
 
 namespace ape
 {
-	class apeSkyWaterTerrainScenePlugin : public ape::IPlugin
+	class OceanAndSkySimulationScenePlugin : public ape::IPlugin
 	{
 	private:
 		ape::IEventManager* mpEventManager;
@@ -73,9 +73,9 @@ namespace ape
 		void createWater();
 
 	public:
-		apeSkyWaterTerrainScenePlugin();
+		OceanAndSkySimulationScenePlugin();
 
-		~apeSkyWaterTerrainScenePlugin();
+		~OceanAndSkySimulationScenePlugin();
 
 		void Init() override;
 
@@ -90,14 +90,14 @@ namespace ape
 		void Restart() override;
 	};
 
-	APE_PLUGIN_FUNC ape::IPlugin* CreateapeSkyWaterTerrainScenePlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateOceanAndSkySimulationScenePlugin()
 	{
-		return new ape::apeSkyWaterTerrainScenePlugin;
+		return new ape::OceanAndSkySimulationScenePlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyapeSkyWaterTerrainScenePlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyOceanAndSkySimulationScenePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeSkyWaterTerrainScenePlugin*)plugin;
+		delete (ape::OceanAndSkySimulationScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -105,7 +105,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateapeSkyWaterTerrainScenePlugin, DestroyapeSkyWaterTerrainScenePlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateOceanAndSkySimulationScenePlugin, DestroyOceanAndSkySimulationScenePlugin);
 		return 0;
 	}
 }

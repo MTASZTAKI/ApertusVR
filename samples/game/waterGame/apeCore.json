@@ -1,9 +1,9 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeViewPointManagerPlugin"
-	"apeOceanAndSkySimulationScenePlugin",
+	  "apeOisUserInputPlugin",
+	  "apeViewPointManagerPlugin",
+	  "apeOceanAndSkySimulationScenePlugin",
     "apeWaterGamePlugin",
     "apeBulletPhysicsPlugin"
   ],

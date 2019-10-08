@@ -2314,20 +2314,15 @@ void ape::OgreRenderPlugin::Init()
 		renderSystem->setConfigOption("Multi device memory hint", "Auto hardware buffers management");
 	}
 
-	/*Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/fonts", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/pbs", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/Cg", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSL150", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/GLSLES", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/HLSL", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/rtss/materials", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/hydrax", "FileSystem", "Hydrax");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mediaFolder.str() + "/skyx", "FileSystem", "Skyx");*/
 	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
+	{
+		if (resourceLocation.find("hydrax"))
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem", "Hydrax");
+		else if (resourceLocation.find("skyx"))
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem", "Skyx");
+		else
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
+	}
 	
 	mpRoot->initialise(false, "ape");
 	mpOgreSceneManager = mpRoot->createSceneManager(Ogre::ST_GENERIC);
