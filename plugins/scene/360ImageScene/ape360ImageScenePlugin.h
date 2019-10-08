@@ -34,19 +34,19 @@ SOFTWARE.*/
 #include "apeIFileMaterial.h"
 #include "apeINode.h"
 
-#define THIS_PLUGINNAME "ape360ImagePlugin"
+#define THIS_PLUGINNAME "ape360ImageScenePlugin"
 
 namespace ape
 {
-	class ape360ImagePlugin : public ape::IPlugin
+	class Image360ScenePlugin : public ape::IPlugin
 	{
 	private:
 		ape::ISceneManager* mpSceneManager;
 
 	public:
-		ape360ImagePlugin();
+		Image360ScenePlugin();
 
-		~ape360ImagePlugin();
+		~Image360ScenePlugin();
 
 		void Init() override;
 
@@ -63,12 +63,12 @@ namespace ape
 
 	APE_PLUGIN_FUNC ape::IPlugin* Createape360ImagePlugin()
 	{
-		return new ape::ape360ImagePlugin;
+		return new ape::Image360ScenePlugin;
 	}
 
 	APE_PLUGIN_FUNC void Destroyape360ImagePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::ape360ImagePlugin*)plugin;
+		delete (ape::Image360ScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

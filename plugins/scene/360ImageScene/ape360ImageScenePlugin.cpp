@@ -1,19 +1,19 @@
-#include "ape360ImagePlugin.h"
+#include "ape360ImageScenePlugin.h"
 
-ape::ape360ImagePlugin::ape360ImagePlugin()
+ape::Image360ScenePlugin::Image360ScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::ape360ImagePlugin::~ape360ImagePlugin()
+ape::Image360ScenePlugin::~Image360ScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Init()
+void ape::Image360ScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto sphereNode = mpSceneManager->createNode("sphereNode").lock())
@@ -27,31 +27,31 @@ void ape::ape360ImagePlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Run()
+void ape::Image360ScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Step()
+void ape::Image360ScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Stop()
+void ape::Image360ScenePlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Suspend()
+void ape::Image360ScenePlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ape360ImagePlugin::Restart()
+void ape::Image360ScenePlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
