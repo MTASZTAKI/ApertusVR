@@ -35,19 +35,19 @@ SOFTWARE.*/
 #include "apeINode.h"
 #include "apeIPlaneGeometry.h"
 
-#define THIS_PLUGINNAME "apeInGameBrowserSamplePlugin"
+#define THIS_PLUGINNAME "apeInGameBrowserScenePlugin"
 
 namespace ape
 {
-	class apeInGameBrowserSamplePlugin : public ape::IPlugin
+	class InGameBrowserScenePlugin : public ape::IPlugin
 	{
 	private:
 		ape::ISceneManager* mpSceneManager;
 
 	public:
-		apeInGameBrowserSamplePlugin();
+		InGameBrowserScenePlugin();
 
-		~apeInGameBrowserSamplePlugin();
+		~InGameBrowserScenePlugin();
 
 		void Init() override;
 
@@ -64,12 +64,12 @@ namespace ape
 
 	APE_PLUGIN_FUNC ape::IPlugin* CreateapeInGameBrowserSamplePlugin()
 	{
-		return new ape::apeInGameBrowserSamplePlugin;
+		return new ape::InGameBrowserScenePlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyapeInGameBrowserSamplePlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeInGameBrowserSamplePlugin*)plugin;
+		delete (ape::InGameBrowserScenePlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);

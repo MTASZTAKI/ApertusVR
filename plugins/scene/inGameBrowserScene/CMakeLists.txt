@@ -22,24 +22,24 @@
 
 # Add all header and cpp files in the directory to the project
 set (HEADERS
-	apeInGameBrowserSamplePlugin.h
+	apeInGameBrowserScenePlugin.h
 	)
 
 set (SOURCES 
-	apeInGameBrowserSamplePlugin.cpp
+	apeInGameBrowserScenePlugin.cpp
 	)
 
 include_directories(
 	 
 	)
 
-add_library (apeInGameBrowserSamplePlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeInGameBrowserScenePlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeInGameBrowserSamplePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
+target_link_libraries (apeInGameBrowserScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager)
 
-set_property (TARGET apeInGameBrowserSamplePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeInGameBrowserScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET apeInGameBrowserSamplePlugin PROPERTY FOLDER "Plugins/Scene")
+set_property (TARGET apeInGameBrowserScenePlugin PROPERTY FOLDER "Plugins/Scene")
 
 

@@ -32,4 +32,4 @@ add_custom_target(
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET HttpAPI PROPERTY FOLDER "Samples/languageAPI")
+set_property (TARGET HttpAPI PROPERTY FOLDER "Samples/LanguageAPI")

@@ -1,10 +1,11 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeCefBrowserPlugin",
-	"apeOisUserInputPlugin",
-	"apeInGameBrowserScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeViewPointManagerPlugin",
+    "apeCefBrowserPlugin",
+    "apeOisUserInputPlugin",
+    "apeSampleScenePlugin",
+    "apeInGameBrowserScenePlugin"
   ],
   "network": {
     "user": "",
@@ -38,6 +39,8 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
+      "/macros/sceneMaker/resources",
+      "/plugins/scene/SampleScene/resources",
       "/plugins/scene/inGameBrowserScene/resources"
     ]
   }

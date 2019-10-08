@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		std::cout << "Usage example: apeSampleLauncher.exe c:\ApertusVR\samples\helloWorld" << std::endl;
+		std::cout << "Usage example: apeSampleLauncher.exe c:/ApertusVR/samples/helloWorld" << std::endl;
 	}	
 	return 0;
 }

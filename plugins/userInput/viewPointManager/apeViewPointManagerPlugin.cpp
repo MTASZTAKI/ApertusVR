@@ -31,7 +31,7 @@ ape::ViewPointManagerPlugin::~ViewPointManagerPlugin()
 
 void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::string& keyValue)
 {
-	APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
+	//APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 	mIsKeyReleased = false;
 	if (keyValue == "r")
 	{
@@ -55,7 +55,7 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
 {
 	mIsKeyReleased = true;
-	APE_LOG_DEBUG("keyReleasedStringEventCallback: " << keyValue);
+	//APE_LOG_DEBUG("keyReleasedStringEventCallback: " << keyValue);
 }
 
 void ape::ViewPointManagerPlugin::mousePressedStringEventCallback(const std::string & mouseValue)
@@ -184,11 +184,11 @@ void ape::ViewPointManagerPlugin::updateViewPoseByKeyBoard(const std::string& ke
 				mGeneralSpeedFactor += 3;
 			}
 			int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
-			if (keyValue == "pgup")
+			if (keyValue == "page up")
 			{
 				userNode->translate(ape::Vector3(0, +transScalar, 0), ape::Node::TransformationSpace::LOCAL);
 			}
-			if (keyValue == "pgdown")
+			if (keyValue == "page down")
 			{
 				userNode->translate(ape::Vector3(0, -transScalar, 0), ape::Node::TransformationSpace::LOCAL);
 			}

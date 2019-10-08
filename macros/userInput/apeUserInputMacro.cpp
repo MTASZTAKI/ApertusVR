@@ -363,12 +363,12 @@ void ape::UserInputMacro::keyReleasedStringValue(std::string keyReleasedStringVa
 
 void ape::UserInputMacro::keyPressedStringValue(std::string keyPressedStringValue)
 {
-	APE_LOG_DEBUG("keyPressedStringValue: " << keyPressedStringValue);
+	//APE_LOG_DEBUG("keyPressedStringValue: " << keyPressedStringValue);
 	auto functionList = mKeyPressedStringFunctions;
 	for (auto it : functionList)
 	{
 		auto type = &it.target_type();
-		APE_LOG_DEBUG("keyPressedStringValue: cb called: " << type->name());
+		//APE_LOG_DEBUG("keyPressedStringValue: cb called: " << type->name());
 		it(keyPressedStringValue);
 	}
 }

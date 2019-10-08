@@ -70,7 +70,7 @@ bool ape::OISUserInputPlugin::keyPressed(const OIS::KeyEvent& e)
 	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
 	mpUserInputMacro->keyPressedStringValue(keyAsString);
 	return true;
 }
@@ -80,7 +80,7 @@ bool ape::OISUserInputPlugin::keyReleased(const OIS::KeyEvent& e)
 	//APE_LOG_DEBUG("OIS::KeyCode: " << (OIS::KeyCode)e.key);
 	std::string keyAsString = mpKeyboard->getAsString(e.key);
 	std::transform(keyAsString.begin(), keyAsString.end(), keyAsString.begin(), ::tolower);
-	APE_LOG_DEBUG("keyAsString:" << keyAsString);
+	//APE_LOG_DEBUG("keyAsString:" << keyAsString);
 	mpUserInputMacro->keyReleasedStringValue(keyAsString);
 	return true;
 }
