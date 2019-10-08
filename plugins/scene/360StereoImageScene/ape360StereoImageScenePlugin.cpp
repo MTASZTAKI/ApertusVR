@@ -35,37 +35,20 @@ void ape::StereoImage360ScenePlugin::createSphere(std::string cameraName, std::s
 
 void ape::StereoImage360ScenePlugin::eventCallBack(const ape::Event & event)
 {
-	if (event.type == ape::Event::Type::CAMERA_WINDOW)
+	if (event.type == ape::Event::Type::CAMERA_CREATE)
 	{
-		std::size_t found = event.subjectName.find("Left");
-		if (found != std::string::npos)
+		if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			createSphere(event.subjectName, "sphereNodeLeft", "sphere_left.mesh", 1);
-		}
-		found = event.subjectName.find("Right");
-		if (found != std::string::npos)
-		{
-			createSphere(event.subjectName, "sphereNodeRight", "sphere_right.mesh", 2);
-		}
-	}
-	else if (event.type == ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA)
-	{
-		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
-		{
-			if (auto camera = manualTexture->getSourceCamera().lock())
+			std::string cameraName = camera->getName();
+			std::size_t found = cameraName.find("Left");
+			if (found != std::string::npos)
 			{
-				std::string cameraName = camera->getName();
-				std::size_t found = cameraName.find("Left");
-				if (found != std::string::npos)
-				{
-					createSphere(cameraName, "sphereNodeLeft", "sphere_left.mesh", 1);
-				}
-				found = cameraName.find("Right");
-				if (found != std::string::npos)
-				{
-					createSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
-					mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
-				}
+				createSphere(cameraName, "sphereNodeLeft", "sphere_left.mesh", 1);
+			}
+			found = cameraName.find("Right");
+			if (found != std::string::npos)
+			{
+				createSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
 			}
 		}
 	}

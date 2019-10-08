@@ -20,23 +20,38 @@
                 "FSAA": 8,
                 "FSAAHint": "Quality"
             },
-            "viewports": [
+          "viewports": [
+            {
+              "zOrder": 0,
+              "left": 0,
+              "top": 0,
+              "width": 700,
+              "height": 1050,
+              "cameras": [
                 {
-                    "zOrder": 0,
-                    "left": 0,
-                    "top": 0,
-                    "width": 1400,
-                    "height": 1050,
-                  "cameras": [
-                    {
-                      "name": "camera1",
-                      "nearClip": 1,
-                      "farClip": 10000,
-                      "fovY": 45
-                    }
-                  ]
+                  "name": "cameraLeft",
+                  "nearClip": 1,
+                  "farClip": 10000,
+                  "fovY": 45
                 }
-            ]
+              ]
+            },
+            {
+              "zOrder": 1,
+              "left": 700,
+              "top": 0,
+              "width": 700,
+              "height": 1050,
+              "cameras": [
+                {
+                  "name": "cameraRight",
+                  "nearClip": 1,
+                  "farClip": 10000,
+                  "fovY": 45
+                }
+              ]
+            }
+          ]
         }
     ]
 }

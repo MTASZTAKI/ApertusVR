@@ -1,6 +1,7 @@
 {
   "cameraNames": [
-    "camera1"
+    "cameraLeft",
+    "cameraRight"
   ],
   "cameraPoses": [
     [ 0, 0, 0, 1, 0, 0, 0 ]
