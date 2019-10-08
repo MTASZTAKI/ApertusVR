@@ -1,6 +1,6 @@
 {
     "httpServer": {
-        "port":  3001
+        "port":  3000
     },
     "pluginManager": {
       "plugins": [

@@ -32,10 +32,10 @@ message(STATUS "NODE_SOURCE_DIR: ${NODE_SOURCE_DIR}")
 set(NODE_LIB_NAME "node.lib")
 
 set(NODE_LIB_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_LIB_NAME}")
-message(STATUS "ApePlugins: Node: NODE_LIB_PATH_DEBUG: '${NODE_LIB_PATH_DEBUG}'")
+message(STATUS "ApeNodeJSPlugin: Node: NODE_LIB_PATH_DEBUG: '${NODE_LIB_PATH_DEBUG}'")
 
 set(NODE_LIB_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_LIB_NAME}")
-message(STATUS "ApePlugins: Node: NODE_LIB_PATH_RELEASE: '${NODE_LIB_PATH_RELEASE}'")
+message(STATUS "ApeNodeJSPlugin: Node: NODE_LIB_PATH_RELEASE: '${NODE_LIB_PATH_RELEASE}'")
 
 set(NODE_INSTALLER_DIR ${NODE_ROOT_DIR}/${NODE_VERSION}/installer)
 message(STATUS "NODE_INSTALLER_DIR: ${NODE_INSTALLER_DIR}")
@@ -59,16 +59,16 @@ else ()
 	message (STATUS "node.js is not installed" )
 endif ()
 
-message(STATUS "ApePlugins: npm version: ${RESULT_VARIABLE}")
+message(STATUS "ApeNodeJSPlugin: npm version: ${RESULT_VARIABLE}")
 execute_process(
 	COMMAND cmd /c "npm --version"
 	RESULT_VARIABLE BUILD_RESULT
 )
 
 if (${BUILD_RESULT} EQUAL 0)
-	message(STATUS "ApePlugins: npm is installed.")
+	message(STATUS "ApeNodeJSPlugin: npm is installed.")
 else ()
-	message("ApePlugins: npm is not installed, starting installer...")
+	message("ApeNodeJSPlugin: npm is not installed, starting installer...")
 
 	if (HOST_ARCH_X64)
 		execute_process(
@@ -83,10 +83,10 @@ else ()
 	endif ()
 
 	if (${BUILD_RESULT} EQUAL 0)
-		message(STATUS "ApePlugins: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
-		message(FATAL_ERROR "ApePlugins: Node-installer: npm should be added to path by the installer. Please restart CMake gui and reconfigure!")
+		message(STATUS "ApeNodeJSPlugin: Node-installer: Installation succeeded, exit code (${BUILD_RESULT})")
+		message(FATAL_ERROR "ApeNodeJSPlugin: Node-installer: npm should be added to path by the installer. Please restart CMake gui and reconfigure!")
 	else ()
-		message(FATAL_ERROR "ApePlugins: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
+		message(FATAL_ERROR "ApeNodeJSPlugin: Node-installer: Installation failed, exit code (${BUILD_RESULT})")
 	endif ()
 
 endif ()
@@ -98,8 +98,9 @@ add_subdirectory (nodeJsPlugin)
 file(COPY ${NODE_SOURCE_DIR}/debug/node.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 file(COPY ${NODE_SOURCE_DIR}/release/node.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
-execute_process(COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug npm install)
-execute_process(COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release npm install)
+message(STATUS "ApeNodeJSPlugin: try to run npm install in the bin folders")
+execute_process(COMMAND cmd /c "npm install" WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+execute_process(COMMAND cmd /c "npm install" WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
 option(APE_JSAPI_FROM_SOURCE "Use JS_API_FROM_SOURCE?" OFF )
 if (${APE_JSAPI_FROM_SOURCE})
@@ -322,16 +323,16 @@ if (WIN32)
 
 
 		# Build Node js
-		message(STATUS "ApePlugins: Prebuilding Node js...")
+		message(STATUS "ApeNodeJSPlugin: Prebuilding Node js...")
 
 		set(NODE_VCBUILD_PATH "${NODE_SOURCE_DIR}/vcbuild.bat")
 		set(NODE_SOLUTION_PATH "${NODE_SOURCE_DIR}/node.sln")
 
 		set(NODE_DLL_NAME "node.dll")
 		set(NODE_DLL_PATH_DEBUG "${NODE_SOURCE_DIR}/Debug/${NODE_DLL_NAME}")
-		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_DEBUG: '${NODE_DLL_PATH_DEBUG}'")
+		message(STATUS "ApeNodeJSPlugin: Node: NODE_DLL_PATH_DEBUG: '${NODE_DLL_PATH_DEBUG}'")
 		set(NODE_DLL_PATH_RELEASE "${NODE_SOURCE_DIR}/Release/${NODE_DLL_NAME}")
-		message(STATUS "ApePlugins: Node: NODE_DLL_PATH_RELEASE: '${NODE_DLL_PATH_RELEASE}'")
+		message(STATUS "ApeNodeJSPlugin: Node: NODE_DLL_PATH_RELEASE: '${NODE_DLL_PATH_RELEASE}'")
 
 		#--------------------------------------------------------------------------------------------------------
 
@@ -359,7 +360,7 @@ if (WIN32)
 		set(NODE_VCBUILD_COMMAND "${NODE_VCBUILD_PATH} ${NODE_BUILD_CONFIG} ${TARGET_STRING} dll vs2017")
 
 		if (EXISTS ${NODE_DLL_PATH_RELEASE})
-			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/release folder...")
+			message(STATUS "ApeNodeJSPlugin: Skip building NodeJs, dll found in NodeJs/bin/release folder...")
 			if (NOT EXISTS ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME})
 				# Copy node.dll to output directory
 				execute_process(
@@ -367,20 +368,20 @@ if (WIN32)
 					${NODE_DLL_PATH_RELEASE} ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME}
 					RESULT_VARIABLE COPY_SETUP_RESULT
 				)
-				message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+				message("ApeNodeJSPlugin: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
 			endif ()
 		else ()
 
 			# Use vcbuild to generate solution files
-			message("ApePlugins: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
+			message("ApeNodeJSPlugin: Node: Creating solution files with vcbuild.bat for RELEASE mode...")
 			execute_process(
 				COMMAND cmd /c ${NODE_VCBUILD_COMMAND}
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
+				message(STATUS "ApeNodeJSPlugin: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
 			else ()
-				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
+				message("ApeNodeJSPlugin: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
 			endif ()
 
 			# Check generated solution file
@@ -391,7 +392,7 @@ if (WIN32)
 			#--------------------------------------------------------------------------------------------------------
 
 			# Build Node js
-			message(STATUS "ApePlugins: Node: Setting up environment variables and building...")
+			message(STATUS "ApeNodeJSPlugin: Node: Setting up environment variables and building...")
 			if (${VCBUILD})
 				execute_process(
 					COMMAND cmd /c ${DEVENV_PATH} ${NODE_SOLUTION_PATH} /Build "Release"
@@ -407,9 +408,9 @@ if (WIN32)
 			endif ()
 
 			if (${BUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
+				message(STATUS "ApeNodeJSPlugin: Node: Build succeeded, exit code (${BUILD_RESULT})")
 			else ()
-				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
+				message("ApeNodeJSPlugin: Node: Build failed, exit code (${BUILD_RESULT})")
 			endif ()
 
 			# Check generated dll
@@ -424,7 +425,7 @@ if (WIN32)
 				RESULT_VARIABLE
 				COPY_SETUP_RESULT
 			)
-			message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+			message("ApeNodeJSPlugin: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
 			if (NOT EXISTS ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME})
 				message(FATAL_ERROR "Could not find ${APE_OUTPUT_DIR_RELEASE}/${NODE_DLL_NAME}")
 			endif ()
@@ -446,7 +447,7 @@ if (WIN32)
 		set(NODE_VCBUILD_COMMAND "${NODE_VCBUILD_PATH} ${NODE_BUILD_CONFIG} ${TARGET_STRING} dll vs2017")
 
 		if (EXISTS ${NODE_DLL_PATH_DEBUG})
-			message(STATUS "ApePlugins: Skip building NodeJs, dll found in NodeJs/bin/debug folder...")
+			message(STATUS "ApeNodeJSPlugin: Skip building NodeJs, dll found in NodeJs/bin/debug folder...")
 			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
 				# Copy node.dll to output directory
 				execute_process(
@@ -455,20 +456,20 @@ if (WIN32)
 					RESULT_VARIABLE
 					COPY_SETUP_RESULT
 				)
-				message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+				message("ApeNodeJSPlugin: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
 			endif ()
 		else ()
 
 			# Use vcbuild to generate solution files
-			message(STATUS "ApePlugins: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
+			message(STATUS "ApeNodeJSPlugin: Node: Creating solution files with vcbuild.bat for DEBUG mode...")
 			execute_process(
 				COMMAND cmd /c ${NODE_VCBUILD_COMMAND}
 				RESULT_VARIABLE NODE_VCBUILD_RESULT
 			)
 			if (${NODE_VCBUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
+				message(STATUS "ApeNodeJSPlugin: Node: Creating solution files succeeded, exit code (${NODE_VCBUILD_RESULT})")
 			else ()
-				message("ApePlugins: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
+				message("ApeNodeJSPlugin: Node: Creating solution files failed, exit code (${NODE_VCBUILD_RESULT})")
 			endif ()
 
 			# Check generated solution file
@@ -479,15 +480,15 @@ if (WIN32)
 			#--------------------------------------------------------------------------------------------------------
 
 			# Build Node js
-			message(STATUS "ApePlugins: Node: Setting up environment variables and building...")
+			message(STATUS "ApeNodeJSPlugin: Node: Setting up environment variables and building...")
 			if (${VCBUILD})
-				message("ApePlugins: VC BUILD")
+				message("ApeNodeJSPlugin: VC BUILD")
 				execute_process(
 					COMMAND cmd /c ${DEVENV_PATH} ${NODE_SOLUTION_PATH} /Build "Debug"
 					RESULT_VARIABLE BUILD_RESULT
 				)
 			elseif (${MSBUILD})
-				message("ApePlugins: MS BUILD")
+				message("ApeNodeJSPlugin: MS BUILD")
 				execute_process(
 					COMMAND cmd /c ${MSBUILD_SETUP_PATH} & msbuild ${NODE_SOLUTION_PATH} /t:Build /p:Configuration=Debug
 					RESULT_VARIABLE BUILD_RESULT
@@ -497,9 +498,9 @@ if (WIN32)
 			endif ()
 
 			if (${BUILD_RESULT} EQUAL 0)
-				message(STATUS "ApePlugins: Node: Build succeeded, exit code (${BUILD_RESULT})")
+				message(STATUS "ApeNodeJSPlugin: Node: Build succeeded, exit code (${BUILD_RESULT})")
 			else ()
-				message("ApePlugins: Node: Build failed, exit code (${BUILD_RESULT})")
+				message("ApeNodeJSPlugin: Node: Build failed, exit code (${BUILD_RESULT})")
 			endif ()
 
 			# Check generated dll
@@ -514,7 +515,7 @@ if (WIN32)
 				RESULT_VARIABLE
 				COPY_SETUP_RESULT
 			)
-			message("ApePlugins: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
+			message("ApeNodeJSPlugin: Node: Copy succeeded, exit code (${COPY_SETUP_RESULT})")
 			if (NOT EXISTS ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME})
 				message(FATAL_ERROR "Could not find ${APE_OUTPUT_DIR_DEBUG}/${NODE_DLL_NAME}")
 			endif ()
