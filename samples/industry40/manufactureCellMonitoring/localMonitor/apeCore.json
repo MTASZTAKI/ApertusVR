@@ -1,11 +1,11 @@
 {
   "plugins": [
-	"apeNodeJsPlugin",
+    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeSampleScenePlugin",
+    "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
-	"ape360VideoScenePlugin",
+    "apeSampleScenePlugin",
+    "ape360VideoScenePlugin",
     "apeCefBrowserPlugin"
   ],
   "network": {
@@ -40,9 +40,9 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-	  "/plugins/macros/SceneMaker/resources",
-      "/plugins/scene/SampleScene/resources",
-	  "/plugins/scene/360VideoScene/resources",
+	    "/macros/sceneMaker/resources",
+      "/plugins/scene/sampleScene/resources",
+	    "/plugins/scene/360VideoScene/resources"
     ]
   }
 }

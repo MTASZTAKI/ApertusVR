@@ -48,6 +48,10 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 		toggleViewPoses(true);
 		return;
 	}
+	else if (keyValue == "space")
+	{
+		mGeneralSpeedFactor += 3;
+	}
 	std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
 	updateViewPoseByKeyBoardThread.detach();
 }
@@ -55,6 +59,10 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
 {
 	mIsKeyReleased = true;
+	if (keyValue == "space")
+	{
+		mGeneralSpeedFactor -= 3;
+	}
 	//APE_LOG_DEBUG("keyReleasedStringEventCallback: " << keyValue);
 }
 
@@ -179,10 +187,6 @@ void ape::ViewPointManagerPlugin::updateViewPoseByKeyBoard(const std::string& ke
 	{
 		if (auto userNode = mpUserInputMacro->getUserNode().lock())
 		{
-			if (keyValue == "space")
-			{
-				mGeneralSpeedFactor += 3;
-			}
 			int transScalar = mTranslateSpeedFactorKeyboard + mGeneralSpeedFactor;
 			if (keyValue == "page up")
 			{
