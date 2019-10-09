@@ -8,7 +8,6 @@ ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	mpAssimpImporter = nullptr;
 	mAssimpScenes = std::vector<const aiScene*>();
 	mAssimpAssetConfigs = std::vector<AssetConfig>();

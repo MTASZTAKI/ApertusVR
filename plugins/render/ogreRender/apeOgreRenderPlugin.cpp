@@ -60,7 +60,6 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	APE_LOG_FUNC_LEAVE();
 }
 

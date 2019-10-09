@@ -43,6 +43,8 @@ namespace ape
 	private:
 		NetworkConfig mNetworkConfig;
 
+		std::string mNetworkGUID;
+
 		WindowConfig mWindowConfig;
 
 		std::vector<std::string> mPluginNames;
@@ -62,7 +64,9 @@ namespace ape
 
 		void setWindowConfig(WindowConfig windowConfig) override;
 
-		void setNetworkConfig(NetworkConfig networkConfig) override;
+		void setNetworkGUID(std::string networkGUID) override;
+
+		std::string getNetworkGUID() override;
 
 		std::string getConfigFolderPath() override;
 	};

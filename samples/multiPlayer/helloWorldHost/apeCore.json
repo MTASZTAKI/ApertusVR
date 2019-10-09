@@ -1,9 +1,9 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeHelloWorldScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeHelloWorldScenePlugin"
   ],
   "network": {
     "user": "multiPlayerHost",
@@ -25,7 +25,19 @@
     },
     "selected": "internet",
     "resourceLocations": [
-      "/plugins/scene/helloWorld/resources"
+      "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/materials",
+      "/plugins/render/ogreRender/resources/pbs",
+      "/plugins/render/ogreRender/resources/rtss",
+      "/plugins/render/ogreRender/resources/rtss/Cg",
+      "/plugins/render/ogreRender/resources/rtss/GLSL",
+      "/plugins/render/ogreRender/resources/rtss/GLSL150",
+      "/plugins/render/ogreRender/resources/rtss/GLSLES",
+      "/plugins/render/ogreRender/resources/rtss/HLSL",
+      "/plugins/render/ogreRender/resources/rtss/materials",
+      "/plugins/render/ogreRender/resources/hydrax",
+      "/plugins/render/ogreRender/resources/skyx",
+      "/plugins/scene/helloWorldScene/resources"
     ]
   }
 }

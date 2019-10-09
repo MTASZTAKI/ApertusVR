@@ -100,7 +100,10 @@ void ape::FileMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_FILE_FILENAME));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSkyBox))
+	{
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_FILE_SETASSKYBOX));
+		//APE_LOG_DEBUG("MATERIAL_FILE_SETASSKYBOX");
+	}
 	RakNet::RakString textureName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, textureName))
 	{

@@ -37,6 +37,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 	struct stat info;
 	msSingleton = this;
 	mConfigFolderPath = configFolderPath;
+	mNetworkGUID = std::string();
 
 	if (stat(mConfigFolderPath.c_str(), &info) != 0)
 	{
@@ -194,9 +195,14 @@ void ape::CoreConfigImpl::setWindowConfig(WindowConfig windowConfig)
 	mWindowConfig = windowConfig;
 }
 
-void ape::CoreConfigImpl::setNetworkConfig(NetworkConfig networkConfig)
+void ape::CoreConfigImpl::setNetworkGUID(std::string networkGUID)
 {
-	mNetworkConfig = networkConfig;
+	mNetworkGUID = networkGUID;
+}
+
+std::string ape::CoreConfigImpl::getNetworkGUID()
+{
+	return mNetworkGUID;
 }
 
 std::vector<std::string> ape::CoreConfigImpl::getPluginNames()

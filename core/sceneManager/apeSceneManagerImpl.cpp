@@ -60,7 +60,6 @@ ape::SceneManagerImpl::SceneManagerImpl()
 	mNodes = ape::NodeSharedPtrNameMap();
 	mEntities = ape::EntitySharedPtrNameMap();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mUniqueID = mpCoreConfig->getNetworkConfig().uniqueID;
 	APE_LOG_FUNC_LEAVE();
 }
 

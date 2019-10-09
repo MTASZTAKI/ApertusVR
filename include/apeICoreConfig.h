@@ -132,8 +132,6 @@ namespace ape
 
 		std::string userName;
 
-		std::string uniqueID;
-
 		Selected selected;
 
 		NatPunchThroughConfig natPunchThroughConfig;
@@ -149,7 +147,6 @@ namespace ape
 		NetworkConfig()
 		{
 			this->userName = std::string();
-			this->uniqueID = std::string();
 			this->natPunchThroughConfig = NatPunchThroughConfig();
 			this->lanConfig = LanConfig();
 			this->resourceLocations = std::vector<std::string>();
@@ -160,7 +157,6 @@ namespace ape
 
 		NetworkConfig(
 			std::string userName,
-			std::string uniqueID,
 			NatPunchThroughConfig natPunchThroughConfig,
 			LanConfig lanConfig,
 			std::vector<std::string> resourceLocations,
@@ -170,7 +166,6 @@ namespace ape
 		)
 		{
 			this->userName = userName;
-			this->uniqueID = uniqueID;
 			this->natPunchThroughConfig = natPunchThroughConfig;
 			this->lanConfig = lanConfig;
 			this->resourceLocations = resourceLocations;
@@ -231,7 +226,9 @@ namespace ape
 
 		virtual void setWindowConfig(WindowConfig windowConfig) = 0;
 
-		virtual void setNetworkConfig(NetworkConfig networkConfig) = 0;
+		virtual void setNetworkGUID(std::string networkGUID) = 0;
+
+		virtual std::string getNetworkGUID() = 0;
 
 		virtual std::string getConfigFolderPath() = 0;
 	};

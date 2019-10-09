@@ -163,6 +163,9 @@ void ape::SceneNetworkImpl::init()
 	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
 	mpRakReplicaPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 	mGuid = mpRakReplicaPeer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS);
+
+	mpCoreConfig->setNetworkGUID(mGuid.ToString());
+
 	mAddress = mpRakReplicaPeer->GetSystemAddressFromGuid(mGuid);
 	APE_LOG_DEBUG("Our guid is: " << mGuid.ToString());
 	APE_LOG_DEBUG("Started on: " << mAddress.ToString(true));
@@ -467,7 +470,7 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						if (!mIsStreamHost)
+						if (!mIsStreamHost && mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::Selected::LAN)
 						{
 							APE_LOG_DEBUG("Try to connect to stream host: " << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP << "|" << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort);
 							RakNet::ConnectionAttemptResult car = mpRakStreamPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
