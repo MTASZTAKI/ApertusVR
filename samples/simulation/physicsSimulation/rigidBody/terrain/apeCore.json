@@ -1,10 +1,10 @@
 {
   "plugins": [
-	"apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
     "apePhysicsSimulationScenePlugin",
-	"apeAssimpAssetLoaderPlugin",
+    "apeAssimpAssetLoaderPlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {
@@ -27,7 +27,7 @@
     },
     "selected": "none",
     "resourceLocations": [
-	  "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",
       "/plugins/render/ogreRender/resources/pbs",
       "/plugins/render/ogreRender/resources/rtss",
@@ -40,7 +40,7 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/macros/sceneMaker/resources",
-      "/plugins/assetLoader/assimpAssetLoader/resources"
+      "/plugins/assetImporter/assimpAssetLoader/resources"
     ]
   }
 }

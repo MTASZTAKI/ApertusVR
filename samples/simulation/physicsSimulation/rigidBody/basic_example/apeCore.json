@@ -2,8 +2,9 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
     "apePhysicsSimulationScenePlugin",
-	"apeAssimpAssetLoaderPlugin",
+    "apeAssimpAssetLoaderPlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {

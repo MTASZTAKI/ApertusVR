@@ -1,13 +1,14 @@
 {
   "plugins": [
-	"apeNodeJsPlugin",
     "apeOgreRenderPlugin",
-    "apeOisUserInputPlugin",
+	  "apeOisUserInputPlugin",
+	  "apeViewPointManagerPlugin",
+	  "apeOceanAndSkySimulationScenePlugin",
     "apeWaterGamePlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {
-    "user": "cave",
+    "user": "",
     "participant": "none",
     "internet": {
       "natPunchThrough": {
@@ -26,7 +27,7 @@
     },
     "selected": "none",
     "resourceLocations": [
-	  "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",
       "/plugins/render/ogreRender/resources/pbs",
       "/plugins/render/ogreRender/resources/rtss",
@@ -38,9 +39,9 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-      "/macros/sceneMaker/resources",
-      "/plugins/assetLoader/assimpAssetLoader/resources",
-	  "/plugins/game/waterGame/resources"
+      "/plugins/game/waterGame/resources"
     ]
   }
 }
+
+

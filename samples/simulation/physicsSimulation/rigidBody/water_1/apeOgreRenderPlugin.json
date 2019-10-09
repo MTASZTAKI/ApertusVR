@@ -6,7 +6,6 @@
     },
     "renderWindows": [
         {
-            "enable": true,
             "monitorIndex": 0,
             "name": "RigidBodyWater1",
             "resolution": {

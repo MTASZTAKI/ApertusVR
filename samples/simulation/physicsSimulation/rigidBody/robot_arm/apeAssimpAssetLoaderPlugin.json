@@ -1,10 +1,10 @@
 {
   "assets": [
     {
-      "file": "/plugins/assimpAssetLoader/resources/Avocado.gltf",
+      "file": "/plugins/assetImporter/assimpAssetLoader/resources/Avocado.gltf",
       "mergeAndExportMeshes": false,
-      "scale": [1000,1000,1000],
-      "position": [ 0,100, 0 ],
+      "scale": [ 1000, 1000, 1000 ],
+      "position": [ 0, 100, 0 ],
       "orientation": [ 1, 0, 0, 0 ],
       "regenerateNormals": true,
       "rootNodeName": "avoNode",
