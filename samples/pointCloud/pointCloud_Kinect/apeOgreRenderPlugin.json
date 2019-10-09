@@ -8,7 +8,7 @@
         {
             "enable": true,
             "monitorIndex": 0,
-            "name": "window0",
+            "name": "PointCloud_Kinect",
             "resolution": {
                 "width": 1400,
                 "height": 1050,

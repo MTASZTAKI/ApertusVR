@@ -74,3 +74,6 @@ target_link_libraries (apeKinectPlugin apePluginManager apeSceneManager apeEvent
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET apeKinectPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET apeKinectPlugin PROPERTY FOLDER "Plugins/Track/Body")
+
+file(COPY ${KINECT_HOME}/v2.0_1409/Bin/Kinect20.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+file(COPY ${KINECT_HOME}/v2.0_1409/Bin/Kinect20.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)

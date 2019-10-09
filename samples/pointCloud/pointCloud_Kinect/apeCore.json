@@ -1,10 +1,10 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeKinectPlugin",
-	"apeSampleScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeKinectPlugin",
+    "apeSampleScenePlugin"
   ],
   "network": {
     "user": "",
@@ -37,9 +37,9 @@
       "/plugins/render/ogreRender/resources/rtss/HLSL",
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
-      "/plugins/render/ogreRender/resources/skyx"
+      "/plugins/render/ogreRender/resources/skyx",
       "/plugins/scene/SampleScene/resources",
-	  "/macros/SceneMaker/resources"
+	    "/macros/SceneMaker/resources"
     ]
   }
 }

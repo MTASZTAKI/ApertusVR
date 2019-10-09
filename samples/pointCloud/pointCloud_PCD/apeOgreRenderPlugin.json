@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
-            "name": "window0",
+            "name": "PointCloud_PCD",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
