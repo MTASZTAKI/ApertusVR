@@ -80,6 +80,8 @@ namespace ape
 
 		int mServerPort;
 
+		void keyPressedStringEventCallback(const std::string& keyValue);
+
 		void mousePressedStringEventCallback(const std::string& keyValue);
 
 		void mouseReleasedStringEventCallback(const std::string& keyValue);

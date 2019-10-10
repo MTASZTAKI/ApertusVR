@@ -54,6 +54,11 @@ void ape::HtmlOverlayUiManagerPlugin::parseNodeJsPluginConfig()
 	APE_LOG_FUNC_LEAVE();
 }
 
+void ape::HtmlOverlayUiManagerPlugin::keyPressedStringEventCallback(const std::string & keyValue)
+{
+	mpUserInputMacro->setOverlayBrowserKeyValue(keyValue);
+}
+
 void ape::HtmlOverlayUiManagerPlugin::mousePressedStringEventCallback(const std::string & keyValue)
 {
 	if (keyValue == "left")
@@ -109,6 +114,7 @@ void ape::HtmlOverlayUiManagerPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	parseNodeJsPluginConfig();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+	mpUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&HtmlOverlayUiManagerPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&HtmlOverlayUiManagerPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&HtmlOverlayUiManagerPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&HtmlOverlayUiManagerPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));

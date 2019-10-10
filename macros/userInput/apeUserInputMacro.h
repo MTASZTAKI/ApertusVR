@@ -281,6 +281,8 @@ namespace ape
 
 		std::string getOverlayBrowserURL();
 
+		void setOverlayBrowserKeyValue(std::string keyValue);
+
 		void rayQuery(ape::Vector3 position);
     };
 }

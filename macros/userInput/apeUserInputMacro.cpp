@@ -488,6 +488,46 @@ std::string ape::UserInputMacro::getOverlayBrowserURL()
 	}
 }
 
+void ape::UserInputMacro::setOverlayBrowserKeyValue(std::string keyValue)
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		APE_LOG_DEBUG("setOverlayBrowserKeyValue: " << keyValue);
+		if (keyValue != "shift" && keyValue != "right shift")
+			std::transform(keyValue.begin(), keyValue.end(), keyValue.begin(), ::tolower);
+
+		std::wstring keyAsWString(keyValue.begin(), keyValue.end());
+		if (keyValue== "backspace")
+			keyAsWString = 8;
+		else if (keyValue== "tab")
+			keyAsWString = 9;
+		else if (keyValue== "enter")
+			keyAsWString = 13;
+		else if (keyValue== "shift" || keyValue == "right shift")
+			keyAsWString = 14;
+		else if (keyValue== "space")
+			keyAsWString = 32;
+		else if (keyValue== "end")
+			keyAsWString = 35;
+		else if (keyValue== "home")
+			keyAsWString = 36;
+		else if (keyValue== "left")
+			keyAsWString = 37;
+		else if (keyValue== "up")
+			keyAsWString = 38;
+		else if (keyValue== "right")
+			keyAsWString = 39;
+		else if (keyValue== "down")
+			keyAsWString = 40;
+		else if (keyValue== "delete")
+			keyAsWString = 46;
+		else if (keyValue== "esc")
+			keyAsWString = 1046;
+
+		overlayBrowser->keyASCIIValue(keyAsWString[0]);
+	}
+}
+
 void ape::UserInputMacro::rayQuery(ape::Vector3 position)
 {
 	if (auto rayOverlayNode = mRayOverlayNode.lock())
