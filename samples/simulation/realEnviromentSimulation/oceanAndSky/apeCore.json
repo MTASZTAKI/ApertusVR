@@ -1,12 +1,12 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeOceanAndSkyScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeOceanAndSkySimulationScenePlugin"
   ],
   "network": {
-    "user": "",
+    "user": "cave",
     "participant": "none",
     "internet": {
       "natPunchThrough": {
@@ -36,10 +36,7 @@
       "/plugins/render/ogreRender/resources/rtss/HLSL",
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
-      "/plugins/render/ogreRender/resources/skyx",
-      "/plugins/scene/oceanAndSkyScene/resources"
+      "/plugins/render/ogreRender/resources/skyx"
     ]
   }
 }
-
-

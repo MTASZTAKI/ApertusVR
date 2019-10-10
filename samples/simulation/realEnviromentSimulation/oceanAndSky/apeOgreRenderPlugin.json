@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
-            "name": "oceanAndSky",
+            "name": "OceanAndSkySimulation",
             "resolution": {
                 "width": 1400,
                 "height": 1050,
