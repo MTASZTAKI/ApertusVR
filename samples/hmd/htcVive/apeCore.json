@@ -2,7 +2,8 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeHtcVivePlugin",
-	"apeHelloWorldScenePlugin"
+    "apeViewPointManagerPlugin",
+    "apeHelloWorldScenePlugin"
   ],
   "network": {
     "user": "HtcVive",

@@ -8,7 +8,7 @@ material universe
 			depth_write off
 			texture_unit
 			{
-				cubic_texture purple-nebula-complex.png combinedUVW
+				cubic_texture purple-nebula-complex.jpg combinedUVW
 				tex_address_mode clamp
 			}
  			rtshader_system

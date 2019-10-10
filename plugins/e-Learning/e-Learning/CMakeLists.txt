@@ -20,15 +20,34 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	apeOgreRenderPlugin.json
-	apeViewPointManagerPlugin.json
-	apeCore.json
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	3rdParty/stb_image.h
+	apeELearningPlugin.h
+	apeELearningPluginConfig.h
 	)
 
-add_custom_target(
-    HtcVive ALL
-    SOURCES ${CONFIGS}
-)
+set (SOURCES 
+	apeELearningPlugin.cpp
+	)
 
-set_property (TARGET HtcVive PROPERTY FOLDER "Samples/HMD")
+include_directories(
+	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+	)
+
+add_library (apeELearningPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeELearningPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
+
+set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apeELearningPlugin PROPERTY FOLDER "Plugins/E-Learning")
+
+set_property (TARGET apeELearningPlugin PROPERTY CXX_STANDARD 17)
+
+set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+

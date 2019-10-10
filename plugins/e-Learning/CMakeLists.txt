@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2018 MTA SZTAKI
+#Copyright (c) 2016 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,4 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# Add all header and cpp files in the directory to the project
-set (HEADERS
-	3rdParty/stb_image.h
-	apeELearningPlugin.h
-	apeELearningPluginConfig.h
-	)
-
-set (SOURCES 
-	apeELearningPlugin.cpp
-	)
-
-include_directories(
-	${RAPIDJSON_INCLUDE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty
-	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
-	)
-
-add_library (apeELearningPlugin SHARED ${SOURCES} ${HEADERS})
-
-# Link with dependency libraries
-target_link_libraries (apeELearningPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
-
-set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-
-set_property (TARGET apeELearningPlugin PROPERTY FOLDER "Plugins")
-
-set_property (TARGET apeELearningPlugin PROPERTY CXX_STANDARD 17)
-
-set_property (TARGET apeELearningPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-
-
+add_subdirectory (e-Learning)

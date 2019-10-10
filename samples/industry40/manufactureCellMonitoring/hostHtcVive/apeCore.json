@@ -2,14 +2,14 @@
   "plugins": [
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeSampleScenePlugin",
+    "apeHtcVivePlugin",
     "apeViewPointManagerPlugin",
-	"ape360VideoScenePlugin",
+    "apeSampleScenePlugin",
+    "ape360VideoScenePlugin",
     "apeCefBrowserPlugin"
   ],
   "network": {
-    "user": "indusrty40Host",
+    "user": "indusrty40HtcViveHost",
     "participant": "host",
     "internet": {
       "natPunchThrough": {
@@ -19,7 +19,7 @@
       "lobby": {
         "ip": "195.111.2.95",
         "port": "8888",
-        "room": "multiPlayer"
+        "room": "industry40"
       }
     },
     "lan": {
@@ -40,9 +40,8 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-	  "/plugins/macros/SceneMaker/resources",
-      "/plugins/scene/SampleScene/resources",
-	  "/plugins/scene/360VideoScene/resources",
+	    "/macros/sceneMaker/resources",
+	    "/plugins/scene/360VideoScene/resources"
     ]
   }
 }

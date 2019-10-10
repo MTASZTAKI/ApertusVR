@@ -28,11 +28,11 @@ void ape::apeHelloWorldScenePlugin::eventCallBack(const ape::Event& event)
 void ape::apeHelloWorldScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	/*if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
+	if (auto universeSkyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("universe", ape::Entity::MATERIAL_FILE).lock()))
 	{
 		universeSkyBoxMaterial->setFileName("universe");
 		universeSkyBoxMaterial->setAsSkyBox();
-	}*/
+	}
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
@@ -43,7 +43,8 @@ void ape::apeHelloWorldScenePlugin::Init()
 	mPlanetNode = mpSceneManager->createNode("planetNode");
 	if (auto planetNode = mPlanetNode.lock())
 	{
-		planetNode->setPosition(ape::Vector3(0, 0, -100));
+		planetNode->setScale(ape::Vector3(10, 10, 10));
+		planetNode->setPosition(ape::Vector3(0, 150, 0));
 		if (auto planetMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("planet.mesh", ape::Entity::GEOMETRY_FILE).lock()))
 		{
 			planetMeshFile->setFileName("planet.mesh");
