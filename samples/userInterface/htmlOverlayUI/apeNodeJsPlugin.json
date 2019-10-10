@@ -1,13 +1,16 @@
 {
-    "httpServer": {
-        "port":  3000
-    },
-    "pluginManager": {
-        "plugins": [
-            {
-                "file": "htmlOverlayUI/htmlOverlayUI.js",
-                "public": "htmlOverlayUI/public"
-            }
-        ]
-    }
+  "httpServer": {
+    "port": 3000
+  },
+  "pluginManager": {
+    "plugins": [
+      {
+        "file": "robotCalibration/robotCalibration.js",
+        "public": "robotCalibration/public"
+      },
+      {
+        "file": "x3dLoader/x3dLoader.js"
+      }
+    ]
+  }
 }

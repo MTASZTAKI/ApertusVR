@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
-            "name": "HelloWorld",
+            "name": "HtmlOverlayUI",
             "resolution": {
                 "width": 1400,
                 "height": 1050,

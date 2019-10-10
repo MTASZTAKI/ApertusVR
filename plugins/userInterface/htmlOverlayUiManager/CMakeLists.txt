@@ -30,14 +30,14 @@ set (SOURCES
 	)
 
 include_directories(	
-	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 
 # Add the dinamic library target to the project
 add_library (apeHtmlOverlayUiManagerPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeHtmlOverlayUiManagerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro)
+target_link_libraries (apeHtmlOverlayUiManagerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeCoreConfig apeUserInputMacro apeSceneMakerMacro)
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET apeHtmlOverlayUiManagerPlugin PROPERTY FOLDER "Plugins/UserInterface")

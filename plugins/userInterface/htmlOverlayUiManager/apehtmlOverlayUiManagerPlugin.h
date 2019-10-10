@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "apeISceneManager.h"
 #include "apeICoreConfig.h"
 #include "apeUserInputMacro.h"
+#include "apeSceneMakerMacro.h"
 
 #define THIS_PLUGINNAME "apeHtmlOverlayUiManagerPlugin"
 
@@ -67,7 +68,11 @@ namespace ape
 
 		ape::UserInputMacro* mpUserInputMacro;
 
-		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
+		ape::SceneMakerMacro* mpSceneMakerMacro;
+
+		void parseNodeJsPluginConfig();
+
+		int mServerPort;
 
 		void eventCallBack(const ape::Event& event);
 	};

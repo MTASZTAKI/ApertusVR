@@ -1,10 +1,12 @@
 {
   "plugins": [
-	"apenodeJsPlugin",
+    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
-	"apeSampleScenePlugin",
-    "apeViewPointManagerPlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeCefBrowserPlugin",
+    "apeHtmlOverlayUiManagerPlugin",
+    "apeSampleScenePlugin"
   ],
   "network": {
     "user": "",
@@ -39,7 +41,7 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/plugins/scene/sampleScene/resources",
-	  "/macros/sceneMaker/resources"
+	    "/macros/sceneMaker/resources"
     ]
   }
 }
