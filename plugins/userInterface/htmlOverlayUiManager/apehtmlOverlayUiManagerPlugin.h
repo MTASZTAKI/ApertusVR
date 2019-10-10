@@ -70,9 +70,21 @@ namespace ape
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
+		ape::UserInputMacro::OverlayBrowserCursor mOverlayBrowserCursor;
+
+		ape::Vector2 mMouseMovedValueAbs;
+
+		int mMouseScrolledValue;
+
 		void parseNodeJsPluginConfig();
 
 		int mServerPort;
+
+		void mousePressedStringEventCallback(const std::string& keyValue);
+
+		void mouseReleasedStringEventCallback(const std::string& keyValue);
+
+		void mouseMovedCallback(const ape::Vector2& mouseMovedValueRel, const ape::Vector2& mouseMovedValueAbs);
 
 		void eventCallBack(const ape::Event& event);
 	};

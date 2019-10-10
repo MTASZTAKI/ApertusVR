@@ -282,8 +282,6 @@ namespace ape
 		std::string getOverlayBrowserURL();
 
 		void rayQuery(ape::Vector3 position);
-
-		ape::RayGeometryWeakPtr getRayGeometry();
     };
 }
 

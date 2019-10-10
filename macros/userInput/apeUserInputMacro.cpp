@@ -107,18 +107,18 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	}
 	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
-		APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
+		;// APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
 	}
 	else if (event.type == ape::Event::Type::BROWSER_MOUSE_CLICK)
 	{
-		APE_LOG_DEBUG("BROWSER_MOUSE_CLICK");
+		//APE_LOG_DEBUG("BROWSER_MOUSE_CLICK");
 		if (auto overlayBrowserMaterial = mOverlayBrowserMaterial.lock())
 		{
 			if (overlayBrowserMaterial->isShowOnOverlay())
 			{
 				if (auto overlayBrowser = mOverlayBrowser.lock())
 				{
-					APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
+					;// APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
 				}
 			}
 		}
@@ -496,10 +496,5 @@ void ape::UserInputMacro::rayQuery(ape::Vector3 position)
 		if (auto rayGeomtery = mRayGeometry.lock())
 			rayGeomtery->fireIntersectionQuery();
 	}
-}
-
-ape::RayGeometryWeakPtr ape::UserInputMacro::getRayGeometry()
-{
-	return mRayGeometry;
 }
 

@@ -6,15 +6,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-ape::apeELearningPlugin::apeELearningPlugin()
+ape::ELearningPlugin::ELearningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&apeELearningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ELearningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ELearningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&ELearningPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&ELearningPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mNodeNamesHotSpots = std::map<std::string, quicktype::Hotspot>();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
@@ -38,13 +38,13 @@ ape::apeELearningPlugin::apeELearningPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::apeELearningPlugin::~apeELearningPlugin()
+ape::ELearningPlugin::~ELearningPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::FileGeometryWeakPtr ape::apeELearningPlugin::createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility)
+ape::FileGeometryWeakPtr ape::ELearningPlugin::createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility)
 {
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
 	{
@@ -63,7 +63,7 @@ ape::FileGeometryWeakPtr ape::apeELearningPlugin::createSphere(std::string camer
 	}
 }
 
-void ape::apeELearningPlugin::createRoomTextures()
+void ape::ELearningPlugin::createRoomTextures()
 {
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
@@ -101,7 +101,7 @@ void ape::apeELearningPlugin::createRoomTextures()
 	}
 }
 
-void ape::apeELearningPlugin::createHotSpots()
+void ape::ELearningPlugin::createHotSpots()
 {
 	for (auto const& room : mConfig.get_rooms())
 	{
@@ -167,7 +167,7 @@ void ape::apeELearningPlugin::createHotSpots()
 	}
 }
 
-void ape::apeELearningPlugin::createBrowser()
+void ape::ELearningPlugin::createBrowser()
 {
 	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -70), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
 	if (auto browserNode = mpSceneManager->getNode("mainBrowser").lock())
@@ -187,7 +187,7 @@ void ape::apeELearningPlugin::createBrowser()
 	}
 }
 
-void ape::apeELearningPlugin::loadRoom(std::string name)
+void ape::ELearningPlugin::loadRoom(std::string name)
 {
 	mIsForwardMovementEnabled = false;
 	for (int i = 0; i < mRooms.size(); i++)
@@ -218,7 +218,7 @@ void ape::apeELearningPlugin::loadRoom(std::string name)
 	}
 }
 
-void ape::apeELearningPlugin::loadHotSpots()
+void ape::ELearningPlugin::loadHotSpots()
 {
 	std::map<std::string, quicktype::Hotspot>::iterator it;
 	for (it = mNodeNamesHotSpots.begin(); it != mNodeNamesHotSpots.end(); it++)
@@ -250,7 +250,7 @@ void ape::apeELearningPlugin::loadHotSpots()
 	}
 }
 
-void ape::apeELearningPlugin::loadRoomTextures()
+void ape::ELearningPlugin::loadRoomTextures()
 {
 	if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 	{
@@ -270,7 +270,7 @@ void ape::apeELearningPlugin::loadRoomTextures()
 	}
 }
 
-void ape::apeELearningPlugin::rotateSpheres(int angle)
+void ape::ELearningPlugin::rotateSpheres(int angle)
 {
 	mCurrentSphereAngle = angle;
 	auto angleRad = ape::Radian(ape::Degree(angle).toRadian());
@@ -293,7 +293,7 @@ void ape::apeELearningPlugin::rotateSpheres(int angle)
 	}
 }
 
-void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
+void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::CAMERA_CREATE)
 	{
@@ -405,7 +405,7 @@ void ape::apeELearningPlugin::eventCallBack(const ape::Event & event)
 	}
 }
 
-void ape::apeELearningPlugin::keyPressedStringEventCallback(const std::string & keyValue)
+void ape::ELearningPlugin::keyPressedStringEventCallback(const std::string & keyValue)
 {
 	if (keyValue == "esc")
 	{
@@ -414,7 +414,7 @@ void ape::apeELearningPlugin::keyPressedStringEventCallback(const std::string & 
 	}
 }
 
-void ape::apeELearningPlugin::mousePressedStringEventCallback(const std::string & keyValue)
+void ape::ELearningPlugin::mousePressedStringEventCallback(const std::string & keyValue)
 {
 	if (keyValue == "left")
 	{
@@ -431,7 +431,7 @@ void ape::apeELearningPlugin::mousePressedStringEventCallback(const std::string 
 	}
 }
 
-void ape::apeELearningPlugin::mouseReleasedStringEventCallback(const std::string & keyValue)
+void ape::ELearningPlugin::mouseReleasedStringEventCallback(const std::string & keyValue)
 {
 	if (mpApeUserInputMacro->isOverlayBrowserShowed())
 	{
@@ -441,7 +441,7 @@ void ape::apeELearningPlugin::mouseReleasedStringEventCallback(const std::string
 	}
 }
 
-void ape::apeELearningPlugin::mouseMovedCallback(const ape::Vector2 & mouseMovedValueRel, const ape::Vector2 & mouseMovedValueAbs)
+void ape::ELearningPlugin::mouseMovedCallback(const ape::Vector2 & mouseMovedValueRel, const ape::Vector2 & mouseMovedValueAbs)
 {
 	mMouseMovedValueAbs = mouseMovedValueAbs;
 	if (mpApeUserInputMacro->isOverlayBrowserShowed())
@@ -460,12 +460,12 @@ void ape::apeELearningPlugin::mouseMovedCallback(const ape::Vector2 & mouseMoved
 	}
 }
 
-void ape::apeELearningPlugin::mouseScrolledCallback(const int & mouseScrolledValue)
+void ape::ELearningPlugin::mouseScrolledCallback(const int & mouseScrolledValue)
 {
 	mMouseScrolledValue = mMouseScrolledValue;
 }
 
-void ape::apeELearningPlugin::controllerMovedValueCallback(const ape::Vector3 & controllerPosition, const ape::Quaternion & controllerOrientation, const ape::Vector3 & controllerScale)
+void ape::ELearningPlugin::controllerMovedValueCallback(const ape::Vector3 & controllerPosition, const ape::Quaternion & controllerOrientation, const ape::Vector3 & controllerScale)
 {
 	if (auto controllerNode = mControllerNode.lock())
 	{
@@ -476,7 +476,7 @@ void ape::apeELearningPlugin::controllerMovedValueCallback(const ape::Vector3 & 
 	}
 }
 
-void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl)
+void ape::ELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl)
 {
 	mLastHmdPosition = hmdMovedValuePos * hmdMovedValueScl;
 	mLastHmdOrientation = hmdMovedValueOri;
@@ -488,7 +488,7 @@ void ape::apeELearningPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMoved
 	//APE_LOG_DEBUG("mLastHmdPosition: " << mLastHmdPosition.toString());
 }
 
-void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& axis)
+void ape::ELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& axis)
 {
 	//APE_LOG_DEBUG("controllerTouchpadPressedValue: " << axis.toString());
 	mIsTouchPadPressed = true;
@@ -520,12 +520,12 @@ void ape::apeELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2&
 	}
 }
 
-void ape::apeELearningPlugin::controllerTouchpadReleasedValue(const ape::Vector2 & axis)
+void ape::ELearningPlugin::controllerTouchpadReleasedValue(const ape::Vector2 & axis)
 {
 	mIsTouchPadPressed = false;
 }
 
-void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
+void ape::ELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
 {
 	APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
 	if (buttonValue == "Grip")
@@ -546,7 +546,7 @@ void ape::apeELearningPlugin::controllerButtonPressedStringValue(const std::stri
 	}
 }
 
-void ape::apeELearningPlugin::findClosestRotationPose(int currentSphereAngle, std::string command)
+void ape::ELearningPlugin::findClosestRotationPose(int currentSphereAngle, std::string command)
 {
 	auto currentSphereAngleRotatePose = ape::RotationPose(currentSphereAngle, "sphere", "sphere");
 	mCurrentRotationPoses.push_back(currentSphereAngleRotatePose);
@@ -579,7 +579,7 @@ void ape::apeELearningPlugin::findClosestRotationPose(int currentSphereAngle, st
 	}
 }
 
-void ape::apeELearningPlugin::Init()
+void ape::ELearningPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
@@ -587,16 +587,16 @@ void ape::apeELearningPlugin::Init()
 	FILE* apeELearningConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	mConfig = nlohmann::json::parse(apeELearningConfigFile);
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&apeELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&apeELearningPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&apeELearningPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&apeELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
-	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&apeELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&apeELearningPlugin::controllerMovedValueCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-	mpApeUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&apeELearningPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-	mpApeUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&apeELearningPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForControllerTouchpadReleasedValue(std::bind(&apeELearningPlugin::controllerTouchpadReleasedValue, this, std::placeholders::_1));
-	mpApeUserInputMacro->registerCallbackForControllerButtonPressedStringValue(std::bind(&apeELearningPlugin::controllerButtonPressedStringValue, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&ELearningPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&ELearningPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&ELearningPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&ELearningPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
+	mpApeUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&ELearningPlugin::mouseScrolledCallback, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&ELearningPlugin::controllerMovedValueCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpApeUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&ELearningPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpApeUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&ELearningPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForControllerTouchpadReleasedValue(std::bind(&ELearningPlugin::controllerTouchpadReleasedValue, this, std::placeholders::_1));
+	mpApeUserInputMacro->registerCallbackForControllerButtonPressedStringValue(std::bind(&ELearningPlugin::controllerButtonPressedStringValue, this, std::placeholders::_1));
 	createHotSpots();
 	while (!mSphereGeometryLeft.lock())
 	{
@@ -606,7 +606,7 @@ void ape::apeELearningPlugin::Init()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeELearningPlugin::Run()
+void ape::ELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	createBrowser();
@@ -626,25 +626,25 @@ void ape::apeELearningPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeELearningPlugin::Step()
+void ape::ELearningPlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeELearningPlugin::Stop()
+void ape::ELearningPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeELearningPlugin::Suspend()
+void ape::ELearningPlugin::Suspend()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::apeELearningPlugin::Restart()
+void ape::ELearningPlugin::Restart()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();

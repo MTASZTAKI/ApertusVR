@@ -83,7 +83,7 @@ namespace ape
 			return angle > r.angle;
 		}
 	};
-	class apeELearningPlugin : public ape::IPlugin
+	class ELearningPlugin : public ape::IPlugin
 	{
 	private:
 		ape::ISceneManager* mpSceneManager;
@@ -141,9 +141,9 @@ namespace ape
 		quicktype::Welcome mConfig;
 
 	public:
-		apeELearningPlugin();
+		ELearningPlugin();
 
-		~apeELearningPlugin();
+		~ELearningPlugin();
 
 		ape::FileGeometryWeakPtr createSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
 
@@ -200,12 +200,12 @@ namespace ape
 
 	APE_PLUGIN_FUNC ape::IPlugin* CreateapeELearningPlugin()
 	{
-		return new ape::apeELearningPlugin;
+		return new ape::ELearningPlugin;
 	}
 
 	APE_PLUGIN_FUNC void DestroyapeELearningPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::apeELearningPlugin*)plugin;
+		delete (ape::ELearningPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
