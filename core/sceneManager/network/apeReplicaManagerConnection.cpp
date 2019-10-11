@@ -31,6 +31,7 @@ SOFTWARE.*/
 #include "apeTubeGeometryImpl.h"
 #include "apeSphereGeometryImpl.h"
 #include "apeConeGeometryImpl.h"
+#include "apeCloneGeometryImpl.h"
 #include "apeTextGeometryImpl.h"
 #include "apeIndexedFaceSetGeometryImpl.h" 
 #include "apeIndexedLineSetGeometryImpl.h" 
@@ -78,6 +79,11 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_FILE).lock())
 				return ((ape::FileGeometryImpl*)entity.get());
+		}
+		else if (objectType == "CloneGeometry")
+		{
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CLONE).lock())
+				return ((ape::CloneGeometryImpl*)entity.get());
 		}
 		else if (objectType == "PlaneGeometry")
 		{
