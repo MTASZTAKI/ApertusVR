@@ -92,12 +92,10 @@ RakNet::RM3SerializationResult ape::CloneGeometryImpl::Serialize(RakNet::Seriali
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSourceGeometryName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSourceGeometryGroupName);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mSourceGeometryGroupName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
@@ -105,10 +103,6 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSourceGeometryGroupName))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
-
 	RakNet::RakString parentNodeName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentNodeName))
 	{
@@ -116,7 +110,6 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_PARENTNODE));
 	}
-
 	RakNet::RakString sourceGeometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, sourceGeometryName))
 	{
@@ -127,6 +120,11 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY));
 		}
 	}
-
+	RakNet::RakString sourceGeometryGroupName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, sourceGeometryGroupName))
+	{
+		mSourceGeometryGroupName = sourceGeometryGroupName;
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
