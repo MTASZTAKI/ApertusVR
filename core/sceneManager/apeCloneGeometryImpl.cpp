@@ -123,7 +123,7 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 	RakNet::RakString sourceGeometryGroupName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, sourceGeometryGroupName))
 	{
-		mSourceGeometryGroupName = sourceGeometryGroupName;
+		mSourceGeometryGroupName = sourceGeometryGroupName.C_String();
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
