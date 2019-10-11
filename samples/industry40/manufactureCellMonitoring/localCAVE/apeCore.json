@@ -1,30 +1,33 @@
 {
   "plugins": [
+    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeKinectHeadTrackingPlugin",
+    "apeSampleScenePlugin",
+    "ape360VideoScenePlugin",
     "apeCefBrowserPlugin"
   ],
   "network": {
-    "user": "indusrty40GuestCAVE",
-    "participant": "guest",
+    "user": "",
+    "participant": "none",
     "internet": {
       "natPunchThrough": {
-        "ip": "195.111.2.95",
-        "port": "61666"
+        "ip": "",
+        "port": ""
       },
       "lobby": {
-        "ip": "195.111.2.95",
-        "port": "8888",
-        "room": "industry40"
+        "ip": "",
+        "port": "",
+        "room": ""
       }
     },
     "lan": {
       "ip": "",
       "port": ""
     },
-    "selected": "internet",
+    "selected": "none",
     "resourceLocations": [
       "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",
@@ -38,8 +41,8 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-      "/macros/sceneMaker/resources",
-      "/plugins/scene/360VideoScene/resources"
+	    "/macros/sceneMaker/resources",
+	    "/plugins/scene/360VideoScene/resources"
     ]
   }
 }
