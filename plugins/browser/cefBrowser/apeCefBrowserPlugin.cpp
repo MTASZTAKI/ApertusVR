@@ -175,6 +175,20 @@ void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 				browserMaterial->showOnOverlay(true, browser->getZOrder());
 		}
 	}
+	else if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(browserName + "_Material").lock()))
+	{
+		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(browserName + "_Texture").lock()))
+		{
+			mBrowserCounter++;
+			mpapeCefLifeSpanHandlerImpl->registerBrowser(mBrowserCounter, browser);
+			mpapeCefKeyboardHandlerImpl->registerBrowser(mBrowserCounter, browser);
+			mpapeCefRenderHandlerImpl->addTexture(mBrowserCounter, browserTexture);
+			mBrowserIDNames[browserName] = mBrowserCounter;
+			CefWindowInfo cefWindowInfo;
+			cefWindowInfo.SetAsWindowless(0);
+			CefBrowserHost::CreateBrowser(cefWindowInfo, mapeCefClientImpl.get(), browser->getURL(), mBrowserSettings, nullptr);
+		}
+	}
 }
 
 void ape::CefBrowserPlugin::Init()

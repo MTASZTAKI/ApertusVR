@@ -304,20 +304,22 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 				replicaManager->Reference(entity.get());
 			return entity;
 		}
-		case ape::Entity::CAMERA:
-		{
-			APE_LOG_TRACE("type: CAMERA");
-			auto entity = std::make_shared<ape::CameraImpl>(name);
-			mEntities.insert(std::make_pair(name, entity));
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::CAMERA_CREATE));
-			return entity;
-		}
 		case ape::Entity::BROWSER:
 		{
 			APE_LOG_TRACE("type: BROWSER");
 			auto entity = std::make_shared<ape::BrowserImpl>(name, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isReplicaHost());
 			mEntities.insert(std::make_pair(name, entity));
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::BROWSER_CREATE));
+			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+				replicaManager->Reference(entity.get());
+			return entity;
+		}
+		case ape::Entity::CAMERA:
+		{
+			APE_LOG_TRACE("type: CAMERA");
+			auto entity = std::make_shared<ape::CameraImpl>(name);
+			mEntities.insert(std::make_pair(name, entity));
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::CAMERA_CREATE));
 			return entity;
 		}
 		case ape::Entity::TEXTURE_UNIT:

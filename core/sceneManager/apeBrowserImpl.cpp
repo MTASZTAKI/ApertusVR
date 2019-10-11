@@ -165,14 +165,14 @@ RakNet::RM3SerializationResult ape::BrowserImpl::Serialize(RakNet::SerializePara
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mURL);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mResoultion);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mZoomLevel);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastPosition);
+	//mVariableDeltaSerializer.SerializeVariable(&serializationContext, mZoomLevel);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mURL.c_str()));
+	/*mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClickIsDown);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseLastClick);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseScrollDelta);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLastKeyValue);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLastKeyValue);*/
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
@@ -182,17 +182,17 @@ void ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mResoultion))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RESOLUTION));
+	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mZoomLevel))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_ZOOM));*/
 	RakNet::RakString url;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, url))
 	{
 		mURL = url.C_String();
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_URL));
 	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mResoultion))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RESOLUTION));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mZoomLevel))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_ZOOM));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastPosition))
+	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastPosition))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_MOVED));
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClickIsDown);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseLastClick))
@@ -200,7 +200,7 @@ void ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMouseScrollDelta))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MOUSE_SCROLL));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLastKeyValue))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_KEY_VALUE));
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_KEY_VALUE));*/
 	RakNet::RakString geometryName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
 	{

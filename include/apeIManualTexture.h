@@ -46,8 +46,8 @@ namespace ape
 		{
 			this->height = 0;
 			this->width = 0;
-			pixelFormat = ape::Texture::PixelFormat::PF_INVALID;
-			usage = ape::Texture::Usage::U_INVALID;
+			this->pixelFormat = ape::Texture::PixelFormat::PF_INVALID;
+			this->usage = ape::Texture::Usage::U_INVALID;
 			this->gammaCorrection = false;
 			this->useFsaa = false;
 		}

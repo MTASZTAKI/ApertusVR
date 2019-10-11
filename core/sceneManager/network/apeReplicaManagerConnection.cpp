@@ -45,6 +45,7 @@ SOFTWARE.*/
 #include "apeWaterImpl.h"
 #include "apePointCloudImpl.h"
 #include "apeFileTextureImpl.h"
+#include "apeManualTextureImpl.h"
 
 ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -69,6 +70,19 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		//APE_LOG_DEBUG("Received name: " << nodeName.C_String() << std::endl;
 		if (auto node = mpSceneManagerImpl->createNode(nodeName.C_String()).lock())
 			return ((ape::NodeImpl*)node.get());
+	}
+	else if (objectType == "ManualTexture")
+	{
+		RakNet::RakString entityName;
+		allocationIdBitstream->Read(entityName);
+		//APE_LOG_DEBUG("Received name: " << entityName.C_String());
+		ape::ManualTextureParameters manualTextureParameters;
+		allocationIdBitstream->Read(manualTextureParameters);
+		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_MANUAL).lock()))
+		{
+			manualTexture->setParameters(manualTextureParameters.width, manualTextureParameters.height, manualTextureParameters.pixelFormat, manualTextureParameters.usage, manualTextureParameters.gammaCorrection, manualTextureParameters.useFsaa);
+			return ((ape::ManualTextureImpl*)manualTexture.get());
+		}
 	}
 	else
 	{
