@@ -20,9 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (localMonitor)
-add_subdirectory (hostMonitor)
-add_subdirectory (guestMonitor)
-add_subdirectory (hostHtcVive)
-add_subdirectory (guestCAVE)
-add_subdirectory (localCAVE)
+set (CONFIGS
+	apeOgreRenderPlugin.json
+	apeViewPointManagerPlugin.json
+	apeCore.json
+	)
+
+add_custom_target(
+    ManufactureCellMonitoring_MonitorGuest ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET ManufactureCellMonitoring_MonitorGuest PROPERTY FOLDER "Samples/Industry40/ManufactureCellMonitoring")
