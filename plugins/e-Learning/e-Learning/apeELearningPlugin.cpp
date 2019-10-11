@@ -313,7 +313,12 @@ void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 			if (auto controllerNode = mpSceneManager->createNode("htcVive_Controller_Node").lock())
 			{
 				controllerNode->setScale(ape::Vector3(10, 10, 10));
-				std::string controller3DModelFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/scene.gltf";
+				std::string controller3DModelFileName;
+				for (auto const& resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+				{
+					if (resourceLocation.find("e-Learning"))
+						controller3DModelFileName = resourceLocation + "/scene.gltf";
+				}
 				if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(controller3DModelFileName, ape::Entity::GEOMETRY_FILE).lock()))
 				{
 					model->setParentNode(controllerNode);

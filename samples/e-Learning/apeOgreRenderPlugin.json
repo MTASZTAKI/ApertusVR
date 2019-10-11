@@ -7,7 +7,7 @@
   "shading": "perPixel",
   "renderWindows": [
     {
-      "name": "local",
+      "name": "e-learning",
       "monitorIndex": 0,
       "hidden": true,
       "resolution": {

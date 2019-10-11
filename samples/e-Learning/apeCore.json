@@ -2,6 +2,7 @@
   "plugins": [
     "apeOgreRenderPlugin",
     "apeHtcVivePlugin",
+    "apeAssimpAssetLoaderPlugin",
     "apeCefBrowserPlugin",
     "apeELearningPlugin"
   ],
@@ -25,7 +26,7 @@
     },
     "selected": "none",
     "resourceLocations": [
-	  "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",
       "/plugins/render/ogreRender/resources/pbs",
       "/plugins/render/ogreRender/resources/rtss",
@@ -37,8 +38,7 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-      "/plugins/e-Learning/resources",
-      "/macros/sceneMaker/resources"
+      "/plugins/e-Learning/e-Learning/resources"
     ]
   }
 }
