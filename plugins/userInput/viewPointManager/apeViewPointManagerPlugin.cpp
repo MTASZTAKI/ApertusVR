@@ -20,6 +20,9 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	mIsMouseReleased = false;
 	mMouseMovedRelValue = ape::Vector2();
 	mMouseScrolledValue = 0;
+	mControllerLastOrientation = ape::Quaternion();
+	mControllerLastTouchAxis = ape::Vector2();
+	mIsControllerTouchPressed = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -87,7 +90,18 @@ void ape::ViewPointManagerPlugin::mouseMovedEventCallback(const ape::Vector2& mo
 
 void ape::ViewPointManagerPlugin::controllerMovedEventCallback(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl)
 {
-	updateViewPoseByController(controllerMovedValuePos, controllerMovedValueOri, controllerMovedValueScl);
+	mControllerLastOrientation = controllerMovedValueOri;
+}
+
+void ape::ViewPointManagerPlugin::controllerTouchpadPressedValue(const ape::Vector2 & axis)
+{
+	mControllerLastTouchAxis = axis;
+	mIsControllerTouchPressed = true;
+}
+
+void ape::ViewPointManagerPlugin::controllerTouchpadReleasedValue(const ape::Vector2 & axis)
+{
+	mIsControllerTouchPressed = false;
 }
 
 void ape::ViewPointManagerPlugin::hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl)
@@ -116,6 +130,8 @@ void ape::ViewPointManagerPlugin::Init()
 	mpUserInputMacro->registerCallbackForMouseScrolledValue(std::bind(&ViewPointManagerPlugin::mouseScrolledEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForControllerMovedValue(std::bind(&ViewPointManagerPlugin::controllerMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	mpUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&ViewPointManagerPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	mpUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&ViewPointManagerPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
+	mpUserInputMacro->registerCallbackForControllerTouchpadReleasedValue(std::bind(&ViewPointManagerPlugin::controllerTouchpadReleasedValue, this, std::placeholders::_1));
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
 	FILE* apeViewPointManagerPlugintConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -250,12 +266,12 @@ void ape::ViewPointManagerPlugin::updateViewPoseByMouse(const std::string& mouse
 	}
 }
 
-void ape::ViewPointManagerPlugin::updateViewPoseByController(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl)
+void ape::ViewPointManagerPlugin::updateViewPoseByController()
 {
 	if (auto userNode = mpUserInputMacro->getUserNode().lock())
 	{
-		//userNode->translate(controllerMovedValueOri * ape::Vector3(0, 0, 3 * -controllerMovedValuePos.y), ape::Node::TransformationSpace::WORLD);
-		//APE_LOG_DEBUG("updateViewPoseByController: ");
+		userNode->translate(mControllerLastOrientation * ape::Vector3(0, 0, 3 * -mControllerLastTouchAxis.y), ape::Node::TransformationSpace::WORLD);
+		//APE_LOG_DEBUG("updateViewPoseByController: " << controllerMovedValueOri.toString() << " :: " << controllerMovedValuePos.toString());
 	}
 }
 
@@ -276,6 +292,8 @@ void ape::ViewPointManagerPlugin::Run()
 	while (true)
 	{
 		std::this_thread::sleep_for (std::chrono::milliseconds(10));
+		if (mIsControllerTouchPressed)
+			updateViewPoseByController();
 	}
 	APE_LOG_FUNC_LEAVE();
 }

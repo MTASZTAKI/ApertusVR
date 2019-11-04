@@ -58,6 +58,10 @@ namespace ape
 
 		void controllerMovedEventCallback(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
 
+		void controllerTouchpadPressedValue(const ape::Vector2& axis);
+
+		void controllerTouchpadReleasedValue(const ape::Vector2& axis);
+
 		void hmdMovedEventCallback(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
 
 		void mouseScrolledEventCallback(const int& mouseValue);
@@ -103,13 +107,19 @@ namespace ape
 
 		int mMouseScrolledValue;
 
+		ape::Quaternion mControllerLastOrientation;
+
+		ape::Vector2 mControllerLastTouchAxis;
+
+		bool mIsControllerTouchPressed;
+
 		ape::UserInputMacro* mpUserInputMacro;
 
 		void updateViewPoseByKeyBoard(const std::string& keyValue);
 
 		void updateViewPoseByMouse(const std::string& mouseValue);
 
-		void updateViewPoseByController(ape::Vector3 controllerMovedValuePos, ape::Quaternion controllerMovedValueOri, ape::Vector3 controllerMovedValueScl);
+		void updateViewPoseByController();
 
 		void updateViewPoseByHmd(ape::Vector3 hmdMovedValuePos, ape::Quaternion hmdMovedValueOri, ape::Vector3 hmdMovedValueScl);
 
