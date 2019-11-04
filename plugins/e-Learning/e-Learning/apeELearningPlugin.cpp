@@ -35,6 +35,7 @@ ape::ELearningPlugin::ELearningPlugin()
 	mCurrentRotationPoseID = -1;
 	mIsForwardMovementEnabled = false;
 	mCurrentSphereAngle = 0;
+	mActiveHotSpotsNode = std::vector<ape::NodeWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -112,39 +113,47 @@ void ape::ELearningPlugin::createHotSpots()
 			{
 				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
 				{
-					node->setPosition(ape::Vector3(20, hotspot.get_v(), hotspot.get_z()));
-					node->setOrientation(ape::Quaternion(0.707, 0.707, 0, 0));
-					if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+					if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 					{
-						material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-						material->setCullingMode(ape::Material::CullingMode::NONE_CM);
-						auto pos = hotspot.get_textures()[0].find("/") + 1;
-						/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + hotspot.get_textures()[0].substr(pos);
-						if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+						node->setParentNode(sphereGeometryLeft->getParentNode());
+						node->setPosition(ape::Vector3(hotspot.get_h(), hotspot.get_v(), hotspot.get_z()));
+						auto angleRad = ape::Radian(ape::Degree(room.get_rotation()).toRadian());
+						auto axis = ape::Vector3(0, 0, 1);
+						auto roomRotation = ape::Quaternion();
+						roomRotation.FromAngleAxis(angleRad, axis);
+						node->setOrientation(ape::Quaternion(0.707, 0.707, 0, 0) * roomRotation);
+						if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
 						{
-							int width, height, channels;
-							unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
-							if (rgb_image)
+							material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+							material->setCullingMode(ape::Material::CullingMode::NONE_CM);
+							auto pos = hotspot.get_textures()[0].find("/") + 1;
+							/*std::string textureFileName = mpCoreConfig->getNetworkConfig().resourceLocations[0] + "/" + hotspot.get_textures()[0].substr(pos);
+							if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
 							{
-								texture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
-								texture->setBuffer(rgb_image);
-								material->setPassTexture(texture);
-							}*/
-						std::string textureFileName = hotspot.get_textures()[0].substr(pos);
-						if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
-						{
-							texture->setFileName(textureFileName);
-							material->setTexture(texture);
-							if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE).lock()))
+								int width, height, channels;
+								unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+								if (rgb_image)
+								{
+									texture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false);
+									texture->setBuffer(rgb_image);
+									material->setPassTexture(texture);
+								}*/
+							std::string textureFileName = hotspot.get_textures()[0].substr(pos);
+							if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
 							{
-								planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * hotspot.get_width(), hotspot.get_src_width() * hotspot.get_width()), ape::Vector2(1, 1));
-								planeGeometry->setParentNode(node);
-								planeGeometry->setMaterial(material);
+								texture->setFileName(textureFileName);
+								material->setTexture(texture);
+								if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE).lock()))
+								{
+									planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * hotspot.get_width(), hotspot.get_src_width() * hotspot.get_width()), ape::Vector2(1, 1));
+									planeGeometry->setParentNode(node);
+									planeGeometry->setMaterial(material);
+								}
 							}
 						}
+						node->setChildrenVisibility(false);
+						mNodeNamesHotSpots[node->getName()] = hotspot;
 					}
-					node->setChildrenVisibility(false);
-					mNodeNamesHotSpots[node->getName()] = hotspot;
 				}
 			}
 		}
@@ -169,7 +178,7 @@ void ape::ELearningPlugin::createHotSpots()
 
 void ape::ELearningPlugin::createBrowser()
 {
-	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -70), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
+	mpSceneMakerMacro->makeBrowser("mainBrowser", "http://www.apertusvr.org", ape::Vector3(0, 0, -80), ape::Quaternion(1, 0, 0, 0), 102.4, 76.8, 1024, 768);
 	if (auto browserNode = mpSceneManager->getNode("mainBrowser").lock())
 	{
 		browserNode->setChildrenVisibility(false);
@@ -189,6 +198,7 @@ void ape::ELearningPlugin::createBrowser()
 
 void ape::ELearningPlugin::loadRoom(std::string name)
 {
+	APE_LOG_DEBUG("Room: " << name);
 	mIsForwardMovementEnabled = false;
 	for (int i = 0; i < mRooms.size(); i++)
 	{
@@ -201,6 +211,16 @@ void ape::ELearningPlugin::loadRoom(std::string name)
 	loadRoomTextures();
 	mCurrentRotationPoses.clear();
 	mCurrentRotationPoses.resize(0);
+	for (auto const& hotSpotNode : mActiveHotSpotsNode)
+	{
+		if (auto node = hotSpotNode.lock())
+		{
+			node->setChildrenVisibility(false);
+			//APE_LOG_DEBUG("A hotSpot is inactive: " << node->getName());
+		}
+	}
+	mActiveHotSpotsNode.clear();
+	mActiveHotSpotsNode.resize(0);
 	loadHotSpots();
 	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
 	{
@@ -233,16 +253,11 @@ void ape::ELearningPlugin::loadHotSpots()
 					if (auto node = mpSceneManager->getNode(it->first).lock())
 					{
 						node->setChildrenVisibility(true);
-						APE_LOG_DEBUG("A hotSpot is active: " << hotspot.get_id());
-						ape::RotationPose rotationPose(20, "hotspot", hotspot.get_id());
+						int rotationAngle = std::abs(ape::Euler(node->getDerivedOrientation()).getPitch().toDegree());
+						//APE_LOG_DEBUG("A hotSpot is active: " << hotspot.get_id() << " rotationAngle:" << rotationAngle);
+						ape::RotationPose rotationPose(rotationAngle, "hotspot", hotspot.get_id());
 						mCurrentRotationPoses.push_back(rotationPose);
-					}
-				}
-				else
-				{
-					if (auto node = mpSceneManager->getNode(it->first).lock())
-					{
-						node->setChildrenVisibility(false);
+						mActiveHotSpotsNode.push_back(node);
 					}
 				}
 			}
@@ -257,7 +272,7 @@ void ape::ELearningPlugin::loadRoomTextures()
 		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(mRooms[mCurrentRoomID].get_id() + "_Material_Left").lock()))
 		{
 			sphereGeometryLeft->setMaterial(material);
-			APE_LOG_DEBUG("A room is active with texture: " << material->getName());
+			//APE_LOG_DEBUG("A room is active with texture: " << material->getName());
 		}
 	}
 	if (auto sphereGeometryRight = mSphereGeometryRight.lock())
@@ -265,13 +280,14 @@ void ape::ELearningPlugin::loadRoomTextures()
 		if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->getEntity(mRooms[mCurrentRoomID].get_id() + "_Material_Right").lock()))
 		{
 			sphereGeometryRight->setMaterial(material);
-			APE_LOG_DEBUG("A room is active with texture: " << material->getName());
+			//APE_LOG_DEBUG("A room is active with texture: " << material->getName());
 		}
 	}
 }
 
 void ape::ELearningPlugin::rotateSpheres(int angle)
 {
+	//APE_LOG_DEBUG("rotateSpheres: " << angle);
 	mCurrentSphereAngle = angle;
 	auto angleRad = ape::Radian(ape::Degree(angle).toRadian());
 	auto axis = ape::Vector3(0, 1, 0);
@@ -349,7 +365,7 @@ void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 	}
 	else if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
-		APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION called");
+		//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION called");
 		if (auto rayGeometry = mRayGeometry.lock())
 		{
 			auto intersections = rayGeometry->getIntersections();
@@ -374,7 +390,7 @@ void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 							{
 								if (clickedNode->getName() == it->first && clickedNode->getChildrenVisibility())
 								{
-									APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
+									//APE_LOG_DEBUG("A hotSpotNode was the clickedNode");
 									if (auto browser = mBrowser.lock())
 									{
 										browser->setURL(mGameURLResourcePath[it->second.get_gameurl()]);
@@ -499,7 +515,7 @@ void ape::ELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& ax
 	mIsTouchPadPressed = true;
 	if (axis.y > 0.666 && std::abs(axis.x) < 0.333)
 	{
-		APE_LOG_DEBUG("UP");
+		//APE_LOG_DEBUG("UP");
 		if (mCurrentRotationPoses[mCurrentRotationPoseID].type == "room")
 		{
 			mIsForwardMovementEnabled = true;
@@ -507,7 +523,7 @@ void ape::ELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& ax
 	}
 	else if (axis.x > 0.666 && std::abs(axis.y) < 0.333)
 	{
-		APE_LOG_DEBUG("RIGHT");
+		//APE_LOG_DEBUG("RIGHT: " << mCurrentRotationPoseID);
 		findClosestRotationPose(mCurrentSphereAngle, "RIGHT");
 		if (mCurrentRotationPoseID > -1 && mCurrentRotationPoseID < mCurrentRotationPoses.size())
 		{
@@ -516,7 +532,7 @@ void ape::ELearningPlugin::controllerTouchpadPressedValue(const ape::Vector2& ax
 	}
 	else if (axis.x < -0.666 && std::abs(axis.y) < 0.333)
 	{
-		APE_LOG_DEBUG("LEFT");
+		//APE_LOG_DEBUG("LEFT: " << mCurrentRotationPoseID);
 		findClosestRotationPose(mCurrentSphereAngle, "LEFT");
 		if (mCurrentRotationPoseID > -1 && mCurrentRotationPoseID < mCurrentRotationPoses.size())
 		{
@@ -532,7 +548,7 @@ void ape::ELearningPlugin::controllerTouchpadReleasedValue(const ape::Vector2 & 
 
 void ape::ELearningPlugin::controllerButtonPressedStringValue(const std::string & buttonValue)
 {
-	APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
+	//APE_LOG_DEBUG("controllerButtonPressedStringValue: " << buttonValue);
 	if (buttonValue == "Grip")
 	{
 		if (auto browserNode = mBrowserNode.lock())
@@ -553,34 +569,41 @@ void ape::ELearningPlugin::controllerButtonPressedStringValue(const std::string 
 
 void ape::ELearningPlugin::findClosestRotationPose(int currentSphereAngle, std::string command)
 {
-	auto currentSphereAngleRotatePose = ape::RotationPose(currentSphereAngle, "sphere", "sphere");
-	mCurrentRotationPoses.push_back(currentSphereAngleRotatePose);
-	std::sort(mCurrentRotationPoses.begin(), mCurrentRotationPoses.end(), std::greater<ape::RotationPose>());
-	for (int i = 0; i < mCurrentRotationPoses.size(); i++)
+	if (mCurrentRotationPoses.size() > 1)
 	{
-		if (mCurrentRotationPoses[i].type == "sphere")
+		auto currentSphereAngleRotatePose = ape::RotationPose(currentSphereAngle, "sphere", "sphere");
+		mCurrentRotationPoses.push_back(currentSphereAngleRotatePose);
+		std::sort(mCurrentRotationPoses.begin(), mCurrentRotationPoses.end(), std::greater<ape::RotationPose>());
+		for (int i = 0; i < mCurrentRotationPoses.size(); i++)
 		{
-			if (command == "RIGHT")
+			if (mCurrentRotationPoses[i].type == "sphere")
 			{
-				if (i - 1 > -1)
+				if (command == "RIGHT")
 				{
-					mCurrentRotationPoseID = i - 1;
-					APE_LOG_DEBUG("RIGHT");
+					if (i - 1 > -1)
+					{
+						mCurrentRotationPoseID = i - 1;
+						//APE_LOG_DEBUG("RIGHT");
+					}
+					mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
+					return;
 				}
-				mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
-				return;
-			}
-			else if (command == "LEFT")
-			{
-				if (i + 1 < mCurrentRotationPoses.size())
+				else if (command == "LEFT")
 				{
-					mCurrentRotationPoseID = i + 1;
-					APE_LOG_DEBUG("LEFT");
+					if (i + 1 < mCurrentRotationPoses.size())
+					{
+						mCurrentRotationPoseID = i + 1;
+						//APE_LOG_DEBUG("LEFT");
+					}
+					mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
+					return;
 				}
-				mCurrentRotationPoses.erase(mCurrentRotationPoses.begin() + i);
-				return;
 			}
 		}
+	}
+	else
+	{
+		mCurrentRotationPoseID = 0;
 	}
 }
 
@@ -602,19 +625,19 @@ void ape::ELearningPlugin::Init()
 	mpApeUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&ELearningPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForControllerTouchpadReleasedValue(std::bind(&ELearningPlugin::controllerTouchpadReleasedValue, this, std::placeholders::_1));
 	mpApeUserInputMacro->registerCallbackForControllerButtonPressedStringValue(std::bind(&ELearningPlugin::controllerButtonPressedStringValue, this, std::placeholders::_1));
-	createHotSpots();
-	while (!mSphereGeometryLeft.lock())
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	}
-	createRoomTextures();
 	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::ELearningPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	while (!mSphereGeometryLeft.lock())
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	}
 	createBrowser();
+	createRoomTextures();
+	createHotSpots();
 	loadRoom(mConfig.get_start_room());
 	while (true)
 	{

@@ -100,6 +100,8 @@ namespace ape
 
 		std::vector<quicktype::Room> mRooms;
 
+		std::vector<ape::NodeWeakPtr> mActiveHotSpotsNode;
+
 		std::vector<RotationPose> mCurrentRotationPoses;
 
 		int mCurrentRotationPoseID;
