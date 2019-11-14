@@ -135,6 +135,8 @@ void ape::HtcVivePlugin::Init()
 	{
 		APE_LOG_DEBUG("OpenVR device system driver name: " << buf);
 	}
+	/*APE_LOG_DEBUG("try to open vr mirror window");
+	vr::VRCompositor()->ShowMirrorWindow();*/
 	unsigned int width, height;
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	APE_LOG_DEBUG("Recomended Render Target Size : " << width << "x" << height);
