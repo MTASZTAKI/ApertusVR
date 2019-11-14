@@ -44,7 +44,6 @@ namespace ape
 	private:
 		ape::ISceneManager* mpSceneManager;
 
-		//TODO_ape360VideoPlugin just for the exhibition
 		std::chrono::milliseconds mLastBrowserReload;
 
 	public:

@@ -3,10 +3,10 @@
     "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
     "apeHtcVivePlugin",
-    "apeViewPointManagerPlugin",
+    "apeCefBrowserPlugin",
     "apeSampleScenePlugin",
-    "ape360VideoScenePlugin",
-    "apeCefBrowserPlugin"
+    "apeViewPointManagerPlugin",
+    "ape360VideoScenePlugin"
   ],
   "network": {
     "user": "indusrty40HtcViveHost",
