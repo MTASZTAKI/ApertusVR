@@ -1,0 +1,10 @@
+{
+    "httpServer": {
+        "port":  3000
+    },
+    "pluginManager": {
+      "plugins": [
+        
+      ]
+    }
+}
