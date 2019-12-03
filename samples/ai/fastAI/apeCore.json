@@ -38,9 +38,12 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-	    "/macros/sceneMaker/resources",
+      "/macros/sceneMaker/resources",
       "/plugins/scene/SampleScene/resources",
-	    "/samples/ai/fastAI/resources"
+      "/samples/ai/fastAI/resources/test/Cat",
+      "/samples/ai/fastAI/resources/test/Dog",
+      "/samples/ai/fastAI/resources/train/Cat",
+      "/samples/ai/fastAI/resources/train/Dog"
     ]
   }
 }
