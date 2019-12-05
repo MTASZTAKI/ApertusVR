@@ -154,7 +154,7 @@ app.post('/setfastai', function (req, res, next) {
 			var manualMaterial = ape.nbind.JsBindManager().createManualMaterial("sda" + i);
 			var fileTexture = ape.nbind.JsBindManager().createFileTexture(image_path);
 			fileTexture.setFileName(image_path);
-			manualMaterial.setPassTexture(fileTexture);
+			manualMaterial.setTexture(fileTexture);
 
 			//var parentNode1 = ape.nbind.JsBindManager().createNode('aaa' + i);
 			//parentNode1.setPosition(ape.nbind.Vector3(10, 30, 10));	

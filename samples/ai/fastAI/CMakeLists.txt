@@ -23,6 +23,7 @@
 message(STATUS "ApeFastAI: Try to find Python")
 FIND_PACKAGE(PythonLibs)
 if (PYTHONLIBS_FOUND)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/apeFastAI.py DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	message(STATUS "ApeFastAI: Python is installed")
 	message(STATUS "ApeFastAI: Try to update pip")
 	execute_process(COMMAND cmd /c "python -m pip install --upgrade pip" WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
