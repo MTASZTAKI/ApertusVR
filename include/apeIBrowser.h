@@ -106,6 +106,8 @@ namespace ape
 		virtual bool isFocusOnEditableField() = 0;
 
 		virtual void setFocusOnEditableField(bool enable) = 0;
+
+		virtual void reload() = 0;
 	};
 }
 

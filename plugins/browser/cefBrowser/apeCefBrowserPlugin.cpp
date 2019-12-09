@@ -63,6 +63,12 @@ void ape::CefBrowserPlugin::processEvent(ape::Event event)
 						mpapeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
 				}
 				break;
+			case ape::Event::Type::BROWSER_RELOAD:
+			{
+				if (mBrowserIDNames[browser->getName()])
+					mpapeCefRenderHandlerImpl->setURL(mBrowserIDNames[browser->getName()], browser->getURL());
+			}
+			break;
 			case ape::Event::Type::BROWSER_MOUSE_MOVED:
 				{
 					if (mBrowserIDNames[browser->getName()])

@@ -39,6 +39,7 @@ ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : ape::IBrow
 	mID = 0;
 	mLastKeyValue = 0;
 	mIsFocusOnEditableField = false;
+	mReloadDeltaTrigger = false;
 }
 
 ape::BrowserImpl::~BrowserImpl()
@@ -154,6 +155,12 @@ void ape::BrowserImpl::setFocusOnEditableField(bool enable)
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD));
 }
 
+void ape::BrowserImpl::reload()
+{
+	mReloadDeltaTrigger = !mReloadDeltaTrigger;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RELOAD));
+}
+
 void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -174,6 +181,7 @@ RakNet::RM3SerializationResult ape::BrowserImpl::Serialize(RakNet::SerializePara
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMouseScrollDelta);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLastKeyValue);*/
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mReloadDeltaTrigger);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -208,5 +216,7 @@ void ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 		mGeometry = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(mGeometryName).lock());
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
 	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mReloadDeltaTrigger))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RELOAD));
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

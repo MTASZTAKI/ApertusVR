@@ -74,6 +74,8 @@ namespace ape
 
 		void setFocusOnEditableField(bool enable) override;
 
+		void reload() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -110,6 +112,8 @@ namespace ape
 		int mLastKeyValue;
 
 		bool mIsFocusOnEditableField;
+
+		bool mReloadDeltaTrigger;
 	};
 }
 

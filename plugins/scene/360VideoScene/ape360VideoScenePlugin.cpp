@@ -49,7 +49,7 @@ void ape::Video360ScenePlugin::Run()
 		{
 			if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity("browser").lock()))
 			{
-				browser->setURL("https://www.youtube.com/embed/aRB13POSo80?start=400&vq=hd1080&autoplay=1&playlist=aRB13POSo80");
+				browser->reload();
 				mLastBrowserReload = timeStamp;
 			}
 		}
