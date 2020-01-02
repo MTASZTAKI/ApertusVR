@@ -1,0 +1,61 @@
+{
+	"male_worker": [{
+		"actions": [{
+			"trigger": {
+				"type": "timestamp",
+				"data": "0"
+			},
+			"event": {
+				"type": "animation",
+				"data": "/plugins/polimi/resources/elements/workerMale/animation_male_worker.bin"
+			}
+		}]
+	}],
+	"trolley": [{
+		"actions": [{
+				"trigger": {
+					"type": "clickOn",
+					"data": "trolley"
+				},
+				"event": {
+					"type": "animation",
+					"data": "/plugins/polimi/resources/elements/trolley/animation_trolley.bin"
+				}
+			},
+			{
+				"trigger": {
+					"type": "timestamp",
+					"data": "50"
+				},
+				"event": {
+					"type": "animation",
+					"data": "/plugins/polimi/resources/elements/trolley/animation_trolley.bin"
+				}
+			}
+		]
+	}],
+	"barrel": [{
+		"actions": [{
+			"trigger": {
+				"type": "timestamp",
+				"data": "0"
+			},
+			"event": {
+				"type": "animation",
+				"data": "/plugins/polimi/resources/elements/barrel/animation_barrel.bin"
+			}
+		}]
+	}],
+	"tc52_1": [{
+		"actions": [{
+			"trigger": {
+				"type": "clickOn",
+				"data": "tc52_1"
+			},
+			"event": {
+				"type": "change geometry",
+				"data": "/plugins/polimi/resources/machines/TC52/tc52_green.3DS"
+			}
+		}]
+	}]
+}
