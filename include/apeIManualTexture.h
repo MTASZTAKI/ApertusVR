@@ -41,6 +41,7 @@ namespace ape
 		ape::Texture::Usage usage;
 		bool gammaCorrection;
 		bool useFsaa;
+		bool serializeBuffer;
 
 		ManualTextureParameters()
 		{
@@ -50,9 +51,10 @@ namespace ape
 			this->usage = ape::Texture::Usage::U_INVALID;
 			this->gammaCorrection = false;
 			this->useFsaa = false;
+			this->serializeBuffer = false;
 		}
 
-		ManualTextureParameters(unsigned int height, unsigned int width, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa)
+		ManualTextureParameters(unsigned int height, unsigned int width, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa, bool serializeBuffer)
 		{
 			this->height = height;
 			this->width = width;
@@ -60,6 +62,7 @@ namespace ape
 			this->usage = usage;
 			this->gammaCorrection = gammaCorrection;
 			this->useFsaa = useFsaa;
+			this->serializeBuffer = serializeBuffer;
 		}
 	};
 
@@ -71,7 +74,7 @@ namespace ape
 		virtual ~IManualTexture() {};
 
 	public:
-		virtual void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa) = 0;
+		virtual void setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa, bool serializeBuffer) = 0;
 
 		virtual ape::ManualTextureParameters getParameters() = 0;
 

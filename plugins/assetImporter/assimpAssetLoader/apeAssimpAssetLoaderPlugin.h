@@ -39,6 +39,7 @@ SOFTWARE.*/
 #include "apeICamera.h"
 #include "apeIFileGeometry.h"
 #include "apeIFileTexture.h"
+#include "apeIManualTexture.h"
 #include "apeIIndexedFaceSetGeometry.h"
 #include "apeIManualMaterial.h"
 #include "apeINode.h"
@@ -60,6 +61,7 @@ namespace ape
 		ape::Quaternion orientation;
 		bool mergeAndExportMeshes;
 		bool regenerateNormals;
+		bool generateManualTexture;
 		std::string rootNodeName;
 	};
 

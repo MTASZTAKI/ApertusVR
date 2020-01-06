@@ -38,7 +38,7 @@ ape::ManualTextureImpl::~ManualTextureImpl()
 	
 }
 
-void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa)
+void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int height, ape::Texture::PixelFormat pixelFormat, ape::Texture::Usage usage, bool gammaCorrection, bool useFsaa, bool serializeBuffer)
 {
 	mParameters.width = width;
 	mParameters.height = height;
@@ -46,6 +46,7 @@ void ape::ManualTextureImpl::setParameters(unsigned int width, unsigned int heig
 	mParameters.usage = usage;
 	mParameters.gammaCorrection = gammaCorrection;
 	mParameters.useFsaa = useFsaa;
+	mParameters.serializeBuffer = serializeBuffer;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
 }
 
@@ -123,31 +124,44 @@ void ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinati
 
 RakNet::RM3SerializationResult ape::ManualTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	//mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
-	//mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCameraName.c_str()));
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	if (serializeParameters->whenLastSerialized == 0)
+	{
+		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+		if (mParameters.serializeBuffer)
+		{
+			unsigned long size = mParameters.height * mParameters.width * 4;
+			for (unsigned long i = 0; i < size; i++)
+			{
+				mVariableDeltaSerializer.SerializeVariable(&serializationContext, static_cast<const unsigned char*>(mpBuffer)[i]);
+			}
+			mVariableDeltaSerializer.EndSerialize(&serializationContext);
+			return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+		}
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void ape::ManualTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
+	if (mParameters.serializeBuffer)
 	{
-		APE_LOG_DEBUG("TEXTURE_MANUAL_PARAMETERS fired");
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_PARAMETERS));
-	}*/
-	/*RakNet::RakString cameraName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, cameraName))
-	{
-		mCameraName = cameraName.C_String();
-		mCamera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(mCameraName).lock());
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_SOURCECAMERA));
-	}*/
+		unsigned long size = mParameters.height * mParameters.width * 4;
+		unsigned char* pixels = new unsigned char[size];
+		for (unsigned long i = 0; i < size; i++)
+		{
+			unsigned char pixel;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, pixel))
+			{
+				pixels[i] = pixel;
+			}
+		}
+		mpBuffer = pixels;
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_BUFFER));
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

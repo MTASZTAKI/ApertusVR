@@ -243,7 +243,7 @@ void ape::ManualMaterialImpl::Deserialize(RakNet::DeserializeParameters *deseria
 		{
 			mTexture = texture;
 			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::MATERIAL_MANUAL_TEXTURE));
-			APE_LOG_DEBUG("MATERIAL_MANUAL_TEXTURE fired: " << mTextureName);
+			//APE_LOG_DEBUG("MATERIAL_MANUAL_TEXTURE fired: " << mTextureName);
 		}
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);

@@ -80,7 +80,7 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		allocationIdBitstream->Read(manualTextureParameters);
 		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_MANUAL).lock()))
 		{
-			manualTexture->setParameters(manualTextureParameters.width, manualTextureParameters.height, manualTextureParameters.pixelFormat, manualTextureParameters.usage, manualTextureParameters.gammaCorrection, manualTextureParameters.useFsaa);
+			manualTexture->setParameters(manualTextureParameters.width, manualTextureParameters.height, manualTextureParameters.pixelFormat, manualTextureParameters.usage, manualTextureParameters.gammaCorrection, manualTextureParameters.useFsaa, manualTextureParameters.serializeBuffer);
 			return ((ape::ManualTextureImpl*)manualTexture.get());
 		}
 	}

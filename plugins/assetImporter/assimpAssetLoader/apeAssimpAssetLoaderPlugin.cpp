@@ -1,6 +1,8 @@
 #include "apeAssimpAssetLoaderPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 ape::AssimpAssetLoaderPlugin::AssimpAssetLoaderPlugin()
 {
@@ -83,6 +85,7 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				AssetConfig assetConfig;
 				assetConfig.mergeAndExportMeshes = false;
 				assetConfig.regenerateNormals = false;
+				assetConfig.generateManualTexture = false;
 				if (auto rootNode = fileGeometry->getParentNode().lock())
 				{
 					assetConfig.rootNodeName = rootNode->getName();
@@ -288,10 +291,32 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, textureCoordinates, material);
 				if (textureCoordinates.size() && diffuseTextureFileName.length())
 				{
-					if (auto fileTexture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, ape::Entity::Type::TEXTURE_FILE).lock()))
+					if (!mAssimpAssetConfigs[assimpSceneID].generateManualTexture)
 					{
-						fileTexture->setFileName(diffuseTextureFileName);
-						material->setTexture(fileTexture);
+						if (auto fileTexture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, ape::Entity::Type::TEXTURE_FILE).lock()))
+						{
+							fileTexture->setFileName(diffuseTextureFileName);
+							material->setTexture(fileTexture);
+						}
+					}
+					else
+					{
+						for (const auto& resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+						{
+							std::string textureFileName = resourceLocation + "/" + diffuseTextureFileName;
+							int width, height, channels;
+							unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+							if (rgb_image)
+							{
+								if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(textureFileName, ape::Entity::TEXTURE_MANUAL).lock()))
+								{
+									texture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false, true);
+									texture->setBuffer(rgb_image);
+									material->setTexture(texture);
+									break;
+								}
+							}
+						}
 					}
 				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
@@ -353,6 +378,8 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 						assetConfig.mergeAndExportMeshes = assetMemberIterator->value.GetBool();
 					if (assetMemberIterator->name == "regenerateNormals")
 						assetConfig.regenerateNormals = assetMemberIterator->value.GetBool();
+					if (assetMemberIterator->name == "generateManualTexture")
+						assetConfig.generateManualTexture = assetMemberIterator->value.GetBool();
 					if (assetMemberIterator->name == "rootNodeName")
 					{
 						assetConfig.rootNodeName = assetMemberIterator->value.GetString();
