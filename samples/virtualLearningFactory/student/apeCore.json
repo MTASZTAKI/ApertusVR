@@ -5,7 +5,7 @@
     "apeViewPointManagerPlugin"
   ],
   "network": {
-    "user": "vlft_teacher",
+    "user": "vlft_student",
     "participant": "guest",
     "internet": {
       "natPunchThrough": {

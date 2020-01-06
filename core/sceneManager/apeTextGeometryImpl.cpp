@@ -114,6 +114,7 @@ void ape::TextGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, caption))
 	{
 		mCaption = caption.C_String();
+		//APE_LOG_DEBUG("mCaption: " << mCaption << " from: " << deserializeParameters->sourceConnection->GetRakNetGUID().ToString());
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_TEXT_CAPTION));
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
