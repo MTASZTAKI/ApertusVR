@@ -1,7 +1,8 @@
 {
   "plugins": [
     "apeAssimpAssetLoaderPlugin",
-    "apeSampleScenePlugin"
+    "apeSampleScenePlugin",
+    "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "vlft_server",

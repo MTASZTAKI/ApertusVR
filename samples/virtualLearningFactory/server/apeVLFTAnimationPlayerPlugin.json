@@ -9,7 +9,7 @@
 			},
 			"event": {
 				"type": "animation",
-				"data": "/plugins/polimi/resources/elements/workerMale/animation_male_worker.bin"
+				"data": "/resources/animations/animation_male_worker.bin"
 			}
 		}]
 	},
@@ -22,7 +22,7 @@
 				},
 				"event": {
 					"type": "animation",
-					"data": "/plugins/polimi/resources/elements/trolley/animation_trolley.bin"
+					"data": "/resources/animations/animation_trolley.bin"
 				}
 			},
 			{
@@ -32,7 +32,7 @@
 				},
 				"event": {
 					"type": "animation",
-					"data": "/plugins/polimi/resources/elements/trolley/animation_trolley.bin"
+					"data": "/resources/animations/animation_trolley.bin"
 				}
 			}
 		]
@@ -46,7 +46,7 @@
 			},
 			"event": {
 				"type": "animation",
-				"data": "/plugins/polimi/resources/elements/barrel/animation_barrel.bin"
+				"data": "/resources/animations/animation_barrel.bin"
 			}
 		}]
 	},
@@ -59,7 +59,7 @@
 			},
 			"event": {
 				"type": "change geometry",
-				"data": "/plugins/polimi/resources/machines/TC52/tc52_green.3DS"
+				"data": "/resources/machines/TC52/tc52.3DS"
 			}
 		}]
 	}

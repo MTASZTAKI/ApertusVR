@@ -22,6 +22,7 @@
 
 set (CONFIGS
     apeAssimpAssetLoaderPlugin.json
+	apeVLFTAnimationPlayerPlugin.json
 	apeCore.json
 	)
 

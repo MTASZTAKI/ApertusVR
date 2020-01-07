@@ -35,6 +35,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTAnimationPlayerPlugin.json";
 	FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	mAnimations = nlohmann::json::parse(apeVLFTAnimationPlayerPluginConfigFile);
+	//APE_LOG_DEBUG("Animations.get_geometries()[0].get_name(): " << mAnimations.get_geometries()[0].get_name());
 	APE_LOG_FUNC_LEAVE();
 }
 
