@@ -1,5 +1,7 @@
 {
-	"male_worker": [{
+"geometries":[
+	{
+	    "name": "male_worker",
 		"actions": [{
 			"trigger": {
 				"type": "timestamp",
@@ -10,8 +12,9 @@
 				"data": "/plugins/polimi/resources/elements/workerMale/animation_male_worker.bin"
 			}
 		}]
-	}],
-	"trolley": [{
+	},
+	{
+	    "name": "trolley",
 		"actions": [{
 				"trigger": {
 					"type": "clickOn",
@@ -33,8 +36,9 @@
 				}
 			}
 		]
-	}],
-	"barrel": [{
+	},
+	{
+	    "name": "barrel",
 		"actions": [{
 			"trigger": {
 				"type": "timestamp",
@@ -45,8 +49,9 @@
 				"data": "/plugins/polimi/resources/elements/barrel/animation_barrel.bin"
 			}
 		}]
-	}],
-	"tc52_1": [{
+	},
+	{
+	    "name": "tc52_1",
 		"actions": [{
 			"trigger": {
 				"type": "clickOn",
@@ -57,5 +62,6 @@
 				"data": "/plugins/polimi/resources/machines/TC52/tc52_green.3DS"
 			}
 		}]
-	}]
+	}
+]
 }

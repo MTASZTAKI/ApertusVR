@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,33 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-include_directories("../macros/sceneMaker")
-include_directories("../macros/userInput")
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	apeVLFTAnimationPlayerPlugin.h
+	apeVLFTAnimationPlayerPluginConfig.h
+	)
 
-add_subdirectory (assetImporter)
-add_subdirectory (browser)
-add_subdirectory (hmd)
-add_subdirectory (languageAPI)
-add_subdirectory (physics)
-add_subdirectory (render)
-add_subdirectory (scene)
-add_subdirectory (track)
-add_subdirectory (userInput)
-add_subdirectory (game)
-add_subdirectory (e-Learning)
-add_subdirectory (userInterface)
-add_subdirectory (virtualLearningFactory)
+set (SOURCES 
+	apeVLFTAnimationPlayerPlugin.cpp
+	)
+
+include_directories(
+	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+	)
+
+add_library (apeVLFTAnimationPlayerPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeVLFTAnimationPlayerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
+
+set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY FOLDER "Plugins/VirtualLearningFactory")
+
+set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY CXX_STANDARD 17)
+
+set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+
