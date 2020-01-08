@@ -27,6 +27,8 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <functional>
+#include <fstream>
 #include "apePluginAPI.h"
 #include "apeILogManager.h"
 #include "apeIEventManager.h"
@@ -67,10 +69,14 @@ namespace ape
 
 		quicktype::Animations mAnimations;
 
+		std::vector<std::thread> mTimeStampThreads;
+
 	public:
 		VLFTAnimationPlayerPlugin();
 
 		~VLFTAnimationPlayerPlugin();
+
+		void playBinFile(std::string name, quicktype::Action action);
 
 		void eventCallBack(const ape::Event& event);
 		

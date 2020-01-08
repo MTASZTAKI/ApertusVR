@@ -147,14 +147,14 @@ void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int millis
 		moveInterpolator->addSection(
 			userNode->getPosition(),
 			pose.userPosition,
-			milliseconds * 1000,
+			milliseconds / 1000,
 			[&](ape::Vector3 pos) { userNode->setPosition(pos); }
 		);
 		auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
 		rotateInterpolator->addSection(
 			userNode->getOrientation(),
 			pose.userOrientation,
-			milliseconds * 1000,
+			milliseconds / 1000,
 			[&](ape::Quaternion ori) { userNode->setOrientation(ori); }
 		);
 		while (!moveInterpolator->isQueueEmpty() && !rotateInterpolator->isQueueEmpty())
