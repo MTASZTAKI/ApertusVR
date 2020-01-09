@@ -106,6 +106,10 @@ namespace ape
 		bool mIsReplicaHost;
 
 		bool mIsStreamHost;
+
+		bool mIsNATPunchthrough2HostSucceeded;
+
+		bool mIsNATPunchthrough2HostResponded;
 		
 		ape::ICoreConfig* mpCoreConfig;
 

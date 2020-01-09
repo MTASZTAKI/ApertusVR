@@ -37,6 +37,8 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&SceneNetworkImpl::eventCallBack, this, std::placeholders::_1));
 	mStreamReplicas = std::vector<ape::Replica*>();
 	mIsConnectedToNATServer = false;
+	mIsNATPunchthrough2HostSucceeded = false;
+	mIsNATPunchthrough2HostResponded = false;
 	mNATServerAddress.FromString("");
 	mParticipantType = mpCoreConfig->getNetworkConfig().participant;
 	mReplicaHostGuid = RakNet::RakNetGUID();
@@ -68,7 +70,14 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 				//connect2ReplicaHost(uuid);
 			//}
 		}
-		connect2ReplicaHost(uuid);
+		while (!mIsNATPunchthrough2HostSucceeded)
+		{
+			connect2ReplicaHost(uuid);
+			while (!mIsNATPunchthrough2HostResponded)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
+		}
 	}
 }
 
@@ -232,13 +241,15 @@ void ape::SceneNetworkImpl::connect2ReplicaHost(std::string guid)
 	mReplicaHostGuid.FromString(guid.c_str());
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 	{
-		APE_LOG_DEBUG("Try to NAT punch to: " << mReplicaHostGuid.ToString());
+		APE_LOG_DEBUG("Try to NAT punch to host: " << mReplicaHostGuid.ToString());
 		if (mpNatPunchthroughClient->OpenNAT(mReplicaHostGuid, mNATServerAddress))
 		{
-			APE_LOG_DEBUG("Wait for server response....");
+			APE_LOG_DEBUG("Wait for host response....");
+			mIsNATPunchthrough2HostResponded = false;
 		}
 		else
 		{
+			mIsNATPunchthrough2HostResponded = true;
 			APE_LOG_DEBUG("Failed to connect.......");
 		}
 	}
@@ -412,11 +423,15 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 			case ID_NAT_ALREADY_IN_PROGRESS:
 			case ID_NAT_PUNCHTHROUGH_FAILED:
 				{
+					mIsNATPunchthrough2HostResponded = true;
+					mIsNATPunchthrough2HostSucceeded = false;
 					APE_LOG_DEBUG("NAT punch to: " << packet->guid.ToString() << " failed. Reason: " << RakNet::PacketLogger::BaseIDTOString(packet->data[0]));
 					break;
 				}
 			case ID_NAT_PUNCHTHROUGH_SUCCEEDED:
 				{
+					mIsNATPunchthrough2HostResponded = true;
+					mIsNATPunchthrough2HostSucceeded = true;
 					if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 					{
 						unsigned char weAreTheSender = packet->data[1];
