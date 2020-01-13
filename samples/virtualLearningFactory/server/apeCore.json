@@ -36,7 +36,7 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-      "/plugins/scene/sampleScene/resources",
+      "/macros/sceneMaker/resources",
 		"/samples/virtualLearningFactory/server/resources/buildings/buildingA",
 		"/samples/virtualLearningFactory/server/resources/elements/pallet",
 		"/samples/virtualLearningFactory/server/resources/elements/workerMale",

@@ -417,6 +417,11 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 						{
 							assimpAssetFileNamePath << resourceLocationStr;
 						}
+						found = resourceLocationStr.find("./");
+						if (found != std::string::npos)
+						{
+							assimpAssetFileNamePath << resourceLocationStr;
+						}
 						else
 						{
 							std::stringstream resourceLocationPath;

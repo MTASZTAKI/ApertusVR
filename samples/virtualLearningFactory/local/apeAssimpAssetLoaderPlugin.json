@@ -1,7 +1,7 @@
 {
     "assets": [
       {
-        "file": "/samples/virtualLearningFactory/server/resources/buildings/buildingA/buildingA.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/buildings/buildingA/buildingA.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 0, 0, 0 ],
@@ -11,7 +11,7 @@
         "rootNodeName": "buildingA"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/pallet/pallet.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 4279, 1, -3355 ],
@@ -21,7 +21,7 @@
         "rootNodeName": "pallet_1"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/pallet/pallet.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 5225, 1, -3353 ],
@@ -31,7 +31,7 @@
         "rootNodeName": "pallet_2"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/pallet/pallet.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 3476, 1, -3334 ],
@@ -41,7 +41,7 @@
         "rootNodeName": "pallet_3"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/pallet/pallet.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 2656, 1, -3355 ],
@@ -51,7 +51,7 @@
         "rootNodeName": "pallet_4"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/TC52/tc52.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/TC52/tc52.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 2213, 0, -4359 ],
@@ -61,7 +61,7 @@
         "rootNodeName": "tc52_1"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/TC52/tc52.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/TC52/tc52.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 3108, 0, -3327 ],
@@ -71,7 +71,7 @@
         "rootNodeName": "tc52_2"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/workerMale/male_worker.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/workerMale/male_worker.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 1931, 0, -3476 ],
@@ -81,7 +81,7 @@
         "rootNodeName": "male_worker"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/table/table.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/table/table.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 2804, 0, -4281 ],
@@ -91,7 +91,7 @@
         "rootNodeName": "table_1"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/table/table.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/table/table.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 2993, 0, -3500 ],
@@ -101,7 +101,7 @@
         "rootNodeName": "table_2"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/acdc/acdc.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/acdc/acdc.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.5, 0.5, 0.5 ],
         "position": [ 2089, 0, -3655 ],
@@ -111,7 +111,7 @@
         "rootNodeName": "acdc"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/barrel/barrel.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/barrel/barrel.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.1, 0.1, 0.1 ],
         "position": [ 1980, 0, -3657 ],
@@ -121,7 +121,7 @@
         "rootNodeName": "barrel"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/barrel2/barrel2.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/barrel2/barrel2.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 0.1, 0.1, 0.1 ],
         "position": [ 1913, 0, -3663 ],
@@ -131,7 +131,7 @@
         "rootNodeName": "barrel2"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/TC108/tc108.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/TC108/tc108.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 2181, 0, -3279 ],
@@ -141,7 +141,7 @@
         "rootNodeName": "tc108"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/VC1020/VC1020.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/VC1020/VC1020.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 4792, 0, -3406 ],
@@ -151,7 +151,7 @@
         "rootNodeName": "vc1020"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/wm2/wm2.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/wm2/wm2.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 5538, 0, -3341 ],
@@ -161,7 +161,7 @@
         "rootNodeName": "wm2"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/elements/trolley/trolley.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/elements/trolley/trolley.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 2438, 0, -4290 ],
@@ -171,7 +171,7 @@
         "rootNodeName": "trolley"
       },
       {
-        "file": "/samples/virtualLearningFactory/server/resources/machines/TC67H/tc67h.3DS",
+        "file": "/samples/virtualLearningFactory/local/resources/machines/TC67H/tc67h.3DS",
         "mergeAndExportMeshes": false,
         "scale": [ 1, 1, 1 ],
         "position": [ 3887, 0, -3362 ],

@@ -122,6 +122,11 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						{
 							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
 						}
+						found = resourceLocationStr.find("./");
+						if (found != std::string::npos)
+						{
+							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
+						}
 						else
 						{
 							std::stringstream resourceLocationPath;
