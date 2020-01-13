@@ -70,14 +70,14 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 				//connect2ReplicaHost(uuid);
 			//}
 		}
-		while (!mIsNATPunchthrough2HostSucceeded)
-		{
+		/*while (!mIsNATPunchthrough2HostSucceeded)
+		{*/
 			connect2ReplicaHost(uuid);
-			while (!mIsNATPunchthrough2HostResponded)
+			/*while (!mIsNATPunchthrough2HostResponded)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
-		}
+		}*/
 	}
 }
 
