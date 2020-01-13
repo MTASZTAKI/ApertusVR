@@ -1,0 +1,60 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+	"apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeAssimpAssetLoaderPlugin",
+    "apeSampleScenePlugin",
+    "apeVLFTAnimationPlayerPlugin"
+  ],
+  "network": {
+    "user": "",
+    "participant": "",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "",
+        "port": ""
+      },
+      "lobby": {
+        "ip": "",
+        "port": "",
+        "room": ""
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "none",
+    "resourceLocations": [
+      "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/materials",
+      "/plugins/render/ogreRender/resources/pbs",
+      "/plugins/render/ogreRender/resources/rtss",
+      "/plugins/render/ogreRender/resources/rtss/Cg",
+      "/plugins/render/ogreRender/resources/rtss/GLSL",
+      "/plugins/render/ogreRender/resources/rtss/GLSL150",
+      "/plugins/render/ogreRender/resources/rtss/GLSLES",
+      "/plugins/render/ogreRender/resources/rtss/HLSL",
+      "/plugins/render/ogreRender/resources/rtss/materials",
+      "/plugins/render/ogreRender/resources/hydrax",
+      "/plugins/render/ogreRender/resources/skyx",
+      "/plugins/scene/sampleScene/resources",
+		"/samples/virtualLearningFactory/server/resources/buildings/buildingA",
+		"/samples/virtualLearningFactory/server/resources/elements/pallet",
+		"/samples/virtualLearningFactory/server/resources/elements/workerMale",
+		"/samples/virtualLearningFactory/server/resources/machines/tc52",
+		"/samples/virtualLearningFactory/server/resources/elements/table",
+		"/samples/virtualLearningFactory/server/resources/elements/acdc",
+		"/samples/virtualLearningFactory/server/resources/elements/barrel",
+		"/samples/virtualLearningFactory/server/resources/elements/barrel2",
+		"/samples/virtualLearningFactory/server/resources/elements/trolley",
+		"/samples/virtualLearningFactory/server/resources/machines/tc108",
+		"/samples/virtualLearningFactory/server/resources/machines/tc67h",
+		"/samples/virtualLearningFactory/server/resources/machines/vc1020",
+		"/samples/virtualLearningFactory/server/resources/machines/wm2"
+    ]
+  }
+}
+
+

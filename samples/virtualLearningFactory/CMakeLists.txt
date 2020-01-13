@@ -23,5 +23,6 @@
 add_subdirectory (server)
 add_subdirectory (student)
 add_subdirectory (teacher)
+add_subdirectory (local)
 
 
