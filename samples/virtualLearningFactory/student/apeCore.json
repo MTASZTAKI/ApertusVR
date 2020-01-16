@@ -1,8 +1,11 @@
 {
   "plugins": [
-    "apeOgreRenderPlugin",
-	  "apeOisUserInputPlugin",
-    "apeViewPointManagerPlugin"
+   "apeNodeJsPlugin",
+   "apeOgreRenderPlugin",
+   "apeOisUserInputPlugin",
+   "apeViewPointManagerPlugin",
+   "apeCefBrowserPlugin",
+   "apeVLFTUIManagerPlugin"
   ],
   "network": {
     "user": "vlft_student",

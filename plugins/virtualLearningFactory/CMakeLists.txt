@@ -21,5 +21,5 @@
 #SOFTWARE.
 
 add_subdirectory (animationPlayer)
-#add_subdirectory (studentUI)
-#add_subdirectory (teacherUI)
+add_subdirectory (userInterfaceManager)
+

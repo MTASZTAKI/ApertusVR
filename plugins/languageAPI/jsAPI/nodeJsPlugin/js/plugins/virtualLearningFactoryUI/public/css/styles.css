@@ -1,0 +1,67 @@
+html {
+    font-size: 65%;
+}
+
+body {
+    background: none;
+    overflow: hidden;
+}
+
+.header {
+    margin-right: 1rem;
+}
+
+.panel-left {
+    width: 240px;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+}
+
+.panel-right {
+    width: 240px;
+    position: absolute;
+    top: 45px;
+    right: 0px;
+}
+
+.slider {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 35px;
+}
+
+.card {
+    background-color: rgba(255,255,255,.3);    
+}
+.card-header {
+    background-color: rgba(255,255,255,.5);
+}
+
+.success {
+    background-color: #218838 !important;
+}
+.success .ui-state-active { 
+    background: #8ae234 !important;
+}
+
+.secondary {
+    background-color: #6c757d !important;
+}
+.secondary .ui-state-active { 
+    background: #949596 !important;
+}
+
+.info {
+    background-color: #17a2b8 !important;
+}
+.info .ui-state-active { 
+    background: #25d8f3 !important;
+}
+
+.danger {
+    background-color: #dc3545 !important;
+}
+.danger .ui-state-active { 
+    background: #ff1c32 !important;
+}

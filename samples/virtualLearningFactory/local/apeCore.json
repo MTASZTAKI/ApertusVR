@@ -1,11 +1,14 @@
 {
   "plugins": [
+    "apeNodeJsPlugin",
     "apeOgreRenderPlugin",
 	"apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeAssimpAssetLoaderPlugin",
     "apeSampleScenePlugin",
-    "apeVLFTAnimationPlayerPlugin"
+    "apeVLFTAnimationPlayerPlugin",
+	"apeCefBrowserPlugin",
+    "apeVLFTUIManagerPlugin"
   ],
   "network": {
     "user": "",

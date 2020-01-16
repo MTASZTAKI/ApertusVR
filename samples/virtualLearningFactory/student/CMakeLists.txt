@@ -21,6 +21,7 @@
 #SOFTWARE.
 
 set (CONFIGS
+	apeNodeJsPlugin.json
 	apeOgreRenderPlugin.json
 	apeViewPointManagerPlugin.json
 	apeCore.json
