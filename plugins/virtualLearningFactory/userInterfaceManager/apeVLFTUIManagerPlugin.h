@@ -74,6 +74,12 @@ namespace ape
 
 		ape::Vector2 mMouseMovedValueAbs;
 
+		ape::RayGeometryWeakPtr mRayGeometry;
+
+		std::vector<std::string> mClickedNodeNames;
+
+		ape::NodeWeakPtr mClickedNode;
+
 		int mMouseScrolledValue;
 
 		void parseNodeJsPluginConfig();
@@ -89,6 +95,8 @@ namespace ape
 		void mouseMovedCallback(const ape::Vector2& mouseMovedValueRel, const ape::Vector2& mouseMovedValueAbs);
 
 		void eventCallBack(const ape::Event& event);
+
+		void eraseClickedNodeName(ape::NodeSharedPtr node);
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateVLFTUIManagerPlugin()

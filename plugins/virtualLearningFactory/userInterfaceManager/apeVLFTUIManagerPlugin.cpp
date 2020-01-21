@@ -9,12 +9,15 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mOverlayBrowserCursor = ape::UserInputMacro::OverlayBrowserCursor();
 	mServerPort = 0;
 	mMouseMovedValueAbs = ape::Vector2();
 	mMouseScrolledValue = 0;
+	mClickedNodeNames = std::vector<std::string>();
+	mClickedNode = ape::NodeWeakPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -63,16 +66,10 @@ void ape::VLFTUIManagerPlugin::mousePressedStringEventCallback(const std::string
 {
 	if (keyValue == "left")
 	{
-		if (mpUserInputMacro->isOverlayBrowserShowed())
-		{
-			mOverlayBrowserCursor.cursorClick = true;
-			mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
-			mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
-		}
-		else
-		{
-			mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
-		}
+		mOverlayBrowserCursor.cursorClick = true;
+		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
+		mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
+		mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
 	}
 }
 
@@ -107,6 +104,73 @@ void ape::VLFTUIManagerPlugin::mouseMovedCallback(const ape::Vector2 & mouseMove
 
 void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 {
+	if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
+	{
+		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			auto intersections = rayGeometry->getIntersections();
+			std::list<ape::EntityWeakPtr> intersectionList;
+			std::copy(intersections.begin(), intersections.end(), std::back_inserter(intersectionList));
+			mClickedNodeNames.clear();
+			mClickedNodeNames.resize(0);
+			std::list<ape::EntityWeakPtr>::iterator i = intersectionList.begin();
+			for (auto intersection : intersectionList)
+			{
+				if (auto entity = intersection.lock())
+				{
+					std::string entityName = entity->getName();
+					ape::Entity::Type entityType = entity->getType();
+					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
+					{
+						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
+						if (auto clickedNode = geometry->getParentNode().lock())
+						{
+							mClickedNodeNames.push_back(clickedNode->getName());
+						}
+					}
+				}
+			}
+			if (auto userNode = mpUserInputMacro->getUserNode().lock())
+			{
+				for (auto ingoredNode : userNode->getChildNodes())
+				{
+					if (auto node = ingoredNode.lock())
+						eraseClickedNodeName(node);
+				}
+			}
+			if (mClickedNodeNames.size())
+			{
+				if (auto clickedNode = mpSceneManager->getNode(mClickedNodeNames[0]).lock())
+				{
+					if (auto previouslyClickedNode = mClickedNode.lock())
+					{
+						previouslyClickedNode->showBoundingBox(false);
+					}
+					clickedNode->showBoundingBox(true);
+					mClickedNode = clickedNode;
+					APE_LOG_DEBUG("ClickedNode: " << mClickedNodeNames[0]);
+				}
+			}
+		}
+	}
+}
+
+void ape::VLFTUIManagerPlugin::eraseClickedNodeName(ape::NodeSharedPtr node)
+{
+	for (auto ignoredNode : node->getChildNodes())
+	{
+		if (auto ignoredNodeSP = ignoredNode.lock())
+		{
+			for (auto it = mClickedNodeNames.begin(); it != mClickedNodeNames.end(); )
+			{
+				if (*it == ignoredNodeSP->getName())
+					it = mClickedNodeNames.erase(it);
+				else
+					++it;
+			}
+			eraseClickedNodeName(ignoredNodeSP);
+		}
+	}
 }
 
 void ape::VLFTUIManagerPlugin::Init()

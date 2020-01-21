@@ -11,7 +11,7 @@
     "apeVLFTUIManagerPlugin"
   ],
   "network": {
-    "user": "",
+    "user": "VLFT_Local",
     "participant": "",
     "internet": {
       "natPunchThrough": {
@@ -43,19 +43,19 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/macros/sceneMaker/resources",
-		"/samples/virtualLearningFactory/local/resources/buildings/buildingA",
-		"/samples/virtualLearningFactory/local/resources/elements/pallet",
-		"/samples/virtualLearningFactory/local/resources/elements/workerMale",
-		"/samples/virtualLearningFactory/local/resources/machines/tc52",
-		"/samples/virtualLearningFactory/local/resources/elements/table",
-		"/samples/virtualLearningFactory/local/resources/elements/acdc",
-		"/samples/virtualLearningFactory/local/resources/elements/barrel",
-		"/samples/virtualLearningFactory/local/resources/elements/barrel2",
-		"/samples/virtualLearningFactory/local/resources/elements/trolley",
-		"/samples/virtualLearningFactory/local/resources/machines/tc108",
-		"/samples/virtualLearningFactory/local/resources/machines/tc67h",
-		"/samples/virtualLearningFactory/local/resources/machines/vc1020",
-		"/samples/virtualLearningFactory/local/resources/machines/wm2"
+      "/samples/virtualLearningFactory/local/resources/buildings/buildingA",
+      "/samples/virtualLearningFactory/local/resources/elements/pallet",
+      "/samples/virtualLearningFactory/local/resources/elements/workerMale",
+      "/samples/virtualLearningFactory/local/resources/machines/tc52",
+      "/samples/virtualLearningFactory/local/resources/elements/table",
+      "/samples/virtualLearningFactory/local/resources/elements/acdc",
+      "/samples/virtualLearningFactory/local/resources/elements/barrel",
+      "/samples/virtualLearningFactory/local/resources/elements/barrel2",
+      "/samples/virtualLearningFactory/local/resources/elements/trolley",
+      "/samples/virtualLearningFactory/local/resources/machines/tc108",
+      "/samples/virtualLearningFactory/local/resources/machines/tc67h",
+      "/samples/virtualLearningFactory/local/resources/machines/vc1020",
+      "/samples/virtualLearningFactory/local/resources/machines/wm2"
     ]
   }
 }

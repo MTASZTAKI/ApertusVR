@@ -40,7 +40,7 @@ bool ape::CefRenderHandlerImpl::GetViewRect(CefRefPtr<CefBrowser> browser, CefRe
 	{
 		rect = CefRect(0, 0, texture->getParameters().width, texture->getParameters().height);
 		mBrowsers[browser->GetIdentifier()] = browser;
-		APE_LOG_DEBUG("GetViewRect: " << browser->GetIdentifier());
+		//APE_LOG_DEBUG("GetViewRect: " << browser->GetIdentifier());
 	}
 	return true;
 }
