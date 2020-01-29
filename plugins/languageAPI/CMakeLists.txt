@@ -21,3 +21,4 @@
 #SOFTWARE.
 
 add_subdirectory (jsAPI)
+add_subdirectory (webSocketServer)
