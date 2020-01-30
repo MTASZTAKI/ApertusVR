@@ -66,7 +66,7 @@ endif ()
 
 if (${APE_PLUGIN_CefBrowser_VideoCodecsSupport})
 	set(CEF_VERSION "3.3113.1650.g6da2bbf")
-	set(CEF_DOWNLOAD_SERVER "http://srv.mvv.sztaki.mta.hu/ape/3rdPartiesBin/cef_ffmpeg/")
+	set(CEF_DOWNLOAD_SERVER "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/cef_ffmpeg/")
 else()
 	set(CEF_VERSION "3.3071.1643.ga83b8e9")
 	set(CEF_DOWNLOAD_SERVER "http://opensource.spotify.com/cefbuilds/")
