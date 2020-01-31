@@ -1,6 +1,7 @@
 {
   "plugins": [
    "apeNodeJsPlugin",
+   "apeWebSocketServerPlugin",
    "apeOgreRenderPlugin",
    "apeOisUserInputPlugin",
    "apeViewPointManagerPlugin",
