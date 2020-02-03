@@ -28,6 +28,10 @@ function doPostRequest(apiEndPointUrl, data, callback) {
     }, "json");
 }
 
+function showChat() {
+    console.log('toogle chat');
+	$('#chat').toggle();
+}
 
 $(document).ready(function(){
     var sock = new WebSocket("ws://localhost:40080/ws");
@@ -43,7 +47,13 @@ $(document).ready(function(){
     sock.onmessage = (e)=>{
         console.log('onmessage:' + e.data);
         var eventObj = JSON.parse(e.data);
-
         console.log('eventObj: ', eventObj);
+		
+		if (eventObj.type == 9) { 
+			$("#nodeName").val(eventObj.subjectName);
+            nodeName = eventObj.subjectName;
+			console.log(' show bounding box - select: ', nodeName);
+			document.getElementById('selectedNodeNameTitle').innerHTML = nodeName;
+        }
     }
 });

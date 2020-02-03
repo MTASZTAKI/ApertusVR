@@ -13,7 +13,8 @@
     <title></title>
   </head>
   <body>
-	  <div class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.5)">
+  <div class="d-inline-block">
+	  <div class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play"></span></button>
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
@@ -22,11 +23,32 @@
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-record"></span></button>
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark"></span></button>
 	  </div>
-	  <div class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.5)">
-		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat"></span></button>
+	  <div class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
+		  <div id="selectedNodeNameTitle" class="card-header"></div>
+		  <div class="card-body text-dark">
+			<h5 class="card-title">Status: Active</h5>
+			<p class="card-text">Specification: </p>
+			<p class="card-text">...............</p>
+			<p class="card-text">Properties: </p>
+			<p class="card-text">...............</p>
+		  </div>
+		  <div class="btn-group-horizontal">
+			<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-eye"></span></button>
+			<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-pencil"></span></button>
+			<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-graph"></span></button>
+		</div>
+	   </div>
+</div>
+<div class="d-inline-block float-right">
+	  <div class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
+		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-location"></span></button>
 		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map"></span></button>
 	  </div>
+	 <iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:500px;background-color:rgba(255, 255, 255, 0.7)" allowtransparency="true"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
+</div>
+
+	   
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
