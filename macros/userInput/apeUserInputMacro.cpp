@@ -107,7 +107,7 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 	}
 	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
-		;// APE_LOG_TRACE("BROWSER_FOCUS_ON_EDITABLE_FIELD");
+		//APE_LOG_DEBUG("BROWSER_FOCUS_ON_EDITABLE_FIELD");
 	}
 	else if (event.type == ape::Event::Type::BROWSER_MOUSE_CLICK)
 	{
@@ -118,7 +118,7 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 			{
 				if (auto overlayBrowser = mOverlayBrowser.lock())
 				{
-					;// APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
+					//APE_LOG_DEBUG("BROWSER_MOUSE_CLICK isFocusOnEditableField: " << overlayBrowser->isFocusOnEditableField());
 				}
 			}
 		}

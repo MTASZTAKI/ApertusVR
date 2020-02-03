@@ -8,6 +8,7 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&ViewPointManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mTranslateSpeedFactorKeyboard = 3;
 	mRotateSpeedFactorKeyboard = 1;
@@ -23,6 +24,7 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	mControllerLastOrientation = ape::Quaternion();
 	mControllerLastTouchAxis = ape::Vector2();
 	mIsControllerTouchPressed = false;
+	mIsKeyboardLockedByBrowser = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -55,8 +57,11 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 	{
 		mGeneralSpeedFactor += 3;
 	}
-	std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
-	updateViewPoseByKeyBoardThread.detach();
+	if (!mIsKeyboardLockedByBrowser)
+	{
+		std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
+		updateViewPoseByKeyBoardThread.detach();
+	}
 }
 
 void ape::ViewPointManagerPlugin::keyReleasedStringEventCallback(const std::string & keyValue)
@@ -116,6 +121,16 @@ void ape::ViewPointManagerPlugin::mouseScrolledEventCallback(const int & mouseVa
 
 void ape::ViewPointManagerPlugin::eventCallBack(const ape::Event& event)
 {
+	if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
+	{
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			if (browser->isFocusOnEditableField())
+				mIsKeyboardLockedByBrowser = true;
+			else
+				mIsKeyboardLockedByBrowser = false;
+		}
+	}
 }
 
 void ape::ViewPointManagerPlugin::Init()

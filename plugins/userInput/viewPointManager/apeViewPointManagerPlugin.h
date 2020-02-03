@@ -87,6 +87,8 @@ namespace ape
 
 		std::vector<ape::UserInputMacro::ViewPose> mViewPoses;
 
+		bool mIsKeyboardLockedByBrowser;
+
 		int mViewPosesToggleIndex;
 
 		float mTranslateSpeedFactorKeyboard;
