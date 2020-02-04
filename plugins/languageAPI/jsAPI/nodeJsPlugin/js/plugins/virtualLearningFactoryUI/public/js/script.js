@@ -1,10 +1,9 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var apiEndPointNode = apiEndPoint + 'nodes/';
-
+var userNodeName = '';
 
 function getNodesNames() {
 	console.log('getNodesNames()');
-	doGetRequest(apiEndPointNode, function (res) {
+	doGetRequest(apiEndPoint + 'nodeNames/', function (res) {
 		var nodeNames = res.data.items;
 		console.log('getNodesNames(): res: ', nodeNames);
 
@@ -14,9 +13,18 @@ function getNodesNames() {
 	});
 }
 
+function getUserNodeName() {
+	console.log('getUserNodeName()');
+	doGetRequest(apiEndPoint + 'userNodeName/', function (res) {
+		userNodeName = res.data.items[0].name;
+		console.log('userNodeName(): res: ', userNodeName);
+	});
+}
+
 function doGetRequest(apiEndPointUrl, callback) {
+	console.log('doGetRequest()');
     $.get(apiEndPointUrl, function(res) {
-        // console.log('doGetRequest(): ', res);
+        console.log('doGetRequest(): res: ', res);
         callback(res);
     });
 }
@@ -33,7 +41,15 @@ function showChat() {
 	$('#chat').toggle();
 }
 
+function showMap() {
+    console.log('toogle map');
+	$('#map').toggle();
+	getUserNodeName();
+    document.getElementById('UserNodeName').innerHTML = userNodeName;
+}
+
 $(document).ready(function(){
+	$('#map').toggle();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
         console.log('open')

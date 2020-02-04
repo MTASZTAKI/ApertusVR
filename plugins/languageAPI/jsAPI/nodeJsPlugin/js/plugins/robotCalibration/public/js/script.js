@@ -1,5 +1,5 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var apiEndPointNode = apiEndPoint + 'nodes/';
+var apiEndPointNode = apiEndPoint + 'nodeNames/';
 var apiEndPointFileGeometries = apiEndPoint + 'filegeometries/';
 var apiEndPointCalcTrans = apiEndPoint + 'calcTransform/';
 var nodeName = 'ur10Gripper';

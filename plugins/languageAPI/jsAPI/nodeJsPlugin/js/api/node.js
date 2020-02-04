@@ -33,9 +33,29 @@ var errorMap = require('../modules/utils/errors.js');
 
 exports.moduleTag = 'ApeHTTPApiNode';
 
-app.get('/nodes', function(req, res) {
+app.get('/userNodeName', function(req, res) {
 	var respObj = new resp(req);
-	respObj.setDescription('Gets all node and their properties in the scene.');
+	respObj.setDescription('Get the name of the user node and their properties in the scene.');
+
+	ape.nbind.JsBindManager().getUserNode( function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.send(respObj.toJSonString());
+		}
+		else {
+			respObj.addDataItem({ name: obj.getName() });
+			res.send(respObj.toJSonString());
+		}
+	});
+});
+
+app.get('/nodeNames', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets all node names');
 
 	async.waterfall(
 		[

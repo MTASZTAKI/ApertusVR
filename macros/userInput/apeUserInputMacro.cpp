@@ -17,7 +17,7 @@ ape::UserInputMacro::UserInputMacro()
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&UserInputMacro::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, ape::CameraWeakPtr>();
-	mUserNodeName = mpCoreConfig->getNetworkConfig().userName;
+	mUserNodeName = mpCoreConfig->getNetworkConfig().userName + "_" + mpCoreConfig->getNetworkGUID();
 	if (auto userNode = mpSceneManager->createNode(mUserNodeName).lock())
 	{
 		if (auto headNode = mpSceneManager->createNode(mUserNodeName + "_HeadNode").lock())
@@ -133,7 +133,7 @@ void ape::UserInputMacro::eventCallBack(const ape::Event& event)
 		{
 			if (!overlayBrowserMaterial->isShowOnOverlay())
 			{
-				APE_LOG_TRACE("GEOMETRY_RAY_INTERSECTION");
+				APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION");
 			}
 		}
 	}

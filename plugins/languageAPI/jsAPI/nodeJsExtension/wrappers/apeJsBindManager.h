@@ -161,11 +161,13 @@ public:
 		auto nodeWeakPtr = ape::UserInputMacro::getSingletonPtr()->getUserNode();
 		if (auto node = nodeWeakPtr.lock())
 		{
+			APE_LOG_DEBUG("getUserNode:" << node->getName());
 			success = true;
 			done(!success, NodeJsPtr(nodeWeakPtr));
 		}
 		else
 		{
+			APE_LOG_DEBUG("getUserNode: false");
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
