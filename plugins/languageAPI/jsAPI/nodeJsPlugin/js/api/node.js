@@ -35,7 +35,7 @@ exports.moduleTag = 'ApeHTTPApiNode';
 
 app.get('/userNodeName', function(req, res) {
 	var respObj = new resp(req);
-	respObj.setDescription('Get the name of the user node and their properties in the scene.');
+	respObj.setDescription('Get the name of the user node in the scene.');
 
 	ape.nbind.JsBindManager().getUserNode( function (error, obj) {
 		if (error) {
@@ -52,6 +52,29 @@ app.get('/userNodeName', function(req, res) {
 		}
 	});
 });
+
+app.get('/otherUserNodeNames', function(req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Get the name of other user node in the scene.');
+
+	ape.nbind.JsBindManager().getOtherUserNodeNames( function (error, arr) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: arr,
+				code: 666
+			});
+			res.send(respObj.toJSonString());
+		}
+		else {
+				arr.forEach(function (element) {
+					respObj.addDataItem({ name: element });
+				});
+			res.send(respObj.toJSonString());
+		}
+	});
+});
+
 
 app.get('/nodeNames', function(req, res) {
 	var respObj = new resp(req);

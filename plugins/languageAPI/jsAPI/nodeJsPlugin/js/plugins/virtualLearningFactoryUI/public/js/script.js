@@ -1,5 +1,6 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var userNodeName = '';
+var otherUserNodeNames;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -18,6 +19,16 @@ function getUserNodeName() {
 	doGetRequest(apiEndPoint + 'userNodeName/', function (res) {
 		userNodeName = res.data.items[0].name;
 		console.log('userNodeName(): res: ', userNodeName);
+	});
+}
+
+function getOtherUserNodeNames() {
+	console.log('getOtherUserNodeNames()');
+	doGetRequest(apiEndPoint + 'otherUserNodeNames/', function (res) {
+		var userNodeNames = res.data.items;
+		userNodeNames.forEach(function (element) {
+			otherUserNodeNames.push(element.name);
+		});
 	});
 }
 
@@ -45,7 +56,8 @@ function showMap() {
     console.log('toogle map');
 	$('#map').toggle();
 	getUserNodeName();
-    document.getElementById('UserNodeName').innerHTML = userNodeName;
+	getOtherUserNodeNames();
+	document.getElementById('UserNodeName').innerHTML = userNodeName + otherUserNodeNames;
 }
 
 $(document).ready(function(){

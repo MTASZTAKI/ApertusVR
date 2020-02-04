@@ -161,18 +161,46 @@ public:
 		auto nodeWeakPtr = ape::UserInputMacro::getSingletonPtr()->getUserNode();
 		if (auto node = nodeWeakPtr.lock())
 		{
-			APE_LOG_DEBUG("getUserNode:" << node->getName());
+			//APE_LOG_DEBUG("getUserNode: " << node->getName());
 			success = true;
 			done(!success, NodeJsPtr(nodeWeakPtr));
 		}
 		else
 		{
-			APE_LOG_DEBUG("getUserNode: false");
+			//APE_LOG_DEBUG("getUserNode: false");
 			success = false;
 			done(!success, mErrorMap[ErrorType::NULLPTR]);
 		}
 		APE_LOG_FUNC_LEAVE();
 		return success;
+	}
+
+	void getOtherUserNodeNames(nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		auto nodes = mpSceneManager->getNodes();
+		std::vector<std::string> otherUserNodeNames;
+		for (auto node : nodes)
+		{
+			if (auto nodeSP = node.second.lock())
+			{
+				std::string nodeName = nodeSP->getName();
+				std::size_t pos = nodeName.find("_HeadNode");
+				if (pos != std::string::npos)
+				{
+					if (auto userNode = nodeSP->getParentNode().lock())
+					{
+						if (userNode->getName() != ape::UserInputMacro::getSingletonPtr()->getUserNode().lock()->getName())
+						{
+							APE_LOG_DEBUG("getOtherUserNodeNames: " << userNode->getName());
+							otherUserNodeNames.push_back(userNode->getName());
+						}
+					}
+				}
+			}
+		}
+		done(false, otherUserNodeNames);
+		APE_LOG_FUNC_LEAVE();
 	}
 
 	LightJsPtr createLight(std::string name)
@@ -613,6 +641,7 @@ NBIND_CLASS(JsBindManager)
 	method(getNodes);
 	method(getNode);
 	method(getUserNode);
+	method(getOtherUserNodeNames);
 
 	method(createLight);
 	method(getLight);
