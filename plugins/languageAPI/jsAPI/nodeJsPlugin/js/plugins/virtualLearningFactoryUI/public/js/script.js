@@ -1,6 +1,8 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var userNodeName = '';
+var userNodeName;
+var userNodePostion;
 var otherUserNodeNames;
+var otherUserNodePositions;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -22,12 +24,37 @@ function getUserNodeName() {
 	});
 }
 
+function getUserNodePosition() {
+	console.log('getUserNodePosition()');
+	doGetRequest(apiEndPoint + userNodeName + '/position', function (res) {
+		userNodePostion = res.data.items[0].position;
+		console.log('getUserNodePosition(): res: ', userNodePostion);
+		$('#posX').val(userNodePostion.x);
+		$('#posY').val(userNodePostion.y);
+		$('#posZ').val(userNodePostion.z);
+	});
+}
+
 function getOtherUserNodeNames() {
 	console.log('getOtherUserNodeNames()');
 	doGetRequest(apiEndPoint + 'otherUserNodeNames/', function (res) {
 		var userNodeNames = res.data.items;
 		userNodeNames.forEach(function (element) {
 			otherUserNodeNames.push(element.name);
+		});
+	});
+}
+
+function getOtherUserNodePositions() {
+	console.log('attachUserNodes()');
+	otherUserNodeNames.forEach(function (element) {
+		doGetRequest(apiEndPoint + element.name + '/position', function (res) {
+			var otherUserNodePosition = res.data.items[0].position;
+			console.log('getOtherUserNodePositions(): res: ', otherUserNodePosition);
+			$('#posX').val(otherUserNodePosition.x);
+			$('#posY').val(otherUserNodePosition.y);
+			$('#posZ').val(otherUserNodePosition.z);
+			otherUserNodePositions.push(otherUserNodePosition);
 		});
 	});
 }
@@ -69,9 +96,42 @@ function showUsers() {
 	document.getElementById('otherUserNodeNames').innerHTML = otherUserNodeNames;
 }
 
+function updateMap() {
+	console.log('update map');
+	getUserNodePosition();
+	getOtherUserNodePositions();
+
+	var canvas = document.getElementById("mapCanvas");
+	var ctx = canvas.getContext("2d");
+	var mapDiv = document.getElementById('map');
+	if (!document.getElementById(userNodeName)) {
+		var newDiv = document.createElement(userNodeName);
+		newDiv.innerHTML = userNodePostion;
+		mapDiv.appendChild(newDiv);
+	}
+	else
+	{
+		document.getElementById(userNodeName).innerHTML = userNodePostion;
+	}
+	userNodeNames.forEach(function (element) {
+		if (!document.getElementById(element.name)) {
+			var newDiv = document.createElement(element.name);
+			newDiv.innerHTML = otherUserNodePositions[element.id];
+			mapDiv.appendChild(newDiv);
+		}
+		else {
+			document.getElementById(element.name).innerHTML = otherUserNodePositions[element.id];
+			ctx.beginPath();
+			ctx.arc(95, 10, 10, 0, 2 * Math.PI);
+			ctx.stroke();
+		}
+	});
+}
+
 function showMap() {
     console.log('toogle map');
-	$('#map').toggle();
+    $('#map').toggle();
+    updateMap()
 	getUserNodeName();
 	getOtherUserNodeNames();
 	document.getElementById('mapAnimation').innerHTML = userNodeName + otherUserNodeNames;
