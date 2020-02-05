@@ -32,6 +32,16 @@ function getOtherUserNodeNames() {
 	});
 }
 
+function attachUserNodes() {
+	console.log('attachUserNodes()');
+	otherUserNodeNames.forEach(function (element) {
+		doGetRequest(apiEndPoint + element.name + '/attach', userNodeName, function (res) {
+			parentNodeName = res.data.items[0].name;
+			console.log('parentNodeName(): res: ', parentNodeName);
+		});
+	});
+}
+
 function doGetRequest(apiEndPointUrl, callback) {
 	console.log('doGetRequest()');
     $.get(apiEndPointUrl, function(res) {
@@ -52,16 +62,24 @@ function showChat() {
 	$('#chat').toggle();
 }
 
+function showUsers() {
+	console.log('toogle users');
+	$('#users').toggle();
+	attachUserNodes();
+	document.getElementById('otherUserNodeNames').innerHTML = otherUserNodeNames;
+}
+
 function showMap() {
     console.log('toogle map');
 	$('#map').toggle();
 	getUserNodeName();
 	getOtherUserNodeNames();
-	document.getElementById('UserNodeName').innerHTML = userNodeName + otherUserNodeNames;
+	document.getElementById('mapAnimation').innerHTML = userNodeName + otherUserNodeNames;
 }
 
 $(document).ready(function(){
 	$('#map').toggle();
+	$('#users').toggle();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
         console.log('open')

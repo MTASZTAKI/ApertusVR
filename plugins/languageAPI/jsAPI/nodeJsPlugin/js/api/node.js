@@ -552,4 +552,48 @@ app.post('/nodes/:name/euler', function(req, res) {
 	});
 });
 
+app.post('/nodes/:name/parent', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the parent of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkBody('parentNamr', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		ape.nbind.JsBindManager().getNode(req.body.parentName, function (error, parentObj) {
+			if (error) {
+				respObj.addErrorItem({
+					name: 'invalidCast',
+					msg: obj,
+					code: 666
+				});
+				res.status(400).send(respObj.toJSonString());
+				return;
+			}
+
+			obj.setParentNodeJsPtr(parentObj);
+			respObj.addDataItem({
+				parentName: JSON.parse(parentObj.getName())
+			});
+			res.send(respObj.toJSonString());
+		});
+	});
+});
+
 module.exports = app;
