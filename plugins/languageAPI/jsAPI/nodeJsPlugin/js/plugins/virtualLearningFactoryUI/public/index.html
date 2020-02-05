@@ -40,11 +40,12 @@
 	   </div>
 </div>
   <div class="d-inline-block float-right">
-  	<div class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
-  		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
-  		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-location" onClick="showUsers();"></span></button>
-  		<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
-  	</div>
+	  <div class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
+	  	<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-reload" onClick="javascript: location.reload(true);"></span></button>
+	  	<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
+	  	<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-location" onClick="showUsers();"></span></button>
+	  	<button type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
+	  </div>
   	<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:500px;background-color:rgba(255, 255, 255, 0.7)" allowtransparency="true"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
 	<div id="map" class="card border-dark mb-3 float-right" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
 		<canvas id="mapCanvas" width="200" height="300" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>

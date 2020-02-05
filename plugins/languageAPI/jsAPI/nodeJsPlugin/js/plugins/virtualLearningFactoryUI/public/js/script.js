@@ -92,12 +92,16 @@ function showChat() {
 function showUsers() {
 	console.log('toogle users');
 	$('#users').toggle();
-	attachUserNodes();
+	getUserNodeName();
+	getOtherUserNodeNames();
 	document.getElementById('otherUserNodeNames').innerHTML = otherUserNodeNames;
+	attachUserNodes();
 }
 
 function updateMap() {
 	console.log('update map');
+	getUserNodeName();
+	getOtherUserNodeNames();
 	getUserNodePosition();
 	getOtherUserNodePositions();
 
@@ -132,9 +136,6 @@ function showMap() {
     console.log('toogle map');
     $('#map').toggle();
     updateMap()
-	getUserNodeName();
-	getOtherUserNodeNames();
-	document.getElementById('mapAnimation').innerHTML = userNodeName + otherUserNodeNames;
 }
 
 $(document).ready(function(){
