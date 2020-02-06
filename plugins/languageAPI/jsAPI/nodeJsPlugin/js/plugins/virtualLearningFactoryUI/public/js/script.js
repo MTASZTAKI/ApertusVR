@@ -1,8 +1,8 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var userNodeName = 'VLFT_teacher';
-var userNodePostion = 'x:100, y:0, z:0';
-var otherUserNodeNames = ['VLFT_student1', 'VLFT_student2'];
-var otherUserNodePositions = ['x:0, y:100, z:0', 'x:0, y:0, z:100'] ;
+var userNodeName;
+var userNodePostion;
+var otherUserNodeNames;
+var otherUserNodePositions;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -26,12 +26,9 @@ function getUserNodeName() {
 
 function getUserNodePosition() {
 	console.log('getUserNodePosition()');
-	doGetRequest(apiEndPoint + userNodeName + '/position', function (res) {
+	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + '/position', function (res) {
 		userNodePostion = res.data.items[0].position;
 		console.log('getUserNodePosition(): res: ', userNodePostion);
-		$('#posX').val(userNodePostion.x);
-		$('#posY').val(userNodePostion.y);
-		$('#posZ').val(userNodePostion.z);
 	});
 }
 
@@ -46,7 +43,7 @@ function getOtherUserNodePositions() {
 	console.log('getOtherUserNodePositions()');
 	otherUserNodePositions = [];
 	otherUserNodeNames.forEach(function (element) {
-		doGetRequest(apiEndPoint + element.name + '/position', function (res) {
+		doGetRequest(apiEndPoint + "/nodes/" + element.name + '/position', function (res) {
 			console.log('getOtherUserNodePositions(): res: ', otherUserNodePosition);
 			$('#posX').val(otherUserNodePosition.x);
 			$('#posY').val(otherUserNodePosition.y);
@@ -59,7 +56,7 @@ function getOtherUserNodePositions() {
 function attachUserNodes() {
 	console.log('attachUserNodes()');
 	otherUserNodeNames.forEach(function (element) {
-		doGetRequest(apiEndPoint + element.name + '/attach', userNodeName, function (res) {
+		doGetRequest(apiEndPoint + "/nodes/" + element.name + '/attach', userNodeName, function (res) {
 			parentNodeName = res.data.items[0].name;
 			console.log('parentNodeName(): res: ', parentNodeName);
 		});
@@ -110,13 +107,13 @@ function updateMap() {
 	var mapDiv = document.getElementById('map');
 	var userNodeNameDiv = document.getElementById(userNodeName);
 	if (typeof (userNodeNameDiv) != 'undefined' && userNodeNameDiv != null) {
-		userNodeNameDiv.innerHTML = userNodeName + ': ' + userNodePostion;
+		userNodeNameDiv.innerHTML = userNodeName + ': Position(' + userNodePostion.x + ',' + userNodePostion.y + ',' + userNodePostion.z + ')';
 	}
 	else
 	{
 		var newDiv = document.createElement(userNodeName);
 		newDiv.id = userNodeName;
-		newDiv.innerHTML = userNodeName + ': ' + userNodePostion;
+		newDiv.innerHTML = userNodeName + ': ' + ': Position(' + userNodePostion.x + ',' + userNodePostion.y + ',' + userNodePostion.z + ')';
 		mapDiv.appendChild(newDiv);
 	}
 	let index = 0
