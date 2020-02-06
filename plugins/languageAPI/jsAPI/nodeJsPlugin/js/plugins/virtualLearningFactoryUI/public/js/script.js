@@ -1,8 +1,8 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var userNodeName;
-var userNodePostion;
-var otherUserNodeNames;
-var otherUserNodePositions;
+var userNodeName = 'VLFT_teacher';
+var userNodePostion = 'x:100, y:0, z:0';
+var otherUserNodeNames = ['VLFT_student1', 'VLFT_student2'];
+var otherUserNodePositions = ['x:0, y:100, z:0', 'x:0, y:0, z:100'] ;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -108,27 +108,33 @@ function updateMap() {
 	var canvas = document.getElementById("mapCanvas");
 	var ctx = canvas.getContext("2d");
 	var mapDiv = document.getElementById('map');
-	if (!document.getElementById(userNodeName)) {
-		var newDiv = document.createElement(userNodeName);
-		newDiv.innerHTML = userNodePostion;
-		mapDiv.appendChild(newDiv);
+	var userNodeNameDiv = document.getElementById(userNodeName);
+	if (typeof (userNodeNameDiv) != 'undefined' && userNodeNameDiv != null) {
+		userNodeNameDiv.innerHTML = userNodeName + ': ' + userNodePostion;
 	}
 	else
 	{
-		document.getElementById(userNodeName).innerHTML = userNodePostion;
+		var newDiv = document.createElement(userNodeName);
+		newDiv.id = userNodeName;
+		newDiv.innerHTML = userNodeName + ': ' + userNodePostion;
+		mapDiv.appendChild(newDiv);
 	}
-	userNodeNames.forEach(function (element) {
-		if (!document.getElementById(element.name)) {
-			var newDiv = document.createElement(element.name);
-			newDiv.innerHTML = otherUserNodePositions[element.id];
-			mapDiv.appendChild(newDiv);
-		}
-		else {
-			document.getElementById(element.name).innerHTML = otherUserNodePositions[element.id];
+	let index = 0
+	otherUserNodeNames.forEach(function (element) {
+		var otherUserNodeNameDiv = document.getElementById(element);
+		if (typeof (otherUserNodeNameDiv) != 'undefined' && otherUserNodeNameDiv != null) {
+			otherUserNodeNameDiv.innerHTML = element + ': ' + otherUserNodePositions[index];
 			ctx.beginPath();
 			ctx.arc(95, 10, 10, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
+		else {
+			var newDiv = document.createElement(element);
+			newDiv.id = element;
+			newDiv.innerHTML = element + ': ' + otherUserNodePositions[index];
+			mapDiv.appendChild(newDiv);
+		}
+		index++;
 	});
 }
 
