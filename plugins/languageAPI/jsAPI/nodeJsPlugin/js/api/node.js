@@ -481,6 +481,50 @@ app.post('/nodes/:name/orientation', function(req, res) {
 	});
 });
 
+app.get('/nodes/:name/:parentName/parent', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the parent of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkParams('parentName', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		ape.nbind.JsBindManager().getNode(req.params.parentName, function (error, parentObj) {
+			if (error) {
+				respObj.addErrorItem({
+					name: 'invalidCast',
+					msg: obj,
+					code: 666
+				});
+				res.status(400).send(respObj.toJSonString());
+				return;
+			}
+
+			obj.setParentNodeJsPtr(parentObj);
+			respObj.addDataItem({
+				parentName: JSON.parse(parentObj.getName())
+			});
+			res.send(respObj.toJSonString());
+		});
+	});
+});
+
 app.get('/nodes/:name/euler', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the Euler (yaw, pitch, roll) of the specified node.');
@@ -552,48 +596,5 @@ app.post('/nodes/:name/euler', function(req, res) {
 	});
 });
 
-app.post('/nodes/:name/:parentName/parent', function (req, res) {
-	var respObj = new resp(req);
-	respObj.setDescription('Sets the parent of the specified node.');
-
-	// handle http param validation errors
-	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkBody('parentName', 'BodyParam is not presented').notEmpty();
-	if (!respObj.validateHttpParams(req, res)) {
-		res.status(400).send(respObj.toJSonString());
-		return;
-	}
-
-	var name = req.params.name;
-	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
-		if (error) {
-			respObj.addErrorItem({
-				name: 'invalidCast',
-				msg: obj,
-				code: 666
-			});
-			res.status(400).send(respObj.toJSonString());
-			return;
-		}
-
-		ape.nbind.JsBindManager().getNode(req.params.parentName, function (error, parentObj) {
-			if (error) {
-				respObj.addErrorItem({
-					name: 'invalidCast',
-					msg: obj,
-					code: 666
-				});
-				res.status(400).send(respObj.toJSonString());
-				return;
-			}
-
-			obj.setParentNodeJsPtr(parentObj);
-			respObj.addDataItem({
-				parentName: JSON.parse(parentObj.getName())
-			});
-			res.send(respObj.toJSonString());
-		});
-	});
-});
 
 module.exports = app;
