@@ -552,13 +552,13 @@ app.post('/nodes/:name/euler', function(req, res) {
 	});
 });
 
-app.post('/nodes/:name/parent', function (req, res) {
+app.post('/nodes/:name/:parentName/parent', function (req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Sets the parent of the specified node.');
 
 	// handle http param validation errors
 	req.checkParams('name', 'UrlParam is not presented').notEmpty()
-	req.checkBody('parentNamr', 'BodyParam is not presented').notEmpty();
+	req.checkBody('parentName', 'BodyParam is not presented').notEmpty();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
@@ -576,7 +576,7 @@ app.post('/nodes/:name/parent', function (req, res) {
 			return;
 		}
 
-		ape.nbind.JsBindManager().getNode(req.body.parentName, function (error, parentObj) {
+		ape.nbind.JsBindManager().getNode(req.params.parentName, function (error, parentObj) {
 			if (error) {
 				respObj.addErrorItem({
 					name: 'invalidCast',
