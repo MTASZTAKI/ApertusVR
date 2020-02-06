@@ -517,9 +517,7 @@ app.get('/nodes/:name/:parentName/parent', function (req, res) {
 			}
 
 			obj.setParentNodeJsPtr(parentObj);
-			respObj.addDataItem({
-				parentName: JSON.parse(parentObj.getName())
-			});
+			respObj.addDataItem({ parentName: parentObj.getName()});
 			res.send(respObj.toJSonString());
 		});
 	});

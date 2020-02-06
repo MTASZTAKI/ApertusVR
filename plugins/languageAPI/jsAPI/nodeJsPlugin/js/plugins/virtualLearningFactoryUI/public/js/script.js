@@ -53,7 +53,7 @@ function attachUserNodes() {
 	console.log('attachUserNodes()');
 	otherUserNodeNames.forEach(function (element) {
 		doGetRequest(apiEndPoint + "/nodes/" + element.name + "/" + userNodeName + '/parent', function (res) {
-			parentNodeName = res.data.items[0].name;
+			var parentNodeName = res.data.items[0].parentName;
 			console.log('parentNodeName(): res: ', parentNodeName);
 		});
 	});

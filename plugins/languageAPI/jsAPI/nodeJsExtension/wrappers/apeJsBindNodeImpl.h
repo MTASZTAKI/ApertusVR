@@ -73,6 +73,7 @@ public:
 
 	void setParentNodeJsPtr(NodeJsPtr parentNode)
 	{
+		APE_LOG_DEBUG("name: " << mPtr.lock()->getName() << " parentNode: " << parentNode.getName());
 		mPtr.lock()->setParentNode(parentNode.getNodeWeakPtr());
 	}
 
