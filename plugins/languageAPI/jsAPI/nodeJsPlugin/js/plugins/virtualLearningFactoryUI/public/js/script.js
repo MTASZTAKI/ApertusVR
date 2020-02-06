@@ -38,18 +38,15 @@ function getUserNodePosition() {
 function getOtherUserNodeNames() {
 	console.log('getOtherUserNodeNames()');
 	doGetRequest(apiEndPoint + 'otherUserNodeNames/', function (res) {
-		var userNodeNames = res.data.items;
-		userNodeNames.forEach(function (element) {
-			otherUserNodeNames.push(element.name);
-		});
+		otherUserNodeNames = res.data.items;
 	});
 }
 
 function getOtherUserNodePositions() {
-	console.log('attachUserNodes()');
+	console.log('getOtherUserNodePositions()');
+	otherUserNodePositions = [];
 	otherUserNodeNames.forEach(function (element) {
 		doGetRequest(apiEndPoint + element.name + '/position', function (res) {
-			var otherUserNodePosition = res.data.items[0].position;
 			console.log('getOtherUserNodePositions(): res: ', otherUserNodePosition);
 			$('#posX').val(otherUserNodePosition.x);
 			$('#posY').val(otherUserNodePosition.y);
@@ -94,7 +91,10 @@ function showUsers() {
 	$('#users').toggle();
 	getUserNodeName();
 	getOtherUserNodeNames();
-	document.getElementById('otherUserNodeNames').innerHTML = otherUserNodeNames;
+	document.getElementById('otherUserNodeNames').innerHTML = '';
+	otherUserNodeNames.forEach(function (element) {
+		document.getElementById('otherUserNodeNames').innerHTML = document.getElementById('otherUserNodeNames').innerHTML  + element.name;
+	});
 	attachUserNodes();
 }
 
@@ -121,17 +121,17 @@ function updateMap() {
 	}
 	let index = 0
 	otherUserNodeNames.forEach(function (element) {
-		var otherUserNodeNameDiv = document.getElementById(element);
+		var otherUserNodeNameDiv = document.getElementById(element.name);
 		if (typeof (otherUserNodeNameDiv) != 'undefined' && otherUserNodeNameDiv != null) {
-			otherUserNodeNameDiv.innerHTML = element + ': ' + otherUserNodePositions[index];
+			otherUserNodeNameDiv.innerHTML = element.name + ': ' + otherUserNodePositions[index];
 			ctx.beginPath();
 			ctx.arc(95, 10, 10, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
 		else {
-			var newDiv = document.createElement(element);
-			newDiv.id = element;
-			newDiv.innerHTML = element + ': ' + otherUserNodePositions[index];
+			var newDiv = document.createElement(element.name);
+			newDiv.id = element.name;
+			newDiv.innerHTML = element.name + ': ' + otherUserNodePositions[index];
 			mapDiv.appendChild(newDiv);
 		}
 		index++;
