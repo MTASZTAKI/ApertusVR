@@ -1,184 +1,337 @@
 {
-    "assets": [
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/buildings/buildingA/buildingA.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 0, 0, 0 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "buildingA"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 4279, 1, -3355 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "pallet_1"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 5225, 1, -3353 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "pallet_2"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 3476, 1, -3334 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "pallet_3"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/pallet/pallet.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 2656, 1, -3355 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "pallet_4"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/TC52/tc52.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 2213, 0, -4359 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "tc52_1"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/TC52/tc52.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 3108, 0, -3327 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "tc52_2"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/workerMale/male_worker.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 1931, 0, -3476 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "male_worker"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/table/table.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 2804, 0, -4281 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "table_1"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/table/table.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 2993, 0, -3500 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "table_2"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/acdc/acdc.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.5, 0.5, 0.5 ],
-        "position": [ 2089, 0, -3655 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "acdc"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/barrel/barrel.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.1, 0.1, 0.1 ],
-        "position": [ 1980, 0, -3657 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "barrel"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/barrel2/barrel2.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 0.1, 0.1, 0.1 ],
-        "position": [ 1913, 0, -3663 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "barrel2"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/TC108/tc108.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 2181, 0, -3279 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "tc108"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/VC1020/VC1020.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 4792, 0, -3406 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "vc1020"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/wm2/wm2.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 5538, 0, -3341 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "wm2"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/elements/trolley/trolley.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 2438, 0, -4290 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "trolley"
-      },
-      {
-        "file": "/samples/virtualLearningFactory/local/resources/machines/TC67H/tc67h.3DS",
-        "mergeAndExportMeshes": false,
-        "scale": [ 1, 1, 1 ],
-        "position": [ 3887, 0, -3362 ],
-        "orientation": [ 1, 0, 0, 0 ],
-        "regenerateNormals": false,
-        "generateManualTexture": true,
-        "rootNodeName": "tc67h"
-      }
-    ]
+  "assets": [
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 332.749, 44.55, -18.248 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Pick_and_Place_Floating_Z.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 315.649, 41.550000000000007, -17.685000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Pick_and_Place_Floating_Y.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Static.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 337.674, 0.0, -28.860000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Pick_and_Place_Static.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 277.075, 0.0, 32.436 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Vibrating_Bowl_Clip.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 340.337, 36.9, -30.655000000000006 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Pick_and_Place_Floating_X.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Lateral_Conveyor.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 19.636, 0.0, -5.735 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Lateral_Conveyor.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Lateral_Conveyor.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 319.636, 0.0, -5.735 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Lateral_Conveyor.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Lateral_Conveyor.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 219.63600000000003, 0.0, -5.735 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Lateral_Conveyor.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Lateral_Conveyor.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 119.63600000000001, 0.0, -5.735 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Lateral_Conveyor.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Conveyor_Main.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 315.649, 0.0, -38.86000000000001 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Conveyor_Main.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Conveyor_Main.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 215.64899999999998, 0.0, -38.86000000000001 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Conveyor_Main.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Conveyor_Main.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 115.649, 0.0, -38.86000000000001 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Conveyor_Main.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Conveyor_Main.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 15.649000000000001, 0.0, -38.86000000000001 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Conveyor_Main.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pallet.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 15.649000000000001, 23.0, -38.86000000000001 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#Pallet.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Static.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 137.674, 0.0, -28.860000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Pick_and_Place_Static.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 40.337, 36.9, -30.655000000000006 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Pick_and_Place_Floating_X.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 140.337, 36.9, -30.655000000000006 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Pick_and_Place_Floating_X.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_2.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 13.349000000000002, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Gripper_2.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_1.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 117.94899999999999, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Gripper_1.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Static.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 237.67399999999999, 0.0, -28.860000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Pick_and_Place_Static.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 177.075, 0.0, 32.436 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Vibrating_Bowl_Clip.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_2.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 213.34899999999997, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Gripper_2.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 15.649000000000001, 41.550000000000007, -17.685000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Pick_and_Place_Floating_Y.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_1.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 217.94899999999999, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Gripper_1.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_1.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 17.949, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Gripper_1.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 32.749, 44.55, -18.248 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Pick_and_Place_Floating_Z.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_1.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 317.949, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Gripper_1.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ -22.925, 0.0, 32.436 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Vibrating_Bowl_Clip.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 77.075, 0.0, 32.436 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Vibrating_Bowl_Clip.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 132.749, 44.55, -18.248 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Pick_and_Place_Floating_Z.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 115.649, 41.550000000000007, -17.685000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Pick_and_Place_Floating_Y.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 240.33699999999997, 36.9, -30.655000000000006 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Pick_and_Place_Floating_X.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_2.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 113.349, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS02.Gripper_2.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Static.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 37.674, 0.0, -28.860000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS01.Pick_and_Place_Static.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 215.64899999999998, 41.550000000000007, -17.685000000000004 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Pick_and_Place_Floating_Y.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Gripper_2.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 313.34899999999996, 37.55, -18.96 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS04.Gripper_2.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    },
+    {
+      "file": "/samples/virtualLearningFactory/local/resources/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+      "scale": [ 0.1, 0.1, 0.1 ],
+      "position": [ 232.74899999999998, 44.55, -18.248 ],
+      "orientation": [ 0.7071067690849304, 0.0, 0.7071067690849304, 0.0 ],
+      "rootNodeName": "http://www.ontoeng.com/2vlft#WS03.Pick_and_Place_Floating_Z.1",
+      "mergeAndExportMeshes": false,
+      "regenerateNormals": false
+    }
+  ]
 }

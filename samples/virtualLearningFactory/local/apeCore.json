@@ -56,7 +56,8 @@
       "/samples/virtualLearningFactory/local/resources/machines/tc108",
       "/samples/virtualLearningFactory/local/resources/machines/tc67h",
       "/samples/virtualLearningFactory/local/resources/machines/vc1020",
-      "/samples/virtualLearningFactory/local/resources/machines/wm2"
+      "/samples/virtualLearningFactory/local/resources/machines/wm2",
+      "/samples/virtualLearningFactory/local/resources/PickAndPlace"
     ]
   }
 }
