@@ -1,0 +1,4 @@
+﻿  stdafx.cpp
+  TheImperialMarch_PlaySndEx_Text_Sample.cpp
+LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'LIBCMT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
+  TheImperialMarch_PlaySndEx_Text_Sample.vcxproj -> C:\Projets\3dRudderSDK\Samples\x64\Debug\TheImperialMarch_PlaySndEx_Text_Sample.exe

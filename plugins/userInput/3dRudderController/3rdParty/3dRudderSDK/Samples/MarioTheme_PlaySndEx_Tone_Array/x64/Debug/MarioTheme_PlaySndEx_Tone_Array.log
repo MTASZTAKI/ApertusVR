@@ -1,0 +1,4 @@
+﻿  stdafx.cpp
+  MarioTheme_PlaySndEx_Tone_Array.cpp
+LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'LIBCMT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
+  MarioTheme_PlaySndEx_Tone_Array.vcxproj -> C:\Projets\3dRudderSDK\Samples\x64\Debug\MarioTheme_PlaySndEx_Tone_Array.exe

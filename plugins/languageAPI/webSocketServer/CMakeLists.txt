@@ -62,7 +62,7 @@ if (NOT BOOST_READY)
 	reportError (output if error)
 endif ()
 
-set(BOOST_LIBRARYDIR "${BOOST_DOWNLOAD_PATH}/boost/lib")
+set(BOOST_LIBRARYDIR "${CMAKE_BINARY_DIR}/boost/lib")
 set(BOOST_LIB_SYSTEM "${BOOST_LIBRARYDIR}/libboost_system-vc141-mt-x64-1_67.lib")
 set(BOOST_LIB_DATETIME "${BOOST_LIBRARYDIR}/libboost_date_time-vc141-mt-x64-1_67.lib")
 set(BOOST_LIB_REGEX "${BOOST_LIBRARYDIR}/libboost_regex-vc141-mt-x64-1_67.lib")
@@ -81,7 +81,7 @@ set (SOURCES
 	)
 
 include_directories(
-	${BOOST_DOWNLOAD_PATH}/boost/include/boost-1_67
+	${CMAKE_BINARY_DIR}/Boost/include/boost-1_67
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/crow/include
 	)
 

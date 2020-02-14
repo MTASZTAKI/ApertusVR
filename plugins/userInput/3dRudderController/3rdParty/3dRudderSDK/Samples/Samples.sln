@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleSDKUsage", "SimpleSDKUsage\SimpleSDKUsage.vcxproj", "{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheImperialMarch_PlaySndEx_Text_Sample", "TheImperialMarch_PlaySndEx_Text_Sample\TheImperialMarch_PlaySndEx_Text_Sample.vcxproj", "{40ADDD44-56DC-45D8-ABCC-49185E024D7B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MarioTheme_PlaySndEx_Tone_Array", "MarioTheme_PlaySndEx_Tone_Array\MarioTheme_PlaySndEx_Tone_Array.vcxproj", "{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Debug|x64.ActiveCfg = Debug|x64
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Debug|x64.Build.0 = Debug|x64
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Debug|x86.ActiveCfg = Debug|Win32
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Debug|x86.Build.0 = Debug|Win32
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Release|x64.ActiveCfg = Release|x64
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Release|x64.Build.0 = Release|x64
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Release|x86.ActiveCfg = Release|Win32
+		{C2898207-1EF6-40E4-8D8E-96EA1428A8D9}.Release|x86.Build.0 = Release|Win32
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Debug|x64.ActiveCfg = Debug|x64
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Debug|x64.Build.0 = Debug|x64
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Debug|x86.ActiveCfg = Debug|Win32
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Debug|x86.Build.0 = Debug|Win32
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Release|x64.ActiveCfg = Release|x64
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Release|x64.Build.0 = Release|x64
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Release|x86.ActiveCfg = Release|Win32
+		{40ADDD44-56DC-45D8-ABCC-49185E024D7B}.Release|x86.Build.0 = Release|Win32
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Debug|x64.ActiveCfg = Debug|x64
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Debug|x64.Build.0 = Debug|x64
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Debug|x86.ActiveCfg = Debug|Win32
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Debug|x86.Build.0 = Debug|Win32
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Release|x64.ActiveCfg = Release|x64
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Release|x64.Build.0 = Release|x64
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Release|x86.ActiveCfg = Release|Win32
+		{4CEA4D15-655B-4198-9E7B-0EEEF18EB142}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

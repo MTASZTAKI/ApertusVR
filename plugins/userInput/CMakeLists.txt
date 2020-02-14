@@ -22,3 +22,4 @@
 
 add_subdirectory (oisUserInput)
 add_subdirectory (viewPointManager)
+add_subdirectory (3dRudderController)
