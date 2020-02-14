@@ -20,21 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (ai)
-add_subdirectory (browser)
-add_subdirectory (content)
-add_subdirectory (controller)
-add_subdirectory (game)
-add_subdirectory (helloWorld)
-add_subdirectory (hmd)
-add_subdirectory (industry40)
-add_subdirectory (languageAPI)
-add_subdirectory (launcher)
-add_subdirectory (multiPlayer)
-add_subdirectory (pointCloud)
-add_subdirectory (simulation)
-add_subdirectory (tracking)
-add_subdirectory (e-Learning)
-add_subdirectory (userInterface)
-add_subdirectory (virtualLearningFactory)
+add_subdirectory (3dRudder)
+
 
