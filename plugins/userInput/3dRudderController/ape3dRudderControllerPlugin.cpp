@@ -63,6 +63,7 @@ void ape::ape3dRudderControllerPlugin::Run()
 		{
 			ns3dRudder::AxesValue lAxis;
 			ns3dRudder::AxesValue lAxisUserOffset;
+			mErrCodeGetAxes = mpSdk->GetAxes(0, &mAxesParamDefault, &lAxis);
 			if (mErrCodeGetAxes != ns3dRudder::NotReady)
 			{
 				APE_LOG_DEBUG("Axes: " << lAxis.Get(ns3dRudder::Axes::LeftRight) << ";" << lAxis.Get(ns3dRudder::Axes::ForwardBackward) << ";" << lAxis.Get(ns3dRudder::Axes::UpDown) << ";" << lAxis.Get(ns3dRudder::Axes::Rotation));
