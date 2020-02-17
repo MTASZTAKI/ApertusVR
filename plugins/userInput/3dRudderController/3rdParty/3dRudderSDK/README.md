@@ -1,15 +1,20 @@
 ![language](https://img.shields.io/badge/Language-c++-green.svg) 
-![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%202013-green.svg) 
-![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%202015-green.svg)
-![IDE](https://img.shields.io/badge/IDE-XCode%20macOS-green.svg)
+![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%202017-green.svg)
 ![Firmware 3dRudder](https://img.shields.io/badge/Firmware%203dRudder-%3E%20v1.4.x.x-brightgreen.svg)
 
 IMPORTANT NOTE
-The 3dRudder SDK API is property of 3dRudder SAS (www.3dRudder.com).
-You can use it for free, and you can check out the documentation and update the SDK if needed on the website  https://3drudder-dev.com.
+-------------------------------------------------------------------------------
+
+The 3dRudder SDK API is property of 3dRudder SAS (www.3dRudder.com)
+
+You can use it for free, and you can check out the documentation and update the SDK if needed on the website  https://3drudder-dev.com
+
 This free license is for personal use only in Apertus VR.
+
 For any professional use, you will need another license.
+
 Please contact us at hello@3drudder.com.
+
 -------------------------------------------------------------------------------
 # 3dRudder SDK 2.05
 
@@ -20,8 +25,6 @@ Please contact us at hello@3drudder.com.
 
 **For that purpose, it is necessary to install the Dashboard software.**
 https://www.3drudder.com/start/
-
-# Now also available for macOS as a same c++ library
 
 # IDE
 * Visual Studio 2017
