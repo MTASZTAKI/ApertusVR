@@ -37,8 +37,19 @@ SOFTWARE.*/
 #include "apeICoreConfig.h"
 #include "apeUserInputMacro.h"
 
-
 #define THIS_PLUGINNAME "ape3dRudderControllerPlugin"
+
+class CEvent : public ns3dRudder::IEvent
+{
+	void OnConnect(uint32_t nDeviceNumber)
+	{
+		APE_LOG_DEBUG("OnConnect: " << nDeviceNumber);
+	}
+	void OnDisconnect(uint32_t nDeviceNumber)
+	{
+		APE_LOG_DEBUG("OnDisconnect: " << nDeviceNumber);
+	}
+};
 
 namespace ape
 {
@@ -73,6 +84,8 @@ namespace ape
 
 		ns3dRudder::CSdk* mpSdk;
 
+		CEvent mEvent;
+
 		ns3dRudder::ErrorCode mErrCodeLoad;
 
 		ns3dRudder::AxesParamDefault mAxesParamDefault;
@@ -103,17 +116,5 @@ namespace ape
 		return 0;
 	}
 }
-
-class CEvent : public ns3dRudder::IEvent
-{
-	void OnConnect(uint32_t nDeviceNumber)
-	{
-		APE_LOG_DEBUG("OnConnect: " << nDeviceNumber);
-	}
-	void OnDisconnect(uint32_t nDeviceNumber)
-	{
-		APE_LOG_DEBUG("OnDisconnect: " << nDeviceNumber);
-	}
-};
 
 #endif
