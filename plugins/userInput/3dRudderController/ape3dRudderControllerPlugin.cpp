@@ -8,6 +8,7 @@ ape::ape3dRudderControllerPlugin::ape3dRudderControllerPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ape3dRudderControllerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mUserDeadZone = ape::Vector3(0.1, 0.1, 0.1);
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -36,6 +37,7 @@ void ape::ape3dRudderControllerPlugin::Init()
 void ape::ape3dRudderControllerPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	bool isInUsePrinted = false;
 	mErrCodeLoad = ns3dRudder::LoadSDK(_3DRUDDER_SDK_LAST_COMPATIBLE_VERSION);
 	if (mErrCodeLoad == ns3dRudder::ErrorCode::Success)
 	{
@@ -65,8 +67,26 @@ void ape::ape3dRudderControllerPlugin::Run()
 			mErrCodeGetAxes = mpSdk->GetAxes(0, &mAxesParamDefault, &lAxis);
 			if (mErrCodeGetAxes != ns3dRudder::NotReady)
 			{
+				ape::Vector3 position(lAxis.Get(ns3dRudder::Axes::LeftRight), lAxis.Get(ns3dRudder::Axes::ForwardBackward), lAxis.Get(ns3dRudder::Axes::Rotation));
+				if (position.length() > mUserDeadZone.length())
+				{
+					if (auto userNode = mpUserInputMacro->getUserNode().lock())
+					{
+						userNode->translate(ape::Vector3(lAxis.Get(ns3dRudder::Axes::LeftRight), 0, 0), ape::Node::TransformationSpace::LOCAL);
 
-				/*APE_LOG_DEBUG("Axes: " << lAxis.Get(ns3dRudder::Axes::LeftRight) << ";" << lAxis.Get(ns3dRudder::Axes::ForwardBackward) << ";" << lAxis.Get(ns3dRudder::Axes::UpDown) << ";" << lAxis.Get(ns3dRudder::Axes::Rotation));
+						userNode->translate(ape::Vector3(lAxis.Get(ns3dRudder::Axes::LeftRight), 0, 0), ape::Node::TransformationSpace::LOCAL);
+
+						userNode->translate(ape::Vector3(0, 0, -lAxis.Get(ns3dRudder::Axes::ForwardBackward)), ape::Node::TransformationSpace::LOCAL);
+
+						userNode->translate(ape::Vector3(0, 0, -lAxis.Get(ns3dRudder::Axes::ForwardBackward)), ape::Node::TransformationSpace::LOCAL);
+
+						userNode->rotate(ape::Degree(-lAxis.Get(ns3dRudder::Axes::Rotation)).toRadian(), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+
+						userNode->rotate(ape::Degree(-lAxis.Get(ns3dRudder::Axes::Rotation)).toRadian(), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
+
+						//APE_LOG_DEBUG("Axes: " << lAxis.Get(ns3dRudder::Axes::LeftRight) << "; " << lAxis.Get(ns3dRudder::Axes::ForwardBackward) << "; " << lAxis.Get(ns3dRudder::Axes::Rotation) << "; " << lAxis.Get(ns3dRudder::Axes::UpDown));
+					}
+				}
 				ns3dRudder::Status status = mpSdk->GetStatus(0);
 				switch (status)
 				{
@@ -87,9 +107,13 @@ void ape::ape3dRudderControllerPlugin::Run()
 						mpSdk->GetUserOffset(0, &lAxisUserOffset);
 						break;
 					case ns3dRudder::InUse:
-						APE_LOG_DEBUG("Status : 3DRudder in use");
+						if (!isInUsePrinted)
+						{
+							APE_LOG_DEBUG("Status : 3DRudder in use");
+							isInUsePrinted = true;
+						}
 						break;
-				}*/
+				}
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
