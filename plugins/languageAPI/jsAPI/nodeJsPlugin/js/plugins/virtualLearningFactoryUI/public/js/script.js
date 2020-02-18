@@ -49,13 +49,25 @@ function getOtherUserNodePositions() {
 	});
 }
 
-function attachUserNodes() {
-	console.log('attachUserNodes()');
-	otherUserNodeNames.forEach(function (element) {
-		doGetRequest(apiEndPoint + "/nodes/" + element.name + "/" + userNodeName + '/parent', function (res) {
-			var parentNodeName = res.data.items[0].parentName;
-			console.log('parentNodeName(): res: ', parentNodeName);
-		});
+function attach2UserNode(parentNodeName) {
+	console.log('attach2UserNode: ', parentNodeName);
+	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + parentNodeName + '/parent', function (res) {
+		var parentNodeName = res.data.items[0].parentName;
+		console.log('parentNodeName(): res: ', parentNodeName);
+	});
+}
+
+function setNodePosition(nodeName, pos) {
+	console.log('setNodePosition(): ', nodeName, ' pos: ', pos);
+	doPostRequest(apiEndPoint + "/nodes/" + nodeName + '/position', pos, function (res) {
+		console.log('setNodePosition(): res: ', res);
+	});
+}
+
+function setNodeOrientation(nodeName, ori) {
+	console.log('setNodeOrientation(): ', nodeName, ' ori: ', ori);
+	doPostRequest(apiEndPoint + "/nodes/" + nodeName + '/orientation', ori, function (res) {
+		console.log('setNodeOrientation(): res: ', res);
 	});
 }
 
@@ -84,11 +96,26 @@ function showUsers() {
 	$('#users').toggle();
 	getUserNodeName();
 	getOtherUserNodeNames();
-	document.getElementById('otherUserNodeNames').innerHTML = '';
+	var usersDiv = document.getElementById('users');
 	otherUserNodeNames.forEach(function (element) {
-		document.getElementById('otherUserNodeNames').innerHTML = document.getElementById('otherUserNodeNames').innerHTML  + element.name;
+		var otherUserNodeNameDiv = document.getElementById(element.name);
+		if (typeof (otherUserNodeNameDiv) != 'undefined' && otherUserNodeNameDiv != null) {
+			otherUserNodeNameDiv.innerHTML = element.name;
+		}
+		else {
+			var newDiv = document.createElement('div');
+			newDiv.id = element.name;
+			newDiv.innerHTML = element.name;
+			newDiv.addEventListener('click', function () {
+				var pos = {x: 0, y: 0, z: 0};
+				setNodePosition(userNodeName, pos);
+				var ori = {w: 1, x: 0, y: 0, z: 0};
+				setNodeOrientation(userNodeName, ori);
+				attach2UserNode(element.name);
+			});
+			usersDiv.appendChild(newDiv);
+		}
 	});
-	attachUserNodes();
 }
 
 function updateMap() {
@@ -137,7 +164,11 @@ function showMap() {
     updateMap()
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
+	getUserNodeName();
+	getOtherUserNodeNames();
+	getUserNodePosition();
+	getOtherUserNodePositions();
 	$('#map').toggle();
 	$('#users').toggle();
     var sock = new WebSocket("ws://localhost:40080/ws");
