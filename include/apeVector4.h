@@ -59,6 +59,11 @@ namespace ape
 			return w;
 		}
 
+		float length() const
+		{
+			return std::sqrt(x * x + y * y + z * z + w * w);
+		}
+
 		std::string toString() const
 		{
 			std::ostringstream buff;

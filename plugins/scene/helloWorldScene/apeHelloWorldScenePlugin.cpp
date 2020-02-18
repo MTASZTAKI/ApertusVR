@@ -43,7 +43,7 @@ void ape::apeHelloWorldScenePlugin::Init()
 	mPlanetNode = mpSceneManager->createNode("planetNode");
 	if (auto planetNode = mPlanetNode.lock())
 	{
-		planetNode->setScale(ape::Vector3(10, 10, 10));
+		//planetNode->setScale(ape::Vector3(10, 10, 10));
 		planetNode->setPosition(ape::Vector3(0, 150, 0));
 		if (auto planetMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("planet.mesh", ape::Entity::GEOMETRY_FILE).lock()))
 		{

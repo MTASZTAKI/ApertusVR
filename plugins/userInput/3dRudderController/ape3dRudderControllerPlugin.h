@@ -94,7 +94,7 @@ namespace ape
 
 		ns3dRudder::ErrorCode mErrCodeGetAxes;
 
-		ape::Vector3 mUserDeadZone;
+		ape::Vector4 mUserDeadZone;
 
 		void eventCallBack(const ape::Event& event);
 	};
