@@ -127,33 +127,18 @@ function updateMap() {
 
 	var canvas = document.getElementById("mapCanvas");
 	var ctx = canvas.getContext("2d");
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	var mapDiv = document.getElementById('map');
-	var userNodeNameDiv = document.getElementById(userNodeName);
-	if (typeof (userNodeNameDiv) != 'undefined' && userNodeNameDiv != null) {
-		userNodeNameDiv.innerHTML = userNodeName + ': Position(' + userNodePostion.x + ',' + userNodePostion.y + ',' + userNodePostion.z + ')';
-	}
-	else
-	{
-		var newDiv = document.createElement(userNodeName);
-		newDiv.id = userNodeName;
-		newDiv.innerHTML = userNodeName + ': Position(' + userNodePostion.x + ',' + userNodePostion.y + ',' + userNodePostion.z + ')';
-		mapDiv.appendChild(newDiv);
-	}
-	let index = 0
+	
+	let index = 0;
 	otherUserNodeNames.forEach(function (element) {
-		var otherUserNodeNameDiv = document.getElementById(element.name);
-		if (typeof (otherUserNodeNameDiv) != 'undefined' && otherUserNodeNameDiv != null) {
-			otherUserNodeNameDiv.innerHTML = element.name + ': Position(' + otherUserNodePositions[index].x + ',' + otherUserNodePositions[index].y + ',' + otherUserNodePositions[index].z + ')';
-			ctx.beginPath();
-			ctx.arc(95, 10, 10, 0, 2 * Math.PI);
-			ctx.stroke();
-		}
-		else {
-			var newDiv = document.createElement(element.name);
-			newDiv.id = element.name;
-			newDiv.innerHTML = element.name  + ': Position(' + otherUserNodePositions[index].x + ',' + otherUserNodePositions[index].y + ',' + otherUserNodePositions[index].z + ')';
-			mapDiv.appendChild(newDiv);
-		}
+		var pos = otherUserNodePositions.pop();
+		var relativePosition = { x: userNodePostion.x - pos.x, y: userNodePostion.y - pos.y, z: userNodePostion.z - pos.z };
+		console.log('relativePosition: ', relativePosition)
+		ctx.beginPath();
+		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.y, 10, 0, 2 * Math.PI);
+		ctx.stroke();
 		index++;
 	});
 }
@@ -161,7 +146,6 @@ function updateMap() {
 function showMap() {
     console.log('toogle map');
     $('#map').toggle();
-    updateMap()
 }
 
 $(document).ready(function () {
@@ -173,7 +157,10 @@ $(document).ready(function () {
 	$('#users').toggle();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
-        console.log('open')
+    	console.log('open')
+    	window.setInterval(function () {
+    		updateMap();
+    	}, 1000);
     }
     sock.onerror = (e)=>{
         console.log('error',e)
