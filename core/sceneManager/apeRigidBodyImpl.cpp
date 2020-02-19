@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include "apeRigidBodyImpl.h"
 
 ape::RigidBodyImpl::RigidBodyImpl(std::string name,bool isHostCreated)
-: ape::IRigidBody(name), ape::Replica("Rigidbody", isHostCreated)
+: ape::IRigidBody(name), ape::Replica("Rigidbody", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

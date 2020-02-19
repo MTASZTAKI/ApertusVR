@@ -191,7 +191,7 @@ void ape::VLFTUIManagerPlugin::Run()
 	std::stringstream url;
 	url << "http://localhost:" << mServerPort << "/virtualLearningFactoryUI/public/";
 	//TODO we have to wait because of the possible GPU race
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	mpSceneMakerMacro->makeOverlayBrowser(url.str());
 	while (true)
 	{

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeTorusGeometryImpl.h"
 
-ape::TorusGeometryImpl::TorusGeometryImpl(std::string name, bool isHostCreated) : ape::ITorusGeometry(name), ape::Replica("TorusGeometry", isHostCreated)
+ape::TorusGeometryImpl::TorusGeometryImpl(std::string name, bool isHostCreated) : ape::ITorusGeometry(name), ape::Replica("TorusGeometry", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

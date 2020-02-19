@@ -22,8 +22,10 @@ SOFTWARE.*/
 
 #include "apeReplica.h"
 
-ape::Replica::Replica(RakNet::RakString objectType, bool isHostCreated)
+ape::Replica::Replica(RakNet::RakString objectType, std::string name, bool isHostCreated)
 {
+	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mReplicaName = name;
 	mObjectType = objectType;
 	mIsHostCreated = isHostCreated;
 }
@@ -72,7 +74,11 @@ RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNe
 
 void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
-	delete this;
+	if (mObjectType == "Node")
+		mpSceneManager->deleteNode(mReplicaName);
+	else
+		mpSceneManager->deleteEntity(mReplicaName);
+	//delete this;
 }
 
 RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )

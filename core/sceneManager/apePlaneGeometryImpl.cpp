@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apePlaneGeometryImpl.h"
 
-ape::PlaneGeometryImpl::PlaneGeometryImpl(std::string name, bool isHostCreated) : ape::IPlaneGeometry(name), ape::Replica("PlaneGeometry", isHostCreated)
+ape::PlaneGeometryImpl::PlaneGeometryImpl(std::string name, bool isHostCreated) : ape::IPlaneGeometry(name), ape::Replica("PlaneGeometry", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

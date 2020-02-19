@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeManualMaterialImpl.h"
 
-ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated) : ape::IManualMaterial(name), ape::Replica("ManualMaterial", isHostCreated)
+ape::ManualMaterialImpl::ManualMaterialImpl(std::string name, bool isHostCreated) : ape::IManualMaterial(name), ape::Replica("ManualMaterial", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

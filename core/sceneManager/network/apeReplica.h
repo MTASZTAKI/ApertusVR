@@ -23,10 +23,11 @@ SOFTWARE.*/
 #ifndef APE_REPLICA_H
 #define APE_REPLICA_H
 
-#include "apeILogManager.h"
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"
+#include "apeILogManager.h"
+#include "apeISceneManager.h"
 
 namespace ape
 {
@@ -37,13 +38,17 @@ namespace ape
 
 		void PrintStringInBitstream(RakNet::BitStream *bs);
 
+		ape::ISceneManager* mpSceneManager;
+
+		std::string mReplicaName;
+
 	protected:
 		RakNet::RakString mObjectType;
 
 		RakNet::VariableDeltaSerializer mVariableDeltaSerializer;
 
 	public:
-		Replica(RakNet::RakString objectType, bool isHostCreated);
+		Replica(RakNet::RakString objectType, std::string name, bool isHostCreated);
 
 		virtual ~Replica();
 		

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeUnitTextureImpl.h"
 
-ape::UnitTextureImpl::UnitTextureImpl(std::string name, bool isHostCreated) : ape::IUnitTexture(name), ape::Replica("UnitTexture", isHostCreated)
+ape::UnitTextureImpl::UnitTextureImpl(std::string name, bool isHostCreated) : ape::IUnitTexture(name), ape::Replica("UnitTexture", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

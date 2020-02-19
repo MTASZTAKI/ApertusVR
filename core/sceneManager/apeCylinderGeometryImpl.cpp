@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeCylinderGeometryImpl.h"
 
-ape::CylinderGeometryImpl::CylinderGeometryImpl(std::string name, bool isHostCreated) : ape::ICylinderGeometry(name), ape::Replica("CylinderGeometry", isHostCreated)
+ape::CylinderGeometryImpl::CylinderGeometryImpl(std::string name, bool isHostCreated) : ape::ICylinderGeometry(name), ape::Replica("CylinderGeometry", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

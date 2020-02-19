@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeSkyImpl.h"
 
-ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : ape::ISky(name), ape::Replica("Sky", isHostCreated)
+ape::SkyImpl::SkyImpl(std::string name, bool isHostCreated) : ape::ISky(name), ape::Replica("Sky", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

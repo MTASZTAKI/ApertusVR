@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeManualTextureImpl.h"
 
-ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : ape::IManualTexture(name), ape::Replica("ManualTexture", isHostCreated)
+ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool isHostCreated) : ape::IManualTexture(name), ape::Replica("ManualTexture", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

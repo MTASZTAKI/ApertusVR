@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeFileMaterialImpl.h"
 
-ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : ape::IFileMaterial(name), ape::Replica("FileMaterial", isHostCreated)
+ape::FileMaterialImpl::FileMaterialImpl(std::string name, bool isHostCreated) : ape::IFileMaterial(name), ape::Replica("FileMaterial", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

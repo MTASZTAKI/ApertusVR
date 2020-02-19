@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeBrowserImpl.h"
 
-ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : ape::IBrowser(name), ape::Replica("Browser", isHostCreated)
+ape::BrowserImpl::BrowserImpl(std::string name, bool isHostCreated) : ape::IBrowser(name), ape::Replica("Browser", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

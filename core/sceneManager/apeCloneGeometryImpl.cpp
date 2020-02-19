@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 ape::CloneGeometryImpl::CloneGeometryImpl(std::string name, bool isHostCreated)
-	: ape::ICloneGeometry(name), ape::Replica("CloneGeometry", isHostCreated)
+	: ape::ICloneGeometry(name), ape::Replica("CloneGeometry", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

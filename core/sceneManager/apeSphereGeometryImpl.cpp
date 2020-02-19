@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeSphereGeometryImpl.h"
 
-ape::SphereGeometryImpl::SphereGeometryImpl(std::string name, bool isHostCreated) : ape::ISphereGeometry(name), ape::Replica("SphereGeometry", isHostCreated)
+ape::SphereGeometryImpl::SphereGeometryImpl(std::string name, bool isHostCreated) : ape::ISphereGeometry(name), ape::Replica("SphereGeometry", name, isHostCreated)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
