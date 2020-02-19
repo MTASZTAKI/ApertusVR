@@ -36,7 +36,7 @@ namespace ape
 	class ManualMaterialImpl : public ape::IManualMaterial, public ape::Replica
 	{
 	public:
-		ManualMaterialImpl(std::string name, bool isHostCreated);
+		ManualMaterialImpl(std::string name, bool isHost);
 
 		~ManualMaterialImpl();
 

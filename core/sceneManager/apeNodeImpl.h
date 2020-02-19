@@ -34,7 +34,7 @@ namespace ape
 	{
 	public:
 
-		NodeImpl(std::string name, bool isHostCreated);
+		NodeImpl(std::string name, bool isHost);
 
 		~NodeImpl();
 		

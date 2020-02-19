@@ -34,7 +34,7 @@ namespace ape
 	{
 	public:
 
-		SkyImpl(std::string name, bool isHostCreated);
+		SkyImpl(std::string name, bool isHost);
 
 		~SkyImpl();
 

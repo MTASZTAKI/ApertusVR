@@ -22,12 +22,12 @@ SOFTWARE.*/
 
 #include "apeReplica.h"
 
-ape::Replica::Replica(RakNet::RakString objectType, std::string name, bool isHostCreated)
+ape::Replica::Replica(RakNet::RakString objectType, std::string name, bool isHost)
 {
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mReplicaName = name;
 	mObjectType = objectType;
-	mIsHostCreated = isHostCreated;
+	mIsHost = isHost;
 }
 
 ape::Replica::~Replica()
@@ -37,33 +37,47 @@ ape::Replica::~Replica()
 
 RakNet::RM3ConstructionState ape::Replica::QueryConstruction( RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3 )
 {
-	return QueryConstruction_ClientConstruction(destinationConnection, mIsHostCreated);
+	return QueryConstruction_ClientConstruction(destinationConnection, mIsHost);
 }
 
 bool ape::Replica::QueryRemoteConstruction( RakNet::Connection_RM3 *sourceConnection )
 {
-	return QueryRemoteConstruction_ClientConstruction(sourceConnection, mIsHostCreated);
+	return QueryRemoteConstruction_ClientConstruction(sourceConnection, mIsHost);
+}
+
+void ape::Replica::SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection)
+{
+	mVariableDeltaSerializer.AddRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
+}
+
+bool ape::Replica::DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection)
+{
+	return true;
+}
+
+RakNet::RM3DestructionState ape::Replica::QueryDestruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3)
+{
+	//APE_LOG_DEBUG("QueryDestruction");
+	return RakNet::RM3DS_DO_NOT_QUERY_DESTRUCTION;
+}
+
+bool ape::Replica::QueryRelayDestruction(RakNet::Connection_RM3 *sourceConnection) const
+{
+	//APE_LOG_DEBUG("QueryRelayDestruction");
+	return true;
 }
 
 void ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection )
 {
 	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
-	destructionBitstream->Write(mObjectType + RakNet::RakString(" SerializeDestruction"));
+	destructionBitstream->Write(mObjectType + RakNet::RakString("SerializeDestruction"));
+	//APE_LOG_DEBUG("SerializeDestruction");
 }
 
 bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
 {
 	PrintStringInBitstream(destructionBitstream);
-	return true;
-}
-
-void ape::Replica::SerializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection )
-{
-	mVariableDeltaSerializer.AddRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
-}
-
-bool ape::Replica::DeserializeConstruction( RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection )
-{
+	//APE_LOG_DEBUG("DeserializeDestruction");
 	return true;
 }
 
@@ -74,6 +88,9 @@ RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNe
 
 void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
+	//APE_LOG_DEBUG("DeallocReplica");
+	if (mIsHost)
+		BroadcastDestruction();
 	if (mObjectType == "Node")
 		mpSceneManager->deleteNode(mReplicaName);
 	else
@@ -83,7 +100,7 @@ void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 
 RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
 {
-	return QuerySerialization_ClientSerializable(destinationConnection, mIsHostCreated);
+	return QuerySerialization_ClientSerializable(destinationConnection, mIsHost);
 }
 
 void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)

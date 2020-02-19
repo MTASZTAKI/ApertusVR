@@ -34,7 +34,7 @@ namespace ape
 	class UnitTextureImpl : public ape::IUnitTexture, public ape::Replica
 	{
 	public:
-		UnitTextureImpl(std::string name, bool isHostCreated);
+		UnitTextureImpl(std::string name, bool isHost);
 
 		~UnitTextureImpl();
 

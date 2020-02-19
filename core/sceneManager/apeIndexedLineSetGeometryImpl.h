@@ -33,7 +33,7 @@ namespace ape
 	class IndexedLineSetGeometryImpl : public ape::IIndexedLineSetGeometry, public ape::Replica
 	{
 	public:
-		IndexedLineSetGeometryImpl(std::string name, bool isHostCreated);
+		IndexedLineSetGeometryImpl(std::string name, bool isHost);
 
 		~IndexedLineSetGeometryImpl();
 

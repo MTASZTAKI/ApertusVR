@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apePointCloudImpl.h"
 
-ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHostCreated) : ape::IPointCloud(name), ape::Replica("PointCloud", name, isHostCreated)
+ape::PointCloudImpl::PointCloudImpl(std::string name, bool isHost) : ape::IPointCloud(name), ape::Replica("PointCloud", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

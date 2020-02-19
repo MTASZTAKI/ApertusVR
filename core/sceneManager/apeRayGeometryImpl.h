@@ -34,7 +34,7 @@ namespace ape
 	class RayGeometryImpl : public ape::IRayGeometry, public ape::Replica
 	{
 	public:
-		RayGeometryImpl(std::string name, bool isHostCreated);
+		RayGeometryImpl(std::string name, bool isHost);
 
 		~RayGeometryImpl();
 

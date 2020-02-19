@@ -35,7 +35,7 @@ namespace ape
 	class FileMaterialImpl : public ape::IFileMaterial, public ape::Replica
 	{
 	public:
-		FileMaterialImpl(std::string name, bool isHostCreated);
+		FileMaterialImpl(std::string name, bool isHost);
 
 		~FileMaterialImpl();
 		

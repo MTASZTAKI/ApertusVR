@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeWaterImpl.h"
 
-ape::WaterImpl::WaterImpl(std::string name, bool isHostCreated) : ape::IWater(name), ape::Replica("Water", name, isHostCreated)
+ape::WaterImpl::WaterImpl(std::string name, bool isHost) : ape::IWater(name), ape::Replica("Water", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

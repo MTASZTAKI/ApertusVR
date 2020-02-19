@@ -34,7 +34,7 @@ namespace ape
 	{
 	public:
 
-		WaterImpl(std::string name, bool isHostCreated);
+		WaterImpl(std::string name, bool isHost);
 
 		~WaterImpl();
 

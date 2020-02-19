@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeIndexedLineSetGeometryImpl.h"
 
-ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bool isHostCreated) : ape::IIndexedLineSetGeometry(name), ape::Replica("IndexedLineSetGeometry", name, isHostCreated)
+ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bool isHost) : ape::IIndexedLineSetGeometry(name), ape::Replica("IndexedLineSetGeometry", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

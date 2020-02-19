@@ -34,7 +34,7 @@ namespace ape
 	class FileTextureImpl : public ape::IFileTexture, public ape::Replica
 	{
 	public:
-		FileTextureImpl(std::string name, bool isHostCreated);
+		FileTextureImpl(std::string name, bool isHost);
 
 		~FileTextureImpl();
 		

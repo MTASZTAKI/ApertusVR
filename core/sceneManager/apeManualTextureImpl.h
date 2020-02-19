@@ -34,7 +34,7 @@ namespace ape
 	class ManualTextureImpl : public ape::IManualTexture, public ape::Replica
 	{
 	public:
-		ManualTextureImpl(std::string name, bool isHostCreated);
+		ManualTextureImpl(std::string name, bool isHost);
 
 		~ManualTextureImpl();
 

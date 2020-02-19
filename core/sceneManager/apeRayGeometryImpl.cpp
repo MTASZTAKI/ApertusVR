@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeRayGeometryImpl.h"
 
-ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHostCreated) : ape::IRayGeometry(name), ape::Replica("RayGeometry", name, isHostCreated)
+ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHost) : ape::IRayGeometry(name), ape::Replica("RayGeometry", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

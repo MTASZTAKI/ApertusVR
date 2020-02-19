@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeBoxGeometryImpl.h"
 
-ape::BoxGeometryImpl::BoxGeometryImpl(std::string name, bool isHostCreated) : ape::IBoxGeometry(name), ape::Replica("BoxGeometry", name, isHostCreated)
+ape::BoxGeometryImpl::BoxGeometryImpl(std::string name, bool isHost) : ape::IBoxGeometry(name), ape::Replica("BoxGeometry", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

@@ -133,11 +133,12 @@ function updateMap() {
 	
 	let index = 0;
 	otherUserNodeNames.forEach(function (element) {
+		var scale = 0.1;
 		var pos = otherUserNodePositions.pop();
-		var relativePosition = { x: userNodePostion.x - pos.x, y: userNodePostion.y - pos.y, z: userNodePostion.z - pos.z };
+		var relativePosition = { x: (userNodePostion.x - pos.x) * scale, y: (userNodePostion.y - pos.y) * scale, z: (userNodePostion.z - pos.z) * scale };
 		console.log('relativePosition: ', relativePosition)
 		ctx.beginPath();
-		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.y, 10, 0, 2 * Math.PI);
+		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.y, 5, 0, 2 * Math.PI);
 		ctx.stroke();
 		index++;
 	});
@@ -160,7 +161,7 @@ $(document).ready(function () {
     	console.log('open')
     	window.setInterval(function () {
     		updateMap();
-    	}, 1000);
+    	}, 500);
     }
     sock.onerror = (e)=>{
         console.log('error',e)

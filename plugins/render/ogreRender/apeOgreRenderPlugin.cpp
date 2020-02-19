@@ -139,9 +139,6 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							}
 						}
 							break;
-						case ape::Event::Type::NODE_DELETE:
-							;
-							break;
 						case ape::Event::Type::NODE_POSITION:
 							ogreNode->setPosition(ape::ConversionToOgre(node->getPosition()));
 							break;
@@ -172,6 +169,14 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						}
 					}
 				}
+			}
+			else if (event.type == ape::Event::Type::NODE_DELETE)
+			{
+				Ogre::SceneNode* ogreNode = nullptr;
+				if (mpOgreSceneManager->hasSceneNode(event.subjectName))
+					ogreNode = mpOgreSceneManager->getSceneNode(event.subjectName);
+				if (ogreNode)
+					ogreNode->removeAndDestroyAllChildren();
 			}
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)

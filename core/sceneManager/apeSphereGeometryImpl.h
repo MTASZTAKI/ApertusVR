@@ -33,7 +33,7 @@ namespace ape
 	class SphereGeometryImpl : public ape::ISphereGeometry, public ape::Replica
 	{
 	public:
-		SphereGeometryImpl(std::string name, bool isHostCreated);
+		SphereGeometryImpl(std::string name, bool isHost);
 
 		~SphereGeometryImpl();
 

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeNodeImpl.h"
 
-ape::NodeImpl::NodeImpl(std::string name, bool isHostCreated) : ape::Replica("Node", name, isHostCreated)
+ape::NodeImpl::NodeImpl(std::string name, bool isHost) : ape::Replica("Node", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

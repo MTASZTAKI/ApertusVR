@@ -33,7 +33,7 @@ namespace ape
 	class RigidBodyImpl : public ape::IRigidBody, public ape::Replica
 	{
 	public:
-		RigidBodyImpl(std::string name, bool isHostCreated);
+		RigidBodyImpl(std::string name, bool isHost);
 
 		~RigidBodyImpl();
 

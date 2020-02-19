@@ -34,7 +34,7 @@ namespace ape
 	class Replica : public RakNet::Replica3
 	{
 	private:
-		bool mIsHostCreated;
+		bool mIsHost;
 
 		void PrintStringInBitstream(RakNet::BitStream *bs);
 
@@ -48,7 +48,7 @@ namespace ape
 		RakNet::VariableDeltaSerializer mVariableDeltaSerializer;
 
 	public:
-		Replica(RakNet::RakString objectType, std::string name, bool isHostCreated);
+		Replica(RakNet::RakString objectType, std::string name, bool isHost);
 
 		virtual ~Replica();
 		
@@ -61,6 +61,10 @@ namespace ape
 		void SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection);
 		
 		bool DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection);
+
+		RakNet::RM3DestructionState QueryDestruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3);
+
+		bool QueryRelayDestruction(RakNet::Connection_RM3 *sourceConnection) const;
 		
 		void SerializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection);
 		
