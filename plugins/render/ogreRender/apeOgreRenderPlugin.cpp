@@ -114,7 +114,16 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 			{
 				std::string nodeName = node->getName();
 				if (event.type == ape::Event::Type::NODE_CREATE)
-					mpOgreSceneManager->getRootSceneNode()->createChildSceneNode(nodeName);
+				{
+					try
+					{
+						mpOgreSceneManager->getRootSceneNode()->createChildSceneNode(nodeName);
+					}
+					catch (const Ogre::Exception& ex)
+					{
+						APE_LOG_DEBUG(ex.getFullDescription());
+					}
+				}
 				else 
 				{
 					Ogre::SceneNode* ogreNode = nullptr;
