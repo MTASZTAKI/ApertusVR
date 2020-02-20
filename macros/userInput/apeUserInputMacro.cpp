@@ -492,7 +492,7 @@ void ape::UserInputMacro::setOverlayBrowserKeyValue(std::string keyValue)
 {
 	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
-		APE_LOG_DEBUG("setOverlayBrowserKeyValue: " << keyValue);
+		//APE_LOG_DEBUG("setOverlayBrowserKeyValue: " << keyValue);
 		if (keyValue != "shift" && keyValue != "right shift")
 			std::transform(keyValue.begin(), keyValue.end(), keyValue.begin(), ::tolower);
 
