@@ -1,0 +1,846 @@
+{
+    "context": {
+        "UnitOfMeasureScale": 0.01,
+        "Zup": false,
+        "RepoPath": "VF/repository/"
+    },
+  "scene": [
+    "http://www.ontoeng.com/2vlftA#WS03.Conveyor_Main.1",
+    "http://www.ontoeng.com/2vlftA#Pallet.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Lateral_Conveyor.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Lateral_Conveyor.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Lateral_Conveyor.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Conveyor_Main.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Conveyor_Main.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Static.1",
+    "http://www.ontoeng.com/2vlftA#WS01.PalletPosition",
+    "http://www.ontoeng.com/2vlftA#WS02",
+    "http://www.ontoeng.com/2vlftA#WS03.PalletPosition",
+    "http://www.ontoeng.com/2vlftA#2vlft_building.1",
+    "http://www.ontoeng.com/2vlftA#WS03",
+    "http://www.ontoeng.com/2vlftA#WS01",
+    "http://www.ontoeng.com/2vlftA#WS02.PalletPosition",
+    "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_X.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Gripper_1.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Z.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Static.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Z.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Gripper_1.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_X.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Vibrating_Bowl_Clip.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_X.1",
+    "http://www.ontoeng.com/2vlftA#WS01.Gripper_2.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Vibrating_Bowl_Clip.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Static.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Z.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Vibrating_Bowl_Clip.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Gripper_2.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1",
+    "http://www.ontoeng.com/2vlftA#WS02.Gripper_1.1",
+    "http://www.ontoeng.com/2vlftA#WS03.Gripper_2.1"
+  ],
+    "assets": [
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Gripper_2",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Gripper_2.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Gripper_2.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_X.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_Y.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_Z.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Vibrating_Bowl_Clip.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Static.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Static.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Gripper_1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Gripper_1.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Gripper_1.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main",
+            "position": [
+                38.86000000000001,
+                0.0,
+                15.649000000000001
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor",
+            "position": [
+                5.735,
+                0.0,
+                19.636
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "type": "http://www.ontoeng.com/factory#MachineToolType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pick_and_Place_Station.jpg"
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Lateral_Conveyor.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor.1",
+            "position": [
+                5.735,
+                0.0,
+                19.636
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Conveyor_Main.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "position": [
+                38.86000000000001,
+                0.0,
+                15.649000000000001
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#Pallet.1",
+            "type": "http://www.ontoeng.com/factory#Pallet",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pallet",
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.PalletPosition"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Lateral_Conveyor.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor.1",
+            "position": [
+                5.735,
+                0.0,
+                19.636
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Conveyor_Main.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "position": [
+                38.86000000000001,
+                0.0,
+                15.649000000000001
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Lateral_Conveyor.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor.1",
+            "position": [
+                5.735,
+                0.0,
+                19.636
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Lateral_Conveyor.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor.1",
+            "position": [
+                5.735,
+                0.0,
+                19.636
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Conveyor_Main.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "position": [
+                38.86000000000001,
+                0.0,
+                15.649000000000001
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Conveyor_Main.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "position": [
+                38.86000000000001,
+                0.0,
+                15.649000000000001
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Static.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "position": [
+                28.860000000000004,
+                0.0,
+                37.674
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.PalletPosition",
+            "type": "http://www.ontoeng.com/factory#BufferElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#PalletPosition",
+            "position": [
+                0.0,
+                23.0,
+                -0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Conveyor_Main.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Conveyor_Main.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "position": [
+                100.0,
+                0.0,
+                -0.0
+            ],
+            "rotation": [
+                0.7071067690849304,
+                0.0,
+                0.7071067690849304,
+                0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#2vlft_building.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.PalletPosition",
+            "type": "http://www.ontoeng.com/factory#BufferElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#PalletPosition",
+            "position": [
+                0.0,
+                23.0,
+                -0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Conveyor_Main.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Conveyor_Main.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#PalletPosition",
+            "type": "http://www.ontoeng.com/factory#BufferElement",
+            "position": [
+                0.0,
+                23.0,
+                -0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.PalletPosition",
+            "type": "http://www.ontoeng.com/factory#BufferElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#PalletPosition",
+            "position": [
+                0.0,
+                23.0,
+                -0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Conveyor_Main.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Conveyor_Main.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#2vlft_building.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#2vlft_building.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcBuilding"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "position": [
+                200.0,
+                0.0,
+                -0.0
+            ],
+            "rotation": [
+                0.7071067690849304,
+                0.0,
+                0.7071067690849304,
+                0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#2vlft_building.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "rotation": [
+                0.7071067690849304,
+                0.0,
+                0.7071067690849304,
+                0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#2vlft_building.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.PalletPosition",
+            "type": "http://www.ontoeng.com/factory#BufferElement",
+            "model": "http://www.ontoeng.com/VLFT_lib#PalletPosition",
+            "position": [
+                0.0,
+                23.0,
+                -0.0
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Conveyor_Main.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Conveyor_Main.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_X.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "position": [
+                1.795,
+                36.9,
+                2.6630000000000004
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Static.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Static.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Gripper_1.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_1.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "position": [
+                -0.563,
+                -3.0,
+                -17.1
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Z.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Z.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Gripper_1.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_1.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Z.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "position": [
+                -12.407,
+                7.6499999999999999,
+                -7.588
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_X.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_X.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Static.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "position": [
+                28.860000000000004,
+                0.0,
+                37.674
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Z.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "position": [
+                -12.407,
+                7.6499999999999999,
+                -7.588
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_X.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_X.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_X.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "position": [
+                1.795,
+                36.9,
+                2.6630000000000004
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Static.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Static.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Gripper_1.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_1.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Static.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "position": [
+                28.860000000000004,
+                0.0,
+                37.674
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_X.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "position": [
+                1.795,
+                36.9,
+                2.6630000000000004
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Static.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Static.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Vibrating_Bowl_Clip.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip.1",
+            "position": [
+                -32.436,
+                0.0,
+                -22.925
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Gripper_1.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Y.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "position": [
+                -0.563,
+                -3.0,
+                -17.1
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Z.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Z.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_X.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "position": [
+                1.795,
+                36.9,
+                2.6630000000000004
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Static.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Static.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Gripper_2.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_2",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                -2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS01.Gripper_2.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_2.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                -2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS01.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X",
+            "position": [
+                1.795,
+                36.9,
+                2.6630000000000004
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y",
+            "position": [
+                -0.563,
+                -3.0,
+                -17.1
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z",
+            "position": [
+                -12.407,
+                7.6499999999999999,
+                -7.588
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_X.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Vibrating_Bowl_Clip.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip.1",
+            "position": [
+                -32.436,
+                0.0,
+                -22.925
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Static.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "position": [
+                28.860000000000004,
+                0.0,
+                37.674
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Gripper_2.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_2.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                -2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Vibrating_Bowl_Clip.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip.1",
+            "position": [
+                -32.436,
+                0.0,
+                -22.925
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Z.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "position": [
+                -12.407,
+                7.6499999999999999,
+                -7.588
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_X.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_X.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_Z.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Z.1",
+            "position": [
+                -12.407,
+                7.6499999999999999,
+                -7.588
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_X.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS04.Pick_and_Place_Floating_X.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Vibrating_Bowl_Clip.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip.1",
+            "position": [
+                -32.436,
+                0.0,
+                -22.925
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Gripper_2.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_2.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                -2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "position": [
+                -0.563,
+                -3.0,
+                -17.1
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Z.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Z.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Floating_Y.1",
+            "position": [
+                -0.563,
+                -3.0,
+                -17.1
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Z.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Z.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS02.Gripper_1.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_1.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS02.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/2vlftA#WS03.Gripper_2.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Gripper_2.1",
+            "position": [
+                1.2750000000000002,
+                -4.0,
+                -2.3
+            ],
+            "placementRelTo": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1",
+            "parentObject": "http://www.ontoeng.com/2vlftA#WS03.Pick_and_Place_Floating_Y.1"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Conveyor_Main",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Conveyor_Main.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Conveyor_Main.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Vibrating_Bowl_Clip",
+            "position": [
+                -32.436,
+                0.0,
+                -22.925
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Lateral_Conveyor",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Lateral_Conveyor.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Lateral_Conveyor.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static.1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponent",
+            "model": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Static",
+            "position": [
+                28.860000000000004,
+                0.0,
+                37.674
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station",
+            "parentObject": "http://www.ontoeng.com/VLFT_lib#Pick_and_Place_Station"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib#Pallet",
+            "type": "http://www.ontoeng.com/factory#PalletType",
+            "representations": [
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pallet.JPG"
+                },
+                {
+                    "file": "binaryfiles/VLFT/PickAndPlace/Pallet.OBJ",
+                    "unit": 0.001
+                }
+            ]
+        }
+    ]
+}

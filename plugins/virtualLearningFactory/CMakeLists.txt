@@ -22,4 +22,5 @@
 
 add_subdirectory (animationPlayer)
 add_subdirectory (userInterfaceManager)
+add_subdirectory (sceneLoader)
 

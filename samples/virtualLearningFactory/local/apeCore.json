@@ -1,15 +1,16 @@
 {
   "plugins": [
     "apeNodeJsPlugin",
-	"apeWebSocketServerPlugin",
+    "apeWebSocketServerPlugin",
     "apeOgreRenderPlugin",
-	"apeOisUserInputPlugin",
+    "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeAssimpAssetLoaderPlugin",
     "apeSampleScenePlugin",
     "apeVLFTAnimationPlayerPlugin",
-	"apeCefBrowserPlugin",
-    "apeVLFTUIManagerPlugin"
+    "apeCefBrowserPlugin",
+    "apeVLFTUIManagerPlugin",
+    "apeVLFTSceneLoaderPlugin"
   ],
   "network": {
     "user": "VLFT_Local",

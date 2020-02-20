@@ -20,18 +20,33 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set (CONFIGS
-	apeNodeJsPlugin.json
-	apeVLFTAnimationPlayerPlugin.json
-	apeOgreRenderPlugin.json
-    apeViewPointManagerPlugin.json
-	apeVLFTSceneLoaderPlugin.json
-	apeCore.json
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	apeVLFTSceneLoaderPlugin.h
+	apeVLFTSceneLoaderPluginConfig.h
 	)
 
-add_custom_target(
-    VirtualLearningFactoryLocal ALL
-    SOURCES ${CONFIGS}
-)
+set (SOURCES 
+	apeVLFTSceneLoaderPlugin.cpp
+	)
 
-set_property (TARGET VirtualLearningFactoryLocal PROPERTY FOLDER "Samples/VirtualLearningFactory")
+include_directories(
+	${RAPIDJSON_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+	)
+
+add_library (apeVLFTSceneLoaderPlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apeVLFTSceneLoaderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
+
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY FOLDER "Plugins/VirtualLearningFactory")
+
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY CXX_STANDARD 17)
+
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+
