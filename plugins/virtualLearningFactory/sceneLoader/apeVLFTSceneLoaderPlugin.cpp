@@ -14,6 +14,7 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTSceneLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
+	mGeometryScale = std::map<std::string, float>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -65,13 +66,47 @@ void ape::VLFTSceneLoaderPlugin::Init()
 				std::string fileExtension = fileFullPathStr.substr(fileFullPathStr.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
-					if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
+					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
 					{
-						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
-						{
-							fileGeometry->setFileName(fileFullPathStr);
-							fileGeometry->setParentNode(node);
-						}
+						fileGeometry->setFileName(fileFullPathStr);
+						mGeometryScale[asset.get_id()] = *representation.get_unit() / 0.01f;
+					}
+				}
+			}
+		}
+	}
+	for (auto asset : mScene.get_assets())
+	{
+		std::weak_ptr<std::string> model = asset.get_model();
+		if (model.lock())
+		{
+			if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
+			{
+				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
+				{
+					node->setParentNode(parentNode);
+				}
+				std::weak_ptr<std::vector<double>> position = asset.get_position();
+				if (position.lock())
+				{
+					ape::Vector3 apePosition;
+					int index = 0;
+					for (auto value : *asset.get_position())
+					{
+						if (index = 0)
+							apePosition.x = value;
+						if (index = 1)
+							apePosition.y = value;
+						if (index = 2)
+							apePosition.z = value;
+						index++;
+					}
+					node->setPosition(apePosition);
+					float unit = mGeometryScale[*asset.get_model()];
+					node->setScale(ape::Vector3(unit, unit, unit));
+					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
+					{
+						fileGeometry->setParentNode(node);
 					}
 				}
 			}
