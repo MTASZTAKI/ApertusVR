@@ -13,13 +13,13 @@
                 "height": 1050,
                 "fullScreen": false
             },
-            "miscParams": {
-                "vSync": true,
-                "vSyncInterval": 1,
-                "colorDepth": 32,
-                "FSAA": 0,
-                "FSAAHint": ""
-            },
+          "miscParams": {
+            "vSync": true,
+            "vSyncInterval": 1,
+            "colorDepth": 32,
+            "FSAA": 8,
+            "FSAAHint": "Quality"
+          },
             "viewports": [
                 {
                     "zOrder": 0,
