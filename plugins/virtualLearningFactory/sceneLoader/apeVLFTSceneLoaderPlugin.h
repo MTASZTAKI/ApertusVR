@@ -37,6 +37,7 @@ SOFTWARE.*/
 #include "apeIFileGeometry.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIFileMaterial.h"
+#include "apeICloneGeometry.h"
 #include "apeIRayGeometry.h"
 #include "apeIBrowser.h"
 #include "apeIIndexedLineSetGeometry.h"

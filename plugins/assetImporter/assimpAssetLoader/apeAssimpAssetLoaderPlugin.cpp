@@ -80,8 +80,8 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 			std::string fileExtension = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("."));
 			if (fileExtension != ".mesh")
 			{
-				APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-				APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+				//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+				//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
 				AssetConfig assetConfig;
 				assetConfig.mergeAndExportMeshes = false;
 				assetConfig.regenerateNormals = false;
@@ -89,14 +89,14 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				if (auto rootNode = fileGeometry->getParentNode().lock())
 				{
 					assetConfig.rootNodeName = rootNode->getName();
-					APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+					//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
 					assetConfig.scale = rootNode->getScale();
 					assetConfig.position = rootNode->getPosition();
 					assetConfig.orientation = rootNode->getOrientation();
 				}
 				else
 				{
-					APE_LOG_DEBUG("no root node was founded maybe it can causes problems");
+					//APE_LOG_DEBUG("no root node was founded maybe it can causes problems");
 				}
 				assetConfig.file = fileGeometry->getFileName();
 				mAssimpAssetConfigs.push_back(assetConfig);
@@ -146,7 +146,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 		node->setPosition(ape::Vector3(position.x, position.y, position.z));
 		node->setOrientation(ape::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
 		node->setScale(ape::Vector3(scaling.x, scaling.y, scaling.z));
-		//APE_LOG_DEBUG("nodeName: " << node->getName());
+		////APE_LOG_DEBUG("nodeName: " << node->getName());
 		for (int i = 0; i < assimpNode->mNumMeshes; i++)
 		{
 			mObjectCount++;
@@ -226,22 +226,22 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					if (sceneBlendingType == aiBlendMode_Additive)
 					{
 						material->setSceneBlending(ape::Material::SceneBlendingType::ADD);
-						//APE_LOG_DEBUG("blending ADD: " << opacity);
+						////APE_LOG_DEBUG("blending ADD: " << opacity);
 					}
 					else if (sceneBlendingType == aiBlendMode_Default)
 					{
 						if (opacity < 0.99)
 						{
 							material->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
-							//APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
+							////APE_LOG_DEBUG("blending TRANSPARENT_ALPHA: " << opacity);
 						}
 						else
 						{
 							material->setSceneBlending(ape::Material::SceneBlendingType::REPLACE);
-							//APE_LOG_DEBUG("blending REPLACE: " << opacity);
+							////APE_LOG_DEBUG("blending REPLACE: " << opacity);
 						}
 					}
-					//APE_LOG_DEBUG("createManualMaterial: " << material->getName());
+					////APE_LOG_DEBUG("createManualMaterial: " << material->getName());
 				}
 				ape::GeometryNormals normals = ape::GeometryNormals();
 				if (assimpMesh->HasNormals() && !mAssimpAssetConfigs[assimpSceneID].regenerateNormals)
@@ -253,7 +253,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						normals.push_back(assimpNormal.y);
 						normals.push_back(assimpNormal.z);
 					}
-					//APE_LOG_DEBUG("hasNormal: " << assimpMesh->mName.C_Str());
+					////APE_LOG_DEBUG("hasNormal: " << assimpMesh->mName.C_Str());
 				}
 				ape::GeometryColors colors = ape::GeometryColors();
 				for (int colorSetIndex = 0; colorSetIndex < AI_MAX_NUMBER_OF_COLOR_SETS; colorSetIndex++)
@@ -268,7 +268,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							colors.push_back(assimpColor.b);
 							colors.push_back(assimpColor.a);
 						}
-						//APE_LOG_DEBUG("hasVertexColors: " << assimpMesh->mName.C_Str());
+						////APE_LOG_DEBUG("hasVertexColors: " << assimpMesh->mName.C_Str());
 					}
 				}
 				ape::GeometryTextureCoordinates textureCoordinates = ape::GeometryTextureCoordinates();
@@ -282,7 +282,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							textureCoordinates.push_back(assimpTerxtureCoordinates.x);
 							textureCoordinates.push_back(1.0f - assimpTerxtureCoordinates.y);
 						}
-						//APE_LOG_DEBUG("HasTextureCoords: " << assimpMesh->mName.C_Str());
+						////APE_LOG_DEBUG("HasTextureCoords: " << assimpMesh->mName.C_Str());
 					}
 				}
 				std::string groupName = std::string();
@@ -321,7 +321,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					mesh->setParentNode(node);
-				//APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
+				////APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
 
 
 				/// setting physics body to the asset
@@ -384,7 +384,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					{
 						assetConfig.rootNodeName = assetMemberIterator->value.GetString();
 						mpSceneManager->createNode(assetConfig.rootNodeName);
-						APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+						//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
 					}
 					if (assetMemberIterator->name == "scale")
 					{
@@ -429,7 +429,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 							assimpAssetFileNamePath << resourceLocationPath.str();
 						}
 						assetConfig.file = assimpAssetFileNamePath.str();
-						APE_LOG_DEBUG("assetConfig.file " << assetConfig.file);
+						//APE_LOG_DEBUG("assetConfig.file " << assetConfig.file);
 						std::string fileName = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("/\\") + 1);
 						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
 						if (fileExtension == ".mesh")
@@ -539,7 +539,7 @@ void ape::AssimpAssetLoaderPlugin::readFile(std::string fileName)
 		const aiScene* assimpScene = mpAssimpImporter->ReadFile(fileName, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 		if (!assimpScene)
 		{
-			APE_LOG_ERROR("Loading the asset " << fileName << " was failed due to: " << mpAssimpImporter->GetErrorString());
+			APE_LOG_DEBUG("Loading the asset " << fileName << " was failed due to: " << mpAssimpImporter->GetErrorString());
 		}
 		else
 		{
@@ -557,11 +557,11 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 	APE_LOG_FUNC_ENTER();
 	if (assimpScene->mRootNode)
 	{
-		//APE_LOG_DEBUG("mNumMeshes: " << assimpScene->mNumMeshes);
+		////APE_LOG_DEBUG("mNumMeshes: " << assimpScene->mNumMeshes);
 		createNode(ID, assimpScene->mRootNode);
 		if (auto assimpSceneRootNode = mpSceneManager->getNode(assimpScene->mRootNode->mName.C_Str() + mUniqueID).lock())
 		{
-			APE_LOG_DEBUG("assimpSceneRootNode: " << assimpSceneRootNode->getName());
+			//APE_LOG_DEBUG("assimpSceneRootNode: " << assimpSceneRootNode->getName());
 			if (mAssimpAssetConfigs[ID].mergeAndExportMeshes)
 			{
 				if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mAssimpAssetConfigs[ID].file, ape::Entity::GEOMETRY_FILE).lock()))
@@ -569,15 +569,14 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 					meshFile->exportMesh();
 					meshFile->setParentNode(assimpSceneRootNode);
 					assimpSceneRootNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
-					APE_LOG_DEBUG("mergeAndExportMeshes: " << mAssimpAssetConfigs[ID].file);
+					//APE_LOG_DEBUG("mergeAndExportMeshes: " << mAssimpAssetConfigs[ID].file);
 				}
 			}
 			else
 			{
 				if (auto rootNode = mpSceneManager->getNode(mAssimpAssetConfigs[ID].rootNodeName + mUniqueID).lock())
 				{
-					APE_LOG_DEBUG("setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString()
-						<< " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());
+					//APE_LOG_DEBUG("setScale to " << mAssimpAssetConfigs[ID].scale.toString() << " setPosition to " << mAssimpAssetConfigs[ID].position.toString() << " setOrientation to " << mAssimpAssetConfigs[ID].orientation.toString());
 					rootNode->setScale(mAssimpAssetConfigs[ID].scale);
 					rootNode->setOrientation(mAssimpAssetConfigs[ID].orientation);
 					rootNode->setPosition(mAssimpAssetConfigs[ID].position);
@@ -585,7 +584,7 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 				}
 				else
 				{
-					APE_LOG_DEBUG("rootNode was not found by name: " << mAssimpAssetConfigs[ID].rootNodeName);
+					//APE_LOG_DEBUG("rootNode was not found by name: " << mAssimpAssetConfigs[ID].rootNodeName);
 				}
 			}
 		}

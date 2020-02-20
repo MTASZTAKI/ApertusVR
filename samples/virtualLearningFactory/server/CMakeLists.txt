@@ -21,7 +21,7 @@
 #SOFTWARE.
 
 set (CONFIGS
-    apeAssimpAssetLoaderPlugin.json
+    apeVLFTSceneLoaderPlugin.json
 	apeVLFTAnimationPlayerPlugin.json
 	apeCore.json
 	)

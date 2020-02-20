@@ -84,6 +84,7 @@ void ape::VLFTSceneLoaderPlugin::Init()
 			{
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
+					APE_LOG_DEBUG("parentNode: " << parentNode->getName());
 					node->setParentNode(parentNode);
 				}
 				std::weak_ptr<std::vector<double>> position = asset.get_position();
@@ -106,7 +107,20 @@ void ape::VLFTSceneLoaderPlugin::Init()
 					node->setScale(ape::Vector3(unit, unit, unit));
 					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
 					{
-						fileGeometry->setParentNode(node);
+						if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
+						{
+							if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
+							{
+								APE_LOG_DEBUG("clone: " << geometryClone->getName());
+								geometryClone->setSourceGeometry(fileGeometry);
+								geometryClone->setParentNode(node);
+							}
+						}
+						else
+						{
+							APE_LOG_DEBUG("node: " << node->getName());
+							fileGeometry->setParentNode(node);
+						}
 					}
 				}
 			}
