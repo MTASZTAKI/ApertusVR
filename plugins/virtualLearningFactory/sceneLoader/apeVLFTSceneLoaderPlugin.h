@@ -76,6 +76,8 @@ namespace ape
 
 		void parsePlacementRelTo();
 
+		std::map<std::string, std::string> mModelsRepresentations;
+
 	public:
 		VLFTSceneLoaderPlugin();
 
