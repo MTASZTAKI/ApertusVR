@@ -70,8 +70,6 @@ namespace ape
 
 		quicktype::Scene mScene;
 
-		std::map<std::string, float> mGeometryScale;
-
 	public:
 		VLFTSceneLoaderPlugin();
 

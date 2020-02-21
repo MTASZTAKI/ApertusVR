@@ -14,7 +14,6 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTSceneLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	mGeometryScale = std::map<std::string, float>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -66,10 +65,16 @@ void ape::VLFTSceneLoaderPlugin::Init()
 				std::string fileExtension = fileFullPathStr.substr(fileFullPathStr.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
-					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
+					if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
 					{
-						fileGeometry->setFileName(fileFullPathStr);
-						mGeometryScale[asset.get_id()] = *representation.get_unit() / 0.01f;
+						float unitScale = *representation.get_unit() / 0.01f;
+						node->setScale(ape::Vector3(unitScale, unitScale, unitScale));
+						//APE_LOG_DEBUG("geometryNode: " << unitScale);
+						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
+						{
+							fileGeometry->setParentNode(node);
+							fileGeometry->setFileName(fileFullPathStr);
+						}
 					}
 				}
 			}
@@ -84,44 +89,21 @@ void ape::VLFTSceneLoaderPlugin::Init()
 			{
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
-					APE_LOG_DEBUG("parentNode: " << parentNode->getName());
+					//APE_LOG_DEBUG("parentNode: " << parentNode->getName());
 					node->setParentNode(parentNode);
 				}
-				std::weak_ptr<std::vector<double>> position = asset.get_position();
-				if (position.lock())
+				std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
+				if (positionWP.lock())
 				{
-					ape::Vector3 apePosition;
-					int index = 0;
-					for (auto value : *asset.get_position())
-					{
-						if (index = 0)
-							apePosition.x = value;
-						if (index = 1)
-							apePosition.y = value;
-						if (index = 2)
-							apePosition.z = value;
-						index++;
-					}
+					std::vector<double> position = *asset.get_position();
+					ape::Vector3 apePosition(position[0], position[1], position[2]);
+					//APE_LOG_DEBUG("apePosition: " << apePosition.toString());
 					node->setPosition(apePosition);
-					float unit = mGeometryScale[*asset.get_model()];
-					node->setScale(ape::Vector3(unit, unit, unit));
-					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
-					{
-						if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
-						{
-							if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
-							{
-								APE_LOG_DEBUG("clone: " << geometryClone->getName());
-								geometryClone->setSourceGeometry(fileGeometry);
-								geometryClone->setParentNode(node);
-							}
-						}
-						else
-						{
-							APE_LOG_DEBUG("node: " << node->getName());
-							fileGeometry->setParentNode(node);
-						}
-					}
+				}
+				if (auto childNode = mpSceneManager->getNode(*asset.get_model()).lock())
+				{
+					//APE_LOG_DEBUG("childNode: " << childNode->getName());
+					childNode->setParentNode(node);
 				}
 			}
 		}
