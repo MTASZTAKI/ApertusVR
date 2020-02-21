@@ -92,24 +92,21 @@ void ape::VLFTSceneLoaderPlugin::parseModels()
 						//APE_LOG_DEBUG("childNode fileGeometry: " << childNode->getName());
 						childNode->setParentNode(node);
 					}
-					else 
+				}
+				std::string modelName = *asset.get_model();
+				auto fileGeometryName = modelName.substr(0, modelName.length() - 2);
+				APE_LOG_DEBUG("modelName: " << modelName);
+				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
+				{
+					if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
 					{
-						std::string modelName = *asset.get_model();
-						auto fileGeometryName = modelName.substr(0, modelName.length() - 2);
-						APE_LOG_DEBUG("modelName: " << modelName);
-						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
+						geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
+						if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
 						{
-							if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
-							{
-								geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
-								if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
-								{
-									node->setScale(fileGeometryParentNode->getScale());
-								}
-								geometryClone->setParentNode(node);
-								APE_LOG_DEBUG("clone: " << fileGeometry->getName());
-							}
+							node->setScale(fileGeometryParentNode->getScale());
 						}
+						geometryClone->setParentNode(node);
+						APE_LOG_DEBUG("clone: " << fileGeometry->getName());
 					}
 				}
 			}
