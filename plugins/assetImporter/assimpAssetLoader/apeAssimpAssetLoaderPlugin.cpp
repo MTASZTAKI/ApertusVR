@@ -154,6 +154,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			std::stringstream meshUniqueName;
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
+			//APE_LOG_DEBUG("meshUniqueName: " << meshUniqueName.str());
 			if (auto mesh = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(meshUniqueName.str(), ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
 			{
 				ape::GeometryCoordinates coordinates = ape::GeometryCoordinates();
@@ -288,6 +289,9 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				std::string groupName = std::string();
 				if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 					groupName = mAssimpAssetConfigs[assimpSceneID].file;
+				else
+					groupName = mAssimpAssetConfigs[assimpSceneID].rootNodeName;
+				//APE_LOG_DEBUG("mAssimpAssetConfigs[assimpSceneID].rootNodeName: " << mAssimpAssetConfigs[assimpSceneID].rootNodeName);
 				mesh->setParameters(groupName, coordinates, indices, normals, mAssimpAssetConfigs[assimpSceneID].regenerateNormals, colors, textureCoordinates, material);
 				if (textureCoordinates.size() && diffuseTextureFileName.length())
 				{
