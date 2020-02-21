@@ -70,6 +70,12 @@ namespace ape
 
 		quicktype::Scene mScene;
 
+		void parseRepresentations();
+
+		void parseModels();
+
+		void parsePlacementRelTo();
+
 	public:
 		VLFTSceneLoaderPlugin();
 

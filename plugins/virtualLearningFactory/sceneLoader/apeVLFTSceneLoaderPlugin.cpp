@@ -4,8 +4,6 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-
-
 ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
@@ -28,13 +26,8 @@ void ape::VLFTSceneLoaderPlugin::eventCallBack(const ape::Event & event)
 	
 }
 
-void ape::VLFTSceneLoaderPlugin::Init()
+void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 {
-	APE_LOG_FUNC_ENTER();
-	std::stringstream fileFullPath;
-	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTSceneLoaderPlugin.json";
-	FILE* apeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	mScene = nlohmann::json::parse(apeVLFTSceneLoaderPluginConfigFile);
 	for (auto asset : mScene.get_assets())
 	{
 		std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
@@ -69,7 +62,7 @@ void ape::VLFTSceneLoaderPlugin::Init()
 					{
 						float unitScale = *representation.get_unit() / 0.01f;
 						node->setScale(ape::Vector3(unitScale, unitScale, unitScale));
-						//APE_LOG_DEBUG("geometryNode: " << unitScale);
+						APE_LOG_DEBUG("geometryNode: " << unitScale);
 						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
 						{
 							fileGeometry->setParentNode(node);
@@ -80,6 +73,10 @@ void ape::VLFTSceneLoaderPlugin::Init()
 			}
 		}
 	}
+}
+
+void ape::VLFTSceneLoaderPlugin::parseModels()
+{
 	for (auto asset : mScene.get_assets())
 	{
 		std::weak_ptr<std::string> model = asset.get_model();
@@ -87,9 +84,35 @@ void ape::VLFTSceneLoaderPlugin::Init()
 		{
 			if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
 			{
+				if (auto childNode = mpSceneManager->getNode(*asset.get_model()).lock())
+				{
+					if (auto childNodeParentNode = childNode->getParentNode().lock())
+					{
+						;
+					}
+					else
+					{
+						APE_LOG_DEBUG("childNode: " << childNode->getName());
+						childNode->setParentNode(node);
+					}
+				}
+			}
+		}
+	}
+}
+
+void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
+{
+	for (auto asset : mScene.get_assets())
+	{
+		std::weak_ptr<std::string> placementRelTo = asset.get_placement_rel_to();
+		if (placementRelTo.lock())
+		{
+			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
+			{
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
-					//APE_LOG_DEBUG("parentNode: " << parentNode->getName());
+					APE_LOG_DEBUG("parentNode: " << parentNode->getName());
 					node->setParentNode(parentNode);
 				}
 				std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
@@ -97,23 +120,38 @@ void ape::VLFTSceneLoaderPlugin::Init()
 				{
 					std::vector<double> position = *asset.get_position();
 					ape::Vector3 apePosition(position[0], position[1], position[2]);
-					//APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+					APE_LOG_DEBUG("apePosition: " << apePosition.toString());
 					node->setPosition(apePosition);
 				}
-				if (auto childNode = mpSceneManager->getNode(*asset.get_model()).lock())
+				std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
+				if (orientationWP.lock())
 				{
-					//APE_LOG_DEBUG("childNode: " << childNode->getName());
-					childNode->setParentNode(node);
+					std::vector<double> orientation = *asset.get_rotation();
+					ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
+					APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
+					node->setOrientation(apeOrientation);
 				}
 			}
 		}
 	}
+}
+
+void ape::VLFTSceneLoaderPlugin::Init()
+{
+	APE_LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTSceneLoaderPlugin.json";
+	FILE* apeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	mScene = nlohmann::json::parse(apeVLFTSceneLoaderPluginConfigFile);
 	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::VLFTSceneLoaderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	parseRepresentations();
+	parseModels();
+	parsePlacementRelTo();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
