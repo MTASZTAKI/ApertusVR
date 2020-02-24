@@ -89,8 +89,8 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 				{
 					if (auto fileGeometryNode = mpSceneManager->getNode(*asset.get_model()).lock())
 					{
-						//APE_LOG_DEBUG("childNode fileGeometry: " << fileGeometryNode->getName());
 						fileGeometryNode->setParentNode(node);
+						//APE_LOG_DEBUG("childNode fileGeometry: " << fileGeometryNode->getName());
 					}
 				}
 				else
