@@ -12,7 +12,6 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTSceneLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	mModelsRepresentations = std::map<std::string, std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -76,14 +75,15 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 	}
 }
 
-void ape::VLFTSceneLoaderPlugin::parseModels()
+void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
-		std::weak_ptr<std::string> model = asset.get_model();
-		if (model.lock())
+		if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
 		{
-			if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
+			//APE_LOG_DEBUG("createNode: " << asset.get_id());
+			std::weak_ptr<std::string> model = asset.get_model();
+			if (model.lock())
 			{
 				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
 				{
@@ -97,7 +97,6 @@ void ape::VLFTSceneLoaderPlugin::parseModels()
 				{
 					std::string modelName = *asset.get_model();
 					auto fileGeometryName = modelName.substr(0, modelName.length() - 2);
-					APE_LOG_DEBUG("modelName: " << modelName);
 					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
 					{
 						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
@@ -108,7 +107,15 @@ void ape::VLFTSceneLoaderPlugin::parseModels()
 								node->setScale(fileGeometryParentNode->getScale());
 							}
 							geometryClone->setParentNode(node);
-							APE_LOG_DEBUG("clone: " << fileGeometry->getName());
+							//APE_LOG_DEBUG("clone: " << fileGeometry->getName());
+						}
+					}
+					else
+					{
+						if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
+						{
+							pureNode->setParentNode(node);
+							APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
 						}
 					}
 				}
@@ -128,8 +135,12 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 			{
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
-					//APE_LOG_DEBUG("parentNode: " << parentNode->getName());
+					//APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode:" << node->getName());
 					node->setParentNode(parentNode);
+				}
+				else
+				{
+					//APE_LOG_DEBUG("parentNode not found: " << *asset.get_placement_rel_to());
 				}
 				std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
 				if (positionWP.lock())
@@ -147,6 +158,10 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 					//APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
 					node->setOrientation(apeOrientation);
 				}
+			}
+			else
+			{
+				//APE_LOG_DEBUG("node not found: " << asset.get_id());
 			}
 		}
 	}
@@ -166,7 +181,7 @@ void ape::VLFTSceneLoaderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	parseRepresentations();
-	parseModels();
+	parseModelsAndNodes();
 	parsePlacementRelTo();
 	while (true)
 	{
