@@ -101,13 +101,17 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 					{
 						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
 						{
-							geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
-							if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
+							if (auto geometryCloneNode = mpSceneManager->createNode(asset.get_id() + "_Clone").lock())
 							{
-								node->setScale(fileGeometryParentNode->getScale());
+								geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
+								if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
+								{
+									geometryCloneNode->setScale(fileGeometryParentNode->getScale());
+								}
+								geometryClone->setParentNode(geometryCloneNode);
+								geometryCloneNode->setParentNode(node);
+								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
 							}
-							geometryClone->setParentNode(node);
-							//APE_LOG_DEBUG("clone: " << fileGeometry->getName());
 						}
 					}
 					else
@@ -115,7 +119,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 						if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
 						{
 							pureNode->setParentNode(node);
-							APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
+							//APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
 						}
 					}
 				}
