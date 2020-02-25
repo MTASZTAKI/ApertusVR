@@ -76,6 +76,12 @@ namespace ape
 
 		void parsePlacementRelTo();
 
+		void parseModelsIDs();
+
+		std::map<std::string, std::string> mModelsIDs;
+
+		std::string findGeometryNameByModelName(std::string modelName);
+
 	public:
 		VLFTSceneLoaderPlugin();
 

@@ -12,6 +12,7 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTSceneLoaderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
+	mModelsIDs = std::map<std::string, std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -75,6 +76,23 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 	}
 }
 
+std::string ape::VLFTSceneLoaderPlugin::findGeometryNameByModelName(std::string modelName)
+{
+	APE_LOG_DEBUG("findGeometryNameByModelName: " << modelName);
+	for (auto modelID : mModelsIDs)
+	{
+		if (modelName == modelID.second)
+		{
+			if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(modelID.first).lock()))
+			{
+				return fileGeometry->getName();
+			}
+			findGeometryNameByModelName(modelID.second);
+		}
+	}
+	return std::string();
+}
+
 void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
@@ -95,8 +113,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 				}
 				else
 				{
-					std::string modelName = *asset.get_model();
-					auto fileGeometryName = modelName.substr(0, modelName.length() - 2);
+					auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
 					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
 					{
 						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
@@ -110,7 +127,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 								}
 								geometryClone->setParentNode(geometryCloneNode);
 								geometryCloneNode->setParentNode(node);
-								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
+								APE_LOG_DEBUG("clone: " << geometryClone->getName());
 							}
 						}
 					}
@@ -171,6 +188,18 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 	}
 }
 
+void ape::VLFTSceneLoaderPlugin::parseModelsIDs()
+{
+	for (auto asset : mScene.get_assets())
+	{
+		std::weak_ptr<std::string> model = asset.get_model();
+		if (model.lock())
+		{
+			mModelsIDs[*asset.get_model()] = asset.get_id();
+		}
+	}
+}
+
 void ape::VLFTSceneLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
@@ -184,6 +213,7 @@ void ape::VLFTSceneLoaderPlugin::Init()
 void ape::VLFTSceneLoaderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	parseModelsIDs();
 	parseRepresentations();
 	parseModelsAndNodes();
 	parsePlacementRelTo();
