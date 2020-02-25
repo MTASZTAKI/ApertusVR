@@ -290,10 +290,10 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
@@ -306,6 +306,8 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString parentName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPosition))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_POSITION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mOrientation))
@@ -320,8 +322,6 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		}
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_PARENTNODE));
 	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))

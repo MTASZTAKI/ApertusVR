@@ -66,8 +66,8 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
 						{
 							//APE_LOG_DEBUG("fileGeometry: " << asset.get_id());
-							fileGeometry->setParentNode(node);
 							fileGeometry->setFileName(fileFullPathStr);
+							fileGeometry->setParentNode(node);
 						}
 					}
 				}

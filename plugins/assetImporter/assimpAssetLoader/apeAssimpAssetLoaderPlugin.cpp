@@ -72,7 +72,7 @@ void ape::AssimpAssetLoaderPlugin::Restart()
 
 void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 {
-	if (event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
+	if (event.type == ape::Event::Type::GEOMETRY_FILE_PARENTNODE)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
