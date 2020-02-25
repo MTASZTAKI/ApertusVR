@@ -78,7 +78,7 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 
 std::string ape::VLFTSceneLoaderPlugin::findGeometryNameByModelName(std::string modelName)
 {
-	APE_LOG_DEBUG("findGeometryNameByModelName: " << modelName);
+	//APE_LOG_DEBUG("findGeometryNameByModelName: " << modelName);
 	for (auto modelID : mModelsIDs)
 	{
 		if (modelName == modelID.second)
@@ -127,7 +127,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 								}
 								geometryClone->setParentNode(geometryCloneNode);
 								geometryCloneNode->setParentNode(node);
-								APE_LOG_DEBUG("clone: " << geometryClone->getName());
+								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
 							}
 						}
 					}

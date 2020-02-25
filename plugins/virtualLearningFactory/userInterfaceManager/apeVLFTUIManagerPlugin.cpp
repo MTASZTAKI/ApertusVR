@@ -120,7 +120,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				{
 					std::string entityName = entity->getName();
 					ape::Entity::Type entityType = entity->getType();
-					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_RAY)
+					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_CLONE)
 					{
 						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
 						if (auto clickedNode = geometry->getParentNode().lock())
@@ -148,7 +148,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					}
 					clickedNode->showBoundingBox(true);
 					mClickedNode = clickedNode;
-					APE_LOG_DEBUG("ClickedNode: " << mClickedNodeNames[0]);
+					APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName());
 				}
 			}
 		}
