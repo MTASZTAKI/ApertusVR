@@ -346,19 +346,19 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 void ape::SceneMakerMacro::makeOverlayBrowser(std::string url)
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER).lock()))
+	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER, false).lock()))
 	{
 		browser->setResoultion(1280, 720);
 		//TODO_SystemJson
 		//url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/robotCalibration/public/";
 		browser->setURL(url);
 		browser->showOnOverlay(true, 0);
-		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL, false).lock()))
 		{
 			mouseMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 			mouseMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 			//mouseMaterial->setLightingEnabled(false); TODO_SceneMakerMacro crash in OpenGL
-			if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", ape::Entity::TEXTURE_UNIT).lock()))
+			if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", ape::Entity::TEXTURE_UNIT, false).lock()))
 			{
 				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 				mouseTexture->setTextureAddressingMode(ape::Texture::AddressingMode::CLAMP);
