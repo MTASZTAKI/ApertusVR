@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeRayGeometryImpl.h"
 
-ape::RayGeometryImpl::RayGeometryImpl(std::string name, bool isHost) : ape::IRayGeometry(name), ape::Replica("RayGeometry", name, isHost)
+ape::RayGeometryImpl::RayGeometryImpl(std::string name) : ape::IRayGeometry(name)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
@@ -64,40 +64,4 @@ void ape::RayGeometryImpl::setParentNode(ape::NodeWeakPtr parentNode)
 	}
 	else
 		mParentNode = ape::NodeWeakPtr();
-}
-
-void ape::RayGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
-{
-	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-}
-
-RakNet::RM3SerializationResult ape::RayGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
-{
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIntersectingEnabled);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIntersections);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-}
-
-void ape::RayGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
-{
-	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
-	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIntersectingEnabled))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTIONENABLE));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIntersections))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_INTERSECTION));
-	RakNet::RakString parentName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
-	{
-		mParentNodeName = parentName.C_String();
-		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_RAY_PARENTNODE));
-	}
-	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

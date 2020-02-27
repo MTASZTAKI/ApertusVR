@@ -22,10 +22,11 @@ SOFTWARE.*/
 
 #include "apeNodeImpl.h"
 
-ape::NodeImpl::NodeImpl(std::string name, bool isHost) : ape::Replica("Node", name, isHost)
+ape::NodeImpl::NodeImpl(std::string name, bool replicate, bool isHost) : ape::Replica("Node", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mName = name;
 	mParentNode = ape::NodeWeakPtr();
 	mParentNodeName = std::string();
@@ -35,6 +36,8 @@ ape::NodeImpl::NodeImpl(std::string name, bool isHost) : ape::Replica("Node", na
 	mChildrenVisibility = true;
 	mIsFixedYaw = false;
 	mIsInheritOrientation = true;
+	mIsReplicated = replicate;
+	mOwnerID = mpCoreConfig->getNetworkGUID();
 }
 
 ape::NodeImpl::~NodeImpl()
@@ -229,6 +232,21 @@ bool ape::NodeImpl::isInheritOrientation()
 void ape::NodeImpl::setInitalState()
 {
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
+}
+
+bool ape::NodeImpl::isReplicated()
+{
+	return mIsReplicated;
+}
+
+void ape::NodeImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::NodeImpl::getOwner()
+{
+	return mOwnerID;
 }
 
 void ape::NodeImpl::translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace )

@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeUnitTextureImpl.h"
 
-ape::UnitTextureImpl::UnitTextureImpl(std::string name, bool isHost) : ape::IUnitTexture(name), ape::Replica("UnitTexture", name, isHost)
+ape::UnitTextureImpl::UnitTextureImpl(std::string name) : ape::IUnitTexture(name)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
@@ -84,39 +84,4 @@ ape::IUnitTexture::Filtering ape::UnitTextureImpl::getTextureFiltering()
 {
 	return mFiltering;
 }
-
-void ape::UnitTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
-{
-	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-}
-
-RakNet::RM3SerializationResult ape::UnitTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
-{
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mScroll);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAddressingMode);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mFiltering);
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-}
-
-void ape::UnitTextureImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
-{
-	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
-	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_PARAMETERS));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScroll))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_SCROLL));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAddressingMode))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_ADDRESSING));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mFiltering))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_UNIT_FILTERING));
-	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
-}
-
 

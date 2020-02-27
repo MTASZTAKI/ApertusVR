@@ -51,7 +51,7 @@ namespace ape
 	{
 	public:
 
-		PointCloudImpl(std::string name, bool isHost);
+		PointCloudImpl(std::string name, bool replicate, bool isHost);
 
 		~PointCloudImpl();
 

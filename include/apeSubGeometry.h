@@ -35,7 +35,7 @@ namespace ape
 	class SubGeometry : public Entity
 	{
 	protected:
-		SubGeometry(std::string name, Entity::Type entityType) : Entity(name, entityType), mParentGeometry(ape::GeometryWeakPtr()) {};
+		SubGeometry(std::string name, bool replicated,  Entity::Type entityType) : Entity(name, replicated, entityType), mParentGeometry(ape::GeometryWeakPtr()) {};
 
 		virtual ~SubGeometry() {};
 

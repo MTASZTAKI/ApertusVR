@@ -99,6 +99,12 @@ namespace ape
 		virtual bool isInheritOrientation() = 0;
 
 		virtual void setInitalState() = 0;
+
+		virtual bool isReplicated() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

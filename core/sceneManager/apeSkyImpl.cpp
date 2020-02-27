@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeSkyImpl.h"
 
-ape::SkyImpl::SkyImpl(std::string name, bool isHost) : ape::ISky(name), ape::Replica("Sky", name, isHost)
+ape::SkyImpl::SkyImpl(std::string name) : ape::ISky(name)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
@@ -81,38 +81,4 @@ void ape::SkyImpl::setSize(float size)
 float ape::SkyImpl::getSize()
 {
 	return mSize;
-}
-
-void ape::SkyImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
-{
-	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
-}
-
-RakNet::RM3SerializationResult ape::SkyImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
-{
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSunLight);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSkyLight);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTime);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSize);
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-}
-
-void ape::SkyImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
-{
-	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
-	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSunLight))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SUNLIGHT));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSkyLight))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SKYLIGHT));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTime))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_TIME));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSize))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::SKY_SIZE));
-	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

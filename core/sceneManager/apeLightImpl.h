@@ -34,7 +34,7 @@ namespace ape
 	{
 	public:
 
-		LightImpl(std::string name, bool isHost);
+		LightImpl(std::string name, bool replicate, bool isHost);
 
 		~LightImpl();
 		

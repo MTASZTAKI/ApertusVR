@@ -59,7 +59,7 @@ namespace ape
 			}
 		};
 	protected:
-		ISky(std::string name) : Entity(name, Entity::SKY) {}
+		ISky(std::string name) : Entity(name, false, Entity::SKY) {}
 
 		virtual ~ISky() {};
 

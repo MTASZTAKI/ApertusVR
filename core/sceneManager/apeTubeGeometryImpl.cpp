@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeTubeGeometryImpl.h"
 
-ape::TubeGeometryImpl::TubeGeometryImpl(std::string name, bool isHost) : ape::ITubeGeometry(name), ape::Replica("TubeGeometry", name, isHost)
+ape::TubeGeometryImpl::TubeGeometryImpl(std::string name, bool replicate, bool isHost) : ape::ITubeGeometry(name, replicate), ape::Replica("TubeGeometry", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

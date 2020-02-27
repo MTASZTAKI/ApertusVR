@@ -30,7 +30,7 @@ namespace ape
 	class IManualMaterial : public Material
 	{
 	protected:
-		IManualMaterial(std::string name) : Material(name, Entity::MATERIAL_MANUAL) {}
+		IManualMaterial(std::string name, bool replicate) : Material(name, replicate, Entity::MATERIAL_MANUAL) {}
 
 		virtual ~IManualMaterial() {};
 

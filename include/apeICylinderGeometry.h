@@ -59,7 +59,7 @@ namespace ape
 	class ICylinderGeometry : public ape::Geometry
 	{
 	protected:
-		ICylinderGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_CYLINDER) {}
+		ICylinderGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_CYLINDER) {}
 
 		virtual ~ICylinderGeometry() {};
 

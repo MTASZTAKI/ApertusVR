@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeLightImpl.h"
 
-ape::LightImpl::LightImpl(std::string name, bool isHost) : ape::ILight(name), ape::Replica("Light", name, isHost)
+ape::LightImpl::LightImpl(std::string name, bool replicate, bool isHost) : ape::ILight(name, replicate), ape::Replica("Light", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

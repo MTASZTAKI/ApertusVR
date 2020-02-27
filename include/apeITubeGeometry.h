@@ -52,10 +52,10 @@ namespace ape
 		}
 	};
 
-	class ITubeGeometry : public ape::Geometry
+	class ITubeGeometry : public Geometry
 	{
 	protected:
-		ITubeGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_TUBE) {}
+		ITubeGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_TUBE) {}
 
 		virtual ~ITubeGeometry() {};
 

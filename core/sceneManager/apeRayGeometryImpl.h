@@ -31,10 +31,10 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class RayGeometryImpl : public ape::IRayGeometry, public ape::Replica
+	class RayGeometryImpl : public ape::IRayGeometry
 	{
 	public:
-		RayGeometryImpl(std::string name, bool isHost);
+		RayGeometryImpl(std::string name);
 
 		~RayGeometryImpl();
 
@@ -45,12 +45,6 @@ namespace ape
 		void fireIntersectionQuery() override;
 
 		void setParentNode(ape::NodeWeakPtr parentNode) override;
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

@@ -33,7 +33,7 @@ namespace ape
 	class TubeGeometryImpl : public ape::ITubeGeometry, public ape::Replica
 	{
 	public:
-		TubeGeometryImpl(std::string name, bool isHost);
+		TubeGeometryImpl(std::string name, bool replicate, bool isHost);
 
 		~TubeGeometryImpl();
 

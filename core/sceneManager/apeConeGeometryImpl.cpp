@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeConeGeometryImpl.h"
 
-ape::ConeGeometryImpl::ConeGeometryImpl(std::string name, bool isHost) : ape::IConeGeometry(name), ape::Replica("ConeGeometry", name, isHost)
+ape::ConeGeometryImpl::ConeGeometryImpl(std::string name, bool replicate, bool isHost) : ape::IConeGeometry(name, replicate), ape::Replica("ConeGeometry", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

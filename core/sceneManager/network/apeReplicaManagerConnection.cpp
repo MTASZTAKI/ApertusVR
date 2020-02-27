@@ -169,25 +169,10 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::BROWSER).lock())
 				return ((ape::BrowserImpl*)entity.get());
 		}
-		else if (objectType == "UnitTexture")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_UNIT).lock())
-				return ((ape::UnitTextureImpl*)entity.get());
-		}
 		else if (objectType == "FileTexture")
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_FILE).lock())
 				return ((ape::FileTextureImpl*)entity.get());
-		}
-		else if (objectType == "Sky")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::SKY).lock())
-				return ((ape::SkyImpl*)entity.get());
-		}
-		else if (objectType == "Water")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::WATER).lock())
-				return ((ape::WaterImpl*)entity.get());
 		}
 		else if (objectType == "PointCloud")
 		{

@@ -31,10 +31,10 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class UnitTextureImpl : public ape::IUnitTexture, public ape::Replica
+	class UnitTextureImpl : public ape::IUnitTexture
 	{
 	public:
-		UnitTextureImpl(std::string name, bool isHost);
+		UnitTextureImpl(std::string name);
 
 		~UnitTextureImpl();
 
@@ -53,12 +53,6 @@ namespace ape
 		void setTextureFiltering(ape::Texture::Filtering minFilter, ape::Texture::Filtering magFilter, ape::Texture::Filtering mipFilter) override;
 
 		Filtering getTextureFiltering() override;
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

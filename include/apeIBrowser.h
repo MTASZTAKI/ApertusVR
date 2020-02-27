@@ -66,7 +66,7 @@ namespace ape
 	class IBrowser : public Entity
 	{
 	protected:
-		IBrowser(std::string name) : Entity(name, Entity::BROWSER) {}
+		IBrowser(std::string name, bool replicate) : Entity(name, replicate, Entity::BROWSER) {}
 
 		virtual ~IBrowser() {};
 

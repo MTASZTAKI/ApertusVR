@@ -79,7 +79,7 @@ namespace ape
 
 		};
 	protected:
-		IUnitTexture(std::string name) : Texture(name, Entity::TEXTURE_UNIT) {}
+		IUnitTexture(std::string name) : Texture(name, false, Entity::TEXTURE_UNIT) {}
 
 		virtual ~IUnitTexture() {};
 

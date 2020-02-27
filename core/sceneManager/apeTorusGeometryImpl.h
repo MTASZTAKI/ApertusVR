@@ -33,7 +33,7 @@ namespace ape
 	class TorusGeometryImpl : public ape::ITorusGeometry, public ape::Replica
 	{
 	public:
-		TorusGeometryImpl(std::string name, bool isHost);
+		TorusGeometryImpl(std::string name, bool replicate, bool isHost);
 
 		~TorusGeometryImpl();
 

@@ -34,7 +34,7 @@ namespace ape
 	{
 	public:
 
-		BrowserImpl(std::string name, bool isHost);
+		BrowserImpl(std::string name, bool replicate, bool isHost);
 
 		~BrowserImpl();
 

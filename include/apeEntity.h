@@ -64,13 +64,15 @@ namespace ape
 		};
 
 	protected:
-		Entity(std::string name, Type type) : mName(name), mType(type) {};
+		Entity(std::string name, bool replicate, Type type) : mName(name), mIsReplicated(replicate), mType(type) {};
 
 		virtual ~Entity() {};
 
 		std::string mName;
 
 		Type mType;
+
+		bool mIsReplicated;
 
 	public:
 		std::string getName()
@@ -81,6 +83,11 @@ namespace ape
 		Type getType()
 		{
 			return mType;
+		};
+
+		bool isReplicated()
+		{
+			return mIsReplicated;
 		};
 	};
 }

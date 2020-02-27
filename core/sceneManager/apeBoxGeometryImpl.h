@@ -33,7 +33,7 @@ namespace ape
 	class BoxGeometryImpl : public ape::IBoxGeometry, public ape::Replica
 	{
 	public:
-		BoxGeometryImpl(std::string name, bool isHost);
+		BoxGeometryImpl(std::string name, bool replicate, bool isHost);
 
 		~BoxGeometryImpl();
 

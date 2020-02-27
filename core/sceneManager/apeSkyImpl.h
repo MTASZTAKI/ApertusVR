@@ -30,11 +30,11 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class SkyImpl : public ISky, public ape::Replica
+	class SkyImpl : public ISky
 	{
 	public:
 
-		SkyImpl(std::string name, bool isHost);
+		SkyImpl(std::string name);
 
 		~SkyImpl();
 
@@ -53,12 +53,6 @@ namespace ape
 		void setSize(float size) override;
 
 		float getSize() override;
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

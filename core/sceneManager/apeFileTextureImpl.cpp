@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #include "apeFileTextureImpl.h"
 
-ape::FileTextureImpl::FileTextureImpl(std::string name, bool isHost) : ape::IFileTexture(name), ape::Replica("FileTexture", name, isHost)
+ape::FileTextureImpl::FileTextureImpl(std::string name, bool replicate, bool isHost) : ape::IFileTexture(name, replicate), ape::Replica("FileTexture", name, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpScene = ape::ISceneManager::getSingletonPtr();

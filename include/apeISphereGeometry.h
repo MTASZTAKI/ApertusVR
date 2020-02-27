@@ -56,7 +56,7 @@ namespace ape
 	class ISphereGeometry : public ape::Geometry
 	{
 	protected:
-		ISphereGeometry(std::string name) : ape::Geometry(name, ape::Entity::GEOMETRY_SPHERE) {}
+		ISphereGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_SPHERE) {}
 
 		virtual ~ISphereGeometry() {};
 

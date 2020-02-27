@@ -134,6 +134,8 @@ namespace ape
 
 		std::mutex mMutex;
 
+		bool mIsReplicateAll;
+
 		void eventCallBack(const ape::Event& event);
 
 		void createNode(int assimpSceneID, aiNode* assimpNode);

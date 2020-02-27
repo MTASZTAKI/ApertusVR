@@ -34,7 +34,7 @@ namespace ape
 	class TextGeometryImpl : public ape::ITextGeometry, public ape::Replica
 	{
 	public:
-		TextGeometryImpl(std::string name, bool isHost);
+		TextGeometryImpl(std::string name, bool replicate, bool isHost);
 
 		~TextGeometryImpl();
 		

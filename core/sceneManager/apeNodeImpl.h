@@ -24,8 +24,9 @@ SOFTWARE.*/
 #define APE_NODEIMPL_H
 
 #include "apeISceneManager.h"
-#include "apeINode.h"
+#include "apeICoreConfig.h"
 #include "apeEventManagerImpl.h"
+#include "apeINode.h"
 #include "apeReplica.h"
 
 namespace ape
@@ -34,7 +35,7 @@ namespace ape
 	{
 	public:
 
-		NodeImpl(std::string name, bool isHost);
+		NodeImpl(std::string name, bool replicate, bool isHost);
 
 		~NodeImpl();
 		
@@ -87,6 +88,12 @@ namespace ape
 		bool isInheritOrientation() override;
 
 		void setInitalState() override;
+
+		bool isReplicated() override;
+
+		void setOwner(std::string ownerID) override;
+
+		std::string getOwner() override;
 		
 		void translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -103,6 +110,8 @@ namespace ape
 		ape::EventManagerImpl* mpEventManagerImpl;
 
 		ape::ISceneManager* mpSceneManager;
+
+		ape::ICoreConfig* mpCoreConfig;
 
 		std::string mName;
 
@@ -125,6 +134,10 @@ namespace ape
 		bool mIsBoundingBoxVisible;
 
 		bool mIsInheritOrientation;
+
+		bool mIsReplicated;
+
+		std::string mOwnerID;
 	};
 }
 

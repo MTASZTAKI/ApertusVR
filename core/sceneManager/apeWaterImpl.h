@@ -30,11 +30,11 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class WaterImpl : public IWater, public ape::Replica
+	class WaterImpl : public IWater
 	{
 	public:
 
-		WaterImpl(std::string name, bool isHost);
+		WaterImpl(std::string name);
 
 		~WaterImpl();
 
@@ -45,12 +45,6 @@ namespace ape
 		void setCameras(std::vector<ape::CameraWeakPtr> cameras) override;
 
 		std::vector<ape::CameraWeakPtr> getCameras() override;
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

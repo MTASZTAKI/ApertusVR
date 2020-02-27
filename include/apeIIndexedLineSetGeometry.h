@@ -88,7 +88,7 @@ namespace ape
 	class IIndexedLineSetGeometry : public Geometry
 	{
 	protected:
-		IIndexedLineSetGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_INDEXEDLINESET) {}
+		IIndexedLineSetGeometry(std::string name, bool replicate) : Geometry(name, replicate, Entity::GEOMETRY_INDEXEDLINESET) {}
 
 		virtual ~IIndexedLineSetGeometry() {};
 

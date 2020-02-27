@@ -30,10 +30,10 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class RigidBodyImpl : public ape::IRigidBody, public ape::Replica
+	class RigidBodyImpl : public ape::IRigidBody
 	{
 	public:
-		RigidBodyImpl(std::string name, bool isHost);
+		RigidBodyImpl(std::string name);
 
 		~RigidBodyImpl();
 
@@ -92,14 +92,6 @@ namespace ape
 		ape::GeometryWeakPtr getGeometry() override;
 
 		std::string getGeometryName() override;
-
-		/// Replica
-
-		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
-
-		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
-
-		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

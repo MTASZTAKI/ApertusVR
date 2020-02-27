@@ -48,7 +48,7 @@ namespace ape
 	class Geometry : public Entity
 	{
 	protected:
-		Geometry(std::string name, Entity::Type entityType) : Entity(name, entityType)
+		Geometry(std::string name, bool replicate,  Entity::Type entityType) : Entity(name, replicate, entityType)
 			, mParentNode(ape::NodeWeakPtr()), mParentNodeName(std::string()) {};
 
 		virtual ~Geometry() {};
