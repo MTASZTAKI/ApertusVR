@@ -49,11 +49,23 @@ function getOtherUserNodePositions() {
 	});
 }
 
-function attach2UserNode(parentNodeName) {
-	console.log('attach2UserNode: ', parentNodeName);
-	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + parentNodeName + '/parent', function (res) {
-		var parentNodeName = res.data.items[0].parentName;
-		console.log('parentNodeName(): res: ', parentNodeName);
+function attach2UserNode(newParentNodeName) {
+	console.log('try to attach2UserNode: ', newParentNodeName);
+	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + newParentNodeName + '/parent', function (res) {
+		var currentParentNodeName = res.data.items[0].parentName;
+		console.log('get parentNodeName(): currentParentNodeName: ', currentParentNodeName);
+		if (currentParentNodeName == newParentNodeName) {
+			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + "root" + '/parent', function (res) {
+				var parentNodeName = res.data.items[0].parentName;
+				console.log('post setParent() zero: res: ', parentNodeName);
+			});
+		}
+		else {
+			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + newParentNodeName + '/parent', function (res) {
+				var parentNodeName = res.data.items[0].parentName;
+				console.log('post setParent(): res: ', parentNodeName);
+			});
+		}
 	});
 }
 
@@ -160,7 +172,7 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		updateMap();
+    		//updateMap();
     	}, 500);
     }
     sock.onerror = (e)=>{

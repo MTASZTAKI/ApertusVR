@@ -33,6 +33,13 @@ SOFTWARE.*/
 
 class NodeJsPtr
 {
+	enum ErrorType
+	{
+		DYN_CAST_FAILED,
+		NULLPTR
+	};
+
+	std::map<ErrorType, std::string> mErrorMap;
 private:
 	ape::NodeWeakPtr mPtr;
 
@@ -75,6 +82,39 @@ public:
 	{
 		APE_LOG_DEBUG("name: " << mPtr.lock()->getName() << " parentNode: " << parentNode.getName());
 		mPtr.lock()->setParentNode(parentNode.getNodeWeakPtr());
+	}
+
+	bool getParentNode(nbind::cbFunction &done)
+	{
+		APE_LOG_FUNC_ENTER();
+		bool success = false;
+		auto nodeWeakPtr = mPtr.lock()->getParentNode();
+		if (auto nodeSP = nodeWeakPtr.lock())
+		{
+			if (auto node = std::dynamic_pointer_cast<ape::INode>(nodeSP))
+			{
+				success = true;
+				done(!success, NodeJsPtr(nodeWeakPtr));
+			}
+			else
+			{
+				success = false;
+				done(!success, mErrorMap[ErrorType::DYN_CAST_FAILED]);
+			}
+		}
+		else
+		{
+			success = false;
+			done(!success, mErrorMap[ErrorType::NULLPTR]);
+		}
+		APE_LOG_FUNC_LEAVE();
+		return success;
+	}
+
+	void detachFromParentNode()
+	{
+		APE_LOG_DEBUG("name: " << mPtr.lock()->getName() << " detachFromParentNode: " << mPtr.lock()->getParentNode().lock()->getName());
+		mPtr.lock()->setParentNode(ape::NodeWeakPtr());
 	}
 
 	// ChildNodes
@@ -206,6 +246,9 @@ NBIND_CLASS(NodeJsPtr)
 
 	method(getParentNodeJsPtr);
 	method(setParentNodeJsPtr);
+
+	method(getParentNode);
+	method(detachFromParentNode);
 
 	// INode
 

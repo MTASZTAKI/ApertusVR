@@ -483,6 +483,42 @@ app.post('/nodes/:name/orientation', function(req, res) {
 
 app.get('/nodes/:name/:parentName/parent', function (req, res) {
 	var respObj = new resp(req);
+	respObj.setDescription('Get the parent name of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkParams('parentName', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	var parentName = req.params.parentName;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCastNode',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+		obj.getParentNode(function (error, parentObj) {
+			if (error) {
+				respObj.addDataItem({ parentName: "" });
+				res.send(respObj.toJSonString());
+				return;
+			}
+			respObj.addDataItem({ parentName: parentObj.getName() });
+			res.send(respObj.toJSonString());
+		});
+	});
+});
+
+app.post('/nodes/:name/:parentName/parent', function (req, res) {
+	var respObj = new resp(req);
 	respObj.setDescription('Sets the parent of the specified node.');
 
 	// handle http param validation errors
@@ -494,10 +530,11 @@ app.get('/nodes/:name/:parentName/parent', function (req, res) {
 	}
 
 	var name = req.params.name;
+	var parentName = req.params.parentName;
 	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
 		if (error) {
 			respObj.addErrorItem({
-				name: 'invalidCast',
+				name: 'invalidCastNode',
 				msg: obj,
 				code: 666
 			});
@@ -505,21 +542,28 @@ app.get('/nodes/:name/:parentName/parent', function (req, res) {
 			return;
 		}
 
-		ape.nbind.JsBindManager().getNode(req.params.parentName, function (error, parentObj) {
-			if (error) {
-				respObj.addErrorItem({
-					name: 'invalidCast',
-					msg: obj,
-					code: 666
-				});
-				res.status(400).send(respObj.toJSonString());
-				return;
-			}
-
-			obj.setParentNodeJsPtr(parentObj);
-			respObj.addDataItem({ parentName: parentObj.getName()});
+		if (parentName != "root") {
+			ape.nbind.JsBindManager().getNode(req.params.parentName, function (error, parentObj) {
+				if (error) {
+					respObj.addErrorItem({
+						name: 'invalidCastParent',
+						msg: obj,
+						code: 666
+					});
+					res.status(400).send(respObj.toJSonString());
+					return;
+				}
+				obj.setParentNodeJsPtr(parentObj);
+				respObj.addDataItem({ parentName: parentObj.getName() });
+				res.send(respObj.toJSonString());
+			});
+		}
+		else
+		{
+			obj.detachFromParentNode();
+			respObj.addDataItem({ parentName: "" });
 			res.send(respObj.toJSonString());
-		});
+		}
 	});
 });
 

@@ -131,13 +131,13 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		bool success = false;
-		auto entityWeakPtr = mpSceneManager->getNode(name);
-		if (auto entity = entityWeakPtr.lock())
+		auto nodeWeakPtr = mpSceneManager->getNode(name);
+		if (auto nodeSP = nodeWeakPtr.lock())
 		{
-			if (auto node = std::dynamic_pointer_cast<ape::INode>(entity))
+			if (auto node = std::dynamic_pointer_cast<ape::INode>(nodeSP))
 			{
 				success = true;
-				done(!success, NodeJsPtr(entityWeakPtr));
+				done(!success, NodeJsPtr(nodeWeakPtr));
 			}
 			else
 			{
