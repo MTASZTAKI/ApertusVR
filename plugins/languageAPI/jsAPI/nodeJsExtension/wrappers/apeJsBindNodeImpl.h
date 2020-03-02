@@ -114,7 +114,7 @@ public:
 	void detachFromParentNode()
 	{
 		APE_LOG_DEBUG("name: " << mPtr.lock()->getName() << " detachFromParentNode: " << mPtr.lock()->getParentNode().lock()->getName());
-		mPtr.lock()->setParentNode(ape::NodeWeakPtr());
+		mPtr.lock()->detachFromParentNode();
 	}
 
 	// ChildNodes

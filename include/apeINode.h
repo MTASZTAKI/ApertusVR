@@ -70,6 +70,8 @@ namespace ape
 
 		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
+		virtual void detachFromParentNode() = 0;
+
 		virtual ape::NodeWeakPtr getParentNode() = 0;
 
 		virtual std::vector<ape::NodeWeakPtr> getChildNodes() = 0;

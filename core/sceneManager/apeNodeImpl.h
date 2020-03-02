@@ -61,6 +61,8 @@ namespace ape
 
 		ape::NodeWeakPtr getParentNode() override;
 
+		void detachFromParentNode() override;
+
 		void addChildNode(ape::NodeWeakPtr node);
 
 		void removeChildNode(ape::NodeWeakPtr childNode);

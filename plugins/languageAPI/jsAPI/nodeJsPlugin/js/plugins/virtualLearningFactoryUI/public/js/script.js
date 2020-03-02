@@ -58,12 +58,14 @@ function attach2UserNode(newParentNodeName) {
 			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + "root" + '/parent', function (res) {
 				var parentNodeName = res.data.items[0].parentName;
 				console.log('post setParent() zero: res: ', parentNodeName);
+				$('#users').toggle();
 			});
 		}
 		else {
 			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + newParentNodeName + '/parent', function (res) {
 				var parentNodeName = res.data.items[0].parentName;
 				console.log('post setParent(): res: ', parentNodeName);
+				$('#users').toggle();
 			});
 		}
 	});

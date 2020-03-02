@@ -99,6 +99,17 @@ bool ape::NodeImpl::isFixedYaw()
 	return mIsFixedYaw;
 }
 
+void ape::NodeImpl::detachFromParentNode()
+{
+	if (auto parentNode = mParentNode.lock())
+	{
+		((ape::NodeImpl*)parentNode.get())->removeChildNode(mpSceneManager->getNode(mName));
+		mParentNode = ape::NodeWeakPtr();
+		mParentNodeName = "";
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_DETACH));
+	}
+}
+
 void ape::NodeImpl::setParentNode(ape::NodeWeakPtr newParentNode)
 {
 	if (auto parentNodeSP = mpSceneManager->getNode(mParentNodeName).lock())
@@ -333,12 +344,15 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
 		mParentNodeName = parentName.C_String();
-		mParentNode = mpSceneManager->getNode(mParentNodeName);
-		if (auto parentNode = mParentNode.lock())
+		if (mParentNodeName == "")
 		{
-			((ape::NodeImpl*)parentNode.get())->addChildNode(mpSceneManager->getNode(mName));
+			detachFromParentNode();
 		}
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_PARENTNODE));
+		else
+		{
+			mParentNode = mpSceneManager->getNode(mParentNodeName);
+			setParentNode(mParentNode);
+		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
