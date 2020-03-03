@@ -6,6 +6,7 @@ int WaterGame::Bubble::geometryCount = 0;
 
 WaterGame::Bubble::Bubble(ape::Vector3 pos, int maxCount)
 {
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mPosition = pos;
 	mTimerCount = maxCount;
 	mIsTimedOut = false;
@@ -26,19 +27,19 @@ void WaterGame::Bubble::init()
 	APE_LOG_TRACE("geometryCount: " << indexStr);
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 
-	mBubbleNode = mpSceneManager->createNode("bubbleNode" + indexStr);
+	mBubbleNode = mpSceneManager->createNode("bubbleNode" + indexStr, true, mpCoreConfig->getNetworkGUID());
 	if (auto bubbleNode = mBubbleNode.lock())
 	{
 		bubbleNode->setPosition(mPosition);
 		bubbleNode->setScale(ape::Vector3(0.1, 0.1, 0.1));
 
-		mGeometry = mpSceneManager->createEntity("bubbleGeometry" + indexStr, ape::Entity::GEOMETRY_SPHERE);
+		mGeometry = mpSceneManager->createEntity("bubbleGeometry" + indexStr, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID());
 		if (auto bubbleGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mGeometry.lock()))
 		{
 			bubbleGeometry->setParameters(200.0f, ape::Vector2(1, 1));
 			bubbleGeometry->setParentNode(bubbleNode);
 
-			mMaterial = mpSceneManager->createEntity("bubbleMaterial" + indexStr, ape::Entity::MATERIAL_MANUAL);
+			mMaterial = mpSceneManager->createEntity("bubbleMaterial" + indexStr, ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID());
 			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mMaterial.lock()))
 			{
 				float opacity = 0.12f;
@@ -49,7 +50,7 @@ void WaterGame::Bubble::init()
 			}
 		}
 
-		mCounterText = mpSceneManager->createEntity("bubbleText" + indexStr, ape::Entity::GEOMETRY_TEXT);
+		mCounterText = mpSceneManager->createEntity("bubbleText" + indexStr, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID());
 		if (auto counterText = std::static_pointer_cast<ape::ITextGeometry>(mCounterText.lock()))
 		{
 			counterText->setCaption(std::to_string(mTimerCount));

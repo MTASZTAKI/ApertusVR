@@ -34,6 +34,8 @@ namespace ape
 	{
 	private:
 		ape::SceneManagerImpl* mpSceneManagerImpl;
+
+		std::string mGUID;
 		
 	public:
 		ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid);

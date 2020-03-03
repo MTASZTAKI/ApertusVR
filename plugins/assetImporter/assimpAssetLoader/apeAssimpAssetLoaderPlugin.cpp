@@ -135,7 +135,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '<'), escapedNodeName.end());
 	escapedNodeName.erase(std::remove(escapedNodeName.begin(), escapedNodeName.end(), '>'), escapedNodeName.end());
 	assimpNode->mName = escapedNodeName;
-	if (auto node = mpSceneManager->createNode(escapedNodeName, mIsReplicateAll).lock())
+	if (auto node = mpSceneManager->createNode(escapedNodeName, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		auto parentNode = ape::NodeWeakPtr();
 		if (assimpNode->mParent)
@@ -156,7 +156,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 			meshUniqueName << assimpNodeOriginalName << "_" << mObjectCount;
 			assimpMesh->mName = meshUniqueName.str();
 			//APE_LOG_DEBUG("meshUniqueName: " << meshUniqueName.str());
-			if (auto mesh = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(meshUniqueName.str(), ape::Entity::GEOMETRY_INDEXEDFACESET, mIsReplicateAll).lock()))
+			if (auto mesh = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(meshUniqueName.str(), ape::Entity::GEOMETRY_INDEXEDFACESET, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				ape::GeometryCoordinates coordinates = ape::GeometryCoordinates();
 				for (int i = 0; i < assimpMesh->mNumVertices; i++)
@@ -194,7 +194,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				std::string diffuseTextureFileName = std::string();
 				if (!material)
 				{
-					material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(modifiedMaterialName, ape::Entity::MATERIAL_MANUAL, mIsReplicateAll).lock());
+					material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(modifiedMaterialName, ape::Entity::MATERIAL_MANUAL, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock());
 					aiColor3D colorDiffuse(0.0f, 0.0f, 0.0f);
 					asssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorDiffuse);
 					float opacity = 1.0f;
@@ -298,7 +298,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				{
 					if (!mAssimpAssetConfigs[assimpSceneID].generateManualTexture)
 					{
-						if (auto fileTexture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, ape::Entity::Type::TEXTURE_FILE, mIsReplicateAll).lock()))
+						if (auto fileTexture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(diffuseTextureFileName, ape::Entity::Type::TEXTURE_FILE, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							fileTexture->setFileName(diffuseTextureFileName);
 							material->setTexture(fileTexture);
@@ -313,7 +313,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 							unsigned char* rgb_image = stbi_load(textureFileName.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 							if (rgb_image)
 							{
-								if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(textureFileName, ape::Entity::TEXTURE_MANUAL, mIsReplicateAll).lock()))
+								if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(textureFileName, ape::Entity::TEXTURE_MANUAL, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 								{
 									texture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false, true);
 									texture->setBuffer(rgb_image);
@@ -333,7 +333,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				
 				if (mPhysicsConfigs[assimpSceneID].enable)
 				{
-					if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY, mIsReplicateAll).lock()))
+					if (auto body = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity(meshUniqueName.str() + "Body", ape::Entity::RIGIDBODY, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						if (mPhysicsConfigs[assimpSceneID].mass > 0.0f)
 							body->setToDynamic(mPhysicsConfigs[assimpSceneID].mass);
@@ -389,7 +389,7 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 					if (assetMemberIterator->name == "rootNodeName")
 					{
 						assetConfig.rootNodeName = assetMemberIterator->value.GetString();
-						mpSceneManager->createNode(assetConfig.rootNodeName, mIsReplicateAll);
+						mpSceneManager->createNode(assetConfig.rootNodeName, mIsReplicateAll, mpCoreConfig->getNetworkGUID());
 						//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
 					}
 					if (assetMemberIterator->name == "scale")
@@ -440,9 +440,9 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 						std::string fileExtension = assimpAssetFileNamePath.str().substr(assimpAssetFileNamePath.str().find_last_of("."));
 						if (fileExtension == ".mesh")
 						{
-							if (auto node = mpSceneManager->createNode("node", mIsReplicateAll).lock())
+							if (auto node = mpSceneManager->createNode("node", mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock())
 							{
-								if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::GEOMETRY_FILE, mIsReplicateAll).lock()))
+								if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::GEOMETRY_FILE, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 								{
 									meshFile->setFileName(fileName);
 									//meshFile->mergeSubMeshes();
@@ -570,7 +570,7 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 			//APE_LOG_DEBUG("assimpSceneRootNode: " << assimpSceneRootNode->getName());
 			if (mAssimpAssetConfigs[ID].mergeAndExportMeshes)
 			{
-				if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mAssimpAssetConfigs[ID].file, ape::Entity::GEOMETRY_FILE, mIsReplicateAll).lock()))
+				if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mAssimpAssetConfigs[ID].file, ape::Entity::GEOMETRY_FILE, mIsReplicateAll, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					meshFile->exportMesh();
 					meshFile->setParentNode(assimpSceneRootNode);

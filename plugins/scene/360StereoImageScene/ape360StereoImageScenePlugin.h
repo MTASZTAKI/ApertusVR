@@ -31,6 +31,7 @@ SOFTWARE.*/
 #include "apeILogManager.h"
 #include "apeIEventManager.h"
 #include "apeISceneManager.h"
+#include "apeICoreConfig.h"
 #include "apeIFileGeometry.h"
 #include "apeIFileMaterial.h"
 #include "apeINode.h"
@@ -50,6 +51,8 @@ namespace ape
 		ape::IEventManager* mpEventManager;
 
 		ape::UserInputMacro* mpApeUserInputMacro;
+
+		ape::ICoreConfig* mpCoreConfig;
 
 	public:
 		StereoImage360ScenePlugin();

@@ -50,6 +50,7 @@ SOFTWARE.*/
 ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
 	mpSceneManagerImpl = ((ape::SceneManagerImpl*)ape::ISceneManager::getSingletonPtr());
+	mGUID = _guid.ToString();
 }
 
 ape::ReplicaManagerConnection::~ReplicaManagerConnection()
@@ -68,7 +69,7 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		RakNet::RakString nodeName;
 		allocationIdBitstream->Read(nodeName);
 		//APE_LOG_DEBUG("Received name: " << nodeName.C_String() << std::endl;
-		if (auto node = mpSceneManagerImpl->createNode(nodeName.C_String()).lock())
+		if (auto node = mpSceneManagerImpl->createNode(nodeName.C_String(), true, mGUID).lock())
 			return ((ape::NodeImpl*)node.get());
 	}
 	else if (objectType == "ManualTexture")
@@ -78,7 +79,7 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		//APE_LOG_DEBUG("Received name: " << entityName.C_String());
 		ape::ManualTextureParameters manualTextureParameters;
 		allocationIdBitstream->Read(manualTextureParameters);
-		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_MANUAL).lock()))
+		if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_MANUAL, true, mGUID).lock()))
 		{
 			manualTexture->setParameters(manualTextureParameters.width, manualTextureParameters.height, manualTextureParameters.pixelFormat, manualTextureParameters.usage, manualTextureParameters.gammaCorrection, manualTextureParameters.useFsaa, manualTextureParameters.serializeBuffer);
 			return ((ape::ManualTextureImpl*)manualTexture.get());
@@ -91,92 +92,92 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		//APE_LOG_DEBUG("Received name: " << entityName.C_String());
 		if (objectType == "FileGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_FILE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_FILE, true, mGUID).lock())
 				return ((ape::FileGeometryImpl*)entity.get());
 		}
 		else if (objectType == "CloneGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CLONE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CLONE, true, mGUID).lock())
 				return ((ape::CloneGeometryImpl*)entity.get());
 		}
 		else if (objectType == "PlaneGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_PLANE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_PLANE, true, mGUID).lock())
 				return ((ape::PlaneGeometryImpl*)entity.get());
 		}
 		else if (objectType == "BoxGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_BOX).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_BOX, true, mGUID).lock())
 				return ((ape::BoxGeometryImpl*)entity.get());
 		}
 		else if (objectType == "ConeGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CONE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CONE, true, mGUID).lock())
 				return ((ape::ConeGeometryImpl*)entity.get());
 		}
 		else if (objectType == "CylinderGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CYLINDER).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_CYLINDER, true, mGUID).lock())
 				return ((ape::CylinderGeometryImpl*)entity.get());
 		}
 		else if (objectType == "SphereGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_SPHERE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_SPHERE, true, mGUID).lock())
 				return ((ape::SphereGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TorusGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TORUS).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TORUS, true, mGUID).lock())
 				return ((ape::TorusGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TubeGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TUBE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TUBE, true, mGUID).lock())
 				return ((ape::TubeGeometryImpl*)entity.get());
 		}
 		else if (objectType == "TextGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TEXT).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TEXT, true, mGUID).lock())
 				return ((ape::TextGeometryImpl*)entity.get());
 		}
 		else if (objectType == "IndexedFaceSetGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDFACESET).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDFACESET, true, mGUID).lock())
 				return ((ape::IndexedFaceSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "IndexedLineSetGeometry")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDLINESET).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mGUID).lock())
 				return ((ape::IndexedLineSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "FileMaterial")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_FILE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_FILE, true, mGUID).lock())
 				return ((ape::FileMaterialImpl*)entity.get());
 		}
 		else if (objectType == "Light")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::LIGHT).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::LIGHT, true, mGUID).lock())
 				return ((ape::LightImpl*)entity.get());
 		}
 		else if (objectType == "ManualMaterial")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_MANUAL).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::MATERIAL_MANUAL, true, mGUID).lock())
 				return ((ape::ManualMaterialImpl*)entity.get());
 		}
 		else if (objectType == "Browser")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::BROWSER).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::BROWSER, true, mGUID).lock())
 				return ((ape::BrowserImpl*)entity.get());
 		}
 		else if (objectType == "FileTexture")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_FILE).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::TEXTURE_FILE, true, mGUID).lock())
 				return ((ape::FileTextureImpl*)entity.get());
 		}
 		else if (objectType == "PointCloud")
 		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::POINT_CLOUD).lock())
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::POINT_CLOUD, true, mGUID).lock())
 				return ((ape::PointCloudImpl*)entity.get());
 		}
 	}

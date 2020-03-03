@@ -31,6 +31,7 @@ SOFTWARE.*/
 #include "apeIEventManager.h"
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
+#include "apeICoreConfig.h"
 #include "apeIFileGeometry.h"
 #include "apeIFileMaterial.h"
 #include "apeILight.h"
@@ -51,10 +52,11 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
+		ape::ICoreConfig* mpCoreConfig;
+
 		ape::WaterWeakPtr mWater;
 
 		ape::SkyWeakPtr mSky;
-
 
 		ape::NodeWeakPtr mSkyLightNode;
 

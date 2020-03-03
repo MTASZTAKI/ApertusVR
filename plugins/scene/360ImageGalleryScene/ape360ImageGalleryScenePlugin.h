@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include "apePluginAPI.h"
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
+#include "apeICoreConfig.h"
 #include "apeIFileGeometry.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIFileMaterial.h"
@@ -43,6 +44,8 @@ namespace ape
 	{
 	private:
 		ape::ISceneManager* mpSceneManager;
+
+		ape::ICoreConfig* mpCoreConfig;
 
 	public:
 		Image360GalleryScenePlugin();

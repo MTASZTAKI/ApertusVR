@@ -42,15 +42,15 @@ void ape::apeWaterGamePlugin::Init()
 
 	if (auto headNode = mpapeUserInputMacro->getHeadNode().lock())
 	{
-		if (auto userBodyNode = mpSceneManager->createNode("userBodyNode").lock())
+		if (auto userBodyNode = mpSceneManager->createNode("userBodyNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			headNode->setParentNode(userBodyNode);
 			mGameManager = new WaterGame::GameManager(mpapeUserInputMacro->getUserNode(), userBodyNode);
 
-			if (auto userGeometry = std::static_pointer_cast<ISphereGeometry>(mpSceneManager->createEntity("userGeometrySphere", ape::Entity::Type::GEOMETRY_SPHERE).lock()))
+			if (auto userGeometry = std::static_pointer_cast<ISphereGeometry>(mpSceneManager->createEntity("userGeometrySphere", ape::Entity::Type::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				userGeometry->setParameters(20.0f, ape::Vector2(1, 1));
-				if (auto userBody = std::static_pointer_cast<IRigidBody>(mpSceneManager->createEntity("userBody", ape::Entity::Type::RIGIDBODY).lock()))
+				if (auto userBody = std::static_pointer_cast<IRigidBody>(mpSceneManager->createEntity("userBody", ape::Entity::Type::RIGIDBODY, false, "").lock()))
 				{
 					userBody->setParentNode(userBodyNode);
 					userBody->setToDynamic(1.0f);

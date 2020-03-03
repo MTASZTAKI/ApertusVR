@@ -50,16 +50,16 @@ void ape::OceanAndSkySimulationScenePlugin::eventCallBack(const ape::Event& even
 void ape::OceanAndSkySimulationScenePlugin::createSky()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto sky = std::static_pointer_cast<ape::ISky>(mpSceneManager->createEntity("sky", ape::Entity::SKY).lock()))
+	if (auto sky = std::static_pointer_cast<ape::ISky>(mpSceneManager->createEntity("sky", ape::Entity::SKY, false, "").lock()))
 	{
 		sky->setSize(9500);
 		sky->setTime(6.00, 4.00, 22.00);
-		if (auto skyLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("skylight", ape::Entity::Type::LIGHT).lock()))
+		if (auto skyLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("skylight", ape::Entity::Type::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			sky->setSkyLight(skyLight);
 			mSkyLight = skyLight;
 		}
-		if (auto sunLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("sunlight", ape::Entity::Type::LIGHT).lock()))
+		if (auto sunLight = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("sunlight", ape::Entity::Type::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			sunLight->setLightType(ape::Light::Type::DIRECTIONAL);
 			sky->setSunLight(sunLight);
@@ -73,7 +73,7 @@ void ape::OceanAndSkySimulationScenePlugin::createSky()
 void ape::OceanAndSkySimulationScenePlugin::createWater()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto water = std::static_pointer_cast<ape::IWater>(mpSceneManager->createEntity("water", ape::Entity::WATER).lock()))
+	if (auto water = std::static_pointer_cast<ape::IWater>(mpSceneManager->createEntity("water", ape::Entity::WATER, false, "").lock()))
 	{
 		water->setCameras(mCameras);
 		if (auto sky = mSky.lock())

@@ -20,7 +20,7 @@ ape::SceneMakerMacro::~SceneMakerMacro()
 void ape::SceneMakerMacro::makeLit()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(1, -1, 0));
@@ -28,21 +28,21 @@ void ape::SceneMakerMacro::makeLit()
 		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
 	}
 
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(0, -1, -1));
 		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light3", ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light3", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(0, -1, 1));
 		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
 		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
 	}
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light4", ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light4", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(-1, -1, 0));
@@ -55,14 +55,14 @@ void ape::SceneMakerMacro::makeLit()
 void ape::SceneMakerMacro::makeGround()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto planeNode = mpSceneManager->createNode("planeNode").lock())
+	if (auto planeNode = mpSceneManager->createNode("planeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		planeNode->setPosition(ape::Vector3(0, -20, 0));
-		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("planeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (auto planeMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("planeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			planeMaterial->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f));
 			planeMaterial->setSpecularColor(ape::Color(0.3f, 0.3f, 0.2f));
-			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("plane", ape::Entity::GEOMETRY_PLANE).lock()))
+			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("plane", ape::Entity::GEOMETRY_PLANE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(1000, 1000), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
@@ -75,9 +75,9 @@ void ape::SceneMakerMacro::makeGround()
 
 void ape::SceneMakerMacro::makeModel(std::string fileName)
 {
-	if (auto node = mpSceneManager->createNode(fileName).lock())
+	if (auto node = mpSceneManager->createNode(fileName, true, mpCoreConfig->getNetworkGUID()).lock())
 	{
-		if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::GEOMETRY_FILE).lock()))
+		if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			model->setFileName(fileName);
 			model->setParentNode(node);
@@ -89,15 +89,15 @@ void ape::SceneMakerMacro::makeBrowser(std::string name, std::string url, ape::V
 {
 	if (!mpSceneManager->getNode(name).lock())
 	{
-		if (auto browserNode = mpSceneManager->createNode(name).lock())
+		if (auto browserNode = mpSceneManager->createNode(name, true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			browserNode->setPosition(position);
 			browserNode->setOrientation(orientation);
-			if (auto browserGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name + "geometry", ape::Entity::GEOMETRY_PLANE).lock()))
+			if (auto browserGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(name + "geometry", ape::Entity::GEOMETRY_PLANE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				browserGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(width, height), ape::Vector2(1, 1));
 				browserGeometry->setParentNode(browserNode);
-				if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity(name + "browser", ape::Entity::BROWSER).lock()))
+				if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity(name + "browser", ape::Entity::BROWSER, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					browser->setResoultion(resoultionVertical, resolutionHorizontal);
 					browser->setURL(url);
@@ -140,7 +140,7 @@ void ape::SceneMakerMacro::makeSky()
 void ape::SceneMakerMacro::makeBackground()
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto skyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", ape::Entity::MATERIAL_FILE).lock()))
+	if (auto skyBoxMaterial = std::static_pointer_cast<ape::IFileMaterial>(mpSceneManager->createEntity("skyBox", ape::Entity::MATERIAL_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		skyBoxMaterial->setFileName("skyBox");
 		skyBoxMaterial->setAsSkyBox();
@@ -159,56 +159,56 @@ void ape::SceneMakerMacro::makeTerrain()
 void ape::SceneMakerMacro::makeCoordinateSystem()
 {
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowXMaterial;
-	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("SystemArrowXMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("SystemArrowXMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowXMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
 		coordinateSystemArrowXMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 	}
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowYMaterial;
-	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowYMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowYMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowYMaterial->setDiffuseColor(ape::Color(0.0f, 1.0f, 0.0f));
 		coordinateSystemArrowYMaterial->setSpecularColor(ape::Color(0.0f, 1.0f, 0.0f));
 	}
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowZMaterial;
-	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowZMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowZMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowZMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 		coordinateSystemArrowZMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 	}
-	if (auto coordinateSystemNode = mpSceneManager->createNode("coordinateSystemNode").lock())
+	if (auto coordinateSystemNode = mpSceneManager->createNode("coordinateSystemNode", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
-		if (auto coordinateSystemArrowXTubeNode = mpSceneManager->createNode("coordinateSystemArrowXTubeNode").lock())
+		if (auto coordinateSystemArrowXTubeNode = mpSceneManager->createNode("coordinateSystemArrowXTubeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			coordinateSystemArrowXTubeNode->setParentNode(coordinateSystemNode);
 			coordinateSystemArrowXTubeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-			if (auto coordinateSystemArrowXTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXTube", ape::Entity::GEOMETRY_TUBE).lock()))
+			if (auto coordinateSystemArrowXTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXTube", ape::Entity::GEOMETRY_TUBE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				coordinateSystemArrowXTube->setParameters(100.0f, 1.0f);
 				coordinateSystemArrowXTube->setParentNode(coordinateSystemArrowXTubeNode);
 				coordinateSystemArrowXTube->setMaterial(coordinateSystemArrowXMaterial);
 			}
-			if (auto coordinateSystemArrowXConeNode = mpSceneManager->createNode("coordinateSystemArrowXConeNode").lock())
+			if (auto coordinateSystemArrowXConeNode = mpSceneManager->createNode("coordinateSystemArrowXConeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				coordinateSystemArrowXConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowXConeNode->setPosition(ape::Vector3(100.0f, 0.0f, 0.0f));
 				coordinateSystemArrowXConeNode->rotate(ape::Degree(-90.0f).toRadian(), ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::WORLD);
-				if (auto coordinateSystemArrowXCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXCone", ape::Entity::GEOMETRY_CONE).lock()))
+				if (auto coordinateSystemArrowXCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXCone", ape::Entity::GEOMETRY_CONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					coordinateSystemArrowXCone->setParameters(2.5f, 2.5f, 1.0f, ape::Vector2(1, 1));
 					coordinateSystemArrowXCone->setParentNode(coordinateSystemArrowXConeNode);
 					coordinateSystemArrowXCone->setMaterial(coordinateSystemArrowXMaterial);
-					if (auto textNode = mpSceneManager->createNode("coordinateSystemXText_Node").lock())
+					if (auto textNode = mpSceneManager->createNode("coordinateSystemXText_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						textNode->setParentNode(coordinateSystemArrowXConeNode);
 						textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemXText", ape::Entity::GEOMETRY_TEXT).lock()))
+						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemXText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							text->setCaption("X");
 							text->setParentNode(textNode);
 						}
 					}
-					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXExtension", ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					if (auto coordinateSystemArrowXExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowXExtension", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -221,36 +221,36 @@ void ape::SceneMakerMacro::makeCoordinateSystem()
 				}
 			}
 		}
-		if (auto coordinateSystemArrowYTubeNode = mpSceneManager->createNode("coordinateSystemArrowYTubeNode").lock())
+		if (auto coordinateSystemArrowYTubeNode = mpSceneManager->createNode("coordinateSystemArrowYTubeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			coordinateSystemArrowYTubeNode->setParentNode(coordinateSystemNode);
 			coordinateSystemArrowYTubeNode->rotate(ape::Degree(0.0f).toRadian(), ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::WORLD);
-			if (auto coordinateSystemArrowYTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYTube", ape::Entity::GEOMETRY_TUBE).lock()))
+			if (auto coordinateSystemArrowYTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYTube", ape::Entity::GEOMETRY_TUBE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				coordinateSystemArrowYTube->setParameters(100.0f, 1.0f);
 				coordinateSystemArrowYTube->setParentNode(coordinateSystemArrowYTubeNode);
 				coordinateSystemArrowYTube->setMaterial(coordinateSystemArrowYMaterial);
 			}
-			if (auto coordinateSystemArrowYConeNode = mpSceneManager->createNode("coordinateSystemArrowYConeNode").lock())
+			if (auto coordinateSystemArrowYConeNode = mpSceneManager->createNode("coordinateSystemArrowYConeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				coordinateSystemArrowYConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowYConeNode->setPosition(ape::Vector3(0.0f, 100.0f, 0.0f));
-				if (auto coordinateSystemArrowYCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYCone", ape::Entity::GEOMETRY_CONE).lock()))
+				if (auto coordinateSystemArrowYCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYCone", ape::Entity::GEOMETRY_CONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					coordinateSystemArrowYCone->setParameters(2.5f, 2.5f, 1.0f, ape::Vector2(1, 1));
 					coordinateSystemArrowYCone->setParentNode(coordinateSystemArrowYConeNode);
 					coordinateSystemArrowYCone->setMaterial(coordinateSystemArrowYMaterial);
-					if (auto textNode = mpSceneManager->createNode("coordinateSystemYText_Node").lock())
+					if (auto textNode = mpSceneManager->createNode("coordinateSystemYText_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						textNode->setParentNode(coordinateSystemArrowYConeNode);
 						textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemYText", ape::Entity::GEOMETRY_TEXT).lock()))
+						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemYText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							text->setCaption("Y");
 							text->setParentNode(textNode);
 						}
 					}
-					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYExtension", ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					if (auto coordinateSystemArrowYExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowYExtension", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -263,37 +263,37 @@ void ape::SceneMakerMacro::makeCoordinateSystem()
 				}
 			}
 		}
-		if (auto coordinateSystemArrowZTubeNode = mpSceneManager->createNode("coordinateSystemArrowZTubeNode").lock())
+		if (auto coordinateSystemArrowZTubeNode = mpSceneManager->createNode("coordinateSystemArrowZTubeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			coordinateSystemArrowZTubeNode->setParentNode(coordinateSystemNode);
 			coordinateSystemArrowZTubeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
-			if (auto coordinateSystemArrowZTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZTube", ape::Entity::GEOMETRY_TUBE).lock()))
+			if (auto coordinateSystemArrowZTube = std::static_pointer_cast<ape::ITubeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZTube", ape::Entity::GEOMETRY_TUBE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				coordinateSystemArrowZTube->setParameters(100.0f, 1.0f);
 				coordinateSystemArrowZTube->setParentNode(coordinateSystemArrowZTubeNode);
 				coordinateSystemArrowZTube->setMaterial(coordinateSystemArrowZMaterial);
 			}
-			if (auto coordinateSystemArrowZConeNode = mpSceneManager->createNode("coordinateSystemArrowZConeNode").lock())
+			if (auto coordinateSystemArrowZConeNode = mpSceneManager->createNode("coordinateSystemArrowZConeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				coordinateSystemArrowZConeNode->setParentNode(coordinateSystemNode);
 				coordinateSystemArrowZConeNode->setPosition(ape::Vector3(0.0f, 0.0f, 100.0f));
 				coordinateSystemArrowZConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
-				if (auto coordinateSystemArrowZCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZCone", ape::Entity::GEOMETRY_CONE).lock()))
+				if (auto coordinateSystemArrowZCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZCone", ape::Entity::GEOMETRY_CONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					coordinateSystemArrowZCone->setParameters(2.5f, 2.5f, 1.0f, ape::Vector2(1, 1));
 					coordinateSystemArrowZCone->setParentNode(coordinateSystemArrowZConeNode);
 					coordinateSystemArrowZCone->setMaterial(coordinateSystemArrowZMaterial);
-					if (auto textNode = mpSceneManager->createNode("coordinateSystemZText_Node").lock())
+					if (auto textNode = mpSceneManager->createNode("coordinateSystemZText_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						textNode->setParentNode(coordinateSystemArrowZConeNode);
 						textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemZText", ape::Entity::GEOMETRY_TEXT).lock()))
+						if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("coordinateSystemZText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							text->setCaption("Z");
 							text->setParentNode(textNode);
 						}
 					}
-					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZExtension", ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					if (auto coordinateSystemArrowZExtension = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("coordinateSystemArrowZExtension", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						ape::GeometryCoordinates coordinates = {
 							0, 0, 0,
@@ -311,13 +311,13 @@ void ape::SceneMakerMacro::makeCoordinateSystem()
 
 void ape::SceneMakerMacro::makeBox(std::string name)
 {
-	if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL).lock()))
+	if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(name + "Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		material->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
 		material->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
-		if (auto node = mpSceneManager->createNode(name + "Node").lock())
+		if (auto node = mpSceneManager->createNode(name + "Node", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
-			if (auto box = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET).lock()))
+			if (auto box = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				ape::GeometryCoordinates coordinates = {
 					10,  10, -10,
@@ -346,19 +346,19 @@ void ape::SceneMakerMacro::makeBox(std::string name)
 void ape::SceneMakerMacro::makeOverlayBrowser(std::string url)
 {
 	APE_LOG_FUNC_ENTER();
-	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER, false).lock()))
+	if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("overlay_frame", ape::Entity::BROWSER, false, "").lock()))
 	{
 		browser->setResoultion(1280, 720);
 		//TODO_SystemJson
 		//url << "http://localhost:" << mNodeJsPluginConfig.serverPort << "/robotCalibration/public/";
 		browser->setURL(url);
 		browser->showOnOverlay(true, 0);
-		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL, false).lock()))
+		if (auto mouseMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("mouseMaterial", ape::Entity::MATERIAL_MANUAL, false, "").lock()))
 		{
 			mouseMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 			mouseMaterial->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
 			//mouseMaterial->setLightingEnabled(false); TODO_SceneMakerMacro crash in OpenGL
-			if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", ape::Entity::TEXTURE_UNIT, false).lock()))
+			if (auto mouseTexture = std::static_pointer_cast<ape::IUnitTexture>(mpSceneManager->createEntity("mouseTexture", ape::Entity::TEXTURE_UNIT, false, "").lock()))
 			{
 				mouseTexture->setParameters(mouseMaterial, "browserpointer.png");
 				mouseTexture->setTextureAddressingMode(ape::Texture::AddressingMode::CLAMP);

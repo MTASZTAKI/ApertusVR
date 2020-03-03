@@ -7,6 +7,7 @@ ape::StereoImage360ScenePlugin::StereoImage360ScenePlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&StereoImage360ScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&StereoImage360ScenePlugin::eventCallBack, this, std::placeholders::_1));
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -20,9 +21,9 @@ void ape::StereoImage360ScenePlugin::createSphere(std::string cameraName, std::s
 {
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
 	{
-		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName).lock())
+		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName, true, mpCoreConfig->getNetworkGUID()).lock())
 		{
-			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE).lock()))
+			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				sphereMeshFile->setFileName(meshName);
 				sphereMeshFile->setParentNode(sphereNode);

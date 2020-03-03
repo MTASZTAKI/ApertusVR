@@ -18,12 +18,12 @@ ape::UserInputMacro::UserInputMacro()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mCameras = std::map<std::string, ape::CameraWeakPtr>();
 	mUserNodeName = mpCoreConfig->getNetworkConfig().userName + "_" + mpCoreConfig->getNetworkGUID();
-	if (auto userNode = mpSceneManager->createNode(mUserNodeName).lock())
+	if (auto userNode = mpSceneManager->createNode(mUserNodeName, true, mpCoreConfig->getNetworkGUID()).lock())
 	{
-		if (auto headNode = mpSceneManager->createNode(mUserNodeName + "_HeadNode").lock())
+		if (auto headNode = mpSceneManager->createNode(mUserNodeName + "_HeadNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			headNode->setParentNode(userNode);
-			if (auto userMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(mUserNodeName + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+			if (auto userMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(mUserNodeName + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				std::random_device rd;
 				std::mt19937 gen(rd());
@@ -39,9 +39,9 @@ ape::UserInputMacro::UserInputMacro()
 		}
 		mUserNode = userNode;
 	}
-	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUserNodeName).lock())
+	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUserNodeName, false, "").lock())
 	{
-		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUserNodeName, ape::Entity::GEOMETRY_RAY).lock()))
+		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUserNodeName, ape::Entity::GEOMETRY_RAY, false, "").lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
 			rayGeometry->setParentNode(rayNode);
@@ -179,28 +179,28 @@ ape::NodeWeakPtr ape::UserInputMacro::getHeadNode()
 
 ape::CameraWeakPtr ape::UserInputMacro::createCamera(std::string name)
 {
-	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity(name, ape::Entity::Type::CAMERA).lock()))
+	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->createEntity(name, ape::Entity::Type::CAMERA, false, "").lock()))
 	{
 		APE_LOG_DEBUG("uniqueID: " << mpCoreConfig->getNetworkGUID());
-		if (auto cameraNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_Node").lock())
+		if (auto cameraNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			cameraNode->setParentNode(mHeadNode);
-			if (auto cameraConeNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_ConeNode").lock())
+			if (auto cameraConeNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_ConeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				cameraConeNode->setParentNode(cameraNode);
 				cameraConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
-				if (auto cameraCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(name + "_" + mpCoreConfig->getNetworkGUID() + "_ConeGeometry", ape::Entity::GEOMETRY_CONE).lock()))
+				if (auto cameraCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(name + "_" + mpCoreConfig->getNetworkGUID() + "_ConeGeometry", ape::Entity::GEOMETRY_CONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					cameraCone->setParameters(10.0f, 30.0f, 1.0f, ape::Vector2(1, 1));
 					cameraCone->setParentNode(cameraConeNode);
 					cameraCone->setMaterial(mUserMaterial);
 				}
 			}
-			if (auto userNameTextNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_TextNode").lock())
+			if (auto userNameTextNode = mpSceneManager->createNode(name + "_" + mpCoreConfig->getNetworkGUID() + "_TextNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				userNameTextNode->setParentNode(cameraNode);
 				userNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-				if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(name + "_" + mpCoreConfig->getNetworkGUID() + "_TextGeometry", ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(name + "_" + mpCoreConfig->getNetworkGUID() + "_TextGeometry", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					userNameText->setCaption(name + "_" + mpCoreConfig->getNetworkGUID());
 					userNameText->setParentNode(userNameTextNode);
@@ -256,10 +256,10 @@ void ape::UserInputMacro::createOverLayText(std::string caption)
 	{
 		if (auto userNode = mUserNode.lock())
 		{
-			if (auto overLayTextNode = mpSceneManager->createNode("overLayTextNode").lock())
+			if (auto overLayTextNode = mpSceneManager->createNode("overLayTextNode", false, "").lock())
 			{
 				overLayTextNode->setParentNode(mUserNode);
-				if (auto overlayText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("overLayText", ape::Entity::GEOMETRY_TEXT).lock()))
+				if (auto overlayText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("overLayText", ape::Entity::GEOMETRY_TEXT, false, "").lock()))
 				{
 					overlayText->setCaption(caption);
 					overlayText->showOnTop(true);

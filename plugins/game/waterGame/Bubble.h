@@ -26,6 +26,7 @@ SOFTWARE.*/
 #include "ape.h"
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
+#include "apeICoreConfig.h"
 #include "apeISphereGeometry.h"
 #include "apeITextGeometry.h"
 #include "apeIManualMaterial.h"
@@ -39,6 +40,8 @@ namespace WaterGame
 		std::thread* mTimerThread;
 
 		ape::ISceneManager* mpSceneManager;
+
+		ape::ICoreConfig* mpCoreConfig;
 
 		ape::NodeWeakPtr mBubbleNode;
 
