@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeFileGeometryImpl.h"
 
-ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, bool isHost) : ape::IFileGeometry(name, replicate), ape::Replica("FileGeometry", name, isHost)
+ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost) : ape::IFileGeometry(name, replicate, ownerID), ape::Replica("FileGeometry", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mFileName = std::string();

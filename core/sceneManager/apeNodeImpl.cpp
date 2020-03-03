@@ -22,11 +22,10 @@ SOFTWARE.*/
 
 #include "apeNodeImpl.h"
 
-ape::NodeImpl::NodeImpl(std::string name, bool replicate, bool isHost) : ape::Replica("Node", name, isHost)
+ape::NodeImpl::NodeImpl(std::string name, bool replicate, std::string ownerID, bool isHost) : ape::Replica("Node", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
-	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mName = name;
 	mParentNode = ape::NodeWeakPtr();
 	mParentNodeName = std::string();
@@ -37,7 +36,6 @@ ape::NodeImpl::NodeImpl(std::string name, bool replicate, bool isHost) : ape::Re
 	mIsFixedYaw = false;
 	mIsInheritOrientation = true;
 	mIsReplicated = replicate;
-	mOwnerID = mpCoreConfig->getNetworkGUID();
 }
 
 ape::NodeImpl::~NodeImpl()

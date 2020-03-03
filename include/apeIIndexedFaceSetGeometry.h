@@ -126,7 +126,7 @@ namespace ape
 	class IIndexedFaceSetGeometry : public Geometry
 	{
 	protected:
-		IIndexedFaceSetGeometry(std::string name, bool replicate) : Geometry(name, replicate, Entity::GEOMETRY_INDEXEDFACESET) {}
+		IIndexedFaceSetGeometry(std::string name, bool replicate, std::string ownerID) : Geometry(name, Entity::GEOMETRY_INDEXEDFACESET, replicate, ownerID) {}
 
 		virtual ~IIndexedFaceSetGeometry() {};
 		

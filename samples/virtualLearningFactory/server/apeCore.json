@@ -1,7 +1,6 @@
 {
   "plugins": [
     "apeSampleScenePlugin",
-    "apeVLFTAnimationPlayerPlugin",
     "apeVLFTSceneLoaderPlugin"
   ],
   "network": {

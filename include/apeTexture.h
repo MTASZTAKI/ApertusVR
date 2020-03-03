@@ -66,7 +66,7 @@ namespace ape
 		};
 
 	protected:
-		Texture(std::string name, bool replicate,  Entity::Type entityType) : Entity(name, replicate, entityType) {}
+		Texture(std::string name, Entity::Type entityType, bool replicated, std::string ownerID) : Entity(name, entityType, replicated, ownerID) {}
 
 		virtual ~Texture() {};
 

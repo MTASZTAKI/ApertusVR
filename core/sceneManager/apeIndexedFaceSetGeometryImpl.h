@@ -33,7 +33,7 @@ namespace ape
 	class IndexedFaceSetGeometryImpl : public ape::IIndexedFaceSetGeometry, public ape::Replica
 	{
 	public:
-		IndexedFaceSetGeometryImpl(std::string name, bool replicate, bool isHost);
+		IndexedFaceSetGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost);
 
 		~IndexedFaceSetGeometryImpl();
 

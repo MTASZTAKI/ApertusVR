@@ -52,13 +52,13 @@ namespace ape
 
 		ape::NodeWeakPtr getNode(std::string name) override;
 
-		ape::NodeWeakPtr createNode(std::string name, bool replicate = true) override;
+		ape::NodeWeakPtr createNode(std::string name, bool replicate, std::string ownerID) override;
 
 		ape::EntityWeakPtrNameMap getEntities() override;
 
 		ape::EntityWeakPtr getEntity(std::string name) override;
 
-		ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type, bool replicate = true) override;
+		ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type, bool replicate, std::string ownerID) override;
 
 		void deleteNode(std::string name) override;
 

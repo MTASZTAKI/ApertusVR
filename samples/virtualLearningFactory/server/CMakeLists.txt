@@ -22,7 +22,6 @@
 
 set (CONFIGS
     apeVLFTSceneLoaderPlugin.json
-	apeVLFTAnimationPlayerPlugin.json
 	apeCore.json
 	)
 

@@ -37,7 +37,7 @@ namespace ape
 	class IWater : public Entity
 	{
 	protected:
-		IWater(std::string name) : Entity(name, false,  Entity::WATER) {}
+		IWater(std::string name) : Entity(name, Entity::WATER, false, "") {}
 
 		virtual ~IWater() {};
 

@@ -79,7 +79,7 @@ namespace ape
 	class ILight : public Entity
 	{
 	protected:
-		ILight(std::string name, bool replicate) : Entity(name, replicate,  ape::Entity::LIGHT) {}
+		ILight(std::string name, bool replicate, std::string ownerID) : Entity(name, ape::Entity::LIGHT, replicate, ownerID) {}
 
 		virtual ~ILight() {};
 

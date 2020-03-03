@@ -54,7 +54,7 @@ namespace ape
     {
     protected:
         IRigidBody(std::string name)
-		: Entity(name, false, Entity::Type::RIGIDBODY)
+		: Entity(name, Entity::Type::RIGIDBODY, false, "")
 		{}
 
         virtual ~IRigidBody() {}

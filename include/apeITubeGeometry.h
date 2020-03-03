@@ -55,7 +55,7 @@ namespace ape
 	class ITubeGeometry : public Geometry
 	{
 	protected:
-		ITubeGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_TUBE) {}
+		ITubeGeometry(std::string name, bool replicate, std::string ownerID) : ape::Geometry(name, ape::Entity::GEOMETRY_TUBE, replicate, ownerID) {}
 
 		virtual ~ITubeGeometry() {};
 

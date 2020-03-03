@@ -33,7 +33,7 @@ namespace ape
 	class CylinderGeometryImpl : public ape::ICylinderGeometry, public ape::Replica
 	{
 	public:
-		CylinderGeometryImpl(std::string name, bool replicate, bool isHost);
+		CylinderGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost);
 
 		~CylinderGeometryImpl();
 

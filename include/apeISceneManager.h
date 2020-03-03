@@ -49,13 +49,13 @@ namespace ape
 
 		virtual ape::NodeWeakPtr getNode(std::string name) = 0;
 
-		virtual ape::NodeWeakPtr createNode(std::string name, bool replicate = true) = 0;
+		virtual ape::NodeWeakPtr createNode(std::string name, bool replicate, std::string ownerID) = 0;
 
 		virtual ape::EntityWeakPtrNameMap getEntities() = 0;
 
 		virtual ape::EntityWeakPtr getEntity(std::string name) = 0;
 
-		virtual ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type, bool replicate = true) = 0;
+		virtual ape::EntityWeakPtr createEntity(std::string name, ape::Entity::Type type, bool replicate, std::string ownerID) = 0;
 
 		virtual void deleteNode(std::string name) = 0;
 

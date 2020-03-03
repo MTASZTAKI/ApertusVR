@@ -43,7 +43,7 @@ namespace ape
 		};
 
 	protected:
-		IFileTexture(std::string name, bool replicate) : Texture(name, replicate, Entity::TEXTURE_FILE) {}
+		IFileTexture(std::string name, bool replicate, std::string ownerID) : Texture(name, Entity::TEXTURE_FILE, replicate, ownerID) {}
 		virtual ~IFileTexture() {};
 
 	public:

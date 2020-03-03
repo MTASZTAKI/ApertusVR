@@ -33,7 +33,7 @@ namespace ape
 	class ConeGeometryImpl : public ape::IConeGeometry, public ape::Replica
 	{
 	public:
-		ConeGeometryImpl(std::string name, bool replicate, bool isHost);
+		ConeGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost);
 
 		~ConeGeometryImpl();
 

@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include "GetTime.h"
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
+#include "apeICoreConfig.h"
 
 namespace ape
 {
@@ -40,15 +41,19 @@ namespace ape
 
 		ape::ISceneManager* mpSceneManager;
 
+		ape::ICoreConfig* mpCoreConfig;
+
 		std::string mReplicaName;
 
 	protected:
 		RakNet::RakString mObjectType;
 
+		std::string mOwnerID;
+
 		RakNet::VariableDeltaSerializer mVariableDeltaSerializer;
 
 	public:
-		Replica(RakNet::RakString objectType, std::string name, bool isHost);
+		Replica(RakNet::RakString objectType, std::string name, std::string ownerID, bool isHost);
 
 		virtual ~Replica();
 		

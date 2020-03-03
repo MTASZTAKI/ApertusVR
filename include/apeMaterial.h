@@ -59,7 +59,7 @@ namespace ape
 		};
 
 	protected:
-		Material(std::string name, bool replicated,  Entity::Type entityType) : Entity(name, replicated, entityType) {}
+		Material(std::string name, Entity::Type entityType, bool replicated, std::string ownerID) : Entity(name, entityType, replicated, ownerID) {}
 
 		virtual ~Material() {};
 

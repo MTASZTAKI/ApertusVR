@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeTextGeometryImpl.h"
 
-ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool replicate, bool isHost) : ape::ITextGeometry(name, replicate), ape::Replica("TextGeometry", name, isHost)
+ape::TextGeometryImpl::TextGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost) : ape::ITextGeometry(name, replicate, ownerID), ape::Replica("TextGeometry", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

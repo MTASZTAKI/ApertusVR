@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-ape::CloneGeometryImpl::CloneGeometryImpl(std::string name, bool replicate, bool isHost)
-	: ape::ICloneGeometry(name, replicate), ape::Replica("CloneGeometry", name, isHost)
+ape::CloneGeometryImpl::CloneGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost)
+	: ape::ICloneGeometry(name, replicate, ownerID), ape::Replica("CloneGeometry", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

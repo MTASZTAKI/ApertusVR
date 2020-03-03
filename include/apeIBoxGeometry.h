@@ -62,7 +62,7 @@ namespace ape
 	class IBoxGeometry : public ape::Geometry
 	{
 	protected:
-		IBoxGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_BOX) {}
+		IBoxGeometry(std::string name, bool replicate, std::string ownerID) : ape::Geometry(name, ape::Entity::GEOMETRY_BOX, replicate, ownerID) {}
 
 		virtual ~IBoxGeometry() {};
 

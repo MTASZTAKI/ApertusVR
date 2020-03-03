@@ -63,7 +63,7 @@ namespace ape
 	class IConeGeometry : public ape::Geometry
 	{
 	protected:
-		IConeGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_CONE) {}
+		IConeGeometry(std::string name, bool replicate, std::string ownerID) : ape::Geometry(name, ape::Entity::GEOMETRY_CONE, replicate, ownerID) {}
 
 		virtual ~IConeGeometry() {};
 

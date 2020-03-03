@@ -34,7 +34,7 @@ namespace ape
 	class CloneGeometryImpl : public ape::ICloneGeometry, public ape::Replica
 	{
 	public:
-		CloneGeometryImpl(std::string name, bool replicate, bool isHost);
+		CloneGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost);
 
 		~CloneGeometryImpl();
 

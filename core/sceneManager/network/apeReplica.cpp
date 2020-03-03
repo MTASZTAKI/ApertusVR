@@ -22,11 +22,13 @@ SOFTWARE.*/
 
 #include "apeReplica.h"
 
-ape::Replica::Replica(RakNet::RakString objectType, std::string name, bool isHost)
+ape::Replica::Replica(RakNet::RakString objectType, std::string name, std::string ownerID, bool isHost)
 {
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mReplicaName = name;
 	mObjectType = objectType;
+	mOwnerID = ownerID;
 	mIsHost = isHost;
 }
 
@@ -100,7 +102,10 @@ void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 
 RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
 {
-	return QuerySerialization_ClientSerializable(destinationConnection, mIsHost);
+	if (mOwnerID == mpCoreConfig->getNetworkGUID())
+		return QuerySerialization_PeerToPeer(destinationConnection, RakNet::Replica3P2PMode::R3P2PM_MULTI_OWNER_CURRENTLY_AUTHORITATIVE);
+	else 
+		return QuerySerialization_PeerToPeer(destinationConnection, RakNet::Replica3P2PMode::R3P2PM_MULTI_OWNER_NOT_CURRENTLY_AUTHORITATIVE);
 }
 
 void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)

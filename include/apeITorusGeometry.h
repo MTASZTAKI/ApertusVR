@@ -56,7 +56,7 @@ namespace ape
 	class ITorusGeometry : public ape::Geometry
 	{
 	protected:
-		ITorusGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_TORUS) {}
+		ITorusGeometry(std::string name, bool replicate, std::string ownerID) : ape::Geometry(name, ape::Entity::GEOMETRY_TORUS, replicate, ownerID) {}
 
 		virtual ~ITorusGeometry() {};
 

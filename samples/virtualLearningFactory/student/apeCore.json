@@ -3,7 +3,8 @@
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
-	"apeAssimpAssetLoaderPlugin"
+    "apeAssimpAssetLoaderPlugin",
+    "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "vlft_student",

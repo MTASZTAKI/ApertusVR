@@ -30,7 +30,7 @@ namespace ape
 	class IFileMaterial : public Material
 	{
 	protected:
-		IFileMaterial(std::string name, bool replicate) : Material(name, replicate, Entity::MATERIAL_FILE) {}
+		IFileMaterial(std::string name, bool replicate, std::string ownerID) : Material(name, Entity::MATERIAL_FILE, replicate, ownerID) {}
 
 		virtual ~IFileMaterial() {};
 

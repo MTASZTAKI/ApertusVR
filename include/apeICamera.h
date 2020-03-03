@@ -47,7 +47,7 @@ namespace ape
 	class ICamera : public Entity
 	{
 	protected:
-		ICamera(std::string name) : Entity(name, false,  ape::Entity::CAMERA) {}
+		ICamera(std::string name) : Entity(name, ape::Entity::CAMERA, false, "") {}
 
 		virtual ~ICamera() {};
 

@@ -78,7 +78,7 @@ namespace ape
 	class IPlaneGeometry : public ape::Geometry
 	{
 	protected:
-		IPlaneGeometry(std::string name, bool replicate) : ape::Geometry(name, replicate, ape::Entity::GEOMETRY_PLANE) {}
+		IPlaneGeometry(std::string name, bool replicate, std::string ownerID) : ape::Geometry(name, ape::Entity::GEOMETRY_PLANE, replicate, ownerID) {}
 
 		virtual ~IPlaneGeometry() {};
 

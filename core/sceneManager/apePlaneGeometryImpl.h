@@ -33,7 +33,7 @@ namespace ape
 	class PlaneGeometryImpl : public ape::IPlaneGeometry, public ape::Replica
 	{
 	public:
-		PlaneGeometryImpl(std::string name, bool replicate, bool isHost);
+		PlaneGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost);
 
 		~PlaneGeometryImpl();
 

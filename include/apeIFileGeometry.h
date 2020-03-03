@@ -32,7 +32,7 @@ namespace ape
 	class IFileGeometry : public Geometry
 	{
 	protected:
-		IFileGeometry(std::string name, bool replicate) : Geometry(name, replicate, Entity::GEOMETRY_FILE) {}
+		IFileGeometry(std::string name, bool replicate, std::string ownerID) : Geometry(name, Entity::GEOMETRY_FILE, replicate, ownerID) {}
 		virtual ~IFileGeometry() {};
 
 	public:

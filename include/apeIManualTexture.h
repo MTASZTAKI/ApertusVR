@@ -69,7 +69,7 @@ namespace ape
 	class IManualTexture : public Texture
 	{
 	protected:
-		IManualTexture(std::string name, bool replicate) : Texture(name, replicate, Entity::TEXTURE_MANUAL) {}
+		IManualTexture(std::string name, bool replicate, std::string ownerID) : Texture(name, Entity::TEXTURE_MANUAL, replicate, ownerID) {}
 
 		virtual ~IManualTexture() {};
 

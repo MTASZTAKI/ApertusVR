@@ -23,7 +23,7 @@ SOFTWARE.*/
 #include <iostream>
 #include "apeIndexedFaceSetGeometryImpl.h"
 
-ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool replicate, bool isHost) : ape::IIndexedFaceSetGeometry(name, replicate), ape::Replica("IndexedFaceSetGeometry", name, isHost)
+ape::IndexedFaceSetGeometryImpl::IndexedFaceSetGeometryImpl(std::string name, bool replicate, std::string ownerID, bool isHost) : ape::IIndexedFaceSetGeometry(name, replicate, ownerID), ape::Replica("IndexedFaceSetGeometry", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();

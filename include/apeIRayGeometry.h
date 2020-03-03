@@ -32,7 +32,7 @@ namespace ape
 	class IRayGeometry : public Geometry
 	{
 	protected:
-		IRayGeometry(std::string name) : Geometry(name, false, Entity::GEOMETRY_RAY) {}
+		IRayGeometry(std::string name) : Geometry(name, Entity::GEOMETRY_RAY, false, "") {}
 
 		virtual ~IRayGeometry() {};
 

@@ -228,6 +228,17 @@ public:
 	{
 		mPtr.lock()->showBoundingBox(show);
 	}
+
+	void setOwner(std::string ownerID)
+	{
+		mPtr.lock()->setOwner(ownerID);
+	}
+
+	const std::string getOwner()
+	{
+		auto ownerID = mPtr.lock()->getOwner();
+		return ownerID;
+	}
 };
 
 NBIND_CLASS(NodeJsPtr)
@@ -276,6 +287,9 @@ NBIND_CLASS(NodeJsPtr)
 
 	method(translate);
 	method(rotate);
+
+	method(setOwner);
+	method(getOwner);
 }
 
 #endif

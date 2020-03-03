@@ -96,7 +96,7 @@ namespace ape
 	class IPointCloud : public Entity
 	{
 	protected:
-		IPointCloud(std::string name, bool replicate) : Entity(name, replicate,  Entity::POINT_CLOUD) {}
+		IPointCloud(std::string name, bool replicate, std::string ownerID) : Entity(name, Entity::POINT_CLOUD, replicate, ownerID) {}
 
 		virtual ~IPointCloud() {};
 

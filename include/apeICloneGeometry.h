@@ -37,7 +37,7 @@ namespace ape
 	class ICloneGeometry : public Geometry
 	{
 	protected:
-		ICloneGeometry(std::string name, bool replicate) : Geometry(name, replicate, Entity::GEOMETRY_CLONE) {}
+		ICloneGeometry(std::string name, bool replicate, std::string ownerID) : Geometry(name, Entity::GEOMETRY_CLONE, replicate, ownerID) {}
 
 		virtual ~ICloneGeometry() {}
 
