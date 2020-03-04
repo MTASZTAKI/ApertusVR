@@ -107,52 +107,52 @@ app.post('/setfastai', function (req, res, next) {
 	else {
 		var classes = req.body.classes; //number of classes
 
-		var parentBox = ape.nbind.JsBindManager().createNode('xBox');
+		var parentBox = ape.nbind.JsBindManager().createNode('xBox', true);
 		parentBox.setPosition(ape.nbind.Vector3(-20, 0, 10));
-		var boxSetObj = ape.nbind.JsBindManager().createBox('xAxis');
+		var boxSetObj = ape.nbind.JsBindManager().createBox('xAxis', true);
 		var dimensionsAtrr = ape.nbind.Vector3(0.2, 200, 0.2);
 		boxSetObj.setParameters(dimensionsAtrr);
 		boxSetObj.setParentNodeJsPtr(parentBox);
-		var xMat = ape.nbind.JsBindManager().createManualMaterial("xmat" );
+		var xMat = ape.nbind.JsBindManager().createManualMaterial("xmat", true);
 		var diffuseColor = ape.nbind.Color(1, 0, 0, 1);			
 		xMat.setDiffuseColor(diffuseColor);
 		boxSetObj.setManualMaterial(xMat);
 
-		var parentNode1 = ape.nbind.JsBindManager().createNode('xtext' );
+		var parentNode1 = ape.nbind.JsBindManager().createNode('xtext', true);
 		parentNode1.setPosition(ape.nbind.Vector3(-20, 100, 10));
-		var textGeometry = ape.nbind.JsBindManager().createText("Loss");
+		var textGeometry = ape.nbind.JsBindManager().createText("Loss", true);
 		textGeometry.setParentNodeJsPtr(parentNode1);
 		
-		var parentBox2 = ape.nbind.JsBindManager().createNode('yBox');
+		var parentBox2 = ape.nbind.JsBindManager().createNode('yBox', true);
 		parentBox2.setPosition(ape.nbind.Vector3(-20, 2, 10));
-		var boxSetObj = ape.nbind.JsBindManager().createBox('yAxis');
+		var boxSetObj = ape.nbind.JsBindManager().createBox('yAxis', true);
 		var dimensionsAtrr = ape.nbind.Vector3(0.2, 0.2, 200);
 		boxSetObj.setParameters(dimensionsAtrr);
 		boxSetObj.setParentNodeJsPtr(parentBox2);
-		var yMat = ape.nbind.JsBindManager().createManualMaterial("ymat");
+		var yMat = ape.nbind.JsBindManager().createManualMaterial("ymat", true);
 		var diffuseColor = ape.nbind.Color(0, 0, 1, 1);
 		yMat.setDiffuseColor(diffuseColor);
 		boxSetObj.setManualMaterial(yMat);
 
-		var parentNode1 = ape.nbind.JsBindManager().createNode('ytext1');
+		var parentNode1 = ape.nbind.JsBindManager().createNode('ytext1', true);
 		parentNode1.setPosition(ape.nbind.Vector3(-20, 2, 95));
-		var textGeometry = ape.nbind.JsBindManager().createText("Cat Prediction");
+		var textGeometry = ape.nbind.JsBindManager().createText("Cat Prediction", true);
 		textGeometry.setParentNodeJsPtr(parentNode1);
 
-		var parentNode1 = ape.nbind.JsBindManager().createNode('ytext2');
+		var parentNode1 = ape.nbind.JsBindManager().createNode('ytext2', true);
 		parentNode1.setPosition(ape.nbind.Vector3(-20, 2, -75));
-		var textGeometry = ape.nbind.JsBindManager().createText("Dog Prediction");
+		var textGeometry = ape.nbind.JsBindManager().createText("Dog Prediction", true);
 		textGeometry.setParentNodeJsPtr(parentNode1);
 
 
 		for (var i = 0; i < req.body.IDs.length; i++) {
 			var image_path = req.body.IDs[i]; // paths to the validation set images
-			var parentNode = ape.nbind.JsBindManager().createNode('dsa'+i);
+			var parentNode = ape.nbind.JsBindManager().createNode('dsa'+i, true);
 			parentNode.setPosition(ape.nbind.Vector3(10, 30, 10));
 			//parentNode.setOrientation(new ape.nbind.Quaternion(0.7071, -0.7071, 0, 0));
 
-			var manualMaterial = ape.nbind.JsBindManager().createManualMaterial("sda" + i);
-			var fileTexture = ape.nbind.JsBindManager().createFileTexture(image_path);
+			var manualMaterial = ape.nbind.JsBindManager().createManualMaterial("sda" + i, true);
+			var fileTexture = ape.nbind.JsBindManager().createFileTexture(image_path, true);
 			fileTexture.setFileName(image_path);
 			manualMaterial.setTexture(fileTexture);
 
@@ -166,7 +166,7 @@ app.post('/setfastai', function (req, res, next) {
 			//textGeometry.setParentNodeJsPtr(parentNode1);
 			//textGeometry.setCaption(text);
 
-			var plane = ape.nbind.JsBindManager().createPlane('das' + i);
+			var plane = ape.nbind.JsBindManager().createPlane('das' + i, true);
 			var numSeg = ape.nbind.Vector2(2, 2);
 			var size = ape.nbind.Vector2(10, 10);
 			var tile = ape.nbind.Vector2(1, 1);

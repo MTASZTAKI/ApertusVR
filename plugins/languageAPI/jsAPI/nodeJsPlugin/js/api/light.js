@@ -48,7 +48,7 @@ app.post('/lights', function(req, res) {
 
 	// get name from url
 	var name = req.body.name;
-	var lightObj = ape.nbind.JsBindManager().createLight(name);
+	var lightObj = ape.nbind.JsBindManager().createLight(name, true);
 	respObj.addEvent({
 		group: 'LIGHT',
 		type: 'LIGHT_CREATE',

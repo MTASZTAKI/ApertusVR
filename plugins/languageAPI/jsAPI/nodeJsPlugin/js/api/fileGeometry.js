@@ -67,7 +67,7 @@ app.post('/filegeometries/', function(req, res){
     form.on('end', function() {
       res.end('success');
       logger.debug('file upload success: ', fullFilePath);
-      var fileGeometry = ape.nbind.JsBindManager().createFileGeometry('robotFileGeometry');
+      var fileGeometry = ape.nbind.JsBindManager().createFileGeometry('robotFileGeometry', true);
       fileGeometry.setFileName(fullFilePath);
     });
   

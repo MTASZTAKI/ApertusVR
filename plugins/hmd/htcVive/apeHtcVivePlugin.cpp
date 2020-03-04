@@ -141,12 +141,12 @@ void ape::HtcVivePlugin::Init()
 	mpOpenVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 	APE_LOG_DEBUG("Recomended Render Target Size : " << width << "x" << height);
 
-	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureLeft", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
 	{
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
 		mManualTextureLeftEye = manualTexture;
 	}
-	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", ape::Entity::TEXTURE_MANUAL).lock()))
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenVrRenderTextureRight", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
 	{
 		manualTexture->setParameters(width, height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
 		mManualTextureRightEye = manualTexture;

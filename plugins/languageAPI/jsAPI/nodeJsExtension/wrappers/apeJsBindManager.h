@@ -93,10 +93,10 @@ public:
 		APE_LOG_FUNC_LEAVE();
 	}*/
 
-	NodeJsPtr createNode(std::string name)
+	NodeJsPtr createNode(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
-		return NodeJsPtr(mpSceneManager->createNode(name));
+		return NodeJsPtr(mpSceneManager->createNode(name, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	void getNodes(nbind::cbFunction &done)
@@ -203,11 +203,11 @@ public:
 		APE_LOG_FUNC_LEAVE();
 	}
 
-	LightJsPtr createLight(std::string name)
+	LightJsPtr createLight(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return LightJsPtr(mpSceneManager->createEntity(name, ape::Entity::LIGHT));
+		return LightJsPtr(mpSceneManager->createEntity(name, ape::Entity::LIGHT, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getLight(std::string name, nbind::cbFunction &done)
@@ -237,11 +237,11 @@ public:
 		return success;
 	}
 
-	TextJsPtr createText(std::string name)
+	TextJsPtr createText(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return TextJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_TEXT));
+		return TextJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_TEXT, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getText(std::string name, nbind::cbFunction &done)
@@ -271,12 +271,12 @@ public:
 		return success;
 	}
 
-	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name)
+	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		/*printf("\nCREATING INDEXED FACE SET GEOMETRY!\n");*/
 		APE_LOG_FUNC_LEAVE();
-		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET));
+		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getIndexedFaceSet(std::string name, nbind::cbFunction &done)
@@ -309,11 +309,11 @@ public:
 		return success;
 	}
 
-	CloneGeometryJsPtr createCloneGeometry(std::string name)
+	CloneGeometryJsPtr createCloneGeometry(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return CloneGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CLONE));
+		return CloneGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_CLONE, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getCloneGeometry(std::string name, nbind::cbFunction &done)
@@ -347,7 +347,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY));
+		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY, false, ""));
 	}
 
 	bool getRigidBody(std::string name, nbind::cbFunction &done)
@@ -377,11 +377,11 @@ public:
 		return success;
 	}
 
-	IndexedLineSetJsPtr createIndexedLineSet(std::string name)
+	IndexedLineSetJsPtr createIndexedLineSet(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return IndexedLineSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDLINESET));
+		return IndexedLineSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDLINESET, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getIndexedLineSet(std::string name, nbind::cbFunction &done)
@@ -411,11 +411,11 @@ public:
 		return success;
 	}
 
-	BoxJsPtr createBox(std::string name)
+	BoxJsPtr createBox(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return BoxJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX));
+		return BoxJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_BOX, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getBox(std::string name, nbind::cbFunction &done)
@@ -445,11 +445,11 @@ public:
 		return success;
 	}
 
-	PlaneJsPtr createPlane(std::string name)
+	PlaneJsPtr createPlane(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return PlaneJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_PLANE));
+		return PlaneJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_PLANE, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getPlane(std::string name, nbind::cbFunction &done)
@@ -479,11 +479,11 @@ public:
 		return success;
 	}
 
-	FileGeometryJsPtr createFileGeometry(std::string name)
+	FileGeometryJsPtr createFileGeometry(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return FileGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_FILE));
+		return FileGeometryJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_FILE, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getFileGeometry(std::string name, nbind::cbFunction &done)
@@ -513,11 +513,11 @@ public:
 		return success;
 	}
 
-	FileTextureJsPtr createFileTexture(std::string name)
+	FileTextureJsPtr createFileTexture(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return FileTextureJsPtr(mpSceneManager->createEntity(name, ape::Entity::TEXTURE_FILE));
+		return FileTextureJsPtr(mpSceneManager->createEntity(name, ape::Entity::TEXTURE_FILE, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getFileTexture(std::string name, nbind::cbFunction &done)
@@ -547,11 +547,11 @@ public:
 		return success;
 	}
 
-	ManualMaterialJsPtr createManualMaterial(std::string name)
+	ManualMaterialJsPtr createManualMaterial(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return ManualMaterialJsPtr(mpSceneManager->createEntity(name, ape::Entity::MATERIAL_MANUAL));
+		return ManualMaterialJsPtr(mpSceneManager->createEntity(name, ape::Entity::MATERIAL_MANUAL, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getManualMaterial(std::string name, nbind::cbFunction &done)
@@ -581,11 +581,11 @@ public:
 		return success;
 	}
 
-	PointCloudJsPtr createPointCloud(std::string name)
+	PointCloudJsPtr createPointCloud(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return PointCloudJsPtr(mpSceneManager->createEntity(name, ape::Entity::POINT_CLOUD));
+		return PointCloudJsPtr(mpSceneManager->createEntity(name, ape::Entity::POINT_CLOUD, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getPointCloud(std::string name, nbind::cbFunction &done)

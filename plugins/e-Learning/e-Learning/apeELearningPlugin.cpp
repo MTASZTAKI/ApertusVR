@@ -49,10 +49,10 @@ ape::FileGeometryWeakPtr ape::ELearningPlugin::createSphere(std::string cameraNa
 {
 	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
 	{
-		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName).lock())
+		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName, true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			//sphereNode->setScale(ape::Vector3(100, 100, 100));
-			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE).lock()))
+			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				sphereMeshFile->setFileName(meshName);
 				sphereMeshFile->setParentNode(sphereNode);
@@ -70,10 +70,10 @@ void ape::ELearningPlugin::createRoomTextures()
 	{
 		for (auto const& room : mConfig.get_rooms())
 		{
-			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Left", ape::Entity::MATERIAL_MANUAL).lock()))
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Left", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Left", ape::Entity::TEXTURE_FILE).lock()))
+				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Left", ape::Entity::TEXTURE_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					auto stringPos = room.get_texture().find_last_of("_") + 1;
 					std::string textureFileName = room.get_texture().substr(0, stringPos) + "Top.png";
@@ -87,10 +87,10 @@ void ape::ELearningPlugin::createRoomTextures()
 	{
 		for (auto const& room : mConfig.get_rooms())
 		{
-			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Right", ape::Entity::MATERIAL_MANUAL).lock()))
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(room.get_id() + "_Material_Right", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Right", ape::Entity::TEXTURE_FILE).lock()))
+				if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(room.get_id() + "_Texture_Right", ape::Entity::TEXTURE_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					auto stringPos = room.get_texture().find_last_of("_") + 1;
 					std::string textureFileName = room.get_texture().substr(0, stringPos) + "Top.png";
@@ -111,7 +111,7 @@ void ape::ELearningPlugin::createHotSpots()
 		{
 			for (auto hotspot : *room.get_hotspots())
 			{
-				if (auto node = mpSceneManager->createNode(hotspot.get_id()).lock())
+				if (auto node = mpSceneManager->createNode(hotspot.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 				{
 					if (auto sphereGeometryLeft = mSphereGeometryLeft.lock())
 					{
@@ -122,7 +122,7 @@ void ape::ELearningPlugin::createHotSpots()
 						auto roomRotation = ape::Quaternion();
 						roomRotation.FromAngleAxis(angleRad, axis);
 						node->setOrientation(ape::Quaternion(0.707, 0.707, 0, 0) * roomRotation);
-						if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+						if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(hotspot.get_id() + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
 							material->setCullingMode(ape::Material::CullingMode::NONE_CM);
@@ -139,11 +139,11 @@ void ape::ELearningPlugin::createHotSpots()
 									material->setPassTexture(texture);
 								}*/
 							std::string textureFileName = hotspot.get_textures()[0].substr(pos);
-							if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE).lock()))
+							if (auto texture = std::static_pointer_cast<ape::IFileTexture>(mpSceneManager->createEntity(hotspot.get_id() + "_Texture", ape::Entity::TEXTURE_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 							{
 								texture->setFileName(textureFileName);
 								material->setTexture(texture);
-								if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE).lock()))
+								if (auto planeGeometry = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity(hotspot.get_id() + "_Geometry", ape::Entity::Type::GEOMETRY_PLANE, true, mpCoreConfig->getNetworkGUID()).lock()))
 								{
 									planeGeometry->setParameters(ape::Vector2(1, 1), ape::Vector2(hotspot.get_src_height() * hotspot.get_width(), hotspot.get_src_width() * hotspot.get_width()), ape::Vector2(1, 1));
 									planeGeometry->setParentNode(node);
@@ -326,7 +326,7 @@ void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 			mpApeUserInputMacro->getUserNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setPosition(ape::Vector3(0, 0, 0));
 			mpApeUserInputMacro->getHeadNode().lock()->setOrientation(ape::Quaternion(1, 0, 0, 0));
-			if (auto controllerNode = mpSceneManager->createNode("htcVive_Controller_Node").lock())
+			if (auto controllerNode = mpSceneManager->createNode("htcVive_Controller_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				controllerNode->setScale(ape::Vector3(10, 10, 10));
 				std::string controller3DModelFileName;
@@ -335,21 +335,21 @@ void ape::ELearningPlugin::eventCallBack(const ape::Event & event)
 					if (resourceLocation.find("e-Learning"))
 						controller3DModelFileName = resourceLocation + "/scene.gltf";
 				}
-				if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(controller3DModelFileName, ape::Entity::GEOMETRY_FILE).lock()))
+				if (auto model = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(controller3DModelFileName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					model->setParentNode(controllerNode);
 					model->setFileName(controller3DModelFileName);
 				}
-				if (auto rayNode = mpSceneManager->createNode("rayNode").lock())
+				if (auto rayNode = mpSceneManager->createNode("rayNode", false, "").lock())
 				{
-					if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery", ape::Entity::GEOMETRY_RAY).lock()))
+					if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery", ape::Entity::GEOMETRY_RAY, false, "").lock()))
 					{
 						rayGeometry->setIntersectingEnabled(true);
 						rayGeometry->setParentNode(rayNode);
 						mRayGeometry = rayGeometry;
 					}
 					rayNode->setParentNode(controllerNode);
-					if (auto laserLine = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("laserLine", ape::Entity::GEOMETRY_INDEXEDLINESET).lock()))
+					if (auto laserLine = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity("laserLine", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						ape::GeometryCoordinates coordinates = {0, 0, 0, 0, 400, 0 };
 						ape::GeometryIndices indices = { 0, 1, -1 };

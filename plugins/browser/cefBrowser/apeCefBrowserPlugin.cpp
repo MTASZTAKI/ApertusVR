@@ -146,12 +146,12 @@ void ape::CefBrowserPlugin::eventCallBack(const ape::Event& event)
 void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
 {
 	std::string browserName = browser->getName();
-	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL).lock()))
+	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		browserMaterial->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
 		browserMaterial->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 		browserMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL).lock()))
+		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false, false);
 			browserMaterial->setTexture(browserTexture);

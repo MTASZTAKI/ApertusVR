@@ -59,11 +59,11 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 				std::string fileExtension = fileFullPathStr.substr(fileFullPathStr.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
-					if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
+					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						float unitScale = *representation.get_unit() / 0.01f;
 						node->setScale(ape::Vector3(unitScale, unitScale, unitScale));
-						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE).lock()))
+						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							//APE_LOG_DEBUG("fileGeometry: " << asset.get_id());
 							fileGeometry->setFileName(fileFullPathStr);
@@ -97,7 +97,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
-		if (auto node = mpSceneManager->createNode(asset.get_id()).lock())
+		if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			//APE_LOG_DEBUG("createNode: " << asset.get_id());
 			std::weak_ptr<std::string> model = asset.get_model();
@@ -116,9 +116,9 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 					auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
 					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
 					{
-						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE).lock()))
+						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
-							if (auto geometryCloneNode = mpSceneManager->createNode(asset.get_id() + "_Clone").lock())
+							if (auto geometryCloneNode = mpSceneManager->createNode(asset.get_id() + "_Clone", true, mpCoreConfig->getNetworkGUID()).lock())
 							{
 								geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
 								if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())

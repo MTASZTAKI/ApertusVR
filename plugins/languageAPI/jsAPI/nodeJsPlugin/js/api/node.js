@@ -120,7 +120,7 @@ app.post('/nodes', function(req, res) {
 	}
 
 	var name = req.body.name;
-	var nodeObj = ape.nbind.JsBindManager().createNode(name);
+	var nodeObj = ape.nbind.JsBindManager().createNode(name, true);
 	respObj.addEvent({
 		group: 'NODE',
 		type: 'NODE_CREATE',

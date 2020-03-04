@@ -46,7 +46,7 @@ app.post('/texts', function(req, res) {
 
 	// get name from url
 	var name = req.body.name;
-	var textObj = ape.nbind.JsBindManager().createText(name);
+	var textObj = ape.nbind.JsBindManager().createText(name, true);
 	respObj.addEventItem({
 		group: 'TEXT',
 		type: 'TEXT_CREATE',

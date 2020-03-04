@@ -21,7 +21,7 @@ ape::KinectPlugin::KinectPlugin()
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&KinectPlugin::eventCallBack, this, std::placeholders::_1));
-	RootNode = mpSceneManager->createNode("KinectRootNode").lock();
+	RootNode = mpSceneManager->createNode("KinectRootNode", true, mpCoreConfig->getNetworkGUID()).lock();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -128,10 +128,10 @@ void ape::KinectPlugin::Init()
 		APE_LOG_DEBUG("Error cannot open config file");
 	if (_3dScan)
 	{
-		if (auto mClothNode = mpSceneManager->createNode("clothNode").lock())
+		if (auto mClothNode = mpSceneManager->createNode("clothNode", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			mClothNode->setScale(ape::Vector3(1.0, 1.0, 1.2));
-			if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("T-Shirt.3DS.mesh", ape::Entity::GEOMETRY_FILE).lock()))
+			if (auto meshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("T-Shirt.3DS.mesh", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				meshFile->setFileName("T-Shirt.3DS.mesh");
 				meshFile->setParentNode(mClothNode);
@@ -149,7 +149,7 @@ void ape::KinectPlugin::Init()
 	if (showSkeleton)
 	{
 		std::shared_ptr<ape::IManualMaterial> _0bodyMaterial;
-		if (_0bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("0BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_0bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("0BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_0bodyMaterial->setDiffuseColor(ape::Color(0.0f, 1.0f, 0.0f));
 			_0bodyMaterial->setSpecularColor(ape::Color(0.0f, 1.0f, 0.0f));
@@ -159,7 +159,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("0BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("0BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_0Body.push_back(myNode);
 			}
@@ -169,7 +169,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _0BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("0BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _0BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("0BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_0BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_0BodyGeometry->setParentNode(_0Body[i]);
@@ -178,7 +178,7 @@ void ape::KinectPlugin::Init()
 		}
 
 		std::shared_ptr<ape::IManualMaterial> _1bodyMaterial;
-		if (_1bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("1BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_1bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("1BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_1bodyMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
 			_1bodyMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
@@ -188,7 +188,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("1BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("1BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_1Body.push_back(myNode);
 			}
@@ -198,7 +198,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _1BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("1BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _1BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("1BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_1BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_1BodyGeometry->setParentNode(_1Body[i]);
@@ -207,7 +207,7 @@ void ape::KinectPlugin::Init()
 		}
 
 		std::shared_ptr<ape::IManualMaterial> _2bodyMaterial;
-		if (_2bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("2BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_2bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("2BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_2bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 			_2bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
@@ -217,7 +217,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("2BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("2BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_2Body.push_back(myNode);
 			}
@@ -227,7 +227,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _2BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("2BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _2BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("2BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_2BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_2BodyGeometry->setParentNode(_2Body[i]);
@@ -236,7 +236,7 @@ void ape::KinectPlugin::Init()
 		}
 
 		std::shared_ptr<ape::IManualMaterial> _3bodyMaterial;
-		if (_3bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("3BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_3bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("3BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_3bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 			_3bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
@@ -246,7 +246,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("3BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("3BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_3Body.push_back(myNode);
 			}
@@ -256,7 +256,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _3BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("3BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _3BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("3BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_3BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_3BodyGeometry->setParentNode(_3Body[i]);
@@ -265,7 +265,7 @@ void ape::KinectPlugin::Init()
 		}
 
 		std::shared_ptr<ape::IManualMaterial> _4bodyMaterial;
-		if (_4bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("4BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_4bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("4BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_4bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 			_4bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
@@ -275,7 +275,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("4BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("4BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_4Body.push_back(myNode);
 			}
@@ -285,7 +285,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _4BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("4BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _4BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("4BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_4BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_4BodyGeometry->setParentNode(_4Body[i]);
@@ -294,7 +294,7 @@ void ape::KinectPlugin::Init()
 		}
 
 		std::shared_ptr<ape::IManualMaterial> _5bodyMaterial;
-		if (_5bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("5BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL).lock()))
+		if (_5bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("5BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			_5bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 			_5bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
@@ -304,7 +304,7 @@ void ape::KinectPlugin::Init()
 		{
 			std::string index = std::to_string(i);
 
-			if (auto myNode = mpSceneManager->createNode("5BodyNode" + index).lock())
+			if (auto myNode = mpSceneManager->createNode("5BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				_5Body.push_back(myNode);
 			}
@@ -314,7 +314,7 @@ void ape::KinectPlugin::Init()
 				childNode->setParentNode(RootNode);
 			}
 
-			if (auto _5BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("5BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE).lock()))
+			if (auto _5BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("5BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
 				_5BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
 				_5BodyGeometry->setParentNode(_5Body[i]);
@@ -340,21 +340,21 @@ void ape::KinectPlugin::Run()
 				//Generate the Point Cloud
 				if (!pointsGenerated && KPts[3030] != 0.0 && KPts[3030] != -1 * std::numeric_limits<float>::infinity())
 				{
-					if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_Kinect").lock())
+					if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_Kinect", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						pointCloudNode->setPosition(ape::Vector3(KPos[0], KPos[1], KPos[2]));
 						pointCloudNode->setOrientation(ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-						if (auto textNode = mpSceneManager->createNode("pointCloudNode_Kinect_Text_Node").lock())
+						if (auto textNode = mpSceneManager->createNode("pointCloudNode_Kinect_Text_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 						{
 							textNode->setParentNode(pointCloudNode);
 							textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-							if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNode_Kinect_Text", ape::Entity::GEOMETRY_TEXT).lock()))
+							if (auto text = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNode_Kinect_Text", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 							{
 								text->setCaption("Kinect");
 								text->setParentNode(textNode);
 							}
 						}
-						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Kinect", ape::Entity::POINT_CLOUD).lock()))
+						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_Kinect", ape::Entity::POINT_CLOUD, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							pointCloud->setParameters(KPts, KCol, 10000, 1.0f, true, 500.0f, 500.0f, 3.0f);
 							pointCloud->setParentNode(pointCloudNode);
@@ -375,21 +375,21 @@ void ape::KinectPlugin::Run()
 			{
 				if (_1Detected && !operatorPointsGenerated)
 				{
-					if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_KinectOperator").lock())
+					if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_KinectOperator", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						pointCloudNode->setPosition(ape::Vector3(KPos[0], KPos[1], KPos[2]));
 						pointCloudNode->setOrientation(ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-						if (auto textNode = mpSceneManager->createNode("pointCloudNodeText_KinectOperator_Node").lock())
+						if (auto textNode = mpSceneManager->createNode("pointCloudNodeText_KinectOperator_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 						{
 							textNode->setParentNode(pointCloudNode);
 							textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-							if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNodeText_KinectOperator", ape::Entity::GEOMETRY_TEXT).lock()))
+							if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNodeText_KinectOperator", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 							{
 								userNameText->setCaption("pointCloudNodeText_KinectOperator");
 								userNameText->setParentNode(textNode);
 							}
 						}
-						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectOperator", ape::Entity::POINT_CLOUD).lock()))
+						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectOperator", ape::Entity::POINT_CLOUD, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							pointCloud->setParameters(OperatorPoints, OperatorColors, 100000, 1.0f, true, 500.0f, 500.0f, 3.0f);
 							pointCloud->setParentNode(pointCloudNode);
@@ -412,21 +412,21 @@ void ape::KinectPlugin::Run()
 					std::cout << ScannedPoints.size() << std::endl;
 					std::cout << ScannedColors.size() << std::endl;
 
-					if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectHalfScan").lock())
+					if (auto pointCloudNode = mpScene->createNode("pointCloudNode_KinectHalfScan", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						pointCloudNode->setPosition(ape::Vector3(KPos[0], KPos[1], KPos[2]));
 						pointCloudNode->setOrientation(ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-						if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectHalfScan_Node").lock())
+						if (auto textNode = mpScene->createNode("pointCloudNodeText_KinectHalfScan_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 						{
 							textNode->setParentNode(pointCloudNode);
 							textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-							if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectHalfScan", ape::Entity::GEOMETRY_TEXT).lock()))
+							if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpScene->createEntity("pointCloudNodeText_KinectHalfScan", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 							{
 								userNameText->setCaption("pointCloudNodeText_KinectHalfScan");
 								userNameText->setParentNode(textNode);
 							}
 						}
-						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectHalfScan", ape::Entity::POINT_CLOUD).lock()))
+						if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpScene->createEntity("pointCloud_KinectHalfScan", ape::Entity::POINT_CLOUD, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							pointCloud->setParameters(ScannedPoints, ScannedColors, 100000);
 							pointCloud->setParentNode(pointCloudNode);
@@ -453,21 +453,21 @@ void ape::KinectPlugin::Run()
 				}
 #endif
 				//show scanned point cloud
-				if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_KinectScanner").lock())
+				if (auto pointCloudNode = mpSceneManager->createNode("pointCloudNode_KinectScanner", true, mpCoreConfig->getNetworkGUID()).lock())
 				{
 					pointCloudNode->setPosition(ape::Vector3(KPos[0], KPos[1], KPos[2]));
 					pointCloudNode->setOrientation(ape::Quaternion(KRot[0], KRot[1], KRot[2], KRot[3]));
-					if (auto textNode = mpSceneManager->createNode("pointCloudNodeText_KinectScanner_Node").lock())
+					if (auto textNode = mpSceneManager->createNode("pointCloudNodeText_KinectScanner_Node", true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						textNode->setParentNode(pointCloudNode);
 						textNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-						if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNodeText_KinectScanner", ape::Entity::GEOMETRY_TEXT).lock()))
+						if (auto userNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("pointCloudNodeText_KinectScanner", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							userNameText->setCaption("pointCloudNodeText_KinectScanner");
 							userNameText->setParentNode(textNode);
 						}
 					}
-					if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectScanner", ape::Entity::POINT_CLOUD).lock()))
+					if (auto pointCloud = std::static_pointer_cast<ape::IPointCloud>(mpSceneManager->createEntity("pointCloud_KinectScanner", ape::Entity::POINT_CLOUD, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
 						pointCloud->setParameters(ScannedPoints, ScannedColors, 100000, 1.0f, true, 500.0f, 500.0f, 3.0f);
 						pointCloud->setParentNode(pointCloudNode);

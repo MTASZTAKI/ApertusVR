@@ -3,12 +3,12 @@
 WaterGame::GameManager::GameManager(ape::NodeWeakPtr userNode, ape::NodeWeakPtr userBodyNode)
 {
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mTime = 0;
 	mScore = 0;
 	mUserNode = userNode;
 	mUserBodyNode = userBodyNode;
 	mBubbleManager = new WaterGame::BubbleManager(userNode, userBodyNode);
-
 	Init();
 }
 
@@ -19,12 +19,12 @@ WaterGame::GameManager::~GameManager()
 void WaterGame::GameManager::Init()
 {
 	APE_LOG_TRACE("timeText create");
-	if (auto timerNode = mpSceneManager->createNode("timerNode").lock())
+	if (auto timerNode = mpSceneManager->createNode("timerNode", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		timerNode->setParentNode(mUserBodyNode);
 		timerNode->setPosition(ape::Vector3(-18, 10, -40));
 
-		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", ape::Entity::GEOMETRY_TEXT);
+		mTimeText = mpSceneManager->createEntity("timeTextKrixkrax", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID());
 		if (auto timeText = std::static_pointer_cast<ape::ITextGeometry>(mTimeText.lock()))
 		{
 			timeText->setCaption(std::to_string(mTime));
@@ -35,12 +35,12 @@ void WaterGame::GameManager::Init()
 	}
 
 	APE_LOG_TRACE("scoreText create");
-	if (auto scoreNode = mpSceneManager->createNode("scoreNode").lock())
+	if (auto scoreNode = mpSceneManager->createNode("scoreNode", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		scoreNode->setParentNode(mUserBodyNode);
 		scoreNode->setPosition(ape::Vector3(18, 10, -40));
 
-		mScoreText = mpSceneManager->createEntity("scoreText", ape::Entity::GEOMETRY_TEXT);
+		mScoreText = mpSceneManager->createEntity("scoreText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID());
 		if (auto scoreText = std::static_pointer_cast<ape::ITextGeometry>(mScoreText.lock()))
 		{
 			scoreText->setCaption(std::to_string(mScore));
@@ -137,7 +137,7 @@ void WaterGame::GameManager::UpdateScore(int score)
 
 void WaterGame::GameManager::UpdateStatus()
 {
-	mStatusText = mpSceneManager->createEntity("statusText", ape::Entity::GEOMETRY_TEXT);
+	mStatusText = mpSceneManager->createEntity("statusText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID());
 	if (auto statusText = std::static_pointer_cast<ape::ITextGeometry>(mStatusText.lock()))
 	{
 		statusText->setCaption("Game Over");

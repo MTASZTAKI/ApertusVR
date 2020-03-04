@@ -363,8 +363,8 @@ exports.parseMaterial = function(matItem, parentGeometry) {
 	if (matItem && matItem[0]) {
 		var itemName = matItem[0].itemName || parentGeometry.getName() + 'material';
 		log('itemName: ' + itemName);
-		var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(itemName);
-		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass');
+		var manualMaterial = ape.nbind.JsBindManager().createManualMaterial(itemName, true);
+		//var manualPass = ape.nbind.JsBindManager().createManualPass(itemName + 'ManualPass', true);
 		var transparency = self.parseTransparencyAttr(matItem);
 		var diffuseColor = self.parseDiffuseColorAttr(matItem, transparency);
 		//var specularColor = self.parseSpecularColorAttr(matItem, transparency);
@@ -447,7 +447,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				//  TODO: create a textGeometry
 			}
 		} else if (tagName == 'scene') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyLoadingFileName);
+			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyLoadingFileName, true);
 			nodeLevel++;
 			nodeObj.setScale(new ape.nbind.Vector3(currentlyLoadingScale[0], currentlyLoadingScale[1], currentlyLoadingScale[2]));
 			nodeObj.setOrientation(new ape.nbind.Quaternion(currentlyLoadingOrientation[0], currentlyLoadingOrientation[1], currentlyLoadingOrientation[2], currentlyLoadingOrientation[3]));
@@ -515,7 +515,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			var HANDLING = groupNodeObjName.indexOf("handling");
 			var FIXTURE = groupNodeObjName.indexOf("WeldingFixture@p");
 			if (HANDLING < 0 && FIXTURE < 0) {
-				var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(itemName);
+				var indexedFaceSetObj = ape.nbind.JsBindManager().createIndexedFaceSet(itemName, true);
 				var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
 				var coordIndexArr = self.parseCoordIndexAttr(currentItem);
 				var normals = self.parseNormals(currentItem);
@@ -524,7 +524,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
 
 				/// RigidBody
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', false);
 				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
 				rigidBodyObj.setToStatic();
 
@@ -557,16 +557,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			var use = currentItem.attr('USE');
 			if (utils.isDefined(use)) {
 				var geometryName = use + currentlyLoadingFileName;
-				var cloneGeometryObj = ape.nbind.JsBindManager().createCloneGeometry(itemName);
-
-				/*ape.nbind.JsBindManager().createNode("fck");
-				ape.nbind.JsBindManager().getNode("fck", function(error, object) {
-					if (error) {
-						log(error);
-						return;
-					}
-					log('????1.5');
-				});*/
+				var cloneGeometryObj = ape.nbind.JsBindManager().createCloneGeometry(itemName, true);
 				log('SHAPE: ' + geometryName + ' - ' + itemNamesMap.get(geometryName) + ' - ' + itemName);
 				ape.nbind.JsBindManager().getIndexedFaceSet(itemNamesMap.get(geometryName), function(error, object) {
 					if (error) {
@@ -581,7 +572,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				log('GOT_INDEXEDFACESET?');
 
 				/// RigidBody
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body');
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', false);
 				rigidBodyObj.setCloneGeometryJsPtr(cloneGeometryObj);
 				rigidBodyObj.setToStatic();
 
@@ -594,7 +585,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				}
 			}
 		} else if (tagName == 'box') {
-			var boxSetObj = ape.nbind.JsBindManager().createBox(itemName);
+			var boxSetObj = ape.nbind.JsBindManager().createBox(itemName, true);
 			var dimensionsAtrr = self.parseDimensionsAttr(currentItem);
 			boxSetObj.setParameters(dimensionsAtrr);
 			var matItem = currentItem.siblings('Appearance').first().children('Material').first();
@@ -606,7 +597,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			}
 		}
 		/*else if (tagName == 'indexedlineset') {
-		    var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(itemName);
+		    var indexedLineSetObj = ape.nbind.JsBindManager().createIndexedLineSet(itemName, true);
 		    var coordinatePointsArr = self.parseCoordinatePointAttr(currentItem);
 		    var coordIndexArr = self.parseCoordIndexAttr(currentItem);
 		    var color = self.parseColorAttr(currentItem);
@@ -618,7 +609,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		    }
 		}*/
 		else if (tagName == 'transform') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
 			nodeLevel++;
 
 			var position = self.parseTranslationAttr(currentItem);
@@ -635,7 +626,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			return nodeObj;
 		} else if (tagName == 'group') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
 			nodeLevel++;
 
 			if (parentNodeObj) {
@@ -646,7 +637,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			log('groupChanged: ' + groupNodeObj.getName());
 			return nodeObj;
 		} else if (tagName == 'switch') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName);
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
 			nodeLevel++;
 
 			if (parentNodeObj) {

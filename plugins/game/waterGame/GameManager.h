@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <mutex>
 #include "ape.h"
 #include "apeISceneManager.h"
+#include "apeISceneManager.h"
 #include "apeICoreConfig.h"
 #include "apeILogManager.h"
 #include "apeIPlaneGeometry.h"
@@ -38,6 +39,8 @@ namespace WaterGame
 	{
 	private:
 		ape::ISceneManager* mpSceneManager;
+
+		ape::ICoreConfig* mpCoreConfig;
 
 		std::thread* mGameThread;
 

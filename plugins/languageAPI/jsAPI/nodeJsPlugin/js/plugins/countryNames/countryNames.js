@@ -32,7 +32,7 @@ exports.init = function() {
 			console.log('error: ' + error);
 			return;
 		}
-		var textObj = ape.nbind.JsBindManager().createText('countryTextGeometry');
+		var textObj = ape.nbind.JsBindManager().createText('countryTextGeometry', true);
 		textObj.setParentNodeJsPtr(obj);
 
 		setInterval(function() {
