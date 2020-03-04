@@ -104,10 +104,20 @@ ape::NodeWeakPtr ape::PointCloudImpl::getParentNode()
 	return mParentNode;
 }
 
+void ape::PointCloudImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::PointCloudImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::PointCloudImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::PointCloudImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

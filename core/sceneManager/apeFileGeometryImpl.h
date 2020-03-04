@@ -56,15 +56,19 @@ namespace ape
 
 		bool isMergeSubMeshes() override;
 
+		void setVisibilityFlag(unsigned int flag) override;
+
+		unsigned int getVisibilityFlag() override;
+
+		void setOwner(std::string ownerID) override;
+
+		std::string getOwner() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
 
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
-
-		void setVisibilityFlag(unsigned int flag) override;
-
-		unsigned int getVisibilityFlag() override;
 
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;

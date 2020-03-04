@@ -54,6 +54,10 @@ namespace ape
 		virtual void showOnTop(bool show) = 0;
 
 		virtual bool isShownOnTop() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

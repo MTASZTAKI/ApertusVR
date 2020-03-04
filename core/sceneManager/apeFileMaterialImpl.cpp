@@ -71,10 +71,20 @@ ape::TextureWeakPtr ape::FileMaterialImpl::getTexture()
 	return mTexture;
 }
 
+void ape::FileMaterialImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::FileMaterialImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::FileMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::FileMaterialImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

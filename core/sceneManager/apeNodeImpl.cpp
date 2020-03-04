@@ -309,7 +309,7 @@ void ape::NodeImpl::rotate( Radian angle, Vector3 axis, ape::Node::Transformatio
 void ape::NodeImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

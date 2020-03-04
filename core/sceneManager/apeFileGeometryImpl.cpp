@@ -111,10 +111,20 @@ unsigned int ape::FileGeometryImpl::getVisibilityFlag()
 	return mVisibilityFlag;
 }
 
+void ape::FileGeometryImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::FileGeometryImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

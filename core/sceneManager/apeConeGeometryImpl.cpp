@@ -79,10 +79,20 @@ ape::MaterialWeakPtr ape::ConeGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+void ape::ConeGeometryImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::ConeGeometryImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::ConeGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::ConeGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

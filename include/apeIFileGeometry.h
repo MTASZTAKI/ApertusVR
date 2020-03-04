@@ -57,6 +57,10 @@ namespace ape
 		virtual void setVisibilityFlag(unsigned int flag) = 0;
 
 		virtual unsigned int getVisibilityFlag() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

@@ -56,11 +56,20 @@ ape::IFileTexture::MapType ape::FileTextureImpl::getMapType()
 	return mMapType;
 }
 
+void ape::FileTextureImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::FileTextureImpl::getOwner()
+{
+	return mOwnerID;
+}
 
 void ape::FileTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::FileTextureImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

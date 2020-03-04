@@ -138,6 +138,10 @@ namespace ape
 		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 
 		virtual ape::MaterialWeakPtr getMaterial() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

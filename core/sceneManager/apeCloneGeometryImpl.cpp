@@ -81,10 +81,20 @@ std::string ape::CloneGeometryImpl::getSourceGeometryGroupName()
 	return mSourceGeometryGroupName;
 }
 
+void ape::CloneGeometryImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::CloneGeometryImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::CloneGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::CloneGeometryImpl::Serialize(RakNet::SerializeParameters * serializeParameters)

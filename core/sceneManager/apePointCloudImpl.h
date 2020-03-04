@@ -72,6 +72,10 @@ namespace ape
 
 		ape::NodeWeakPtr getParentNode() override;
 
+		void setOwner(std::string ownerID) override;
+
+		std::string getOwner() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;

@@ -44,6 +44,10 @@ namespace ape
 		virtual void setTexture(ape::TextureWeakPtr texture) = 0;
 
 		virtual ape::TextureWeakPtr getTexture() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 
 	typedef std::weak_ptr<IFileMaterial> FileMaterialWeakPtr;

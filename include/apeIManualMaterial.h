@@ -80,6 +80,10 @@ namespace ape
 		virtual void showOnOverlay(bool enable, int zOrder) = 0;
 
 		virtual int getZOrder() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

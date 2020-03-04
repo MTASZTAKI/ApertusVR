@@ -78,10 +78,20 @@ ape::MaterialWeakPtr ape::SphereGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+void ape::SphereGeometryImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::SphereGeometryImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::SphereGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::SphereGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

@@ -149,10 +149,20 @@ int ape::ManualMaterialImpl::getZOrder()
 	return mZOrder;
 }
 
+void ape::ManualMaterialImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::ManualMaterialImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::ManualMaterialImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::ManualMaterialImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

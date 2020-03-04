@@ -77,10 +77,20 @@ ape::MaterialWeakPtr ape::TubeGeometryImpl::getMaterial()
 	return mMaterial;
 }
 
+void ape::TubeGeometryImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::TubeGeometryImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::TubeGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::TubeGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

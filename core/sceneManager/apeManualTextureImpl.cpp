@@ -115,10 +115,20 @@ void ape::ManualTextureImpl::unRegisterFunction(std::function<void()> callback)
 	}
 }
 
+void ape::ManualTextureImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::ManualTextureImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::ManualTextureImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 	allocationIdBitstream->Write(mParameters);
 }
 

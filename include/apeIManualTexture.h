@@ -95,6 +95,10 @@ namespace ape
 		virtual std::vector<std::function<void()>> getFunctionList() = 0;
 
 		virtual void unRegisterFunction(std::function<void()> callback) = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

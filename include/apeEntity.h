@@ -64,7 +64,7 @@ namespace ape
 		};
 
 	protected:
-		Entity(std::string name, Type type, bool replicate, std::string ownerID) : mName(name), mType(type), mIsReplicated(replicate), mOwnerID(ownerID) {};
+		Entity(std::string name, Type type, bool replicate, std::string ownerID) : mName(name), mType(type), mIsReplicated(replicate) {};
 
 		virtual ~Entity() {};
 
@@ -73,8 +73,6 @@ namespace ape
 		Type mType;
 
 		bool mIsReplicated;
-
-		std::string mOwnerID;
 
 	public:
 		std::string getName()
@@ -90,16 +88,6 @@ namespace ape
 		bool isReplicated()
 		{
 			return mIsReplicated;
-		};
-
-		void setOwner(std::string ownerID)
-		{
-			mOwnerID = ownerID;
-		};
-
-		std::string getOwner()
-		{
-			return mOwnerID;
 		};
 	};
 }

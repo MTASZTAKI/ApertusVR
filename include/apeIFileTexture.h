@@ -54,6 +54,10 @@ namespace ape
 		virtual void setMapType (MapType mapType) = 0;
 
 		virtual MapType getMapType () = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

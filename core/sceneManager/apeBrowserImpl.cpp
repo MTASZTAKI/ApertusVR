@@ -161,10 +161,20 @@ void ape::BrowserImpl::reload()
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RELOAD));
 }
 
+void ape::BrowserImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::BrowserImpl::getOwner()
+{
+	return mOwnerID;
+}
+
 void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::BrowserImpl::Serialize(RakNet::SerializeParameters *serializeParameters)

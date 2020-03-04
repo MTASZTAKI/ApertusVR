@@ -108,6 +108,10 @@ namespace ape
 		virtual void setFocusOnEditableField(bool enable) = 0;
 
 		virtual void reload() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 
