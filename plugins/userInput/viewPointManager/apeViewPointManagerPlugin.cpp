@@ -38,27 +38,27 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 {
 	//APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 	mIsKeyReleased = false;
-	if (keyValue == "r")
-	{
-		mpUserInputMacro->saveViewPose();
-		return;
-	}
-	else if (keyValue == "t")
-	{
-		toggleViewPoses(false);
-		return;
-	}
-	else if (keyValue == "i")
-	{
-		toggleViewPoses(true);
-		return;
-	}
-	else if (keyValue == "space")
-	{
-		mGeneralSpeedFactor += 3;
-	}
 	if (!mIsKeyboardLockedByBrowser)
 	{
+		if (keyValue == "r")
+		{
+			mpUserInputMacro->saveViewPose();
+			return;
+		}
+		else if (keyValue == "t")
+		{
+			toggleViewPoses(false);
+			return;
+		}
+		else if (keyValue == "i")
+		{
+			toggleViewPoses(true);
+			return;
+		}
+		else if (keyValue == "space")
+		{
+			mGeneralSpeedFactor += 3;
+		}
 		std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
 		updateViewPoseByKeyBoardThread.detach();
 	}
@@ -123,6 +123,7 @@ void ape::ViewPointManagerPlugin::eventCallBack(const ape::Event& event)
 {
 	if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
 	{
+		//APE_LOG_DEBUG("BROWSER_FOCUS_ON_EDITABLE_FIELD: " << event.subjectName);
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			if (browser->isFocusOnEditableField())

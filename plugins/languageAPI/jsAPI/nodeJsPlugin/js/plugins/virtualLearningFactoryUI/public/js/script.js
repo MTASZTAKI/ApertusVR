@@ -174,7 +174,7 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		//updateMap();
+    		updateMap();
     	}, 500);
     }
     sock.onerror = (e)=>{
