@@ -85,6 +85,7 @@ bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstre
 
 RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNet::Connection_RM3 *droppedConnection ) const
 {
+	//return RakNet::RM3AOPC_DO_NOTHING;
 	return QueryActionOnPopConnection_Client(droppedConnection);
 }
 
@@ -97,12 +98,32 @@ void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 		mpSceneManager->deleteNode(mReplicaName);
 	else
 		mpSceneManager->deleteEntity(mReplicaName);
-	//delete this;
 }
 
 RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
 {
-	return QuerySerialization_ClientSerializable(destinationConnection, mIsHost);
+	if (creatingSystemGUID == replicaManager->GetRakPeerInterface()->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS))
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	if (mIsHost && destinationConnection->GetRakNetGUID() != creatingSystemGUID)
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	if (mOwnerID != creatingSystemGUID.ToString())
+		APE_LOG_DEBUG("I would like to own this replica: " << mReplicaName);
+	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
+}
+
+void ape::Replica::OnUserReplicaPreSerializeTick()
+{
+	mVariableDeltaSerializer.OnPreSerializeTick();
+}
+
+void ape::Replica::OnPoppedConnection(RakNet::Connection_RM3 *droppedConnection)
+{
+	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(droppedConnection->GetRakNetGUID());
+}
+
+void ape::Replica::NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived)
+{
+	mVariableDeltaSerializer.OnMessageReceipt(guid, receiptId, messageArrived);
 }
 
 void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer)
@@ -113,21 +134,6 @@ void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPe
 void ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
 {
 
-}
-
-void ape::Replica::OnUserReplicaPreSerializeTick()
-{
-	mVariableDeltaSerializer.OnPreSerializeTick();
-}
-
-void ape::Replica::OnPoppedConnection( RakNet::Connection_RM3 *droppedConnection )
-{
-	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(droppedConnection->GetRakNetGUID());
-}
-
-void ape::Replica::NotifyReplicaOfMessageDeliveryStatus( RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived )
-{
-	mVariableDeltaSerializer.OnMessageReceipt(guid,receiptId,messageArrived);
 }
 
 void ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )

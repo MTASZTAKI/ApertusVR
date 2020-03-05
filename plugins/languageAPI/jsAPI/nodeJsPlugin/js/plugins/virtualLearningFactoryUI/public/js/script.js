@@ -1,5 +1,6 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var userNodeName;
+var userID;
 var userNodePostion;
 var otherUserNodeNames = [];
 var otherUserNodePositions = [];
@@ -9,18 +10,19 @@ function getNodesNames() {
 	doGetRequest(apiEndPoint + 'nodeNames/', function (res) {
 		var nodeNames = res.data.items;
 		console.log('getNodesNames(): res: ', nodeNames);
-
 		nodeNames.forEach(function (element) {
 			genNodeItem(element.name);
 		});
 	});
 }
 
-function getUserNodeName() {
-	console.log('getUserNodeName()');
+function getUserNodeNameAndID() {
+	console.log('getUserNodeNameAndID()');
 	doGetRequest(apiEndPoint + 'userNodeName/', function (res) {
 		userNodeName = res.data.items[0].name;
+		userID = res.data.items[1].ownerID;
 		console.log('userNodeName(): res: ', userNodeName);
+		console.log('userID(): res: ', userID);
 	});
 }
 
@@ -108,7 +110,7 @@ function showChat() {
 function showUsers() {
 	console.log('toogle users');
 	$('#users').toggle();
-	getUserNodeName();
+	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	var usersDiv = document.getElementById('users');
 	otherUserNodeNames.forEach(function (element) {
@@ -134,7 +136,7 @@ function showUsers() {
 
 function updateMap() {
 	console.log('update map');
-	getUserNodeName();
+	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
 	getOtherUserNodePositions();
@@ -164,7 +166,7 @@ function showMap() {
 }
 
 $(document).ready(function () {
-	getUserNodeName();
+	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
 	getOtherUserNodePositions();
@@ -174,7 +176,7 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		updateMap();
+    		//updateMap();
     	}, 500);
     }
     sock.onerror = (e)=>{
@@ -188,11 +190,21 @@ $(document).ready(function () {
         var eventObj = JSON.parse(e.data);
         console.log('eventObj: ', eventObj);
 		
-		if (eventObj.type == 9) { 
+		if (eventObj.type == 10) { 
 			$("#nodeName").val(eventObj.subjectName);
             nodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', nodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = nodeName;
+
+			console.log('try to attach server created node to me: ', nodeName);
+			doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userID + '/owner', function (res) {
+				var ownerID = res.data.items[0].ownerID;
+				console.log('post setOwner() res: ', ownerID);
+				doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userNodeName + '/parent', function (res) {
+					var parentNodeName = res.data.items[0].parentName;
+					console.log('post attachNodeToMe res: ', parentNodeName);
+				});
+			});
         }
     }
 });

@@ -23,6 +23,7 @@ SOFTWARE.*/
 #ifndef APE_REPLICA_H
 #define APE_REPLICA_H
 
+#include "RakPeerInterface.h"
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 #include "GetTime.h"
@@ -85,15 +86,15 @@ namespace ape
 		
 		virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters) = 0;
 
+		void OnUserReplicaPreSerializeTick();
+
+		void OnPoppedConnection(RakNet::Connection_RM3 *droppedConnection);
+
+		void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived);
+
 		virtual void listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPeer);
 
 		virtual void listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer);
-		
-		void OnUserReplicaPreSerializeTick();
-		
-		void OnPoppedConnection(RakNet::Connection_RM3 *droppedConnection);
-		
-		void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived);
 		
 	};
 }

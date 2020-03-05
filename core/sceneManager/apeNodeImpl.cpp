@@ -309,7 +309,8 @@ void ape::NodeImpl::rotate( Radian angle, Vector3 axis, ape::Node::Transformatio
 void ape::NodeImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
@@ -324,6 +325,7 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mOwnerID.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -333,6 +335,7 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString parentName;
+	RakNet::RakString ownerID;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPosition))
@@ -358,5 +361,9 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_FIXEDYAW));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsInheritOrientation))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, ownerID))
+	{
+		setOwner(ownerID.C_String());
+	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

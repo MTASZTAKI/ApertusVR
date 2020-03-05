@@ -48,6 +48,7 @@ app.get('/userNodeName', function(req, res) {
 		}
 		else {
 			respObj.addDataItem({ name: obj.getName() });
+			respObj.addDataItem({ ownerID: obj.getOwner() });
 			res.send(respObj.toJSonString());
 		}
 	});
@@ -564,6 +565,36 @@ app.post('/nodes/:name/:parentName/parent', function (req, res) {
 			respObj.addDataItem({ parentName: "" });
 			res.send(respObj.toJSonString());
 		}
+	});
+});
+
+app.post('/nodes/:name/:ownerID/owner', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the owner of the specified node.');
+
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkParams('ownerID', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	var ownerID = req.params.ownerID;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCastNode',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+		obj.setOwner(ownerID);
+		respObj.addDataItem({ ownerID: obj.getOwner() });
+		res.send(respObj.toJSonString());
 	});
 });
 
