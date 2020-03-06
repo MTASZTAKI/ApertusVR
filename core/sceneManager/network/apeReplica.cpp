@@ -107,7 +107,10 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 	if (mIsHost && destinationConnection->GetRakNetGUID() != creatingSystemGUID)
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	if (mOwnerID != creatingSystemGUID.ToString())
+	{
 		APE_LOG_DEBUG("I would like to own this replica: " << mReplicaName);
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	}
 	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
 }
 
