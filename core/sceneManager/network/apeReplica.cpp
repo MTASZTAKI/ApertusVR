@@ -110,13 +110,13 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 		}
 		else
 		{
-			//APE_LOG_DEBUG("Hey, my replica: " << mReplicaName << " is requested to be owned by the system: " << mOwnerID);
 			if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
 			{
-				return RakNet::RM3QSR_CALL_SERIALIZE;
+				//return RakNet::RM3QSR_CALL_SERIALIZE;
 			}
 			else
 			{
+				APE_LOG_DEBUG("Replica: " << mReplicaName << " is requested to be serialized by: " << mOwnerID << " therefore, it is not serialized");
 				return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
 			}
 		}
@@ -125,9 +125,9 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 	{
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
-	if (mOwnerID != creatingSystemGUID.ToString())
+	if ((mOwnerID != creatingSystemGUID.ToString()) && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
 	{
-		//APE_LOG_DEBUG("I would like to own this replica: " << mReplicaName << " from the system: " << creatingSystemGUID.ToString());
+		APE_LOG_DEBUG("Request to serialize this replica: " << mReplicaName << " creator: " << creatingSystemGUID.ToString() << " to: " << destinationConnection->GetRakNetGUID().ToString());
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
 	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;

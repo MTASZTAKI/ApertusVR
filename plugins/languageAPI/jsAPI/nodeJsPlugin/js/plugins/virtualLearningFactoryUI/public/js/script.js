@@ -51,23 +51,27 @@ function getOtherUserNodePositions() {
 	});
 }
 
-function attach2UserNode(newParentNodeName) {
-	console.log('try to attach2UserNode: ', newParentNodeName);
-	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + newParentNodeName + '/parent', function (res) {
+function attachOtherUserNode2Me(otherUserNodeName) {
+	console.log('try to attachOtherUserNode2Me: ', otherUserNodeName);
+	doGetRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + userNodeName + '/parent', function (res) {
 		var currentParentNodeName = res.data.items[0].parentName;
 		console.log('get parentNodeName(): currentParentNodeName: ', currentParentNodeName);
-		if (currentParentNodeName == newParentNodeName) {
-			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + "root" + '/parent', function (res) {
+		if (currentParentNodeName == userNodeName) {
+			doPostRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + "root" + '/parent', function (res) {
 				var parentNodeName = res.data.items[0].parentName;
 				console.log('post setParent() zero: res: ', parentNodeName);
 				$('#users').toggle();
 			});
 		}
 		else {
-			doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + newParentNodeName + '/parent', function (res) {
-				var parentNodeName = res.data.items[0].parentName;
-				console.log('post setParent(): res: ', parentNodeName);
-				$('#users').toggle();
+			doPostRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + userID + '/owner', function (res) {
+				var ownerID = res.data.items[0].ownerID;
+				console.log('post setOwner() res: ', ownerID);
+				doPostRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + userNodeName + '/parent', function (res) {
+					var parentNodeName = res.data.items[0].parentName;
+					console.log('post setParent(): res: ', parentNodeName);
+					$('#users').toggle();
+				});
 			});
 		}
 	});
@@ -124,10 +128,10 @@ function showUsers() {
 			newDiv.innerHTML = element.name;
 			newDiv.addEventListener('click', function () {
 				var pos = {x: 0, y: 0, z: 0};
-				setNodePosition(userNodeName, pos);
+				setNodePosition(element.name, pos);
 				var ori = {w: 1, x: 0, y: 0, z: 0};
-				setNodeOrientation(userNodeName, ori);
-				attach2UserNode(element.name);
+				setNodeOrientation(element.name, ori);
+				attachOtherUserNode2Me(element.name);
 			});
 			usersDiv.appendChild(newDiv);
 		}
@@ -196,7 +200,7 @@ $(document).ready(function () {
 			console.log(' show bounding box - select: ', nodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = nodeName;
 
-			console.log('try to attach server created node to me: ', nodeName);
+			/*console.log('try to attach server created node to me: ', nodeName);
 			doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userID + '/owner', function (res) {
 				var ownerID = res.data.items[0].ownerID;
 				console.log('post setOwner() res: ', ownerID);
@@ -204,7 +208,7 @@ $(document).ready(function () {
 					var parentNodeName = res.data.items[0].parentName;
 					console.log('post attachNodeToMe res: ', parentNodeName);
 				});
-			});
+			});*/
         }
     }
 });
