@@ -363,7 +363,6 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, ownerID))
 	{
-		APE_LOG_DEBUG("Hey, the replica: " << mName << " is requested to be owned by the system: " << ownerID);
 		setOwner(ownerID.C_String());
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
