@@ -23,6 +23,9 @@ SOFTWARE.*/
 #include "apeHttpManager.h"
 #include <sstream>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <streambuf>
 #ifdef HTTPMANAGER_USE_CURL
 	#include <curl/curl.h>
 	#include <curl/easy.h>
@@ -59,43 +62,96 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 #ifdef HTTPMANAGER_USE_CURL
 	if (mpCurl)
 	{
-		FILE *fp;
-		auto posLastFwdSlash = url.find_last_of("/");
-		//auto posLastDot = url.find_last_of(".");
-		auto fileName = url.substr(posLastFwdSlash + 1, url.length());
-		std::stringstream filePath;
-		std::size_t found = location.find(":");
-		if (found != std::string::npos)
+		bool isNeedToDownload = false;
+		if (md5.size())
 		{
-			filePath << location << "/" << fileName;
+			APE_LOG_DEBUG("try to download md5 hash from: " << md5);
+			std::stringstream remoteMD5Content;
+			curl_easy_setopt(mpCurl, CURLOPT_URL, md5.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_data);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, &remoteMD5Content);
+			CURLcode res = curl_easy_perform(mpCurl);
+			if (res != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
+			}
+			else
+			{
+				auto posLastFwdSlash = md5.find_last_of("/");
+				auto fileName = md5.substr(posLastFwdSlash + 1, md5.length());
+				std::stringstream filePath;
+				std::size_t found = location.find(":");
+				if (found != std::string::npos)
+				{
+					filePath << location << "/" << fileName;
+				}
+				found = location.find("./");
+				if (found != std::string::npos)
+				{
+					filePath << location << "/" << fileName;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					filePath << resourceLocationPath.str() << "/" << fileName;
+				}
+				APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str());
+				std::ifstream localMD5(filePath.str().c_str());
+				std::string localMD5Content((std::istreambuf_iterator<char>(localMD5)), std::istreambuf_iterator<char>());
+				std::string remoteMD5ContentStr = remoteMD5Content.str().substr(0, remoteMD5Content.str().length() - 1);
+				APE_LOG_DEBUG("local: " << localMD5Content << " remote: " << remoteMD5ContentStr);
+				if (localMD5Content != remoteMD5ContentStr)
+				{
+					APE_LOG_DEBUG("need to update the resources...");
+					isNeedToDownload = true;
+				}
+				else
+				{
+					APE_LOG_DEBUG("resources are up-to-date");
+					isNeedToDownload = false;
+				}
+			}
 		}
-		found = location.find("./");
-		if (found != std::string::npos)
+		if (isNeedToDownload)
 		{
-			filePath << location << "/" << fileName;
+			FILE *downloadedZip;
+			auto posLastFwdSlash = url.find_last_of("/");
+			auto fileName = url.substr(posLastFwdSlash + 1, url.length());
+			std::stringstream filePath;
+			std::size_t found = location.find(":");
+			if (found != std::string::npos)
+			{
+				filePath << location << "/" << fileName;
+			}
+			found = location.find("./");
+			if (found != std::string::npos)
+			{
+				filePath << location << "/" << fileName;
+			}
+			else
+			{
+				std::stringstream resourceLocationPath;
+				resourceLocationPath << APE_SOURCE_DIR << location;
+				filePath << resourceLocationPath.str() << "/" << fileName;
+			}
+			APE_LOG_DEBUG("try to download from: " << url << " to: " << filePath.str());
+			downloadedZip = fopen(filePath.str().c_str(), "wb");
+			curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_file);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedZip);
+			CURLcode res = curl_easy_perform(mpCurl);
+			if (res != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
+			}
+			else
+			{
+				//TODO unzip the files
+				APE_LOG_DEBUG("try to unzip to: " << filePath.str());
+			}
+			fclose(downloadedZip);
 		}
-		else
-		{
-			std::stringstream resourceLocationPath;
-			resourceLocationPath << APE_SOURCE_DIR << location;
-			filePath << resourceLocationPath.str() << "/" << fileName;
-		}
-		APE_LOG_DEBUG("try to download from: " << url << " to: " << filePath.str());
-		fp = fopen(filePath.str().c_str(), "wb");
-		curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_file);
-		curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, fp);
-		//if (md5.size())
-		//{
-		//	curl_easy_setopt(mpCurl, CURLOPT_URL, md5.c_str());
-		//	//curl_easy_setopt(mpCurl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, md5);
-		//}
-		CURLcode res = curl_easy_perform(mpCurl);
-		if (res != CURLE_OK)
-		{
-			APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
-		}
-		fclose(fp);
 	}
 #endif
 	return false;
