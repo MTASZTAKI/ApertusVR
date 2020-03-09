@@ -79,6 +79,8 @@ namespace ape
 		bool removeSession(const std::string& sessionName);
 		
 		bool getSessionHostGuid(std::string& sessionName, std::string& guid);
+
+		bool downloadResources(const std::string& url, const std::string& location, const std::string& md5 = "");
 	};
 }
 

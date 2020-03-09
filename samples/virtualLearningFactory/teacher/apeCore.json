@@ -29,6 +29,9 @@
       "port": ""
     },
     "selected": "internet",
+    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/resources/PickAndPlace/PickAndPlace.zip",
+    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/resources/PickAndPlace/PickAndPlace.md5",
+    "resourceDownloadLocation": "/samples/virtualLearningFactory/resources",
     "resourceLocations": [
       "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",

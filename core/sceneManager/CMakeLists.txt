@@ -132,7 +132,7 @@ if (WIN32)
 endif ()
 
 target_link_libraries(apeSceneManager ${APE_LINK_LIBS_SCENEMANAGER})
-set_property(TARGET apeSceneManager PROPERTY COMPILE_DEFINITIONS ${APE_PREPROC_DEF_SCENEMANAGER})
+set_property(TARGET apeSceneManager PROPERTY COMPILE_DEFINITIONS ${APE_PREPROC_DEF_SCENEMANAGER} APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property(TARGET apeSceneManager PROPERTY FOLDER "Core")

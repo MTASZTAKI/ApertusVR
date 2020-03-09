@@ -112,6 +112,18 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 					}
 
 				}
+				else if (networkMemberIterator->name == "resourceZipUrl")
+				{
+					mNetworkConfig.resourceZipUrl = networkMemberIterator->value.GetString();
+				}
+				else if (networkMemberIterator->name == "resourceMd5Url")
+				{
+					mNetworkConfig.resourceMd5Url = networkMemberIterator->value.GetString();
+				}
+				else if (networkMemberIterator->name == "resourceDownloadLocation")
+				{
+					mNetworkConfig.resourceDownloadLocation = networkMemberIterator->value.GetString();
+				}
 				else if (networkMemberIterator->name == "resourceLocations")
 				{
 					for (auto& resourceLocation : jsonDocument["network"]["resourceLocations"].GetArray())

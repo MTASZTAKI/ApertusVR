@@ -1,5 +1,6 @@
 #include "apeLobbyManager.h"
 #include "rapidjson/document.h"
+
 #include <string>
 #include <sstream>
 
@@ -196,4 +197,9 @@ bool ape::LobbyManager::getSessionHostGuid(std::string& sessionName, std::string
 	}
 
 	return false;
+}
+
+bool ape::LobbyManager::downloadResources(const std::string& url, const std::string& location, const std::string& md5)
+{
+	return mHttpManager.downloadResources(url, location, md5);
 }

@@ -47,6 +47,8 @@ namespace ape
 		
 		~HttpManager();
 
+		bool downloadResources(const std::string& url, const std::string& location, const std::string& md5 = "");
+
 		std::string download(const std::string& url);
 		
 		std::string post(const std::string& url, const std::string& data);

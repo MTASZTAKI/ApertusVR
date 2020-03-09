@@ -63,6 +63,11 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 		{
 			APE_LOG_DEBUG("use lobbyManager to get scene session guid");
 			std::string name = mpCoreConfig->getNetworkConfig().lobbyConfig.roomName;
+			if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+			{
+				APE_LOG_DEBUG("use lobbyManager to update the resources...");
+				mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+			}
 			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
 			APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 			//if (getSessionRes && !uuid.empty())

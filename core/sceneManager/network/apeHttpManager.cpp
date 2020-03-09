@@ -35,6 +35,11 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
     return size * nmemb;
 }
 
+size_t write_file(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	return written;
+}
+
 ape::HttpManager::HttpManager()
 {
 #ifdef HTTPMANAGER_USE_CURL
@@ -47,6 +52,53 @@ ape::HttpManager::~HttpManager()
 #ifdef HTTPMANAGER_USE_CURL
     curl_easy_cleanup(mpCurl);
 #endif
+}
+
+bool ape::HttpManager::downloadResources(const std::string& url, const std::string& location, const std::string& md5)
+{
+#ifdef HTTPMANAGER_USE_CURL
+	if (mpCurl)
+	{
+		FILE *fp;
+		auto posLastFwdSlash = url.find_last_of("/");
+		//auto posLastDot = url.find_last_of(".");
+		auto fileName = url.substr(posLastFwdSlash + 1, url.length());
+		std::stringstream filePath;
+		std::size_t found = location.find(":");
+		if (found != std::string::npos)
+		{
+			filePath << location << "/" << fileName;
+		}
+		found = location.find("./");
+		if (found != std::string::npos)
+		{
+			filePath << location << "/" << fileName;
+		}
+		else
+		{
+			std::stringstream resourceLocationPath;
+			resourceLocationPath << APE_SOURCE_DIR << location;
+			filePath << resourceLocationPath.str() << "/" << fileName;
+		}
+		APE_LOG_DEBUG("try to download from: " << url << " to: " << filePath.str());
+		fp = fopen(filePath.str().c_str(), "wb");
+		curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_file);
+		curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, fp);
+		//if (md5.size())
+		//{
+		//	curl_easy_setopt(mpCurl, CURLOPT_URL, md5.c_str());
+		//	//curl_easy_setopt(mpCurl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, md5);
+		//}
+		CURLcode res = curl_easy_perform(mpCurl);
+		if (res != CURLE_OK)
+		{
+			APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
+		}
+		fclose(fp);
+	}
+#endif
+	return false;
 }
 
 std::string ape::HttpManager::download(const std::string& url)

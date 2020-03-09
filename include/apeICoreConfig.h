@@ -138,6 +138,12 @@ namespace ape
 
 		LanConfig lanConfig;
 
+		std::string resourceZipUrl;
+
+		std::string resourceMd5Url;
+
+		std::string resourceDownloadLocation;
+
 		std::vector<std::string> resourceLocations;
 
 		LobbyConfig lobbyConfig;
@@ -149,6 +155,9 @@ namespace ape
 			this->userName = std::string();
 			this->natPunchThroughConfig = NatPunchThroughConfig();
 			this->lanConfig = LanConfig();
+			this->resourceZipUrl = std::string();
+			this->resourceMd5Url = std::string();
+			this->resourceDownloadLocation = std::string();
 			this->resourceLocations = std::vector<std::string>();
 			this->lobbyConfig = LobbyConfig();
 			this->selected = Selected::INVALID;
@@ -159,6 +168,9 @@ namespace ape
 			std::string userName,
 			NatPunchThroughConfig natPunchThroughConfig,
 			LanConfig lanConfig,
+			std::string resourceZipUrl,
+		    std::string resourceMd5Url,
+			std::string resourceDownloadLocation,
 			std::vector<std::string> resourceLocations,
 			LobbyConfig lobbyConfig,
 			Selected selected,
@@ -168,6 +180,9 @@ namespace ape
 			this->userName = userName;
 			this->natPunchThroughConfig = natPunchThroughConfig;
 			this->lanConfig = lanConfig;
+			this->resourceZipUrl = resourceZipUrl;
+			this->resourceMd5Url = resourceMd5Url;
+			this->resourceDownloadLocation = resourceDownloadLocation;
 			this->resourceLocations = resourceLocations;
 			this->lobbyConfig = lobbyConfig;
 			this->selected = selected;
