@@ -147,7 +147,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						{
 							auto ogreParentNode = ogreNode->getParentSceneNode();
 							if (ogreParentNode)
+							{
 								ogreParentNode->removeChild(ogreNode);
+								mpOgreSceneManager->getRootSceneNode()->addChild(ogreNode);
+							}
 						}
 							break;
 						case ape::Event::Type::NODE_POSITION:

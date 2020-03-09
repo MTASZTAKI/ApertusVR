@@ -52,6 +52,10 @@ function getOtherUserNodePositions() {
 }
 
 function attachOtherUserNode2Me(otherUserNodeName) {
+	var pos = { x: 0, y: 0, z: 0 };
+	setNodePosition(otherUserNodeName, pos);
+	var ori = { w: 1, x: 0, y: 0, z: 0 };
+	setNodeOrientation(otherUserNodeName, ori);
 	console.log('try to attachOtherUserNode2Me: ', otherUserNodeName);
 	doGetRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + userNodeName + '/parent', function (res) {
 		var currentParentNodeName = res.data.items[0].parentName;
@@ -133,10 +137,6 @@ function showUsers() {
 			newDiv.id = element.name;
 			newDiv.innerHTML = element.name;
 			newDiv.addEventListener('click', function () {
-				var pos = {x: 0, y: 0, z: 0};
-				setNodePosition(element.name, pos);
-				var ori = {w: 1, x: 0, y: 0, z: 0};
-				setNodeOrientation(element.name, ori);
 				attachOtherUserNode2Me(element.name);
 			});
 			usersDiv.appendChild(newDiv);
@@ -186,7 +186,7 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		//updateMap();
+    		updateMap();
     	}, 500);
     }
     sock.onerror = (e)=>{
