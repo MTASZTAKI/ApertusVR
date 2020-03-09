@@ -61,6 +61,12 @@ function attachOtherUserNode2Me(otherUserNodeName) {
 				var parentNodeName = res.data.items[0].parentName;
 				console.log('post setParent() zero: res: ', parentNodeName);
 				$('#users').toggle();
+				var pos = otherUserNodeName.lastIndexOf("_");
+				var otherUserID = otherUserNodeName.substring(pos + 1, otherUserNodeName.length);
+				doPostRequest(apiEndPoint + "/nodes/" + otherUserNodeName + "/" + otherUserID + '/owner', function (res) {
+					var ownerID = res.data.items[0].ownerID;
+					console.log('post setOwner() res: ', ownerID);
+				});
 			});
 		}
 		else {
@@ -200,7 +206,7 @@ $(document).ready(function () {
 			console.log(' show bounding box - select: ', nodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = nodeName;
 
-			console.log('try to attach server created node to me: ', nodeName);
+			/*console.log('try to attach server created node to me: ', nodeName);
 			doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userID + '/owner', function (res) {
 				var ownerID = res.data.items[0].ownerID;
 				console.log('post setOwner() res: ', ownerID);
@@ -208,7 +214,7 @@ $(document).ready(function () {
 					var parentNodeName = res.data.items[0].parentName;
 					console.log('post attachNodeToMe res: ', parentNodeName);
 				});
-			});
+			});*/
         }
     }
 });

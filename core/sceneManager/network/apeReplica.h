@@ -46,6 +46,8 @@ namespace ape
 
 		std::string mReplicaName;
 
+		bool mIsLastTickSerializedByMe;
+
 	protected:
 		RakNet::RakString mObjectType;
 
