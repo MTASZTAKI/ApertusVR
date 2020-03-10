@@ -20,27 +20,59 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "apeHttpManager.h"
 #include <sstream>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <streambuf>
+#include "apeHttpManager.h"
+#include "zip.h"
 #ifdef HTTPMANAGER_USE_CURL
-	#include <curl/curl.h>
-	#include <curl/easy.h>
+	#include "curl/curl.h"
+	#include "curl/easy.h"
 #endif
 
 size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
+	std::string data((const char*)ptr, (size_t)size * nmemb);
+	*((std::stringstream*) stream) << data << std::endl;
+	return size * nmemb;
+}
+
+bool gLoadRemoteMD5Finished = false;
+
+bool gDownloadRemoteMD5Finished = false;
+
+bool gDownloadRemoteZipFinished = false;
+
+bool gUnzipFinished = false;
+
+size_t loadRemoteMD5(void *ptr, size_t size, size_t nmemb, void *stream)
+{
     std::string data((const char*) ptr, (size_t) size * nmemb);
     *((std::stringstream*) stream) << data << std::endl;
+	gLoadRemoteMD5Finished = true;
     return size * nmemb;
 }
 
-size_t write_file(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t downloadRemoteMD5(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	size_t written = fwrite(ptr, size, nmemb, stream);
+	gDownloadRemoteMD5Finished = true;
 	return written;
+}
+
+size_t downloadRemoteZip(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	gDownloadRemoteZipFinished = true;
+	return written;
+}
+
+int unzip(const char *filename, void *arg) {
+	static int i = 0;
+	int n = *(int *)arg;
+	APE_LOG_DEBUG("Extracted: "<< filename, << " " << ++i << " of " << n);
+	gUnzipFinished = true;
+	return 0;
 }
 
 ape::HttpManager::HttpManager()
@@ -68,7 +100,7 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			APE_LOG_DEBUG("try to download md5 hash from: " << md5);
 			std::stringstream remoteMD5Content;
 			curl_easy_setopt(mpCurl, CURLOPT_URL, md5.c_str());
-			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_data);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, loadRemoteMD5);
 			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, &remoteMD5Content);
 			CURLcode res = curl_easy_perform(mpCurl);
 			if (res != CURLE_OK)
@@ -77,47 +109,14 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			}
 			else
 			{
-				auto posLastFwdSlash = md5.find_last_of("/");
-				auto fileName = md5.substr(posLastFwdSlash + 1, md5.length());
-				std::stringstream filePath;
-				std::size_t found = location.find(":");
-				if (found != std::string::npos)
-				{
-					filePath << location << "/" << fileName;
-				}
-				found = location.find("./");
-				if (found != std::string::npos)
-				{
-					filePath << location << "/" << fileName;
-				}
-				else
-				{
-					std::stringstream resourceLocationPath;
-					resourceLocationPath << APE_SOURCE_DIR << location;
-					filePath << resourceLocationPath.str() << "/" << fileName;
-				}
-				APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str());
-				std::ifstream localMD5(filePath.str().c_str());
-				std::string localMD5Content((std::istreambuf_iterator<char>(localMD5)), std::istreambuf_iterator<char>());
-				std::string remoteMD5ContentStr = remoteMD5Content.str().substr(0, remoteMD5Content.str().length() - 1);
-				APE_LOG_DEBUG("local: " << localMD5Content << " remote: " << remoteMD5ContentStr);
-				if (localMD5Content != remoteMD5ContentStr)
-				{
-					APE_LOG_DEBUG("need to update the resources...");
-					isNeedToDownload = true;
-				}
-				else
-				{
-					APE_LOG_DEBUG("resources are up-to-date");
-					isNeedToDownload = false;
-				}
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(res));
 			}
-		}
-		if (isNeedToDownload)
-		{
-			FILE *downloadedZip;
-			auto posLastFwdSlash = url.find_last_of("/");
-			auto fileName = url.substr(posLastFwdSlash + 1, url.length());
+			while (!gLoadRemoteMD5Finished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			auto posLastFwdSlash = md5.find_last_of("/");
+			auto fileName = md5.substr(posLastFwdSlash + 1, md5.length());
 			std::stringstream filePath;
 			std::size_t found = location.find(":");
 			if (found != std::string::npos)
@@ -135,11 +134,56 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 				resourceLocationPath << APE_SOURCE_DIR << location;
 				filePath << resourceLocationPath.str() << "/" << fileName;
 			}
-			APE_LOG_DEBUG("try to download from: " << url << " to: " << filePath.str());
-			downloadedZip = fopen(filePath.str().c_str(), "wb");
-			curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
-			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_file);
-			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedZip);
+			APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str());
+			std::ifstream localMD5(filePath.str().c_str());
+			if (localMD5.is_open())
+			{
+				std::string localMD5Content((std::istreambuf_iterator<char>(localMD5)), std::istreambuf_iterator<char>());
+				std::string remoteMD5ContentStr = remoteMD5Content.str().substr(0, remoteMD5Content.str().length() - 1);
+				APE_LOG_DEBUG("local: " << localMD5Content << " remote: " << remoteMD5ContentStr);
+				if (localMD5Content != remoteMD5ContentStr)
+				{
+					APE_LOG_DEBUG("need to update the resources...");
+					isNeedToDownload = true;
+				}
+				else
+				{
+					APE_LOG_DEBUG("resources are up-to-date");
+					isNeedToDownload = false;
+				}
+			}
+			else
+			{
+				isNeedToDownload = true;
+			}
+		}
+		if (isNeedToDownload)
+		{
+			FILE *downloadedMd5Hash;
+			auto md5PosLastFwdSlash = md5.find_last_of("/");
+			auto md5FileName = md5.substr(md5PosLastFwdSlash + 1, md5.length());
+			std::stringstream md5FilePath;
+			std::size_t md5Found = location.find(":");
+			if (md5Found != std::string::npos)
+			{
+				md5FilePath << location << "/" << md5FileName;
+			}
+			md5Found = location.find("./");
+			if (md5Found != std::string::npos)
+			{
+				md5FilePath << location << "/" << md5FileName;
+			}
+			else
+			{
+				std::stringstream resourceLocationPath;
+				resourceLocationPath << APE_SOURCE_DIR << location;
+				md5FilePath << resourceLocationPath.str() << "/" << md5FileName;
+			}
+			APE_LOG_DEBUG("try to download from: " << md5 << " to: " << md5FilePath.str());
+			downloadedMd5Hash = fopen(md5FilePath.str().c_str(), "wb");
+			curl_easy_setopt(mpCurl, CURLOPT_URL, md5.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, downloadRemoteMD5);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedMd5Hash);
 			CURLcode res = curl_easy_perform(mpCurl);
 			if (res != CURLE_OK)
 			{
@@ -147,10 +191,77 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			}
 			else
 			{
-				//TODO unzip the files
-				APE_LOG_DEBUG("try to unzip to: " << filePath.str());
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(res));
+			}
+			while (!gDownloadRemoteMD5Finished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			fclose(downloadedMd5Hash);
+			FILE *downloadedZip;
+			auto zipPosLastFwdSlash = url.find_last_of("/");
+			auto zipFileName = url.substr(zipPosLastFwdSlash + 1, url.length());
+			std::stringstream zipFilePath;
+			std::size_t zipFound = location.find(":");
+			if (zipFound != std::string::npos)
+			{
+				zipFilePath << location << "/" << zipFileName;
+			}
+			zipFound = location.find("./");
+			if (zipFound != std::string::npos)
+			{
+				zipFilePath << location << "/" << zipFileName;
+			}
+			else
+			{
+				std::stringstream resourceLocationPath;
+				resourceLocationPath << APE_SOURCE_DIR << location;
+				zipFilePath << resourceLocationPath.str() << "/" << zipFileName;
+			}
+			APE_LOG_DEBUG("try to download from: " << url << " to: " << zipFilePath.str());
+			downloadedZip = fopen(zipFilePath.str().c_str(), "wb");
+			curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, downloadRemoteZip);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedZip);
+			CURLcode zipRes = curl_easy_perform(mpCurl);
+			if (zipRes != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(zipRes));
+			}
+			else
+			{
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(zipRes));
+			}
+			while (!gDownloadRemoteZipFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
 			}
 			fclose(downloadedZip);
+			std::stringstream extractLocation;
+			std::size_t found = location.find(":");
+			if (found != std::string::npos)
+			{
+				extractLocation << location;
+			}
+			found = location.find("./");
+			if (found != std::string::npos)
+			{
+				extractLocation << location;
+			}
+			else
+			{
+				std::stringstream resourceLocationPath;
+				resourceLocationPath << APE_SOURCE_DIR << location;
+				extractLocation << resourceLocationPath.str();
+			}
+			APE_LOG_DEBUG("try to unzip: " << zipFilePath.str() << " to: " << extractLocation.str());
+			int arg = 2;
+			int unzipErrorCode = zip_extract(zipFilePath.str().c_str(), extractLocation.str().c_str(), unzip, &arg);
+			APE_LOG_DEBUG("unzip error code: " << unzipErrorCode);
+			while (!gUnzipFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
 		}
 	}
 #endif
