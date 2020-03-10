@@ -24,6 +24,7 @@
 
 include("network/prepare_curl.cmake")
 include("network/prepare_raknet.cmake")
+include("network/prepare_zip.cmake")
 
 set(HEADERS
 	apeTextGeometryImpl.h
@@ -105,6 +106,7 @@ include_directories(
 	${RAKNET_INCLUDE_DIR}
 	${CURL_INCLUDE_DIRS}
 	${CMAKE_CURRENT_SOURCE_DIR}/network/3rdParty/rapidjson/include
+	${MY_ZIP_INCLUDE_DIR}
 	)
 
 # Add the dinamic library target to the project
@@ -116,6 +118,7 @@ set(APE_LINK_LIBS_SCENEMANAGER
 	apeEventManager
 	apeLogManager
 	RAKNET
+	MY_ZIP
 	)
 
 set(APE_PREPROC_DEF_SCENEMANAGER
