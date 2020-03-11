@@ -33,6 +33,7 @@ ape::NodeImpl::NodeImpl(std::string name, bool replicate, std::string ownerID, b
 	mScale = ape::Vector3(1.0f, 1.0f, 1.0f);
 	mOrientation = ape::Quaternion();
 	mChildrenVisibility = true;
+	mVisibility = true;
 	mIsFixedYaw = false;
 	mIsInheritOrientation = true;
 	mIsReplicated = replicate;
@@ -90,6 +91,11 @@ ape::Vector3 ape::NodeImpl::getDerivedScale() const
 bool ape::NodeImpl::getChildrenVisibility()
 {
 	return mChildrenVisibility;
+}
+
+bool ape::NodeImpl::isVisible()
+{
+	return mVisibility;
 }
 
 bool ape::NodeImpl::isFixedYaw()
@@ -212,6 +218,12 @@ void ape::NodeImpl::setChildrenVisibility(bool visible)
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
 }
 
+void ape::NodeImpl::setVisible(bool visible)
+{
+	mVisibility = visible;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_VISIBILITY));
+}
+
 void ape::NodeImpl::setFixedYaw(bool fix)
 {
 	mIsFixedYaw = fix;
@@ -323,6 +335,7 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mOwnerID.c_str()));
@@ -357,6 +370,8 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_VISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_FIXEDYAW));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsInheritOrientation))

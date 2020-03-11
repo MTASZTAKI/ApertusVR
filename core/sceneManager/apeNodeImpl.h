@@ -54,6 +54,8 @@ namespace ape
 
 		bool getChildrenVisibility() override;
 
+		bool isVisible() override;
+
 		bool isFixedYaw() override;
 		
 		void setParentNode(ape::NodeWeakPtr parentNode) override;
@@ -79,6 +81,8 @@ namespace ape
 		void setScale(Vector3 scale) override;
 
 		void setChildrenVisibility(bool visible) override;
+
+		void setVisible(bool visible) override;
 
 		void setFixedYaw(bool fix) override;
 
@@ -127,6 +131,8 @@ namespace ape
 		ape::Vector3 mScale;
 
 		bool mChildrenVisibility;
+
+		bool mVisibility;
 
 		bool mIsFixedYaw;
 
