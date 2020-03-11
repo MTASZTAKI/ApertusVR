@@ -200,7 +200,7 @@ $(document).ready(function () {
         var eventObj = JSON.parse(e.data);
         console.log('eventObj: ', eventObj);
 		
-		if (eventObj.type == 10) { 
+		if (eventObj.type == 11) { 
 			$("#nodeName").val(eventObj.subjectName);
             nodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', nodeName);

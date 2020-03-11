@@ -127,6 +127,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 								}
 								geometryClone->setParentNode(geometryCloneNode);
 								geometryCloneNode->setParentNode(node);
+								geometryCloneNode->setVisible(false);
 								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
 							}
 						}
@@ -154,10 +155,12 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 		{
 			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
 			{
+				node->setVisible(true);
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
 					//APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode:" << node->getName());
 					node->setParentNode(parentNode);
+					node->setVisible(true);
 				}
 				else
 				{
@@ -200,6 +203,22 @@ void ape::VLFTSceneLoaderPlugin::parseModelsIDs()
 	}
 }
 
+void ape::VLFTSceneLoaderPlugin::parseVisibleNodes()
+{
+	for (auto scene : mScene.get_scene())
+	{
+		if (auto node = mpSceneManager->getNode(scene).lock())
+		{
+			//APE_LOG_DEBUG("scene: " << scene);
+			node->setVisible(true);
+			if (auto cloneNode = mpSceneManager->getNode(scene + "_Clone").lock())
+			{
+				cloneNode->setVisible(true);
+			}
+		}
+	}
+}
+
 void ape::VLFTSceneLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
@@ -217,6 +236,7 @@ void ape::VLFTSceneLoaderPlugin::Run()
 	parseRepresentations();
 	parseModelsAndNodes();
 	parsePlacementRelTo();
+	parseVisibleNodes();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));

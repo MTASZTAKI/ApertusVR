@@ -78,6 +78,8 @@ namespace ape
 
 		void parseModelsIDs();
 
+		void parseVisibleNodes();
+
 		std::map<std::string, std::string> mModelsIDs;
 
 		std::string findGeometryNameByModelName(std::string modelName);
