@@ -192,7 +192,7 @@ public:
 					{
 						if (userNode->getName() != ape::UserInputMacro::getSingletonPtr()->getUserNode().lock()->getName())
 						{
-							APE_LOG_DEBUG("getOtherUserNodeNames: " << userNode->getName());
+							//APE_LOG_DEBUG("getOtherUserNodeNames: " << userNode->getName());
 							otherUserNodeNames.push_back(userNode->getName());
 						}
 					}

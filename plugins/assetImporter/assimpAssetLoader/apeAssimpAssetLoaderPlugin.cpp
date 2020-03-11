@@ -215,13 +215,13 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 						asssimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 						diffuseTextureFileName = path.data;
 					}
-					if (!colorDiffuse.IsBlack())
+					//if (!colorDiffuse.IsBlack())
 						material->setDiffuseColor(ape::Color(colorDiffuse.r, colorDiffuse.g, colorDiffuse.b, opacity));
-					if (!colorSpecular.IsBlack())
+					//if (!colorSpecular.IsBlack())
 						material->setSpecularColor(ape::Color(colorSpecular.r, colorSpecular.g, colorSpecular.b, opacity));
-					if (!colorAmbient.IsBlack())
+					//if (!colorAmbient.IsBlack())
 						material->setAmbientColor(ape::Color(colorAmbient.r, colorAmbient.g, colorAmbient.b));
-					if (!colorEmissive.IsBlack())
+					//if (!colorEmissive.IsBlack())
 						material->setEmissiveColor(ape::Color(colorEmissive.r, colorEmissive.g, colorEmissive.b));
 
 
