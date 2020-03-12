@@ -136,12 +136,12 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 		{
 			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
 			{
-				node->setVisible(true);
+				node->setVisible(false);
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
 					//APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode:" << node->getName());
 					node->setParentNode(parentNode);
-					node->setVisible(true);
+					node->setVisible(false);
 				}
 				else
 				{
