@@ -26,7 +26,6 @@ set (CONFIGS
 	apeOgreRenderPlugin.json
 	apeViewPointManagerPlugin.json
 	apeCore.json
-	apeVLFTAnimationPlayerPlugin.json
 	)
 
 add_custom_target(

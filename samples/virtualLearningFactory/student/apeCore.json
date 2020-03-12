@@ -1,10 +1,13 @@
 {
   "plugins": [
+    "apeNodeJsPlugin",
+    "apeWebSocketServerPlugin",
     "apeOgreRenderPlugin",
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeAssimpAssetLoaderPlugin",
-    "apeVLFTAnimationPlayerPlugin"
+    "apeCefBrowserPlugin",
+    "apeVLFTUIManagerPlugin"
   ],
   "network": {
     "user": "vlft_student",
