@@ -108,7 +108,6 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 								}
 								geometryClone->setParentNode(geometryCloneNode);
 								geometryCloneNode->setParentNode(node);
-								geometryCloneNode->setVisible(false);
 								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
 							}
 						}
@@ -136,12 +135,10 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 		{
 			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
 			{
-				node->setVisible(false);
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
 					//APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode:" << node->getName());
 					node->setParentNode(parentNode);
-					node->setVisible(false);
 				}
 				else
 				{
@@ -186,15 +183,37 @@ void ape::VLFTSceneLoaderPlugin::parseModelsIDs()
 
 void ape::VLFTSceneLoaderPlugin::parseVisibleNodes()
 {
-	for (auto scene : mScene.get_scene())
+	for (auto asset : mScene.get_assets())
 	{
-		if (auto node = mpSceneManager->getNode(scene).lock())
+		bool isAssetVisible = false;
+		for (auto scene : mScene.get_scene())
 		{
-			//APE_LOG_DEBUG("scene: " << scene);
-			node->setVisible(true);
-			if (auto cloneNode = mpSceneManager->getNode(scene + "_Clone").lock())
+			if (asset.get_id() == scene)
 			{
-				cloneNode->setVisible(true);
+				if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
+				{
+					//APE_LOG_DEBUG("visible: " << asset.get_id());
+					node->setVisible(true);
+					if (auto cloneNode = mpSceneManager->getNode(asset.get_id() + "_Clone").lock())
+					{
+						//APE_LOG_DEBUG("visible: " << asset.get_id() + "_Clone");
+						cloneNode->setVisible(true);
+					}
+					isAssetVisible = true;
+				}
+			}
+		}
+		if (!isAssetVisible)
+		{
+			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
+			{
+				//APE_LOG_DEBUG("not visible: " << asset.get_id());
+				node->setVisible(false);
+				if (auto cloneNode = mpSceneManager->getNode(asset.get_id() + "_Clone").lock())
+				{
+					//APE_LOG_DEBUG("not visible: " << asset.get_id() + "_Clone");
+					cloneNode->setVisible(false);
+				}
 			}
 		}
 	}
