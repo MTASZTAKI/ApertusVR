@@ -7,7 +7,6 @@
     "apeViewPointManagerPlugin",
     "apeAssimpAssetLoaderPlugin",
     "apeSampleScenePlugin",
-    "apeVLFTAnimationPlayerPlugin",
     "apeCefBrowserPlugin",
     "apeVLFTUIManagerPlugin",
     "apeVLFTSceneLoaderPlugin"

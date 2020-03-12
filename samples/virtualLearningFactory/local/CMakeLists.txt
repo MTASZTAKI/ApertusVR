@@ -22,7 +22,6 @@
 
 set (CONFIGS
 	apeNodeJsPlugin.json
-	apeVLFTAnimationPlayerPlugin.json
 	apeOgreRenderPlugin.json
     apeViewPointManagerPlugin.json
 	apeVLFTSceneLoaderPlugin.json
