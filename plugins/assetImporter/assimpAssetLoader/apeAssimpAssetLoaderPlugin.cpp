@@ -77,7 +77,6 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			std::string fileName = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("/\\") + 1);
 			std::string fileExtension = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("."));
 			if (fileExtension != ".mesh")
 			{
@@ -99,7 +98,25 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				{
 					//APE_LOG_DEBUG("no root node was founded maybe it can causes problems");
 				}
-				assetConfig.file = fileGeometry->getFileName();
+				std::stringstream assimpAssetFileNamePath;
+				std::string resourceLocationStr = fileGeometry->getFileName();
+				std::size_t found = resourceLocationStr.find(":");
+				if (found != std::string::npos)
+				{
+					assimpAssetFileNamePath << resourceLocationStr;
+				}
+				found = resourceLocationStr.find("./");
+				if (found != std::string::npos)
+				{
+					assimpAssetFileNamePath << resourceLocationStr;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
+					assimpAssetFileNamePath << resourceLocationPath.str();
+				}
+				assetConfig.file = assimpAssetFileNamePath.str();
 				mAssimpAssetConfigs.push_back(assetConfig);
 
 				PhysicsConfig physicsConfig;
@@ -113,7 +130,7 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				physicsConfig.bouyancyEnable = true;
 				mPhysicsConfigs.push_back(physicsConfig);
 
-				readFile(fileGeometry->getFileName());
+				readFile(assetConfig.file);
 			}
 		}
 	}

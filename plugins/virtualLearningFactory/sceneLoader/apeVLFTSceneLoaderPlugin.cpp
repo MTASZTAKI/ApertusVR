@@ -36,27 +36,8 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 		{
 			for (auto representation : *asset.get_representations())
 			{
-				std::stringstream fileFullPath;
 				std::string filePath = representation.get_file();
-				std::size_t found = filePath.find(":");
-				if (found != std::string::npos)
-				{
-					fileFullPath << filePath;
-				}
-				found = filePath.find("./");
-				if (found != std::string::npos)
-				{
-					fileFullPath << filePath;
-				}
-				else
-				{
-					std::stringstream fileFullPathSource;
-					fileFullPathSource << APE_SOURCE_DIR << filePath;
-					fileFullPath << fileFullPathSource.str();
-				}
-				std::string fileFullPathStr = fileFullPath.str();
-				std::string fileName = fileFullPathStr.substr(fileFullPathStr.find_last_of("/\\") + 1);
-				std::string fileExtension = fileFullPathStr.substr(fileFullPathStr.find_last_of("."));
+				std::string fileExtension = filePath.substr(filePath.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
@@ -66,7 +47,7 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							//APE_LOG_DEBUG("fileGeometry: " << asset.get_id());
-							fileGeometry->setFileName(fileFullPathStr);
+							fileGeometry->setFileName(filePath);
 							fileGeometry->setParentNode(node);
 						}
 					}
