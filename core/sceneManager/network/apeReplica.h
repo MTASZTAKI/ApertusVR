@@ -38,8 +38,6 @@ namespace ape
 	private:
 		bool mIsHost;
 
-		void PrintStringInBitstream(RakNet::BitStream *bs);
-
 		ape::ISceneManager* mpSceneManager;
 
 		ape::ICoreConfig* mpCoreConfig;

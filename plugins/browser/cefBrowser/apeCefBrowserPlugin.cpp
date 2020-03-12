@@ -44,12 +44,12 @@ void ape::CefBrowserPlugin::processEvent(ape::Event event)
 				break;
 			case ape::Event::Type::BROWSER_GEOMETRY:
 				{
-					createBrowser(browser);
+					createBrowser(browser, false);
 				}
 				break;
 			case ape::Event::Type::BROWSER_OVERLAY:
 				{
-					createBrowser(browser);
+					createBrowser(browser, true);
 				}
 				break;
 			case ape::Event::Type::BROWSER_ZOOM:
@@ -144,15 +144,15 @@ void ape::CefBrowserPlugin::eventCallBack(const ape::Event& event)
 		processEvent(event);
 }
 
-void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser)
+void ape::CefBrowserPlugin::createBrowser(ape::BrowserSharedPtr browser, bool isOverlay)
 {
 	std::string browserName = browser->getName();
-	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+	if (auto browserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(browserName + "_Material", ape::Entity::MATERIAL_MANUAL, !isOverlay, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		browserMaterial->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
 		browserMaterial->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
 		browserMaterial->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
-		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+		if (auto browserTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(browserName + "_Texture", ape::Entity::TEXTURE_MANUAL, !isOverlay, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			browserTexture->setParameters(browser->getResoultion().x, browser->getResoultion().y, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false, false);
 			browserMaterial->setTexture(browserTexture);

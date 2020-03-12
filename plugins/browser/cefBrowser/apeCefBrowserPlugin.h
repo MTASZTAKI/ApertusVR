@@ -109,7 +109,7 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
-		void createBrowser(ape::BrowserSharedPtr browser);
+		void createBrowser(ape::BrowserSharedPtr browser, bool isOverlay);
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateCefBrowserPlugin()

@@ -79,8 +79,12 @@ void ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream
 
 bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
 {
-	PrintStringInBitstream(destructionBitstream);
-	//APE_LOG_DEBUG("DeserializeDestruction");
+	if (destructionBitstream->GetNumberOfBitsUsed() != 0)
+	{
+		RakNet::RakString rakString;
+		destructionBitstream->Read(rakString);
+		APE_LOG_DEBUG(mReplicaName << " : " << rakString.C_String());
+	}
 	return true;
 }
 
@@ -172,12 +176,4 @@ void ape::Replica::listenStreamPeerSendThread(RakNet::RakPeerInterface* streamPe
 void ape::Replica::listenStreamPeerReceiveThread(RakNet::RakPeerInterface* streamPeer)
 {
 
-}
-
-void ape::Replica::PrintStringInBitstream( RakNet::BitStream *bs )
-{
-	if (bs->GetNumberOfBitsUsed() == 0) return;
-	RakNet::RakString rakString;
-	bs->Read(rakString);
-	APE_LOG_DEBUG("Receive: " << rakString.C_String());
 }
