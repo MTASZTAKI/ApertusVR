@@ -33,6 +33,7 @@ ape::CefBrowserPlugin::~CefBrowserPlugin()
 
 void ape::CefBrowserPlugin::processEvent(ape::Event event)
 {
+	//APE_LOG_DEBUG(event.subjectName);
 	if (event.group == ape::Event::Group::BROWSER)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
@@ -212,7 +213,6 @@ void ape::CefBrowserPlugin::Init()
 		mpapeCefLifeSpanHandlerImpl = new ape::CefLifeSpanHandlerImpl();
 		mpapeCefKeyboardHandlerImpl = new ape::CefKeyboardHandlerImpl();
 		mapeCefClientImpl = new ape::CefClientImpl(mpapeCefRenderHandlerImpl, mpapeCefLifeSpanHandlerImpl, mpapeCefKeyboardHandlerImpl);
-		mCefIsInintialzed = true;
 	}
 	APE_LOG_FUNC_LEAVE();
 }
@@ -220,12 +220,12 @@ void ape::CefBrowserPlugin::Init()
 void ape::CefBrowserPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	if (mCefIsInintialzed)
-	{
-		processEventDoubleQueue();
-		CefRunMessageLoop();
-		CefShutdown();
-	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	//APE_LOG_DEBUG("start");
+	mCefIsInintialzed = true;
+	processEventDoubleQueue();
+	CefRunMessageLoop();
+	CefShutdown();
 	APE_LOG_FUNC_LEAVE();
 }
 
