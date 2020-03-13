@@ -193,11 +193,11 @@ void ape::VLFTSceneLoaderPlugin::parseVisibleNodes()
 				if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
 				{
 					//APE_LOG_DEBUG("visible: " << asset.get_id());
-					node->setVisible(true);
+					//node->setVisible(true);
 					if (auto cloneNode = mpSceneManager->getNode(asset.get_id() + "_Clone").lock())
 					{
 						//APE_LOG_DEBUG("visible: " << asset.get_id() + "_Clone");
-						cloneNode->setVisible(true);
+						//cloneNode->setVisible(true);
 					}
 					isAssetVisible = true;
 				}

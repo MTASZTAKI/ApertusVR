@@ -166,7 +166,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							ogreNode->setVisible(node->getChildrenVisibility());
 							break;
 						case ape::Event::Type::NODE_VISIBILITY:
+						{
 							ogreNode->setVisible(node->isVisible(), false);
+							//APE_LOG_DEBUG(nodeName << " visibility: " << node->isVisible());
+						}
 							break;
 						case ape::Event::Type::NODE_FIXEDYAW:
 							ogreNode->setFixedYawAxis(node->isFixedYaw());
