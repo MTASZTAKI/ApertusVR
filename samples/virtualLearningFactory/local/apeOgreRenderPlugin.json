@@ -8,11 +8,11 @@
         {
             "monitorIndex": 0,
             "name": "vlft_local",
-            "resolution": {
-                "width": 1400,
-                "height": 1050,
-                "fullScreen": false
-            },
+          "resolution": {
+            "width": 1280,
+            "height": 760,
+            "fullScreen": false
+          },
             "miscParams": {
                 "vSync": true,
                 "vSyncInterval": 1,
@@ -21,21 +21,21 @@
                 "FSAAHint": "Quality"
             },
             "viewports": [
-                {
-                    "zOrder": 0,
-                    "left": 0,
-                    "top": 0,
-                    "width": 1400,
-                    "height": 1050,
-                  "cameras": [
-                    {
-                      "name": "camera1",
-                      "nearClip": 1,
-                      "farClip": 10000,
-                      "fovY": 45
-                    }
-                  ]
-                }
+              {
+                "zOrder": 0,
+                "left": 0,
+                "top": 0,
+                "width": 1280,
+                "height": 760,
+                "cameras": [
+                  {
+                    "name": "camera1",
+                    "nearClip": 1,
+                    "farClip": 10000,
+                    "fovY": 45
+                  }
+                ]
+              }
             ]
         }
     ]
