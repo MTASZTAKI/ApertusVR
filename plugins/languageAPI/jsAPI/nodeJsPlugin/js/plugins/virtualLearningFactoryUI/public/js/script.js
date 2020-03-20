@@ -1,3 +1,6 @@
+var LineByLineReader = moduleManager.requireNodeModule('line-by-line');
+var fs = moduleManager.requireNodeModule('fs');
+
 var apiEndPoint = 'http://localhost:3000/api/v1/';
 var userNodeName;
 var userID;
@@ -175,7 +178,17 @@ function showMap() {
     $('#map').toggle();
 }
 
+function parseAnimationJSON() {
+	console.log('parseAnimationJSON');
+	fs.readFile('../../../../../../../../../samples/virtualLearningFactory/Animation/animation.json', (err, data) => {
+		if (err) throw err;
+		let animation = JSON.parse(data);
+		console.log(animation);
+	});
+}
+
 $(document).ready(function () {
+	parseAnimationJSON();
 	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
