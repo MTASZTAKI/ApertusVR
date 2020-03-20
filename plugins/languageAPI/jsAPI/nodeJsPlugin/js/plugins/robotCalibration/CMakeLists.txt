@@ -22,6 +22,8 @@
 
 set (JSFILES
 	robotCalibration.js
+	public/index.html
+	public/js/script.js
 	)
 
 add_custom_target(

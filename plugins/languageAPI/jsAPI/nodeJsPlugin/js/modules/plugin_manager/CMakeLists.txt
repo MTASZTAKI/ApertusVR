@@ -20,19 +20,14 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (plugins)
-add_subdirectory (api)
-add_subdirectory (modules)
-
 set (JSFILES
-	ape.js
-	server.js
-	package.json
+	plugin_manager.js
+	config.json
 	)
 
 add_custom_target(
-    apeJS ALL
+    apeJS_PluginManager ALL
     SOURCES ${JSFILES}
 )
 
-set_property (TARGET apeJS PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI")
+set_property (TARGET apeJS_PluginManager PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI")

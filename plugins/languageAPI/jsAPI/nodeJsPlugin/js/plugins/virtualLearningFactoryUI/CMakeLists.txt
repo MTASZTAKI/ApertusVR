@@ -22,6 +22,9 @@
 
 set (JSFILES
 	virtualLearningFactoryUI.js
+	public/index.html
+	public/js/script.js
+	public/js/animation.json
 	)
 
 add_custom_target(

@@ -22,6 +22,7 @@
 
 set (JSFILES
 	htmlOverlayUI.js
+	public/index.html
 	)
 
 add_custom_target(

@@ -2058,7 +2058,7 @@ bool ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 
 bool ape::OgreRenderPlugin::frameRenderingQueued( const Ogre::FrameEvent& evt )
 {
-	//std::cout << "FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount() << std::endl;
+	//APE_LOG_DEBUG("FPS: " << mRenderWindows.begin()->second->getLastFPS() << " triangles: " << mRenderWindows.begin()->second->getTriangleCount() << " batches: " << mRenderWindows.begin()->second->getBatchCount());
 	processEventDoubleQueue();
 	if (mpHydrax && mpSkyxSkylight)
 	{
