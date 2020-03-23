@@ -74,9 +74,14 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 	}
 }
 
+void ape::VLFTAnimationPlayerPlugin::playTxtFile(std::string name, quicktype::Action action)
+{
+}
+
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 {
-	
+	//TODO: When play click fired
+	//std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
 }
 
 void ape::VLFTAnimationPlayerPlugin::Init()
@@ -86,24 +91,22 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTAnimationPlayerPlugin.json";
 	FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	mAnimations = nlohmann::json::parse(apeVLFTAnimationPlayerPluginConfigFile);
-	std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
-	APE_LOG_FUNC_LEAVE();
-}
-
-void ape::VLFTAnimationPlayerPlugin::Run()
-{
-	APE_LOG_FUNC_ENTER();
-	std::this_thread::sleep_for(std::chrono::milliseconds(30000)); //TODO sign up an startup signal event from the teacher for example click on something....
 	for (const auto& node : mAnimations.get_nodes())
 	{
 		for (const auto& action : node.get_actions())
 		{
 			if (action.get_trigger().get_type() == "timestamp")
 			{
-				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playBinFile, this, node.get_name(), action));
+				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playTxtFile, this, node.get_name(), action));
 			}
 		}
 	}
+	APE_LOG_FUNC_LEAVE();
+}
+
+void ape::VLFTAnimationPlayerPlugin::Run()
+{
+	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));

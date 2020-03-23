@@ -78,6 +78,8 @@ namespace ape
 
 		void playBinFile(std::string name, quicktype::Action action);
 
+		void playTxtFile(std::string name, quicktype::Action action);
+
 		void eventCallBack(const ape::Event& event);
 		
 		void Init() override;
