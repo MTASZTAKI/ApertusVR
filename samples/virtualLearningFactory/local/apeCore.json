@@ -9,7 +9,8 @@
     "apeSampleScenePlugin",
     "apeCefBrowserPlugin",
     "apeVLFTUIManagerPlugin",
-    "apeVLFTSceneLoaderPlugin"
+    "apeVLFTSceneLoaderPlugin",
+	"apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "VLFT_Local",
@@ -44,20 +45,8 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/macros/sceneMaker/resources",
-      "/samples/virtualLearningFactory/resources/buildings/buildingA",
-      "/samples/virtualLearningFactory/resources/elements/pallet",
-      "/samples/virtualLearningFactory/resources/elements/workerMale",
-      "/samples/virtualLearningFactory/resources/machines/tc52",
-      "/samples/virtualLearningFactory/resources/elements/table",
-      "/samples/virtualLearningFactory/resources/elements/acdc",
-      "/samples/virtualLearningFactory/resources/elements/barrel",
-      "/samples/virtualLearningFactory/resources/elements/barrel2",
-      "/samples/virtualLearningFactory/resources/elements/trolley",
-      "/samples/virtualLearningFactory/resources/machines/tc108",
-      "/samples/virtualLearningFactory/resources/machines/tc67h",
-      "/samples/virtualLearningFactory/resources/machines/vc1020",
-      "/samples/virtualLearningFactory/resources/machines/wm2",
-      "/samples/virtualLearningFactory/resources/PickAndPlace"
+      "/samples/virtualLearningFactory/models/pickAndPlace",
+      "/samples/virtualLearningFactory/models/pallet"
     ]
   }
 }

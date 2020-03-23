@@ -68,10 +68,10 @@ namespace quicktype {
 		void set_event(const quicktype::Event & value) { this->event = value; }
 	};
 
-	class Geometry {
+	class Node {
 	public:
-		Geometry() = default;
-		virtual ~Geometry() = default;
+		Node() = default;
+		virtual ~Node() = default;
 
 	private:
 		std::string name;
@@ -93,12 +93,12 @@ namespace quicktype {
 		virtual ~Animations() = default;
 
 	private:
-		std::vector<quicktype::Geometry> geometries;
+		std::vector<quicktype::Node> nodes;
 
 	public:
-		const std::vector<quicktype::Geometry> & get_geometries() const { return geometries; }
-		std::vector<quicktype::Geometry> & get_mutable_geometries() { return geometries; }
-		void set_geometries(const std::vector<quicktype::Geometry> & value) { this->geometries = value; }
+		const std::vector<quicktype::Node> & get_nodes() const { return nodes; }
+		std::vector<quicktype::Node> & get_mutable_nodes() { return nodes; }
+		void set_nodes(const std::vector<quicktype::Node> & value) { this->nodes = value; }
 	};
 }
 
@@ -110,8 +110,8 @@ namespace nlohmann {
 		void from_json(const json & j, quicktype::Action & x);
 		void to_json(json & j, const quicktype::Action & x);
 
-		void from_json(const json & j, quicktype::Geometry & x);
-		void to_json(json & j, const quicktype::Geometry & x);
+		void from_json(const json & j, quicktype::Node & x);
+		void to_json(json & j, const quicktype::Node & x);
 
 		void from_json(const json & j, quicktype::Animations & x);
 		void to_json(json & j, const quicktype::Animations & x);
@@ -138,24 +138,24 @@ namespace nlohmann {
 			j["event"] = x.get_event();
 		}
 
-		inline void from_json(const json & j, quicktype::Geometry& x) {
+		inline void from_json(const json & j, quicktype::Node& x) {
 			x.set_name(j.at("name").get<std::string>());
 			x.set_actions(j.at("actions").get<std::vector<quicktype::Action>>());
 		}
 
-		inline void to_json(json & j, const quicktype::Geometry & x) {
+		inline void to_json(json & j, const quicktype::Node & x) {
 			j = json::object();
 			j["name"] = x.get_name();
 			j["actions"] = x.get_actions();
 		}
 
 		inline void from_json(const json & j, quicktype::Animations& x) {
-			x.set_geometries(j.at("geometries").get<std::vector<quicktype::Geometry>>());
+			x.set_nodes(j.at("nodes").get<std::vector<quicktype::Node>>());
 		}
 
 		inline void to_json(json & j, const quicktype::Animations & x) {
 			j = json::object();
-			j["geometries"] = x.get_geometries();
+			j["nodes"] = x.get_nodes();
 		}
 	}
 }

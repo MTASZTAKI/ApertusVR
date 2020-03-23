@@ -25,6 +25,7 @@ set (CONFIGS
 	apeAssimpAssetLoaderPlugin.json
 	apeOgreRenderPlugin.json
 	apeViewPointManagerPlugin.json
+	apeVLFTAnimationPlayerPlugin.json
 	apeCore.json
 	)
 

@@ -1,0 +1,43 @@
+{
+"nodes":[
+	{
+	    "name": "http://www.ontoeng.com/VLFT_test#Pallet.1",
+		"actions": [{
+			"trigger": {
+				"type": "timestamp",
+				"data": "0"
+			},
+			"event": {
+				"type": "animation",
+				"data": "/samples/virtualLearningFactory/animations/pallet_1.txt"
+			}
+		}]
+	},
+	{
+	    "name": "http://www.ontoeng.com/VLFT_test#Pallet.2",
+		"actions": [{
+			"trigger": {
+				"type": "timestamp",
+				"data": "5"
+			},
+			"event": {
+				"type": "animation",
+				"data": "/samples/virtualLearningFactory/animations/pallet_2.txt"
+			}
+		}]
+	}
+	{
+	    "name": "http://www.ontoeng.com/VLFT_test#Pallet.3",
+		"actions": [{
+			"trigger": {
+				"type": "timestamp",
+				"data": "10"
+			},
+			"event": {
+				"type": "animation",
+				"data": "/samples/virtualLearningFactory/animations/pallet_3.txt"
+			}
+		}]
+	}
+]
+}

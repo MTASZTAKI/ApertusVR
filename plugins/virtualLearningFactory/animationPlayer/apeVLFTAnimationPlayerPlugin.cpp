@@ -94,13 +94,13 @@ void ape::VLFTAnimationPlayerPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	std::this_thread::sleep_for(std::chrono::milliseconds(30000)); //TODO sign up an startup signal event from the teacher for example click on something....
-	for (const auto& geometry : mAnimations.get_geometries())
+	for (const auto& node : mAnimations.get_nodes())
 	{
-		for (const auto& action : geometry.get_actions())
+		for (const auto& action : node.get_actions())
 		{
 			if (action.get_trigger().get_type() == "timestamp")
 			{
-				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playBinFile, this, geometry.get_name(), action));
+				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playBinFile, this, node.get_name(), action));
 			}
 		}
 	}

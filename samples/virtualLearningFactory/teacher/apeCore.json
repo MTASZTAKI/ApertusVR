@@ -7,7 +7,8 @@
     "apeViewPointManagerPlugin",
     "apeAssimpAssetLoaderPlugin",
     "apeCefBrowserPlugin",
-    "apeVLFTUIManagerPlugin"
+    "apeVLFTUIManagerPlugin",
+	"apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "vlft_teacher",
@@ -28,9 +29,9 @@
       "port": ""
     },
     "selected": "internet",
-    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/resources.zip",
-    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/resources.md5",
-    "resourceDownloadLocation": "/samples/virtualLearningFactory",
+    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory.zip",
+    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory.md5",
+    "resourceDownloadLocation": "/samples",
     "resourceLocations": [
       "/plugins/render/ogreRender/resources/fonts",
       "/plugins/render/ogreRender/resources/materials",
@@ -45,20 +46,8 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/macros/sceneMaker/resources",
-      "/samples/virtualLearningFactory/resources/buildings/buildingA",
-      "/samples/virtualLearningFactory/resources/elements/pallet",
-      "/samples/virtualLearningFactory/resources/elements/workerMale",
-      "/samples/virtualLearningFactory/resources/machines/tc52",
-      "/samples/virtualLearningFactory/resources/elements/table",
-      "/samples/virtualLearningFactory/resources/elements/acdc",
-      "/samples/virtualLearningFactory/resources/elements/barrel",
-      "/samples/virtualLearningFactory/resources/elements/barrel2",
-      "/samples/virtualLearningFactory/resources/elements/trolley",
-      "/samples/virtualLearningFactory/resources/machines/tc108",
-      "/samples/virtualLearningFactory/resources/machines/tc67h",
-      "/samples/virtualLearningFactory/resources/machines/vc1020",
-      "/samples/virtualLearningFactory/resources/machines/wm2",
-      "/samples/virtualLearningFactory/resources/PickAndPlace"
+      "/samples/virtualLearningFactory/models/pickAndPlace",
+      "/samples/virtualLearningFactory/models/pallet"
     ]
   }
 }
