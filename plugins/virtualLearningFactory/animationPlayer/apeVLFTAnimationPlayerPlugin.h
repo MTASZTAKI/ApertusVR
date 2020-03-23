@@ -78,7 +78,7 @@ namespace ape
 
 		void playBinFile(std::string name, quicktype::Action action);
 
-		void playTxtFile(std::string name, quicktype::Action action);
+		void playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations);
 
 		void eventCallBack(const ape::Event& event);
 		

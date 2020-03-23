@@ -9,7 +9,7 @@
 			},
 			"event": {
 				"type": "animation",
-				"data": "/samples/virtualLearningFactory/animations/pallet_1.txt"
+				"data": "animations/pallet_1.txt"
 			}
 		}]
 	},
@@ -22,7 +22,7 @@
 			},
 			"event": {
 				"type": "animation",
-				"data": "/samples/virtualLearningFactory/animations/pallet_2.txt"
+				"data": "animations/pallet_2.txt"
 			}
 		}]
 	},
@@ -35,7 +35,7 @@
 			},
 			"event": {
 				"type": "animation",
-				"data": "/samples/virtualLearningFactory/animations/pallet_3.txt"
+				"data": "animations/pallet_3.txt"
 			}
 		}]
 	}

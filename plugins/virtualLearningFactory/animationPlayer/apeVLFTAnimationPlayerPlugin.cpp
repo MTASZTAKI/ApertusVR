@@ -74,9 +74,19 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 	}
 }
 
-void ape::VLFTAnimationPlayerPlugin::playTxtFile(std::string name, quicktype::Action action)
+void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
 {
-
+	APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " size: " << positions.size());
+	std::this_thread::sleep_for(std::chrono::seconds(delay));
+	if (auto node = mpSceneManager->getNode(nodeName).lock())
+	{
+		for (int i = 0; i < positions.size(); i++)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(1 / fps));
+			node->setPosition(positions[i]);
+			node->setOrientation(orientations[i]);
+		}
+	}
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
@@ -85,10 +95,11 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			APE_LOG_DEBUG(browser->getClickedElementName());
+			//APE_LOG_DEBUG(browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
-				//std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+				APE_LOG_DEBUG("play: " << mTimeStampThreads.size());
+				std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
 			}
 		}
 	}
@@ -107,7 +118,47 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 		{
 			if (action.get_trigger().get_type() == "timestamp")
 			{
-				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playTxtFile, this, node.get_name(), action));
+				std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + action.get_event().get_data();
+				std::ifstream file(fileNamePath);
+				std::string dataCount;
+				std::getline(file, dataCount);
+				std::string fps;
+				std::getline(file, fps);
+				std::vector<ape::Vector3> positions;
+				std::vector<ape::Quaternion> orientations;
+				for (int i = 0; i < atoi(dataCount.c_str()); i++)
+				{
+					std::string postionData;
+					std::getline(file, postionData);
+					auto posX = postionData.find_first_of(",");
+					float x = atof(postionData.substr(0, posX).c_str());
+					postionData = postionData.substr(posX, postionData.length());
+					auto posY = postionData.find_first_of(",");
+					float y = atof(postionData.substr(0, posY).c_str());
+					postionData = postionData.substr(posY, postionData.length());
+					auto posZ = postionData.find_first_of("]");
+					float z = atof(postionData.substr(0, posZ).c_str());
+					positions.push_back(ape::Vector3(x, y, z));
+				}
+				for (int i = 0; i < atoi(dataCount.c_str()); i++)
+				{
+					std::string orientationData;
+					std::getline(file, orientationData);
+					auto posW = orientationData.find_first_of(",");
+					float w = atof(orientationData.substr(0, posW).c_str());
+					orientationData = orientationData.substr(posW, orientationData.length());
+					auto posX = orientationData.find_first_of(",");
+					float x = atof(orientationData.substr(0, posX).c_str());
+					orientationData = orientationData.substr(posX, orientationData.length());
+					auto posY = orientationData.find_first_of(",");
+					float y = atof(orientationData.substr(0, posY).c_str());
+					orientationData = orientationData.substr(posY, orientationData.length());
+					auto posZ = orientationData.find_first_of("]");
+					float z = atof(orientationData.substr(0, posZ).c_str());
+					orientations.push_back(ape::Quaternion(w, x, y, z));
+				}
+				//APE_LOG_DEBUG("nodeName: " << node.get_name() << " delay: " << atoi(action.get_trigger().get_data().c_str()) << " fps: " << atoi(fps.c_str()) << " dataCount: " << dataCount);
+				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, node.get_name(), atoi(action.get_trigger().get_data().c_str()), atoi(fps.c_str()), positions, orientations));
 			}
 		}
 	}
