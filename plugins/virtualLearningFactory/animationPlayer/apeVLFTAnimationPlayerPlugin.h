@@ -57,6 +57,14 @@ namespace ape
 	class VLFTAnimationPlayerPlugin : public ape::IPlugin
 	{
 	private:
+		struct Animation
+		{
+			std::string nodeName;
+			unsigned int delay;
+			unsigned int fps;
+			std::vector<ape::Vector3> positions;
+			std::vector<ape::Quaternion> orientations;
+		};
 		ape::ISceneManager* mpSceneManager;
 
 		ape::IEventManager* mpEventManager;
@@ -70,6 +78,8 @@ namespace ape
 		quicktype::Animations mAnimations;
 
 		std::vector<std::thread> mTimeStampThreads;
+
+		std::vector<Animation> mParsedAnimations;
 
 	public:
 		VLFTAnimationPlayerPlugin();

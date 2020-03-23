@@ -15,6 +15,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mTimeStampThreads = std::vector<std::thread>();
+	mParsedAnimations = std::vector<Animation>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -76,7 +77,7 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
 {
-	APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " size: " << positions.size());
+	//APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " size: " << positions.size());
 	std::this_thread::sleep_for(std::chrono::seconds(delay));
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
@@ -85,6 +86,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 			std::this_thread::sleep_for(std::chrono::seconds(1 / fps));
 			node->setPosition(positions[i]);
 			node->setOrientation(orientations[i]);
+			//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
 		}
 	}
 }
@@ -98,7 +100,12 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			//APE_LOG_DEBUG(browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
-				APE_LOG_DEBUG("play: " << mTimeStampThreads.size());
+				APE_LOG_DEBUG("play: " << mParsedAnimations.size());
+				mTimeStampThreads = std::vector<std::thread>();
+				for (auto const& animation : mParsedAnimations)
+				{
+					mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, animation.nodeName, animation.delay, animation.fps, animation.positions, animation.orientations));
+				}
 				std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
 			}
 		}
@@ -130,13 +137,13 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 				{
 					std::string postionData;
 					std::getline(file, postionData);
-					auto posX = postionData.find_first_of(",");
-					float x = atof(postionData.substr(0, posX).c_str());
-					postionData = postionData.substr(posX, postionData.length());
-					auto posY = postionData.find_first_of(",");
+					auto posX = postionData.find_first_of(",") - 1;
+					float x = atof(postionData.substr(1, posX).c_str());
+					postionData = postionData.substr(posX + 2, postionData.length());
+					auto posY = postionData.find_first_of(",") - 1;
 					float y = atof(postionData.substr(0, posY).c_str());
-					postionData = postionData.substr(posY, postionData.length());
-					auto posZ = postionData.find_first_of("]");
+					postionData = postionData.substr(posY + 2, postionData.length());
+					auto posZ = postionData.find_first_of("]") - 1;
 					float z = atof(postionData.substr(0, posZ).c_str());
 					positions.push_back(ape::Vector3(x, y, z));
 				}
@@ -144,21 +151,27 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 				{
 					std::string orientationData;
 					std::getline(file, orientationData);
-					auto posW = orientationData.find_first_of(",");
-					float w = atof(orientationData.substr(0, posW).c_str());
-					orientationData = orientationData.substr(posW, orientationData.length());
-					auto posX = orientationData.find_first_of(",");
+					auto posW = orientationData.find_first_of(",") - 1;
+					float w = atof(orientationData.substr(1, posW).c_str());
+					orientationData = orientationData.substr(posW + 2, orientationData.length());
+					auto posX = orientationData.find_first_of(",") - 1;
 					float x = atof(orientationData.substr(0, posX).c_str());
-					orientationData = orientationData.substr(posX, orientationData.length());
-					auto posY = orientationData.find_first_of(",");
+					orientationData = orientationData.substr(posX + 2, orientationData.length());
+					auto posY = orientationData.find_first_of(",") - 1;
 					float y = atof(orientationData.substr(0, posY).c_str());
-					orientationData = orientationData.substr(posY, orientationData.length());
-					auto posZ = orientationData.find_first_of("]");
+					orientationData = orientationData.substr(posY + 2, orientationData.length());
+					auto posZ = orientationData.find_first_of("]" - 1);
 					float z = atof(orientationData.substr(0, posZ).c_str());
 					orientations.push_back(ape::Quaternion(w, x, y, z));
 				}
 				//APE_LOG_DEBUG("nodeName: " << node.get_name() << " delay: " << atoi(action.get_trigger().get_data().c_str()) << " fps: " << atoi(fps.c_str()) << " dataCount: " << dataCount);
-				mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, node.get_name(), atoi(action.get_trigger().get_data().c_str()), atoi(fps.c_str()), positions, orientations));
+				Animation animation;
+				animation.nodeName = node.get_name();
+				animation.delay = atoi(action.get_trigger().get_data().c_str());
+				animation.fps = atoi(fps.c_str());
+				animation.positions = positions;
+				animation.orientations = orientations;
+				mParsedAnimations.push_back(animation);
 			}
 		}
 	}
