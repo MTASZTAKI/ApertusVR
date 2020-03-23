@@ -40,6 +40,7 @@ ape::BrowserImpl::BrowserImpl(std::string name, bool replicate, std::string owne
 	mLastKeyValue = 0;
 	mIsFocusOnEditableField = false;
 	mReloadDeltaTrigger = false;
+	mClickedElementName = std::string();
 }
 
 ape::BrowserImpl::~BrowserImpl()
@@ -169,6 +170,17 @@ void ape::BrowserImpl::setOwner(std::string ownerID)
 std::string ape::BrowserImpl::getOwner()
 {
 	return mOwnerID;
+}
+
+void ape::BrowserImpl::setClickedElementName(std::string clickedElementName)
+{
+	mClickedElementName = clickedElementName;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_ELEMENT_CLICK));
+}
+
+std::string ape::BrowserImpl::getClickedElementName()
+{
+	return mClickedElementName;
 }
 
 void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

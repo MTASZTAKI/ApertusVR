@@ -10,7 +10,7 @@
     "apeCefBrowserPlugin",
     "apeVLFTUIManagerPlugin",
     "apeVLFTSceneLoaderPlugin",
-	"apeVLFTAnimationPlayerPlugin"
+    "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "VLFT_Local",

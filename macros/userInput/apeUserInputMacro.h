@@ -273,6 +273,8 @@ namespace ape
 
 		void updateOverLayBrowserCursor(OverlayBrowserCursor overlayBrowserCursor);
 
+		void setOverLayBrowserClickedElement(std::string clickedElementName);
+
 		void showOverlayBrowser(bool show);
 
 		bool isOverlayBrowserShowed();

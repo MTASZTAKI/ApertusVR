@@ -8,7 +8,7 @@
     "apeAssimpAssetLoaderPlugin",
     "apeCefBrowserPlugin",
     "apeVLFTUIManagerPlugin",
-	"apeVLFTAnimationPlayerPlugin"
+	  "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "vlft_student",

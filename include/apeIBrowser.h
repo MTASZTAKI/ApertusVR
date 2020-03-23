@@ -112,6 +112,10 @@ namespace ape
 		virtual void setOwner(std::string ownerID) = 0;
 
 		virtual std::string getOwner() = 0;
+
+		virtual void setClickedElementName(std::string clickedElementName) = 0;
+
+		virtual std::string getClickedElementName() = 0;
 	};
 }
 

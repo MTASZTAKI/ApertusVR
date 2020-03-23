@@ -445,6 +445,14 @@ void ape::UserInputMacro::updateOverLayBrowserCursor(OverlayBrowserCursor overla
 	}
 }
 
+void ape::UserInputMacro::setOverLayBrowserClickedElement(std::string clickedElementName)
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		overlayBrowser->setClickedElementName(clickedElementName);
+	}
+}
+
 bool ape::UserInputMacro::isOverlayBrowserShowed()
 {
 	if (auto overlayBrowser = mOverlayBrowser.lock())

@@ -74,6 +74,7 @@ public:
 		mpSceneManager = ape::ISceneManager::getSingletonPtr();
 		mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 		mpEventManager = ape::IEventManager::getSingletonPtr();
+		mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 		mErrorMap.insert(std::pair<ErrorType, std::string>(DYN_CAST_FAILED, "Dynamic cast failed!"));
 		mErrorMap.insert(std::pair<ErrorType, std::string>(NULLPTR, "Return value is nullptr!"));
 		APE_LOG_FUNC_LEAVE();
@@ -622,10 +623,18 @@ public:
 		return mpCoreConfig->getConfigFolderPath();
 	}
 
+	void setOverlayBrowserClickedElement(std::string clickedElementName)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpUserInputMacro->setOverLayBrowserClickedElement(clickedElementName);
+	}
+
 private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ICoreConfig* mpCoreConfig;
 	ape::IEventManager* mpEventManager;
+	ape::UserInputMacro* mpUserInputMacro;
 	std::map<int, nbind::cbFunction*> mEventMap;
 };
 
@@ -680,6 +689,7 @@ NBIND_CLASS(JsBindManager)
 	method(getPointCloud);
 
 	method(getFolderPath);
+	method(setOverlayBrowserClickedElement);
 }
 
 #endif

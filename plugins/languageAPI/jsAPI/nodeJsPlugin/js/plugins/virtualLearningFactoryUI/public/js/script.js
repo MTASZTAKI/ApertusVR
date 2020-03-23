@@ -101,6 +101,13 @@ function setNodeOrientation(nodeName, ori) {
 	});
 }
 
+function setClickedElement(clickedElementName) {
+	console.log('setClickedElement(): ', clickedElementName);
+	doPostRequest(apiEndPoint + "/overLayBrowser/setClickedElement/" + clickedElementName, clickedElementName, function (res) {
+		console.log('setClickedElement(): res: ', res);
+	});
+}
+
 function doGetRequest(apiEndPointUrl, callback) {
 	console.log('doGetRequest()');
     $.get(apiEndPointUrl, function(res) {
@@ -195,7 +202,7 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		updateMap();
+    		//updateMap();
     	}, 500);
     }
     sock.onerror = (e)=>{
@@ -226,4 +233,8 @@ $(document).ready(function () {
 			});*/
         }
     }
+    $("button").click(function () {
+    	console.log('click on: ', this.id);
+    	setClickedElement(this.id);
+    });
 });

@@ -11,7 +11,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTAnimationPlayerPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTAnimationPlayerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mTimeStampThreads = std::vector<std::thread>();
@@ -76,12 +76,22 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playTxtFile(std::string name, quicktype::Action action)
 {
+
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 {
-	//TODO: When play click fired
-	//std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+	if (event.type == ape::Event::Type::BROWSER_ELEMENT_CLICK)
+	{
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			APE_LOG_DEBUG(browser->getClickedElementName());
+			if (browser->getClickedElementName() == "play")
+			{
+				//std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+			}
+		}
+	}
 }
 
 void ape::VLFTAnimationPlayerPlugin::Init()
