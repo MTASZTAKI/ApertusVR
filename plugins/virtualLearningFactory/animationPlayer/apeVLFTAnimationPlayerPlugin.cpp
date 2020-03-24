@@ -77,13 +77,15 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
 {
-	//APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " size: " << positions.size());
+	unsigned int frameTime = (1.0f / fps) * 1000;
+	APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " frameTime: " << frameTime << " size: " << positions.size());
 	std::this_thread::sleep_for(std::chrono::seconds(delay));
+	nodeName += "_Clone";
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
 		for (int i = 0; i < positions.size(); i++)
 		{
-			std::this_thread::sleep_for(std::chrono::seconds(1 / fps));
+			std::this_thread::sleep_for(std::chrono::milliseconds(frameTime));
 			node->setPosition(positions[i]);
 			node->setOrientation(orientations[i]);
 			//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
