@@ -59,7 +59,6 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 
 std::string ape::VLFTSceneLoaderPlugin::findGeometryNameByModelName(std::string modelName)
 {
-	//APE_LOG_DEBUG("findGeometryNameByModelName: " << modelName);
 	for (auto modelID : mModelsIDs)
 	{
 		if (modelName == modelID.second)
@@ -95,6 +94,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 				else
 				{
 					auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
+					//APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
 					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
 					{
 						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
@@ -108,7 +108,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 								}
 								geometryClone->setParentNode(geometryCloneNode);
 								geometryCloneNode->setParentNode(node);
-								//APE_LOG_DEBUG("clone: " << geometryClone->getName());
+								//APE_LOG_DEBUG("clone: " << geometryClone->getName() << " source: " << fileGeometry->getName());
 							}
 						}
 					}

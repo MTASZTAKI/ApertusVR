@@ -84,6 +84,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 	nodeName += "_Clone";
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
+		node->setVisible(true);
 		if (auto spaghettiLineNode = mpSceneManager->createNode(nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
 			mNodeSpaghettiNode[node->getName()] = spaghettiLineNode->getName();

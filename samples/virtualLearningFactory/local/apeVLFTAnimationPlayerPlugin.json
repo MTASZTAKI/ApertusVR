@@ -1,7 +1,7 @@
 {
 "nodes":[
   {
-    "name": "http://www.ontoeng.com/VLFT_test#WS01.PnP_Conveyor_Main.1",
+    "name": "http://www.ontoeng.com/VLFT_test#Pallet.1",
     "actions": [
       {
         "trigger": {
@@ -16,7 +16,7 @@
     ]
   },
   {
-    "name": "http://www.ontoeng.com/VLFT_test#WS02.PnP_Conveyor_Main.1",
+    "name": "http://www.ontoeng.com/VLFT_test#Pallet.2",
     "actions": [
       {
         "trigger": {
@@ -31,7 +31,7 @@
     ]
   },
   {
-    "name": "http://www.ontoeng.com/VLFT_test#WS03.PnP_Conveyor_Main.1",
+    "name": "http://www.ontoeng.com/VLFT_test#Pallet.3",
     "actions": [
       {
         "trigger": {
