@@ -81,7 +81,9 @@ namespace ape
 
 		std::vector<Animation> mParsedAnimations;
 
-		std::vector<ape::NodeWeakPtr> mSpaghettiLineNodes;
+		std::map<std::string, std::string> mNodeSpaghettiNode;
+
+		ape::NodeWeakPtr mClickedNode;
 
 	public:
 		VLFTAnimationPlayerPlugin();

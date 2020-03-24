@@ -4,19 +4,19 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
-
-
 ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTAnimationPlayerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTAnimationPlayerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mTimeStampThreads = std::vector<std::thread>();
 	mParsedAnimations = std::vector<Animation>();
-	mSpaghettiLineNodes = std::vector<ape::NodeWeakPtr>();
+	mNodeSpaghettiNode = std::map<std::string, std::string>();
+	mClickedNode = ape::NodeWeakPtr();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -86,6 +86,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 	{
 		if (auto spaghettiLineNode = mpSceneManager->createNode(nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
+			mNodeSpaghettiNode[node->getName()] = spaghettiLineNode->getName();
 			for (int i = 0; i < positions.size(); i++)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(frameTime));
@@ -102,7 +103,6 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 					ape::Color color(1, 0, 0);
 					spagetthiLineSection->setParameters(coordinates, indices, color);
 					spagetthiLineSection->setParentNode(spaghettiLineNode);
-					mSpaghettiLineNodes.push_back(spaghettiLineNode);
 				}
 				//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
 			}
@@ -116,10 +116,10 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			//APE_LOG_DEBUG(browser->getClickedElementName());
+			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			if (browser->getClickedElementName() == "play")
 			{
-				APE_LOG_DEBUG("play: " << mParsedAnimations.size());
+				//APE_LOG_DEBUG("play: " << mParsedAnimations.size());
 				mTimeStampThreads = std::vector<std::thread>();
 				for (auto const& animation : mParsedAnimations)
 				{
@@ -129,9 +129,26 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "spaghetti")
 			{
-				APE_LOG_DEBUG("spaghetti: " << mSpaghettiLineNodes.size());
-				//set visibility of the node
+				//APE_LOG_DEBUG("spaghetti");
+				if (auto clickedNode = mClickedNode.lock())
+				{
+					if (auto spaghettiNode = mpSceneManager->getNode(mNodeSpaghettiNode[clickedNode->getName()]).lock())
+					{
+						if (spaghettiNode->isVisible())
+							spaghettiNode->setVisible(false);
+						else
+							spaghettiNode->setVisible(true);
+					}
+				}
 			}
+		}
+	}
+	else if (event.type == ape::Event::Type::NODE_SHOWBOUNDINGBOX)
+	{
+		if (auto clickedNode = mpSceneManager->getNode(event.subjectName).lock())
+		{
+			APE_LOG_DEBUG("NODE_SHOWBOUNDINGBOX");
+			mClickedNode = clickedNode;
 		}
 	}
 }

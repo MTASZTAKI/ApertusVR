@@ -137,7 +137,7 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 			{
 				if (auto parentNode = mpSceneManager->getNode(*asset.get_placement_rel_to()).lock())
 				{
-					APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode: " << node->getName());
+					//APE_LOG_DEBUG("parentNode: " << parentNode->getName() << " childNode: " << node->getName());
 					node->setParentNode(parentNode);
 				}
 				else
@@ -149,7 +149,7 @@ void ape::VLFTSceneLoaderPlugin::parsePlacementRelTo()
 				{
 					std::vector<double> position = *asset.get_position();
 					ape::Vector3 apePosition(position[0], position[1], position[2]);
-					APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+					//APE_LOG_DEBUG("apePosition: " << apePosition.toString());
 					node->setPosition(apePosition);
 				}
 				std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
