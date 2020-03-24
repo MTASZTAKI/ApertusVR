@@ -16,6 +16,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mTimeStampThreads = std::vector<std::thread>();
 	mParsedAnimations = std::vector<Animation>();
+	mSpaghettiLineNodes = std::vector<ape::NodeWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -83,12 +84,28 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 	nodeName += "_Clone";
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
-		for (int i = 0; i < positions.size(); i++)
+		if (auto spaghettiLineNode = mpSceneManager->createNode(nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(frameTime));
-			node->setPosition(positions[i]);
-			node->setOrientation(orientations[i]);
-			//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
+			for (int i = 0; i < positions.size(); i++)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(frameTime));
+				auto previousPosition = node->getDerivedPosition();
+				node->setPosition(positions[i]);
+				node->setOrientation(orientations[i]);
+				auto currentPosition = node->getDerivedPosition();
+				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiLineNode->getName() + std::to_string(i), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					ape::GeometryCoordinates coordinates = {
+						previousPosition.x, previousPosition.y, previousPosition.z,
+						currentPosition.x, currentPosition.y, currentPosition.z, };
+					ape::GeometryIndices indices = { 0, 1, -1 };
+					ape::Color color(1, 0, 0);
+					spagetthiLineSection->setParameters(coordinates, indices, color);
+					spagetthiLineSection->setParentNode(spaghettiLineNode);
+					mSpaghettiLineNodes.push_back(spaghettiLineNode);
+				}
+				//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
+			}
 		}
 	}
 }
@@ -109,6 +126,11 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 					mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, animation.nodeName, animation.delay, animation.fps, animation.positions, animation.orientations));
 				}
 				std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+			}
+			else if (browser->getClickedElementName() == "spaghetti")
+			{
+				APE_LOG_DEBUG("spaghetti: " << mSpaghettiLineNodes.size());
+				//set visibility of the node
 			}
 		}
 	}
