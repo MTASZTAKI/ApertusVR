@@ -80,6 +80,8 @@ namespace ape
 
 		ape::NodeWeakPtr mClickedNode;
 
+		bool mIsBrowserClicked;
+
 		int mMouseScrolledValue;
 
 		void parseNodeJsPluginConfig();
@@ -97,6 +99,8 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 		void eraseClickedNodeName(ape::NodeSharedPtr node);
+
+		void rayQueryIfNotBrowserClick();
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateVLFTUIManagerPlugin()

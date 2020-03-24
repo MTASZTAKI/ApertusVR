@@ -9,6 +9,7 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
@@ -18,6 +19,7 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	mMouseScrolledValue = 0;
 	mClickedNodeNames = std::vector<std::string>();
 	mClickedNode = ape::NodeWeakPtr();
+	mIsBrowserClicked = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -62,6 +64,19 @@ void ape::VLFTUIManagerPlugin::keyPressedStringEventCallback(const std::string &
 	mpUserInputMacro->setOverlayBrowserKeyValue(keyValue);
 }
 
+void ape::VLFTUIManagerPlugin::rayQueryIfNotBrowserClick()
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(150));
+	if (!mIsBrowserClicked)
+	{
+		mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
+	}
+	else
+	{
+		mIsBrowserClicked = false;
+	}
+}
+
 void ape::VLFTUIManagerPlugin::mousePressedStringEventCallback(const std::string & keyValue)
 {
 	if (keyValue == "left")
@@ -69,7 +84,8 @@ void ape::VLFTUIManagerPlugin::mousePressedStringEventCallback(const std::string
 		mOverlayBrowserCursor.cursorClick = true;
 		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
 		mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
-		mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
+		auto rayQueryIfNotBrowserClickThread = std::thread(&VLFTUIManagerPlugin::rayQueryIfNotBrowserClick, this);
+		rayQueryIfNotBrowserClickThread.detach();
 	}
 }
 
@@ -151,6 +167,14 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName());
 				}
 			}
+		}
+	}
+	if (event.type == ape::Event::Type::BROWSER_ELEMENT_CLICK)
+	{
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
+			mIsBrowserClicked = true;
 		}
 	}
 }
