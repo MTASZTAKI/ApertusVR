@@ -235,6 +235,13 @@ $(document).ready(function () {
     }
     $("button").click(function () {
     	console.log('click on: ', this.id);
+    	$(this).css('background-color', 'green');
     	setClickedElement(this.id);
+    });
+    $("button").hover(
+    function () {
+    	$(this).css('background', 'LightGray')
+    }, function () {
+    	$(this).css('background', 'Grey')
     });
 });
