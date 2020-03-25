@@ -164,7 +164,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					}
 					clickedNode->showBoundingBox(true);
 					mClickedNode = clickedNode;
-					//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName());
+					APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
 				}
 			}
 		}

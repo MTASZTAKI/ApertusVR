@@ -186,10 +186,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.JPG"
+          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Gripper_2.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.OBJ",
+          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Gripper_2.OBJ",
           "unit": 0.001
         }
       ]
@@ -251,10 +251,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.JPG"
+          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Gripper_1.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.OBJ",
+          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Gripper_1.OBJ",
           "unit": 0.001
         }
       ]

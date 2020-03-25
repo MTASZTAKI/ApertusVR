@@ -120,7 +120,6 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			//APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			if (browser->getClickedElementName() == "play")
 			{
-				//APE_LOG_DEBUG("play: " << mParsedAnimations.size());
 				mTimeStampThreads = std::vector<std::thread>();
 				for (auto const& animation : mParsedAnimations)
 				{
@@ -130,7 +129,6 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "spaghetti")
 			{
-				//APE_LOG_DEBUG("spaghetti");
 				if (auto clickedNode = mClickedNode.lock())
 				{
 					if (auto spaghettiNode = mpSceneManager->getNode(mNodeSpaghettiNode[clickedNode->getName()]).lock())
@@ -148,7 +146,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto clickedNode = mpSceneManager->getNode(event.subjectName).lock())
 		{
-			APE_LOG_DEBUG("NODE_SHOWBOUNDINGBOX");
+			//APE_LOG_DEBUG("NODE_SHOWBOUNDINGBOX");
 			mClickedNode = clickedNode;
 		}
 	}
