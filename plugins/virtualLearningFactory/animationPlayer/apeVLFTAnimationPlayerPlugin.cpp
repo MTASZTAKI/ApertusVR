@@ -1,8 +1,68 @@
 #include <fstream>
 #include <stdint.h>
+#include <stdio.h>
+#include <windows.h>
+#include <gdiplus.h>
+#include <time.h>
 #include "apeVLFTAnimationPlayerPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+
+int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) 
+{
+	using namespace Gdiplus;
+	UINT  num = 0;
+	UINT  size = 0;
+	ImageCodecInfo* pImageCodecInfo = NULL;
+	GetImageEncodersSize(&num, &size);
+	if (size == 0)
+		return -1;
+	pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
+	if (pImageCodecInfo == NULL)
+		return -1;
+	GetImageEncoders(num, size, pImageCodecInfo);
+	for (UINT j = 0; j < num; ++j)
+	{
+		if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+		{
+			*pClsid = pImageCodecInfo[j].Clsid;
+			free(pImageCodecInfo);
+			return j;
+		}
+	}
+	free(pImageCodecInfo);
+	return 0;
+}
+
+void gdiscreen() 
+{
+	using namespace Gdiplus;
+	IStream* istream;
+	HRESULT res = CreateStreamOnHGlobal(NULL, true, &istream);
+	GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	{
+		HDC scrdc, memdc;
+		HBITMAP membit;
+		scrdc = ::GetDC(0);
+		int Height = GetSystemMetrics(SM_CYSCREEN);
+		int Width = GetSystemMetrics(SM_CXSCREEN);
+		memdc = CreateCompatibleDC(scrdc);
+		membit = CreateCompatibleBitmap(scrdc, Width, Height);
+		HBITMAP hOldBitmap = (HBITMAP)SelectObject(memdc, membit);
+		BitBlt(memdc, 0, 0, Width, Height, scrdc, 0, 0, SRCCOPY);
+		Gdiplus::Bitmap bitmap(membit, NULL);
+		CLSID clsid;
+		GetEncoderClsid(L"image/jpeg", &clsid);
+		std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+		auto fileName = "../../screenshots/" + std::to_string(uuid.count()) + ".jpg";
+		std::wstring wFileName = std::wstring(fileName.begin(), fileName.end());
+		bitmap.Save(wFileName.c_str(), &clsid, NULL);
+	}
+	GdiplusShutdown(gdiplusToken);
+	istream->Release();
+}
 
 ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 {
@@ -120,7 +180,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
+			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK: " << browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
 				mTimeStampThreads = std::vector<std::thread>();
@@ -169,6 +229,10 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "performance")
 			{
+			}
+			else if (browser->getClickedElementName() == "screenshot")
+			{
+				gdiscreen();
 			}
 		}
 	}

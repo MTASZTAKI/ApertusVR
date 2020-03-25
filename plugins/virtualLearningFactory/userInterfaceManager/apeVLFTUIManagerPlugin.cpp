@@ -164,7 +164,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					}
 					clickedNode->showBoundingBox(true);
 					mClickedNode = clickedNode;
-					APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
+					//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
 				}
 			}
 		}
@@ -173,7 +173,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
+			//APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			mIsBrowserClicked = true;
 		}
 	}

@@ -39,7 +39,7 @@ include_directories(
 add_library (apeVLFTAnimationPlayerPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeVLFTAnimationPlayerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
+target_link_libraries (apeVLFTAnimationPlayerPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro gdiplus.lib)
 
 set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
