@@ -78,12 +78,14 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
 {
-	unsigned int frameTime = (1.0f / fps) * 1000;
-	APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " frameTime: " << frameTime << " size: " << positions.size());
-	std::this_thread::sleep_for(std::chrono::seconds(delay));
 	nodeName += "_Clone";
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
+		std::string previousOwner = node->getOwner();
+		node->setOwner(mpCoreConfig->getNetworkGUID());
+		unsigned int frameTime = (1.0f / fps) * 1000;
+		APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " frameTime: " << frameTime << " size: " << positions.size());
+		std::this_thread::sleep_for(std::chrono::seconds(delay));
 		node->setVisible(true);
 		if (auto spaghettiLineNode = mpSceneManager->createNode(nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
 		{
@@ -108,6 +110,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 				//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
 			}
 		}
+		node->setOwner(previousOwner);
 	}
 }
 
