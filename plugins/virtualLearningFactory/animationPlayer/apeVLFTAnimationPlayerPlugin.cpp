@@ -117,7 +117,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			//APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
+			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			if (browser->getClickedElementName() == "play")
 			{
 				mTimeStampThreads = std::vector<std::thread>();
@@ -126,6 +126,24 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 					mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, animation.nodeName, animation.delay, animation.fps, animation.positions, animation.orientations));
 				}
 				std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+			}
+			else if (browser->getClickedElementName() == "backward")
+			{
+			}
+			else if (browser->getClickedElementName() == "forward")
+			{
+			}
+			else if (browser->getClickedElementName() == "pause")
+			{
+			}
+			else if (browser->getClickedElementName() == "stop")
+			{
+			}
+			else if (browser->getClickedElementName() == "record")
+			{
+			}
+			else if (browser->getClickedElementName() == "bookmark")
+			{
 			}
 			else if (browser->getClickedElementName() == "spaghetti")
 			{
@@ -139,6 +157,15 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 							spaghettiNode->setVisible(true);
 					}
 				}
+			}
+			else if (browser->getClickedElementName() == "view")
+			{
+			}
+			else if (browser->getClickedElementName() == "edit")
+			{
+			}
+			else if (browser->getClickedElementName() == "performance")
+			{
 			}
 		}
 	}
