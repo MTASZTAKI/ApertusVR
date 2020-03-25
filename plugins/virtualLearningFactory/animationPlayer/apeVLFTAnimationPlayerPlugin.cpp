@@ -202,9 +202,6 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			else if (browser->getClickedElementName() == "stop")
 			{
 			}
-			else if (browser->getClickedElementName() == "record")
-			{
-			}
 			else if (browser->getClickedElementName() == "bookmark")
 			{
 			}
@@ -233,6 +230,9 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			else if (browser->getClickedElementName() == "screenshot")
 			{
 				gdiscreen();
+			}
+			else if (browser->getClickedElementName() == "screencast")
+			{
 			}
 		}
 	}
