@@ -63,6 +63,7 @@ namespace ape
 		bool regenerateNormals;
 		bool generateManualTexture;
 		std::string rootNodeName;
+		float unitScale = 1.0f;
 	};
 
 	struct PhysicsConfig

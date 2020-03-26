@@ -13,6 +13,7 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mModelsIDs = std::map<std::string, std::string>();
+	mFileGeometryNamesScales = std::map<std::string, ape::Vector3>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -40,16 +41,12 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 				std::string fileExtension = filePath.substr(filePath.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
-					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
+					float unitScale = *representation.get_unit() / 0.01f;
+					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 					{
-						float unitScale = *representation.get_unit() / 0.01f;
-						node->setScale(ape::Vector3(unitScale, unitScale, unitScale));
-						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
-						{
-							//APE_LOG_DEBUG("fileGeometry: " << asset.get_id());
-							fileGeometry->setFileName(filePath);
-							fileGeometry->setParentNode(node);
-						}
+						//APE_LOG_DEBUG("fileGeometry: " << asset.get_id());
+						fileGeometry->setUnitScale(unitScale);
+						fileGeometry->setFileName(filePath);
 					}
 				}
 			}
@@ -85,11 +82,8 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 			{
 				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
 				{
-					if (auto fileGeometryNode = mpSceneManager->getNode(*asset.get_model()).lock())
-					{
-						fileGeometryNode->setParentNode(node);
-						//APE_LOG_DEBUG("childNode fileGeometry: " << fileGeometryNode->getName());
-					}
+					fileGeometry->setParentNode(node);
+					//APE_LOG_DEBUG("childNode fileGeometry: " << fileGeometry->getName());
 				}
 				else
 				{
@@ -100,10 +94,6 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
-							if (auto fileGeometryParentNode = fileGeometry->getParentNode().lock())
-							{
-								node->setScale(fileGeometryParentNode->getScale());
-							}
 							geometryClone->setParentNode(node);
 							//APE_LOG_DEBUG("clone: " << geometryClone->getName() << " source: " << fileGeometry->getName());
 						}

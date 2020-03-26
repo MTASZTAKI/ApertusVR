@@ -73,7 +73,7 @@ void ape::AssimpAssetLoaderPlugin::Restart()
 
 void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 {
-	if (event.type == ape::Event::Type::GEOMETRY_FILE_PARENTNODE)
+	if (event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
@@ -96,7 +96,12 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				}
 				else
 				{
-					//APE_LOG_DEBUG("no root node was founded maybe it can causes problems");
+					assetConfig.rootNodeName = fileGeometry->getName();
+					//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+					assetConfig.scale = ape::Vector3(1, 1, 1);
+					assetConfig.position = ape::Vector3(0, 0, 0);
+					assetConfig.orientation = ape::Quaternion(1, 0, 0, 0);
+					assetConfig.unitScale = fileGeometry->getUnitScale();
 				}
 				std::stringstream assimpAssetFileNamePath;
 				std::string resourceLocationStr = fileGeometry->getFileName();
@@ -179,7 +184,7 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 				for (int i = 0; i < assimpMesh->mNumVertices; i++)
 				{
 					aiVector3D assimpVertex = assimpMesh->mVertices[i];
-					ape::Vector3 vertexPosition(assimpVertex.x, assimpVertex.y, assimpVertex.z);
+					ape::Vector3 vertexPosition(assimpVertex.x * mAssimpAssetConfigs[assimpSceneID].unitScale, assimpVertex.y * mAssimpAssetConfigs[assimpSceneID].unitScale, assimpVertex.z * mAssimpAssetConfigs[assimpSceneID].unitScale);
 					if (mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
 						vertexPosition = (node->getDerivedPosition() + (node->getDerivedOrientation() * vertexPosition)) * mAssimpAssetConfigs[assimpSceneID].scale;
 					coordinates.push_back(vertexPosition.x);

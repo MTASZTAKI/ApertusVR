@@ -80,6 +80,8 @@ namespace ape
 
 		void parseVisibleNodes();
 
+		std::map<std::string, ape::Vector3> mFileGeometryNamesScales;
+
 		std::map<std::string, std::string> mModelsIDs;
 
 		std::string findGeometryNameByModelName(std::string modelName);

@@ -61,6 +61,10 @@ namespace ape
 		virtual void setOwner(std::string ownerID) = 0;
 
 		virtual std::string getOwner() = 0;
+
+		virtual void setUnitScale(float unitScale) = 0;
+
+		virtual float getUnitScale() = 0;
 	};
 }
 

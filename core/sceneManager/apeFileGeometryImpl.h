@@ -64,6 +64,10 @@ namespace ape
 
 		std::string getOwner() override;
 
+		void setUnitScale(float unitScale) override;
+
+		float getUnitScale() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -86,6 +90,8 @@ namespace ape
 		bool mIsSubMeshesMerged;
 
 		unsigned int mVisibilityFlag;
+
+		float mUnitScale;
 	};
 }
 

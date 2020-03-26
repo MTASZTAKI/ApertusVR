@@ -31,6 +31,7 @@ ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, std::s
 	mIsExportMesh = false;
 	mIsSubMeshesMerged = false;
 	mVisibilityFlag = 0;
+	mUnitScale = 1.0f;
 }
 
 ape::FileGeometryImpl::~FileGeometryImpl()
@@ -121,6 +122,16 @@ std::string ape::FileGeometryImpl::getOwner()
 	return mOwnerID;
 }
 
+void ape::FileGeometryImpl::setUnitScale(float unitScale)
+{
+	mUnitScale = unitScale;
+}
+
+float ape::FileGeometryImpl::getUnitScale()
+{
+	return mUnitScale;
+}
+
 void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
@@ -132,6 +143,7 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mUnitScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
@@ -145,6 +157,7 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mUnitScale);
 	RakNet::RakString fileName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, fileName))
 	{
