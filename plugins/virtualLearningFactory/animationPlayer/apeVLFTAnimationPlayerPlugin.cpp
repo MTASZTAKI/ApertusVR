@@ -233,6 +233,10 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "screencast")
 			{
+				std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+				std::stringstream command;
+				command << "ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
+				system(command.str().c_str());
 			}
 		}
 	}

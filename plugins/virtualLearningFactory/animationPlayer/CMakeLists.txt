@@ -49,4 +49,8 @@ set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY CXX_STANDARD 17)
 
 set_property (TARGET apeVLFTAnimationPlayerPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ffmpeg-4.2.2-win64-static/bin/ffmpeg.exe DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ffmpeg-4.2.2-win64-static/bin/ffmpeg.exe DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+
+
 
