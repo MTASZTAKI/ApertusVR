@@ -64,6 +64,7 @@ namespace ape
 		bool generateManualTexture;
 		std::string rootNodeName;
 		float unitScale = 1.0f;
+		bool visible = true;
 	};
 
 	struct PhysicsConfig

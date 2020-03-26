@@ -102,6 +102,7 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 					assetConfig.position = ape::Vector3(0, 0, 0);
 					assetConfig.orientation = ape::Quaternion(1, 0, 0, 0);
 					assetConfig.unitScale = fileGeometry->getUnitScale();
+					assetConfig.visible = false;
 				}
 				std::stringstream assimpAssetFileNamePath;
 				std::string resourceLocationStr = fileGeometry->getFileName();
@@ -347,7 +348,10 @@ void ape::AssimpAssetLoaderPlugin::createNode(int assimpSceneID, aiNode* assimpN
 					}
 				}
 				if (!mAssimpAssetConfigs[assimpSceneID].mergeAndExportMeshes)
+				{
 					mesh->setParentNode(node);
+					node->setVisible(mAssimpAssetConfigs[assimpSceneID].visible);
+				}
 				////APE_LOG_DEBUG("createIndexedFaceSetGeometry: " << mesh->getName());
 
 
