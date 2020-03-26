@@ -201,7 +201,7 @@ function showBookmarks() {
 	var bookmarksDiv = document.getElementById('bookmarks');
 	animationJSON.nodes.forEach(function (element) {
 		//console.log('node: ' + element.name);
-		if (element.name + "_Clone" == clickedNodeName) {
+		if (element.name == clickedNodeName) {
 			//console.log('clickedNodeName');
 			element.actions.forEach(function (element) {
 				//console.log('actions');

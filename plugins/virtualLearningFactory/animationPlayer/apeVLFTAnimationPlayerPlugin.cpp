@@ -142,7 +142,6 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
 {
-	nodeName += "_Clone";
 	if (auto node = mpSceneManager->getNode(nodeName).lock())
 	{
 		std::string previousOwner = node->getOwner();
