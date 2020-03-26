@@ -346,6 +346,36 @@ app.post('/nodes/:name/scale', function(req, res) {
 	});
 });
 
+app.post('/nodeDerivedPosition', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the position of the specified node.');
+
+	// handle http param validation errors
+	req.checkBody('name', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.body.name;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		respObj.addDataItem({
+			position: JSON.parse(obj.getDerivedPosition().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
 app.get('/nodes/:name/position', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the position of the specified node.');

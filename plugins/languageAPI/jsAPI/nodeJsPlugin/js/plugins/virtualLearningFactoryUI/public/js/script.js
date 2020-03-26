@@ -4,6 +4,8 @@ var userID;
 var userNodePostion;
 var otherUserNodeNames = [];
 var otherUserNodePositions = [];
+var clickedNodeName;
+var clickedNodePosition;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -25,6 +27,15 @@ function getUserNodeNameAndID() {
 		console.log('userID(): res: ', userID);
 	});
 }
+function getClickedNodePosition() {
+	console.log('getClickedNodeDerivedPosition(): ' + clickedNodeName);
+	var nodeName = { name: clickedNodeName};
+	doPostRequest(apiEndPoint + "/nodeDerivedPosition", nodeName, function (res) {
+		clickedNodePosition = res.data.items[0].position;
+		console.log('getClickedNodeDerivedPosition(): res: ', clickedNodePosition);
+	});
+}
+
 
 function getUserNodePosition() {
 	console.log('getUserNodePosition()');
@@ -117,8 +128,9 @@ function doGetRequest(apiEndPointUrl, callback) {
 }
 
 function doPostRequest(apiEndPointUrl, data, callback) {
+	console.log('doPostRequest(): ', data);
     $.post(apiEndPointUrl, data, function(res) {
-        // console.log('doPostRequest(): ', res);
+        console.log('doPostRequest(): ', res);
         callback(res);
     }, "json");
 }
@@ -152,7 +164,7 @@ function showUsers() {
 }
 
 function updateMap() {
-	console.log('update map');
+	//console.log('update map');
 	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
@@ -169,7 +181,7 @@ function updateMap() {
 		var scale = 0.1;
 		var pos = otherUserNodePositions.pop();
 		var relativePosition = { x: (userNodePostion.x - pos.x) * scale, y: (userNodePostion.y - pos.y) * scale, z: (userNodePostion.z - pos.z) * scale };
-		console.log('relativePosition: ', relativePosition)
+		//console.log('relativePosition: ', relativePosition)
 		ctx.beginPath();
 		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.y, 5, 0, 2 * Math.PI);
 		ctx.stroke();
@@ -190,6 +202,12 @@ function parseAnimationJSON() {
 	});
 }
 
+function updateProperties() {
+	//console.log('update Properties of the clicked node: ' + clickedNodeName);
+	getClickedNodePosition();
+	document.getElementById('properties').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
+}
+
 $(document).ready(function () {
 	parseAnimationJSON();
 	getUserNodeNameAndID();
@@ -202,7 +220,8 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		updateMap();
+    		//updateMap();
+    		updateProperties();
     	}, 500);
     }
     sock.onerror = (e)=>{
@@ -218,9 +237,9 @@ $(document).ready(function () {
 		
 		if (eventObj.type == 11) { 
 			$("#nodeName").val(eventObj.subjectName);
-            nodeName = eventObj.subjectName;
-			console.log(' show bounding box - select: ', nodeName);
-			document.getElementById('selectedNodeNameTitle').innerHTML = nodeName;
+			clickedNodeName = eventObj.subjectName;
+			console.log(' show bounding box - select: ', clickedNodeName);
+			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
 
 			/*console.log('try to attach server created node to me: ', nodeName);
 			doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userID + '/owner', function (res) {

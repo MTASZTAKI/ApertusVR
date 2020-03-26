@@ -85,6 +85,14 @@ namespace ape
 
 		ape::NodeWeakPtr mClickedNode;
 
+		float mCurrentFrameTimeFactor;
+
+		bool mIsSkipCurrentAnimation;
+
+		bool mIsPauseCurrentAnimation;
+
+		bool mIsStopAnimations;
+
 	public:
 		VLFTAnimationPlayerPlugin();
 

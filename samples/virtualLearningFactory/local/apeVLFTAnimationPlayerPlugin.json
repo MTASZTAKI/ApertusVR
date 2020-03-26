@@ -11,7 +11,17 @@
         "event": {
           "type": "animation",
           "data": "animations/pallet_1.txt"
-        }
+        },
+        "bookmarks": [
+          {
+            "name": "pallet_1_bookmark_1",
+            "frameID": "5"
+          },
+          {
+            "name": "pallet_1_bookmark_2",
+            "frameID": "10"
+          }
+        ]
       }
     ]
   },
@@ -26,7 +36,17 @@
         "event": {
           "type": "animation",
           "data": "animations/pallet_2.txt"
-        }
+        },
+        "bookmarks": [
+          {
+            "name": "pallet_2_bookmark_1",
+            "frameID": "10"
+          },
+          {
+            "name": "pallet_2_bookmark_2",
+            "frameID": "15"
+          }
+        ]
       }
     ]
   },
@@ -41,7 +61,17 @@
         "event": {
           "type": "animation",
           "data": "animations/pallet_3.txt"
-        }
+        },
+        "bookmarks": [
+          {
+            "name": "pallet_3_bookmark_1",
+            "frameID": "20"
+          },
+          {
+            "name": "pallet_3_bookmark_2",
+            "frameID": "25"
+          }
+        ]
       }
     ]
   }
